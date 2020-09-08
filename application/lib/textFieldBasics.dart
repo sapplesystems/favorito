@@ -1,4 +1,4 @@
-import 'package:favorito/ObjectFieldsBasic.dart';
+import 'package:application/ObjectFieldsBasic.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
