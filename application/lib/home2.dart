@@ -1,7 +1,7 @@
-import 'package:favorito/card1.dart';
-import 'package:favorito/skipper.dart';
-import 'package:favorito/toggleText.dart';
-import 'package:favorito/toggleTextButton.dart';
+import 'package:application/card1.dart';
+import 'package:application/skipper.dart';
+import 'package:application/toggleText.dart';
+import 'package:application/toggleTextButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
