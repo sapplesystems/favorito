@@ -1,5 +1,9 @@
+import 'package:application/ObjectFieldsBasic.dart';
 import 'package:application/card1.dart';
+import 'package:application/fieldFocusChange.dart';
+import 'package:application/roundedButton.dart';
 import 'package:application/skipper.dart';
+import 'package:application/textFieldBasics.dart';
 import 'package:application/toggleText.dart';
 import 'package:application/toggleTextButton.dart';
 import 'package:flutter/material.dart';
@@ -38,26 +42,26 @@ class _home2State extends State<home2> {
                       semanticsLabel: 'vector'),
                 ),
                 card1(),
-                // roundedButton(
-                //   title: "LOGIN",
-                //   clr: Color(0xffdd2626),
-                // ),
-                // textFieldBasics(
-                //     buttonsOne: ObjectFieldsBasic(
-                //   //washing fee
-                //   control: _controler,
-                //   inputType: TextInputType.number,
-                //   label: "label",
-                //   enabls: true,
-                //   iconVal: Icons.accessible,
-                //   valid: true,
-                //   readOnly: false,
-                //   labelcolor: Colors.grey,
-                //   from: _focus,
-                //   fieldSubmit: (_) {
-                //     fieldFocusChange(context, _focus, _focus);
-                //   },
-                // )),
+                roundedButton(
+                  title: "LOGIN",
+                  clr: Color(0xffdd2626),
+                ),
+                textFieldBasics(
+                    buttonsOne: ObjectFieldsBasic(
+                  //washing fee
+                  control: _controler,
+                  inputType: TextInputType.number,
+                  label: "label",
+                  enabls: true,
+                  iconVal: Icons.accessible,
+                  valid: true,
+                  readOnly: false,
+                  labelcolor: Colors.grey,
+                  from: _focus,
+                  fieldSubmit: (_) {
+                    fieldFocusChange(context, _focus, _focus);
+                  },
+                )),
 
                 toggleText(
                     hint: "Hint",

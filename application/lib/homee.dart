@@ -11,7 +11,6 @@ class SampleWidget extends StatefulWidget {
 class _SampleWidgetState extends State<SampleWidget> {
   @override
   Widget build(BuildContext context) {
-    // Figma Flutter Generator SampleWidget - FRAME
 
     return Container(
         width: 414,
