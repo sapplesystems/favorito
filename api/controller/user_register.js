@@ -1,43 +1,81 @@
 var db = require('../config/db');
 var bcrypt = require('bcrypt');
 const nodemailer = require("nodemailer");
+var jwt = require('jsonwebtoken');
 
 exports.register = function (req, res, next) {
-    if (req.body.username == '' || req.body.username == null) {
-        res.status(500).json({ status: 'error', message: 'username', data: 'Param required' });
+    if (req.body.business_type == '' || req.body.business_type == null) {
+        return res.status(500).json({ status: 'error', message: 'Business type is required' });
+    } else if (req.body.business_category == '' || req.body.business_category == null) {
+        return res.status(500).json({ status: 'error', message: 'Business category is required' });
+    } else if (req.body.business_name == '' || req.body.business_name == null) {
+        return res.status(500).json({ status: 'error', message: 'Business name is required' });
+    } else if (req.body.postal_code == '' || req.body.postal_code == null) {
+        return res.status(500).json({ status: 'error', message: 'Postal code is required' });
+    } if (req.body.business_phone == '' || req.body.business_phone == null) {
+        return res.status(500).json({ status: 'error', message: 'Business phone is required' });
+    } else if (req.body.username == '' || req.body.username == null) {
+        return res.status(500).json({ status: 'error', message: 'Username is required' });
     } else if (req.body.email == '' || req.body.email == null) {
-        res.status(500).json({ status: 'error', message: 'email', data: 'Param required' });
+        return res.status(500).json({ status: 'error', message: 'Email is required' });
     } else if (req.body.password == '' || req.body.password == null) {
-        res.status(500).json({ status: 'error', message: 'password', data: 'Param required' });
+        return res.status(500).json({ status: 'error', message: 'Password is required' });
     } else if (req.body.cpassword == '' || req.body.cpassword == null) {
-        res.status(500).json({ status: 'error', message: 'cpassword', data: 'Param required' });
+        return res.status(500).json({ status: 'error', message: 'Confirm password is required' });
     }
+    var business_type = req.body.business_type;
+    var business_category = req.body.business_category;
+    var business_name = req.body.business_name;
+    var postal_code = req.body.postal_code;
+    var business_phone = req.body.business_phone;
     var username = req.body.username;
     var email = req.body.email;
     var password = req.body.password;
     var cpassword = req.body.cpassword;
 
     if (password !== cpassword) {
-        res.status(500).json({ status: 'error', message: 'error', data: 'Confirm password does not match' });
+        return res.status(500).json({ status: 'error', message: 'Passwrod and confirm password does not match' });
     }
 
     bcrypt.hash(password, 10, function (err, hash) {
         if (err) {
-            res.status(500).json({ status: 'error', message: err, data: 'Password encryption failed' });
+            return res.status(500).json({ status: 'error', message: 'Password encryption failed' });
         }
-        var sql = "INSERT INTO users (username, email, password, org_password) values('" + username + "','" + email + "','" + hash + "','" + password + "')";
-        db.query(sql, function (err, result) {
-            if (err) {
-                res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
+        var cslq = "select count(*) as c from users where username='" + username + "' and deleted_at is null";
+        db.query(cslq, function (chkerr, check) {
+            if (chkerr) {
+                return res.json({ status: 'error', message: 'Something went wrong.' });
+            } else {
+                if(check[0].c === 0){
+                    var sql = "INSERT INTO users (business_type, business_category, business_name, postal_code, business_phone, username, email, password, org_password) values('" + business_type + "','" + business_category + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + username + "','" + email + "','" + hash + "','" + password + "')";
+                    db.query(sql, function (err, result) {
+                        if (err) {
+                            return res.status(500).json({ status: 'error', message: 'Something went wrong.'});
+                        }
+                        var token = jwt.sign({
+                            username: username,
+                            id: result.insertId,
+                        }, 'secret', {
+                            expiresIn: "1h"
+                        });
+    
+                        var messageId = main(res, result.insertId, result).catch(console.error);
+                        if (messageId) {
+                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, username: username, token: token });
+                        } else {
+                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, username: username, token: token });
+                        }
+                    });
+                }else{
+                    return res.status(500).json({ status: 'error', message: 'Username already exist' });
+                }
             }
-            main(res, result.insertId, result).catch(console.error);
-            //res.status(200).json({ status: 'success', message: 'success', id: result.insertId, data: result });
         });
     });
 };
 
 // async..await is not allowed in global scope, must use a wrapper
-async function main(res, last_inserted_id, result_data) {
+async function main() {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
     let testAccount = await nodemailer.createTestAccount();
@@ -62,7 +100,12 @@ async function main(res, last_inserted_id, result_data) {
         html: "<b>Hello world?</b>", // html body
     });
 
-    if (info.messageId) {
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+    return info.messageId;
+
+    /*if (info.messageId) {
         return res.status(200).json({ status: 'success', message: 'mail sent success', id: last_inserted_id, data: result_data });
     } else {
         return res.status(500).json({ status: 'error', message: 'mail sending failed' });
@@ -73,5 +116,5 @@ async function main(res, last_inserted_id, result_data) {
 
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...*/
 }
