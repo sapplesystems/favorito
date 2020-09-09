@@ -7,7 +7,7 @@ var CheckAuth = require('../middleware/auth');
 
 router.post('/add', CheckAuth, BusinessCategoryController.add_business_category);
 
-router.post('/list', CheckAuth, BusinessCategoryController.all_business_category);
+router.post('/list', BusinessCategoryController.all_business_category);
 
 router.post('/find', CheckAuth, BusinessCategoryController.find_business_category);
 
