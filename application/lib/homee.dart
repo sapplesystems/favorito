@@ -15,6 +15,7 @@ class _SampleWidgetState extends State<SampleWidget> {
     return Container(
         width: 414,
         height: 896,
+
         decoration: BoxDecoration(
           color: Color.fromRGBO(255, 255, 255, 1),
         ),
