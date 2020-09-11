@@ -59,13 +59,13 @@ exports.register = function (req, res, next) {
                         }
 
                         /**insert row into business_informations table */
-                        var bi_sql = "INSERT INTO business_informations (business_user_id, business_id) VALUES ('" + result.insertId + "', '" + business_id + "')";
+                        var bi_sql = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
                         db.query(bi_sql, function (bierr, biresult) {
                             if (bierr) throw bierr;
                         });
 
                         /**insert row into business_owner_profile table */
-                        var bop_sql = "INSERT INTO business_owner_profile (business_user_id, business_id) VALUES ('" + result.insertId + "', '" + business_id + "')";
+                        var bop_sql = "INSERT INTO business_owner_profile (business_id) VALUES ('" + business_id + "')";
                         db.query(bop_sql, function (boperr, bopresult) {
                             if (boperr) throw boperr;
                         });
