@@ -13,13 +13,12 @@ class _card1State extends State<card1> {
       children: [
         Stack(
           children: [
-            
             Container(
               width: 162,
               height: 173,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Colors.grey,
+                color: Colors.white,
               ),
             ),
           ],

@@ -121,7 +121,6 @@ class _Tour_aState extends State<Tour_a> {
                     ),
                   ],
                 ),
-
                 Container(
                   margin:
                       EdgeInsets.symmetric(vertical: context.percentHeight * 4),
