@@ -80,19 +80,24 @@ class _signup_aState extends State<signup_a> {
                     children: [
                       Padding(
                           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: txtfieldboundry(title: "Business Type")),
+                          child: txtfieldboundry(
+                              title: "Business Type", security: false)),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Business Name")),
+                          child: txtfieldboundry(
+                              title: "Business Name", security: false)),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Business Category")),
+                          child: txtfieldboundry(
+                              title: "Business Category", security: false)),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Postal Cado")),
+                          child: txtfieldboundry(
+                              title: "Postal Cado", security: false)),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Business Phone")),
+                          child: txtfieldboundry(
+                              title: "Business Phone", security: false)),
                     ],
                   ),
                 ),

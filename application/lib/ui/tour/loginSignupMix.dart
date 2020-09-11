@@ -1,3 +1,4 @@
+import 'package:application/ui/login/login.dart';
 import 'package:application/ui/signup/signup_a.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,8 +37,8 @@ class loginSignup extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => signup_a())),
+                onTap: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Login())),
                 child: Container(
                   margin: EdgeInsets.only(top: context.percentWidth * 20),
                   decoration: BoxDecoration(
@@ -74,17 +75,21 @@ class loginSignup extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: context.percentWidth * 4),
-                child: Text(
-                  "Sign Up",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                    fontFamily: "Gilroy-Bold",
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 1,
+              InkWell(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => signup_a())),
+                child: Container(
+                  margin: EdgeInsets.only(top: context.percentWidth * 4),
+                  child: Text(
+                    "Sign Up",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 20,
+                      fontFamily: "Gilroy-Bold",
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 1,
+                    ),
                   ),
                 ),
               )

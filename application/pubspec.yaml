@@ -32,6 +32,8 @@ dependencies:
   grouped_checkbox: ^1.0.0
   easy_rich_text: ^0.5.0
   introduction_screen: ^1.0.9
+  font_awesome_flutter: ^8.8.1
+  dio: ^3.0.10
 
 dev_dependencies:
   flutter_test:
