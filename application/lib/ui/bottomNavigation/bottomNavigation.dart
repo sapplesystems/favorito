@@ -1,0 +1,52 @@
+import 'package:application/ui/dashboard/dashboard.dart';
+import 'package:flutter/material.dart';
+
+class bottomNavigation extends StatefulWidget {
+  bottomNavigation({Key key}) : super(key: key);
+
+  @override
+  _bottomNavigationState createState() => _bottomNavigationState();
+}
+
+class _bottomNavigationState extends State<bottomNavigation> {
+  int _selectedIndex = 0;
+  static List<Widget> _widgetOptions = <Widget>[
+    dashboard(),
+    dashboard(),
+    dashboard(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            title: Text('Business'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            title: Text('School'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}

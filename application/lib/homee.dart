@@ -11,11 +11,11 @@ class SampleWidget extends StatefulWidget {
 class _SampleWidgetState extends State<SampleWidget> {
   @override
   Widget build(BuildContext context) {
-    // Figma Flutter Generator SampleWidget - FRAME
 
     return Container(
         width: 414,
         height: 896,
+
         decoration: BoxDecoration(
           color: Color.fromRGBO(255, 255, 255, 1),
         ),
