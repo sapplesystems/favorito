@@ -4,78 +4,78 @@ var jwt = require('jsonwebtoken');
 
 /*CREATE BUSINESS TYPE*/
 exports.add_business_type = function (req, res, next) {
-    if (req.body.business_name == '' || req.body.business_name == null) {
-        return res.status(500).json({status: 'error', message: 'business_name', data: 'Param required'});
+    if (req.body.type_name == '' || req.body.type_name == null) {
+        return res.status(500).json({status: 'error', message: 'Business type name required.'});
     }
-    var business_name = req.body.business_name;
+    var type_name = req.body.type_name;
 
-    var sql = "INSERT INTO business_types (name) values('" + business_name + "')";
+    var sql = "INSERT INTO business_types (type_name) values('" + type_name + "')";
     db.query(sql, function (err, result) {
         if (err) {
             return res.status(500).json({status: 'error', message: 'Something went wrong.', data: err});
         }
-        return  res.status(200).json({status: 'success', message: 'success', id: result.insertId, data: result});
+        return  res.status(200).json({status: 'success', message: 'Business type added successfully.'});
     });
 };
 
 /*SELECT ALL BUSINESS TYPE*/
 exports.all_business_type = function (req, res, next) {
-    var sql = "SELECT id, `name` FROM business_types WHERE deleted_at IS NULL";
+    var sql = "SELECT id, `type_name` FROM business_types WHERE is_activated=1 and deleted_at IS NULL";
     db.query(sql, function (err, result) {
         if (err) {
-            return res.status(500).json({status: 'error', message: 'Something went wrong.', data: err});
+            return res.status(500).json({status: 'error', message: 'Something went wrong.'});
         }
-        return res.status(200).json({status: 'success', message: 'success', id: result.insertId, data: result});
+        return res.status(200).json({status: 'success', message: 'success', data: result});
     });
 };
 
 /*SELECT FIND BUSINESS TYPE*/
 exports.find_business_type = function (req, res, next) {
-    if (req.body.business_id == '' || req.body.business_id == null) {
-        return res.status(500).json({status: 'error', message: 'business_id', data: 'Param required'});
+    if (req.body.type_id == '' || req.body.type_id == null) {
+        return res.status(500).json({status: 'error', message: 'Business type id required.'});
     }
-    var business_id = req.body.business_id;
-    var sql = "SELECT id, `name` FROM business_types WHERE deleted_at IS NULL AND id = '" + business_id + "'";
+    var type_id = req.body.type_id;
+    var sql = "SELECT id, `type_name` FROM business_types WHERE is_activated=1 and deleted_at IS NULL AND id = '" + type_id + "'";
     db.query(sql, function (err, result) {
         if (err) {
-            return res.status(500).json({status: 'error', message: 'Something went wrong.', data: err});
+            return res.status(500).json({status: 'error', message: 'Something went wrong.'});
         }
-        return res.status(200).json({status: 'success', message: 'success', id: result.insertId, data: result});
+        return res.status(200).json({status: 'success', message: 'success', data: result});
     });
 };
 
 /*UPDATE BUSINESS TYPE*/
 exports.update_business_type = function (req, res, next) {
-    if (req.body.business_id == '' || req.body.business_id == null) {
-        return res.status(500).json({status: 'error', message: 'business_id', data: 'Param required'});
+    if (req.body.type_id == '' || req.body.type_id == null) {
+        return res.status(500).json({status: 'error', message: 'Business type id required.'});
     }
-    if (req.body.business_name == '' || req.body.business_name == null) {
-        return res.status(500).json({status: 'error', message: 'business_name', data: 'Param required'});
+    if (req.body.type_name == '' || req.body.type_name == null) {
+        return res.status(500).json({status: 'error', message: 'Business type is required.'});
     }
-    var business_id = req.body.business_id;
-    var business_name = req.body.business_name;
+    var type_id = req.body.type_id;
+    var type_name = req.body.type_name;
 
-    var sql = "update business_types set name = '" + business_name + "' where id = '" + business_id + "'";
+    var sql = "update business_types set type_name = '" + type_name + "' where id = '" + type_id + "'";
     db.query(sql, function (err, result) {
         if (err) {
-            res.status(500).json({status: 'error', message: 'Something went wrong.', data: err});
+            res.status(500).json({status: 'error', message: 'Something went wrong.'});
         }
-        res.status(200).json({status: 'success', message: 'success', id: result.insertId, data: result});
+        res.status(200).json({status: 'success', message: 'Business type updated successfully.'});
     });
 };
 
 /*DELETE BUSINESS TYPE*/
 exports.delete_business_type = function (req, res, next) {
-    if (req.body.business_id == '' || req.body.business_id == null) {
-        return res.status(500).json({status: 'error', message: 'business_id', data: 'Param required'});
+    if (req.body.type_id == '' || req.body.type_id == null) {
+        return res.status(500).json({status: 'error', message: 'Business type id is required.'});
     }
-    var business_id = req.body.business_id;
+    var type_id = req.body.type_id;
 
-    var sql = "update business_types set deleted_at = now() where id = '" + business_id + "'";
+    var sql = "update business_types set is_activated=0, deleted_at = now() where id = '" + type_id + "'";
     db.query(sql, function (err, result) {
         if (err) {
-            res.status(500).json({status: 'error', message: 'Something went wrong.', data: err});
+            res.status(500).json({status: 'error', message: 'Something went wrong.'});
         }
-        res.status(200).json({status: 'success', message: 'success', id: result.insertId, data: result});
+        res.status(200).json({status: 'success', message: 'Business type deleted successfully.'});
     });
 };

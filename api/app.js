@@ -5,10 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var businessUsersRouter = require('./routes/business_users');
 var productsRouter = require('./routes/products');
 var businessTypeRouter = require('./routes/business_type');
 var businessCategoryRouter = require('./routes/business_category');
+var businessDashboardRouter = require('./routes/business_dashboard');
 
 var app = express();
 
@@ -18,15 +19,16 @@ app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/api/user', usersRouter);
+app.use('/api/business-user', businessUsersRouter);
 app.use('/api/product', productsRouter);
 app.use('/api/business-type', businessTypeRouter);
 app.use('/api/business-category', businessCategoryRouter);
+app.use('/api/business-dashboard', businessDashboardRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

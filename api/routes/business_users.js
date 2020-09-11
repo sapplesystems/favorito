@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser');
-var UserController = require('../controller/user');
-var UserRegisterController = require('../controller/user_register');
+//var bodyParser = require('body-parser');
+var UserController = require('../controller/business_user');
+var UserRegisterController = require('../controller/business_user_register');
 var CheckAuth = require('../middleware/auth');
 //router.use(bodyParser.json());
+//router.use(bodyParser.urlencoded({extended: true}));
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
