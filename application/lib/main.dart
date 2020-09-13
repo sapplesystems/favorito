@@ -1,4 +1,6 @@
 import 'package:application/ui/tour/Tour_A.dart';
+import 'package:application/ui/signup/signup_a.dart';
+import 'package:application/ui/notification/Notifications.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -12,6 +14,6 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Tour_a(),
+        home: Notifications(),
       );
 }
