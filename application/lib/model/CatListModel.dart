@@ -1,7 +1,7 @@
 class CatListModel {
   String status;
   String message;
-  List<Data> data;
+  List<catData> data;
 
   CatListModel({this.status, this.message, this.data});
 
@@ -9,9 +9,9 @@ class CatListModel {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = new List<catData>();
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data.add(new catData.fromJson(v));
       });
     }
   }
@@ -27,13 +27,13 @@ class CatListModel {
   }
 }
 
-class Data {
+class catData {
   int id;
   String categoryName;
 
-  Data({this.id, this.categoryName});
+  catData({this.id, this.categoryName});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  catData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     categoryName = json['category_name'];
   }

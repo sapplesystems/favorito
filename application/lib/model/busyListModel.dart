@@ -1,7 +1,7 @@
 class busyListModel {
   String status;
   String message;
-  List<Data> data;
+  List<busData> data;
 
   busyListModel({this.status, this.message, this.data});
 
@@ -9,9 +9,9 @@ class busyListModel {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = new List<busData>();
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data.add(new busData.fromJson(v));
       });
     }
   }
@@ -27,13 +27,13 @@ class busyListModel {
   }
 }
 
-class Data {
+class busData {
   int id;
   String typeName;
 
-  Data({this.id, this.typeName});
+  busData({this.id, this.typeName});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  busData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     typeName = json['type_name'];
   }
