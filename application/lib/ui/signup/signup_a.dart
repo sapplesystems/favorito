@@ -1,9 +1,11 @@
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
+import 'package:application/network/webservices.dart';
 import 'package:application/ui/signup/signup_b.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class signup_a extends StatefulWidget {
   @override
@@ -11,6 +13,15 @@ class signup_a extends StatefulWidget {
 }
 
 class _signup_aState extends State<signup_a> {
+  List<String> busy = [];
+  List<String> cat = [];
+  @override
+  void initState() {
+    super.initState();
+    getBusiness();
+    getCategory();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,20 +90,48 @@ class _signup_aState extends State<signup_a> {
                   child: Column(
                     children: [
                       Padding(
-                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: txtfieldboundry(title: "Business Type")),
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownSearch<String>(
+                            mode: Mode.MENU,
+                            showSelectedItem: true,
+                            items: busy,
+                            label: "Business Type",
+                            hint: "Please Select Business Type",
+                            // popupItemDisabled: (String s) => s.startsWith('I'),
+                            onChanged: print,
+                            selectedItem: ""),
+                      ),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Business Name")),
+                          child: txtfieldboundry(
+                              title: "Business Name", security: false)),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DropdownSearch<String>(
+                              mode: Mode.MENU,
+                              showSelectedItem: true,
+                              items: cat,
+                              label: "Category",
+                              hint: "Please Select Category",
+                              // popupItemDisabled: (String s) => s.startsWith('I'),
+                              onChanged: print,
+                              selectedItem: ""),
+                        ),
+                      ),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Business Category")),
+                          child: txtfieldboundry(
+                              title: "Business Category", security: false)),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Postal Cado")),
+                          child: txtfieldboundry(
+                              title: "Postal Cado", security: false)),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(title: "Business Phone")),
+                          child: txtfieldboundry(
+                              title: "Business Phone", security: false)),
                     ],
                   ),
                 ),
@@ -109,5 +148,16 @@ class _signup_aState extends State<signup_a> {
         ),
       ),
     );
+  }
+
+  void getCategory() {}
+
+  void getBusiness() {
+    WebService.funGetBusyList().then((value) {
+      for (int i = 0; i < value.data.length; i++) {
+        busy.add(value.data[0].typeName);
+      }
+      print(busy.toString());
+    });
   }
 }

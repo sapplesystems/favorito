@@ -85,13 +85,16 @@ class _signup_bState extends State<signup_b> {
                   children: [
                     Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: txtfieldboundry(title: "Email")),
+                        child:
+                            txtfieldboundry(title: "Email", security: false)),
                     Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: txtfieldboundry(title: "Phone")),
+                        child:
+                            txtfieldboundry(title: "Phone", security: false)),
                     Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: txtfieldboundry(title: "Password")),
+                        child: txtfieldboundry(
+                            title: "Password", security: false)),
                     CheckboxListTile(
                       title: Text(
                         "By continuing, you agree to Favorito's\nTerms of Service and acknowledge\nFavorito's Privacy Policy.",

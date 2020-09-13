@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/skipper.dart';
+import 'package:application/ui/login/login.dart';
 import 'package:application/ui/tour/Tour_B.dart';
 import 'package:application/ui/tour/Tour_C.dart';
 import 'package:application/ui/tour/Tour_D.dart';
@@ -121,12 +122,18 @@ class _Tour_aState extends State<Tour_a> {
                     ),
                   ],
                 ),
-                Container(
-                  margin:
-                      EdgeInsets.symmetric(vertical: context.percentHeight * 4),
-                  child: roundedButton(
-                    title: "LOGIN",
-                    clr: Color(0xffdd2626),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Login()));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: context.percentHeight * 4),
+                    child: roundedButton(
+                      title: "LOGIN",
+                      clr: Color(0xffdd2626),
+                    ),
                   ),
                 ),
               ]),

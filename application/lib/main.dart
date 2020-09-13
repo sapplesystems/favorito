@@ -3,7 +3,10 @@ import 'package:application/ui/signup/signup_a.dart';
 import 'package:application/ui/notification/Notifications.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  //initializeReflectable();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

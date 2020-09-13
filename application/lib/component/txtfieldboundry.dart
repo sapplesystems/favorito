@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class txtfieldboundry extends StatefulWidget {
   String title;
-  txtfieldboundry({this.title});
+  bool security;
+  txtfieldboundry({this.title, this.security});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -12,10 +13,10 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        obscureText: widget.security,
         decoration: new InputDecoration(
           labelText: widget.title,
           fillColor: Colors.transparent,
-
           border: new OutlineInputBorder(
             borderRadius: new BorderRadius.circular(12.0),
             borderSide: new BorderSide(),

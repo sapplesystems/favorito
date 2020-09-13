@@ -2,11 +2,12 @@ var db = require('../config/db');
 var bcrypt = require('bcrypt');
 const nodemailer = require("nodemailer");
 var jwt = require('jsonwebtoken');
+var uniqid = require('uniqid');
 
 exports.register = function (req, res, next) {
-    if (req.body.business_type == '' || req.body.business_type == null) {
+    if (req.body.business_type_id == '' || req.body.business_type_id == null) {
         return res.status(500).json({ status: 'error', message: 'Business type is required' });
-    } else if (req.body.business_category == '' || req.body.business_category == null) {
+    } else if (req.body.business_category_id == '' || req.body.business_category_id == null) {
         return res.status(500).json({ status: 'error', message: 'Business category is required' });
     } else if (req.body.business_name == '' || req.body.business_name == null) {
         return res.status(500).json({ status: 'error', message: 'Business name is required' });
@@ -14,24 +15,28 @@ exports.register = function (req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Postal code is required' });
     } if (req.body.business_phone == '' || req.body.business_phone == null) {
         return res.status(500).json({ status: 'error', message: 'Business phone is required' });
-    } else if (req.body.username == '' || req.body.username == null) {
-        return res.status(500).json({ status: 'error', message: 'Username is required' });
-    } else if (req.body.email == '' || req.body.email == null) {
-        return res.status(500).json({ status: 'error', message: 'Email is required' });
+    } else if (req.body.business_email == '' || req.body.business_email == null) {
+        return res.status(500).json({ status: 'error', message: 'Business Email is required' });
     } else if (req.body.password == '' || req.body.password == null) {
         return res.status(500).json({ status: 'error', message: 'Password is required' });
     } else if (req.body.cpassword == '' || req.body.cpassword == null) {
         return res.status(500).json({ status: 'error', message: 'Confirm password is required' });
     }
-    var business_type = req.body.business_type;
-    var business_category = req.body.business_category;
+
+    var business_id = uniqid();
+    business_id = business_id.toUpperCase();
+    var business_type_id = req.body.business_type_id;
+    var business_category_id = req.body.business_category_id;
     var business_name = req.body.business_name;
     var postal_code = req.body.postal_code;
     var business_phone = req.body.business_phone;
-    var username = req.body.username;
-    var email = req.body.email;
+    var business_email = req.body.business_email;
     var password = req.body.password;
     var cpassword = req.body.cpassword;
+    var reach_whatsapp = 0;
+    if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {
+        reach_whatsapp = 1;
+    }
 
     if (password !== cpassword) {
         return res.status(500).json({ status: 'error', message: 'Passwrod and confirm password does not match' });
@@ -41,32 +46,48 @@ exports.register = function (req, res, next) {
         if (err) {
             return res.status(500).json({ status: 'error', message: 'Password encryption failed' });
         }
-        var cslq = "select count(*) as c from users where username='" + username + "' and deleted_at is null";
+        var cslq = "select count(*) as c from business_users where (business_email='" + business_email + "' or business_phone='" + business_phone + "') and is_activated=1 and deleted_at is null";
         db.query(cslq, function (chkerr, check) {
             if (chkerr) {
                 return res.json({ status: 'error', message: 'Something went wrong.' });
             } else {
-                if(check[0].c === 0){
-                    var sql = "INSERT INTO users (business_type, business_category, business_name, postal_code, business_phone, username, email, password, org_password) values('" + business_type + "','" + business_category + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + username + "','" + email + "','" + hash + "','" + password + "')";
+                if (check[0].c === 0) {
+                    var sql = "INSERT INTO business_users (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp, business_email, password, org_password) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "','" + business_email + "','" + hash + "','" + password + "')";
                     db.query(sql, function (err, result) {
                         if (err) {
-                            return res.status(500).json({ status: 'error', message: 'Something went wrong.'});
+                            return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                         }
+
+                        /**insert row into business_informations table */
+                        var bi_sql = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
+                        db.query(bi_sql, function (bierr, biresult) {
+                            if (bierr) throw bierr;
+                        });
+
+                        /**insert row into business_owner_profile table */
+                        var bop_sql = "INSERT INTO business_owner_profile (business_id) VALUES ('" + business_id + "')";
+                        db.query(bop_sql, function (boperr, bopresult) {
+                            if (boperr) throw boperr;
+                        });
+
+
                         var token = jwt.sign({
-                            username: username,
+                            business_email: business_email,
+                            business_phone: business_phone,
                             id: result.insertId,
+                            business_id: business_id,
                         }, 'secret', {
                             expiresIn: "1h"
                         });
-    
+
                         var messageId = main(res, result.insertId, result).catch(console.error);
                         if (messageId) {
-                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, username: username, token: token });
+                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, business_email: business_email, business_phone: business_phone, token: token });
                         } else {
-                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, username: username, token: token });
+                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, business_email: business_email, business_phone: business_phone, token: token });
                         }
                     });
-                }else{
+                } else {
                     return res.status(500).json({ status: 'error', message: 'Username already exist' });
                 }
             }
