@@ -64,7 +64,7 @@ exports.updateProfile = function (req, res, next) {
     update_columns += ", photo='" + req.file.filename + "' ";
   }
 
-  var sql = "update business_users set " + update_columns + " where id='" + id + "'";
+  var sql = "update business_master set " + update_columns + " where id='" + id + "'";
   db.query(sql, function (err, rows, fields) {
     if (err) {
       return res.status(500).send({ status: 'error', message: 'Business user profile could not be updated.' });

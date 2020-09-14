@@ -12,7 +12,7 @@ exports.getProfile = function (req, res, next) {
         var business_id = req.body.business_id;
         var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
         business_email,photo, address1,address2,address3,pincode,town_city,state_id,country_id,website,short_description,business_status \n\
-        FROM business_users WHERE id='" + id + "' and business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
+        FROM business_master WHERE id='" + id + "' and business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
 
         db.query(sql, function (err, rows, fields) {
             if (err) {
@@ -43,7 +43,7 @@ exports.login = function (req, res, next) {
     }
     var username = req.body.username;
 
-    var sql = "select * from business_users where (business_email='" + username + "' or business_phone='" + username + "') and is_activated=1 and deleted_at is null";
+    var sql = "select * from business_users where (email='" + username + "' or phone='" + username + "') and is_deleted=0 and deleted_at is null";
     db.query(sql, function (err, result) {
         if (err) {
             return res.json({ status: 'error', message: 'Something went wrong.', data: err });
@@ -57,9 +57,8 @@ exports.login = function (req, res, next) {
                 }
                 if (enc_result == true) {
                     var token = jwt.sign({
-                        business_name: result[0].business_name,
-                        business_email: result[0].business_email,
-                        business_phone: result[0].business_phone,
+                        email: result[0].email,
+                        phone: result[0].phone,
                         id: result[0].id,
                         business_id: result[0].business_id,
                     }, 'secret', {
@@ -69,10 +68,8 @@ exports.login = function (req, res, next) {
                     var user_data = {
                         id: result[0].id,
                         business_id: result[0].business_id,
-                        business_name: result[0].business_name,
-                        business_email: result[0].business_email,
-                        business_phone: result[0].business_phone,
-                        photo: result[0].photo,
+                        email: result[0].email,
+                        phone: result[0].phone,
                     };
                     return res.json({ status: 'success', message: 'success', data: user_data, token: token });
                 } else {
