@@ -52,16 +52,14 @@ class _Tour_aState extends State<Tour_a> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onTap: () {},
-                        child: ClipOval(
+                          onTap: () {},
                           child: Container(
-                            color: Colors.red,
-                            height: 20.0, // height of the button
-                            width: 20.0, // width of the button
-                            child: null,
+                              width: 37,
+                              height: 14,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color(0xffdd2626)))
                           ),
-                        ),
-                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -74,7 +72,7 @@ class _Tour_aState extends State<Tour_a> {
                         },
                         child: ClipOval(
                           child: Container(
-                            color: Colors.red,
+                            color: Colors.grey,
                             height: 12.0, // height of the button
                             width: 12.0, // width of the button
                             child: null,
@@ -93,7 +91,7 @@ class _Tour_aState extends State<Tour_a> {
                         },
                         child: ClipOval(
                           child: Container(
-                            color: Colors.red,
+                            color: Colors.grey,
                             height: 12.0, // height of the button
                             width: 12.0, // width of the button
                             child: null,
@@ -112,7 +110,7 @@ class _Tour_aState extends State<Tour_a> {
                         },
                         child: ClipOval(
                           child: Container(
-                            color: Colors.red,
+                            color: Colors.grey,
                             height: 12.0, // height of the button
                             width: 12.0, // width of the button
                             child: null,
