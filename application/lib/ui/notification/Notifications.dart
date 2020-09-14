@@ -1,4 +1,6 @@
 import 'package:application/model/NotificationListModel.dart';
+import 'package:application/ui/notification/CreateNotification.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:application/component/roundedButton.dart';
@@ -16,7 +18,9 @@ class _NotificationsState extends State<Notifications> {
   @override
   void initState() {
     WebService.funGetNotifications().then((value) {
-      notificationsList = value;
+      setState(() {
+        notificationsList = value;
+      });
     });
     super.initState();
   }
@@ -34,53 +38,73 @@ class _NotificationsState extends State<Notifications> {
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
+          title: Text(
+            "Notification",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: Container(
-            color: Color(0xfffff4f4),
-            height: context.percentHeight * 90,
             child: Stack(children: [
-              Positioned(
-                top: context.percentWidth * 6,
-                left: context.percentWidth * 10,
-                right: context.percentWidth * 10,
-                child: ListView.builder(
-                    itemCount: notificationsList.notifications.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: context.percentHeight * 70,
-                            width: context.percentWidth * 80,
-                            child: Card(
-                              elevation: 0,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    notificationsList
-                                        .notifications[index].title,
-                                    style: TextStyle(fontSize: 22),
-                                  ),
-                                  Text(
-                                    notificationsList
-                                        .notifications[index].title,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
+          Positioned(
+            top: context.percentWidth * 6,
+            left: context.percentWidth * 10,
+            right: context.percentWidth * 10,
+            child: Container(
+              height: context.percentHeight * 70,
+              child: ListView.builder(
+                  itemCount: notificationsList.notifications.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                        height: context.percentHeight * 10,
+                        width: context.percentWidth * 80,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.white,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        margin: EdgeInsets.symmetric(vertical: 2.0),
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text(
+                              notificationsList.notifications[index].title,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Container(
+                              //height: context.percentHeight * 4,
+                              child: AutoSizeText(
+                                notificationsList
+                                    .notifications[index].description,
+                                minFontSize: 14,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          ));
-                    }),
-              ),
-              Positioned(
-                bottom: context.percentWidth * 6,
-                left: context.percentWidth * 20,
-                right: context.percentWidth * 20,
-                child: roundedButton(
-                  clicker: () {},
-                  clr: Colors.red,
-                  title: "Next",
-                ),
-              ),
-            ])));
+                          ),
+                        ));
+                  }),
+            ),
+          ),
+          Positioned(
+            bottom: context.percentWidth * 10,
+            left: context.percentWidth * 20,
+            right: context.percentWidth * 20,
+            child: roundedButton(
+              clicker: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateNotification()));
+              },
+              clr: Colors.red,
+              title: "Create New",
+            ),
+          ),
+        ])));
   }
 }

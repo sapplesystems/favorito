@@ -33,7 +33,8 @@ class WebService {
     // return _data;
     NotificationModel model1 = NotificationModel();
     model1.title = "Notification 1";
-    model1.description = "Description is that it is a description";
+    model1.description =
+        "Description is that it is a description, and to test the bigger texts, now for even bigger text to check if the ui breaks";
     _data.notifications.add(model1);
 
     NotificationModel model2 = NotificationModel();

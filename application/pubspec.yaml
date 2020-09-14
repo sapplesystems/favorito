@@ -36,6 +36,7 @@ dependencies:
   font_awesome_flutter: ^8.8.1
   dio: ^3.0.10
   dropdown_search: ^0.4.4
+  auto_size_text: ^2.1.0
   # json_parser: ^0.1.8
   # build_runner: ^0.10.1+1
 

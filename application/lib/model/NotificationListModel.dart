@@ -1,6 +1,5 @@
 // import 'package:json_parser/reflectable.dart';
 
-// @reflectable
 class NotificationListModel {
   List<NotificationModel> _notifications = [];
   List<NotificationModel> get notifications => _notifications;
@@ -9,7 +8,6 @@ class NotificationListModel {
   }
 }
 
-// @reflectable
 class NotificationModel {
   String title = "";
   String description = "";

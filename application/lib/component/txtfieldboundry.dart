@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class txtfieldboundry extends StatefulWidget {
   String title;
   bool security;
-  txtfieldboundry({this.title, this.security});
+  int maxLines;
+  txtfieldboundry({this.title, this.security, this.maxLines});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -33,6 +34,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         style: new TextStyle(
           fontFamily: "Poppins",
         ),
+        maxLines: widget.maxLines,
       ),
     );
   }
