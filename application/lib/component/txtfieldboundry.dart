@@ -14,12 +14,12 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
     return Container(
       child: TextFormField(
         obscureText: widget.security,
-        decoration: new InputDecoration(
+        decoration:  InputDecoration(
           labelText: widget.title,
           fillColor: Colors.transparent,
-          border: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(12.0),
-            borderSide: new BorderSide(),
+          border:  OutlineInputBorder(
+            borderRadius:  BorderRadius.circular(12.0),
+            borderSide:  BorderSide(),
           ),
           // fillColor: Colors.green
         ),
@@ -30,7 +30,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
             return null;
         },
         keyboardType: TextInputType.emailAddress,
-        style: new TextStyle(
+        style:  TextStyle(
           fontFamily: "Poppins",
         ),
       ),

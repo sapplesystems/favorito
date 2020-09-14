@@ -57,7 +57,7 @@ class _signup_aState extends State<signup_a> {
               ),
             ),
             Positioned(
-              bottom: context.percentWidth * 6,
+              bottom: context.percentWidth * 4,
               left: context.percentWidth * 20,
               right: context.percentWidth * 20,
               child: roundedButton(
@@ -74,7 +74,7 @@ class _signup_aState extends State<signup_a> {
               left: context.percentWidth * 10,
               right: context.percentWidth * 10,
               child: Container(
-                height: context.percentWidth * 120,
+                height: context.percentWidth * 100,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(
@@ -107,23 +107,16 @@ class _signup_aState extends State<signup_a> {
                               title: "Business Name", security: false)),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DropdownSearch<String>(
-                              mode: Mode.MENU,
-                              showSelectedItem: true,
-                              items: cat,
-                              label: "Category",
-                              hint: "Please Select Category",
-                              // popupItemDisabled: (String s) => s.startsWith('I'),
-                              onChanged: print,
-                              selectedItem: ""),
-                        ),
+                        child: DropdownSearch<String>(
+                            mode: Mode.MENU,
+                            showSelectedItem: true,
+                            items: cat,
+                            label: "Business Category",
+                            hint: "Please Select Business Category",
+                            // popupItemDisabled: (String s) => s.startsWith('I'),
+                            onChanged: print,
+                            selectedItem: ""),
                       ),
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(
-                              title: "Business Category", security: false)),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: txtfieldboundry(
