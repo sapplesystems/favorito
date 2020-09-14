@@ -72,6 +72,7 @@ exports.register = function (req, res, next) {
 
 
                         var token = jwt.sign({
+                            business_name: result[0].business_name,
                             business_email: business_email,
                             business_phone: business_phone,
                             id: result.insertId,
