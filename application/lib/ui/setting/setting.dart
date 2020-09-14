@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:application/component/listItem.dart';
 import 'package:application/myCss.dart';
+import 'package:application/ui/setting/businessSetting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class setting extends StatefulWidget {
@@ -94,7 +94,12 @@ class _settingState extends State<setting> {
                       listItems(
                           title: "Bussiness Profile",
                           ico: "shop",
-                          clicker: () {}),
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BusinessSetting()));
+                          }),
                       listItems(
                           title: "Bussiness Information",
                           ico: "circlenotyfy",
