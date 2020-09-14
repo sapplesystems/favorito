@@ -68,14 +68,16 @@ class _CreateNotificationState extends State<CreateNotification> {
                     ],
                   ),
                 )),
-            Positioned(
-              bottom: context.percentWidth * 10,
-              left: context.percentWidth * 20,
-              right: context.percentWidth * 20,
-              child: roundedButton(
-                clicker: () {},
-                clr: Colors.red,
-                title: "Send",
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(bottom: context.percentWidth * 10),
+                width: context.percentWidth * 50,
+                child: roundedButton(
+                  clicker: () {},
+                  clr: Colors.red,
+                  title: "Send",
+                ),
               ),
             ),
           ])),

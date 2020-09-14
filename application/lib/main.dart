@@ -17,6 +17,6 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Notifications(),
+        home: signup_a(),
       );
 }
