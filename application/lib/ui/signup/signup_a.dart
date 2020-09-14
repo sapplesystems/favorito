@@ -1,5 +1,6 @@
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
+import 'package:application/myCss.dart';
 import 'package:application/network/webservices.dart';
 import 'package:application/ui/signup/signup_b.dart';
 import 'package:flutter/material.dart';
@@ -75,12 +76,7 @@ class _signup_aState extends State<signup_a> {
               right: context.percentWidth * 10,
               child: Container(
                 height: context.percentWidth * 100,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                decoration: bd1,
                 padding: EdgeInsets.only(
                   top: context.percentHeight * 8,
                   left: context.percentWidth * 2,
