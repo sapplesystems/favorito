@@ -33,15 +33,12 @@ class _bottomNavigationState extends State<bottomNavigation> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
-            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
-            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.listUl),
-            label: '',
           )
         ],
         currentIndex: _selectedIndex,
