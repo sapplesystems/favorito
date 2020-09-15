@@ -20,6 +20,12 @@
       "languageVersion": "2.10"
     },
     {
+      "name": "bot_toast",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/bot_toast-3.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "characters",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.2",
       "packageUri": "lib/",
@@ -290,7 +296,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-15T07:13:48.056658Z",
+  "generated": "2020-09-15T08:38:27.537581Z",
   "generator": "pub",
   "generatorVersion": "2.10.0-7.3.beta"
 }
