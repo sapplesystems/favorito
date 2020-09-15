@@ -144,7 +144,9 @@ class _signup_aState extends State<signup_a> {
   void getBusiness() {
     WebService.funGetBusyList().then((value) {
       for (int i = 0; i < value.data.length; i++) {
-        busy.add(value.data[0].typeName);
+        setState(() {
+          busy.add(value.data[0].typeName);
+        });
       }
       print(busy.toString());
     });
