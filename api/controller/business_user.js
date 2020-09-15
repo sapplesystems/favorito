@@ -107,7 +107,7 @@ exports.getBusinessOwnerProfile = function (req, res, next) {
                 return res.status(500).send({ status: 'error', message: 'No recored found.' });
             } else {
 
-                var bsql = "select branch_id,is_authenticated,branch_address,branch_contact,is_official from business_branches \n\
+                var bsql = "select id,branch_address,branch_contact from business_branches \n\
                 where business_id='" + business_id + "' and id_deleted='0'";
                 db.query(bsql, function (error, branches) {
                     rows[0].branches = branches;
@@ -151,6 +151,17 @@ exports.updateBusinessOwnerProfile = function (req, res, next) {
         }
         if (req.body.upi != '' && req.body.upi != 'undefined' && req.body.upi != null) {
             update_columns += ", upi='" + req.body.upi + "' ";
+        }
+        var bid = req.body.bid;
+        if (bid && bid != 'undefined') {
+            var bid_len = bid.length;
+            for (var x = 0; x < bid_len; x++) {
+                var branchid = bid[x];
+                var branch_address = req.body.branch_address[x];
+                var branch_contact = req.body.branch_contact[x];
+                var q = "UPDATE business_branches SET branch_address='" + branch_address + "', branch_contact='" + branch_contact + "', updated_at=NOW() WHERE id='" + branchid + "'";
+                db.query(q);
+            }
         }
 
         var sql = "update business_users set " + update_columns + " where business_id='" + business_id + "'";

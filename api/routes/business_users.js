@@ -39,6 +39,6 @@ router.post('/profile/update', upload_business_profile.single('photo'), CheckAut
 
 router.post('/owner-profile', CheckAuth, UserController.getBusinessOwnerProfile);
 
-router.post('/update-owner-profile', CheckAuth, UserController.updateBusinessOwnerProfile);
+router.post('/update-owner-profile', multer().array(), CheckAuth, UserController.updateBusinessOwnerProfile);
 
 module.exports = router;
