@@ -62,16 +62,18 @@ exports.register = function (req, res, next) {
                         }
 
                         /**insert row into business_owner_profile table */
-                        var bop_sql = "INSERT INTO business_users (business_id,email,phone,password,org_password) VALUES ('" + business_id + "','" + email + "','" + phone + "','" + hash + "','" + password + "')";
-                        db.query(bop_sql, function (boperr, bopresult) {
-                            if (boperr) throw boperr;
-                        });
+                        var sql1 = "INSERT INTO business_users (business_id,email,phone,password,org_password) VALUES ('" + business_id + "','" + email + "','" + phone + "','" + hash + "','" + password + "')";
+                        db.query(sql1);
 
                         /**insert row into business_informations table */
-                        var bi_sql = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
-                        db.query(bi_sql, function (bierr, biresult) {
-                            if (bierr) throw bierr;
-                        });
+                        var sql2 = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
+                        var sql3 = "INSERT INTO business_hours (business_id) VALUES ('" + business_id + "')";
+                        var sql4 = "INSERT INTO business_uploads (business_id) VALUES ('" + business_id + "')";
+                        var sql5 = "INSERT INTO business_branches (business_id) VALUES ('" + business_id + "')";
+                        db.query(sql2);
+                        db.query(sql3);
+                        db.query(sql4);
+                        db.query(sql5);
 
 
                         var token = jwt.sign({
