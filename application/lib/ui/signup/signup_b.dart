@@ -226,9 +226,9 @@ class _signup_bState extends State<signup_b> {
       Map<String, dynamic> _map = {
         "business_type_id": widget.preData[0].text.contains("Bus") ? "1" : "2",
         "business_category_id": cat,
-        "business_name": "test business",
-        "postal_code": 963698,
-        "business_phone": 9876543210,
+        "business_name": widget.preData[1].text,
+        "postal_code": widget.preData[3].text,
+        "business_phone": widget.preData[4].text,
         "email": "test0@test.com",
         "phone": 9876543210,
         "password": 123456,
