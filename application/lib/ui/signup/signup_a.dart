@@ -1,11 +1,16 @@
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
+import 'package:application/model/CatListModel.dart';
+import 'package:application/model/busyListModel.dart';
+import 'package:application/myCss.dart';
 import 'package:application/network/webservices.dart';
 import 'package:application/ui/signup/signup_b.dart';
+import 'package:application/utils/Regexer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:bot_toast/bot_toast.dart';
 
 class signup_a extends StatefulWidget {
   @override
@@ -15,9 +20,20 @@ class signup_a extends StatefulWidget {
 class _signup_aState extends State<signup_a> {
   List<String> busy = [];
   List<String> cat = [];
+  List<catData> catdata = [];
+  List<busData> busdata = [];
+  bool _autovalidate = false;
+  bool catvisib = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<State> _busKey = GlobalKey<State>();
+  final GlobalKey<State> _vatKey = GlobalKey<State>();
+  List<TextEditingController> ctrl = List();
+  bool checked = false;
   @override
   void initState() {
     super.initState();
+    for (int i = 0; i < 6; i++) ctrl.add(TextEditingController());
+
     getBusiness();
     getCategory();
   }
@@ -26,16 +42,22 @@ class _signup_aState extends State<signup_a> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xfffff4f4),
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-      ),
+          backgroundColor: Color(0xfffff4f4),
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.refresh, color: Colors.black),
+                onPressed: () {
+                  BotToast.showLoading(
+                      allowClick: true, duration: Duration(seconds: 1));
+                  getBusiness();
+                  getCategory();
+                })
+          ]),
       body: Container(
         color: Color(0xfffff4f4),
         height: context.percentHeight * 90,
@@ -61,74 +83,136 @@ class _signup_aState extends State<signup_a> {
               left: context.percentWidth * 20,
               right: context.percentWidth * 20,
               child: roundedButton(
-                clicker: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => signup_b()));
-                },
-                clr: Colors.red,
-                title: "Next",
-              ),
+                  clicker: () {
+                    if (ctrl[0].text == null || ctrl[0].text == "") {
+                      BotToast.showText(text: "Please check Business Type");
+                      return;
+                    }
+                    if (catvisib &&
+                        (ctrl[2].text == null || ctrl[2].text == "")) {
+                      BotToast.showText(text: "Please check Business category");
+                      return;
+                    }
+
+                    if (_formKey.currentState.validate()) {
+                      _autovalidate = false;
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => signup_b(preData: ctrl)));
+                    } else
+                      _autovalidate = true;
+                  },
+                  clr: Colors.red,
+                  title: "Next"),
             ),
             Positioned(
               top: context.percentWidth * 30,
               left: context.percentWidth * 10,
               right: context.percentWidth * 10,
               child: Container(
-                height: context.percentWidth * 100,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                padding: EdgeInsets.only(
-                  top: context.percentHeight * 8,
-                  left: context.percentWidth * 2,
-                  right: context.percentWidth * 2,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItem: true,
-                            items: busy,
-                            label: "Business Type",
-                            hint: "Please Select Business Type",
-                            // popupItemDisabled: (String s) => s.startsWith('I'),
-                            onChanged: print,
-                            selectedItem: ""),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(
-                              title: "Business Name", security: false)),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DropdownSearch<String>(
-                            mode: Mode.MENU,
-                            showSelectedItem: true,
-                            items: cat,
-                            label: "Business Category",
-                            hint: "Please Select Business Category",
-                            // popupItemDisabled: (String s) => s.startsWith('I'),
-                            onChanged: print,
-                            selectedItem: ""),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(
-                              title: "Postal Cado", security: false)),
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: txtfieldboundry(
-                              title: "Business Phone", security: false)),
-                    ],
+                  height: context.percentWidth * 100,
+                  decoration: bd1,
+                  padding: EdgeInsets.only(
+                    top: context.percentHeight * 8,
+                    left: context.percentWidth * 2,
+                    right: context.percentWidth * 2,
                   ),
-                ),
-              ),
+                  child: Builder(
+                    builder: (context) => Form(
+                      key: _formKey,
+                      autovalidate: _autovalidate,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: DropdownSearch<String>(
+                                  mode: Mode.MENU,
+                                  maxHeight: busy.length * 58.0,
+                                  showSelectedItem: true,
+                                  items: busy,
+                                  label: "Business Type",
+                                  hint: "Please Select Business Type",
+                                  // popupItemDisabled: (String s) => s.startsWith('I'),
+                                  onChanged: (String val) {
+                                    ctrl[0].text = val;
+                                    if (val.contains("Bus"))
+                                      catvisib = true;
+                                    else
+                                      catvisib = false;
+                                    setState(() {});
+                                  },
+                                  selectedItem: ctrl[0].text),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: txtfieldboundry(
+                                    valid: true,
+                                    ctrl: ctrl[1],
+                                    title: "Business Name",
+                                    security: false)),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Visibility(
+                                  visible: catvisib,
+                                  child: DropdownSearch<String>(
+                                      mode: Mode.MENU,
+                                      showSelectedItem: true,
+                                      items: cat,
+                                      label: "Business Category",
+                                      hint: "Please Select Business Category",
+                                      // popupItemDisabled: (String s) => s.startsWith('I'),
+                                      onChanged: (val) {
+                                        ctrl[2].text = val;
+                                        setState(() {});
+                                      },
+                                      selectedItem: ctrl[2].text)),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: txtfieldboundry(
+                                    ctrl: ctrl[3],
+                                    valid: true,
+                                    title: "Postal Code",
+                                    security: false)),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: txtfieldboundry(
+                                    ctrl: ctrl[4],
+                                    valid: true,
+                                    title:
+                                        catvisib ? "Business Phone" : "Phone",
+                                    maxlen: 10,
+                                    keyboardSet: TextInputType.number,
+                                    myregex: mobileRegex,
+                                    security: false)),
+                            CheckboxListTile(
+                              title: Text(
+                                "Reach me on whatsapp",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: "Roboto",
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 0.32,
+                                ),
+                              ),
+                              value: checked,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  checked = !checked;
+                                  ctrl[5].text = checked.toString();
+                                });
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .leading, //  <-- leading Checkbox
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )),
             ),
             Positioned(
                 top: context.percentWidth * 5,
@@ -143,14 +227,31 @@ class _signup_aState extends State<signup_a> {
     );
   }
 
-  void getCategory() {}
+  void getCategory() {
+    WebService.funGetCatList().then((value) {
+      cat.clear();
+      catdata.clear();
+      catdata.addAll(value.data);
+      for (int i = 0; i < value.data.length; i++) {
+        setState(() {
+          cat.add(value.data[i].categoryName);
+        });
+      }
+      print(catdata.toString());
+    });
+  }
 
   void getBusiness() {
     WebService.funGetBusyList().then((value) {
+      busy.clear();
+      busdata.clear();
+      busdata.addAll(value.data);
       for (int i = 0; i < value.data.length; i++) {
-        busy.add(value.data[0].typeName);
+        setState(() {
+          busy.add(value.data[i].typeName);
+        });
       }
-      print(busy.toString());
+      print(busdata.toString());
     });
   }
 }

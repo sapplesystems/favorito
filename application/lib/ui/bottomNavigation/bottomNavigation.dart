@@ -1,4 +1,5 @@
 import 'package:application/ui/dashboard/dashboard.dart';
+import 'package:application/ui/setting/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -14,7 +15,7 @@ class _bottomNavigationState extends State<bottomNavigation> {
   static List<Widget> _widgetOptions = <Widget>[
     dashboard(),
     dashboard(),
-    dashboard()
+    setting()
   ];
 
   void _onItemTapped(int index) {
@@ -31,14 +32,12 @@ class _bottomNavigationState extends State<bottomNavigation> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("")),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-          ),
+              icon: Icon(Icons.calendar_today), title: Text("")),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.listUl),
+            icon: Icon(FontAwesomeIcons.cog),
+            title: Text(""),
           )
         ],
         currentIndex: _selectedIndex,

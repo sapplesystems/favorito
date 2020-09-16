@@ -5,9 +5,8 @@ exports.getDashboardDetail = function (req, res, next) {
         return res.status(500).send({ status: 'error', message: 'Business Id not found' });
     } else {
         var business_id = req.body.business_id;
-        var sql = "SELECT id, business_id, business_status, is_profile_completed, is_information_completed, is_verified FROM `business_users` \n\
+        var sql = "SELECT id, business_id, business_name, photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` \n\
                     WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
-        console.log(sql);
         db.query(sql, function (err, result_set, fields) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
@@ -16,10 +15,15 @@ exports.getDashboardDetail = function (req, res, next) {
             }
             var row = result_set[0];
             var data = {
+                id: row.id,
                 business_id: row.business_id,
+                business_name: row.business_name,
+                photo: row.photo,
                 business_status: row.business_status,
                 is_profile_completed: row.is_profile_completed,
                 is_information_completed: row.is_information_completed,
+                is_phone_verified: row.is_phone_verified,
+                is_email_verified: row.is_email_verified,
                 is_verified: row.is_verified,
                 check_ins: 960,
                 ratings: 4.5,

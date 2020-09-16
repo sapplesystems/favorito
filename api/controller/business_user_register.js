@@ -15,8 +15,10 @@ exports.register = function (req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Postal code is required' });
     } if (req.body.business_phone == '' || req.body.business_phone == null) {
         return res.status(500).json({ status: 'error', message: 'Business phone is required' });
-    } else if (req.body.business_email == '' || req.body.business_email == null) {
+    } else if (req.body.email == '' || req.body.email == null) {
         return res.status(500).json({ status: 'error', message: 'Business Email is required' });
+    } else if (req.body.phone == '' || req.body.phone == null) {
+        return res.status(500).json({ status: 'error', message: 'Owner phone is required' });
     } else if (req.body.password == '' || req.body.password == null) {
         return res.status(500).json({ status: 'error', message: 'Password is required' });
     } else if (req.body.cpassword == '' || req.body.cpassword == null) {
@@ -30,7 +32,8 @@ exports.register = function (req, res, next) {
     var business_name = req.body.business_name;
     var postal_code = req.body.postal_code;
     var business_phone = req.body.business_phone;
-    var business_email = req.body.business_email;
+    var email = req.body.email;
+    var phone = req.body.phone;
     var password = req.body.password;
     var cpassword = req.body.cpassword;
     var reach_whatsapp = 0;
@@ -46,35 +49,36 @@ exports.register = function (req, res, next) {
         if (err) {
             return res.status(500).json({ status: 'error', message: 'Password encryption failed' });
         }
-        var cslq = "select count(*) as c from business_users where (business_email='" + business_email + "' or business_phone='" + business_phone + "') and is_activated=1 and deleted_at is null";
+        var cslq = "select count(*) as c from business_users where (email='" + email + "' or phone='" + phone + "') and is_deleted=0 and deleted_at is null";
         db.query(cslq, function (chkerr, check) {
             if (chkerr) {
                 return res.json({ status: 'error', message: 'Something went wrong.' });
             } else {
                 if (check[0].c === 0) {
-                    var sql = "INSERT INTO business_users (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp, business_email, password, org_password) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "','" + business_email + "','" + hash + "','" + password + "')";
+                    var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "')";
                     db.query(sql, function (err, result) {
                         if (err) {
                             return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                         }
 
-                        /**insert row into business_informations table */
-                        var bi_sql = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
-                        db.query(bi_sql, function (bierr, biresult) {
-                            if (bierr) throw bierr;
-                        });
-
                         /**insert row into business_owner_profile table */
-                        var bop_sql = "INSERT INTO business_owner_profile (business_id) VALUES ('" + business_id + "')";
-                        db.query(bop_sql, function (boperr, bopresult) {
-                            if (boperr) throw boperr;
-                        });
+                        var sql1 = "INSERT INTO business_users (business_id,email,phone,password,org_password) VALUES ('" + business_id + "','" + email + "','" + phone + "','" + hash + "','" + password + "')";
+                        db.query(sql1);
+
+                        /**insert row into business_informations table */
+                        var sql2 = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
+                        var sql3 = "INSERT INTO business_hours (business_id) VALUES ('" + business_id + "')";
+                        var sql4 = "INSERT INTO business_uploads (business_id) VALUES ('" + business_id + "')";
+                        var sql5 = "INSERT INTO business_branches (business_id) VALUES ('" + business_id + "')";
+                        db.query(sql2);
+                        db.query(sql3);
+                        db.query(sql4);
+                        db.query(sql5);
 
 
                         var token = jwt.sign({
-                            business_name: result[0].business_name,
-                            business_email: business_email,
-                            business_phone: business_phone,
+                            email: email,
+                            phone: phone,
                             id: result.insertId,
                             business_id: business_id,
                         }, 'secret', {
@@ -83,9 +87,9 @@ exports.register = function (req, res, next) {
 
                         var messageId = main(res, result.insertId, result).catch(console.error);
                         if (messageId) {
-                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, business_email: business_email, business_phone: business_phone, token: token });
+                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, email: email, phone: phone, token: token });
                         } else {
-                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, business_email: business_email, business_phone: business_phone, token: token });
+                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, email: email, phone: phone, token: token });
                         }
                     });
                 } else {

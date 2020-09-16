@@ -37,8 +37,7 @@ dependencies:
   dio: ^3.0.10
   dropdown_search: ^0.4.4
   auto_size_text: ^2.1.0
-  # json_parser: ^0.1.8
-  # build_runner: ^0.10.1+1
+  bot_toast: ^3.0.4
 
 dev_dependencies:
   flutter_test:

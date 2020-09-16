@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:application/utils/myString.Dart';
 
 class txtfieldboundry extends StatefulWidget {
   String title;
+  String hint;
   bool security;
   int maxLines;
-  String hintText;
-  TextEditingController textController;
+  int maxlen;
+  bool valid;
+  TextInputType keyboardSet;
+  TextEditingController ctrl;
+  RegExp myregex;
   txtfieldboundry(
       {this.title,
       this.security,
-      this.maxLines,
-      this.hintText,
-      this.textController});
+      this.hint,
+      this.ctrl,
+      this.maxlen,
+      this.keyboardSet,
+      this.myregex,
+      this.valid,
+      this.maxLines});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -21,11 +30,13 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
-        controller: widget.textController,
+        controller: widget.ctrl,
         obscureText: widget.security,
+        maxLength: widget.maxlen,
         decoration: InputDecoration(
           labelText: widget.title,
-          hintText: widget.hintText,
+          counterText: "",
+          hintText: widget.hint,
           fillColor: Colors.transparent,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
@@ -33,18 +44,24 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
           ),
           // fillColor: Colors.green
         ),
-        validator: (val) {
-          if (val.length == 0) {
-            return "${widget.title} cannot be empty";
-          } else
-            return null;
-        },
-        keyboardType: TextInputType.emailAddress,
+        validator: (value) =>
+            _validation(value, widget.valid, widget.title, widget.myregex),
+        keyboardType: widget.keyboardSet,
         style: TextStyle(
           fontFamily: "Poppins",
         ),
         maxLines: widget.maxLines,
       ),
     );
+  }
+
+  // ignore: missing_return
+  String _validation(String text, bool valid, String lbl, RegExp myregex) {
+    if (valid) {
+      if (myregex != null && text.isNotEmpty)
+        return myregex.hasMatch(text) ? null : "$pleaseEnterValid $lbl";
+      else
+        return text.isEmpty ? "$pleaseEnter $lbl" : null;
+    }
   }
 }

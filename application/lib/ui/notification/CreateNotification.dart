@@ -105,7 +105,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: txtfieldboundry(
-                          textController: _myTitleEditController,
+                          ctrl: _myTitleEditController,
                           title: "Title",
                           security: false,
                         ),
@@ -146,7 +146,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                         child: txtfieldboundry(
                           title: "Contact",
                           security: false,
-                          hintText: _contactHintText,
+                          hint: _contactHintText,
                           maxLines: 1,
                         ),
                       ),
@@ -266,7 +266,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                           child: txtfieldboundry(
                             title: "Contact",
                             security: false,
-                            hintText: 'Please enter pincode',
+                            hint: 'Please enter pincode',
                             maxLines: 1,
                           ),
                         ),

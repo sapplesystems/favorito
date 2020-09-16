@@ -1,20 +1,52 @@
 import 'dart:ui';
-
+import 'package:application/network/webservices.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
 import 'package:application/ui/bottomNavigation/bottomNavigation.dart';
-import 'package:application/ui/dashboard/dashboard.dart';
+import 'package:application/utils/Regexer.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class signup_b extends StatefulWidget {
+  List<TextEditingController> preData;
+  signup_b({this.preData});
+
   @override
   _signup_bState createState() => _signup_bState();
 }
 
 class _signup_bState extends State<signup_b> {
   bool checked = false;
+  List<String> busy = [];
+  List<TextEditingController> ctrl = List();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<State> _busKey = GlobalKey<State>();
+  bool _autovalidate = false;
+  var ddlabel;
+  var namelabel;
+  var maillabel;
+
+  void initState() {
+    super.initState();
+    for (int i = 0; i < 5; i++) ctrl.add(TextEditingController());
+    if (widget.preData[0].text.contains("Bus")) {
+      ddlabel = "Contact Person Role";
+      namelabel = "Contact Person Name";
+      maillabel = "Business Email";
+      busy = ["Owner", "Manager", "Employee"];
+    } else {
+      ddlabel = "Category";
+      maillabel = "Email";
+      namelabel = "Display Name";
+    }
+
+    // getBusiness();
+    // getCategory();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +55,9 @@ class _signup_bState extends State<signup_b> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
@@ -55,10 +89,7 @@ class _signup_bState extends State<signup_b> {
               right: context.percentWidth * 22,
               child: roundedButton(
                 clicker: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => bottomNavigation()));
+                  funSublim();
                 },
                 clr: Colors.red,
                 title: "Done",
@@ -69,54 +100,95 @@ class _signup_bState extends State<signup_b> {
               left: context.percentWidth * 10,
               right: context.percentWidth * 10,
               child: Container(
-                height: context.percentWidth * 100,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
+                  height: context.percentWidth * 100,
+                  decoration: BoxDecoration(
                       color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                padding: EdgeInsets.only(
-                  top: context.percentHeight * 8,
-                  left: context.percentWidth * 2,
-                  right: context.percentWidth * 2,
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:
-                            txtfieldboundry(title: "Email", security: false)),
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:
-                            txtfieldboundry(title: "Phone", security: false)),
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: txtfieldboundry(
-                            title: "Password", security: false)),
-                    CheckboxListTile(
-                      title: Text(
-                        "By continuing, you agree to Favorito's\nTerms of Service and acknowledge\nFavorito's Privacy Policy.",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: "Roboto",
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.32,
+                      border: Border.all(
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  padding: EdgeInsets.only(
+                    top: context.percentHeight * 8,
+                    left: context.percentWidth * 2,
+                    right: context.percentWidth * 2,
+                  ),
+                  child: Builder(
+                    builder: (context) => Form(
+                      key: _formKey,
+                      autovalidate: _autovalidate,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: txtfieldboundry(
+                                    valid: true,
+                                    ctrl: ctrl[0],
+                                    title: namelabel,
+                                    security: false)),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: DropdownSearch<String>(
+                                  mode: Mode.MENU,
+                                  maxHeight: busy.length * 58.0,
+                                  showSelectedItem: true,
+                                  items: busy,
+                                  label: ddlabel,
+                                  hint: "Please Select Business Type",
+                                  // popupItemDisabled: (String s) => s.startsWith('I'),
+                                  onChanged: (String val) {
+                                    ctrl[1].text = val;
+
+                                    setState(() {});
+                                  },
+                                  selectedItem: ctrl[1].text),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: txtfieldboundry(
+                                    title: maillabel,
+                                    valid: true,
+                                    ctrl: ctrl[2],
+                                    myregex: emailRegex,
+                                    security: false)),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: txtfieldboundry(
+                                    valid: true,
+                                    ctrl: ctrl[3],
+                                    title: "Password",
+                                    security: true)),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: txtfieldboundry(
+                                    valid: true,
+                                    ctrl: ctrl[4],
+                                    title: "Confirm Password",
+                                    security: true)),
+                            CheckboxListTile(
+                              title: Text(
+                                "By continuing, you agree to Favorito's\nTerms of Service and acknowledge\nFavorito's Privacy Policy.",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: "Roboto",
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 0.32,
+                                ),
+                              ),
+                              value: checked,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  checked = !checked;
+                                });
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .leading, //  <-- leading Checkbox
+                            ),
+                          ],
                         ),
                       ),
-                      value: checked,
-                      onChanged: (newValue) {
-                        setState(() {
-                          checked = !checked;
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity
-                          .leading, //  <-- leading Checkbox
                     ),
-                  ],
-                ),
-              ),
+                  )),
             ),
             Positioned(
                 top: context.percentWidth * 5,
@@ -129,5 +201,36 @@ class _signup_bState extends State<signup_b> {
         ),
       ),
     );
+  }
+
+  void funSublim() {
+    if (ctrl[1].text == null || ctrl[0].text == "") {
+      BotToast.showText(text: "Please check category");
+      return;
+    }
+    if (!checked) {
+      BotToast.showText(text: "Please check T&T");
+      return;
+    }
+    if (_formKey.currentState.validate()) {
+      _autovalidate = false;
+      Map<String, dynamic> _map = {
+        "business_type_id": 2,
+        "business_category_id": 2,
+        "business_name": "test business",
+        "postal_code": 963698,
+        "business_phone": 9876543210,
+        "email": "test0@test.com",
+        "phone": 9876543210,
+        "password": 123456,
+        "cpassword": 123456,
+        "reach_whatsapp": 1
+      };
+      WebService.funRegister(_map).then((value) {});
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => bottomNavigation()));
+    } else
+      _autovalidate = true;
   }
 }

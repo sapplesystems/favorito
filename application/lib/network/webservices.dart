@@ -4,6 +4,7 @@ import 'package:application/model/notification/CreateNotificationRequestModel.da
 import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:application/model/notification/NotificationListRequestModel.dart';
 import 'package:application/model/busyListModel.dart';
+import 'package:application/model/registerModel.dart';
 import 'package:application/network/serviceFunction.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
@@ -73,5 +74,13 @@ class WebService {
     _returnData.message = 'success';
 
     return _returnData;
+  }
+
+  static Future<registerModel> funRegister(Map _map) async {
+    registerModel _data = registerModel();
+    response = await dio.post(serviceFunction.funBusyRegister, data: _map);
+    _data = registerModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_data.status}");
+    return _data;
   }
 }
