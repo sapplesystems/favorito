@@ -54,6 +54,9 @@ exports.updateProfile = function (req, res, next) {
   if (req.body.location != '' && req.body.location != null) {
     update_columns += ", location='" + req.body.location + "' ";
   }
+  if (req.body.by_appointment_only != 'undefined' && req.body.by_appointment_only != '' && req.body.by_appointment_only != null && req.body.by_appointment_only == '1') {
+    update_columns += ", by_appointment_only='" + req.body.by_appointment_only + "' ";
+  }
   if (req.body.working_hours != '' && req.body.working_hours != null) {
     if (req.body.working_hours === 'Select Hours') {
       saveBusinessHours(business_id, req.body.business_days, req.body.business_start_hours, req.body.business_end_hours);
