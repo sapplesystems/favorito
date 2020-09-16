@@ -20,9 +20,9 @@ class WebService {
     return _data;
   }
 
-  static Future<CatListModel> funGetCatList() async {
+  static Future<CatListModel> funGetCatList(Map _map) async {
     CatListModel _data = CatListModel();
-    response = await dio.post(serviceFunction.funCatList, data: null);
+    response = await dio.post(serviceFunction.funCatList, data: _map);
     _data = CatListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_data.status}");
     return _data;

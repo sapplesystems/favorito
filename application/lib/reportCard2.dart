@@ -11,7 +11,7 @@ class _reportCard2State extends State<reportCard2> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Stack(children: [
-        
+
         Container(
             width: 162,
             height: 173,
