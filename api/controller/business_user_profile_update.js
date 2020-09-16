@@ -51,6 +51,15 @@ exports.updateProfile = function (req, res, next) {
   if (req.body.country_id != '' && req.body.country_id != null) {
     update_columns += ", country_id='" + req.body.country_id + "' ";
   }
+  if (req.body.location != '' && req.body.location != null) {
+    update_columns += ", location='" + req.body.location + "' ";
+  }
+  if (req.body.working_hours != '' && req.body.working_hours != null) {
+    if (req.body.working_hours === 'Select Hours') {
+      saveBusinessHours(business_id, req.body.business_days, req.body.business_start_hours, req.body.business_end_hours);
+    }
+    update_columns += ", working_hours='" + req.body.working_hours + "' ";
+  }
   if (website_arr && website_arr != 'undefined') {
     update_columns += ", website='" + website_arr.join('|_|') + "' ";
   }
@@ -63,7 +72,7 @@ exports.updateProfile = function (req, res, next) {
   if (req.file && req.file.filename != '') {
     update_columns += ", photo='" + req.file.filename + "' ";
   }
-
+  
   var sql = "update business_master set " + update_columns + " where id='" + id + "'";
   db.query(sql, function (err, rows, fields) {
     if (err) {
@@ -73,3 +82,26 @@ exports.updateProfile = function (req, res, next) {
     }
   });
 };
+
+function saveBusinessHours(business_id, business_days, business_start_hours, business_end_hours) {
+  var sql = "delete from business_hours where business_id='" + business_id + "'";
+  db.query(sql, function (err, rows, fields) {
+    if (err) {
+      return res.status(500).send({ status: 'error', message: 'Business user profile could not be updated.' });
+    } else {
+      var arr_len = business_days.length;
+
+      for (var i = 0; i < arr_len; i++) {
+        var day = business_days[i];
+        var start_time = business_start_hours[i];
+        var end_time = business_end_hours[i];
+        db.query("insert into business_hours(business_id, `day`, start_hours, end_hours) values('" + business_id + "','" + day + "','" + start_time + "','" + end_time + "')");
+      }
+    }
+  });
+  console.log('here in saveBusinessHours function');
+  console.log(business_id);
+  console.log(business_days);
+  console.log(business_start_hours);
+  console.log(business_end_hours);
+}
