@@ -9,9 +9,11 @@ var BusinessUsersRouter = require('./routes/business_users');
 var ProductsRouter = require('./routes/products');
 var BusinessTypeRouter = require('./routes/business_type');
 var BusinessCategoryRouter = require('./routes/business_category');
+var BusinessSubCategoryRouter = require('./routes/business_sub_category');
 var BusinessDashboardRouter = require('./routes/business_dashboard');
 var CountryStateCityRouter = require('./routes/country_state_city');
 var ChangePasswordRouter = require('./routes/change_password');
+var BusinessDdRouter = require('./routes/business_hours_dd_list');
 
 var app = express();
 
@@ -30,9 +32,11 @@ app.use('/api/business-user', BusinessUsersRouter);
 app.use('/api/product', ProductsRouter);
 app.use('/api/business-type', BusinessTypeRouter);
 app.use('/api/business-category', BusinessCategoryRouter);
+app.use('/api/business-sub-category', BusinessSubCategoryRouter);
 app.use('/api/business-dashboard', BusinessDashboardRouter);
 app.use('/api/state-city', CountryStateCityRouter);
 app.use('/api/change-password', ChangePasswordRouter);
+app.use('/api/business-hours-dd-list', BusinessDdRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

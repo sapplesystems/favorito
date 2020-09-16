@@ -41,4 +41,6 @@ router.post('/owner-profile', CheckAuth, UserController.getBusinessOwnerProfile)
 
 router.post('/update-owner-profile', multer().array(), CheckAuth, UserController.updateBusinessOwnerProfile);
 
+router.post('/owner-profile/add-branch', multer().array(), CheckAuth, UserController.addAnotherBranch);
+
 module.exports = router;

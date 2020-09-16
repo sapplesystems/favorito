@@ -67,13 +67,7 @@ exports.register = function (req, res, next) {
 
                         /**insert row into business_informations table */
                         var sql2 = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
-                        var sql3 = "INSERT INTO business_hours (business_id) VALUES ('" + business_id + "')";
-                        var sql4 = "INSERT INTO business_uploads (business_id) VALUES ('" + business_id + "')";
-                        var sql5 = "INSERT INTO business_branches (business_id) VALUES ('" + business_id + "')";
                         db.query(sql2);
-                        db.query(sql3);
-                        db.query(sql4);
-                        db.query(sql5);
 
 
                         var token = jwt.sign({
@@ -82,7 +76,7 @@ exports.register = function (req, res, next) {
                             id: result.insertId,
                             business_id: business_id,
                         }, 'secret', {
-                            expiresIn: "1h"
+                            expiresIn: "2 days"
                         });
 
                         var messageId = main(res, result.insertId, result).catch(console.error);

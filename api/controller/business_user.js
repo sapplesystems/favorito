@@ -15,7 +15,8 @@ exports.getProfile = function (req, res, next) {
         var id = req.body.id;
         var business_id = req.body.business_id;
         var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
-        business_email,photo, address1,address2,address3,pincode,town_city,state_id,country_id,website,short_description,business_status \n\
+        business_email,photo, address1,address2,address3,pincode,town_city,state_id,country_id, \n\
+        location, working_hours, website,short_description,business_status \n\
         FROM business_master WHERE id='" + id + "' and business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
 
         db.query(sql, function (err, rows, fields) {
@@ -30,7 +31,17 @@ exports.getProfile = function (req, res, next) {
                     website = x.split('|_|');
                     rows[0]['website'] = website;
                 }
-                return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                if (rows[0]['working_hours'] === 'Select Hours') {
+                    var q2 = "select id,`day`,start_hours,end_hours from business_hours \n\
+                                where business_id='" + business_id + "' and deleted_at is null";
+                    db.query(q2, function (error, hours) {
+                        console.log(hours);
+                        rows[0].hours = hours;
+                        return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                    });
+                } else {
+                    return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                }
             }
         });
     }
@@ -67,7 +78,7 @@ exports.login = function (req, res, next) {
                         id: result[0].id,
                         business_id: result[0].business_id,
                     }, 'secret', {
-                        expiresIn: "1h"
+                        expiresIn: "2 days"
                     });
 
                     var user_data = {
@@ -152,6 +163,7 @@ exports.updateBusinessOwnerProfile = function (req, res, next) {
         if (req.body.upi != '' && req.body.upi != 'undefined' && req.body.upi != null) {
             update_columns += ", upi='" + req.body.upi + "' ";
         }
+
         var bid = req.body.bid;
         if (bid && bid != 'undefined') {
             var bid_len = bid.length;
@@ -176,4 +188,29 @@ exports.updateBusinessOwnerProfile = function (req, res, next) {
         });
     }
 
+};
+
+/**
+ * BUSINESS OWNER PROFILE ADD ANOTHER BRANCH
+ */
+exports.addAnotherBranch = function (req, res, next) {
+    if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
+        return res.status(500).send({ status: 'error', message: 'Id not found' });
+    } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
+        return res.json({ status: 'error', message: 'Business id not found.' });
+    } else if (req.body.branch_address == '' || req.body.branch_address == 'undefined' || req.body.branch_address == null) {
+        return res.status(500).send({ status: 'error', message: 'Branch address found' });
+    } else if (req.body.branch_contact == '' || req.body.branch_contact == 'undefined' || req.body.branch_contact == null) {
+        return res.json({ status: 'error', message: 'Branch contact not found.' });
+    }
+    var business_id = req.body.business_id;
+    var b_addr = req.body.branch_address;
+    var b_addr_len = b_addr.length;
+    for (var x = 0; x < b_addr_len; x++) {
+        var branch_address = req.body.branch_address[x];
+        var branch_contact = req.body.branch_contact[x];
+        var q = "insert into business_branches (business_id,branch_address,branch_contact) values('" + business_id + "','" + branch_address + "','" + branch_contact + "')";
+        db.query(q);
+    }
+    return res.status(200).json({ status: 'success', message: 'Branch added successfully' });
 };
