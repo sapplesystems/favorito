@@ -14,15 +14,13 @@ exports.register = function (req, res, next) {
     } else if (req.body.postal_code == '' || req.body.postal_code == null) {
         return res.status(500).json({ status: 'error', message: 'Postal code is required' });
     } if (req.body.business_phone == '' || req.body.business_phone == null) {
-        return res.status(500).json({ status: 'error', message: 'Business phone is required' });
+        return res.status(500).json({ status: 'error', message: 'Phone number is required' });
     } if (req.body.display_name == '' || req.body.display_name == null) {
         return res.status(500).json({ status: 'error', message: 'Display name is required' });
     } if (req.body.role == '' || req.body.role == null) {
         return res.status(500).json({ status: 'error', message: 'Role is required' });
     } else if (req.body.email == '' || req.body.email == null) {
         return res.status(500).json({ status: 'error', message: 'Business Email is required' });
-    } else if (req.body.phone == '' || req.body.phone == null) {
-        return res.status(500).json({ status: 'error', message: 'Owner phone is required' });
     } else if (req.body.password == '' || req.body.password == null) {
         return res.status(500).json({ status: 'error', message: 'Password is required' });
     }
@@ -35,7 +33,7 @@ exports.register = function (req, res, next) {
     var postal_code = req.body.postal_code;
     var business_phone = req.body.business_phone;
     var email = req.body.email;
-    var phone = req.body.phone;
+    var phone = business_phone;
     var password = req.body.password;
     var reach_whatsapp = 0;
     if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {

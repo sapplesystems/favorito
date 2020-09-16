@@ -90,16 +90,15 @@ exports.getBusinessInformationUpdate = function (req, res, next) {
 /**
  * BUSINESS OWNER PROFILE ADD ANOTHER BRANCH
  */
-exports.addAnotherBranch = function (req, res, next) {
+exports.addPhotos = function (req, res, next) {
     if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
         return res.status(500).send({ status: 'error', message: 'Id not found' });
     } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
         return res.json({ status: 'error', message: 'Business id not found.' });
-    } else if (req.body.branch_address == '' || req.body.branch_address == 'undefined' || req.body.branch_address == null) {
-        return res.status(500).send({ status: 'error', message: 'Branch address found' });
-    } else if (req.body.branch_contact == '' || req.body.branch_contact == 'undefined' || req.body.branch_contact == null) {
-        return res.json({ status: 'error', message: 'Branch contact not found.' });
-    }
+    } 
+    console.log(req.body);
+    console.log(req);
+    return false;
     var business_id = req.body.business_id;
     var b_addr = req.body.branch_address;
     var b_addr_len = b_addr.length;
