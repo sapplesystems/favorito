@@ -15,14 +15,16 @@ exports.register = function (req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Postal code is required' });
     } if (req.body.business_phone == '' || req.body.business_phone == null) {
         return res.status(500).json({ status: 'error', message: 'Business phone is required' });
+    } if (req.body.display_name == '' || req.body.display_name == null) {
+        return res.status(500).json({ status: 'error', message: 'Display name is required' });
+    } if (req.body.role == '' || req.body.role == null) {
+        return res.status(500).json({ status: 'error', message: 'Role is required' });
     } else if (req.body.email == '' || req.body.email == null) {
         return res.status(500).json({ status: 'error', message: 'Business Email is required' });
     } else if (req.body.phone == '' || req.body.phone == null) {
         return res.status(500).json({ status: 'error', message: 'Owner phone is required' });
     } else if (req.body.password == '' || req.body.password == null) {
         return res.status(500).json({ status: 'error', message: 'Password is required' });
-    } else if (req.body.cpassword == '' || req.body.cpassword == null) {
-        return res.status(500).json({ status: 'error', message: 'Confirm password is required' });
     }
 
     var business_id = uniqid();
@@ -35,15 +37,20 @@ exports.register = function (req, res, next) {
     var email = req.body.email;
     var phone = req.body.phone;
     var password = req.body.password;
-    var cpassword = req.body.cpassword;
     var reach_whatsapp = 0;
     if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {
         reach_whatsapp = 1;
     }
-
-    if (password !== cpassword) {
-        return res.status(500).json({ status: 'error', message: 'Passwrod and confirm password does not match' });
+    var display_name = req.body.display_name;
+    display_name = display_name.trim();
+    var split_name = display_name.split(' ');
+    var first_name = split_name[0];
+    var last_name = '';
+    if(split_name.length > 0){
+        split_name.shift();
+        last_name = split_name.join(' ');;
     }
+
 
     bcrypt.hash(password, 10, function (err, hash) {
         if (err) {
@@ -62,7 +69,8 @@ exports.register = function (req, res, next) {
                         }
 
                         /**insert row into business_owner_profile table */
-                        var sql1 = "INSERT INTO business_users (business_id,email,phone,password,org_password) VALUES ('" + business_id + "','" + email + "','" + phone + "','" + hash + "','" + password + "')";
+                        var sql1 = "INSERT INTO business_users (business_id,first_name,last_name,email,phone,`role`,password,org_password) \n\
+                                    VALUES ('" + business_id + "','" + first_name + "','" + last_name + "','" + email + "','" + phone + "','" + req.body.role + "','" + hash + "','" + password + "')";
                         db.query(sql1);
 
                         /**insert row into business_informations table */
