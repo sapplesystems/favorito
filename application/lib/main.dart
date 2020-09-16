@@ -1,8 +1,13 @@
 import 'package:application/ui/tour/Tour_A.dart';
+import 'package:application/ui/signup/signup_a.dart';
+import 'package:application/ui/notification/Notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  //initializeReflectable();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -18,5 +23,5 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Tour_a());
+      home: signup_a());
 }

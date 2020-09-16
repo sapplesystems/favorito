@@ -5,6 +5,7 @@ class txtfieldboundry extends StatefulWidget {
   String title;
   String hint;
   bool security;
+  int maxLines;
   int maxlen;
   bool valid;
   TextInputType keyboardSet;
@@ -18,7 +19,8 @@ class txtfieldboundry extends StatefulWidget {
       this.maxlen,
       this.keyboardSet,
       this.myregex,
-      this.valid});
+      this.valid,
+      this.maxLines});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -48,6 +50,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         style: TextStyle(
           fontFamily: "Poppins",
         ),
+        maxLines: widget.maxLines,
       ),
     );
   }

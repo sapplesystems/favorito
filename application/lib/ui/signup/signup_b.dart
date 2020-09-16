@@ -12,7 +12,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 class signup_b extends StatefulWidget {
   List<TextEditingController> preData;
-  signup_b({this.preData});
+  List catData;
+  signup_b({this.preData, this.catData});
 
   @override
   _signup_bState createState() => _signup_bState();
@@ -155,6 +156,7 @@ class _signup_bState extends State<signup_b> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
                                     valid: true,
+                                    maxLines: 1,
                                     ctrl: ctrl[3],
                                     title: "Password",
                                     security: true)),
@@ -162,6 +164,7 @@ class _signup_bState extends State<signup_b> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
                                     valid: true,
+                                    maxLines: 1,
                                     ctrl: ctrl[4],
                                     title: "Confirm Password",
                                     security: true)),
@@ -214,9 +217,15 @@ class _signup_bState extends State<signup_b> {
     }
     if (_formKey.currentState.validate()) {
       _autovalidate = false;
+      var cat;
+      for (int i = 0; i < widget.catData.length; i++) {
+        if (widget.catData[i].categoryName == widget.preData[2].text) {
+          cat = widget.catData[i].id.toString();
+        }
+      }
       Map<String, dynamic> _map = {
-        "business_type_id": 2,
-        "business_category_id": 2,
+        "business_type_id": widget.preData[0].text.contains("Bus") ? "1" : "2",
+        "business_category_id": cat,
         "business_name": "test business",
         "postal_code": 963698,
         "business_phone": 9876543210,

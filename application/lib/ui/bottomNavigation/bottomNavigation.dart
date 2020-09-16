@@ -31,15 +31,13 @@ class _bottomNavigationState extends State<bottomNavigation> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("")),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),title: Text("")
-          ),
+              icon: Icon(Icons.calendar_today), title: Text("")),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),title: Text("")
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.cog),title: Text(""),
+            icon: Icon(FontAwesomeIcons.cog),
+            title: Text(""),
           )
         ],
         currentIndex: _selectedIndex,

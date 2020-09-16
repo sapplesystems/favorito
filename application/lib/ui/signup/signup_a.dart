@@ -24,6 +24,7 @@ class _signup_aState extends State<signup_a> {
   List<busData> busdata = [];
   bool _autovalidate = false;
   bool catvisib = false;
+  String type_id;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<State> _busKey = GlobalKey<State>();
   final GlobalKey<State> _vatKey = GlobalKey<State>();
@@ -35,7 +36,6 @@ class _signup_aState extends State<signup_a> {
     for (int i = 0; i < 6; i++) ctrl.add(TextEditingController());
 
     getBusiness();
-    getCategory();
   }
 
   @override
@@ -100,7 +100,8 @@ class _signup_aState extends State<signup_a> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => signup_b(preData: ctrl)));
+                              builder: (context) =>
+                                  signup_b(preData: ctrl, catData: catdata)));
                     } else
                       _autovalidate = true;
                   },
@@ -138,10 +139,14 @@ class _signup_aState extends State<signup_a> {
                                   // popupItemDisabled: (String s) => s.startsWith('I'),
                                   onChanged: (String val) {
                                     ctrl[0].text = val;
-                                    if (val.contains("Bus"))
+                                    if (val.contains("Bus")) {
+                                      type_id = "1";
                                       catvisib = true;
-                                    else
+                                      getCategory();
+                                    } else {
+                                      type_id = "0";
                                       catvisib = false;
+                                    }
                                     setState(() {});
                                   },
                                   selectedItem: ctrl[0].text),
@@ -159,6 +164,7 @@ class _signup_aState extends State<signup_a> {
                                   visible: catvisib,
                                   child: DropdownSearch<String>(
                                       mode: Mode.MENU,
+                                      maxHeight: busy.length * 58.0,
                                       showSelectedItem: true,
                                       items: cat,
                                       label: "Business Category",
@@ -228,7 +234,7 @@ class _signup_aState extends State<signup_a> {
   }
 
   void getCategory() {
-    WebService.funGetCatList().then((value) {
+    WebService.funGetCatList({"type_id": type_id}).then((value) {
       cat.clear();
       catdata.clear();
       catdata.addAll(value.data);
