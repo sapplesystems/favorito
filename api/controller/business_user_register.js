@@ -66,7 +66,7 @@ exports.register = function (req, res, next) {
                         db.query(sql1);
 
                         /**insert row into business_informations table */
-                        var sql2 = "INSERT INTO business_informations (business_id) VALUES ('" + business_id + "')";
+                        var sql2 = "INSERT INTO business_informations (business_id, categories) VALUES ('" + business_id + "', '" + business_category_id + "')";
                         db.query(sql2);
 
 
