@@ -217,28 +217,40 @@ class _signup_bState extends State<signup_b> {
     }
     if (_formKey.currentState.validate()) {
       _autovalidate = false;
-      var cat;
+      var cat = "";
+      ;
       for (int i = 0; i < widget.catData.length; i++) {
-        if (widget.catData[i].categoryName == widget.preData[2].text) {
+        if (widget.catData[i].categoryName == widget.preData[2].text)
           cat = widget.catData[i].id.toString();
-        }
+      }
+      if (ctrl[3].text != ctrl[4].text) {
+        BotToast.showText(text: "Please confirm your password!");
+        return;
       }
       Map<String, dynamic> _map = {
         "business_type_id": widget.preData[0].text.contains("Bus") ? "1" : "2",
-        "business_category_id": cat,
         "business_name": widget.preData[1].text,
+        "business_category_id": cat,
         "postal_code": widget.preData[3].text,
         "business_phone": widget.preData[4].text,
-        "email": "test0@test.com",
-        "phone": 9876543210,
-        "password": 123456,
-        "cpassword": 123456,
-        "reach_whatsapp": 1
+        "email": ctrl[2].text,
+        "password": ctrl[3].text,
+        "reach_whatsapp": widget.preData[5].text,
+        "display_name": ctrl[0].text,
+        "role":
+            widget.preData[0].text.contains("Bus") ? ctrl[1].text : "freelancer"
       };
-      WebService.funRegister(_map).then((value) {});
-
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => bottomNavigation()));
+      print("Request:${_map}");
+      BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
+      WebService.funRegister(_map).then((value) {
+        if (value.status == 'success') {
+          Navigator.pop(context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => bottomNavigation()));
+        } else {
+          BotToast.showText(text: value.message.toString());
+        }
+      });
     } else
       _autovalidate = true;
   }

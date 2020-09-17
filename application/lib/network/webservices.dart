@@ -78,7 +78,9 @@ class WebService {
 
   static Future<registerModel> funRegister(Map _map) async {
     registerModel _data = registerModel();
-    response = await dio.post(serviceFunction.funBusyRegister, data: _map);
+    response = await dio.post(serviceFunction.funBusyRegister,
+        data: _map,
+        options: Options(contentType: Headers.formUrlEncodedContentType));
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_data.status}");
     return _data;

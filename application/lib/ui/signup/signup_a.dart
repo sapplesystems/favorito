@@ -96,7 +96,7 @@ class _signup_aState extends State<signup_a> {
 
                     if (_formKey.currentState.validate()) {
                       _autovalidate = false;
-
+                      ctrl[5].text = checked.toString();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
