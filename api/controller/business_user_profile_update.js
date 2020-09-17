@@ -3,9 +3,9 @@ var db = require('../config/db');
 exports.updateProfile = function (req, res, next) {
 
   if (req.body.id == '' || req.body.id == null) {
-    return res.json({ status: 'error', message: 'Id not found.' });
+    return res.status(404)({ status: 'error', message: 'Id not found.' });
   } else if (req.body.business_id == '' || req.body.business_id == null) {
-    return res.json({ status: 'error', message: 'Business id not found.' });
+    return res.status(404)({ status: 'error', message: 'Business id not found.' });
   }
 
   var id = req.body.id;
@@ -79,9 +79,9 @@ exports.updateProfile = function (req, res, next) {
   var sql = "update business_master set " + update_columns + " where id='" + id + "'";
   db.query(sql, function (err, rows, fields) {
     if (err) {
-      return res.status(500).send({ status: 'error', message: 'Business user profile could not be updated.' });
+      return res.status(404).send({ status: 'error', message: 'Business user profile could not be updated.' });
     } else {
-      return res.status(200).json({ status: 'success', message: 'Business user profile updated successfully.' });
+      return res.status(404).json({ status: 'success', message: 'Business user profile updated successfully.' });
     }
   });
 };
@@ -102,9 +102,4 @@ function saveBusinessHours(business_id, business_days, business_start_hours, bus
       }
     }
   });
-  console.log('here in saveBusinessHours function');
-  console.log(business_id);
-  console.log(business_days);
-  console.log(business_start_hours);
-  console.log(business_end_hours);
 }

@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 /*CREATE BUSINESS CATEGORY*/
 exports.add_business_category = function (req, res, next) {
     if (req.body.category_name == '' || req.body.category_name == null) {
-        return res.status(500).json({ status: 'error', message: 'Business category name required.' });
+        return res.status(404).json({ status: 'error', message: 'Business category name required.' });
     }
     var category_name = req.body.category_name;
 
@@ -21,7 +21,7 @@ exports.add_business_category = function (req, res, next) {
 /*SELECT ALL BUSINESS CATEGORY*/
 exports.all_business_category = function (req, res, next) {
     if (req.body.type_id == '' || req.body.type_id == 'undefined' || req.body.type_id == null) {
-        return res.status(500).json({ status: 'error', message: 'Business type id required' });
+        return res.status(404).json({ status: 'error', message: 'Business type id required' });
     }
     var sql = "SELECT id, `category_name` FROM business_categories WHERE business_type_id='" + req.body.type_id + "' and is_activated='1' and deleted_at IS NULL";
     db.query(sql, function (err, result) {
@@ -35,7 +35,7 @@ exports.all_business_category = function (req, res, next) {
 /*SELECT FIND BUSINESS CATEGORY*/
 exports.find_business_category = function (req, res, next) {
     if (req.body.category_id == '' || req.body.category_id == null) {
-        return res.status(500).json({ status: 'error', message: 'Business category id required' });
+        return res.status(404).json({ status: 'error', message: 'Business category id required' });
     }
     var category_id = req.body.category_id;
     var sql = "SELECT id, `category_name` FROM business_categories WHERE is_activated='1' and deleted_at IS NULL AND id = '" + category_id + "'";
@@ -50,10 +50,10 @@ exports.find_business_category = function (req, res, next) {
 /*UPDATE BUSINESS CATEGORY*/
 exports.update_business_category = function (req, res, next) {
     if (req.body.category_id == '' || req.body.category_id == null) {
-        return res.status(500).json({ status: 'error', message: 'Business category id required.' });
+        return res.status(404).json({ status: 'error', message: 'Business category id required.' });
     }
     if (req.body.category_name == '' || req.body.category_name == null) {
-        return res.status(500).json({ status: 'error', message: 'Business category name required.' });
+        return res.status(404).json({ status: 'error', message: 'Business category name required.' });
     }
     var category_id = req.body.category_id;
     var category_name = req.body.category_name;
@@ -70,7 +70,7 @@ exports.update_business_category = function (req, res, next) {
 /*DELETE BUSINESS CATEGORY*/
 exports.delete_business_category = function (req, res, next) {
     if (req.body.category_id == '' || req.body.category_id == null) {
-        return res.status(500).json({ status: 'error', message: 'business_id', data: 'Param required' });
+        return res.status(404).json({ status: 'error', message: 'business_id', data: 'Param required' });
     }
     var category_id = req.body.category_id;
 

@@ -5,9 +5,9 @@ var db = require('../config/db');
  */
 exports.getBusinessInformation = function (req, res, next) {
     if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
-        return res.status(500).send({ status: 'error', message: 'Id not found' });
+        return res.status(404).send({ status: 'error', message: 'Id not found' });
     } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
-        return res.json({ status: 'error', message: 'Business id not found.' });
+        return res.status(404)({ status: 'error', message: 'Business id not found.' });
     } else {
         var id = req.body.id;
         var business_id = req.body.business_id;
@@ -24,7 +24,7 @@ exports.getBusinessInformation = function (req, res, next) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(500).send({ status: 'error', message: 'No recored found.' });
+                return res.status(404).send({ status: 'error', message: 'No recored found.' });
             } else {
                 /*var sub_categories_id = rows[0].sub_categories_id;
                 var sub_categories_name = rows[0].sub_categories_name;
@@ -48,9 +48,9 @@ exports.getBusinessInformation = function (req, res, next) {
  */
 exports.getBusinessInformationUpdate = function (req, res, next) {
     if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
-        return res.status(500).send({ status: 'error', message: 'Id not found' });
+        return res.status(404).send({ status: 'error', message: 'Id not found' });
     } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
-        return res.json({ status: 'error', message: 'Business id not found.' });
+        return res.status(404)({ status: 'error', message: 'Business id not found.' });
     } else {
         var id = req.body.id;
         var business_id = req.body.business_id;
@@ -83,7 +83,7 @@ exports.getBusinessInformationUpdate = function (req, res, next) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(500).send({ status: 'error', message: 'No recored found.' });
+                return res.status(404).send({ status: 'error', message: 'No recored found.' });
             } else {
                 return res.status(200).json({ status: 'success', message: 'Information updated successfully.' });
             }

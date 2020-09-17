@@ -2,7 +2,7 @@ var db = require('../config/db');
 
 exports.getDashboardDetail = function (req, res, next) {
     if (req.body.business_id == '' || req.body.business_id == null) {
-        return res.status(500).send({ status: 'error', message: 'Business Id not found' });
+        return res.status(404).send({ status: 'error', message: 'Business Id not found' });
     } else {
         var business_id = req.body.business_id;
         var sql = "SELECT id, business_id, business_name, photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` \n\
@@ -11,7 +11,7 @@ exports.getDashboardDetail = function (req, res, next) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
             }else if(result_set.length === 0){
-                return res.status(500).send({ status: 'error', message: 'No record found.' });
+                return res.status(404).send({ status: 'error', message: 'No record found.' });
             }
             var row = result_set[0];
             var data = {

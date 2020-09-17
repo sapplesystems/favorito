@@ -6,23 +6,23 @@ var uniqid = require('uniqid');
 
 exports.register = function (req, res, next) {
     if (req.body.business_type_id == '' || req.body.business_type_id == null) {
-        return res.status(500).json({ status: 'error', message: 'Business type is required' });
+        return res.status(404).json({ status: 'error', message: 'Business type is required' });
     } else if (req.body.business_category_id == '' || req.body.business_category_id == null) {
-        return res.status(500).json({ status: 'error', message: 'Business category is required' });
+        return res.status(404).json({ status: 'error', message: 'Business category is required' });
     } else if (req.body.business_name == '' || req.body.business_name == null) {
-        return res.status(500).json({ status: 'error', message: 'Business name is required' });
+        return res.status(404).json({ status: 'error', message: 'Business name is required' });
     } else if (req.body.postal_code == '' || req.body.postal_code == null) {
-        return res.status(500).json({ status: 'error', message: 'Postal code is required' });
+        return res.status(404).json({ status: 'error', message: 'Postal code is required' });
     } if (req.body.business_phone == '' || req.body.business_phone == null) {
-        return res.status(500).json({ status: 'error', message: 'Phone number is required' });
+        return res.status(404).json({ status: 'error', message: 'Phone number is required' });
     } if (req.body.display_name == '' || req.body.display_name == null) {
-        return res.status(500).json({ status: 'error', message: 'Display name is required' });
+        return res.status(404).json({ status: 'error', message: 'Display name is required' });
     } if (req.body.role == '' || req.body.role == null) {
-        return res.status(500).json({ status: 'error', message: 'Role is required' });
+        return res.status(404).json({ status: 'error', message: 'Role is required' });
     } else if (req.body.email == '' || req.body.email == null) {
-        return res.status(500).json({ status: 'error', message: 'Business Email is required' });
+        return res.status(404).json({ status: 'error', message: 'Business Email is required' });
     } else if (req.body.password == '' || req.body.password == null) {
-        return res.status(500).json({ status: 'error', message: 'Password is required' });
+        return res.status(404).json({ status: 'error', message: 'Password is required' });
     }
 
     var business_id = uniqid();
@@ -52,7 +52,7 @@ exports.register = function (req, res, next) {
 
     bcrypt.hash(password, 10, function (err, hash) {
         if (err) {
-            return res.status(500).json({ status: 'error', message: 'Password encryption failed' });
+            return res.status(404).json({ status: 'error', message: 'Password encryption failed' });
         }
         var cslq = "select count(*) as c from business_users where (email='" + email + "' or phone='" + phone + "') and is_deleted=0 and deleted_at is null";
         db.query(cslq, function (chkerr, check) {
@@ -93,7 +93,7 @@ exports.register = function (req, res, next) {
                         }
                     });
                 } else {
-                    return res.status(500).json({ status: 'error', message: 'Username already exist' });
+                    return res.status(404).json({ status: 'error', message: 'Username already exist' });
                 }
             }
         });
