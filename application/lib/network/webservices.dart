@@ -1,6 +1,7 @@
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
 import 'package:application/model/job/JobListRequestModel.dart';
+import 'package:application/model/loginModel.dart';
 import 'package:application/model/notification/CityListModel.dart';
 import 'package:application/model/notification/CreateNotificationRequestModel.dart';
 import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
@@ -15,6 +16,7 @@ import 'dart:convert' as convert;
 class WebService {
   static Response response;
   static Dio dio = new Dio();
+  static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
     response = await dio.post(serviceFunction.funBusyList);
@@ -33,11 +35,6 @@ class WebService {
 
   static Future<NotificationListRequestModel> funGetNotifications() async {
     NotificationListRequestModel _returnData = NotificationListRequestModel();
-    // response = await dio.post(serviceFunction.funGetNotifications, data: 1);
-    // _data = NotificationListModel.fromJson(
-    //     convert.json.decode(response.toString()));
-    // print("responseData3:${_data.status}");
-    // return _data;
     NotificationModel model1 = NotificationModel();
     model1.title = "Notification 1";
     model1.description =
@@ -82,13 +79,21 @@ class WebService {
   static Future<registerModel> funRegister(Map _map) async {
     registerModel _data = registerModel();
     response = await dio.post(serviceFunction.funBusyRegister,
-        data: _map,
-        options: Options(contentType: Headers.formUrlEncodedContentType));
+        data: _map, options: opt);
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
     Prefs.setToken(_data.token.toString().trim());
     print("responseData3:${_data.toString().trim()}");
     print("token:${_data.token.toString().trim()}");
     return _data;
+  }
+
+  static Future<loginModel> funGetLogin(Map _map) async {
+    loginModel _data = loginModel();
+    response =
+        await dio.post(serviceFunction.funLogin, data: _map, options: opt);
+    _data = loginModel.fromJson(convert.json.decode(response.toString()));
+    Prefs.setToken(_data.token.toString().trim());
+    return _data.status == "success" ? _data : _data.message;
   }
 
   static Future<CityListModel> funGetCities() async {

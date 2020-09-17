@@ -1,5 +1,9 @@
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
+import 'package:application/myCss.dart';
+import 'package:application/network/webservices.dart';
+import 'package:application/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -7,6 +11,8 @@ import 'package:velocity_x/velocity_x.dart';
 class Login extends StatelessWidget {
   TextEditingController userCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autovalidate = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +32,8 @@ class Login extends StatelessWidget {
           height: context.percentHeight * 100,
           child: Builder(
               builder: (context) => Form(
+                    key: _formKey,
+                    autovalidate: _autovalidate,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -52,7 +60,7 @@ class Login extends StatelessWidget {
                                 left: context.percentWidth * 10,
                                 right: context.percentWidth * 10,
                                 child: Container(
-                                  height: context.percentHeight * 50,
+                                  height: context.percentHeight * 40,
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(
@@ -122,14 +130,34 @@ class Login extends StatelessWidget {
                             ]),
                           ),
                           Positioned(
-                              bottom: context.percentHeight * 7,
+                              bottom: context.percentHeight * 70,
                               left: context.percentWidth * 50,
-                              right: context.percentWidth * 20,
-                              child: roundedButton(
-                                clicker: () {},
-                                clr: Colors.red,
-                                title: "Login",
-                              )),
+                              right: context.percentWidth * 50,
+                              child: roundedButton2("Login", Color(0xffdd2626),
+                                  () {
+                                if (_formKey.currentState.validate()) {
+                                  _autovalidate = false;
+                                  Map<String, dynamic> _map = {
+                                    "username": userCtrl.text,
+                                    "password": passCtrl.text
+                                  };
+                                  BotToast.showLoading(
+                                      allowClick: true,
+                                      duration: Duration(seconds: 1));
+                                  WebService.funGetLogin(_map).then((value) {
+                                    if (value.message == "success") {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  bottomNavigation()));
+                                    } else {
+                                      BotToast.showText(
+                                          text: value.message.toString());
+                                    }
+                                  });
+                                }
+                              })),
                           Padding(
                             padding: EdgeInsets.only(
                                 top: context.percentHeight * 10,
@@ -151,5 +179,24 @@ class Login extends StatelessWidget {
                     ),
                   ))),
     );
+  }
+
+  Widget roundedButton2(String title, Color clr, Function clicker) {
+    return InkWell(
+        onTap: clicker,
+        child: Container(
+            margin: EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+                color: clr,
+                border: Border.all(),
+                borderRadius: BorderRadius.all(Radius.circular(32))),
+            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 92),
+            child: Text(title,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: "Gilroy",
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1))));
   }
 }

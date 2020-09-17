@@ -10,4 +10,5 @@ class serviceFunction {
   static String funGetCities = baseUrl + 'notification/cityList';
   static String funValidPincode = baseUrl + 'notification/validPincode';
   static String funGetJobs = baseUrl + 'job/list';
+  static String funLogin = baseUrl + 'user/login';
 }
