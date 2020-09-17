@@ -89,10 +89,10 @@ class _dashboardState extends State<dashboard> {
                       MaterialPageRoute(
                           builder: (context) => BusinessSetting()));
                 }),
-                // rowWithTextNButton("Complete your information", "Now",
-                //     is_information_completed, () {}),
-                // rowWithTextNButton(
-                //     "Send for verification", "Verify", is_verified, () {}),
+                rowWithTextNButton("Complete your information", "Now",
+                    is_information_completed, () {}),
+                rowWithTextNButton(
+                    "Send for verification", "Verify", is_verified, () {}),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(vertical: context.percentHeight * 2),

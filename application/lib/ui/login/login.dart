@@ -1,3 +1,4 @@
+import 'package:application/component/roundedButton2.dart';
 import 'package:application/component/txtfieldboundry.dart';
 import 'package:application/network/webservices.dart';
 import 'package:application/ui/bottomNavigation/bottomNavigation.dart';
@@ -143,31 +144,11 @@ class _LoginState extends State<Login> {
                               bottom: context.percentHeight * 70,
                               left: context.percentWidth * 50,
                               right: context.percentWidth * 50,
-                              child: roundedButton2("Login", Color(0xffdd2626),
-                                  () {
-                                if (_formKey.currentState.validate()) {
-                                  _autovalidate = false;
-                                  Map<String, dynamic> _map = {
-                                    "username": userCtrl.text,
-                                    "password": passCtrl.text
-                                  };
-                                  BotToast.showLoading(
-                                      allowClick: true,
-                                      duration: Duration(seconds: 1));
-                                  WebService.funGetLogin(_map).then((value) {
-                                    if (value.message == "success") {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  bottomNavigation()));
-                                    } else {
-                                      BotToast.showText(
-                                          text: value.message.toString());
-                                    }
-                                  });
-                                }
-                              })),
+                              child: roundedButton2(
+                                title: "Login",
+                                clr: Colors.red,
+                                clicker: () => funClick(),
+                              )),
                           Padding(
                             padding: EdgeInsets.only(
                                 top: context.percentHeight * 10,
@@ -191,28 +172,31 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget roundedButton2(String title, Color clr, Function clicker) {
-    return InkWell(
-        onTap: clicker,
-        child: Container(
-            margin: EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-                color: clr,
-                border: Border.all(),
-                borderRadius: BorderRadius.all(Radius.circular(32))),
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 92),
-            child: Text(title,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontFamily: "Gilroy",
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1))));
+  void funClick() {
+    if (_formKey.currentState.validate()) {
+      _autovalidate = false;
+      Map<String, dynamic> _map = {
+        "username": userCtrl.text,
+        "password": passCtrl.text
+      };
+      BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
+      WebService.funGetLogin(_map).then((value) {
+        if (value.message == "success") {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => bottomNavigation()));
+        } else {
+          BotToast.showText(text: value.message.toString());
+        }
+      });
+    }
   }
 
   void decide() async {
-    if (Prefs.token != null || Prefs.token != "")
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => bottomNavigation()));
+    if (Prefs.token != null || Prefs.token != "") {
+      Future.delayed(Duration.zero, () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => bottomNavigation()));
+      });
+    }
   }
 }
