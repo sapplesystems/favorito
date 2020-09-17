@@ -12,7 +12,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 class signup_b extends StatefulWidget {
   List<TextEditingController> preData;
-  signup_b({this.preData});
+  List catData;
+  signup_b({this.preData, this.catData});
 
   @override
   _signup_bState createState() => _signup_bState();
@@ -155,6 +156,7 @@ class _signup_bState extends State<signup_b> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
                                     valid: true,
+                                    maxLines: 1,
                                     ctrl: ctrl[3],
                                     title: "Password",
                                     security: true)),
@@ -162,6 +164,7 @@ class _signup_bState extends State<signup_b> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
                                     valid: true,
+                                    maxLines: 1,
                                     ctrl: ctrl[4],
                                     title: "Confirm Password",
                                     security: true)),
@@ -214,22 +217,40 @@ class _signup_bState extends State<signup_b> {
     }
     if (_formKey.currentState.validate()) {
       _autovalidate = false;
+      var cat = "";
+      ;
+      for (int i = 0; i < widget.catData.length; i++) {
+        if (widget.catData[i].categoryName == widget.preData[2].text)
+          cat = widget.catData[i].id.toString();
+      }
+      if (ctrl[3].text != ctrl[4].text) {
+        BotToast.showText(text: "Please confirm your password!");
+        return;
+      }
       Map<String, dynamic> _map = {
-        "business_type_id": 2,
-        "business_category_id": 2,
-        "business_name": "test business",
-        "postal_code": 963698,
-        "business_phone": 9876543210,
-        "email": "test0@test.com",
-        "phone": 9876543210,
-        "password": 123456,
-        "cpassword": 123456,
-        "reach_whatsapp": 1
+        "business_type_id": widget.preData[0].text.contains("Bus") ? "1" : "2",
+        "business_name": widget.preData[1].text,
+        "business_category_id": cat,
+        "postal_code": widget.preData[3].text,
+        "business_phone": widget.preData[4].text,
+        "email": ctrl[2].text,
+        "password": ctrl[3].text,
+        "reach_whatsapp": widget.preData[5].text,
+        "display_name": ctrl[0].text,
+        "role":
+            widget.preData[0].text.contains("Bus") ? ctrl[1].text : "freelancer"
       };
-      WebService.funRegister(_map).then((value) {});
-
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => bottomNavigation()));
+      print("Request:${_map}");
+      BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
+      WebService.funRegister(_map).then((value) {
+        if (value.status == 'success') {
+          Navigator.pop(context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => bottomNavigation()));
+        } else {
+          BotToast.showText(text: value.message.toString());
+        }
+      });
     } else
       _autovalidate = true;
   }
