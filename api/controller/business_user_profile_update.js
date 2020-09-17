@@ -2,14 +2,8 @@ var db = require('../config/db');
 
 exports.updateProfile = function (req, res, next) {
 
-  if (req.body.id == '' || req.body.id == null) {
-    return res.json({ status: 'error', message: 'Id not found.' });
-  } else if (req.body.business_id == '' || req.body.business_id == null) {
-    return res.json({ status: 'error', message: 'Business id not found.' });
-  }
-
-  var id = req.body.id;
-  var business_id = req.body.business_id;
+  var id = req.userdata.id;
+  var business_id = req.userdata.business_id;
   var address_arr = req.body.address;
   var website_arr = req.body.website;
 
@@ -54,6 +48,9 @@ exports.updateProfile = function (req, res, next) {
   if (req.body.location != '' && req.body.location != null) {
     update_columns += ", location='" + req.body.location + "' ";
   }
+  if (req.body.by_appointment_only != 'undefined' && req.body.by_appointment_only != '' && req.body.by_appointment_only != null) {
+    update_columns += ", by_appointment_only='" + req.body.by_appointment_only + "' ";
+  }
   if (req.body.working_hours != '' && req.body.working_hours != null) {
     if (req.body.working_hours === 'Select Hours') {
       saveBusinessHours(business_id, req.body.business_days, req.body.business_start_hours, req.body.business_end_hours);
@@ -76,9 +73,9 @@ exports.updateProfile = function (req, res, next) {
   var sql = "update business_master set " + update_columns + " where id='" + id + "'";
   db.query(sql, function (err, rows, fields) {
     if (err) {
-      return res.status(500).send({ status: 'error', message: 'Business user profile could not be updated.' });
+      return res.status(404).json({ status: 'error', message: 'Business user profile could not be updated.' });
     } else {
-      return res.status(200).json({ status: 'success', message: 'Business user profile updated successfully.' });
+      return res.status(404).json({ status: 'success', message: 'Business user profile updated successfully.' });
     }
   });
 };
@@ -87,7 +84,7 @@ function saveBusinessHours(business_id, business_days, business_start_hours, bus
   var sql = "delete from business_hours where business_id='" + business_id + "'";
   db.query(sql, function (err, rows, fields) {
     if (err) {
-      return res.status(500).send({ status: 'error', message: 'Business user profile could not be updated.' });
+      return res.status(500).json({ status: 'error', message: 'Business user profile could not be updated.' });
     } else {
       var arr_len = business_days.length;
 
@@ -99,9 +96,4 @@ function saveBusinessHours(business_id, business_days, business_start_hours, bus
       }
     }
   });
-  console.log('here in saveBusinessHours function');
-  console.log(business_id);
-  console.log(business_days);
-  console.log(business_start_hours);
-  console.log(business_end_hours);
 }
