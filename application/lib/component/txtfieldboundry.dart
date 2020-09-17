@@ -10,6 +10,8 @@ class txtfieldboundry extends StatefulWidget {
   bool valid;
   TextInputType keyboardSet;
   TextEditingController ctrl;
+
+  Function myOnChanged;
   RegExp myregex;
   txtfieldboundry(
       {this.title,
@@ -20,7 +22,8 @@ class txtfieldboundry extends StatefulWidget {
       this.keyboardSet,
       this.myregex,
       this.valid,
-      this.maxLines});
+      this.maxLines,
+      this.myOnChanged});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -51,6 +54,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
           fontFamily: "Poppins",
         ),
         maxLines: widget.maxLines,
+        onChanged: widget.myOnChanged,
       ),
     );
   }
