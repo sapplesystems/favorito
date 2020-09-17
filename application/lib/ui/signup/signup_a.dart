@@ -55,7 +55,6 @@ class _signup_aState extends State<signup_a> {
                   BotToast.showLoading(
                       allowClick: true, duration: Duration(seconds: 1));
                   getBusiness();
-                  getCategory();
                 })
           ]),
       body: Container(
@@ -96,7 +95,7 @@ class _signup_aState extends State<signup_a> {
 
                     if (_formKey.currentState.validate()) {
                       _autovalidate = false;
-
+                      ctrl[5].text = checked.toString();
                       Navigator.push(
                           context,
                           MaterialPageRoute(

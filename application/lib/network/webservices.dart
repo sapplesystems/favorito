@@ -1,11 +1,14 @@
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
+import 'package:application/model/job/JobListRequestModel.dart';
+import 'package:application/model/notification/CityListModel.dart';
 import 'package:application/model/notification/CreateNotificationRequestModel.dart';
 import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:application/model/notification/NotificationListRequestModel.dart';
 import 'package:application/model/busyListModel.dart';
 import 'package:application/model/registerModel.dart';
 import 'package:application/network/serviceFunction.dart';
+import 'package:application/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
 
@@ -14,7 +17,7 @@ class WebService {
   static Dio dio = new Dio();
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
-    response = await dio.post(serviceFunction.funBusyList, data: null);
+    response = await dio.post(serviceFunction.funBusyList);
     _data = busyListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_data.status}");
     return _data;
@@ -78,9 +81,46 @@ class WebService {
 
   static Future<registerModel> funRegister(Map _map) async {
     registerModel _data = registerModel();
-    response = await dio.post(serviceFunction.funBusyRegister, data: _map);
+    response = await dio.post(serviceFunction.funBusyRegister,
+        data: _map,
+        options: Options(contentType: Headers.formUrlEncodedContentType));
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_data.status}");
+    Prefs.setToken(_data.token.toString().trim());
+    print("responseData3:${_data.toString().trim()}");
+    print("token:${_data.token.toString().trim()}");
     return _data;
+  }
+
+  static Future<CityListModel> funGetCities() async {
+    CityListModel _returnData = CityListModel();
+    _returnData.cityList = ['Noida', 'New Delhi', 'Agra', 'Ghaziabad'];
+
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> funValidPincode(String pincode) async {
+    if (pincode == '000000') {
+      BaseResponseModel _returnData = BaseResponseModel();
+      _returnData.status = 1;
+      _returnData.message = 'success';
+
+      return _returnData;
+    } else {
+      return null;
+    }
+  }
+
+  static Future<JobListRequestModel> funGetJobs() async {
+    JobListRequestModel _returnData = JobListRequestModel();
+
+    JobModel model1 = JobModel();
+    model1.title = "Receptionist";
+    _returnData.jobs.add(model1);
+
+    JobModel model2 = JobModel();
+    model2.title = "Waiter";
+    _returnData.jobs.add(model2);
+
+    return _returnData;
   }
 }
