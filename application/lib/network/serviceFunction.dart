@@ -4,4 +4,10 @@ class serviceFunction {
   static String funBusyList = baseUrl + 'type/list';
   static String funGetNotifications = baseUrl + 'notification/list';
   static String funBusyRegister = baseUrl + 'user/register';
+  static String funGetCreateNotificationDefaultData =
+      baseUrl + 'notification/getDefaultData';
+  static String funCreateNotification = baseUrl + 'notification/create';
+  static String funGetCities = baseUrl + 'notification/cityList';
+  static String funValidPincode = baseUrl + 'notification/validPincode';
+  static String funGetJobs = baseUrl + 'job/list';
 }
