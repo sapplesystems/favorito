@@ -5,7 +5,7 @@ var db = require('../config/db');
  */
 exports.getBusinessInformation = function (req, res, next) {
     var id = req.userdata.id;
-    var business_id = req.body.userdata;
+    var business_id = req.userdata.business_id;
     var sql = "SELECT business_informations.id AS business_information_id, business_id, business_categories.id AS category_id, business_categories.category_name, \n\
         sub_categories as sub_categories_id, (SELECT GROUP_CONCAT(sub_category_name) FROM business_sub_categories \n\
         WHERE FIND_IN_SET(id, business_informations.sub_categories) AND deleted_at IS NULL) AS sub_categories_name, \n\
@@ -14,7 +14,6 @@ exports.getBusinessInformation = function (req, res, next) {
         ON business_informations.categories = business_categories.id \n\
         WHERE business_id='"+ business_id + "' AND business_informations.deleted_at IS NULL \n\
         AND business_categories.deleted_at IS NULL";
-
     db.query(sql, function (err, rows, fields) {
         if (err) {
             return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
@@ -71,9 +70,9 @@ exports.getBusinessInformationUpdate = function (req, res, next) {
     var sql = "update business_informations set " + update_columns + " where business_id='" + business_id + "'";
     db.query(sql, function (err, rows, fields) {
         if (err) {
-            return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
+            return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
         } else if (rows.length === 0) {
-            return res.status(404).send({ status: 'error', message: 'No recored found.' });
+            return res.status(404).json({ status: 'error', message: 'No recored found.' });
         } else {
             return res.status(200).json({ status: 'success', message: 'Information updated successfully.' });
         }

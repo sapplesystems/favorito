@@ -73,7 +73,7 @@ exports.updateProfile = function (req, res, next) {
   var sql = "update business_master set " + update_columns + " where id='" + id + "'";
   db.query(sql, function (err, rows, fields) {
     if (err) {
-      return res.status(404).send({ status: 'error', message: 'Business user profile could not be updated.' });
+      return res.status(404).json({ status: 'error', message: 'Business user profile could not be updated.' });
     } else {
       return res.status(404).json({ status: 'success', message: 'Business user profile updated successfully.' });
     }
@@ -84,7 +84,7 @@ function saveBusinessHours(business_id, business_days, business_start_hours, bus
   var sql = "delete from business_hours where business_id='" + business_id + "'";
   db.query(sql, function (err, rows, fields) {
     if (err) {
-      return res.status(500).send({ status: 'error', message: 'Business user profile could not be updated.' });
+      return res.status(500).json({ status: 'error', message: 'Business user profile could not be updated.' });
     } else {
       var arr_len = business_days.length;
 

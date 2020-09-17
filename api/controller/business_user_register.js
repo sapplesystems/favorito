@@ -57,7 +57,7 @@ exports.register = function (req, res, next) {
         var cslq = "select count(*) as c from business_users where (email='" + email + "' or phone='" + phone + "') and is_deleted=0 and deleted_at is null";
         db.query(cslq, function (chkerr, check) {
             if (chkerr) {
-                return res.json({ status: 'error', message: 'Something went wrong.' });
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             } else {
                 if (check[0].c === 0) {
                     var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "')";

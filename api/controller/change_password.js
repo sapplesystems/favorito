@@ -3,13 +3,13 @@ var bcrypt = require('bcrypt');
 
 exports.changePassword = function (req, res, next) {
   if (req.body.old_password == '' || req.body.old_password == 'undefined' || req.body.old_password == null) {
-    return res.status(404).send({ status: 'error', message: 'Old password not found.' });
+    return res.status(404).json({ status: 'error', message: 'Old password not found.' });
   } else if (req.body.new_password == '' || req.body.new_password == 'undefined' || req.body.new_password == null) {
-    return res.status(404).send({ status: 'error', message: 'New password not found.' });
+    return res.status(404).json({ status: 'error', message: 'New password not found.' });
   } else if (req.body.confirm_password == '' || req.body.confirm_password == 'undefined' || req.body.confirm_password == null) {
-    return res.status(404).send({ status: 'error', message: 'Confirm passwod not found.' });
+    return res.status(404).json({ status: 'error', message: 'Confirm passwod not found.' });
   } else if (req.body.new_password != req.body.confirm_password) {
-    return res.status(404).send({ status: 'error', message: 'New password and confirm password does not match.' });
+    return res.status(404).json({ status: 'error', message: 'New password and confirm password does not match.' });
   } else {
     var sql = "select * from business_users where business_id='" + req.userdata.business_id + "' and is_deleted=0 and deleted_at is null";
     db.query(sql, function (err, result) {
