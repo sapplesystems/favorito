@@ -6,6 +6,7 @@ import 'package:application/model/notification/NotificationListRequestModel.dart
 import 'package:application/model/busyListModel.dart';
 import 'package:application/model/registerModel.dart';
 import 'package:application/network/serviceFunction.dart';
+import 'package:application/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
 
@@ -14,7 +15,7 @@ class WebService {
   static Dio dio = new Dio();
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
-    response = await dio.post(serviceFunction.funBusyList, data: null);
+    response = await dio.post(serviceFunction.funBusyList);
     _data = busyListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_data.status}");
     return _data;
@@ -82,7 +83,9 @@ class WebService {
         data: _map,
         options: Options(contentType: Headers.formUrlEncodedContentType));
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_data.status}");
+    Prefs.setToken(_data.token.toString().trim());
+    print("responseData3:${_data.toString().trim()}");
+    print("token:${_data.token.toString().trim()}");
     return _data;
   }
 }

@@ -92,6 +92,12 @@
       "languageVersion": "2.10"
     },
     {
+      "name": "file",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/file-5.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.2"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/rohitshukla/Downloads/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -134,6 +140,12 @@
       "languageVersion": "2.3"
     },
     {
+      "name": "intl",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/intl-0.16.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.5"
+    },
+    {
       "name": "introduction_screen",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/introduction_screen-1.0.9",
       "packageUri": "lib/",
@@ -170,10 +182,28 @@
       "languageVersion": "1.19"
     },
     {
+      "name": "path_provider_linux",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-0.0.1+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "path_provider_platform_interface",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/path_provider_platform_interface-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "petitparser",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/petitparser-3.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.7"
+    },
+    {
+      "name": "platform",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/platform-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "1.24"
     },
     {
       "name": "platform_detect",
@@ -188,10 +218,46 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "process",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/process-3.0.13",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "pub_semver",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/pub_semver-1.4.4",
       "packageUri": "lib/",
       "languageVersion": "2.0"
+    },
+    {
+      "name": "shared_preferences",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "shared_preferences_linux",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/shared_preferences_linux-0.0.2+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "shared_preferences_macos",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/shared_preferences_macos-0.0.1+10",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "shared_preferences_platform_interface",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/shared_preferences_platform_interface-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "shared_preferences_web",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-0.1.2+7",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
     },
     {
       "name": "sky_engine",
@@ -284,6 +350,12 @@
       "languageVersion": "2.6"
     },
     {
+      "name": "xdg_directories",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/xdg_directories-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.3"
+    },
+    {
       "name": "xml",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/xml-4.2.0",
       "packageUri": "lib/",
@@ -296,7 +368,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-17T02:14:55.796542Z",
+  "generated": "2020-09-17T02:44:05.482095Z",
   "generator": "pub",
   "generatorVersion": "2.10.0-77.0.dev"
 }
