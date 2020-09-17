@@ -1,3 +1,4 @@
+import 'package:application/ui/jobs/JobList.dart';
 import 'package:application/ui/tour/Tour_A.dart';
 import 'package:application/ui/signup/signup_a.dart';
 import 'package:application/ui/notification/Notifications.dart';
@@ -23,5 +24,5 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: signup_a());
+      home: JobList());
 }

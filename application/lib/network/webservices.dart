@@ -1,5 +1,6 @@
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
+import 'package:application/model/job/JobListRequestModel.dart';
 import 'package:application/model/notification/CityListModel.dart';
 import 'package:application/model/notification/CreateNotificationRequestModel.dart';
 import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
@@ -104,5 +105,19 @@ class WebService {
     } else {
       return null;
     }
+  }
+
+  static Future<JobListRequestModel> funGetJobs() async {
+    JobListRequestModel _returnData = JobListRequestModel();
+
+    JobModel model1 = JobModel();
+    model1.title = "Receptionist";
+    _returnData.jobs.add(model1);
+
+    JobModel model2 = JobModel();
+    model2.title = "Waiter";
+    _returnData.jobs.add(model2);
+
+    return _returnData;
   }
 }
