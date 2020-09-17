@@ -4,12 +4,7 @@ var db = require('../config/db');
  * FETCH ALL NOTIFICATION
  */
 exports.all_notifications = function (req, res, next) {
-    if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
-        return res.status(404).send({ status: 'error', message: 'Id not found' });
-    } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
-        return res.status(404)({ status: 'error', message: 'Business id not found.' });
-    }
-    var sql = "SELECT id, title, description FROM business_notifications WHERE business_id='" + req.body.business_id + "' AND business_user_id='" + req.body.id + "' AND is_deleted='0' AND deleted_at IS NULL";
+    var sql = "SELECT id, title, description FROM business_notifications WHERE business_id='" + req.userdata.business_id + "' AND business_user_id='" + req.userdata.id + "' AND is_deleted='0' AND deleted_at IS NULL";
     db.query(sql, function (err, result) {
         if (err) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -22,11 +17,6 @@ exports.all_notifications = function (req, res, next) {
  * STATIC DROP DONW DETAI TO CREATE THE NOTIFICATION
  */
 exports.dd_verbose = function (req, res, next) {
-    if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
-        return res.status(404).send({ status: 'error', message: 'Id not found' });
-    } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
-        return res.status(404)({ status: 'error', message: 'Business id not found.' });
-    }
     var sql = "SELECT id, `state` from states order by state";
     db.query(sql, function (err, state_list, fields) {
         if (err) {
@@ -64,11 +54,7 @@ exports.verify_pincode = function (req, res, next) {
  * CREATE NEW NOTIFICATION
  */
 exports.add_notification = function (req, res, next) {
-    if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
-        return res.status(404).send({ status: 'error', message: 'Id not found' });
-    } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
-        return res.status(404)({ status: 'error', message: 'Business id not found.' });
-    } else if (req.body.title == '' || req.body.title == 'undefined' || req.body.title == null) {
+    if (req.body.title == '' || req.body.title == 'undefined' || req.body.title == null) {
         return res.status(404)({ status: 'error', message: 'Notification title not found.' });
     } else if (req.body.description == '' || req.body.description == 'undefined' || req.body.description == null) {
         return res.status(404)({ status: 'error', message: 'Notification description not found.' });
@@ -94,8 +80,8 @@ exports.add_notification = function (req, res, next) {
     var area = req.body.area;
     var area_detail = req.body.area_detail;
     var quantity = req.body.quantity;
-    var business_id = req.body.business_id;
-    var business_user_id = req.body.id;
+    var business_id = req.userdata.business_id;
+    var business_user_id = req.userdata.id;
 
     var sql = "INSERT INTO business_notifications(title, description, `action`, contact, audience, `area`, area_detail, quantity, business_id, business_user_id) \n\
                 VALUES ('"+ title + "','" + description + "','" + action + "','" + contact + "','" + audience + "','" + area + "','" + area_detail + "','" + quantity + "','" + business_id + "','" + business_user_id + "');";

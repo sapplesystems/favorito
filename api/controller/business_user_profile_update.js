@@ -2,14 +2,8 @@ var db = require('../config/db');
 
 exports.updateProfile = function (req, res, next) {
 
-  if (req.body.id == '' || req.body.id == null) {
-    return res.status(404)({ status: 'error', message: 'Id not found.' });
-  } else if (req.body.business_id == '' || req.body.business_id == null) {
-    return res.status(404)({ status: 'error', message: 'Business id not found.' });
-  }
-
-  var id = req.body.id;
-  var business_id = req.body.business_id;
+  var id = req.userdata.id;
+  var business_id = req.userdata.business_id;
   var address_arr = req.body.address;
   var website_arr = req.body.website;
 
