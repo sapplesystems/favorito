@@ -64,6 +64,6 @@ router.post('/information', CheckAuth, UpdateBusinessInformationController.getBu
 
 router.post('/information/update', multer().array(), CheckAuth, UpdateBusinessInformationController.getBusinessInformationUpdate);
 
-router.post('/information/add-photo', upload_business_info_media.array('photo[]', 12), CheckAuth, UpdateBusinessInformationController.addPhotos);
+router.post('/information/add-photo', upload_business_info_media.array('photo[]', 1000), CheckAuth, UpdateBusinessInformationController.addPhotos);
 
 module.exports = router;

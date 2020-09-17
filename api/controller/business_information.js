@@ -30,7 +30,12 @@ exports.getBusinessInformation = function (req, res, next) {
                 var sub_categories_name = rows[0].sub_categories_name;
                 rows[0].sub_categories_id = sub_categories_id.split(',');
                 rows[0].sub_categories_name = sub_categories_name.split(',');*/
-                return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+
+                var q = "select id, type, asset_url as photo from business_uploads where business_id='" + business_id + "' and is_deleted='0' and deleted_at is null";
+                db.query(q, function(e,r,f){
+                    rows[0].photos = r;
+                    return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                });
             }
         });
     }
@@ -95,18 +100,21 @@ exports.addPhotos = function (req, res, next) {
         return res.status(500).send({ status: 'error', message: 'Id not found' });
     } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
         return res.json({ status: 'error', message: 'Business id not found.' });
-    } 
-    console.log(req.body);
-    console.log(req);
-    return false;
-    var business_id = req.body.business_id;
-    var b_addr = req.body.branch_address;
-    var b_addr_len = b_addr.length;
-    for (var x = 0; x < b_addr_len; x++) {
-        var branch_address = req.body.branch_address[x];
-        var branch_contact = req.body.branch_contact[x];
-        var q = "insert into business_branches (business_id,branch_address,branch_contact) values('" + business_id + "','" + branch_address + "','" + branch_contact + "')";
-        db.query(q);
     }
-    return res.status(200).json({ status: 'success', message: 'Branch added successfully' });
+
+    var id = req.body.id;
+    var business_id = req.body.business_id;
+
+    if (req.files && req.files.length) {
+        var file_count = req.files.length;
+        for (var i = 0; i < file_count; i++) {
+            var filename = req.files[i].filename;
+            var sql = "INSERT INTO `business_uploads`(business_id, asset_url, uploaded_by) \n\
+                        VALUES ('"+ business_id + "','" + filename + "','" + id + "')";
+            db.query(sql);
+        }
+        return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.' });
+    } else {
+        return res.status(200).json({ status: 'success', message: 'No photo found to upload.' });
+    }
 };
