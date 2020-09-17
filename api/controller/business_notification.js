@@ -44,6 +44,23 @@ exports.dd_verbose = function (req, res, next) {
 
 
 /**
+ * VERIFY PINCODE
+ */
+exports.verify_pincode = function (req, res, next) {
+    if (req.body.pincode == '' || req.body.pincode == 'undefined' || req.body.pincode == null) {
+        return res.status(404).send({ status: 'error', message: 'Pincode not found' });
+    }
+    var P = require('pincode-validator');
+    var ps = P.validate(req.body.pincode);
+    if(ps === true){
+        return res.status(200).json({ status: 'success', message: 'Pincode is correct.' });
+    }else{
+        return res.status(404).json({ status: 'error', message: 'Pincode is incorrect.' });
+    }
+};
+
+
+/**
  * CREATE NEW NOTIFICATION
  */
 exports.add_notification = function (req, res, next) {

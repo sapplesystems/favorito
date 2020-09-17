@@ -15,6 +15,11 @@ router.post('/list', CheckAuth, BusinessNotificatonController.all_notifications)
  */
 router.post('/dd-verbose', CheckAuth, BusinessNotificatonController.dd_verbose);
 
+/**
+ * VERIFY PINCODE
+ */
+router.post('/verify-pincode', CheckAuth, BusinessNotificatonController.verify_pincode);
+
 
 /**
  * CREATE NEW NOTIFICATION ROUTE
