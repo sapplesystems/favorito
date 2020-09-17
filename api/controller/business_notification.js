@@ -1,11 +1,52 @@
 var db = require('../config/db');
-var bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
+
+/**
+ * FETCH ALL NOTIFICATION
+ */
+exports.all_notifications = function (req, res, next) {
+    if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
+        return res.status(404).send({ status: 'error', message: 'Id not found' });
+    } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
+        return res.status(404)({ status: 'error', message: 'Business id not found.' });
+    }
+    var sql = "SELECT id, title, description FROM business_notifications WHERE business_id='" + req.body.business_id + "' AND business_user_id='" + req.body.id + "' AND is_deleted='0' AND deleted_at IS NULL";
+    db.query(sql, function (err, result) {
+        if (err) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        }
+        return res.status(200).json({ status: 'success', message: 'success', data: result });
+    });
+};
+
+/**
+ * STATIC DROP DONW DETAI TO CREATE THE NOTIFICATION
+ */
+exports.dd_verbose = function (req, res, next) {
+    if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
+        return res.status(404).send({ status: 'error', message: 'Id not found' });
+    } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
+        return res.status(404)({ status: 'error', message: 'Business id not found.' });
+    }
+    var sql = "SELECT id, `state` from states order by state";
+    db.query(sql, function (err, state_list, fields) {
+        if (err) {
+            return res.status(500).send({ status: 'error', message: 'Something went wrong.', data: err });
+        }
+        var verbose = {};
+        verbose.action = ['Call', 'Chat'];
+        verbose.audience = ['Paid', 'Free'];
+        verbose.area = ['Country', 'State', 'City', 'Pincode'];
+        verbose.status = ['New', 'In-Progress', 'Complete'];
+        verbose.state_list = state_list;
+        return res.status(200).json({ status: 'success', message: 'success', data: verbose });
+    });
+};
+
 
 /**
  * CREATE NEW NOTIFICATION
  */
-exports.add_business_category = function (req, res, next) {
+exports.add_notification = function (req, res, next) {
     if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
         return res.status(404).send({ status: 'error', message: 'Id not found' });
     } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
@@ -46,23 +87,5 @@ exports.add_business_category = function (req, res, next) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
         }
         return res.status(200).json({ status: 'success', message: 'Notification created successfully.' });
-    });
-};
-
-/**
- * FETCH ALL NOTIFICATION
- */
-exports.all_business_category = function (req, res, next) {
-    if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
-        return res.status(404).send({ status: 'error', message: 'Id not found' });
-    } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
-        return res.status(404)({ status: 'error', message: 'Business id not found.' });
-    }
-    var sql = "SELECT id, title, description FROM business_notifications WHERE business_id='" + req.body.business_id + "' AND business_user_id='" + req.body.id + "' AND is_deleted='0' AND deleted_at IS NULL";
-    db.query(sql, function (err, result) {
-        if (err) {
-            return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
-        }
-        return res.status(200).json({ status: 'success', message: 'success', data: result });
     });
 };
