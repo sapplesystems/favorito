@@ -25,6 +25,7 @@ exports.getProfile = function (req, res, next) {
             } else if (rows.length === 0) {
                 return res.status(404).send({ status: 'error', message: 'No recored found.' });
             } else {
+                var hours_drop_down_list = ['Select Hours', 'Always Open'];
                 var website = [];
                 if (rows[0]['website'] != '' && rows[0]['website'] != null && rows[0]['website'] != 'undefined') {
                     var x = rows[0]['website'];
@@ -37,10 +38,10 @@ exports.getProfile = function (req, res, next) {
                     db.query(q2, function (error, hours) {
                         console.log(hours);
                         rows[0].hours = hours;
-                        return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                        return res.status(200).json({ status: 'success', message: 'success', data: rows[0], hours_drop_down_list: hours_drop_down_list });
                     });
                 } else {
-                    return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                    return res.status(200).json({ status: 'success', message: 'success', data: rows[0], hours_drop_down_list: hours_drop_down_list });
                 }
             }
         });
