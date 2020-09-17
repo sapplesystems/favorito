@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
+import 'package:application/model/dashModel.dart';
 import 'package:application/model/job/JobListRequestModel.dart';
 import 'package:application/model/loginModel.dart';
 import 'package:application/model/notification/CityListModel.dart';
@@ -17,6 +20,7 @@ class WebService {
   static Response response;
   static Dio dio = new Dio();
   static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
+
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
     response = await dio.post(serviceFunction.funBusyList);
@@ -31,6 +35,18 @@ class WebService {
     _data = CatListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_data.status}");
     return _data;
+  }
+
+  static Future<dashData> funGetDashBoard() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    dashModel _data = dashModel();
+    response = await dio.post(serviceFunction.funDash, options: _opt);
+    _data = dashModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_data.status}");
+    return _data.data;
   }
 
   static Future<NotificationListRequestModel> funGetNotifications() async {

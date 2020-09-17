@@ -1,18 +1,28 @@
-import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/myCss.dart';
 import 'package:application/network/webservices.dart';
 import 'package:application/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:application/utils/Prefs.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   TextEditingController userCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
+  @override
+  void initState() {
+    super.initState();
+    decide();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,5 +208,11 @@ class Login extends StatelessWidget {
                     fontFamily: "Gilroy",
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1))));
+  }
+
+  void decide() async {
+    if (Prefs.token != null || Prefs.token != "")
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => bottomNavigation()));
   }
 }

@@ -3,6 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class card2 extends StatefulWidget {
+  String ratings;
+  card2({this.ratings});
+
   @override
   _card2State createState() => _card2State();
 }
@@ -103,7 +106,7 @@ class _card2State extends State<card2> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "4.5",
+                    widget.ratings,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 30,

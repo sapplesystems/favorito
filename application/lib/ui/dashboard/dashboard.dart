@@ -3,9 +3,12 @@ import 'dart:ui';
 import 'package:application/component/card1.dart';
 import 'package:application/component/card2.dart';
 import 'package:application/component/cart3.dart';
+import 'package:application/network/webservices.dart';
+import 'package:application/ui/setting/businessSetting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:application/utils/myString.Dart';
 
 class dashboard extends StatefulWidget {
   @override
@@ -13,6 +16,12 @@ class dashboard extends StatefulWidget {
 }
 
 class _dashboardState extends State<dashboard> {
+  @override
+  void initState() {
+    super.initState();
+    calldashBoard();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +38,13 @@ class _dashboardState extends State<dashboard> {
                 style: TextStyle(color: Colors.black),
               ),
             ),
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.refresh, color: Colors.black),
+                  onPressed: () {
+                    calldashBoard();
+                  })
+            ],
             centerTitle: true,
             backgroundColor: Color(0xfffff4f4),
             elevation: 0,
@@ -50,38 +66,53 @@ class _dashboardState extends State<dashboard> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text("Status : ", style: TextStyle(fontSize: 16)),
-                    Text("Live",
-                        style: TextStyle(fontSize: 16, color: Colors.green)),
+                    Text(
+                        is_verified == "0"
+                            ? "Offline"
+                            : is_verified == "1" ? "Live" : "Blocked",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: is_verified == "0"
+                                ? Colors.grey
+                                : is_verified == "1"
+                                    ? Colors.green
+                                    : Colors.red)),
                     SizedBox(
                       width: 20,
                     )
                   ],
                 ),
-                rowWithTextNButton("Conplete Your Profile", "Fill"),
-                rowWithTextNButton("Complete your information", "Now"),
-                rowWithTextNButton("Send for verification", "Verify"),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: context.percentHeight * 2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [card1(), card2()],
-                  ),
-                ),
+                rowWithTextNButton(
+                    "Conplete Your Profile", "Fill", is_profile_completed, () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BusinessSetting()));
+                }),
+                // rowWithTextNButton("Complete your information", "Now",
+                //     is_information_completed, () {}),
+                // rowWithTextNButton(
+                //     "Send for verification", "Verify", is_verified, () {}),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(vertical: context.percentHeight * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      card3(txt1: "Catalogoues", txt2: "71"),
-                      card3(
-                        txt1: "Orders",
-                        txt2: "642",
-                      )
+                      card1(checkins: check_ins),
+                      card2(ratings: ratings)
                     ],
                   ),
                 ),
+                Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: context.percentHeight * 2),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          card3(txt1: "Catalogoues", txt2: catalogoues),
+                          card3(txt1: "Orders", txt2: orders)
+                        ])),
                 Row(children: [
                   Text(
                     "Grow your Business",
@@ -89,8 +120,8 @@ class _dashboardState extends State<dashboard> {
                   )
                 ]),
                 Row(children: [
-                  credit("Free Credit", "200", "assets/icon/warning.svg"),
-                  credit("Paid Credit", "400", "null")
+                  credit("Free Credit", free_credit, "assets/icon/warning.svg"),
+                  credit("Paid Credit", paid_credit, "null")
                 ]),
                 for (int i = 0; i < 2; i++)
                   rowCard("Advertise",
@@ -99,7 +130,8 @@ class _dashboardState extends State<dashboard> {
             )));
   }
 
-  Widget rowWithTextNButton(String txt1, String txt2) {
+  Widget rowWithTextNButton(
+      String txt1, String txt2, String check, Function function) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -118,21 +150,24 @@ class _dashboardState extends State<dashboard> {
         children: [
           Text(txt1),
           InkWell(
-            onTap: () {},
-            child: Container(
-              width: 54,
-              height: 20,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(
-                  color: Color(0xffdd2626),
-                  width: 1,
+            onTap: function,
+            child: Visibility(
+              visible: check == "0" ? true : false,
+              child: Container(
+                width: 54,
+                height: 20,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
+                    color: Color(0xffdd2626),
+                    width: 1,
+                  ),
                 ),
-              ),
-              child: Text(
-                txt2,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.red),
+                child: Text(
+                  txt2,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             ),
           )
@@ -173,5 +208,25 @@ class _dashboardState extends State<dashboard> {
         )
       ]),
     );
+  }
+
+  void calldashBoard() {
+    WebService.funGetDashBoard().then((value) {
+      business_id = value.businessId;
+      business_name = value.businessName;
+      business_status = value.businessStatus;
+      is_profile_completed = value.isProfileCompleted.toString();
+      is_information_completed = value.isInformationCompleted.toString();
+      is_phone_verified = value.isPhoneVerified.toString();
+      is_email_verified = value.isEmailVerified.toString();
+      is_verified = value.isVerified.toString();
+      check_ins = value.checkIns.toString();
+      ratings = value.ratings.toString();
+      catalogoues = value.catalogoues.toString();
+      orders = value.orders.toString();
+      free_credit = value.freeCredit.toString();
+      paid_credit = value.paidCredit.toString();
+      setState(() {});
+    });
   }
 }
