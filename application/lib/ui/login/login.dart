@@ -192,7 +192,8 @@ class _LoginState extends State<Login> {
   }
 
   void decide() async {
-    if (Prefs.token != null || Prefs.token != "") {
+    var va = await Prefs.token;
+    if (va != null && va != "") {
       Future.delayed(Duration.zero, () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => bottomNavigation()));

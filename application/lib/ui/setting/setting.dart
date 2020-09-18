@@ -62,7 +62,7 @@ class _settingState extends State<setting> {
                 ),
                 subtitle: Text(
                   "We are buggest food chain vased is Surat Gujrat",
-                  style: TextStyle(wordSpacing: 2, fontSize: 18),
+                  style: TextStyle(wordSpacing: 2, fontSize: 16),
                 ),
               ),
             ),
