@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:application/component/roundedButton2.dart';
 import 'package:application/utils/myString.Dart';
-import 'package:google_maps/google_maps.dart';
 import 'package:application/component/txtfieldboundry.dart';
 import 'package:application/myCss.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BusinessSetting extends StatefulWidget {
   @override
@@ -16,6 +17,9 @@ class BusinessSetting extends StatefulWidget {
 }
 
 class _BusinessSettingState extends State<BusinessSetting> {
+  final CameraPosition _initPosition = CameraPosition(target: LatLng(27.1751,78.0421),zoom: 10.5);
+  Completer<GoogleMapController> _controller = Completer();
+  Set<Marker> _marker ={};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +130,7 @@ class _BusinessSettingState extends State<BusinessSetting> {
                                             Text(" Mon - Fri ",
                                                 style: TextStyle(
                                                     fontSize: 16,
-                                                    fontWeight:
+                                                     fontWeight:
                                                         FontWeight.w400)),
                                             Text("11:30 - 23:00",
                                                 style: TextStyle(
@@ -139,6 +143,19 @@ class _BusinessSettingState extends State<BusinessSetting> {
                                       Text("Add",
                                           style: TextStyle(color: Colors.red))
                                     ],
+                                  ),
+                                  Container(height: 200,
+                                    child: GoogleMap(initialCameraPosition: _initPosition,onMapCreated: (GoogleMapController controller){
+                                      _controller.complete(controller);
+                                      setState(() {
+                                        _marker.add(Marker(markerId: MarkerId('marker_1'),position:  LatLng(27.1751,78.0421)));
+                                      });
+                                    },mapType: MapType.normal,markers: _marker,zoomGesturesEnabled: true,
+                                      zoomControlsEnabled: false,
+                                        minMaxZoomPreference: MinMaxZoomPreference(16,18),
+                                      myLocationButtonEnabled: true,
+                                      myLocationEnabled: true,
+                                      ),
                                   )
                                 ],
                               )),
