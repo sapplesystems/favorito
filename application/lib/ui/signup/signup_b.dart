@@ -23,8 +23,8 @@ class _signup_bState extends State<signup_b> {
   bool checked = false;
   List<String> busy = [];
   List<TextEditingController> ctrl = List();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<State> _busKey = GlobalKey<State>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<State> _busKey = GlobalKey<State>();
   bool _autovalidate = false;
   var ddlabel;
   var namelabel;
@@ -43,9 +43,6 @@ class _signup_bState extends State<signup_b> {
       maillabel = "Email";
       namelabel = "Display Name";
     }
-
-    // getBusiness();
-    // getCategory();
   }
 
   @override
@@ -244,6 +241,7 @@ class _signup_bState extends State<signup_b> {
       BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
       WebService.funRegister(_map).then((value) {
         if (value.status == 'success') {
+          BotToast.showText(text: "Registration SuccessFull!!");
           Navigator.pop(context);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => bottomNavigation()));

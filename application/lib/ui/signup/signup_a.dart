@@ -55,7 +55,6 @@ class _signup_aState extends State<signup_a> {
                   BotToast.showLoading(
                       allowClick: true, duration: Duration(seconds: 1));
                   getBusiness();
-                  getCategory();
                 })
           ]),
       body: Container(

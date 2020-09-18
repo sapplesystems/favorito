@@ -11,4 +11,6 @@ class serviceFunction {
   static String funValidPincode = baseUrl + 'notification/validPincode';
   static String funGetJobs = baseUrl + 'job/list';
   static String funGetCreteJobDefaultData = baseUrl + 'job/getRequiredData';
+  static String funLogin = baseUrl + 'user/login';
+  static String funDash = baseUrl + 'dashboard/detail';
 }

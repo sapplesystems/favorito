@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
 import 'package:application/model/job/CreateJobRequiredDataModel.dart';
 import 'package:application/model/job/JobListRequestModel.dart';
 import 'package:application/model/job/SkillListRequiredDataModel.dart';
+import 'package:application/model/dashModel.dart';
+import 'package:application/model/loginModel.dart';
 import 'package:application/model/notification/CityListModel.dart';
 import 'package:application/model/notification/CreateNotificationRequestModel.dart';
 import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
@@ -10,15 +14,18 @@ import 'package:application/model/notification/NotificationListRequestModel.dart
 import 'package:application/model/busyListModel.dart';
 import 'package:application/model/registerModel.dart';
 import 'package:application/network/serviceFunction.dart';
+import 'package:application/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
 
 class WebService {
   static Response response;
   static Dio dio = new Dio();
+  static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
+
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
-    response = await dio.post(serviceFunction.funBusyList, data: null);
+    response = await dio.post(serviceFunction.funBusyList);
     _data = busyListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_data.status}");
     return _data;
@@ -32,9 +39,26 @@ class WebService {
     return _data;
   }
 
+  static Future<dashData> funGetDashBoard() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    dashModel _data = dashModel();
+    response = await dio.post(serviceFunction.funDash, options: _opt);
+    _data = dashModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_data.status}");
+    return _data.data;
+  }
+
   static Future<NotificationListRequestModel> funGetNotifications() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     NotificationListRequestModel _returnData = NotificationListRequestModel();
-    response = await dio.post(serviceFunction.funGetNotifications, data: 1);
+    response =
+        await dio.post(serviceFunction.funGetNotifications, options: _opt);
     _returnData = NotificationListRequestModel.fromJson(
         convert.json.decode(response.toString()));
     return _returnData;
@@ -70,11 +94,21 @@ class WebService {
   static Future<registerModel> funRegister(Map _map) async {
     registerModel _data = registerModel();
     response = await dio.post(serviceFunction.funBusyRegister,
-        data: _map,
-        options: Options(contentType: Headers.formUrlEncodedContentType));
+        data: _map, options: opt);
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_data.status}");
+    Prefs.setToken(_data.token.toString().trim());
+    print("responseData3:${_data.toString().trim()}");
+    print("token:${_data.token.toString().trim()}");
     return _data;
+  }
+
+  static Future<loginModel> funGetLogin(Map _map) async {
+    loginModel _data = loginModel();
+    response =
+        await dio.post(serviceFunction.funLogin, data: _map, options: opt);
+    _data = loginModel.fromJson(convert.json.decode(response.toString()));
+    Prefs.setToken(_data.token.toString().trim());
+    return _data.status == "success" ? _data : _data.message;
   }
 
   static Future<CityListModel> funGetCities() async {

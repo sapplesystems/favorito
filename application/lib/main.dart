@@ -1,9 +1,8 @@
-import 'package:application/ui/jobs/JobList.dart';
-import 'package:application/ui/tour/Tour_A.dart';
-import 'package:application/ui/signup/signup_a.dart';
-import 'package:application/ui/notification/Notifications.dart';
-import 'package:flutter/material.dart';
+import 'package:application/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:application/ui/login/login.dart';
+import 'package:application/utils/Prefs.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   //initializeReflectable();
@@ -24,5 +23,5 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Notifications());
+      home: Login());
 }
