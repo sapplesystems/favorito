@@ -38,6 +38,7 @@ dependencies:
   dropdown_search: ^0.4.4
   auto_size_text: ^2.1.0
   bot_toast: ^3.0.4
+  flutter_tagging: ^2.2.0+3
 
 dev_dependencies:
   flutter_test:

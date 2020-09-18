@@ -1,6 +1,8 @@
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
+import 'package:application/model/job/CreateJobRequiredDataModel.dart';
 import 'package:application/model/job/JobListRequestModel.dart';
+import 'package:application/model/job/SkillListRequiredDataModel.dart';
 import 'package:application/model/notification/CityListModel.dart';
 import 'package:application/model/notification/CreateNotificationRequestModel.dart';
 import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
@@ -32,22 +34,9 @@ class WebService {
 
   static Future<NotificationListRequestModel> funGetNotifications() async {
     NotificationListRequestModel _returnData = NotificationListRequestModel();
-    // response = await dio.post(serviceFunction.funGetNotifications, data: 1);
-    // _data = NotificationListModel.fromJson(
-    //     convert.json.decode(response.toString()));
-    // print("responseData3:${_data.status}");
-    // return _data;
-    NotificationModel model1 = NotificationModel();
-    model1.title = "Notification 1";
-    model1.description =
-        "Description is that it is a description, and to test the bigger texts, now for even bigger text to check if the ui breaks";
-    _returnData.notifications.add(model1);
-
-    NotificationModel model2 = NotificationModel();
-    model2.title = "Notification 1";
-    model2.description = "Description is that it is a description";
-    _returnData.notifications.add(model2);
-
+    response = await dio.post(serviceFunction.funGetNotifications, data: 1);
+    _returnData = NotificationListRequestModel.fromJson(
+        convert.json.decode(response.toString()));
     return _returnData;
   }
 
@@ -119,5 +108,46 @@ class WebService {
     _returnData.jobs.add(model2);
 
     return _returnData;
+  }
+
+  static Future<CreateJobRequiredDataModel> funGetCreteJobDefaultData(
+      int jobId) async {
+    CreateJobRequiredDataModel _returnData = CreateJobRequiredDataModel();
+    _returnData.contactOptionsList = ['Call', 'Email'];
+    _returnData.cityList = ['Noida', 'New Delhi', 'Agra', 'Ghaziabad'];
+
+    return _returnData;
+  }
+
+  static Future<List<SkillListRequiredDataModel>> funGetSkillList() async {
+    List<SkillListRequiredDataModel> _returnData = [];
+    SkillListRequiredDataModel model1 = SkillListRequiredDataModel('abc', 1);
+    SkillListRequiredDataModel model2 = SkillListRequiredDataModel('abcde', 2);
+    SkillListRequiredDataModel model3 = SkillListRequiredDataModel('qwerty', 3);
+    SkillListRequiredDataModel model4 = SkillListRequiredDataModel('zxcv', 4);
+    _returnData.add(model1);
+    _returnData.add(model2);
+    _returnData.add(model3);
+    _returnData.add(model4);
+
+    return _returnData;
+  }
+
+  static Future<List<SkillListRequiredDataModel>> getLanguages(
+      String query) async {
+    List<SkillListRequiredDataModel> _returnData = [];
+    SkillListRequiredDataModel model1 = SkillListRequiredDataModel('abc', 1);
+    SkillListRequiredDataModel model2 = SkillListRequiredDataModel('abcde', 2);
+    SkillListRequiredDataModel model3 = SkillListRequiredDataModel('qwerty', 3);
+    SkillListRequiredDataModel model4 = SkillListRequiredDataModel('zxcv', 4);
+    _returnData.add(model1);
+    _returnData.add(model2);
+    _returnData.add(model3);
+    _returnData.add(model4);
+
+    return _returnData
+        .where((skill) =>
+            skill.skillName.toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 }

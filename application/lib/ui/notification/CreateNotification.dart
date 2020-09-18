@@ -82,7 +82,6 @@ class _CreateNotificationState extends State<CreateNotification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
           elevation: 0,

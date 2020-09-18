@@ -104,10 +104,22 @@
       "languageVersion": "2.2"
     },
     {
+      "name": "flutter_tagging",
+      "rootUri": "file:///E:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_tagging-2.2.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.5"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///E:/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.2"
+    },
+    {
+      "name": "flutter_typeahead_web",
+      "rootUri": "file:///E:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_typeahead_web-1.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.5"
     },
     {
       "name": "flutter_web_plugins",
@@ -296,7 +308,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-17T06:32:39.709912Z",
+  "generated": "2020-09-17T09:49:49.903566Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }
