@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:application/component/listItem.dart';
 import 'package:application/myCss.dart';
 import 'package:application/ui/notification/Notifications.dart';
+import 'package:application/ui/offer/CreateOffer.dart';
 import 'package:application/ui/setting/businessSetting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -63,7 +64,7 @@ class _settingState extends State<setting> {
                 ),
                 subtitle: Text(
                   "We are buggest food chain vased is Surat Gujrat",
-                  style: TextStyle(wordSpacing: 2, fontSize: 18),
+                  style: TextStyle(wordSpacing: 2, fontSize: 16),
                 ),
               ),
             ),
@@ -136,7 +137,14 @@ class _settingState extends State<setting> {
                         horizontal: context.percentWidth * 14),
                     child: Column(children: [
                       listItems(
-                          title: "Create Offer", ico: "offer", clicker: () {}),
+                          title: "Create Offer",
+                          ico: "offer",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateOffer()));
+                          }),
                       listItems(title: "Jobs", ico: "jobs", clicker: () {}),
                       listItems(
                           title: "Waitlist", ico: "waiting", clicker: () {}),

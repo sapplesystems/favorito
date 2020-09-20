@@ -3,7 +3,8 @@ class NotificationListRequestModel {
   String message;
   List<NotificationModel> notifications;
 
-  NotificationListRequestModel({this.status, this.message, this.notifications});
+  NotificationListRequestModel(
+      {this.status = '', this.message = '', this.notifications = const []});
 
   NotificationListRequestModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];

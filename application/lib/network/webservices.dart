@@ -12,6 +12,8 @@ import 'package:application/model/notification/CreateNotificationRequestModel.da
 import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:application/model/notification/NotificationListRequestModel.dart';
 import 'package:application/model/busyListModel.dart';
+import 'package:application/model/offer/CreateOfferRequestModel.dart';
+import 'package:application/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:application/model/registerModel.dart';
 import 'package:application/network/serviceFunction.dart';
 import 'package:application/utils/Prefs.dart';
@@ -61,33 +63,49 @@ class WebService {
         await dio.post(serviceFunction.funGetNotifications, options: _opt);
     _returnData = NotificationListRequestModel.fromJson(
         convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
     return _returnData;
   }
 
   static Future<CreateNotificationRequiredDataModel>
       funGetCreateNotificationDefaultData() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     CreateNotificationRequiredDataModel _returnData =
         CreateNotificationRequiredDataModel();
-    _returnData.actionList = ['Call', 'Direct Chat'];
-    _returnData.audienceList = ['Paid', 'Free'];
-    _returnData.areaList = ['Country', 'State', 'City', 'Pincode'];
-    _returnData.countryList = ['India'];
-    _returnData.stateList = ['Uttar Pradesh', 'Madhya Pradesh', 'Maharashtra'];
-    _returnData.quantityList = [
-      '10000 (Rs 1100)',
-      '1000 (Rs 110)',
-      '15000 (Rs 1650)'
-    ];
-
+    response = await dio.post(
+        serviceFunction.funGetCreateNotificationDefaultData,
+        options: _opt);
+    _returnData = CreateNotificationRequiredDataModel.fromJson(
+        convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
     return _returnData;
   }
 
   static Future<BaseResponseModel> funCreateNotification(
       CreateNotificationRequestModel requestData) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
-    _returnData.status = 1;
-    _returnData.message = 'success';
-
+    Map<String, dynamic> _map = {
+      "title": requestData.title,
+      "description": requestData.description,
+      "action": requestData.selectedAction,
+      "contact": requestData.contact,
+      "audience": requestData.selectedAudience,
+      "area": requestData.selectedArea,
+      "area_detail": requestData.areaDetail,
+      "quantity": requestData.selectedQuantity
+    };
+    response = await dio.post(serviceFunction.funCreateNotification,
+        data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
     return _returnData;
   }
 
@@ -119,15 +137,16 @@ class WebService {
   }
 
   static Future<BaseResponseModel> funValidPincode(String pincode) async {
-    if (pincode == '000000') {
-      BaseResponseModel _returnData = BaseResponseModel();
-      _returnData.status = 1;
-      _returnData.message = 'success';
-
-      return _returnData;
-    } else {
-      return null;
-    }
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    response = await dio.post(serviceFunction.funValidPincode, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
+    return _returnData;
   }
 
   static Future<JobListRequestModel> funGetJobs() async {
@@ -183,5 +202,41 @@ class WebService {
         .where((skill) =>
             skill.skillName.toLowerCase().contains(query.toLowerCase()))
         .toList();
+  }
+
+  static Future<CreateOfferRequiredDataModel>
+      funGetCreateOfferDefaultData() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    CreateOfferRequiredDataModel _returnData = CreateOfferRequiredDataModel();
+    response = await dio.post(serviceFunction.funGetCreateOfferDefaultData,
+        options: _opt);
+    _returnData = CreateOfferRequiredDataModel.fromJson(
+        convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> funCreateOffer(
+      CreateOfferRequestModel requestData) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    Map<String, dynamic> _map = {
+      "offer_title": requestData.title,
+      "offer_description": requestData.description,
+      "offer_status": requestData.selectedOfferState,
+      "offer_type": requestData.selectedOfferType
+    };
+    response = await dio.post(serviceFunction.funCreateOffer,
+        data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
+    return _returnData;
   }
 }

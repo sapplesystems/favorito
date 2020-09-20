@@ -1,6 +1,7 @@
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
 import 'package:application/model/notification/CreateNotificationRequestModel.dart';
+import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:application/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -13,22 +14,19 @@ class CreateNotification extends StatefulWidget {
 }
 
 class _CreateNotificationState extends State<CreateNotification> {
-  List<String> _actionList;
-  List<String> _audienceList;
-  List<String> _areaList;
-  List<String> _countryList;
-  List<String> _stateList;
-  List<String> _cityList;
-  List<String> _quantityList;
-
-  String _contactHintText;
-  String _selectedAction;
-  String _selectedAudience;
-  String _selectedArea;
-  String _selectedCountry;
-  String _selectedState;
-  String _selectedCity;
-  String _selectedQuantity;
+  List<String> _countryList = ['India'];
+  List<String> _cityList = [];
+  List<String> _quantityList = ['quantity 1', 'quantity 2'];
+  CreateNotificationRequiredDataModel _notificationRequiredData =
+      CreateNotificationRequiredDataModel();
+  String _contactHintText = '';
+  String _selectedAction = '';
+  String _selectedAudience = '';
+  String _selectedArea = '';
+  String _selectedCountry = '';
+  StateList _selectedState = StateList();
+  String _selectedCity = '';
+  String _selectedQuantity = '';
   bool _countryVisible;
   bool _stateVisible;
   bool _cityVisible;
@@ -47,11 +45,7 @@ class _CreateNotificationState extends State<CreateNotification> {
   void initState() {
     WebService.funGetCreateNotificationDefaultData().then((value) {
       setState(() {
-        _actionList = value.actionList;
-        _audienceList = value.audienceList;
-        _areaList = value.areaList;
-        _stateList = value.stateList;
-        _quantityList = value.quantityList;
+        _notificationRequiredData = value;
       });
     });
     super.initState();
@@ -64,7 +58,7 @@ class _CreateNotificationState extends State<CreateNotification> {
     _selectedAudience = '';
     _selectedArea = '';
     _selectedCountry = 'India';
-    _selectedState = '';
+    _selectedState = null;
     _selectedCity = '';
     _selectedQuantity = '';
     _countryVisible = false;
@@ -93,7 +87,7 @@ class _CreateNotificationState extends State<CreateNotification> {
             color: Colors.black, //change your color here
           ),
           title: Text(
-            "Notification",
+            "Create Notification",
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -103,7 +97,6 @@ class _CreateNotificationState extends State<CreateNotification> {
             ),
             child: ListView(children: [
               Container(
-                height: context.percentHeight * 75,
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: Card(
                     elevation: 5,
@@ -114,7 +107,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                       builder: (context) => Form(
                         key: _formKey,
                         autovalidate: _autoValidateForm,
-                        child: ListView(
+                        child: Column(
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -140,16 +133,20 @@ class _CreateNotificationState extends State<CreateNotification> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: true,
+                                autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 selectedItem: _selectedAction,
-                                items: _actionList,
+                                items: _notificationRequiredData.data != null
+                                    ? _notificationRequiredData.data.action
+                                    : null,
                                 label: "Action",
                                 hint: "Please Select Action",
                                 showSearchBox: false,
                                 onChanged: (value) {
                                   setState(() {
-                                    if (value == _actionList[0]) {
+                                    if (value ==
+                                        _notificationRequiredData
+                                            .data.action[0]) {
                                       _contactHintText =
                                           'Enter number for call';
                                     } else {
@@ -176,11 +173,13 @@ class _CreateNotificationState extends State<CreateNotification> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: true,
+                                autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 selectedItem: _selectedAudience,
-                                items: _audienceList,
+                                items: _notificationRequiredData.data != null
+                                    ? _notificationRequiredData.data.audience
+                                    : null,
                                 label: "Audience",
                                 hint: "Please Select Audience",
                                 showSearchBox: false,
@@ -196,28 +195,36 @@ class _CreateNotificationState extends State<CreateNotification> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: true,
+                                autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 selectedItem: _selectedArea,
-                                items: _areaList,
+                                items: _notificationRequiredData.data != null
+                                    ? _notificationRequiredData.data.area
+                                    : null,
                                 label: "Area",
                                 hint: "Please Select Area",
                                 showSearchBox: false,
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedArea = value;
-                                    if (value == _areaList[0]) {
+                                    if (value ==
+                                        _notificationRequiredData
+                                            .data.area[0]) {
                                       _countryVisible = true;
                                       _stateVisible = false;
                                       _cityVisible = false;
                                       _pincodeVisible = false;
-                                    } else if (value == _areaList[1]) {
+                                    } else if (value ==
+                                        _notificationRequiredData
+                                            .data.area[1]) {
                                       _countryVisible = false;
                                       _stateVisible = true;
                                       _cityVisible = false;
                                       _pincodeVisible = false;
-                                    } else if (value == _areaList[2]) {
+                                    } else if (value ==
+                                        _notificationRequiredData
+                                            .data.area[2]) {
                                       _countryVisible = false;
                                       _stateVisible = false;
                                       _cityVisible = true;
@@ -244,7 +251,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                                 child: DropdownSearch<String>(
                                   validator: (v) =>
                                       v == '' ? "required field" : null,
-                                  autoValidate: true,
+                                  autoValidate: _autoValidateForm,
                                   mode: Mode.MENU,
                                   showSelectedItem: true,
                                   selectedItem: _selectedCountry,
@@ -258,14 +265,20 @@ class _CreateNotificationState extends State<CreateNotification> {
                             Visibility(
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: DropdownSearch<String>(
+                                child: DropdownSearch<StateList>(
                                   validator: (v) =>
-                                      v == '' ? "required field" : null,
-                                  autoValidate: true,
+                                      v == null ? "required field" : null,
+                                  autoValidate: _autoValidateForm,
+                                  compareFn: (StateList i, StateList s) =>
+                                      i.isEqual(s),
                                   mode: Mode.MENU,
                                   showSelectedItem: true,
+                                  itemAsString: (StateList u) =>
+                                      u.userAsString(),
                                   selectedItem: _selectedState,
-                                  items: _stateList,
+                                  items: _notificationRequiredData.data != null
+                                      ? _notificationRequiredData.data.stateList
+                                      : null,
                                   label: "State",
                                   hint: "Please Select State",
                                   showSearchBox: false,
@@ -284,7 +297,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                                 child: DropdownSearch<String>(
                                   validator: (v) =>
                                       v == '' ? "required field" : null,
-                                  autoValidate: true,
+                                  autoValidate: _autoValidateForm,
                                   mode: Mode.MENU,
                                   showSelectedItem: true,
                                   selectedItem: _selectedCity,
@@ -318,7 +331,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                                       WebService.funValidPincode(
                                               _myPincodeEditController.text)
                                           .then((value) {
-                                        if (value != null) {
+                                        if (value.status == 'success') {
                                           BotToast.showText(
                                               text: "Pincode verified");
                                           return;
@@ -341,7 +354,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: true,
+                                autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 selectedItem: _selectedQuantity,
                                 items: _quantityList,
@@ -364,6 +377,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                 alignment: Alignment.center,
                 child: Container(
                   width: context.percentWidth * 50,
+                  margin: EdgeInsets.only(bottom: 16.0),
                   child: roundedButton(
                     clicker: () {
                       if (_formKey.currentState.validate()) {
@@ -375,21 +389,30 @@ class _CreateNotificationState extends State<CreateNotification> {
                         requestData.contact = _myContactEditController.text;
                         requestData.selectedAudience = _selectedAudience;
                         requestData.selectedArea = _selectedArea;
-                        if (_selectedArea == _areaList[0]) {
-                          requestData.selectedCountry = _selectedCountry;
-                        } else if (_selectedArea == _areaList[1]) {
-                          requestData.selectedState = _selectedState;
-                        } else if (_selectedArea == _areaList[2]) {
-                          requestData.selectedCity = _selectedCity;
-                        } else if (_selectedArea == _areaList[3]) {
-                          requestData.pincode = _myPincodeEditController.text;
+                        if (_selectedArea ==
+                            _notificationRequiredData.data.area[0]) {
+                          requestData.areaDetail = _selectedCountry;
+                        } else if (_selectedArea ==
+                            _notificationRequiredData.data.area[1]) {
+                          requestData.areaDetail = _selectedState.state;
+                        } else if (_selectedArea ==
+                            _notificationRequiredData.data.area[2]) {
+                          requestData.areaDetail = _selectedCity;
+                        } else if (_selectedArea ==
+                            _notificationRequiredData.data.area[3]) {
+                          requestData.areaDetail =
+                              _myPincodeEditController.text;
                         }
                         requestData.selectedQuantity = _selectedQuantity;
                         WebService.funCreateNotification(requestData)
                             .then((value) {
-                          setState(() {
-                            initializeDefaultValues();
-                          });
+                          if (value.status == 'success') {
+                            setState(() {
+                              initializeDefaultValues();
+                            });
+                          } else {
+                            BotToast.showText(text: value.message);
+                          }
                         });
                       } else {
                         _autoValidateForm = true;

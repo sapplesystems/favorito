@@ -1,3 +1,5 @@
+import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
+
 class CreateNotificationRequestModel {
   String title;
   String description;
@@ -5,9 +7,6 @@ class CreateNotificationRequestModel {
   String contact;
   String selectedAudience;
   String selectedArea;
-  String selectedCountry;
-  String selectedState;
-  String selectedCity;
-  String pincode;
+  String areaDetail;
   String selectedQuantity;
 }
