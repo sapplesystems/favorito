@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:application/component/listItem.dart';
 import 'package:application/myCss.dart';
+import 'package:application/ui/catalog/Catalogs.dart';
+import 'package:application/ui/jobs/JobList.dart';
 import 'package:application/ui/notification/Notifications.dart';
 import 'package:application/ui/offer/CreateOffer.dart';
 import 'package:application/ui/setting/businessSetting.dart';
@@ -145,11 +147,26 @@ class _settingState extends State<setting> {
                                 MaterialPageRoute(
                                     builder: (context) => CreateOffer()));
                           }),
-                      listItems(title: "Jobs", ico: "jobs", clicker: () {}),
+                      listItems(
+                          title: "Jobs",
+                          ico: "jobs",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => JobList()));
+                          }),
                       listItems(
                           title: "Waitlist", ico: "waiting", clicker: () {}),
                       listItems(
-                          title: "catalogs", ico: "catlog", clicker: () {}),
+                          title: "catalogs",
+                          ico: "catlog",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Catalogs()));
+                          }),
                       listItems(
                           title: "Create Notification",
                           ico: "bell",

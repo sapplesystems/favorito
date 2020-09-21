@@ -71,14 +71,16 @@ class _JobListState extends State<JobList> {
                                     BorderRadius.all(Radius.circular(40))),
                             margin: EdgeInsets.symmetric(vertical: 2.0),
                             padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              trailing: SvgPicture.asset(
-                                  'assets/icon/forward_arrow.svg'),
-                              title: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4.0),
-                                child: Text(
-                                  _jobList.jobs[index].title,
+                            child: Center(
+                              child: ListTile(
+                                trailing: SvgPicture.asset(
+                                    'assets/icon/forward_arrow.svg'),
+                                title: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4.0),
+                                  child: Text(
+                                    _jobList.jobs[index].title,
+                                  ),
                                 ),
                               ),
                             )),

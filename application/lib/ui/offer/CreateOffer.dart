@@ -1,6 +1,5 @@
 import 'package:application/component/roundedButton.dart';
 import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/model/notification/CreateNotificationRequestModel.dart';
 import 'package:application/model/offer/CreateOfferRequestModel.dart';
 import 'package:application/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:application/network/webservices.dart';
