@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:application/component/card1.dart';
 import 'package:application/component/card2.dart';
 import 'package:application/component/cart3.dart';
+import 'package:application/component/rowWithTextNButton.dart';
 import 'package:application/network/webservices.dart';
+import 'package:application/ui/businessInfo/businessInfo.dart';
 import 'package:application/ui/setting/businessSetting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -69,7 +71,9 @@ class _dashboardState extends State<dashboard> {
                     Text(
                         is_verified == "0"
                             ? "Offline"
-                            : is_verified == "1" ? "Live" : "Blocked",
+                            : is_verified == "1"
+                                ? "Live"
+                                : "Blocked",
                         style: TextStyle(
                             fontSize: 16,
                             color: is_verified == "0"
@@ -83,16 +87,30 @@ class _dashboardState extends State<dashboard> {
                   ],
                 ),
                 rowWithTextNButton(
-                    "Conplete Your Profile", "Fill", is_profile_completed, () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BusinessSetting()));
-                }),
-                rowWithTextNButton("Complete your information", "Now",
-                    is_information_completed, () {}),
+                    txt1: "Conplete Your Profile",
+                    txt2: "Fill",
+                    check: is_profile_completed,
+                    function: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BusinessSetting()));
+                    }),
                 rowWithTextNButton(
-                    "Send for verification", "Verify", is_verified, () {}),
+                    txt1: "Complete your information",
+                    txt2: "Now",
+                    check: is_information_completed,
+                    function: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => businessInfo()));
+                    }),
+                rowWithTextNButton(
+                    txt1: "Send for verification",
+                    txt2: "Verify",
+                    check: is_verified,
+                    function: () {}),
                 Padding(
                   padding:
                       EdgeInsets.symmetric(vertical: context.percentHeight * 2),
@@ -128,52 +146,6 @@ class _dashboardState extends State<dashboard> {
                       "Reach new audience searching for related services"),
               ]),
             )));
-  }
-
-  Widget rowWithTextNButton(
-      String txt1, String txt2, String check, Function function) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: Colors.white,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      padding: EdgeInsets.symmetric(
-          vertical: context.percentHeight * 2,
-          horizontal: context.percentWidth * 2),
-      margin: EdgeInsets.symmetric(
-        vertical: context.percentHeight * 1,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(txt1),
-          InkWell(
-            onTap: function,
-            child: Visibility(
-              visible: check == "0" ? true : false,
-              child: Container(
-                width: 54,
-                height: 20,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(
-                    color: Color(0xffdd2626),
-                    width: 1,
-                  ),
-                ),
-                child: Text(
-                  txt2,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
   }
 
   Widget rowCard(String title, String subtitle) {

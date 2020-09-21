@@ -42,6 +42,7 @@ dependencies:
   velocity_x: ^0.4.1
   location: ^3.0.2
   provider: ^4.3.2+2
+  find_dropdown: ^0.2.0
 
 dev_dependencies:
   flutter_test:
