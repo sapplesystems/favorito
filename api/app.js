@@ -15,6 +15,7 @@ var CountryStateCityRouter = require('./routes/country_state_city');
 var ChangePasswordRouter = require('./routes/change_password');
 var BusinessNotificationRouter = require('./routes/business_notification');
 var BusinessOfferRouter = require('./routes/business_offer');
+var JobRouter = require('./routes/job');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use('/api/state-city', CountryStateCityRouter);
 app.use('/api/change-password', ChangePasswordRouter);
 app.use('/api/notification', BusinessNotificationRouter);
 app.use('/api/offer', BusinessOfferRouter);
+app.use('/api/job', JobRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
