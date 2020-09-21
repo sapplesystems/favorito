@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class card1 extends StatefulWidget {
+  String checkins;
+  card1({this.checkins});
   @override
   _card1State createState() => _card1State();
 }
@@ -209,7 +211,7 @@ class _card1State extends State<card1> {
             width: 58,
             height: 32,
             child: Text(
-              "860",
+              widget.checkins,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 30,

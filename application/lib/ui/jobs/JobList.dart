@@ -86,13 +86,15 @@ class _JobListState extends State<JobList> {
                     }),
               ),
               Align(
-                alignment: Alignment.bottomCenter,
+                alignment: Alignment.center,
                 child: Container(
                   width: context.percentWidth * 50,
                   child: roundedButton(
                     clicker: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => CreateJob()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateJob(null)));
                     },
                     clr: Colors.red,
                     title: "Add New",

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class bottomNavigation extends StatefulWidget {
-  bottomNavigation({Key key}) : super(key: key);
-
   @override
   _bottomNavigationState createState() => _bottomNavigationState();
 }

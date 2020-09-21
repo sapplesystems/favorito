@@ -13,14 +13,14 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-  NotificationListRequestModel _notificationsList =
+  NotificationListRequestModel _notificationsListdata =
       NotificationListRequestModel();
 
   @override
   void initState() {
     WebService.funGetNotifications().then((value) {
       setState(() {
-        _notificationsList = value;
+        _notificationsListdata = value;
       });
     });
     super.initState();
@@ -54,7 +54,7 @@ class _NotificationsState extends State<Notifications> {
                 height: context.percentHeight * 75,
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: ListView.builder(
-                    itemCount: _notificationsList.notifications.length,
+                    itemCount: _notificationsListdata.notifications.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         elevation: 5,
@@ -78,7 +78,8 @@ class _NotificationsState extends State<Notifications> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4.0),
                                 child: Text(
-                                  _notificationsList.notifications[index].title,
+                                  _notificationsListdata
+                                      .notifications[index].title,
                                 ),
                               ),
                               subtitle: Padding(
@@ -86,7 +87,7 @@ class _NotificationsState extends State<Notifications> {
                                     const EdgeInsets.symmetric(vertical: 4.0),
                                 child: Container(
                                   child: AutoSizeText(
-                                    _notificationsList
+                                    _notificationsListdata
                                         .notifications[index].description,
                                     minFontSize: 14,
                                     maxLines: 2,
