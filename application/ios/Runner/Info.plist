@@ -47,5 +47,7 @@
 		<string>To access your current location.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
 		<string>To access your current location.</string>
+		<key>com.apple.security.network.server</key>
+		<true />
 	</dict>
 </plist>

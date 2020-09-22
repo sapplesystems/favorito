@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
 import 'package:application/model/job/CreateJobRequestModel.dart';
@@ -28,17 +27,19 @@ class WebService {
 
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
+    print("Request URL:${serviceFunction.funBusyList}");
     response = await dio.post(serviceFunction.funBusyList);
     _data = busyListModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_data.status}");
+    print("responseData1:${_data.status}");
     return _data;
   }
 
   static Future<CatListModel> funGetCatList(Map _map) async {
     CatListModel _data = CatListModel();
+    print("Request URL:${serviceFunction.funCatList}");
     response = await dio.post(serviceFunction.funCatList, data: _map);
     _data = CatListModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_data.status}");
+    print("responseData2:${_data.status}");
     return _data;
   }
 
@@ -48,8 +49,13 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     dashModel _data = dashModel();
+    print("Request URL:${serviceFunction.funDash}");
     response = await dio.post(serviceFunction.funDash, options: _opt);
-    _data = dashModel.fromJson(convert.json.decode(response.toString()));
+    if (response.statusCode == 200) {
+      _data = dashModel.fromJson(convert.json.decode(response.toString()));
+    } else if (response.statusCode != 200) {
+      Prefs().clear();
+    }
     print("responseData3:${_data.status}");
     return _data.data;
   }
@@ -62,9 +68,11 @@ class WebService {
     NotificationListRequestModel _returnData = NotificationListRequestModel();
     response =
         await dio.post(serviceFunction.funGetNotifications, options: _opt);
+
+    print("Request URL:${serviceFunction.funGetNotifications}");
     _returnData = NotificationListRequestModel.fromJson(
         convert.json.decode(response.toString()));
-    print("responseData3:${_returnData.status}");
+    print("responseData4:${_returnData.status}");
     return _returnData;
   }
 
@@ -76,12 +84,14 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     CreateNotificationRequiredDataModel _returnData =
         CreateNotificationRequiredDataModel();
+
+    print("Request URL:${serviceFunction.funGetCreateNotificationDefaultData}");
     response = await dio.post(
         serviceFunction.funGetCreateNotificationDefaultData,
         options: _opt);
     _returnData = CreateNotificationRequiredDataModel.fromJson(
         convert.json.decode(response.toString()));
-    print("responseData3:${_returnData.status}");
+    print("responseData5:${_returnData.status}");
     return _returnData;
   }
 
@@ -104,9 +114,10 @@ class WebService {
     };
     response = await dio.post(serviceFunction.funCreateNotification,
         data: _map, options: _opt);
+    print("Request URL:${serviceFunction.funCreateNotification}");
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_returnData.status}");
+    print("responseData6:${_returnData.status}");
     return _returnData;
   }
 
@@ -116,7 +127,7 @@ class WebService {
         data: _map, options: opt);
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
     Prefs.setToken(_data.token.toString().trim());
-    print("responseData3:${_data.toString().trim()}");
+    print("responseData7:${_data.toString().trim()}");
     print("token:${_data.token.toString().trim()}");
     return _data;
   }
@@ -127,7 +138,7 @@ class WebService {
         await dio.post(serviceFunction.funLogin, data: _map, options: opt);
     _data = loginModel.fromJson(convert.json.decode(response.toString()));
     Prefs.setToken(_data.token.toString().trim());
-    return _data.status == "success" ? _data : _data.message;
+    return _data.status == "success" ? _data : _data;
   }
 
   static Future<CityListModel> funGetCities() async {
@@ -152,7 +163,7 @@ class WebService {
     response = await dio.post(serviceFunction.funValidPincode, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_returnData.status}");
+    print("responseData8:${_returnData.status}");
     return _returnData;
   }
 
@@ -222,7 +233,7 @@ class WebService {
         options: _opt);
     _returnData = CreateOfferRequiredDataModel.fromJson(
         convert.json.decode(response.toString()));
-    print("responseData3:${_returnData.status}");
+    print("responseData9:${_returnData.status}");
     return _returnData;
   }
 
@@ -243,7 +254,7 @@ class WebService {
         data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData3:${_returnData.status}");
+    print("responseData10:${_returnData.status}");
     return _returnData;
   }
 
