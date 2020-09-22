@@ -122,6 +122,12 @@
       "languageVersion": "2.10"
     },
     {
+      "name": "flutter_multi_chip_select",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/flutter_multi_chip_select-0.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-1.0.9",
       "packageUri": "lib/",
@@ -500,7 +506,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-22T12:40:20.498705Z",
+  "generated": "2020-09-22T14:15:54.091291Z",
   "generator": "pub",
   "generatorVersion": "2.10.0-110.0.dev"
 }
