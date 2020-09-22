@@ -43,6 +43,7 @@ dependencies:
   location: ^3.0.2
   provider: ^4.3.2+2
   transparent_image: ^0.1.0
+  async_loader: ^0.1.2
   find_dropdown: ^0.2.0
 
 dev_dependencies:

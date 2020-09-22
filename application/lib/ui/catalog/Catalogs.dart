@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:application/component/roundedButton.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class Catalogs extends StatefulWidget {
   @override

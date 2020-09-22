@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:application/model/BaseResponse/BaseResponseModel.dart';
 import 'package:application/model/CatListModel.dart';
+import 'package:application/model/job/CreateJobRequestModel.dart';
 import 'package:application/model/job/CreateJobRequiredDataModel.dart';
 import 'package:application/model/job/JobListRequestModel.dart';
 import 'package:application/model/job/SkillListRequiredDataModel.dart';
@@ -141,9 +142,15 @@ class WebService {
   }
 
   static Future<CityListModel> funGetCities() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     CityListModel _returnData = CityListModel();
-    _returnData.cityList = ['Noida', 'New Delhi', 'Agra', 'Ghaziabad'];
-
+    response = await dio.post(serviceFunction.funGetCities, options: _opt);
+    _returnData =
+        CityListModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
     return _returnData;
   }
 
@@ -248,6 +255,30 @@ class WebService {
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData10:${_returnData.status}");
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> funCreateJob(
+      CreateJobRequestModel requestData) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    Map<String, dynamic> _map = {
+      "title": requestData.title,
+      "description": requestData.description,
+      "skills": requestData.skills,
+      "contact_via": requestData.contact_via,
+      "contact_value": requestData.contact_value,
+      "city": requestData.city,
+      "pincode": requestData.pincode
+    };
+    response =
+        await dio.post(serviceFunction.funCreateJob, data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
     return _returnData;
   }
 }

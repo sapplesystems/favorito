@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:application/component/listItem.dart';
 import 'package:application/myCss.dart';
 import 'package:application/ui/catalog/Catalogs.dart';
+import 'package:application/ui/contactPerson/ContactPerson.dart';
 import 'package:application/ui/jobs/JobList.dart';
 import 'package:application/ui/businessInfo/businessInfo.dart';
 import 'package:application/ui/notification/Notifications.dart';
@@ -119,7 +120,14 @@ class _settingState extends State<setting> {
                           ico: "claim",
                           clicker: () {}),
                       listItems(
-                          title: "Owner Profile", ico: "owner", clicker: () {}),
+                          title: "Owner Profile",
+                          ico: "owner",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ContactPerson()));
+                          }),
                     ]),
                   ),
                   SizedBox(
