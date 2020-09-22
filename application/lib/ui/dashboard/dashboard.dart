@@ -6,7 +6,9 @@ import 'package:application/component/cart3.dart';
 import 'package:application/component/rowWithTextNButton.dart';
 import 'package:application/network/webservices.dart';
 import 'package:application/ui/businessInfo/businessInfo.dart';
+import 'package:application/ui/login/login.dart';
 import 'package:application/ui/setting/businessSetting.dart';
+import 'package:application/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -45,6 +47,14 @@ class _dashboardState extends State<dashboard> {
                   icon: Icon(Icons.refresh, color: Colors.black),
                   onPressed: () {
                     calldashBoard();
+                  }),
+              IconButton(
+                  icon: Icon(Icons.settings_power, color: Colors.black),
+                  onPressed: () {
+                    Prefs().clear();
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Login()));
                   })
             ],
             centerTitle: true,
@@ -55,7 +65,7 @@ class _dashboardState extends State<dashboard> {
               onPressed: () => Navigator.of(context).pop(),
             ),
             iconTheme: IconThemeData(
-              color: Colors.black, //change your color here
+              color: Colors.white, //change your color here
             ),
           ),
         ),

@@ -48,7 +48,7 @@ class _BusinessSettingState extends State<BusinessSetting> {
           ),
           centerTitle: true,
           iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
+            color: Colors.white, //change your color here
           ),
           elevation: 0,
         ),

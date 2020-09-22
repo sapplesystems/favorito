@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:application/component/listItem.dart';
 import 'package:application/myCss.dart';
+import 'package:application/ui/businessInfo/businessInfo.dart';
 import 'package:application/ui/notification/Notifications.dart';
 import 'package:application/ui/offer/CreateOffer.dart';
 import 'package:application/ui/setting/businessSetting.dart';
@@ -105,7 +106,12 @@ class _settingState extends State<setting> {
                       listItems(
                           title: "Bussiness Information",
                           ico: "circlenotyfy",
-                          clicker: () {}),
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => businessInfo()));
+                          }),
                       listItems(
                           title: "Claim Bussiness",
                           ico: "claim",

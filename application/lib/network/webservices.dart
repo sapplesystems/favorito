@@ -137,7 +137,7 @@ class WebService {
         await dio.post(serviceFunction.funLogin, data: _map, options: opt);
     _data = loginModel.fromJson(convert.json.decode(response.toString()));
     Prefs.setToken(_data.token.toString().trim());
-    return _data.status == "success" ? _data : _data.message;
+    return _data.status == "success" ? _data : _data;
   }
 
   static Future<CityListModel> funGetCities() async {

@@ -181,7 +181,7 @@ class _LoginState extends State<Login> {
       };
       BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
       WebService.funGetLogin(_map).then((value) {
-        if (value.message == "success") {
+        if (value.status == "success") {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => bottomNavigation()));
         } else {
