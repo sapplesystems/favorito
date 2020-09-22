@@ -1,7 +1,7 @@
 class loginModel {
   String status;
   String message;
-  LoginData data;
+  Data data;
   String token;
 
   loginModel({this.status, this.message, this.data, this.token});
@@ -9,7 +9,7 @@ class loginModel {
   loginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new LoginData.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
     token = json['token'];
   }
 
@@ -25,15 +25,15 @@ class loginModel {
   }
 }
 
-class LoginData {
+class Data {
   int id;
   String businessId;
   String email;
   String phone;
 
-  LoginData({this.id, this.businessId, this.email, this.phone});
+  Data({this.id, this.businessId, this.email, this.phone});
 
-  LoginData.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     businessId = json['business_id'];
     email = json['email'];
@@ -49,3 +49,4 @@ class LoginData {
     return data;
   }
 }
+

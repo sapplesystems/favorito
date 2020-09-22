@@ -5,99 +5,103 @@ var jwt = require('jsonwebtoken');
 var uniqid = require('uniqid');
 
 exports.register = function (req, res, next) {
-    if (req.body.business_type_id == '' || req.body.business_type_id == null) {
-        return res.status(404).json({ status: 'error', message: 'Business type is required' });
-    } else if (req.body.business_category_id == '' || req.body.business_category_id == null) {
-        return res.status(404).json({ status: 'error', message: 'Business category is required' });
-    } else if (req.body.business_name == '' || req.body.business_name == null) {
-        return res.status(404).json({ status: 'error', message: 'Business name is required' });
-    } else if (req.body.postal_code == '' || req.body.postal_code == null) {
-        return res.status(404).json({ status: 'error', message: 'Postal code is required' });
-    } if (req.body.business_phone == '' || req.body.business_phone == null) {
-        return res.status(404).json({ status: 'error', message: 'Phone number is required' });
-    } if (req.body.display_name == '' || req.body.display_name == null) {
-        return res.status(404).json({ status: 'error', message: 'Display name is required' });
-    } if (req.body.role == '' || req.body.role == null) {
-        return res.status(404).json({ status: 'error', message: 'Role is required' });
-    } else if (req.body.email == '' || req.body.email == null) {
-        return res.status(404).json({ status: 'error', message: 'Business Email is required' });
-    } else if (req.body.password == '' || req.body.password == null) {
-        return res.status(404).json({ status: 'error', message: 'Password is required' });
-    }
-
-    var business_id = uniqid();
-    business_id = business_id.toUpperCase();
-    var business_type_id = req.body.business_type_id;
-    var business_category_id = req.body.business_category_id;
-    var business_name = req.body.business_name;
-    var postal_code = req.body.postal_code;
-    var business_phone = req.body.business_phone;
-    var email = req.body.email;
-    var phone = business_phone;
-    var password = req.body.password;
-    var reach_whatsapp = 0;
-    if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {
-        reach_whatsapp = 1;
-    }
-    var display_name = req.body.display_name;
-    display_name = display_name.trim();
-    var split_name = display_name.split(' ');
-    var first_name = split_name[0];
-    var last_name = '';
-    if(split_name.length > 0){
-        split_name.shift();
-        last_name = split_name.join(' ');;
-    }
-
-
-    bcrypt.hash(password, 10, function (err, hash) {
-        if (err) {
-            return res.status(404).json({ status: 'error', message: 'Password encryption failed' });
+    try {
+        if (req.body.business_type_id == '' || req.body.business_type_id == null) {
+            return res.status(404).json({ status: 'error', message: 'Business type is required' });
+        } else if (req.body.business_category_id == '' || req.body.business_category_id == null) {
+            return res.status(404).json({ status: 'error', message: 'Business category is required' });
+        } else if (req.body.business_name == '' || req.body.business_name == null) {
+            return res.status(404).json({ status: 'error', message: 'Business name is required' });
+        } else if (req.body.postal_code == '' || req.body.postal_code == null) {
+            return res.status(404).json({ status: 'error', message: 'Postal code is required' });
+        } if (req.body.business_phone == '' || req.body.business_phone == null) {
+            return res.status(404).json({ status: 'error', message: 'Phone number is required' });
+        } if (req.body.display_name == '' || req.body.display_name == null) {
+            return res.status(404).json({ status: 'error', message: 'Display name is required' });
+        } if (req.body.role == '' || req.body.role == null) {
+            return res.status(404).json({ status: 'error', message: 'Role is required' });
+        } else if (req.body.email == '' || req.body.email == null) {
+            return res.status(404).json({ status: 'error', message: 'Business Email is required' });
+        } else if (req.body.password == '' || req.body.password == null) {
+            return res.status(404).json({ status: 'error', message: 'Password is required' });
         }
-        var cslq = "select count(*) as c from business_users where (email='" + email + "' or phone='" + phone + "') and is_deleted=0 and deleted_at is null";
-        db.query(cslq, function (chkerr, check) {
-            if (chkerr) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
-            } else {
-                if (check[0].c === 0) {
-                    var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "')";
-                    db.query(sql, function (err, result) {
-                        if (err) {
-                            return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
-                        }
 
-                        /**insert row into business_owner_profile table */
-                        var sql1 = "INSERT INTO business_users (business_id,first_name,last_name,email,phone,`role`,password,org_password) \n\
-                                    VALUES ('" + business_id + "','" + first_name + "','" + last_name + "','" + email + "','" + phone + "','" + req.body.role + "','" + hash + "','" + password + "')";
-                        db.query(sql1);
+        var business_id = uniqid();
+        business_id = business_id.toUpperCase();
+        var business_type_id = req.body.business_type_id;
+        var business_category_id = req.body.business_category_id;
+        var business_name = req.body.business_name;
+        var postal_code = req.body.postal_code;
+        var business_phone = req.body.business_phone;
+        var email = req.body.email;
+        var phone = business_phone;
+        var password = req.body.password;
+        var reach_whatsapp = 0;
+        if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {
+            reach_whatsapp = 1;
+        }
+        var display_name = req.body.display_name;
+        display_name = display_name.trim();
+        var split_name = display_name.split(' ');
+        var first_name = split_name[0];
+        var last_name = '';
+        if (split_name.length > 0) {
+            split_name.shift();
+            last_name = split_name.join(' ');;
+        }
 
-                        /**insert row into business_informations table */
-                        var sql2 = "INSERT INTO business_informations (business_id, categories) VALUES ('" + business_id + "', '" + business_category_id + "')";
-                        db.query(sql2);
 
-
-                        var token = jwt.sign({
-                            email: email,
-                            phone: phone,
-                            id: result.insertId,
-                            business_id: business_id,
-                        }, 'secret', {
-                            expiresIn: "2 days"
-                        });
-
-                        var messageId = main(res, result.insertId, result).catch(console.error);
-                        if (messageId) {
-                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, email: email, phone: phone, token: token });
-                        } else {
-                            return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, email: email, phone: phone, token: token });
-                        }
-                    });
-                } else {
-                    return res.status(404).json({ status: 'error', message: 'Username already exist' });
-                }
+        bcrypt.hash(password, 10, function (err, hash) {
+            if (err) {
+                return res.status(404).json({ status: 'error', message: 'Password encryption failed' });
             }
+            var cslq = "select count(*) as c from business_users where (email='" + email + "' or phone='" + phone + "') and is_deleted=0 and deleted_at is null";
+            db.query(cslq, function (chkerr, check) {
+                if (chkerr) {
+                    return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                } else {
+                    if (check[0].c === 0) {
+                        var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "')";
+                        db.query(sql, function (err, result) {
+                            if (err) {
+                                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                            }
+
+                            /**insert row into business_owner_profile table */
+                            var sql1 = "INSERT INTO business_users (business_id,first_name,last_name,email,phone,`role`,password,org_password) \n\
+                                    VALUES ('" + business_id + "','" + first_name + "','" + last_name + "','" + email + "','" + phone + "','" + req.body.role + "','" + hash + "','" + password + "')";
+                            db.query(sql1);
+
+                            /**insert row into business_informations table */
+                            var sql2 = "INSERT INTO business_informations (business_id, categories) VALUES ('" + business_id + "', '" + business_category_id + "')";
+                            db.query(sql2);
+
+
+                            var token = jwt.sign({
+                                email: email,
+                                phone: phone,
+                                id: result.insertId,
+                                business_id: business_id,
+                            }, 'secret', {
+                                expiresIn: "2 days"
+                            });
+
+                            var messageId = main(res, result.insertId, result).catch(console.error);
+                            if (messageId) {
+                                return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, email: email, phone: phone, token: token });
+                            } else {
+                                return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, email: email, phone: phone, token: token });
+                            }
+                        });
+                    } else {
+                        return res.status(404).json({ status: 'error', message: 'Username already exist' });
+                    }
+                }
+            });
         });
-    });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
 };
 
 // async..await is not allowed in global scope, must use a wrapper
