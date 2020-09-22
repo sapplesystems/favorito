@@ -27,7 +27,7 @@ class Data {
   List<String> audience;
   List<String> area;
   List<String> status;
-  List<StateList> stateList;
+  List<StateModel> stateList;
 
   Data({this.action, this.audience, this.area, this.status, this.stateList});
 
@@ -37,9 +37,9 @@ class Data {
     area = json['area'].cast<String>();
     status = json['status'].cast<String>();
     if (json['state_list'] != null) {
-      stateList = new List<StateList>();
+      stateList = new List<StateModel>();
       json['state_list'].forEach((v) {
-        stateList.add(new StateList.fromJson(v));
+        stateList.add(new StateModel.fromJson(v));
       });
     }
   }
@@ -57,13 +57,13 @@ class Data {
   }
 }
 
-class StateList {
+class StateModel {
   int id;
   String state;
 
-  StateList({this.id, this.state});
+  StateModel({this.id, this.state});
 
-  StateList.fromJson(Map<String, dynamic> json) {
+  StateModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     state = json['state'];
   }
@@ -75,7 +75,7 @@ class StateList {
     return data;
   }
 
-  bool isEqual(StateList model) {
+  bool isEqual(StateModel model) {
     return this?.id == model?.id;
   }
 
