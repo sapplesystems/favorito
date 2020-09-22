@@ -1,9 +1,9 @@
-import 'package:application/model/notification/NotificationListRequestModel.dart';
-import 'package:application/ui/notification/CreateNotification.dart';
+import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
+import 'package:Favorito/ui/notification/CreateNotification.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:application/component/roundedButton.dart';
+import 'package:Favorito/component/roundedButton.dart';
 
 import '../../network/webservices.dart';
 

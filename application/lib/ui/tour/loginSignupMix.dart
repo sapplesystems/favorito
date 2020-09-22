@@ -1,5 +1,5 @@
-import 'package:application/ui/login/login.dart';
-import 'package:application/ui/signup/signup_a.dart';
+import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';

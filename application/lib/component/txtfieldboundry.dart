@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:application/utils/myString.Dart';
+import 'package:Favorito/utils/myString.Dart';
 
 class txtfieldboundry extends StatefulWidget {
   String title;

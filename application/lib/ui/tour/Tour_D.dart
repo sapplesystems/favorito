@@ -1,14 +1,14 @@
 import 'dart:ui';
 
-import 'package:application/component/roundedButton.dart';
-import 'package:application/ui/tour/Tour_A.dart';
-import 'package:application/ui/tour/Tour_B.dart';
-import 'package:application/ui/tour/Tour_C.dart';
-import 'package:application/ui/tour/loginSignupMix.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/ui/tour/Tour_A.dart';
+import 'package:Favorito/ui/tour/Tour_B.dart';
+import 'package:Favorito/ui/tour/Tour_C.dart';
+import 'package:Favorito/ui/tour/loginSignupMix.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:application/utils/myString.Dart';
+import 'package:Favorito/utils/myString.Dart';
 
 class Tour_d extends StatelessWidget {
   @override

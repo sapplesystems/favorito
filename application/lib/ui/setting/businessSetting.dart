@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:application/component/MyGoogleMap.dart';
-import 'package:application/component/roundedButton.dart';
-import 'package:application/utils/myString.Dart';
-import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/myCss.dart';
+import 'package:Favorito/component/MyGoogleMap.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/utils/myString.Dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:find_dropdown/find_dropdown.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

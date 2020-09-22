@@ -1,14 +1,14 @@
 import 'dart:ui';
 
-import 'package:application/component/listItem.dart';
-import 'package:application/myCss.dart';
-import 'package:application/ui/catalog/Catalogs.dart';
-import 'package:application/ui/contactPerson/ContactPerson.dart';
-import 'package:application/ui/jobs/JobList.dart';
-import 'package:application/ui/businessInfo/businessInfo.dart';
-import 'package:application/ui/notification/Notifications.dart';
-import 'package:application/ui/offer/CreateOffer.dart';
-import 'package:application/ui/setting/businessSetting.dart';
+import 'package:Favorito/component/listItem.dart';
+import 'package:Favorito/myCss.dart';
+import 'package:Favorito/ui/catalog/Catalogs.dart';
+import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
+import 'package:Favorito/ui/jobs/JobList.dart';
+import 'package:Favorito/ui/businessInfo/businessInfo.dart';
+import 'package:Favorito/ui/notification/Notifications.dart';
+import 'package:Favorito/ui/offer/CreateOffer.dart';
+import 'package:Favorito/ui/setting/businessSetting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:velocity_x/velocity_x.dart';

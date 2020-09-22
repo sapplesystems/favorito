@@ -1,8 +1,8 @@
-import 'package:application/component/roundedButton.dart';
-import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/model/job/CreateJobRequestModel.dart';
-import 'package:application/model/job/SkillListRequiredDataModel.dart';
-import 'package:application/network/webservices.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/model/job/CreateJobRequestModel.dart';
+import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +133,6 @@ class _CreateJobState extends State<CreateJob> {
                                     labelText: 'Select Skill',
                                   ),
                                 ),
-                                findSuggestions: WebService.getLanguages,
                                 additionCallback: (value) {
                                   return SkillListRequiredDataModel(value, 0);
                                 },

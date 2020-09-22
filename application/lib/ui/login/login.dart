@@ -1,8 +1,8 @@
-import 'package:application/component/roundedButton2.dart';
-import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/network/webservices.dart';
-import 'package:application/ui/bottomNavigation/bottomNavigation.dart';
-import 'package:application/utils/Prefs.dart';
+import 'package:Favorito/component/roundedButton2.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

@@ -1,5 +1,5 @@
-import 'package:application/utils/SharedPrefUtils.dart';
-import 'package:application/utils/myString.Dart';
+import 'package:Favorito/utils/SharedPrefUtils.dart';
+import 'package:Favorito/utils/myString.Dart';
 
 class Prefs {
   // static Future<String> get mobileNumber => SharedPrefUtils.getString(MONO);

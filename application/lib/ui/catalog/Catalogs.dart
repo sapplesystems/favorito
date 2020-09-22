@@ -1,8 +1,8 @@
-import 'package:application/model/catalog/CatalogListRequestModel.dart';
+import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:application/component/roundedButton.dart';
+import 'package:Favorito/component/roundedButton.dart';
 
 class Catalogs extends StatefulWidget {
   @override

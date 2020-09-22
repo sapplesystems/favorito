@@ -1,7 +1,7 @@
-import 'package:application/component/roundedButton.dart';
-import 'package:application/model/job/JobListRequestModel.dart';
-import 'package:application/network/webservices.dart';
-import 'package:application/ui/jobs/CreateJob.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/model/job/JobListRequestModel.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/jobs/CreateJob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';

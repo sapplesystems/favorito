@@ -1,10 +1,10 @@
-import 'package:application/component/BranchDetailsListVIewAdd.dart';
-import 'package:application/component/BranchDetailsListViewDelete.dart';
-import 'package:application/component/PopupContent.dart';
-import 'package:application/component/PopupLayout.dart';
-import 'package:application/component/roundedButton.dart';
-import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/ui/contactPerson/BranchDetailsModel.dart';
+import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';
+import 'package:Favorito/component/BranchDetailsListViewDelete.dart';
+import 'package:Favorito/component/PopupContent.dart';
+import 'package:Favorito/component/PopupLayout.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/ui/contactPerson/BranchDetailsModel.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

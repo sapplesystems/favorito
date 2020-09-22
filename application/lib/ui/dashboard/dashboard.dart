@@ -1,18 +1,18 @@
 import 'dart:ui';
 
-import 'package:application/component/card1.dart';
-import 'package:application/component/card2.dart';
-import 'package:application/component/cart3.dart';
-import 'package:application/component/rowWithTextNButton.dart';
-import 'package:application/network/webservices.dart';
-import 'package:application/ui/businessInfo/businessInfo.dart';
-import 'package:application/ui/login/login.dart';
-import 'package:application/ui/setting/businessSetting.dart';
-import 'package:application/utils/Prefs.dart';
+import 'package:Favorito/component/card1.dart';
+import 'package:Favorito/component/card2.dart';
+import 'package:Favorito/component/cart3.dart';
+import 'package:Favorito/component/rowWithTextNButton.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/businessInfo/businessInfo.dart';
+import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/setting/businessSetting.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:application/utils/myString.Dart';
+import 'package:Favorito/utils/myString.Dart';
 
 class dashboard extends StatefulWidget {
   @override

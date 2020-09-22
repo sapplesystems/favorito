@@ -1,6 +1,6 @@
-import 'package:application/ObjectFieldsBasic.dart';
+import 'package:Favorito/ObjectFieldsBasic.dart';
 import 'package:flutter/material.dart';
-import 'package:application/utils/myString.Dart';
+import 'package:Favorito/utils/myString.Dart';
 
 // ignore: must_be_immutable
 class TextFieldsBasic extends StatelessWidget {

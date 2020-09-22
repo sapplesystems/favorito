@@ -1,8 +1,8 @@
-import 'package:application/component/roundedButton.dart';
-import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/model/offer/CreateOfferRequestModel.dart';
-import 'package:application/model/offer/CreateOfferRequiredDataModel.dart';
-import 'package:application/network/webservices.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
+import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
