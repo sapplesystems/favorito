@@ -1,9 +1,7 @@
-import 'package:Favorito/component/roundedButton2.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/utils/Prefs.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +64,6 @@ class _LoginState extends State<Login> {
                     child: Builder(
                       builder: (context) => Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
                             Padding(

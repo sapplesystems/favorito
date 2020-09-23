@@ -178,10 +178,10 @@ class _Waitlist extends State<Waitlist> {
     Navigator.push(
       context,
       PopupLayout(
-        top: context.percentHeight * 20,
+        top: context.percentHeight * 40,
         left: context.percentWidth * 10,
         right: context.percentWidth * 10,
-        bottom: context.percentHeight * 20,
+        bottom: context.percentHeight * 40,
         child: PopupContent(
           content: Scaffold(
             resizeToAvoidBottomPadding: false,
