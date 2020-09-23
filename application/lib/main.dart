@@ -1,4 +1,4 @@
-import 'package:application/ui/login/login.dart';
+import 'package:Favorito/ui/login/login.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [BotToastNavigatorObserver()],
       theme: ThemeData(
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Colors.red, //change your color here
         ),
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Login());

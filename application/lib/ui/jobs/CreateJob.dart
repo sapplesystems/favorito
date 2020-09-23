@@ -1,7 +1,9 @@
-import 'package:application/component/roundedButton.dart';
-import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/model/job/SkillListRequiredDataModel.dart';
-import 'package:application/network/webservices.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/model/job/CreateJobRequestModel.dart';
+import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
@@ -19,7 +21,6 @@ class _CreateJobState extends State<CreateJob> {
   int _jobId;
   List<String> _contactOptionsList = [];
   List<String> _cityList = [];
-  List<String> _skillList = [];
   List<SkillListRequiredDataModel> _selectedSkillList = [];
 
   String _contactHint = '';
@@ -75,7 +76,7 @@ class _CreateJobState extends State<CreateJob> {
             color: Colors.black, //change your color here
           ),
           title: Text(
-            "Notification",
+            "Create Job",
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -85,7 +86,6 @@ class _CreateJobState extends State<CreateJob> {
             ),
             child: ListView(children: [
               Container(
-                height: context.percentHeight * 75,
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: Card(
                     elevation: 5,
@@ -96,7 +96,7 @@ class _CreateJobState extends State<CreateJob> {
                       builder: (context) => Form(
                         key: _formKey,
                         autovalidate: _autoValidateForm,
-                        child: ListView(
+                        child: Column(
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -178,7 +178,7 @@ class _CreateJobState extends State<CreateJob> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: true,
+                                autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 selectedItem: _selectedContactOption,
                                 items: _contactOptionsList,
@@ -213,7 +213,7 @@ class _CreateJobState extends State<CreateJob> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: true,
+                                autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 selectedItem: _selectedCity,
@@ -253,10 +253,34 @@ class _CreateJobState extends State<CreateJob> {
                 alignment: Alignment.center,
                 child: Container(
                   width: context.percentWidth * 50,
+                  margin: EdgeInsets.only(bottom: 16.0),
                   child: roundedButton(
                     clicker: () {
                       if (_formKey.currentState.validate()) {
-                        initializeDefaultValues();
+                        var _requestData = CreateJobRequestModel();
+                        _requestData.title = _myTitleEditController.text;
+                        _requestData.description =
+                            _myDescriptionEditController.text;
+                        for (var skill in _selectedSkillList) {
+                          if (_selectedSkillList.indexOf(skill) == 0) {
+                            _requestData.skills = skill.skillName;
+                          } else if (_selectedSkillList.indexOf(skill) ==
+                              _selectedSkillList.length) {}
+                        }
+                        _requestData.contact_via = _selectedContactOption;
+                        _requestData.contact_value =
+                            _myContactEditController.text;
+                        _requestData.city = _selectedCity;
+                        _requestData.pincode = _myPincodeEditController.text;
+                        WebService.funCreateJob(_requestData).then((value) {
+                          if (value.status == 'success') {
+                            setState(() {
+                              initializeDefaultValues();
+                            });
+                          } else {
+                            BotToast.showText(text: value.message);
+                          }
+                        });
                       } else {
                         initializeDefaultValues();
                         _autoValidateForm = true;

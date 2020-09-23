@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:application/utils/myString.Dart';
+import 'package:Favorito/utils/myString.Dart';
 
 class txtfieldboundry extends StatefulWidget {
   String title;
@@ -10,9 +10,10 @@ class txtfieldboundry extends StatefulWidget {
   bool valid;
   TextInputType keyboardSet;
   TextEditingController ctrl;
-
+  IconData prefixIco;
   Function myOnChanged;
   RegExp myregex;
+  Function prefClick;
   txtfieldboundry(
       {this.title,
       this.security,
@@ -23,7 +24,9 @@ class txtfieldboundry extends StatefulWidget {
       this.myregex,
       this.valid,
       this.maxLines,
-      this.myOnChanged});
+      this.myOnChanged,
+      this.prefixIco,
+      this.prefClick});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -37,16 +40,21 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         obscureText: widget.security,
         maxLength: widget.maxlen,
         decoration: InputDecoration(
-          labelText: widget.title,
-          counterText: "",
-          hintText: widget.hint,
-          fillColor: Colors.transparent,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(),
-          ),
-          // fillColor: Colors.green
-        ),
+            labelText: widget.title,
+            counterText: "",
+            prefixIcon: IconButton(
+              icon: Icon(widget.prefixIco),
+              onPressed: () {
+                if (widget.prefixIco != null) {
+                  widget.prefClick();
+                }
+              },
+            ),
+            hintText: widget.hint,
+            fillColor: Colors.transparent,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide())),
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,

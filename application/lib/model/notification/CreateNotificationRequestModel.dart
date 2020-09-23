@@ -1,4 +1,4 @@
-import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
+import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
 
 class CreateNotificationRequestModel {
   String title;

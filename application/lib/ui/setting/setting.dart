@@ -1,10 +1,15 @@
 import 'dart:ui';
 
-import 'package:application/component/listItem.dart';
-import 'package:application/myCss.dart';
-import 'package:application/ui/notification/Notifications.dart';
-import 'package:application/ui/offer/CreateOffer.dart';
-import 'package:application/ui/setting/businessSetting.dart';
+import 'package:Favorito/component/listItem.dart';
+import 'package:Favorito/myCss.dart';
+import 'package:Favorito/ui/catalog/Catalogs.dart';
+import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
+import 'package:Favorito/ui/jobs/JobList.dart';
+import 'package:Favorito/ui/businessInfo/businessInfo.dart';
+import 'package:Favorito/ui/notification/Notifications.dart';
+import 'package:Favorito/ui/offer/CreateOffer.dart';
+import 'package:Favorito/ui/setting/businessSetting.dart';
+import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -105,13 +110,25 @@ class _settingState extends State<setting> {
                       listItems(
                           title: "Bussiness Information",
                           ico: "circlenotyfy",
-                          clicker: () {}),
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => businessInfo()));
+                          }),
                       listItems(
                           title: "Claim Bussiness",
                           ico: "claim",
                           clicker: () {}),
                       listItems(
-                          title: "Owner Profile", ico: "owner", clicker: () {}),
+                          title: "Owner Profile",
+                          ico: "owner",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ContactPerson()));
+                          }),
                     ]),
                   ),
                   SizedBox(
@@ -145,11 +162,33 @@ class _settingState extends State<setting> {
                                 MaterialPageRoute(
                                     builder: (context) => CreateOffer()));
                           }),
-                      listItems(title: "Jobs", ico: "jobs", clicker: () {}),
                       listItems(
-                          title: "Waitlist", ico: "waiting", clicker: () {}),
+                          title: "Jobs",
+                          ico: "jobs",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => JobList()));
+                          }),
                       listItems(
-                          title: "catalogs", ico: "catlog", clicker: () {}),
+                          title: "Waitlist",
+                          ico: "waiting",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Waitlist()));
+                          }),
+                      listItems(
+                          title: "catalogs",
+                          ico: "catlog",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Catalogs()));
+                          }),
                       listItems(
                           title: "Create Notification",
                           ico: "bell",

@@ -1,8 +1,9 @@
-import 'package:application/component/roundedButton.dart';
-import 'package:application/component/txtfieldboundry.dart';
-import 'package:application/model/notification/CreateNotificationRequestModel.dart';
-import 'package:application/model/notification/CreateNotificationRequiredDataModel.dart';
-import 'package:application/network/webservices.dart';
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/model/notification/CityListModel.dart';
+import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
+import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +16,17 @@ class CreateNotification extends StatefulWidget {
 
 class _CreateNotificationState extends State<CreateNotification> {
   List<String> _countryList = ['India'];
-  List<String> _cityList = [];
   List<String> _quantityList = ['quantity 1', 'quantity 2'];
   CreateNotificationRequiredDataModel _notificationRequiredData =
       CreateNotificationRequiredDataModel();
+  CityListModel _cityListModel = CityListModel();
   String _contactHintText = '';
   String _selectedAction = '';
   String _selectedAudience = '';
   String _selectedArea = '';
   String _selectedCountry = '';
-  StateList _selectedState = StateList();
-  String _selectedCity = '';
+  StateModel _selectedState = StateModel();
+  CityModel _selectedCity = CityModel();
   String _selectedQuantity = '';
   bool _countryVisible;
   bool _stateVisible;
@@ -59,7 +60,7 @@ class _CreateNotificationState extends State<CreateNotification> {
     _selectedArea = '';
     _selectedCountry = 'India';
     _selectedState = null;
-    _selectedCity = '';
+    _selectedCity = null;
     _selectedQuantity = '';
     _countryVisible = false;
     _stateVisible = false;
@@ -231,7 +232,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                                       _pincodeVisible = false;
                                       WebService.funGetCities().then((value) {
                                         setState(() {
-                                          _cityList = value.cityList;
+                                          _cityListModel = value;
                                         });
                                       });
                                     } else {
@@ -265,15 +266,15 @@ class _CreateNotificationState extends State<CreateNotification> {
                             Visibility(
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: DropdownSearch<StateList>(
+                                child: DropdownSearch<StateModel>(
                                   validator: (v) =>
                                       v == null ? "required field" : null,
                                   autoValidate: _autoValidateForm,
-                                  compareFn: (StateList i, StateList s) =>
+                                  compareFn: (StateModel i, StateModel s) =>
                                       i.isEqual(s),
                                   mode: Mode.MENU,
                                   showSelectedItem: true,
-                                  itemAsString: (StateList u) =>
+                                  itemAsString: (StateModel u) =>
                                       u.userAsString(),
                                   selectedItem: _selectedState,
                                   items: _notificationRequiredData.data != null
@@ -294,17 +295,23 @@ class _CreateNotificationState extends State<CreateNotification> {
                             Visibility(
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: DropdownSearch<String>(
+                                child: DropdownSearch<CityModel>(
                                   validator: (v) =>
-                                      v == '' ? "required field" : null,
+                                      v == null ? "required field" : null,
                                   autoValidate: _autoValidateForm,
                                   mode: Mode.MENU,
                                   showSelectedItem: true,
+                                  compareFn: (CityModel i, CityModel s) =>
+                                      i.isEqual(s),
+                                  itemAsString: (CityModel u) =>
+                                      u.userAsString(),
                                   selectedItem: _selectedCity,
-                                  items: _cityList,
+                                  items: _cityListModel.data != null
+                                      ? _cityListModel.data
+                                      : null,
                                   label: "City",
                                   hint: "Please Select City",
-                                  showSearchBox: false,
+                                  showSearchBox: true,
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedCity = value;
@@ -397,7 +404,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                           requestData.areaDetail = _selectedState.state;
                         } else if (_selectedArea ==
                             _notificationRequiredData.data.area[2]) {
-                          requestData.areaDetail = _selectedCity;
+                          requestData.areaDetail = _selectedCity.city;
                         } else if (_selectedArea ==
                             _notificationRequiredData.data.area[3]) {
                           requestData.areaDetail =
