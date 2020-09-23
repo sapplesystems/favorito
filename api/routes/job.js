@@ -17,6 +17,18 @@ router.post('/dd-verbose', CheckAuth, JobController.dd_verbose);
 
 
 /**
+ * FETCH ALL PINCODE OF THE CITY
+ */
+router.post('/city-pincode', CheckAuth, JobController.city_pincode);
+
+
+/**
+ * FETCH ID, CITY NAME FROM THE PINCODE
+ */
+router.post('/city-from-pincode', CheckAuth, JobController.city_from_pincode);
+
+
+/**
  * CREATE NEW JOB ROUTE
  */
 router.post('/create', CheckAuth, JobController.add_job);
