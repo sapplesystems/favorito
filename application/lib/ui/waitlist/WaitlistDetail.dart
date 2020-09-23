@@ -18,7 +18,7 @@ class _WaitListDetail extends State<WaitListDetail> {
         body: Container(
       margin: EdgeInsets.all(8.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(

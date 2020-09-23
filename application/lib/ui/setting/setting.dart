@@ -7,7 +7,7 @@ import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
 import 'package:Favorito/ui/jobs/JobList.dart';
 import 'package:Favorito/ui/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/notification/Notifications.dart';
-import 'package:Favorito/ui/offer/CreateOffer.dart';
+import 'package:Favorito/ui/offer/Offers.dart';
 import 'package:Favorito/ui/setting/businessSetting.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
@@ -160,7 +160,7 @@ class _settingState extends State<setting> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CreateOffer()));
+                                    builder: (context) => Offers()));
                           }),
                       listItems(
                           title: "Jobs",
