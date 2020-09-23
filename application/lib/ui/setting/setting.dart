@@ -9,6 +9,7 @@ import 'package:Favorito/ui/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/notification/Notifications.dart';
 import 'package:Favorito/ui/offer/CreateOffer.dart';
 import 'package:Favorito/ui/setting/businessSetting.dart';
+import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -171,7 +172,14 @@ class _settingState extends State<setting> {
                                     builder: (context) => JobList()));
                           }),
                       listItems(
-                          title: "Waitlist", ico: "waiting", clicker: () {}),
+                          title: "Waitlist",
+                          ico: "waiting",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Waitlist()));
+                          }),
                       listItems(
                           title: "catalogs",
                           ico: "catlog",

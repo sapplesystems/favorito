@@ -4,7 +4,7 @@ import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/ui/contactPerson/BranchDetailsModel.dart';
+import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -341,10 +341,8 @@ class _ContactPersonState extends State<ContactPerson> {
                 return IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
-                    try {
-                      _searchedBranches.clear();
-                      Navigator.of(context).pop(); //close the popup
-                    } catch (e) {}
+                    _searchedBranches.clear();
+                    Navigator.of(context).pop(); //close the popup
                   },
                 );
               }),

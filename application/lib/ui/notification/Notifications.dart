@@ -45,77 +45,69 @@ class _NotificationsState extends State<Notifications> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: Container(
-            decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+        body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Container(
+            height: context.percentHeight * 75,
+            margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+            child: ListView.builder(
+                itemCount: _notificationsListdata.notifications.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    ),
+                    child: Container(
+                        height: context.percentHeight * 10,
+                        width: context.percentWidth * 80,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.white,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40))),
+                        margin: EdgeInsets.symmetric(vertical: 2.0),
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text(
+                              _notificationsListdata.notifications[index].title,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Container(
+                              child: AutoSizeText(
+                                _notificationsListdata
+                                    .notifications[index].description,
+                                minFontSize: 14,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        )),
+                  );
+                }),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: context.percentWidth * 50,
+              child: roundedButton(
+                clicker: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateNotification()));
+                },
+                clr: Colors.red,
+                title: "Create New",
+              ),
             ),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Container(
-                height: context.percentHeight * 75,
-                margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
-                child: ListView.builder(
-                    itemCount: _notificationsListdata.notifications.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        child: Container(
-                            height: context.percentHeight * 10,
-                            width: context.percentWidth * 80,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                  color: Colors.white,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(40))),
-                            margin: EdgeInsets.symmetric(vertical: 2.0),
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              title: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4.0),
-                                child: Text(
-                                  _notificationsListdata
-                                      .notifications[index].title,
-                                ),
-                              ),
-                              subtitle: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4.0),
-                                child: Container(
-                                  child: AutoSizeText(
-                                    _notificationsListdata
-                                        .notifications[index].description,
-                                    minFontSize: 14,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            )),
-                      );
-                    }),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: context.percentWidth * 50,
-                  child: roundedButton(
-                    clicker: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateNotification()));
-                    },
-                    clr: Colors.red,
-                    title: "Create New",
-                  ),
-                ),
-              ),
-            ])));
+          ),
+        ]));
   }
 }
