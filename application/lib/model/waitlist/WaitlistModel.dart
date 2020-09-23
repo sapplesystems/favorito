@@ -5,4 +5,6 @@ class WaitlistModel {
   String time;
   String notes;
   String mobile;
+  String date;
+  String slot;
 }

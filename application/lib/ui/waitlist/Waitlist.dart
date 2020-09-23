@@ -23,7 +23,10 @@ class _Waitlist extends State<Waitlist> {
       model1.name = 'John Hopkins';
       model1.type = 'Wak-In';
       model1.time = '13:40';
-      model1.notes = "Here is the use notes to show the important part";
+      model1.notes =
+          "Here is the use notes to show the important part gf agf gsd f gfahgdhagfdg gfhagbdfh gajhfghjfjha hvjhf sgf ae ygaygayg agyfg";
+      model1.date = "12 Jan";
+      model1.slot = "13:00-14:00";
       waitlistData.add(model1);
     });
     super.initState();
@@ -71,7 +74,7 @@ class _Waitlist extends State<Waitlist> {
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    showPopup(context, _popupBody(), '');
+                    showPopup(context, _popupBody(waitlistData[index]));
                   },
                   child: Card(
                       elevation: 5,
@@ -173,15 +176,14 @@ class _Waitlist extends State<Waitlist> {
         ));
   }
 
-  showPopup(BuildContext context, Widget widget, String title,
-      {BuildContext popupContext}) {
+  showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
     Navigator.push(
       context,
       PopupLayout(
-        top: context.percentHeight * 40,
+        top: context.percentHeight * 30,
         left: context.percentWidth * 10,
         right: context.percentWidth * 10,
-        bottom: context.percentHeight * 40,
+        bottom: context.percentHeight * 30,
         child: PopupContent(
           content: Scaffold(
             resizeToAvoidBottomPadding: false,
@@ -192,7 +194,7 @@ class _Waitlist extends State<Waitlist> {
     );
   }
 
-  Widget _popupBody() {
-    return Container(child: WaitListDetail());
+  Widget _popupBody(WaitlistModel model) {
+    return Container(child: WaitListDetail(waitlistData: model));
   }
 }
