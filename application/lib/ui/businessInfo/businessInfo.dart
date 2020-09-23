@@ -1,3 +1,4 @@
+import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundButtonRightIcon.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
@@ -18,6 +19,8 @@ class _businessInfoState extends State<businessInfo> {
   bool _autoValidateForm = false;
   List<String> lst = ["a", "b", "c"];
   List<TextEditingController> controller = [];
+  List<String> list = ["pizza", "burger", "cold drink", "French fries"];
+  List<String> selectedlist = [];
   void initState() {
     super.initState();
 
@@ -125,38 +128,12 @@ class _businessInfoState extends State<businessInfo> {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: DropdownSearch<String>(
-                      validator: (v) => v == '' ? "required field" : null,
-                      autoValidate: _autoValidateForm,
-                      mode: Mode.MENU,
-                      showSelectedItem: true,
-                      selectedItem: controller[0].text,
-                      items: lst != null ? lst : null,
-                      label: "Sub Category",
-                      hint: "Please Select Sub Category",
-                      showSearchBox: true,
-                      onChanged: (value) {
-                        setState(() {
-                          controller[0].text = value;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 52,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        for (int i = 0; i < 10; i++)
-                          roundButtonRightIcon(
-                            title: "Pizza",
-                            clr: Color(0xffdd2626),
-                            ico: Icons.close,
-                          ),
-                      ],
-                    ),
+                  MyTags(
+                    sourceList: list,
+                    selectedList: [],
+                    controller: controller[0],
+                    hint: "Please select category",
+                    title: "Category",
                   ),
                   Row(children: [
                     Padding(

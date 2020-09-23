@@ -133,6 +133,7 @@ class _CreateJobState extends State<CreateJob> {
                                     labelText: 'Select Skill',
                                   ),
                                 ),
+                                findSuggestions: WebService.getLanguages,
                                 additionCallback: (value) {
                                   return SkillListRequiredDataModel(value, 0);
                                 },
