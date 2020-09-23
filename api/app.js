@@ -17,6 +17,7 @@ var BusinessNotificationRouter = require('./routes/business_notification');
 var BusinessOfferRouter = require('./routes/business_offer');
 var JobRouter = require('./routes/job');
 var BusinessCatalog = require('./routes/business_catalog');
+var BusinessClaim = require('./routes/business_claim');
 
 var app = express();
 
@@ -42,7 +43,7 @@ app.use('/api/change-password', ChangePasswordRouter);
 app.use('/api/notification', BusinessNotificationRouter);
 app.use('/api/offer', BusinessOfferRouter);
 app.use('/api/job', JobRouter);
-app.use('/api/catalog', BusinessCatalog);
+app.use('/api/business-claim', BusinessClaim);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
