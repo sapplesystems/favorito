@@ -73,9 +73,9 @@ exports.updateProfile = function (req, res, next) {
     var sql = "update business_master set " + update_columns + " where id='" + id + "'";
     db.query(sql, function (err, rows, fields) {
       if (err) {
-        return res.status(404).json({ status: 'error', message: 'Business user profile could not be updated.' });
+        return res.status(403).json({ status: 'error', message: 'Business user profile could not be updated.' });
       } else {
-        return res.status(404).json({ status: 'success', message: 'Business user profile updated successfully.' });
+        return res.status(403).json({ status: 'success', message: 'Business user profile updated successfully.' });
       }
     });
   } catch (e) {

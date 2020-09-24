@@ -19,7 +19,7 @@ exports.getProfile = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(404).json({ status: 'error', message: 'No recored found.' });
+                return res.status(403).json({ status: 'error', message: 'No recored found.' });
             } else {
                 var hours_drop_down_list = ['Select Hours', 'Always Open'];
                 var website = [];
@@ -52,9 +52,9 @@ exports.getProfile = function (req, res, next) {
 exports.login = function (req, res, next) {
     try {
         if (req.body.username == '' || req.body.username == null) {
-            return res.status(404).json({ status: 'error', message: 'Business email or phone required.' });
+            return res.status(403).json({ status: 'error', message: 'Business email or phone required.' });
         } else if (req.body.password == '' || req.body.password == null) {
-            return res.status(404).json({ status: 'error', message: 'Password required.' });
+            return res.status(403).json({ status: 'error', message: 'Password required.' });
         }
         var username = req.body.username;
 
@@ -64,7 +64,7 @@ exports.login = function (req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             } else {
                 if (result.length === 0) {
-                    return res.status(404).json({ status: 'error', message: 'Incorrect username or password' });
+                    return res.status(403).json({ status: 'error', message: 'Incorrect username or password' });
                 }
                 bcrypt.compare(req.body.password, result[0].password, function (err, enc_result) {
                     if (err) {
@@ -88,7 +88,7 @@ exports.login = function (req, res, next) {
                         };
                         return res.status(200).json({ status: 'success', message: 'success', data: user_data, token: token });
                     } else {
-                        return res.status(404).json({ status: 'error', message: 'Incorrect username or password' });
+                        return res.status(403).json({ status: 'error', message: 'Incorrect username or password' });
                     }
                 });
             }
@@ -113,7 +113,7 @@ exports.getBusinessOwnerProfile = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(404).json({ status: 'error', message: 'No recored found.' });
+                return res.status(403).json({ status: 'error', message: 'No recored found.' });
             } else {
 
                 var bsql = "select id,branch_address,branch_contact from business_branches \n\
@@ -176,7 +176,7 @@ exports.updateBusinessOwnerProfile = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(404).json({ status: 'error', message: 'No recored found.' });
+                return res.status(403).json({ status: 'error', message: 'No recored found.' });
             } else {
                 return res.status(200).json({ status: 'success', message: 'Profile updated successfully.' });
             }
@@ -192,9 +192,9 @@ exports.updateBusinessOwnerProfile = function (req, res, next) {
 exports.addAnotherBranch = function (req, res, next) {
     try {
         if (req.body.branch_address == '' || req.body.branch_address == 'undefined' || req.body.branch_address == null) {
-            return res.status(404).json({ status: 'error', message: 'Branch address not found' });
+            return res.status(403).json({ status: 'error', message: 'Branch address not found' });
         } else if (req.body.branch_contact == '' || req.body.branch_contact == 'undefined' || req.body.branch_contact == null) {
-            return res.status(404).json({ status: 'error', message: 'Branch contact not found.' });
+            return res.status(403).json({ status: 'error', message: 'Branch contact not found.' });
         }
         var business_id = req.userdata.business_id;
         var b_addr = req.body.branch_address;

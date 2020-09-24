@@ -47,6 +47,8 @@ dependencies:
   find_dropdown: ^0.2.0
   flutter_multi_chip_select: ^0.1.1
   icon_text_button: ^0.1.7
+  pin_code_fields: ^5.1.0
+  # file_picker: ^2.0.1+1
 
 dev_dependencies:
   flutter_test:

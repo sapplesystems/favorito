@@ -19,7 +19,7 @@ exports.getBusinessInformation = function (req, res, next) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(404).send({ status: 'error', message: 'No recored found.' });
+                return res.status(403).send({ status: 'error', message: 'No recored found.' });
             } else {
                 /*var sub_categories_id = rows[0].sub_categories_id;
                 var sub_categories_name = rows[0].sub_categories_name;
@@ -76,7 +76,7 @@ exports.getBusinessInformationUpdate = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(404).json({ status: 'error', message: 'No recored found.' });
+                return res.status(403).json({ status: 'error', message: 'No recored found.' });
             } else {
                 return res.status(200).json({ status: 'success', message: 'Information updated successfully.' });
             }

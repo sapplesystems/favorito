@@ -117,13 +117,13 @@ class _LoginState extends State<Login> {
             ),
           ),
           Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: context.percentWidth * 16),
+              padding: EdgeInsets.symmetric(
+                  horizontal: context.percentWidth * 16,
+                  vertical: context.percentWidth * 12),
               child: roundedButton(
                   clicker: () => funClick(), clr: Colors.red, title: "Login")),
           Padding(
-            padding: EdgeInsets.only(
-                top: context.percentHeight * 20, left: 20, right: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
             child: Text(
               "By continuing, you agree to Favorito's Terms of Service and acknowledge Favorito's \nPrivacy Policy.",
               textAlign: TextAlign.center,

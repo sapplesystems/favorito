@@ -9,7 +9,7 @@ exports.addClaim = async function (req, res, next) {
         var claim_count = await checkClaimCount(business_id);
 
         if (claim_count >= 3) {
-            return res.status(404).json({ status: 'error', message: 'You can not claim to this business as you have already claimed ' + claim_count + ' times.' });
+            return res.status(403).json({ status: 'error', message: 'You can not claim to this business as you have already claimed ' + claim_count + ' times.' });
         }
 
         var postval = {business_id: business_id};
@@ -52,7 +52,7 @@ exports.addClaimPhotos = async function (req, res, next) {
         var claim_count = await checkClaimCount(business_id);
 
         if (claim_count >= 3) {
-            return res.status(404).json({ status: 'error', message: 'You can not claim to this business as you have already claimed ' + claim_count + ' times.' });
+            return res.status(403).json({ status: 'error', message: 'You can not claim to this business as you have already claimed ' + claim_count + ' times.' });
         }
 
         if (req.files && req.files.length) {

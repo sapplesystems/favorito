@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:Favorito/component/card1.dart';
 import 'package:Favorito/component/card2.dart';
 import 'package:Favorito/component/cart3.dart';
 import 'package:Favorito/component/rowWithTextNButton.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/login/login.dart';
@@ -158,28 +158,25 @@ class _dashboardState extends State<dashboard> {
                   credit("Paid Credit", paid_credit, "null")
                 ]),
                 for (int i = 0; i < 2; i++)
-                  rowCard("Advertise",
-                      "Reach new audience searching for related services"),
+                  rowCard(
+                      "Advertise",
+                      "Reach new audience searching for related services",
+                      () {}),
               ]),
             )));
   }
 
-  Widget rowCard(String title, String subtitle) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 6),
-      margin: EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-        subtitle: Text(subtitle),
-        // trailing: ,
-      ),
+  Widget rowCard(String title, String subtitle, Function function) {
+    return InkWell(
+      onTap: function,
+      child: Container(
+          padding: EdgeInsets.symmetric(vertical: 6),
+          margin: EdgeInsets.symmetric(vertical: 12),
+          decoration: bd3,
+          child: ListTile(
+              title: Text(title,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              subtitle: Text(subtitle))),
     );
   }
 
