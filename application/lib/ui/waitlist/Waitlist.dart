@@ -67,6 +67,9 @@ class _Waitlist extends State<Waitlist> {
           ],
         ),
         body: Container(
+          decoration: BoxDecoration(
+            color: Color(0xfffff4f4),
+          ),
           height: context.percentHeight * 100,
           margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
           child: ListView.builder(
@@ -82,7 +85,6 @@ class _Waitlist extends State<Waitlist> {
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       ),
                       child: Container(
-                        height: context.percentHeight * 12,
                         margin: EdgeInsets.all(8.0),
                         child: Center(
                           child: Row(
