@@ -1,9 +1,12 @@
 import 'dart:ui';
-
 import 'package:Favorito/component/listItem.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/ui/PageViews/PageViews.dart';
+import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
+import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
+import 'package:Favorito/ui/highlights/highlights.dart';
 import 'package:Favorito/ui/jobs/JobList.dart';
 import 'package:Favorito/ui/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/notification/Notifications.dart';
@@ -25,14 +28,7 @@ class _settingState extends State<setting> {
       backgroundColor: Color(0xfffff4f4),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text(
-          "Settings",
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1),
-        ),
+        title: Text("Settings", style: titleStyle),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
@@ -118,7 +114,12 @@ class _settingState extends State<setting> {
                       listItems(
                           title: "Claim Bussiness",
                           ico: "claim",
-                          clicker: () {}),
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BusinessClaim()));
+                          }),
                       listItems(
                           title: "Owner Profile",
                           ico: "owner",
@@ -193,18 +194,37 @@ class _settingState extends State<setting> {
                       listItems(
                           title: "Create Highlights",
                           ico: "highlights",
-                          clicker: () {}),
-                      listItems(title: "Page View", ico: "eye", clicker: () {}),
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => highlights()));
+                          }),
+                      listItems(
+                          title: "Page View",
+                          ico: "eye",
+                          clicker: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PageViews()));
+                          }),
                     ]),
                   ),
-                  ListTile(
-                    leading: SvgPicture.asset('assets/icon/horn.svg',
-                        alignment: Alignment.center,
-                        height: context.percentHeight * 3),
-                    title: Text(
-                      "Advertise",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => adSpent()));
+                    },
+                    child: ListTile(
+                      leading: SvgPicture.asset('assets/icon/horn.svg',
+                          alignment: Alignment.center,
+                          height: context.percentHeight * 3),
+                      title: Text(
+                        "Advertise",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   ListTile(

@@ -290,6 +290,12 @@
       "languageVersion": "2.7"
     },
     {
+      "name": "pin_code_fields",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/pin_code_fields-5.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/platform-2.2.1",
       "packageUri": "lib/",
@@ -506,7 +512,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-22T14:15:54.091291Z",
+  "generated": "2020-09-23T11:49:27.775626Z",
   "generator": "pub",
   "generatorVersion": "2.10.0-110.0.dev"
 }

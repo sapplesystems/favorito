@@ -1,3 +1,4 @@
+import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundButtonRightIcon.dart';
 import 'package:Favorito/component/roundedButton.dart';
@@ -83,26 +84,9 @@ class _businessInfoState extends State<businessInfo> {
                 ],
               ),
             ),
-            Container(
-              width: context.percentWidth * 6.5,
-              height: context.percentHeight * 6.5,
-              margin: EdgeInsets.symmetric(
-                horizontal: context.percentWidth * 14,
-                vertical: context.percentHeight * 2,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                  color: Color(0xffdd2626),
-                  width: 1,
-                ),
-              ),
-              child: Center(
-                child: Text("Add more photo",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.red, fontSize: 16, letterSpacing: 1)),
-              ),
+            MyOutlineButton(
+              title: "Add more photo",
+              function: () {},
             ),
             Container(
                 decoration: bd1,

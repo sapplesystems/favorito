@@ -3,6 +3,7 @@ import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -101,9 +102,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: Card(
                     elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
+                    shape: rrb,
                     child: Builder(
                       builder: (context) => Form(
                         key: _formKey,
