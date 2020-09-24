@@ -31,9 +31,9 @@ exports.addHighlight = async function (req, res, next) {
         var business_id = req.userdata.business_id;
 
         if (req.body.highlight_title == '' || req.body.highlight_title == 'undefined' || req.body.highlight_title == null) {
-            return res.status(404).json({ status: 'error', message: 'Highlight title not found.' });
+            return res.status(403).json({ status: 'error', message: 'Highlight title not found.' });
         } else if (req.body.highlight_desc == '' || req.body.highlight_desc == 'undefined' || req.body.highlight_desc == null) {
-            return res.status(404).json({ status: 'error', message: 'Highlight description not found.' });
+            return res.status(403).json({ status: 'error', message: 'Highlight description not found.' });
         }
 
         var highlight_count = await checkHightlightCount(business_id);

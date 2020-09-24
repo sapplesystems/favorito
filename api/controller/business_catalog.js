@@ -40,7 +40,7 @@ exports.findCatalog = function (req, res, next) {
         var business_id = req.userdata.business_id;
 
         if (req.body.catalog_id == '' || req.body.catalog_id == 'undefined' || req.body.catalog_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Catalog id not found.' });
+            return res.status(403).json({ status: 'error', message: 'Catalog id not found.' });
         }
 
         var cond = " AND c.id='" + req.body.catalog_id + "' ";
@@ -73,15 +73,15 @@ exports.addCatalog = function (req, res, next) {
         var business_id = req.userdata.business_id;
 
         if (req.body.catalog_title == '' || req.body.catalog_title == 'undefined' || req.body.catalog_title == null) {
-            return res.status(404).json({ status: 'error', message: 'Catalog title not found.' });
+            return res.status(403).json({ status: 'error', message: 'Catalog title not found.' });
         } else if (req.body.catalog_price == '' || req.body.catalog_price == 'undefined' || req.body.catalog_price == null) {
-            return res.status(404).json({ status: 'error', message: 'Catalog price not found.' });
+            return res.status(403).json({ status: 'error', message: 'Catalog price not found.' });
         } else if (req.body.catalog_desc == '' || req.body.catalog_desc == 'undefined' || req.body.catalog_desc == null) {
-            return res.status(404).json({ status: 'error', message: 'Catalog description not found.' });
+            return res.status(403).json({ status: 'error', message: 'Catalog description not found.' });
         } else if (req.body.product_url == '' || req.body.product_url == 'undefined' || req.body.product_url == null) {
-            return res.status(404).json({ status: 'error', message: 'Product url not found.' });
+            return res.status(403).json({ status: 'error', message: 'Product url not found.' });
         } else if (req.body.product_id == '' || req.body.product_id == 'undefined' || req.body.product_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Product id not found.' });
+            return res.status(403).json({ status: 'error', message: 'Product id not found.' });
         }
 
         var postval = {
@@ -135,7 +135,7 @@ exports.updateCatalog = function (req, res, next) {
         var business_id = req.userdata.business_id;
 
         if (req.body.catalog_id == '' || req.body.catalog_id == 'undefined' || req.body.catalog_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Catelog id not found.' });
+            return res.status(403).json({ status: 'error', message: 'Catelog id not found.' });
         }
 
         var catalog_id = req.body.catalog_id;
@@ -183,7 +183,7 @@ exports.addPhotos = function (req, res, next) {
         var business_id = req.userdata.business_id;
 
         if (req.body.catalog_id == '' || req.body.catalog_id == 'undefined' || req.body.catalog_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Catelog id not found.' });
+            return res.status(403).json({ status: 'error', message: 'Catelog id not found.' });
         }
         var catalog_id = req.body.catalog_id;
 

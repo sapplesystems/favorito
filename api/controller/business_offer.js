@@ -53,13 +53,13 @@ exports.dd_verbose = function (req, res, next) {
 exports.add_offer = function (req, res, next) {
     try {
         if (req.body.offer_title == '' || req.body.offer_title == 'undefined' || req.body.offer_title == null) {
-            return res.status(404).json({ status: 'error', message: 'Offer title not found.' });
+            return res.status(403).json({ status: 'error', message: 'Offer title not found.' });
         } else if (req.body.offer_description == '' || req.body.offer_description == 'undefined' || req.body.offer_description == null) {
-            return res.status(404).json({ status: 'error', message: 'Offer description not found.' });
+            return res.status(403).json({ status: 'error', message: 'Offer description not found.' });
         } else if (req.body.offer_type == '' || req.body.offer_type == 'undefined' || req.body.offer_type == null) {
-            return res.status(404).json({ status: 'error', message: 'Offer type not found.' });
+            return res.status(403).json({ status: 'error', message: 'Offer type not found.' });
         } else if (req.body.offer_status == '' || req.body.offer_status == 'undefined' || req.body.offer_status == null) {
-            return res.status(404).json({ status: 'error', message: 'Offer status not found.' });
+            return res.status(403).json({ status: 'error', message: 'Offer status not found.' });
         }
 
         var business_id = req.userdata.business_id;
