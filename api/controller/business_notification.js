@@ -47,14 +47,14 @@ exports.dd_verbose = function (req, res, next) {
 exports.verify_pincode = function (req, res, next) {
     try {
         if (req.body.pincode == '' || req.body.pincode == 'undefined' || req.body.pincode == null) {
-            return res.status(404).json({ status: 'error', message: 'Pincode not found' });
+            return res.status(403).json({ status: 'error', message: 'Pincode not found' });
         }
         var P = require('pincode-validator');
         var ps = P.validate(req.body.pincode);
         if (ps === true) {
             return res.status(200).json({ status: 'success', message: 'Pincode is correct.' });
         } else {
-            return res.status(404).json({ status: 'error', message: 'Pincode is incorrect.' });
+            return res.status(403).json({ status: 'error', message: 'Pincode is incorrect.' });
         }
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -68,21 +68,21 @@ exports.verify_pincode = function (req, res, next) {
 exports.add_notification = function (req, res, next) {
     try {
         if (req.body.title == '' || req.body.title == 'undefined' || req.body.title == null) {
-            return res.status(404).json({ status: 'error', message: 'Notification title not found.' });
+            return res.status(403).json({ status: 'error', message: 'Notification title not found.' });
         } else if (req.body.description == '' || req.body.description == 'undefined' || req.body.description == null) {
-            return res.status(404).json({ status: 'error', message: 'Notification description not found.' });
+            return res.status(403).json({ status: 'error', message: 'Notification description not found.' });
         } else if (req.body.action == '' || req.body.action == 'undefined' || req.body.action == null) {
-            return res.status(404).json({ status: 'error', message: 'Action not found.' });
+            return res.status(403).json({ status: 'error', message: 'Action not found.' });
         } else if (req.body.action === 'Call' && (req.body.contact == '' || req.body.contact == 'undefined' || req.body.contact == null)) {
-            return res.status(404).json({ status: 'error', message: 'Contact not found.' });
+            return res.status(403).json({ status: 'error', message: 'Contact not found.' });
         } else if (req.body.audience == '' || req.body.audience == 'undefined' || req.body.audience == null) {
-            return res.status(404).json({ status: 'error', message: 'Notification audience not found.' });
+            return res.status(403).json({ status: 'error', message: 'Notification audience not found.' });
         } else if (req.body.area == '' || req.body.area == 'undefined' || req.body.area == null) {
-            return res.status(404).json({ status: 'error', message: 'Notification area not found.' });
+            return res.status(403).json({ status: 'error', message: 'Notification area not found.' });
         } else if (req.body.area_detail == '' || req.body.area_detail == 'undefined' || req.body.area_detail == null) {
-            return res.status(404).json({ status: 'error', message: 'Notification area_detail not found.' });
+            return res.status(403).json({ status: 'error', message: 'Notification area_detail not found.' });
         } else if (req.body.quantity == '' || req.body.quantity == 'undefined' || req.body.quantity == null) {
-            return res.status(404).json({ status: 'error', message: 'Notification quantity not found.' });
+            return res.status(403).json({ status: 'error', message: 'Notification quantity not found.' });
         }
 
         var title = req.body.title;

@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken');
 exports.add_business_type = function (req, res, next) {
     try {
         if (req.body.type_name == '' || req.body.type_name == null) {
-            return res.status(404).json({ status: 'error', message: 'Business type name required.' });
+            return res.status(403).json({ status: 'error', message: 'Business type name required.' });
         }
         var type_name = req.body.type_name;
 
@@ -41,7 +41,7 @@ exports.all_business_type = function (req, res, next) {
 exports.find_business_type = function (req, res, next) {
     try {
         if (req.body.type_id == '' || req.body.type_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Business type id required.' });
+            return res.status(403).json({ status: 'error', message: 'Business type id required.' });
         }
         var type_id = req.body.type_id;
         var sql = "SELECT id, `type_name` FROM business_types WHERE is_activated=1 and deleted_at IS NULL AND id = '" + type_id + "'";
@@ -60,10 +60,10 @@ exports.find_business_type = function (req, res, next) {
 exports.update_business_type = function (req, res, next) {
     try {
         if (req.body.type_id == '' || req.body.type_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Business type id required.' });
+            return res.status(403).json({ status: 'error', message: 'Business type id required.' });
         }
         if (req.body.type_name == '' || req.body.type_name == null) {
-            return res.status(404).json({ status: 'error', message: 'Business type is required.' });
+            return res.status(403).json({ status: 'error', message: 'Business type is required.' });
         }
         var type_id = req.body.type_id;
         var type_name = req.body.type_name;
@@ -84,7 +84,7 @@ exports.update_business_type = function (req, res, next) {
 exports.delete_business_type = function (req, res, next) {
     try {
         if (req.body.type_id == '' || req.body.type_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Business type id is required.' });
+            return res.status(403).json({ status: 'error', message: 'Business type id is required.' });
         }
         var type_id = req.body.type_id;
 

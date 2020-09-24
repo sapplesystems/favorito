@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:Favorito/component/card1.dart';
 import 'package:Favorito/component/card2.dart';
 import 'package:Favorito/component/cart3.dart';

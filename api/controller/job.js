@@ -33,23 +33,81 @@ exports.all_jobs = function (req, res, next) {
 /**
  * STATIC DROP DONW DETAI TO CREATE THE JOB
  */
-exports.dd_verbose = function (req, res, next) {
+exports.dd_verbose = async function (req, res, next) {
     try {
         var verbose = {};
         verbose.contact_via = contact_via;
-        var sql = "SELECT id,skill FROM skills";
-        db.query(sql, function (err, skill_list) {
-            verbose.skill_list = skill_list;
-            var sql = "SELECT id,city FROM cities";
-            db.query(sql, function (err, city_list) {
-                verbose.city_list = city_list;
-                return res.status(200).json({ status: 'success', message: 'success', data: verbose });
-            });
-        });
+        verbose.skill_list = await exports.getSkillList();
+        verbose.city_list = await exports.getCityList();
+        return res.status(200).json({ status: 'success', message: 'success', data: verbose });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+
+/**
+ * GET SKILL LIST
+ */
+exports.getSkillList = function () {
+    return new Promise(function (resolve, reject) {
+        var sql = "SELECT id,skill FROM skills";
+        db.query(sql, function (err, skill_list) {
+            resolve(skill_list);
+        });
+    });
+}
+
+
+/**
+ * GET CITY LIST
+ */
+exports.getCityList = function () {
+    return new Promise(function (resolve, reject) {
+        var sql = "SELECT id,city FROM cities";
+        db.query(sql, function (err, city_list) {
+            resolve(city_list);
+        });
+    });
+}
+
+
+/**
+ * GET PINCODE LIST OF THE CITY
+ */
+exports.city_pincode = function (req, res, next) {
+    try {
+        if (req.body.city_id == '' || req.body.city_id == 'undefined' || req.body.city_id == null) {
+            return res.status(403).json({ status: 'error', message: 'City id not found.' });
+        }
+        var city_id = req.body.city_id;
+        var sql = "SELECT id,pincode FROM pincodes where city_id='" + city_id + "'";
+        db.query(sql, function (err, pincode) {
+            return res.status(200).json({ status: 'success', message: 'success', data: pincode });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
+
+
+/**
+ * GET CITY NAME FROM PINCODE
+ */
+exports.city_from_pincode = function (req, res, next) {
+    try {
+        if (req.body.pincode == '' || req.body.pincode == 'undefined' || req.body.pincode == null) {
+            return res.status(403).json({ status: 'error', message: 'Pincode not found.' });
+        }
+        var pincode = req.body.pincode;
+        var sql = "SELECT id,city FROM cities WHERE id IN(SELECT city_id FROM pincodes WHERE pincode='" + pincode + "' GROUP BY city_id)";
+        db.query(sql, function (err, result) {
+            return res.status(200).json({ status: 'success', message: 'success', data: result });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
 
 
 /**
@@ -58,7 +116,7 @@ exports.dd_verbose = function (req, res, next) {
 exports.detail_job = function (req, res, next) {
     try {
         if (req.body.job_id == '' || req.body.job_id == 'undefined' || req.body.job_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Job id not found.' });
+            return res.status(403).json({ status: 'error', message: 'Job id not found.' });
         }
 
         var verbose = {};
@@ -96,19 +154,19 @@ exports.detail_job = function (req, res, next) {
 exports.add_job = function (req, res, next) {
     try {
         if (req.body.title == '' || req.body.title == 'undefined' || req.body.title == null) {
-            return res.status(404).json({ status: 'error', message: 'Job title not found.' });
+            return res.status(403).json({ status: 'error', message: 'Job title not found.' });
         } else if (req.body.description == '' || req.body.description == 'undefined' || req.body.description == null) {
-            return res.status(404).json({ status: 'error', message: 'Job description not found.' });
+            return res.status(403).json({ status: 'error', message: 'Job description not found.' });
         } else if (req.body.skills == '' || req.body.skills == 'undefined' || req.body.skills == null) {
-            return res.status(404).json({ status: 'error', message: 'Job skills not found.' });
+            return res.status(403).json({ status: 'error', message: 'Job skills not found.' });
         } else if (req.body.contact_via == '' || req.body.contact_via == 'undefined' || req.body.contact_via == null) {
-            return res.status(404).json({ status: 'error', message: 'Contact via not found.' });
+            return res.status(403).json({ status: 'error', message: 'Contact via not found.' });
         } else if (req.body.contact_value == '' || req.body.contact_value == 'undefined' || req.body.contact_value == null) {
-            return res.status(404).json({ status: 'error', message: 'Contact value not found.' });
+            return res.status(403).json({ status: 'error', message: 'Contact value not found.' });
         } else if (req.body.city == '' || req.body.city == 'undefined' || req.body.city == null) {
-            return res.status(404).json({ status: 'error', message: 'City not found.' });
+            return res.status(403).json({ status: 'error', message: 'City not found.' });
         } else if (req.body.pincode == '' || req.body.pincode == 'undefined' || req.body.pincode == null) {
-            return res.status(404).json({ status: 'error', message: 'Pincode not found.' });
+            return res.status(403).json({ status: 'error', message: 'Pincode not found.' });
         }
 
         var business_id = req.userdata.business_id;
@@ -150,7 +208,7 @@ exports.add_job = function (req, res, next) {
 exports.edit_job = function (req, res, next) {
     try {
         if (req.body.job_id == '' || req.body.job_id == 'undefined' || req.body.job_id == null) {
-            return res.status(404).json({ status: 'error', message: 'Job id not found.' });
+            return res.status(403).json({ status: 'error', message: 'Job id not found.' });
         }
 
         var business_id = req.userdata.business_id;

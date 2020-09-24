@@ -4,7 +4,7 @@ import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/ui/contactPerson/BranchDetailsModel.dart';
+import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,10 +53,7 @@ class _ContactPersonState extends State<ContactPerson> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: 
-        
-        
-        Container(
+        body: Container(
             decoration: BoxDecoration(
               color: Color(0xfffff4f4),
             ),
@@ -332,10 +329,10 @@ class _ContactPersonState extends State<ContactPerson> {
     Navigator.push(
       context,
       PopupLayout(
-        top: context.percentHeight * 20,
+        top: context.percentHeight * 18,
         left: context.percentWidth * 10,
         right: context.percentWidth * 10,
-        bottom: context.percentHeight * 20,
+        bottom: context.percentHeight * 18,
         child: PopupContent(
           content: Scaffold(
             appBar: AppBar(
@@ -344,10 +341,8 @@ class _ContactPersonState extends State<ContactPerson> {
                 return IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
-                    try {
-                      _searchedBranches.clear();
-                      Navigator.of(context).pop(); //close the popup
-                    } catch (e) {}
+                    _searchedBranches.clear();
+                    Navigator.of(context).pop(); //close the popup
                   },
                 );
               }),
@@ -378,12 +373,6 @@ class _ContactPersonState extends State<ContactPerson> {
     model2.isSelected = false;
     _searchedBranches.add(model2);
 
-    _selectedBranches.add(model1);
-    _selectedBranches.add(model1);
-    _selectedBranches.add(model1);
-    _selectedBranches.add(model1);
-    _selectedBranches.add(model1);
-    _selectedBranches.add(model1);
     return Container(
       child: BranchDetailsListViewAdd(
           inputList: _searchedBranches, selectedList: _selectedBranches),

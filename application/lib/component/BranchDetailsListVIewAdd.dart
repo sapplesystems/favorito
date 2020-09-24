@@ -1,5 +1,5 @@
 import 'package:Favorito/component/roundedButton.dart';
-import 'package:Favorito/ui/contactPerson/BranchDetailsModel.dart';
+import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 

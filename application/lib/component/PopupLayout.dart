@@ -60,7 +60,19 @@ class PopupLayout extends ModalRoute {
         // make sure that the overlay content is not cut off
         child: SafeArea(
           bottom: true,
-          child: _buildOverlayContent(context),
+          child: Container(
+            margin: EdgeInsets.only(
+                bottom: this.bottom,
+                left: this.left,
+                right: this.right,
+                top: this.top),
+            child: Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                child: _buildOverlayContent(context)),
+          ),
         ),
       ),
     );
@@ -68,11 +80,7 @@ class PopupLayout extends ModalRoute {
 
   Widget _buildOverlayContent(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-          bottom: this.bottom,
-          left: this.left,
-          right: this.right,
-          top: this.top),
+      padding: EdgeInsets.all(10),
       child: child,
     );
   }
