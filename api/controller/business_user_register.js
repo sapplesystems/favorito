@@ -76,6 +76,10 @@ exports.register = function (req, res, next) {
                             var sql2 = "INSERT INTO business_informations (business_id, categories) VALUES ('" + business_id + "', '" + business_category_id + "')";
                             db.query(sql2);
 
+                            /**insert row into business_waitlist_setting table */
+                            var sql2 = "INSERT INTO business_waitlist_setting (business_id) VALUES ('" + business_id + "')";
+                            db.query(sql2);
+
 
                             var token = jwt.sign({
                                 email: email,
