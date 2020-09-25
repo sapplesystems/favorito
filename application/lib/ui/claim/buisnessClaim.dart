@@ -16,6 +16,7 @@ class BusinessClaim extends StatefulWidget {
 class _BusinessClaimState extends State<BusinessClaim> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController ctrl = TextEditingController();
+  bool autovalidateMode;
   @override
   Widget build(BuildContext context) {
      SizeManager sm = SizeManager(context);

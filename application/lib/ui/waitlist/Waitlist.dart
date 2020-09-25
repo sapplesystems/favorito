@@ -69,6 +69,7 @@ class _Waitlist extends State<Waitlist> {
         ),
         body: Container(
           height: sm.scaledHeight(100),
+          decoration: BoxDecoration(color: Color(0xfffff4f4)),
           margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
           child: ListView.builder(
               itemCount: waitlistData.length,
