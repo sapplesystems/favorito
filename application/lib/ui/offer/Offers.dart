@@ -4,7 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class Offers extends StatefulWidget {
   @override
@@ -71,6 +71,7 @@ class _OfferState extends State<Offers> {
 
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -108,8 +109,8 @@ class _OfferState extends State<Offers> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                    left: context.percentWidth * 20,
-                    right: context.percentWidth * 20,
+                    left: sm.scaledWidth(20),
+                    right: sm.scaledWidth(20),
                     top: 8.0,
                     bottom: 16.0),
                 child: DropdownSearch<String>(
@@ -151,7 +152,7 @@ class _OfferState extends State<Offers> {
               Text("New User Offers",
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
               Container(
-                  height: context.percentHeight * 35,
+                  height: sm.scaledHeight(35),
                   child: ListView.builder(
                       itemCount: newUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {
@@ -220,7 +221,7 @@ class _OfferState extends State<Offers> {
               Text("New User Offers",
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
               Container(
-                  height: context.percentHeight * 35,
+                  height: sm.scaledHeight( 35),
                   child: ListView.builder(
                       itemCount: currentUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {

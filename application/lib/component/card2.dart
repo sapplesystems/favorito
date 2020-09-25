@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class card2 extends StatefulWidget {
   String ratings;
@@ -13,6 +13,7 @@ class card2 extends StatefulWidget {
 class _card2State extends State<card2> {
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Container(
       width: 162,
       height: 180,
@@ -119,7 +120,7 @@ class _card2State extends State<card2> {
                   SvgPicture.asset(
                     'assets/icon/star.svg',
                     alignment: Alignment.center,
-                    height: context.percentHeight * 4,
+                    height: sm.scaledHeight(4),
                   )
                 ],
               ),

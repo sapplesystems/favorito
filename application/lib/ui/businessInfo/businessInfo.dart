@@ -1,13 +1,12 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/myTags.dart';
-import 'package:Favorito/component/roundButtonRightIcon.dart';
 import 'package:Favorito/component/roundedButton.dart';
-import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/component/txtfieldprefix.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class businessInfo extends StatefulWidget {
   @override
@@ -30,6 +29,7 @@ class _businessInfoState extends State<businessInfo> {
 
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Scaffold(
       backgroundColor: Color(0xfffff4f4),
       appBar: AppBar(
@@ -63,7 +63,7 @@ class _businessInfoState extends State<businessInfo> {
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2)),
             Container(
-              height: context.percentHeight * 24,
+              height: sm.scaledHeight(24),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -140,20 +140,11 @@ class _businessInfoState extends State<businessInfo> {
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
                               onTap: () {
-                                if (i == 0) {
-                                  radioChecked[0] = true;
-                                  radioChecked[1] = false;
-                                  radioChecked[2] = false;
-                                }
-                                if (i == 1) {
-                                  radioChecked[0] = false;
-                                  radioChecked[1] = true;
-                                  radioChecked[2] = false;
-                                }
-                                if (i == 2) {
-                                  radioChecked[0] = false;
-                                  radioChecked[1] = false;
-                                  radioChecked[2] = true;
+                                for (int j = 0; j < 3; j++) {
+                                  if (i == j)
+                                    radioChecked[i] = true;
+                                  else
+                                    radioChecked[i] = false;
                                 }
                                 setState(() {});
                               },
@@ -220,7 +211,7 @@ class _businessInfoState extends State<businessInfo> {
                         ),
                       Padding(
                           padding: EdgeInsets.symmetric(vertical: 6),
-                          child: txtfieldboundry(
+                          child: txtfieldprefix(
                               title: "Attributes",
                               valid: true,
                               ctrl: controller[2],
@@ -246,8 +237,8 @@ class _businessInfoState extends State<businessInfo> {
                 ])),
             Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: context.percentWidth * 16,
-                    vertical: context.percentHeight * 2),
+                    horizontal: sm.scaledWidth(16),
+                    vertical: sm.scaledHeight(2)),
                 child: roundedButton(
                     clicker: () {
                       // funSublim();

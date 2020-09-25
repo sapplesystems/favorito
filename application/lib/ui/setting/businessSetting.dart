@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BusinessSetting extends StatefulWidget {
@@ -31,6 +31,7 @@ class _BusinessSettingState extends State<BusinessSetting> {
 
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
         backgroundColor: Color(0xfffff4f4),
         appBar: AppBar(
@@ -65,32 +66,32 @@ class _BusinessSettingState extends State<BusinessSetting> {
                   letterSpacing: 2),
             ),
             Container(
-                width: context.percentWidth * 98,
-                height: context.percentHeight * 212,
+                width: sm.scaledWidth(98),
+                height: sm.scaledHeight(212),
                 child: Stack(children: [
                   Positioned(
-                      top: context.percentHeight * 7,
-                      left: context.percentWidth * 8,
-                      right: context.percentWidth * 8,
+                      top: sm.scaledHeight(7),
+                      left: sm.scaledWidth(8),
+                      right: sm.scaledWidth(8),
                       child: Container(
                           decoration: bd1,
                           margin: EdgeInsets.only(
-                              bottom: context.percentHeight * 0),
-                          height: context.percentHeight * 200,
+                              bottom: sm.scaledHeight(0)),
+                          height: sm.scaledHeight(200),
                           padding: EdgeInsets.symmetric(
-                              horizontal: context.percentWidth * 6,
-                              vertical: context.percentHeight * 4),
+                              horizontal: sm.scaledWidth(6),
+                              vertical: sm.scaledHeight(4)),
                           child: ListView(
                               physics: const NeverScrollableScrollPhysics(),
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: context.percentHeight * 4),
+                                      top: sm.scaledHeight(4)),
                                   child: Image.asset(
                                     // 'assets/icon/save.svg',
                                     'assets/icon/foodcircle.png',
                                     fit: BoxFit.cover,
-                                    height: context.percentHeight * 20,
+                                    height: sm.scaledHeight(20),
                                   ),
                                 ),
                                 Padding(
@@ -235,14 +236,14 @@ class _BusinessSettingState extends State<BusinessSetting> {
                                     )),
                               ]))),
                   Positioned(
-                      top: context.percentHeight * 3,
-                      left: context.percentWidth * 18,
-                      right: context.percentWidth * 18,
+                      top: sm.scaledHeight(3),
+                      left: sm.scaledWidth(18),
+                      right: sm.scaledWidth(18),
                       child: Container(
                           decoration: bd1,
                           padding: EdgeInsets.symmetric(
-                              horizontal: context.percentWidth * 4,
-                              vertical: context.percentHeight * 2),
+                              horizontal: sm.scaledWidth(4),
+                              vertical: sm.scaledHeight(2)),
                           child: Column(children: [
                             Text(
                               "Your Business ID",
@@ -257,7 +258,7 @@ class _BusinessSettingState extends State<BusinessSetting> {
                 ])),
             Padding(
                 padding:
-                    EdgeInsets.symmetric(horizontal: context.percentWidth * 16),
+                    EdgeInsets.symmetric(horizontal: sm.scaledWidth(16)),
                 child: roundedButton(
                     clicker: () {
                       // funSublim();

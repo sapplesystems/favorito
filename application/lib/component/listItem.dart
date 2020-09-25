@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class listItems extends StatelessWidget {
   String ico;
@@ -10,6 +10,7 @@ class listItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: InkWell(
@@ -17,7 +18,7 @@ class listItems extends StatelessWidget {
         child: Row(
           children: [
             SvgPicture.asset("assets/icon/$ico.svg",
-                alignment: Alignment.center, height: context.percentHeight * 3),
+                alignment: Alignment.center, height: sm.scaledHeight(3)),
             SizedBox(
               width: 20,
             ),

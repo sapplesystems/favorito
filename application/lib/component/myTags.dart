@@ -24,7 +24,7 @@ class _MyTagsState extends State<MyTags> {
   Widget build(BuildContext context) {
     return Column(children: [
       Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: DropdownSearch<String>(
               validator: (v) => v == '' ? "required field" : null,
               autoValidate: true,
@@ -43,7 +43,7 @@ class _MyTagsState extends State<MyTags> {
                 });
               })),
       SizedBox(
-          height: 52,
+          height: widget.selectedList.isEmpty ? 0 : 52,
           child: ListView(scrollDirection: Axis.horizontal, children: [
             for (int i = 0; i < widget.selectedList.length; i++)
               roundButtonRightIcon(

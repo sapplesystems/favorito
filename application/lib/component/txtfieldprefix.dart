@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myString.Dart';
 
-class txtfieldboundry extends StatefulWidget {
+class txtfieldprefix extends StatefulWidget {
   String title;
   String hint;
   bool security;
@@ -10,10 +10,11 @@ class txtfieldboundry extends StatefulWidget {
   bool valid;
   TextInputType keyboardSet;
   TextEditingController ctrl;
+  IconData prefixIco;
   Function myOnChanged;
   RegExp myregex;
   Function prefClick;
-  txtfieldboundry(
+  txtfieldprefix(
       {this.title,
       this.security,
       this.hint,
@@ -24,12 +25,13 @@ class txtfieldboundry extends StatefulWidget {
       this.valid,
       this.maxLines,
       this.myOnChanged,
+      this.prefixIco,
       this.prefClick});
   @override
-  _txtfieldboundryState createState() => _txtfieldboundryState();
+  _txtfieldprefixState createState() => _txtfieldprefixState();
 }
 
-class _txtfieldboundryState extends State<txtfieldboundry> {
+class _txtfieldprefixState extends State<txtfieldprefix> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,6 +42,14 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         decoration: InputDecoration(
             labelText: widget.title,
             counterText: "",
+            prefixIcon: IconButton(
+              icon: Icon(widget.prefixIco),
+              onPressed: () {
+                if (widget.prefixIco != null) {
+                  widget.prefClick();
+                }
+              },
+            ),
             hintText: widget.hint,
             fillColor: Colors.transparent,
             border: OutlineInputBorder(

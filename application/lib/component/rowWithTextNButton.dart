@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class rowWithTextNButton extends StatelessWidget {
   String txt1;
@@ -9,6 +9,7 @@ class rowWithTextNButton extends StatelessWidget {
   rowWithTextNButton({this.txt1, this.txt2, this.check, this.function});
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -17,10 +18,9 @@ class rowWithTextNButton extends StatelessWidget {
           ),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       padding: EdgeInsets.symmetric(
-          vertical: context.percentHeight * 2,
-          horizontal: context.percentWidth * 2),
+          vertical: sm.scaledHeight(2), horizontal: sm.scaledWidth(2)),
       margin: EdgeInsets.symmetric(
-        vertical: context.percentHeight * 1,
+        vertical: sm.scaledHeight(1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

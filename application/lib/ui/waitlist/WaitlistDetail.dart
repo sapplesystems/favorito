@@ -1,7 +1,7 @@
 import 'package:Favorito/model/waitlist/WaitlistModel.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class WaitListDetail extends StatefulWidget {
   WaitlistModel waitlistData;
@@ -14,6 +14,7 @@ class WaitListDetail extends StatefulWidget {
 class _WaitListDetail extends State<WaitListDetail> {
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Scaffold(
         body: Container(
       margin: EdgeInsets.all(8.0),
@@ -76,22 +77,22 @@ class _WaitListDetail extends State<WaitListDetail> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  iconSize: context.percentWidth * 8,
+                  iconSize: sm.scaledWidth(8),
                   icon: Icon(Icons.call),
                   onPressed: () {},
                 ),
                 IconButton(
-                  iconSize: context.percentWidth * 8,
+                  iconSize: sm.scaledWidth(8),
                   icon: Icon(Icons.check_circle),
                   onPressed: () {},
                 ),
                 IconButton(
-                  iconSize: context.percentWidth * 8,
+                  iconSize: sm.scaledWidth(8),
                   icon: Icon(Icons.close),
                   onPressed: () {},
                 ),
                 IconButton(
-                  iconSize: context.percentWidth * 8,
+                  iconSize: sm.scaledWidth(8),
                   icon: Icon(Icons.delete),
                   onPressed: () {},
                 ),

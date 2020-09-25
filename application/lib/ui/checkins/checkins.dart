@@ -14,12 +14,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
 
-class dashboard extends StatefulWidget {
+class checkins extends StatefulWidget {
   @override
-  _dashboardState createState() => _dashboardState();
+  _checkinsState createState() => _checkinsState();
 }
 
-class _dashboardState extends State<dashboard> {
+class _checkinsState extends State<checkins> {
   SizeManager sm;
   @override
   void initState() {

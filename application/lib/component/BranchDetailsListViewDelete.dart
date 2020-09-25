@@ -1,6 +1,6 @@
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class BranchDetailsListViewDelete extends StatefulWidget {
   List<BranchDetailsModel> inputList;
@@ -13,6 +13,7 @@ class BranchDetailsListViewDelete extends StatefulWidget {
 class _BranchDetailsListViewDelete extends State<BranchDetailsListViewDelete> {
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Container(
       child: Column(children: [
         for (int index = 0; index < widget.inputList.length; index++)
@@ -25,9 +26,9 @@ class _BranchDetailsListViewDelete extends State<BranchDetailsListViewDelete> {
               child: Center(
                 child: ListTile(
                     leading: Image.network(widget.inputList[index].imageUrl,
-                        height: context.percentHeight * 8,
+                        height: sm.scaledHeight(8),
                         fit: BoxFit.fill,
-                        width: context.percentHeight * 8),
+                        width: sm.scaledWidth(8)),
                     title: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Text(

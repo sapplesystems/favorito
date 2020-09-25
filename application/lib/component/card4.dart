@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:Favorito/myCss.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class card4 extends StatelessWidget {
   String title;
@@ -21,6 +21,7 @@ class card4 extends StatelessWidget {
       this.circleColor});
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Card(
       shape: rrb,
       elevation: 4,
@@ -38,7 +39,7 @@ class card4 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: context.percentWidth * 6,
+              width: sm.scaledWidth(6),
             ),
             Text(ammount,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
