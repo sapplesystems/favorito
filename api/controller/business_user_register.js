@@ -80,7 +80,7 @@ exports.register = function (req, res, next) {
                             var sql3 = "INSERT INTO business_waitlist_setting (business_id) VALUES ('" + business_id + "')";
                             db.query(sql3);
 
-                            /**insert row into business_waitlist_setting table */
+                            /**insert row into business_booking_setting table */
                             var sql4 = "INSERT INTO business_booking_setting (business_id) VALUES ('" + business_id + "')";
                             db.query(sql4);
 
