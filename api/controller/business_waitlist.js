@@ -85,7 +85,7 @@ exports.delete_manual_waitlist = function (req, res, next) {
 /**
  * SAVE MANUAL WAITLIST SETTING
  */
-exports.save_setting = async function (req, res, next) {
+exports.save_setting = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var update_column = " updated_at=NOW() ";
@@ -139,7 +139,7 @@ exports.save_setting = async function (req, res, next) {
 /**
  * GET MANUAL WAITLIST SETTING
  */
-exports.get_setting = async function (req, res, next) {
+exports.get_setting = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT start_time,end_time,available_resource,minium_wait_time,slot_length,booking_per_slot,\n\
