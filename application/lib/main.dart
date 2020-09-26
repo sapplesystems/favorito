@@ -1,3 +1,5 @@
+import 'package:Favorito/ui/booking/Bookings.dart';
+import 'package:Favorito/ui/booking/ManualBooking.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -25,5 +27,5 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Login());
+      home: Bookings());
 }

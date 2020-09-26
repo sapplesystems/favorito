@@ -282,7 +282,6 @@ class _CreateJobState extends State<CreateJob> {
                           }
                         });
                       } else {
-                        initializeDefaultValues();
                         _autoValidateForm = true;
                       }
                     },
