@@ -134,6 +134,12 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "flutter_rating",
+      "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_rating-0.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "flutter_svg",
       "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_svg-0.18.1",
       "packageUri": "lib/",
@@ -506,7 +512,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-26T11:36:51.409005Z",
+  "generated": "2020-09-28T12:26:29.878625Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }
