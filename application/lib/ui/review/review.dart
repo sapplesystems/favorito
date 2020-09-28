@@ -1,6 +1,7 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class review extends StatefulWidget {
@@ -13,9 +14,9 @@ class _reviewState extends State<review> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfffff4f4),
+      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),

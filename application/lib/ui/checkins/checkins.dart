@@ -3,7 +3,7 @@ import 'package:Favorito/myCss.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class checkins extends StatefulWidget {
   @override
   _checkinsState createState() => _checkinsState();
@@ -34,7 +34,7 @@ class _checkinsState extends State<checkins> {
               ),
             ),
             centerTitle: true,
-            backgroundColor: Color(0xfffff4f4),
+            backgroundColor: myBackGround,
             elevation: 0,
             leading: IconButton(
               icon: Icon(null, color: Colors.black),
@@ -47,7 +47,7 @@ class _checkinsState extends State<checkins> {
         ),
         body: Container(
             height: sm.scaledHeight(100),
-            color: Color(0xfffff4f4),
+            color: myBackGround,
             padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
             child: SingleChildScrollView(
               child: Column(children: [

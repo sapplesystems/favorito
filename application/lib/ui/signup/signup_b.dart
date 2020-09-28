@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
@@ -50,7 +51,7 @@ class _signup_bState extends State<signup_b> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -63,7 +64,7 @@ class _signup_bState extends State<signup_b> {
         ),
       ),
       body: Container(
-        color: Color(0xfffff4f4),
+        color: myBackGround,
         height: sm.scaledHeight(90),
         child: Stack(
           children: [

@@ -9,7 +9,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class ContactPerson extends StatefulWidget {
   @override
   _ContactPersonState createState() => _ContactPersonState();
@@ -38,10 +38,10 @@ class _ContactPersonState extends State<ContactPerson> {
   bool _autoValidateForm = false;
   @override
   Widget build(BuildContext context) {
-        sm = SizeManager(context);
+    sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -57,7 +57,7 @@ class _ContactPersonState extends State<ContactPerson> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             child: ListView(
               children: [
@@ -67,8 +67,7 @@ class _ContactPersonState extends State<ContactPerson> {
                   child: Stack(
                     children: [
                       Card(
-                        margin:
-                            EdgeInsets.only(top: sm.scaledHeight( 10)),
+                        margin: EdgeInsets.only(top: sm.scaledHeight(10)),
                         elevation: 5,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
@@ -81,7 +80,7 @@ class _ContactPersonState extends State<ContactPerson> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: sm.scaledHeight( 12),
+                                      top: sm.scaledHeight(12),
                                       left: 32.0,
                                       right: 32.0),
                                   child: Text(
@@ -93,7 +92,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: sm.scaledHeight( 2),
+                                      top: sm.scaledHeight(2),
                                       left: 8.0,
                                       right: 8.0),
                                   child: Row(
@@ -175,7 +174,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                     child: SvgPicture.asset(
                                         'assets/icon/changePassword.svg',
                                         alignment: Alignment.center,
-                                        height: sm.scaledHeight( 20),
+                                        height: sm.scaledHeight(20),
                                         fit: BoxFit.contain),
                                   ),
                                 ),

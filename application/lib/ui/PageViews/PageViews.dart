@@ -1,5 +1,6 @@
 import 'package:Favorito/component/card4.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
@@ -21,9 +22,9 @@ class _PageViewsState extends State<PageViews> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

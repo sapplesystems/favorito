@@ -2,6 +2,7 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/model/job/JobListRequestModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/jobs/CreateJob.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -26,10 +27,10 @@ class _JobListState extends State<JobList> {
 
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -45,7 +46,7 @@ class _JobListState extends State<JobList> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.start, children: [

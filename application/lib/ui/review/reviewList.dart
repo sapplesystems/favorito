@@ -1,6 +1,7 @@
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/review/review.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class reviewList extends StatefulWidget {
@@ -14,9 +15,9 @@ class _reviewListState extends State<reviewList> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: Color(0xfffff4f4),
+      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -38,7 +39,7 @@ class _reviewListState extends State<reviewList> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Row(children: [
               Text("4.5", style: TextStyle(fontSize: 24)),
-              Icon(Icons.star, color: Color(0xffdd2626))
+              Icon(Icons.star, color: myRed)
             ]),
             Text("100 Rating\n75 Reviews", style: TextStyle(fontSize: 14))
           ]),
@@ -54,15 +55,14 @@ class _reviewListState extends State<reviewList> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.filter_alt,
-                            color: Color(0xffdd2626), size: 30),
+                        Icon(Icons.filter_alt, color: myRed, size: 30),
                         Row(
                           children: [
                             Text(
                               "Alphabetical",
                               style: TextStyle(color: Colors.grey),
                             ),
-                            Icon(Icons.sort, color: Color(0xffdd2626), size: 30)
+                            Icon(Icons.sort, color: myRed, size: 30)
                           ],
                         )
                       ]),
@@ -102,7 +102,7 @@ class _reviewListState extends State<reviewList> {
                   width: 40,
                   child: Row(children: [
                     Text("4.5", style: TextStyle(fontSize: 16)),
-                    Icon(Icons.star, color: Color(0xffdd2626), size: 16)
+                    Icon(Icons.star, color: myRed, size: 16)
                   ]),
                 ))),
       ),

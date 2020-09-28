@@ -3,6 +3,7 @@ import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,9 +27,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: Color(0xfffff4f4),
+      backgroundColor: myBackGround,
       body: ListView(
         children: [
           Padding(
@@ -68,8 +69,7 @@ class _LoginState extends State<Login> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(
-                                  top: sm.scaledHeight(8)),
+                              padding: EdgeInsets.only(top: sm.scaledHeight(8)),
                               child: txtfieldboundry(
                                 valid: true,
                                 title: "Email/Phone",
@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
                                   "Forgot Password?",
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
-                                    color: Color(0xffdd2626),
+                                    color: myRed,
                                     fontSize: 16,
                                     fontFamily: "Roboto",
                                     fontWeight: FontWeight.w400,
@@ -119,8 +119,7 @@ class _LoginState extends State<Login> {
           ),
           Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: sm.scaledWidth(16),
-                  vertical: sm.scaledWidth(12)),
+                  horizontal: sm.scaledWidth(16), vertical: sm.scaledWidth(12)),
               child: roundedButton(
                   clicker: () => funClick(), clr: Colors.red, title: "Login")),
           Padding(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class roundButtonRightIcon extends StatefulWidget {
   String title;
   Color clr;
@@ -23,7 +23,7 @@ class _roundButtonRightIconState extends State<roundButtonRightIcon> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: Color(0xffdd2626),
+              color: myRed,
               width: 1,
             ),
             color: Colors.white,

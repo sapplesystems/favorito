@@ -5,6 +5,7 @@ import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/tour/Tour_B.dart';
 import 'package:Favorito/ui/tour/Tour_C.dart';
 import 'package:Favorito/ui/tour/Tour_D.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -58,7 +59,7 @@ class _Tour_aState extends State<Tour_a> {
                               height: 14,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: Color(0xffdd2626)))),
+                                  color: myRed))),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -128,7 +129,7 @@ class _Tour_aState extends State<Tour_a> {
                     margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
                     child: roundedButton(
                       title: "LOGIN",
-                      clr: Color(0xffdd2626),
+                      clr: myRed,
                     ),
                   ),
                 ),
