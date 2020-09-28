@@ -1,6 +1,4 @@
 var db = require('../config/db');
-var offer_status_drop_down = ['Activated', 'Deactivated'];
-var offer_type_drop_down = ['New User Offer', 'Current Offer'];
 
 /**
  * FETCH ALL BUSINESS WAITLIST
