@@ -2,6 +2,8 @@ var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
+var user_role = ['Owner', 'Manager', 'Employee'];
+
 /**
  * GET BUSINESS MASTER PROFILE
  */
@@ -120,7 +122,7 @@ exports.getBusinessOwnerProfile = function (req, res, next) {
                 where business_id='" + business_id + "' and id_deleted='0'";
                 db.query(bsql, function (error, branches) {
                     rows[0].branches = branches;
-                    return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                    return res.status(200).json({ status: 'success', message: 'success', user_role: user_role, data: rows[0] });
                 });
             }
         });

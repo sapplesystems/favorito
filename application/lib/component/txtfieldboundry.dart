@@ -8,6 +8,7 @@ class txtfieldboundry extends StatefulWidget {
   int maxLines;
   int maxlen;
   bool valid;
+  bool isEnabled;
   TextInputType keyboardSet;
   TextEditingController ctrl;
   Function myOnChanged;
@@ -22,6 +23,7 @@ class txtfieldboundry extends StatefulWidget {
       this.keyboardSet,
       this.myregex,
       this.valid,
+      this.isEnabled,
       this.maxLines,
       this.myOnChanged,
       this.prefClick});
@@ -53,6 +55,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         ),
         maxLines: widget.maxLines,
         onChanged: widget.myOnChanged,
+        enabled: widget.isEnabled,
       ),
     );
   }

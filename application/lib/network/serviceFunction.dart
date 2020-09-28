@@ -11,10 +11,14 @@ class serviceFunction {
   static String funGetCities = baseUrl2 + 'state-city/city-list';
   static String funValidPincode = baseUrl2 + 'notification/verify-pincode';
   static String funGetJobs = baseUrl2 + 'job/list';
-  static String funGetCreateJobDefaultData = baseUrl2 + 'job/getRequiredData';
+  static String funGetCreateJobDefaultData = baseUrl2 + 'job/dd-verbose';
   static String funLogin = baseUrl1 + 'user/login';
   static String funDash = baseUrl1 + 'dashboard/detail';
   static String funGetCreateOfferDefaultData = baseUrl2 + 'offer/dd-verbose';
   static String funCreateOffer = baseUrl2 + 'offer/create';
   static String funCreateJob = baseUrl2 + 'job/create';
+  static String funContactPersonRequiredData =
+      baseUrl2 + 'business-user/owner-profile';
+  static String funUpdateContactPerson =
+      baseUrl2 + 'business-user/update-owner-profile';
 }

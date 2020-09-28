@@ -68,7 +68,6 @@ class _CreateCampaignState extends State<CreateCampaign> {
                 child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.always,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [

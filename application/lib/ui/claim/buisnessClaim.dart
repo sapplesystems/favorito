@@ -68,7 +68,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                 child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.always,
+                        //autovalidateMode: AutovalidateMode.always,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
