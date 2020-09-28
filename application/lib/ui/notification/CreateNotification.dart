@@ -3,11 +3,12 @@ import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class CreateNotification extends StatefulWidget {
   @override
@@ -76,6 +77,7 @@ class _CreateNotificationState extends State<CreateNotification> {
 
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -101,9 +103,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: Card(
                     elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
+                    shape: rrb,
                     child: Builder(
                       builder: (context) => Form(
                         key: _formKey,
@@ -383,7 +383,7 @@ class _CreateNotificationState extends State<CreateNotification> {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  width: context.percentWidth * 50,
+                  width: sm.scaledWidth(50),
                   margin: EdgeInsets.only(bottom: 16.0),
                   child: roundedButton(
                     clicker: () {

@@ -6,7 +6,7 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -26,12 +26,13 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
       backgroundColor: Color(0xfffff4f4),
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: context.percentHeight * 6),
+            padding: EdgeInsets.only(top: sm.scaledHeight(6)),
             child: Text(
               "Log in",
               textAlign: TextAlign.center,
@@ -53,7 +54,7 @@ class _LoginState extends State<Login> {
             child: Stack(
               children: [
                 Card(
-                  margin: EdgeInsets.only(top: context.percentHeight * 10),
+                  margin: EdgeInsets.only(top: sm.scaledHeight(10)),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15.0)),
@@ -68,7 +69,7 @@ class _LoginState extends State<Login> {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
-                                  top: context.percentHeight * 8),
+                                  top: sm.scaledHeight(8)),
                               child: txtfieldboundry(
                                 valid: true,
                                 title: "Email/Phone",
@@ -78,7 +79,7 @@ class _LoginState extends State<Login> {
                             ),
                             Padding(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: context.percentHeight * 4),
+                                    vertical: sm.scaledHeight(4)),
                                 child: txtfieldboundry(
                                   valid: true,
                                   maxLines: 1,
@@ -108,22 +109,22 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 Positioned(
-                    left: context.percentWidth * 30,
-                    right: context.percentWidth * 30,
+                    left: sm.scaledWidth(30),
+                    right: sm.scaledWidth(30),
                     child: SvgPicture.asset('assets/icon/maskgroup.svg',
                         alignment: Alignment.center,
-                        height: context.percentHeight * 20)),
+                        height: sm.scaledHeight(20))),
               ],
             ),
           ),
           Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: context.percentWidth * 16),
+              padding: EdgeInsets.symmetric(
+                  horizontal: sm.scaledWidth(16),
+                  vertical: sm.scaledWidth(12)),
               child: roundedButton(
                   clicker: () => funClick(), clr: Colors.red, title: "Login")),
           Padding(
-            padding: EdgeInsets.only(
-                top: context.percentHeight * 20, left: 20, right: 20),
+            padding: EdgeInsets.only(left: 20, right: 20),
             child: Text(
               "By continuing, you agree to Favorito's Terms of Service and acknowledge Favorito's \nPrivacy Policy.",
               textAlign: TextAlign.center,
@@ -169,40 +170,3 @@ class _LoginState extends State<Login> {
     }
   }
 }
-
-// Stack(children: [
-//           Positioned(
-//             left: context.percentWidth * 30,
-//             right: context.percentWidth * 30,
-//             child: Text(
-//               "Log in",
-//               textAlign: TextAlign.center,
-//               style: TextStyle(
-//                 color: Colors.black,
-//                 fontSize: 24,
-//                 fontFamily: "Gilroy-Bold",
-//                 fontWeight: FontWeight.w700,
-//                 letterSpacing: 1,
-//               ),
-//             ),
-//           ),
-//           Positioned(
-//             top: context.percentWidth * 30,
-//             left: context.percentWidth * 10,
-//             right: context.percentWidth * 10,
-//             child: Container(
-//               height: context.percentHeight * 40,
-//               decoration: bd1,
-//               child: Column(
-//                 children: [],
-//               ),
-//             ),
-//           ),
-//           Positioned(
-//               top: context.percentWidth * 5,
-//               left: context.percentWidth * 30,
-//               right: context.percentWidth * 30,
-//               child: SvgPicture.asset('assets/icon/maskgroup.svg',
-//                   alignment: Alignment.center,
-//                   height: context.percentHeight * 20)),
-//         ]),

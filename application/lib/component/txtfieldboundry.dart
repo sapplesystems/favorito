@@ -10,7 +10,6 @@ class txtfieldboundry extends StatefulWidget {
   bool valid;
   TextInputType keyboardSet;
   TextEditingController ctrl;
-  IconData prefixIco;
   Function myOnChanged;
   RegExp myregex;
   Function prefClick;
@@ -25,7 +24,6 @@ class txtfieldboundry extends StatefulWidget {
       this.valid,
       this.maxLines,
       this.myOnChanged,
-      this.prefixIco,
       this.prefClick});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
@@ -42,14 +40,6 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         decoration: InputDecoration(
             labelText: widget.title,
             counterText: "",
-            prefixIcon: IconButton(
-              icon: Icon(widget.prefixIco),
-              onPressed: () {
-                if (widget.prefixIco != null) {
-                  widget.prefClick();
-                }
-              },
-            ),
             hintText: widget.hint,
             fillColor: Colors.transparent,
             border: OutlineInputBorder(

@@ -11,7 +11,8 @@ class _radiosState extends State<radios> {
     return Container(
       child: Row(
         children: [
-          Icon(Icons.radio_button_checked,color: Colors.red),Text("")
+          Icon(Icons.radio_button_checked, color: Colors.red),
+          Text("")
         ],
       ),
     );

@@ -8,7 +8,7 @@ import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class ContactPerson extends StatefulWidget {
   @override
@@ -16,6 +16,7 @@ class ContactPerson extends StatefulWidget {
 }
 
 class _ContactPersonState extends State<ContactPerson> {
+  SizeManager sm;
   var _myFirstNameEditController = TextEditingController();
   var _myLastNameEditController = TextEditingController();
   var _myPersonalEmailEditController = TextEditingController();
@@ -37,6 +38,7 @@ class _ContactPersonState extends State<ContactPerson> {
   bool _autoValidateForm = false;
   @override
   Widget build(BuildContext context) {
+        sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -66,7 +68,7 @@ class _ContactPersonState extends State<ContactPerson> {
                     children: [
                       Card(
                         margin:
-                            EdgeInsets.only(top: context.percentHeight * 10),
+                            EdgeInsets.only(top: sm.scaledHeight( 10)),
                         elevation: 5,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
@@ -79,7 +81,7 @@ class _ContactPersonState extends State<ContactPerson> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: context.percentHeight * 12,
+                                      top: sm.scaledHeight( 12),
                                       left: 32.0,
                                       right: 32.0),
                                   child: Text(
@@ -91,7 +93,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: context.percentHeight * 2,
+                                      top: sm.scaledHeight( 2),
                                       left: 8.0,
                                       right: 8.0),
                                   child: Row(
@@ -168,12 +170,12 @@ class _ContactPersonState extends State<ContactPerson> {
                                   onTap: () {},
                                   child: Padding(
                                     padding: EdgeInsets.only(
-                                        left: context.percentWidth * 10,
-                                        right: context.percentWidth * 10),
+                                        left: sm.scaledWidth(10),
+                                        right: sm.scaledWidth(10)),
                                     child: SvgPicture.asset(
                                         'assets/icon/changePassword.svg',
                                         alignment: Alignment.center,
-                                        height: context.percentHeight * 20,
+                                        height: sm.scaledHeight( 20),
                                         fit: BoxFit.contain),
                                   ),
                                 ),
@@ -183,13 +185,13 @@ class _ContactPersonState extends State<ContactPerson> {
                         ),
                       ),
                       Positioned(
-                          top: context.percentWidth * 5,
-                          left: context.percentWidth * 30,
-                          right: context.percentWidth * 30,
+                          top: sm.scaledWidth(5),
+                          left: sm.scaledWidth(30),
+                          right: sm.scaledWidth(30),
                           child: SvgPicture.asset(
                               'assets/icon/contactPerson.svg',
                               alignment: Alignment.center,
-                              height: context.percentHeight * 20)),
+                              height: sm.scaledHeight(20))),
                     ],
                   ),
                 ),
@@ -311,7 +313,7 @@ class _ContactPersonState extends State<ContactPerson> {
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    width: context.percentWidth * 50,
+                    width: sm.scaledWidth(50),
                     margin: EdgeInsets.only(bottom: 16.0),
                     child: roundedButton(
                       clicker: () {},
@@ -329,10 +331,10 @@ class _ContactPersonState extends State<ContactPerson> {
     Navigator.push(
       context,
       PopupLayout(
-        top: context.percentHeight * 18,
-        left: context.percentWidth * 10,
-        right: context.percentWidth * 10,
-        bottom: context.percentHeight * 18,
+        top: sm.scaledHeight(18),
+        left: sm.scaledWidth(10),
+        right: sm.scaledWidth(10),
+        bottom: sm.scaledHeight(18),
         child: PopupContent(
           content: Scaffold(
             appBar: AppBar(

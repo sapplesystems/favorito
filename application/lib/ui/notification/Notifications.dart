@@ -2,7 +2,7 @@ import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
 import 'package:Favorito/ui/notification/CreateNotification.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/component/roundedButton.dart';
 
 import '../../network/webservices.dart';
@@ -29,6 +29,7 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -47,7 +48,7 @@ class _NotificationsState extends State<Notifications> {
         ),
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Container(
-            height: context.percentHeight * 75,
+            height: sm.scaledHeight(75),
             margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
             child: ListView.builder(
                 itemCount: _notificationsListdata.notifications.length,
@@ -58,8 +59,8 @@ class _NotificationsState extends State<Notifications> {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     ),
                     child: Container(
-                        height: context.percentHeight * 10,
-                        width: context.percentWidth * 80,
+                        height: sm.scaledHeight(10),
+                        width: sm.scaledWidth(80),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
@@ -95,7 +96,7 @@ class _NotificationsState extends State<Notifications> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              width: context.percentWidth * 50,
+              width: sm.scaledWidth(50),
               child: roundedButton(
                 clicker: () {
                   Navigator.push(

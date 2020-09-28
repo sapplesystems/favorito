@@ -8,7 +8,7 @@ import 'package:Favorito/utils/Regexer.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class signup_b extends StatefulWidget {
   List<TextEditingController> preData;
@@ -47,6 +47,7 @@ class _signup_bState extends State<signup_b> {
 
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xfffff4f4),
@@ -63,12 +64,12 @@ class _signup_bState extends State<signup_b> {
       ),
       body: Container(
         color: Color(0xfffff4f4),
-        height: context.percentHeight * 90,
+        height: sm.scaledHeight(90),
         child: Stack(
           children: [
             Positioned(
-              left: context.percentWidth * 30,
-              right: context.percentWidth * 30,
+              left: sm.scaledWidth(30),
+              right: sm.scaledWidth(30),
               child: Text(
                 "Sign Up",
                 textAlign: TextAlign.center,
@@ -82,9 +83,9 @@ class _signup_bState extends State<signup_b> {
               ),
             ),
             Positioned(
-              bottom: context.percentWidth * 6,
-              left: context.percentWidth * 22,
-              right: context.percentWidth * 22,
+              bottom: sm.scaledWidth(6),
+              left: sm.scaledWidth(22),
+              right: sm.scaledWidth(22),
               child: roundedButton(
                 clicker: () {
                   funSublim();
@@ -94,11 +95,11 @@ class _signup_bState extends State<signup_b> {
               ),
             ),
             Positioned(
-              top: context.percentWidth * 30,
-              left: context.percentWidth * 10,
-              right: context.percentWidth * 10,
+              top: sm.scaledWidth(30),
+              left: sm.scaledWidth(10),
+              right: sm.scaledWidth(10),
               child: Container(
-                  height: context.percentWidth * 100,
+                  height: sm.scaledWidth(100),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -106,9 +107,9 @@ class _signup_bState extends State<signup_b> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   padding: EdgeInsets.only(
-                    top: context.percentHeight * 8,
-                    left: context.percentWidth * 2,
-                    right: context.percentWidth * 2,
+                    top: sm.scaledHeight(8),
+                    left: sm.scaledWidth(2),
+                    right: sm.scaledWidth(2),
                   ),
                   child: Builder(
                     builder: (context) => Form(
@@ -191,12 +192,11 @@ class _signup_bState extends State<signup_b> {
                   )),
             ),
             Positioned(
-                top: context.percentWidth * 5,
-                left: context.percentWidth * 30,
-                right: context.percentWidth * 30,
+                top: sm.scaledWidth(5),
+                left: sm.scaledWidth(30),
+                right: sm.scaledWidth(30),
                 child: SvgPicture.asset('assets/icon/maskgroup.svg',
-                    alignment: Alignment.center,
-                    height: context.percentHeight * 20)),
+                    alignment: Alignment.center, height: sm.scaledHeight(20)))
           ],
         ),
       ),

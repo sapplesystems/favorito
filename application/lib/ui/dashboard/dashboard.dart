@@ -1,17 +1,20 @@
 import 'dart:ui';
-
 import 'package:Favorito/component/card1.dart';
 import 'package:Favorito/component/card2.dart';
 import 'package:Favorito/component/cart3.dart';
 import 'package:Favorito/component/rowWithTextNButton.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/businessInfo/businessInfo.dart';
+import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/order/Orders.dart';
+import 'package:Favorito/ui/review/reviewList.dart';
 import 'package:Favorito/ui/setting/businessSetting.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
 
 class dashboard extends StatefulWidget {
@@ -20,6 +23,7 @@ class dashboard extends StatefulWidget {
 }
 
 class _dashboardState extends State<dashboard> {
+  SizeManager sm;
   @override
   void initState() {
     super.initState();
@@ -28,13 +32,14 @@ class _dashboardState extends State<dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    sm = SizeManager(context);
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70.0),
           child: AppBar(
             title: Padding(
               padding: EdgeInsets.only(
-                top: context.percentWidth * 10,
+                top: sm.scaledWidth(10),
               ),
               child: Text(
                 "DASHBOARD",
@@ -71,7 +76,7 @@ class _dashboardState extends State<dashboard> {
         ),
         body: Container(
             color: Color(0xfffff4f4),
-            padding: EdgeInsets.symmetric(horizontal: context.percentWidth * 4),
+            padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
             child: SingleChildScrollView(
               child: Column(children: [
                 Row(
@@ -122,24 +127,44 @@ class _dashboardState extends State<dashboard> {
                     check: is_verified,
                     function: () {}),
                 Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: context.percentHeight * 2),
+                  padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      card1(checkins: check_ins),
-                      card2(ratings: ratings)
+                      card1(
+                          checkins: check_ins,
+                          function: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => checkins()));
+                          }),
+                      card2(
+                        ratings: ratings,
+                        function: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => reviewList()));
+                        },
+                      )
                     ],
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: context.percentHeight * 2),
+                    padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           card3(txt1: "Catalogoues", txt2: catalogoues),
-                          card3(txt1: "Orders", txt2: orders)
+                          InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Orders()));
+                              },
+                              child: card3(txt1: "Orders", txt2: orders))
                         ])),
                 Row(children: [
                   Text(
@@ -152,28 +177,25 @@ class _dashboardState extends State<dashboard> {
                   credit("Paid Credit", paid_credit, "null")
                 ]),
                 for (int i = 0; i < 2; i++)
-                  rowCard("Advertise",
-                      "Reach new audience searching for related services"),
+                  rowCard(
+                      "Advertise",
+                      "Reach new audience searching for related services",
+                      () {}),
               ]),
             )));
   }
 
-  Widget rowCard(String title, String subtitle) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 6),
-      margin: EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-        subtitle: Text(subtitle),
-        // trailing: ,
-      ),
+  Widget rowCard(String title, String subtitle, Function function) {
+    return InkWell(
+      onTap: function,
+      child: Container(
+          padding: EdgeInsets.symmetric(vertical: 6),
+          margin: EdgeInsets.symmetric(vertical: 12),
+          decoration: bd3,
+          child: ListTile(
+              title: Text(title,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              subtitle: Text(subtitle))),
     );
   }
 
@@ -186,7 +208,7 @@ class _dashboardState extends State<dashboard> {
         SvgPicture.asset(
           ico,
           alignment: Alignment.center,
-          height: context.percentHeight * 1.4,
+          height: sm.scaledHeight(1.4),
         )
       ]),
     );
