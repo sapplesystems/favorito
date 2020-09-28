@@ -7,11 +7,11 @@ class MyOutlineButton extends StatelessWidget {
   MyOutlineButton({this.title, this.function});
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return InkWell(
       onTap: function,
       child: Container(
-        width: sm.scaledWidth(6.5),
+        width: sm.scaledWidth(65),
         height: sm.scaledHeight(6.5),
         margin: EdgeInsets.symmetric(
           horizontal: sm.scaledWidth(14),

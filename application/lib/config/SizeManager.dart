@@ -14,7 +14,7 @@ class SizeManager {
     return value * _screenHeight / 100;
   }
 
-  double  scaledWidth(double value) {
+  double scaledWidth(double value) {
     return value * _screenWidth / 100;
   }
 }

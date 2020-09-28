@@ -17,6 +17,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
   List<TextEditingController> ctrl = List();
   List<String> keywordList = [];
   List<String> keyList = ["a", "b", "c"];
+  List<String> selectedKeyList = [];
   String _selectedRole;
   List<String> _roleList = ["a1", "b1", "c1"];
   Map<String, bool> statusData = {
@@ -83,7 +84,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                 padding: EdgeInsets.only(top: 14),
                                 child: MyTags(
                                   controller: ctrl[1],
-                                  selectedList: [],
+                                  selectedList: selectedKeyList,
                                   sourceList: keyList,
                                   hint: "KeyWords",
                                   title: "KeyWords",

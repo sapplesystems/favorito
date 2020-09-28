@@ -6,8 +6,10 @@ import 'package:Favorito/component/rowWithTextNButton.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/businessInfo/businessInfo.dart';
+import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/order/Orders.dart';
+import 'package:Favorito/ui/review/reviewList.dart';
 import 'package:Favorito/ui/setting/businessSetting.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +86,9 @@ class _dashboardState extends State<dashboard> {
                     Text(
                         is_verified == "0"
                             ? "Offline"
-                            : is_verified == "1" ? "Live" : "Blocked",
+                            : is_verified == "1"
+                                ? "Live"
+                                : "Blocked",
                         style: TextStyle(
                             fontSize: 16,
                             color: is_verified == "0"
@@ -127,8 +131,23 @@ class _dashboardState extends State<dashboard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      card1(checkins: check_ins),
-                      card2(ratings: ratings)
+                      card1(
+                          checkins: check_ins,
+                          function: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => checkins()));
+                          }),
+                      card2(
+                        ratings: ratings,
+                        function: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => reviewList()));
+                        },
+                      )
                     ],
                   ),
                 ),
