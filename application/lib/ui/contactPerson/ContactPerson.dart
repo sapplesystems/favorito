@@ -5,10 +5,14 @@ import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
+import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
+import 'package:Favorito/model/contactPerson/UpdateContactPerson.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class ContactPerson extends StatefulWidget {
   @override
@@ -16,6 +20,9 @@ class ContactPerson extends StatefulWidget {
 }
 
 class _ContactPersonState extends State<ContactPerson> {
+  SizeManager sm;
+  String displayName = '';
+  String displayEmail = '';
   var _myFirstNameEditController = TextEditingController();
   var _myLastNameEditController = TextEditingController();
   var _myPersonalEmailEditController = TextEditingController();
@@ -30,13 +37,59 @@ class _ContactPersonState extends State<ContactPerson> {
   final GlobalKey<FormState> _form3Key = GlobalKey<FormState>();
 
   String _selectedRole = '';
-  List<String> _roleList = ['Manager', 'Employee'];
+  List<String> _roleList = [];
   List<BranchDetailsModel> _searchedBranches = [];
   List<BranchDetailsModel> _selectedBranches = [];
+
+  ContactPersonRequiredDataModel _contactPersonData;
+
+  @override
+  void initState() {
+    initializeDefaultValues();
+    super.initState();
+  }
+
+  void initializeDefaultValues() {
+    WebService.funContactPersonRequiredData().then((value) {
+      setState(() {
+        _contactPersonData = value;
+        displayName = _contactPersonData.data.firstName +
+            ' ' +
+            _contactPersonData.data.lastName;
+        displayEmail = _contactPersonData.data.email;
+        _myFirstNameEditController.text = _contactPersonData.data.firstName;
+        _myLastNameEditController.text = _contactPersonData.data.lastName;
+        _myPersonalEmailEditController.text = _contactPersonData.data.email;
+        _myPersonalMobileEditController.text = _contactPersonData.data.phone;
+        _selectedRole = _contactPersonData.data.role;
+
+        _myNameEditController.text = _contactPersonData.data.bankAcHolderName;
+        _myAccountNoEditController.text = _contactPersonData.data.accountNumber;
+        _myIFSCEditController.text = _contactPersonData.data.ifscCode;
+        _myUPIEditController.text = _contactPersonData.data.upi;
+
+        _selectedBranches.clear();
+        for (var branch in _contactPersonData.data.branches) {
+          BranchDetailsModel model = new BranchDetailsModel();
+          model.id = branch.id.toString();
+          model.name = branch.branchContact;
+          model.address = branch.branchAddress;
+          model.isSelected = true;
+          model.imageUrl = "https://source.unsplash.com/random/400*400";
+          _selectedBranches.add(model);
+        }
+
+        for (var role in _contactPersonData.userRole) {
+          _roleList.add(role);
+        }
+      });
+    });
+  }
 
   bool _autoValidateForm = false;
   @override
   Widget build(BuildContext context) {
+    sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -65,8 +118,7 @@ class _ContactPersonState extends State<ContactPerson> {
                   child: Stack(
                     children: [
                       Card(
-                        margin:
-                            EdgeInsets.only(top: context.percentHeight * 10),
+                        margin: EdgeInsets.only(top: sm.scaledHeight(10)),
                         elevation: 5,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
@@ -79,11 +131,11 @@ class _ContactPersonState extends State<ContactPerson> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: context.percentHeight * 12,
+                                      top: sm.scaledHeight(12),
                                       left: 32.0,
                                       right: 32.0),
                                   child: Text(
-                                    "Mr. Johny Vinno",
+                                    displayName,
                                     style: TextStyle(
                                         fontSize: 24.0,
                                         fontWeight: FontWeight.bold),
@@ -91,7 +143,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: context.percentHeight * 2,
+                                      top: sm.scaledHeight(2),
                                       left: 8.0,
                                       right: 8.0),
                                   child: Row(
@@ -103,7 +155,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                           style: TextStyle(fontSize: 20.0),
                                         ),
                                         Text(
-                                          "hello.johny@gmail.com",
+                                          displayEmail,
                                           style: TextStyle(fontSize: 20.0),
                                         ),
                                       ]),
@@ -133,6 +185,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                     title: "Personal Email",
                                     security: false,
                                     valid: true,
+                                    isEnabled: false,
                                   ),
                                 ),
                                 Padding(
@@ -142,6 +195,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                     title: "Personal Mobile",
                                     security: false,
                                     valid: true,
+                                    isEnabled: false,
                                   ),
                                 ),
                                 Padding(
@@ -168,12 +222,12 @@ class _ContactPersonState extends State<ContactPerson> {
                                   onTap: () {},
                                   child: Padding(
                                     padding: EdgeInsets.only(
-                                        left: context.percentWidth * 10,
-                                        right: context.percentWidth * 10),
+                                        left: sm.scaledWidth(10),
+                                        right: sm.scaledWidth(10)),
                                     child: SvgPicture.asset(
                                         'assets/icon/changePassword.svg',
                                         alignment: Alignment.center,
-                                        height: context.percentHeight * 20,
+                                        height: sm.scaledHeight(20),
                                         fit: BoxFit.contain),
                                   ),
                                 ),
@@ -183,13 +237,13 @@ class _ContactPersonState extends State<ContactPerson> {
                         ),
                       ),
                       Positioned(
-                          top: context.percentWidth * 5,
-                          left: context.percentWidth * 30,
-                          right: context.percentWidth * 30,
+                          top: sm.scaledWidth(5),
+                          left: sm.scaledWidth(30),
+                          right: sm.scaledWidth(30),
                           child: SvgPicture.asset(
                               'assets/icon/contactPerson.svg',
                               alignment: Alignment.center,
-                              height: context.percentHeight * 20)),
+                              height: sm.scaledHeight(20))),
                     ],
                   ),
                 ),
@@ -311,10 +365,34 @@ class _ContactPersonState extends State<ContactPerson> {
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    width: context.percentWidth * 50,
+                    width: sm.scaledWidth(50),
                     margin: EdgeInsets.only(bottom: 16.0),
                     child: roundedButton(
-                      clicker: () {},
+                      clicker: () {
+                        if (_form1Key.currentState.validate() &&
+                            _form2Key.currentState.validate()) {
+                          UpdateContactPerson request = UpdateContactPerson();
+                          request.firtName = _myFirstNameEditController.text;
+                          request.lastName = _myLastNameEditController.text;
+                          request.role = _selectedRole;
+                          request.name = _myNameEditController.text;
+                          request.accNo = _myAccountNoEditController.text;
+                          request.ifsc = _myIFSCEditController.text;
+                          request.upi = _myUPIEditController.text;
+                          WebService.funUpdateContactPerson(
+                                  request, _selectedBranches)
+                              .then((value) {
+                            if (value.status == 'success') {
+                              BotToast.showText(text: value.message);
+                              setState(() {
+                                initializeDefaultValues();
+                              });
+                            } else {
+                              BotToast.showText(text: value.message);
+                            }
+                          });
+                        }
+                      },
                       clr: Colors.red,
                       title: "Submit",
                     ),
@@ -329,10 +407,10 @@ class _ContactPersonState extends State<ContactPerson> {
     Navigator.push(
       context,
       PopupLayout(
-        top: context.percentHeight * 18,
-        left: context.percentWidth * 10,
-        right: context.percentWidth * 10,
-        bottom: context.percentHeight * 18,
+        top: sm.scaledHeight(18),
+        left: sm.scaledWidth(10),
+        right: sm.scaledWidth(10),
+        bottom: sm.scaledHeight(18),
         child: PopupContent(
           content: Scaffold(
             appBar: AppBar(

@@ -6,7 +6,7 @@ import 'package:Favorito/myCss.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class highlights extends StatefulWidget {
   @override
@@ -29,6 +29,7 @@ class _highlightsState extends State<highlights> {
 
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Scaffold(
       backgroundColor: Color(0xfffff4f4),
       appBar: AppBar(
@@ -62,8 +63,8 @@ class _highlightsState extends State<highlights> {
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2)),
             Container(
-              height: context.percentHeight * 12,
-              margin: EdgeInsets.symmetric(vertical: context.percentHeight * 4),
+              height: sm.scaledHeight(12),
+              margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -90,7 +91,7 @@ class _highlightsState extends State<highlights> {
                 margin: EdgeInsets.symmetric(horizontal: 12),
                 child: Column(children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: context.percentHeight * 1),
+                    padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
                     child: txtfieldboundry(
                       valid: true,
                       title: "Title",
@@ -100,7 +101,7 @@ class _highlightsState extends State<highlights> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: context.percentHeight * 1),
+                    padding: EdgeInsets.only(top: sm.scaledHeight(1)),
                     child: txtfieldboundry(
                       valid: true,
                       title: "Discription",
@@ -113,8 +114,8 @@ class _highlightsState extends State<highlights> {
                 ])),
             Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: context.percentWidth * 16,
-                    vertical: context.percentHeight * 2),
+                    horizontal: sm.scaledWidth(16),
+                    vertical: sm.scaledHeight(2)),
                 child: roundedButton(
                     clicker: () {
                       // funSublim();

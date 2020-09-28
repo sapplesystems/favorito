@@ -31,8 +31,17 @@ BoxDecoration bd3 = BoxDecoration(
     color: Colors.white,
     border: Border.all(color: Colors.white),
     borderRadius: BorderRadius.all(Radius.circular(12)));
+
 TextStyle titleStyle = TextStyle(
     color: Colors.black,
     fontSize: 24,
     fontWeight: FontWeight.bold,
     letterSpacing: 1);
+
+TextStyle titleStyle1 = TextStyle(
+    color: Colors.black,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1);
+TextStyle barTitleStyle =
+    TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w500);

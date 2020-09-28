@@ -1,7 +1,7 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class BranchDetailsListViewAdd extends StatefulWidget {
   List<BranchDetailsModel> inputList;
@@ -16,10 +16,11 @@ class BranchDetailsListViewAdd extends StatefulWidget {
 class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Column(
       children: [
         Container(
-          height: context.percentHeight * 40,
+          height: sm.scaledHeight(40),
           child: ListView.builder(
               shrinkWrap: true,
               itemCount: widget.inputList.length,
@@ -33,9 +34,9 @@ class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
                     child: Center(
                       child: ListTile(
                         leading: Image.network(widget.inputList[index].imageUrl,
-                            height: context.percentHeight * 8,
+                            height: sm.scaledHeight(8),
                             fit: BoxFit.fill,
-                            width: context.percentHeight * 8),
+                            width: sm.scaledHeight(8)),
                         title: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Text(
@@ -74,7 +75,7 @@ class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            width: context.percentWidth * 50,
+            width: sm.scaledWidth(50),
             margin: EdgeInsets.only(bottom: 16.0, top: 16.0),
             child: roundedButton(
               clicker: () {

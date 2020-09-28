@@ -1,8 +1,8 @@
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/order/OrderModel.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:icon_text_button/icon_text_button.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class Orders extends StatefulWidget {
   @override
@@ -14,6 +14,7 @@ class _Orders extends State<Orders> {
   List<OrderModel> allOrdersList = [];
   List<OrderModel> inputOrdersList = [];
   String selectedTab = 'New Orders';
+  SizeManager sm;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _Orders extends State<Orders> {
 
   @override
   Widget build(BuildContext context) {
+    sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -67,7 +69,7 @@ class _Orders extends State<Orders> {
             decoration: BoxDecoration(
               color: Color(0xfffff4f4),
             ),
-            height: context.percentHeight * 100,
+            height: sm.scaledHeight(100),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,12 +142,12 @@ class _Orders extends State<Orders> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(8.0),
-                  height: context.percentHeight * 80,
+                  height: sm.scaledHeight(80),
                   child: ListView.builder(
                       itemCount: inputOrdersList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return SizedBox(
-                          height: context.percentHeight * 22,
+                          height: sm.scaledHeight(22),
                           child: Card(
                             elevation: 5,
                             shape: RoundedRectangleBorder(
@@ -190,7 +192,7 @@ class _Orders extends State<Orders> {
                                       padding: const EdgeInsets.only(
                                           top: 12.0, right: 16.0),
                                       child: IconButton(
-                                        iconSize: context.percentWidth * 8,
+                                        iconSize: sm.scaledWidth(8),
                                         icon: Icon(Icons.call),
                                         onPressed: () {},
                                       ),

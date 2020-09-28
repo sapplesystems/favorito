@@ -3,8 +3,8 @@ import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:flutter/material.dart';
-import 'package:outline_gradient_button/outline_gradient_button.dart';
-import 'package:velocity_x/velocity_x.dart';
+
+import '../../config/SizeManager.dart';
 
 class ManualBooking extends StatefulWidget {
   @override
@@ -12,6 +12,7 @@ class ManualBooking extends StatefulWidget {
 }
 
 class _ManualBooking extends State<ManualBooking> {
+  SizeManager sm;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidateForm = false;
 
@@ -47,6 +48,7 @@ class _ManualBooking extends State<ManualBooking> {
 
   @override
   Widget build(BuildContext context) {
+    sm = SizeManager(context);
     initializeDefaultValues();
     return Scaffold(
         appBar: AppBar(
@@ -71,7 +73,7 @@ class _ManualBooking extends State<ManualBooking> {
           child: ListView(children: [
             Container(
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
-                height: context.percentHeight * 75,
+                height: sm.scaledHeight(75),
                 child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
@@ -92,14 +94,14 @@ class _ManualBooking extends State<ManualBooking> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         SizedBox(
-                                          width: context.percentWidth * 40,
+                                          width: sm.scaledWidth(40),
                                           child: DatePicker(
                                             selectedDateText: _selectedDateText,
                                             selectedDate: _initialDate,
                                           ),
                                         ),
                                         SizedBox(
-                                          width: context.percentWidth * 40,
+                                          width: sm.scaledWidth(40),
                                           child: TimePicker(
                                             selectedTimeText: _selectedTimeText,
                                             selectedTime: _intitialTime,
@@ -149,7 +151,7 @@ class _ManualBooking extends State<ManualBooking> {
             Align(
               alignment: Alignment.center,
               child: Container(
-                width: context.percentWidth * 60,
+                width: sm.scaledWidth(60),
                 margin: EdgeInsets.only(bottom: 16.0),
                 child: roundedButton(
                   clicker: () {

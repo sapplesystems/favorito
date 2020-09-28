@@ -1,7 +1,7 @@
 import 'package:Favorito/component/card4.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class PageViews extends StatefulWidget {
   @override
@@ -19,6 +19,7 @@ class _PageViewsState extends State<PageViews> {
 
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Scaffold(
         backgroundColor: Color(0xfffff4f4),
         appBar: AppBar(
@@ -45,14 +46,13 @@ class _PageViewsState extends State<PageViews> {
           elevation: 10,
           shape: rrb28,
           child: Padding(
-            padding: EdgeInsets.only(top: context.percentWidth * 4),
+            padding: EdgeInsets.only(top: sm.scaledWidth(4)),
             child: ListView(
               children: [
                 Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: context.percentWidth * 6),
-                  padding:
-                      EdgeInsets.symmetric(vertical: context.percentHeight * 0),
+                  margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(6)),
+                  padding: EdgeInsets.only(
+                      top: sm.scaledHeight(2), bottom: sm.scaledHeight(8)),
                   child: GridView.count(
                     shrinkWrap: true,
                     physics: const ScrollPhysics(),
@@ -142,8 +142,8 @@ class _PageViewsState extends State<PageViews> {
                             fontSize: 16, fontWeight: FontWeight.w600)),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          vertical: context.percentHeight * 2,
-                          horizontal: context.percentHeight * 3),
+                          vertical: sm.scaledHeight(2),
+                          horizontal: sm.scaledHeight(3)),
                       child: Text(branchList,
                           style: TextStyle(fontWeight: FontWeight.w400)),
                     )

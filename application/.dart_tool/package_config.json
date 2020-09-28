@@ -201,9 +201,9 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/intl-0.15.8",
+      "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/intl-0.16.1",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.5"
     },
     {
       "name": "introduction_screen",
@@ -441,7 +441,7 @@
     },
     {
       "name": "url_launcher",
-      "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/url_launcher-5.7.1",
+      "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/url_launcher-5.7.2",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
@@ -482,12 +482,6 @@
       "languageVersion": "2.0"
     },
     {
-      "name": "velocity_x",
-      "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/velocity_x-0.4.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.6"
-    },
-    {
       "name": "win32",
       "rootUri": "file:///C:/Users/sapple/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/win32-1.7.3",
       "packageUri": "lib/",
@@ -512,7 +506,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-24T21:26:33.157444Z",
+  "generated": "2020-09-26T11:36:51.409005Z",
   "generator": "pub",
   "generatorVersion": "2.9.2"
 }

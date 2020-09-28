@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class MyOutlineButton extends StatelessWidget {
   String title;
@@ -7,14 +7,15 @@ class MyOutlineButton extends StatelessWidget {
   MyOutlineButton({this.title, this.function});
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return InkWell(
       onTap: function,
       child: Container(
-        width: context.percentWidth * 6.5,
-        height: context.percentHeight * 6.5,
+        width: sm.scaledWidth(6.5),
+        height: sm.scaledHeight(6.5),
         margin: EdgeInsets.symmetric(
-          horizontal: context.percentWidth * 14,
-          vertical: context.percentHeight * 2,
+          horizontal: sm.scaledWidth(14),
+          vertical: sm.scaledHeight(2),
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),

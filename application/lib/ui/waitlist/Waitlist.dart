@@ -5,7 +5,7 @@ import 'package:Favorito/ui/waitlist/WaitlistDetail.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class Waitlist extends StatefulWidget {
   @override
@@ -34,6 +34,7 @@ class _Waitlist extends State<Waitlist> {
 
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -67,10 +68,8 @@ class _Waitlist extends State<Waitlist> {
           ],
         ),
         body: Container(
-          decoration: BoxDecoration(
-            color: Color(0xfffff4f4),
-          ),
-          height: context.percentHeight * 100,
+          height: sm.scaledHeight(100),
+          decoration: BoxDecoration(color: Color(0xfffff4f4)),
           margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
           child: ListView.builder(
               itemCount: waitlistData.length,
@@ -85,6 +84,7 @@ class _Waitlist extends State<Waitlist> {
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       ),
                       child: Container(
+                        height: sm.scaledHeight(12),
                         margin: EdgeInsets.all(8.0),
                         child: Center(
                           child: Row(
@@ -92,7 +92,7 @@ class _Waitlist extends State<Waitlist> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: context.percentWidth * 10,
+                                width: sm.scaledWidth(10),
                                 child: Text(
                                   waitlistData[index].tableCapacity,
                                   style: TextStyle(
@@ -101,7 +101,7 @@ class _Waitlist extends State<Waitlist> {
                                 ),
                               ),
                               SizedBox(
-                                width: context.percentWidth * 45,
+                                width: sm.scaledWidth(45),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -142,12 +142,12 @@ class _Waitlist extends State<Waitlist> {
                                   Row(
                                     children: [
                                       IconButton(
-                                        iconSize: context.percentWidth * 8,
+                                        iconSize: sm.scaledWidth(8),
                                         icon: Icon(Icons.call),
                                         onPressed: () {},
                                       ),
                                       IconButton(
-                                        iconSize: context.percentWidth * 8,
+                                        iconSize: sm.scaledWidth(8),
                                         icon: Icon(Icons.delete),
                                         onPressed: () {},
                                       )
@@ -156,12 +156,12 @@ class _Waitlist extends State<Waitlist> {
                                   Row(
                                     children: [
                                       IconButton(
-                                        iconSize: context.percentWidth * 8,
+                                        iconSize: sm.scaledWidth(8),
                                         icon: Icon(Icons.check_circle),
                                         onPressed: () {},
                                       ),
                                       IconButton(
-                                        iconSize: context.percentWidth * 8,
+                                        iconSize: sm.scaledWidth(8),
                                         icon: Icon(Icons.close),
                                         onPressed: () {},
                                       )
@@ -179,13 +179,14 @@ class _Waitlist extends State<Waitlist> {
   }
 
   showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
+    SizeManager sm = SizeManager(context);
     Navigator.push(
       context,
       PopupLayout(
-        top: context.percentHeight * 30,
-        left: context.percentWidth * 10,
-        right: context.percentWidth * 10,
-        bottom: context.percentHeight * 30,
+        top: sm.scaledHeight(30),
+        left: sm.scaledWidth(10),
+        right: sm.scaledWidth(10),
+        bottom: sm.scaledHeight(30),
         child: PopupContent(
           content: Scaffold(
             resizeToAvoidBottomPadding: false,

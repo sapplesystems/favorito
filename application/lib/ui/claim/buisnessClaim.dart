@@ -5,7 +5,7 @@ import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class BusinessClaim extends StatefulWidget {
@@ -19,6 +19,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
   bool autovalidateMode;
   @override
   Widget build(BuildContext context) {
+     SizeManager sm = SizeManager(context);
     return Scaffold(
       backgroundColor: Color(0xfffff4f4),
       appBar: AppBar(
@@ -38,18 +39,18 @@ class _BusinessClaimState extends State<BusinessClaim> {
       ),
       body: Container(
         color: Color(0xfffff4f4),
-        height: context.percentHeight * 82,
+        height: sm.scaledHeight( 82),
 
-        padding: EdgeInsets.symmetric(horizontal: context.percentWidth * 4),
+        padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth( 4)),
         margin: EdgeInsets.only(
-          top: context.percentHeight * 2,
+          top: sm.scaledHeight( 2),
         ),
         // padding:
-        //     EdgeInsets.symmetric(horizontal: context.percentWidth * 10),
+        //     EdgeInsets.symmetric(horizontal: sm.scaledWidth( * 10),
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: context.percentHeight * 4),
+              padding: EdgeInsets.only(bottom: sm.scaledHeight( 4)),
               child: Text(
                 "Business Claim",
                 textAlign: TextAlign.center,
@@ -174,8 +175,8 @@ class _BusinessClaimState extends State<BusinessClaim> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: context.percentWidth * 16,
-                    vertical: context.percentHeight * 4),
+                    horizontal: sm.scaledWidth(16),
+                    vertical: sm.scaledHeight( 4)),
                 child: roundedButton(
                     clicker: () {
                       // funSublim();

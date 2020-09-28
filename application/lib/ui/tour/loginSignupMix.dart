@@ -2,21 +2,23 @@ import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class loginSignup extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(top: context.percentHeight * 10),
+        margin: EdgeInsets.only(top: sm.scaledHeight(10)),
         child: Center(
           child: Column(
             children: [
               SvgPicture.asset(
                 'assets/icon/f.svg',
                 alignment: Alignment.center,
-                height: context.percentHeight * 20,
+                height: sm.scaledHeight( 20),
               ),
               Text(
                 "FAVORITO",
@@ -29,25 +31,25 @@ class loginSignup extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: context.percentHeight * 12),
+                padding: EdgeInsets.only(top: sm.scaledHeight( 12)),
                 child: SvgPicture.asset(
                   'assets/icon/man.svg',
                   alignment: Alignment.center,
-                  height: context.percentHeight * 20,
+                  height: sm.scaledHeight(20),
                 ),
               ),
               InkWell(
                 onTap: () => Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Login())),
                 child: Container(
-                  margin: EdgeInsets.only(top: context.percentWidth * 20),
+                  margin: EdgeInsets.only(top: sm.scaledWidth(20)),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Color(0xffdd2626),
                   ),
                   padding: EdgeInsets.symmetric(
-                      horizontal: context.percentWidth * 20,
-                      vertical: context.percentHeight * 2),
+                      horizontal: sm.scaledWidth(20),
+                      vertical: sm.scaledHeight( 2)),
                   child: Text(
                     "Log In",
                     textAlign: TextAlign.center,
@@ -62,7 +64,7 @@ class loginSignup extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: context.percentWidth * 4),
+                margin: EdgeInsets.only(top: sm.scaledWidth(4)),
                 child: Text(
                   "Don’t have account yet?",
                   textAlign: TextAlign.center,
@@ -79,7 +81,7 @@ class loginSignup extends StatelessWidget {
                 onTap: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => signup_a())),
                 child: Container(
-                  margin: EdgeInsets.only(top: context.percentWidth * 4),
+                  margin: EdgeInsets.only(top: sm.scaledWidth(4)),
                   child: Text(
                     "Sign Up",
                     textAlign: TextAlign.center,

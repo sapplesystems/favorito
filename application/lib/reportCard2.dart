@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class reportCard2 extends StatefulWidget {
   @override
@@ -9,9 +9,9 @@ class reportCard2 extends StatefulWidget {
 class _reportCard2State extends State<reportCard2> {
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return Stack(children: [
       Stack(children: [
-
         Container(
             width: 162,
             height: 173,
@@ -24,8 +24,7 @@ class _reportCard2State extends State<reportCard2> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                        left: context.percentWidth * 5,
-                        top: context.percentWidth * 5),
+                        left: sm.scaledWidth(5), top: sm.scaledWidth(5)),
                     child: Text(
                       "860",
                       style: TextStyle(
@@ -41,7 +40,7 @@ class _reportCard2State extends State<reportCard2> {
               Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: context.percentWidth * 5),
+                    padding: EdgeInsets.only(left: sm.scaledWidth(5)),
                     child: Text(
                       "Check-in(s) ",
                       style: TextStyle(

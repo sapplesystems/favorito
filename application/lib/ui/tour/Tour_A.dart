@@ -7,7 +7,7 @@ import 'package:Favorito/ui/tour/Tour_C.dart';
 import 'package:Favorito/ui/tour/Tour_D.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
 
 class Tour_a extends StatefulWidget {
@@ -20,6 +20,7 @@ class _Tour_aState extends State<Tour_a> {
   FocusNode _focus = FocusNode();
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -28,11 +29,10 @@ class _Tour_aState extends State<Tour_a> {
               skipper(),
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Container(
-                  margin: EdgeInsets.only(top: context.isMobile ? 200 : 150),
+                  margin: EdgeInsets.only(top: 200),
                   alignment: Alignment.center,
                   child: SvgPicture.asset('assets/icon/login.svg',
-                      height: context.percentHeight * 30,
-                      semanticsLabel: 'vector'),
+                      height: sm.scaledHeight(30), semanticsLabel: 'vector'),
                 ),
                 // card1(),
                 Text(welcometxt,
@@ -58,8 +58,7 @@ class _Tour_aState extends State<Tour_a> {
                               height: 14,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: Color(0xffdd2626)))
-                          ),
+                                  color: Color(0xffdd2626)))),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -126,8 +125,7 @@ class _Tour_aState extends State<Tour_a> {
                         MaterialPageRoute(builder: (context) => Login()));
                   },
                   child: Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: context.percentHeight * 4),
+                    margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
                     child: roundedButton(
                       title: "LOGIN",
                       clr: Color(0xffdd2626),

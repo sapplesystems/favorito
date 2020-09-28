@@ -7,12 +7,13 @@ import 'package:Favorito/ui/tour/Tour_C.dart';
 import 'package:Favorito/ui/tour/loginSignupMix.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
 
 class Tour_d extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -25,7 +26,7 @@ class Tour_d extends StatelessWidget {
                       bottomLeft: const Radius.circular(28.0),
                       bottomRight: const Radius.circular(28.0),
                     )),
-                margin: EdgeInsets.only(bottom: context.percentHeight * 10),
+                margin: EdgeInsets.only(bottom: sm.scaledHeight(10)),
                 child: Stack(children: [
                   Positioned(
                       bottom: 8,
@@ -33,21 +34,21 @@ class Tour_d extends StatelessWidget {
                       child: SvgPicture.asset(
                         'assets/icon/img2.svg',
                         alignment: Alignment.center,
-                        height: context.percentHeight * 20,
+                        height: sm.scaledHeight(20),
                       )),
                   Positioned(
-                      top: context.percentHeight * 20,
-                      left: context.percentWidth * 2,
-                      right: context.percentWidth * 2,
+                      top: sm.scaledHeight(20),
+                      left: sm.scaledWidth(2),
+                      right: sm.scaledWidth(2),
                       child: SvgPicture.asset(
                         'assets/icon/img3.svg',
                         alignment: Alignment.center,
-                        height: context.percentHeight * 30,
+                        height: sm.scaledHeight(30),
                       )),
                   Positioned(
-                      top: context.percentHeight * 52,
-                      left: context.percentWidth * 12,
-                      right: context.percentWidth * 12,
+                      top: sm.scaledHeight(52),
+                      left: sm.scaledWidth(12),
+                      right: sm.scaledWidth(12),
                       child: Text(welcometxt,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -55,9 +56,9 @@ class Tour_d extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: Colors.grey.shade700))),
                   Positioned(
-                      top: context.percentHeight * 58,
-                      left: context.percentWidth * 12,
-                      right: context.percentWidth * 12,
+                      top: sm.scaledHeight(58),
+                      left: sm.scaledWidth(12),
+                      right: sm.scaledWidth(12),
                       child: Text(welcometxt2,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -65,16 +66,16 @@ class Tour_d extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: Colors.grey.shade700))),
                   Positioned(
-                      top: context.percentHeight * 72,
-                      left: context.percentWidth * 12,
-                      right: context.percentWidth * 12,
+                      top: sm.scaledHeight(72),
+                      left: sm.scaledWidth(12),
+                      right: sm.scaledWidth(12),
                       child: dots(context)),
                 ]),
               )),
           Positioned(
-              bottom: context.percentHeight * 7,
-              left: context.percentWidth * 12,
-              right: context.percentWidth * 12,
+              bottom: sm.scaledHeight(7),
+              left: sm.scaledWidth(12),
+              right: sm.scaledWidth(12),
               child: roundedButton(
                 clicker: () {
                   Navigator.push(context,
@@ -84,9 +85,9 @@ class Tour_d extends StatelessWidget {
                 title: "Let's Start",
               )),
           Positioned(
-              bottom: context.percentHeight * 2,
-              left: context.percentWidth * 12,
-              right: context.percentWidth * 12,
+              bottom: sm.scaledHeight(2),
+              left: sm.scaledWidth(12),
+              right: sm.scaledWidth(12),
               child: Text(
                 "LOGIN",
                 style: TextStyle(fontSize: 18, color: Colors.white),

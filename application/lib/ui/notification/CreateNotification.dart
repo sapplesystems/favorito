@@ -8,7 +8,7 @@ import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:Favorito/config/SizeManager.dart';
 
 class CreateNotification extends StatefulWidget {
   @override
@@ -77,6 +77,7 @@ class _CreateNotificationState extends State<CreateNotification> {
 
   @override
   Widget build(BuildContext context) {
+        SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -382,7 +383,7 @@ class _CreateNotificationState extends State<CreateNotification> {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  width: context.percentWidth * 50,
+                  width: sm.scaledWidth(50),
                   margin: EdgeInsets.only(bottom: 16.0),
                   child: roundedButton(
                     clicker: () {
