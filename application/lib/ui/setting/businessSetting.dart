@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:Favorito/component/MyGoogleMap.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/utils/myString.Dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/myCss.dart';
@@ -31,9 +32,9 @@ class _BusinessSettingState extends State<BusinessSetting> {
 
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: null,
@@ -75,8 +76,7 @@ class _BusinessSettingState extends State<BusinessSetting> {
                       right: sm.scaledWidth(8),
                       child: Container(
                           decoration: bd1,
-                          margin: EdgeInsets.only(
-                              bottom: sm.scaledHeight(0)),
+                          margin: EdgeInsets.only(bottom: sm.scaledHeight(0)),
                           height: sm.scaledHeight(200),
                           padding: EdgeInsets.symmetric(
                               horizontal: sm.scaledWidth(6),
@@ -85,8 +85,8 @@ class _BusinessSettingState extends State<BusinessSetting> {
                               physics: const NeverScrollableScrollPhysics(),
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: sm.scaledHeight(4)),
+                                  padding:
+                                      EdgeInsets.only(top: sm.scaledHeight(4)),
                                   child: Image.asset(
                                     // 'assets/icon/save.svg',
                                     'assets/icon/foodcircle.png',
@@ -257,8 +257,7 @@ class _BusinessSettingState extends State<BusinessSetting> {
                           ])))
                 ])),
             Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: sm.scaledWidth(16)),
+                padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(16)),
                 child: roundedButton(
                     clicker: () {
                       // funSublim();

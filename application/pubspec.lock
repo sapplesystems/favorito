@@ -296,6 +296,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.4"
+  outline_gradient_button:
+    dependency: "direct main"
+    description:
+      name: outline_gradient_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+2"
   path:
     dependency: transitive
     description:
@@ -510,7 +517,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.7.1"
+    version: "5.7.2"
   url_launcher_linux:
     dependency: transitive
     description:

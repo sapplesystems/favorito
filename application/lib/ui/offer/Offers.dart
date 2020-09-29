@@ -1,5 +1,6 @@
 import 'package:Favorito/model/offer/OfferDataModel.dart';
 import 'package:Favorito/ui/offer/CreateOffer.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -71,10 +72,10 @@ class _OfferState extends State<Offers> {
 
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -101,7 +102,7 @@ class _OfferState extends State<Offers> {
         body: Container(
           padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-            color: Color(0xfffff4f4),
+            color: myBackGround,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +222,7 @@ class _OfferState extends State<Offers> {
               Text("New User Offers",
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
               Container(
-                  height: sm.scaledHeight( 35),
+                  height: sm.scaledHeight(35),
                   child: ListView.builder(
                       itemCount: currentUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class rowWithTextNButton extends StatelessWidget {
   String txt1;
   String txt2;
@@ -45,7 +45,7 @@ class rowWithTextNButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: Color(0xffdd2626),
+          color: myRed,
           width: 1,
         ),
       ),

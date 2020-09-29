@@ -1,5 +1,6 @@
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/order/OrderModel.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:icon_text_button/icon_text_button.dart';
@@ -51,7 +52,7 @@ class _Orders extends State<Orders> {
     sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -67,7 +68,7 @@ class _Orders extends State<Orders> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             height: sm.scaledHeight(100),
             child: Column(

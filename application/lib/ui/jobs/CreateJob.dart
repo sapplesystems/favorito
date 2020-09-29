@@ -1,6 +1,7 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
+import 'package:Favorito/model/job/CreateJobRequiredDataModel.dart';
 import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -8,7 +9,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class CreateJob extends StatefulWidget {
   final int _jobId;
   CreateJob(this._jobId);
@@ -20,12 +21,12 @@ class CreateJob extends StatefulWidget {
 class _CreateJobState extends State<CreateJob> {
   int _jobId;
   List<String> _contactOptionsList = [];
-  List<String> _cityList = [];
+  List<CityList> _cityList = [];
   List<SkillListRequiredDataModel> _selectedSkillList = [];
 
   String _contactHint = '';
   String _selectedContactOption = '';
-  String _selectedCity = '';
+  CityList _selectedCity;
 
   bool _autoValidateForm = false;
 
@@ -42,8 +43,10 @@ class _CreateJobState extends State<CreateJob> {
   void initState() {
     WebService.funGetCreteJobDefaultData(_jobId).then((value) {
       setState(() {
-        _contactOptionsList = value.contactOptionsList;
-        _cityList = value.cityList;
+        _contactOptionsList.clear();
+        _cityList.clear();
+        _contactOptionsList = value.data.contactVia;
+        _cityList = value.data.cityList;
       });
     });
     super.initState();
@@ -54,7 +57,7 @@ class _CreateJobState extends State<CreateJob> {
     _selectedSkillList.clear();
     _contactHint = '';
     _selectedContactOption = '';
-    _selectedCity = '';
+    _selectedCity = null;
     _autoValidateForm = false;
     _myTitleEditController.text = '';
     _myDescriptionEditController.text = '';
@@ -67,7 +70,7 @@ class _CreateJobState extends State<CreateJob> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -83,7 +86,7 @@ class _CreateJobState extends State<CreateJob> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             child: ListView(children: [
               Container(
@@ -211,7 +214,7 @@ class _CreateJobState extends State<CreateJob> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: DropdownSearch<String>(
+                              child: DropdownSearch<CityList>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
                                 autoValidate: _autoValidateForm,
@@ -271,7 +274,7 @@ class _CreateJobState extends State<CreateJob> {
                         _requestData.contact_via = _selectedContactOption;
                         _requestData.contact_value =
                             _myContactEditController.text;
-                        _requestData.city = _selectedCity;
+                        _requestData.city = _selectedCity.id.toString();
                         _requestData.pincode = _myPincodeEditController.text;
                         WebService.funCreateJob(_requestData).then((value) {
                           if (value.status == 'success') {
@@ -283,7 +286,6 @@ class _CreateJobState extends State<CreateJob> {
                           }
                         });
                       } else {
-                        initializeDefaultValues();
                         _autoValidateForm = true;
                       }
                     },

@@ -3,7 +3,7 @@ import 'package:Favorito/ui/CreateCampaign/CreateCampaign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class adSpent extends StatefulWidget {
   @override
   _adSpentState createState() => _adSpentState();
@@ -15,10 +15,10 @@ class _adSpentState extends State<adSpent> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           title: Text("Ad Spent", style: titleStyle),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

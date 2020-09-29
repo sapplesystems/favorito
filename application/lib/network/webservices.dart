@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
+import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
+import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
+import 'package:Favorito/model/contactPerson/UpdateContactPerson.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
 import 'package:Favorito/model/job/CreateJobRequiredDataModel.dart';
 import 'package:Favorito/model/job/JobListRequestModel.dart';
@@ -68,11 +71,13 @@ class WebService {
     NotificationListRequestModel _returnData = NotificationListRequestModel();
     response =
         await dio.post(serviceFunction.funGetNotifications, options: _opt);
-
-    print("Request URL:${serviceFunction.funGetNotifications}");
-    _returnData = NotificationListRequestModel.fromJson(
-        convert.json.decode(response.toString()));
-    print("responseData4:${_returnData.status}");
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:${serviceFunction.funGetNotifications}");
+      _returnData = NotificationListRequestModel.fromJson(
+          convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
     return _returnData;
   }
 
@@ -168,25 +173,33 @@ class WebService {
   }
 
   static Future<JobListRequestModel> funGetJobs() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     JobListRequestModel _returnData = JobListRequestModel();
 
-    JobModel model1 = JobModel();
-    model1.title = "Receptionist";
-    _returnData.jobs.add(model1);
-
-    JobModel model2 = JobModel();
-    model2.title = "Waiter";
-    _returnData.jobs.add(model2);
-
+    print("Request URL:${serviceFunction.funGetJobs}");
+    response =
+        await dio.post(serviceFunction.funGetJobs, data: null, options: _opt);
+    _returnData =
+        JobListRequestModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData5:${_returnData.status}");
     return _returnData;
   }
 
   static Future<CreateJobRequiredDataModel> funGetCreteJobDefaultData(
       int jobId) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     CreateJobRequiredDataModel _returnData = CreateJobRequiredDataModel();
-    _returnData.contactOptionsList = ['Call', 'Email'];
-    _returnData.cityList = ['Noida', 'New Delhi', 'Agra', 'Ghaziabad'];
 
+    response = await dio.post(serviceFunction.funGetCreateJobDefaultData,
+        data: null, options: _opt);
+    _returnData = CreateJobRequiredDataModel.fromJson(
+        convert.json.decode(response.toString()));
     return _returnData;
   }
 
@@ -279,6 +292,49 @@ class WebService {
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_returnData.status}");
+    return _returnData;
+  }
+
+  static Future<ContactPersonRequiredDataModel>
+      funContactPersonRequiredData() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    ContactPersonRequiredDataModel _returnData =
+        ContactPersonRequiredDataModel();
+
+    response = await dio.post(serviceFunction.funContactPersonRequiredData,
+        data: null, options: _opt);
+    _returnData = ContactPersonRequiredDataModel.fromJson(
+        convert.json.decode(response.toString()));
+    print("responseData5:${_returnData.status}");
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> funUpdateContactPerson(
+      UpdateContactPerson requestData,
+      List<BranchDetailsModel> branchList) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    Map<String, dynamic> _map = {
+      "first_name": requestData.firtName,
+      "last_name": requestData.lastName,
+      "role": requestData.role,
+      "bank_ac_holder_name": requestData.name,
+      "account_number": requestData.accNo,
+      "ifsc_code": requestData.ifsc,
+      "upi": requestData.upi
+    };
+
+    response = await dio.post(serviceFunction.funUpdateContactPerson,
+        data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData5:${_returnData.status}");
     return _returnData;
   }
 }

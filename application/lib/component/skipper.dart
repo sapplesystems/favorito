@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class skipper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class skipper extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(sm.scaledHeight(20)),
-          color: Color(0xffdd2626),
+          color: myRed,
         ),
         padding: const EdgeInsets.only(
           left: 22,

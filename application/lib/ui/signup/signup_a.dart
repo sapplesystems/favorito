@@ -6,6 +6,7 @@ import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/signup/signup_b.dart';
 import 'package:Favorito/utils/Regexer.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -40,10 +41,10 @@ class _signup_aState extends State<signup_a> {
 
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -59,7 +60,7 @@ class _signup_aState extends State<signup_a> {
                 })
           ]),
       body: Container(
-        color: Color(0xfffff4f4),
+        color: myBackGround,
         height: sm.scaledHeight(90),
         child: Stack(
           children: [
@@ -109,7 +110,7 @@ class _signup_aState extends State<signup_a> {
                   title: "Next"),
             ),
             Positioned(
-              top: sm.scaledWidth( 30),
+              top: sm.scaledWidth(30),
               left: sm.scaledWidth(10),
               right: sm.scaledWidth(10),
               child: Container(
@@ -225,8 +226,7 @@ class _signup_aState extends State<signup_a> {
                 left: sm.scaledWidth(30),
                 right: sm.scaledWidth(30),
                 child: SvgPicture.asset('assets/icon/maskgroup.svg',
-                    alignment: Alignment.center,
-                    height: sm.scaledHeight(20))),
+                    alignment: Alignment.center, height: sm.scaledHeight(20))),
           ],
         ),
       ),

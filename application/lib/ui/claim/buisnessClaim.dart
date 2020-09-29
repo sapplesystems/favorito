@@ -7,7 +7,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class BusinessClaim extends StatefulWidget {
   @override
   _BusinessClaimState createState() => _BusinessClaimState();
@@ -19,11 +19,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
   bool autovalidateMode;
   @override
   Widget build(BuildContext context) {
-     SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: Color(0xfffff4f4),
+      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -38,19 +38,19 @@ class _BusinessClaimState extends State<BusinessClaim> {
         ),
       ),
       body: Container(
-        color: Color(0xfffff4f4),
-        height: sm.scaledHeight( 82),
+        color: myBackGround,
+        height: sm.scaledHeight(82),
 
-        padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth( 4)),
+        padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
         margin: EdgeInsets.only(
-          top: sm.scaledHeight( 2),
+          top: sm.scaledHeight(2),
         ),
         // padding:
         //     EdgeInsets.symmetric(horizontal: sm.scaledWidth( * 10),
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: sm.scaledHeight( 4)),
+              padding: EdgeInsets.only(bottom: sm.scaledHeight(4)),
               child: Text(
                 "Business Claim",
                 textAlign: TextAlign.center,
@@ -68,7 +68,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                 child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.always,
+                        //autovalidateMode: AutovalidateMode.always,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -176,7 +176,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
             Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: sm.scaledWidth(16),
-                    vertical: sm.scaledHeight( 4)),
+                    vertical: sm.scaledHeight(4)),
                 child: roundedButton(
                     clicker: () {
                       // funSublim();

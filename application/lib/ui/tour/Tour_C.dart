@@ -4,6 +4,7 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/ui/tour/Tour_A.dart';
 import 'package:Favorito/ui/tour/Tour_B.dart';
 import 'package:Favorito/ui/tour/Tour_D.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -12,7 +13,7 @@ import 'package:Favorito/utils/myString.Dart';
 class Tour_c extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -25,7 +26,7 @@ class Tour_c extends StatelessWidget {
                       bottomLeft: const Radius.circular(28.0),
                       bottomRight: const Radius.circular(28.0),
                     )),
-                margin: EdgeInsets.only(bottom: sm.scaledHeight( 10)),
+                margin: EdgeInsets.only(bottom: sm.scaledHeight(10)),
                 child: Stack(children: [
                   Positioned(
                       bottom: 8,
@@ -55,7 +56,7 @@ class Tour_c extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: Colors.grey.shade700))),
                   Positioned(
-                      top: sm.scaledHeight( 58),
+                      top: sm.scaledHeight(58),
                       left: sm.scaledWidth(12),
                       right: sm.scaledWidth(12),
                       child: Text(welcometxt2,
@@ -65,7 +66,7 @@ class Tour_c extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: Colors.grey.shade700))),
                   Positioned(
-                      top: sm.scaledHeight( 72),
+                      top: sm.scaledHeight(72),
                       left: sm.scaledWidth(12),
                       right: sm.scaledWidth(12),
                       child: dots(context)),
@@ -132,16 +133,15 @@ class Tour_c extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-                onTap: () {},
-                child: Container(
-                    width: 37,
-                    height: 14,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Color(0xffdd2626)))),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                      width: 37,
+                      height: 14,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: myRed)))),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(

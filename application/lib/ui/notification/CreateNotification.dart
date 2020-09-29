@@ -5,6 +5,7 @@ import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart'
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -77,10 +78,10 @@ class _CreateNotificationState extends State<CreateNotification> {
 
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -96,7 +97,7 @@ class _CreateNotificationState extends State<CreateNotification> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             child: ListView(children: [
               Container(
