@@ -1,9 +1,11 @@
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/utils/myColors.dart';
 
 class Catalogs extends StatefulWidget {
   @override
@@ -28,7 +30,7 @@ class _CatalogState extends State<Catalogs> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -44,7 +46,7 @@ class _CatalogState extends State<Catalogs> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -78,7 +80,7 @@ class _CatalogState extends State<Catalogs> {
                                       child: Padding(
                                     padding: EdgeInsets.only(left: 16.0),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(8),
                                       child: Image.network(
                                         _catalogListdata.data[index].photo ==
                                                 null
@@ -116,7 +118,10 @@ class _CatalogState extends State<Catalogs> {
                 child: Container(
                   width: sm.scaledWidth(50),
                   child: roundedButton(
-                    clicker: () {},
+                    clicker: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => NewCatlog()));
+                    },
                     clr: Colors.red,
                     title: "Create New",
                   ),

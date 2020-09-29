@@ -13,6 +13,7 @@ import 'package:Favorito/ui/notification/Notifications.dart';
 import 'package:Favorito/ui/offer/Offers.dart';
 import 'package:Favorito/ui/setting/businessSetting.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -27,7 +28,7 @@ class _settingState extends State<setting> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: Color(0xfffff4f4),
+      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text("Settings", style: titleStyle),

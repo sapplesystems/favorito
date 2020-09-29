@@ -6,7 +6,8 @@ var db = require('../config/db');
 exports.all_business_waitlist = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT id,`name`,contact,no_of_person,special_notes,DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
+        var sql = "SELECT id,`name`,contact,no_of_person,special_notes,DATE_FORMAT(created_at, '%d %b') as waitlist_date, \n\
+        DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
         db.query(sql, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

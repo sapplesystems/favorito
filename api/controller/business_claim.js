@@ -1,5 +1,7 @@
 var db = require('../config/db');
 
+var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
+
 /*CREATE BUSINESS CATEGORY*/
 exports.addClaim = async function (req, res, next) {
     try {

@@ -1,16 +1,16 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/myCss.dart';
-import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
-class highlights extends StatefulWidget {
+class NewCatlog extends StatefulWidget {
   @override
-  _highlightsState createState() => _highlightsState();
+  _NewCatlogState createState() => _NewCatlogState();
 }
 
-class _highlightsState extends State<highlights> {
+class _NewCatlogState extends State<NewCatlog> {
   List<bool> checked = [false, false, false];
   List<bool> radioChecked = [true, false, false];
   bool _autoValidateForm = false;
@@ -18,9 +18,9 @@ class _highlightsState extends State<highlights> {
   List<TextEditingController> controller = [];
   List<String> list = ["pizza", "burger", "cold drink", "French fries"];
   List<String> selectedlist = [];
+  List title = ["Title", "Price", "Discription", "Url", "Id"];
   void initState() {
     super.initState();
-
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
   }
 
@@ -31,7 +31,13 @@ class _highlightsState extends State<highlights> {
       backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: null,
+        title: Text("Highlights",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2)),
         actions: [
           IconButton(
             icon: Icon(Icons.error_outline, color: Colors.black),
@@ -52,16 +58,9 @@ class _highlightsState extends State<highlights> {
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: ListView(
           children: [
-            Text("Highlights",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2)),
             Container(
-              height: sm.scaledHeight(12),
-              margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
+              height: sm.scaledHeight(14),
+              margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -72,6 +71,7 @@ class _highlightsState extends State<highlights> {
                       child: Image.network(
                         'https://eatforum.org/content/uploads/2018/05/table_with_food_top_view_900x700.jpg',
                         fit: BoxFit.fill,
+                        width: sm.scaledHeight(8),
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -87,27 +87,18 @@ class _highlightsState extends State<highlights> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40.0),
                 margin: EdgeInsets.symmetric(horizontal: 12),
                 child: Column(children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
-                    child: txtfieldboundry(
-                      valid: true,
-                      title: "Title",
-                      hint: "Enter title of highlights",
-                      // ctrl: userCtrl,
-                      security: false,
+                  for (int i = 0; i < 4; i++)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                      child: txtfieldboundry(
+                        valid: true,
+                        title: title[i],
+                        hint: "Enter ${title[i]}",
+                        ctrl: controller[i],
+                        maxLines: i == 2 ? 4 : 1,
+                        security: false,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: sm.scaledHeight(1)),
-                    child: txtfieldboundry(
-                      valid: true,
-                      title: "Discription",
-                      maxLines: 4,
-                      hint: "Enter Discription highlights",
-                      // ctrl: userCtrl,
-                      security: false,
-                    ),
-                  ),
                 ])),
             Padding(
                 padding: EdgeInsets.symmetric(

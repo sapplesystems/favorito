@@ -6,7 +6,7 @@ import 'package:Favorito/myCss.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class CreateCampaign extends StatefulWidget {
   @override
   _CreateCampaignState createState() => _CreateCampaignState();
@@ -35,9 +35,9 @@ class _CreateCampaignState extends State<CreateCampaign> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: Color(0xfffff4f4),
+      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: Color(0xfffff4f4),
+        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -52,7 +52,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
         ),
       ),
       body: Container(
-        color: Color(0xfffff4f4),
+        color: myBackGround,
         height: sm.scaledHeight(82),
         padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
         margin: EdgeInsets.only(

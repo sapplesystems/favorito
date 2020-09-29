@@ -1,5 +1,6 @@
 import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
 import 'package:Favorito/ui/notification/CreateNotification.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -29,10 +30,10 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

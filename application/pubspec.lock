@@ -133,7 +133,7 @@ packages:
       name: find_dropdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1"
+    version: "0.2.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -400,7 +400,7 @@ packages:
       name: select_dialog
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   shared_preferences:
     dependency: "direct main"
     description:

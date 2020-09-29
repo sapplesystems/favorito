@@ -5,6 +5,7 @@ import 'package:Favorito/ui/tour/Tour_A.dart';
 import 'package:Favorito/ui/tour/Tour_B.dart';
 import 'package:Favorito/ui/tour/Tour_C.dart';
 import 'package:Favorito/ui/tour/loginSignupMix.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -13,7 +14,7 @@ import 'package:Favorito/utils/myString.Dart';
 class Tour_d extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-        SizeManager sm = SizeManager(context);
+    SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -98,72 +99,68 @@ class Tour_d extends StatelessWidget {
     );
   }
 
-  Widget dots(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Tour_a()));
-              },
-              child: ClipOval(
-                child: Container(
-                  color: Colors.grey,
-                  height: 12.0, // height of the button
-                  width: 12.0, // width of the button
-                  child: null,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Tour_B()));
-              },
-              child: ClipOval(
-                child: Container(
-                  color: Colors.grey,
-                  height: 12.0, // height of the button
-                  width: 12.0, // width of the button
-                  child: null,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Tour_c()));
-              },
-              child: ClipOval(
-                child: Container(
-                  color: Colors.grey,
-                  height: 12.0, // height of the button
-                  width: 12.0, // width of the button
-                  child: null,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {},
+  Widget dots(BuildContext context) =>
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Tour_a()));
+            },
+            child: ClipOval(
               child: Container(
-                  width: 37,
-                  height: 14,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0xffdd2626))),
+                color: Colors.grey,
+                height: 12.0, // height of the button
+                width: 12.0, // width of the button
+                child: null,
+              ),
             ),
           ),
-        ],
-      );
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Tour_B()));
+            },
+            child: ClipOval(
+              child: Container(
+                color: Colors.grey,
+                height: 12.0, // height of the button
+                width: 12.0, // width of the button
+                child: null,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Tour_c()));
+            },
+            child: ClipOval(
+              child: Container(
+                color: Colors.grey,
+                height: 12.0, // height of the button
+                width: 12.0, // width of the button
+                child: null,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+                onTap: () {},
+                child: Container(
+                    width: 37,
+                    height: 14,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: myRed))))
+      ]);
 }

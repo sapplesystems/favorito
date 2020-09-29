@@ -8,8 +8,8 @@ const mkdirp = require('mkdirp');
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    mkdirp.sync('./public/uploads/business_catalogs/');
-    cb(null, './public/uploads/business_catalogs/');
+    mkdirp.sync('./public/uploads/');
+    cb(null, './public/uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);

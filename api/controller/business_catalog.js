@@ -1,5 +1,7 @@
 var db = require('../config/db');
 
+var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
+
 /**
  * LIST ALL CATALOG
  */

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Favorito/utils/myColors.dart';
 
 class toggleTextButton extends StatelessWidget {
   String hint, label;
@@ -23,7 +24,6 @@ class toggleTextButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              
               Text(
                 "Complete your profile ",
                 style: TextStyle(
@@ -41,7 +41,7 @@ class toggleTextButton extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   border: Border.all(
-                    color: Color(0xffdd2626),
+                    color: myRed,
                     width: 1,
                   ),
                 ),
@@ -49,7 +49,7 @@ class toggleTextButton extends StatelessWidget {
                   child: Text(
                     "Fill",
                     style: TextStyle(
-                      color: Color(0xffdd2626),
+                      color: myRed,
                       fontSize: 12,
                       fontFamily: "Gilroy-Medium",
                       fontWeight: FontWeight.w400,

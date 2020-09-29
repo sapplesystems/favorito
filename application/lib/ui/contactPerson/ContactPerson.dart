@@ -13,7 +13,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class ContactPerson extends StatefulWidget {
   @override
   _ContactPersonState createState() => _ContactPersonState();
@@ -92,7 +92,7 @@ class _ContactPersonState extends State<ContactPerson> {
     sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -108,7 +108,7 @@ class _ContactPersonState extends State<ContactPerson> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             child: ListView(
               children: [

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class card1 extends StatefulWidget {
   String checkins;
   Function function;
-  card1({this.checkins,this.function});
+  card1({this.checkins, this.function});
   @override
   _card1State createState() => _card1State();
 }
@@ -11,8 +11,9 @@ class card1 extends StatefulWidget {
 class _card1State extends State<card1> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(onTap:widget.function,
-          child: Stack(
+    return InkWell(
+      onTap: widget.function,
+      child: Stack(
         children: [
           Stack(
             children: [
@@ -118,7 +119,7 @@ class _card1State extends State<card1> {
                   child: Container(
                     width: 3.10,
                     height: 21.39,
-                    color: Color(0xffdd2626),
+                    color: myRed,
                   ),
                 ),
                 SizedBox(width: 3.77),
@@ -181,7 +182,7 @@ class _card1State extends State<card1> {
                   child: Container(
                     width: 3.10,
                     height: 21.39,
-                    color: Color(0xffdd2626),
+                    color: myRed,
                   ),
                 ),
               ],

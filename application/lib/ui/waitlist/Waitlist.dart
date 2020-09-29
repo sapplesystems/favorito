@@ -5,10 +5,13 @@ import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/booking/ManualBooking.dart';
 import 'package:Favorito/ui/waitlist/WaitlistDetail.dart';
+import 'package:Favorito/ui/waitlist/waitListSetting.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:Favorito/utils/myString.Dart';
 
 class Waitlist extends StatefulWidget {
   @override
@@ -33,7 +36,7 @@ class _Waitlist extends State<Waitlist> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -43,30 +46,27 @@ class _Waitlist extends State<Waitlist> {
             color: Colors.black, //change your color here
           ),
           title: Text(
-            "Waitlist",
+            waitlist,
             style: TextStyle(color: Colors.black),
           ),
           actions: [
             IconButton(
-              icon: SvgPicture.asset('assets/icon/addWaitlist.svg',
-                  alignment: Alignment.center),
+              icon: Icon(Icons.add_circle_outline),
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ManualBooking()));
               },
             ),
             IconButton(
-              icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
-                  alignment: Alignment.center),
-              onPressed: () {
-                // do something
-              },
-            )
+                icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
+                    height: 20),
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => WaitListSetting())))
           ],
         ),
         body: Container(
           height: sm.scaledHeight(100),
-          decoration: BoxDecoration(color: Color(0xfffff4f4)),
+          decoration: BoxDecoration(color: myBackGround),
           margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
           child: ListView.builder(
               itemCount: waitlistData == null ? 0 : waitlistData.data.length,
@@ -142,7 +142,7 @@ class _Waitlist extends State<Waitlist> {
                                     children: [
                                       IconButton(
                                         iconSize: sm.scaledWidth(8),
-                                        icon: Icon(Icons.call),
+                                        icon: Icon(Icons.call, color: myRed),
                                         onPressed: () {
                                           _callPhone(
                                               'tel:${waitlistData.data[index].contact}');
@@ -150,7 +150,7 @@ class _Waitlist extends State<Waitlist> {
                                       ),
                                       IconButton(
                                         iconSize: sm.scaledWidth(8),
-                                        icon: Icon(Icons.delete),
+                                        icon: Icon(Icons.delete, color: myRed),
                                         onPressed: () {},
                                       )
                                     ],
@@ -159,12 +159,13 @@ class _Waitlist extends State<Waitlist> {
                                     children: [
                                       IconButton(
                                         iconSize: sm.scaledWidth(8),
-                                        icon: Icon(Icons.check_circle),
+                                        icon: Icon(Icons.check_circle,
+                                            color: myRed),
                                         onPressed: () {},
                                       ),
                                       IconButton(
                                         iconSize: sm.scaledWidth(8),
-                                        icon: Icon(Icons.close),
+                                        icon: Icon(Icons.close, color: myRed),
                                         onPressed: () {},
                                       )
                                     ],

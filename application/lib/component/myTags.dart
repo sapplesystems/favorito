@@ -1,7 +1,7 @@
 import 'package:Favorito/component/roundButtonRightIcon.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class MyTags extends StatefulWidget {
   List<String> sourceList;
   List<String> selectedList;
@@ -48,7 +48,7 @@ class _MyTagsState extends State<MyTags> {
             for (int i = 0; i < widget.selectedList.length; i++)
               roundButtonRightIcon(
                   title: widget.selectedList[i],
-                  clr: Color(0xffdd2626),
+                  clr: myRed,
                   ico: Icons.close,
                   function: () => setState(() {
                         widget.sourceList.add(widget.selectedList[i]);

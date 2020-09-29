@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class dashboard extends StatefulWidget {
   @override
   _dashboardState createState() => _dashboardState();
@@ -63,7 +63,7 @@ class _dashboardState extends State<dashboard> {
                   })
             ],
             centerTitle: true,
-            backgroundColor: Color(0xfffff4f4),
+            backgroundColor: myBackGround,
             elevation: 0,
             leading: IconButton(
               icon: Icon(null, color: Colors.black),
@@ -75,7 +75,7 @@ class _dashboardState extends State<dashboard> {
           ),
         ),
         body: Container(
-            color: Color(0xfffff4f4),
+            color: myBackGround,
             padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
             child: SingleChildScrollView(
               child: Column(children: [

@@ -11,7 +11,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class CreateJob extends StatefulWidget {
   final int _jobId;
   CreateJob(this._jobId);
@@ -73,7 +73,7 @@ class _CreateJobState extends State<CreateJob> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xfffff4f4),
+          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -89,7 +89,7 @@ class _CreateJobState extends State<CreateJob> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: Color(0xfffff4f4),
+              color: myBackGround,
             ),
             child: ListView(children: [
               Container(

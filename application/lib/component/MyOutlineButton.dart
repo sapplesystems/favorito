@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
-
+import 'package:Favorito/utils/myColors.dart';
 class MyOutlineButton extends StatelessWidget {
   String title;
   Function function;
@@ -20,7 +20,7 @@ class MyOutlineButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
-            color: Color(0xffdd2626),
+            color: myRed,
             width: 1,
           ),
         ),
