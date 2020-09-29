@@ -119,8 +119,12 @@ exports.getBusinessOwnerProfile = function (req, res, next) {
                 return res.status(403).json({ status: 'error', message: 'No recored found.' });
             } else {
 
-                var bsql = "select id,branch_address,branch_contact from business_branches \n\
-                where business_id='" + business_id + "' and id_deleted='0'";
+                var bsql = "SELECT id as branch_id, business_name AS branch_name, \n\
+                            CONCAT(address1, ', ', address2, ', ', address3) AS branch_address, \n\
+                            CONCAT('" + img_path + "', photo) AS branch_photo \n\
+                            FROM business_master WHERE id \n\
+                            IN( SELECT branch_id FROM business_branches \n\
+                                WHERE business_id='"+ business_id + "' AND is_deleted='0' AND deleted_at IS NULL)";
                 db.query(bsql, function (error, branches) {
                     rows[0].branches = branches;
                     return res.status(200).json({ status: 'success', message: 'success', user_role: user_role, data: rows[0] });
@@ -146,7 +150,8 @@ exports.searchBranch = function (req, res, next) {
         var business_id = req.userdata.business_id;
         var search_branch = req.body.search_branch;
 
-        var sql = "select id, business_name, concat('" + img_path + "', photo) as photo from business_master where \n\
+        var sql = "select id, business_name, concat(address1, ', ', address2, ', ', address3) as business_address, \n\
+                    concat('" + img_path + "', photo) as photo from business_master where \n\
                     business_name like '%"+ search_branch + "%' or address1 like '%" + search_branch + "%' or \n\
                     address2 like '%"+ search_branch + "%' or address3 like '%" + search_branch + "%'";
         db.query(sql, function (err, rows) {

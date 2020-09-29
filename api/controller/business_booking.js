@@ -7,7 +7,7 @@ exports.all_business_booking = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id,`name`,contact,no_of_person,special_notes, \n\
-                    DATE_FORMAT(created_datetime, '%d-%m-%Y') AS created_date, \n\
+                    DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
                     DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
                     FROM business_booking WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
         db.query(sql, function (err, result) {
