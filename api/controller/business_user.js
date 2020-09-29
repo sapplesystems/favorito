@@ -4,6 +4,8 @@ var jwt = require('jsonwebtoken');
 
 var user_role = ['Owner', 'Manager', 'Employee'];
 
+var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
+
 /**
  * GET BUSINESS MASTER PROFILE
  */
@@ -34,7 +36,6 @@ exports.getProfile = function (req, res, next) {
                     var q2 = "select id,`day`,start_hours,end_hours from business_hours \n\
                                 where business_id='" + business_id + "' and deleted_at is null";
                     db.query(q2, function (error, hours) {
-                        console.log(hours);
                         rows[0].hours = hours;
                         return res.status(200).json({ status: 'success', message: 'success', data: rows[0], hours_drop_down_list: hours_drop_down_list });
                     });
@@ -133,6 +134,35 @@ exports.getBusinessOwnerProfile = function (req, res, next) {
 
 
 /**
+ * SEARCH BUSINESS BRANCH TO ADD
+ */
+exports.searchBranch = function (req, res, next) {
+    try {
+
+        if (req.body.search_branch == '' || req.body.search_branch == 'undefined' || req.body.search_branch == null) {
+            return res.status(403).json({ status: 'error', message: 'Search branch keyword not found.' });
+        }
+
+        var business_id = req.userdata.business_id;
+        var search_branch = req.body.search_branch;
+
+        var sql = "select id, business_name, concat('" + img_path + "', photo) as photo from business_master where \n\
+                    business_name like '%"+ search_branch + "%' or address1 like '%" + search_branch + "%' or \n\
+                    address2 like '%"+ search_branch + "%' or address3 like '%" + search_branch + "%'";
+        db.query(sql, function (err, rows) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'success', data: rows });
+        });
+
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+
+/**
  * BUSINESS USER PROFILE INFORMATION (BUSINESS USER) START HERE
  */
 exports.updateBusinessOwnerProfile = function (req, res, next) {
@@ -164,13 +194,16 @@ exports.updateBusinessOwnerProfile = function (req, res, next) {
         var bid = req.body.bid;
         if (bid && bid != 'undefined') {
             var bid_len = bid.length;
-            for (var x = 0; x < bid_len; x++) {
-                var branchid = bid[x];
-                var branch_address = req.body.branch_address[x];
-                var branch_contact = req.body.branch_contact[x];
-                var q = "UPDATE business_branches SET branch_address='" + branch_address + "', branch_contact='" + branch_contact + "', updated_at=NOW() WHERE id='" + branchid + "'";
-                db.query(q);
-            }
+            var dq = "UPDATE business_branches SET is_deleted='1', deleted_at=NOW() WHERE business_id='" + business_id + "'";
+            db.query(dq, function (e, r) {
+                for (var x = 0; x < bid_len; x++) {
+                    var branchid = bid[x];
+                    //var branch_address = req.body.branch_address[x];
+                    //var branch_contact = req.body.branch_contact[x];
+                    var q = "INSERT INTO business_branches (business_id, branch_id) VALUES('" + business_id + "','" + branchid + "')";
+                    db.query(q);
+                }
+            });
         }
 
         var sql = "update business_users set " + update_columns + " where business_id='" + business_id + "'";
@@ -184,7 +217,7 @@ exports.updateBusinessOwnerProfile = function (req, res, next) {
             }
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' + e });
     }
 };
 
