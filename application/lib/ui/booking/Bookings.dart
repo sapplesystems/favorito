@@ -1,7 +1,9 @@
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/model/booking/BookingModel.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/booking/BokingDetail.dart';
+import 'package:Favorito/ui/booking/ManualBooking.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -111,14 +113,21 @@ class _Bookings extends State<Bookings> {
               icon: SvgPicture.asset('assets/icon/addWaitlist.svg',
                   alignment: Alignment.center),
               onPressed: () {
-                // do something
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ManualBooking()))
+                    .whenComplete(() {
+                  // call the page reload here
+                });
               },
             ),
             IconButton(
               icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
                   alignment: Alignment.center),
               onPressed: () {
-                // do something
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => CreateJob(null)));
               },
             )
           ],
@@ -382,6 +391,7 @@ class _Bookings extends State<Bookings> {
   }
 
   Widget _popupBody(User model) {
-    return Container(child: BookingDetail(userModel: model));
+    // return Container(child: BookingDetail(userModel: model));
+    return Container(child: null);
   }
 }

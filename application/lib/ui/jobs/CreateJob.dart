@@ -2,7 +2,9 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
 import 'package:Favorito/model/job/CreateJobRequiredDataModel.dart';
+import 'package:Favorito/model/job/PincodeListModel.dart';
 import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
+import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -23,6 +25,7 @@ class _CreateJobState extends State<CreateJob> {
   List<String> _contactOptionsList = [];
   List<CityList> _cityList = [];
   List<SkillListRequiredDataModel> _selectedSkillList = [];
+  List<PincodeModel> _pincodesForCity = [];
 
   String _contactHint = '';
   String _selectedContactOption = '';
@@ -216,10 +219,13 @@ class _CreateJobState extends State<CreateJob> {
                               padding: const EdgeInsets.all(16.0),
                               child: DropdownSearch<CityList>(
                                 validator: (v) =>
-                                    v == '' ? "required field" : null,
+                                    v == null ? "required field" : null,
                                 autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
+                                compareFn: (CityList i, CityList s) =>
+                                    i.isEqual(s),
+                                itemAsString: (CityList u) => u.userAsString(),
                                 selectedItem: _selectedCity,
                                 items: _cityList,
                                 label: "City",
@@ -228,6 +234,14 @@ class _CreateJobState extends State<CreateJob> {
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedCity = value;
+                                    _pincodesForCity.clear();
+                                    WebService.funGetPicodesForCity(
+                                            _selectedCity.id)
+                                        .then((value) {
+                                      setState(() {
+                                        _pincodesForCity = value.pincodeModel;
+                                      });
+                                    });
                                   });
                                 },
                               ),
@@ -244,7 +258,36 @@ class _CreateJobState extends State<CreateJob> {
                                 maxlen: 6,
                                 myOnChanged: (val) {
                                   if (_myPincodeEditController.text.length ==
-                                      6) {}
+                                      6) {
+                                    if (_pincodesForCity.length != 0) {
+                                      for (var temp in _pincodesForCity) {
+                                        if (temp.pincode ==
+                                            _myPincodeEditController.text) {
+                                          break;
+                                        } else {
+                                          if (_pincodesForCity.indexOf(temp) ==
+                                              _pincodesForCity.length - 1) {
+                                            _pincodesForCity.clear();
+                                            _selectedCity = null;
+                                            BotToast.showText(
+                                                text:
+                                                    "Please enter a pincode from selected city");
+                                          }
+                                        }
+                                      }
+                                    } else {
+                                      WebService.funGetCityByPincode(
+                                              _myPincodeEditController.text)
+                                          .then((value) {
+                                        setState(() {
+                                          CityList city = CityList();
+                                          city.id = value.data.id;
+                                          city.city = value.data.city;
+                                          _selectedCity = city;
+                                        });
+                                      });
+                                    }
+                                  }
                                 },
                               ),
                             ),

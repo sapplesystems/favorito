@@ -1,4 +1,5 @@
-import 'package:Favorito/model/waitlist/WaitlistModel.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -25,7 +26,7 @@ class _WaitListDetail extends State<WaitListDetail> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Text(
-              "${widget.waitlistData.date} | ${widget.waitlistData.slot}",
+              "${widget.waitlistData.waitlistDate} | pending",
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -45,30 +46,28 @@ class _WaitListDetail extends State<WaitListDetail> {
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  "${widget.waitlistData.type} | ${widget.waitlistData.time}",
+                  "Walk-in | ${widget.waitlistData.walkinAt}",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  widget.waitlistData.tableCapacity == '1'
-                      ? "${widget.waitlistData.tableCapacity} Person"
-                      : "${widget.waitlistData.tableCapacity} Persons",
+                  widget.waitlistData.noOfPerson == 1
+                      ? "${widget.waitlistData.noOfPerson} Person"
+                      : "${widget.waitlistData.noOfPerson} Persons",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 ),
               ),
             ],
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: AutoSizeText(
-                widget.waitlistData.notes,
-                maxLines: 4,
-                minFontSize: 16,
-                overflow: TextOverflow.ellipsis,
-              ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: AutoSizeText(
+              widget.waitlistData.specialNotes,
+              maxLines: 4,
+              minFontSize: 16,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           Padding(
@@ -79,7 +78,9 @@ class _WaitListDetail extends State<WaitListDetail> {
                 IconButton(
                   iconSize: sm.scaledWidth(8),
                   icon: Icon(Icons.call),
-                  onPressed: () {},
+                  onPressed: () {
+                    _callPhone('tel:${widget.waitlistData.contact}');
+                  },
                 ),
                 IconButton(
                   iconSize: sm.scaledWidth(8),
@@ -102,5 +103,13 @@ class _WaitListDetail extends State<WaitListDetail> {
         ],
       ),
     ));
+  }
+
+  _callPhone(String phone) async {
+    if (await canLaunch(phone)) {
+      await launch(phone);
+    } else {
+      throw 'Could not Call Phone';
+    }
   }
 }

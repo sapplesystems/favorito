@@ -1,4 +1,5 @@
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -10,14 +11,15 @@ class Catalogs extends StatefulWidget {
 }
 
 class _CatalogState extends State<Catalogs> {
-  List<CatalogListRequestModel> _catalogListdata = [];
+  CatalogListRequestModel _catalogListdata;
 
   @override
   void initState() {
-    CatalogListRequestModel model1 = CatalogListRequestModel();
-    model1.title = 'Exteriors';
-    model1.imageUrl = 'https://source.unsplash.com/random/400*400';
-    _catalogListdata.add(model1);
+    WebService.funGetCatalogs().then((value) {
+      setState(() {
+        _catalogListdata = value;
+      });
+    });
     super.initState();
   }
 
@@ -50,7 +52,7 @@ class _CatalogState extends State<Catalogs> {
                 height: sm.scaledHeight(75),
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: ListView.builder(
-                    itemCount: _catalogListdata.length,
+                    itemCount: _catalogListdata.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         elevation: 5,
@@ -58,7 +60,7 @@ class _CatalogState extends State<Catalogs> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         child: Container(
-                            height: sm.scaledHeight( 10),
+                            height: sm.scaledHeight(10),
                             width: sm.scaledWidth(80),
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -73,15 +75,19 @@ class _CatalogState extends State<Catalogs> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 16.0),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Image.network(
-                                            _catalogListdata[index].imageUrl,
-                                            height: sm.scaledHeight( 8),
-                                            fit: BoxFit.fill,
-                                            width: sm.scaledHeight( 8),
+                                      child: Padding(
+                                    padding: EdgeInsets.only(left: 16.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.network(
+                                        _catalogListdata.data[index].photo ==
+                                                null
+                                            ? "https://source.unsplash.com/random/400*400"
+                                            : _catalogListdata
+                                                .data[index].photo,
+                                        height: sm.scaledHeight(8),
+                                        fit: BoxFit.fill,
+                                        width: sm.scaledHeight(8),
                                       ),
                                     ),
                                   )),
@@ -90,7 +96,8 @@ class _CatalogState extends State<Catalogs> {
                                       child: Padding(
                                         padding: EdgeInsets.only(left: 4.0),
                                         child: Text(
-                                          _catalogListdata[index].title,
+                                          _catalogListdata
+                                              .data[index].catalogTitle,
                                         ),
                                       )),
                                   Expanded(
@@ -107,14 +114,9 @@ class _CatalogState extends State<Catalogs> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  width: sm.scaledWidth( 50),
+                  width: sm.scaledWidth(50),
                   child: roundedButton(
-                    clicker: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => CreateNotification()));
-                    },
+                    clicker: () {},
                     clr: Colors.red,
                     title: "Create New",
                   ),

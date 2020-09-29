@@ -65,4 +65,12 @@ class CityList {
     data['city'] = this.city;
     return data;
   }
+
+  bool isEqual(CityList model) {
+    return this?.id == model?.id;
+  }
+
+  String userAsString() {
+    return '${this.city}';
+  }
 }

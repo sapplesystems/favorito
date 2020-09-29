@@ -1,11 +1,11 @@
-class CatalogListRequestModel {
+class SearchBranchResponseModel {
   String status;
   String message;
   List<Data> data;
 
-  CatalogListRequestModel({this.status, this.message, this.data});
+  SearchBranchResponseModel({this.status, this.message, this.data});
 
-  CatalogListRequestModel.fromJson(Map<String, dynamic> json) {
+  SearchBranchResponseModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
@@ -29,21 +29,24 @@ class CatalogListRequestModel {
 
 class Data {
   int id;
-  String catalogTitle;
+  String businessName;
+  String buisnessAddress;
   String photo;
 
-  Data({this.id, this.catalogTitle, this.photo});
+  Data({this.id, this.businessName, this.photo});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    catalogTitle = json['catalog_title'];
+    businessName = json['business_name'];
+    buisnessAddress = json['business_address'];
     photo = json['photo'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['catalog_title'] = this.catalogTitle;
+    data['business_name'] = this.businessName;
+    data['business_address'] = this.buisnessAddress;
     data['photo'] = this.photo;
     return data;
   }
