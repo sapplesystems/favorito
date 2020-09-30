@@ -1,8 +1,4 @@
 import 'package:Favorito/ui/appoinment/appoinmentSetting.dart';
-import 'package:Favorito/ui/booking/Bookings.dart';
-import 'package:Favorito/ui/login/login.dart';
-import 'package:Favorito/ui/waitlist/ManualWaitList.dart';
-import 'package:Favorito/ui/waitlist/waitListSetting.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
