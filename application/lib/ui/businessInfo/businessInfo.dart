@@ -7,7 +7,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/utils/myColors.dart';
+
 class businessInfo extends StatefulWidget {
   @override
   _businessInfoState createState() => _businessInfoState();
@@ -31,7 +31,7 @@ class _businessInfoState extends State<businessInfo> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
+      backgroundColor: Color(0xfffff4f4),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: null,

@@ -1,9 +1,8 @@
-import 'package:Favorito/component/DatePicker.dart';
-import 'package:Favorito/component/TimePicker.dart';
-import 'package:Favorito/component/roundedButton.dart';
-import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:flutter/material.dart';
-
+import '../../component/DatePicker.dart';
+import '../../component/TimePicker.dart';
+import '../../component/roundedButton.dart';
+import '../../component/txtfieldboundry.dart';
 import '../../config/SizeManager.dart';
 
 class ManualBooking extends StatefulWidget {
