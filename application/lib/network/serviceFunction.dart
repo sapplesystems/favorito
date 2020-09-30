@@ -27,4 +27,5 @@ class serviceFunction {
   static String funGetWaitlist = baseUrl2 + 'business-waitlist/list';
   static String funCreateManualBooking = baseUrl2 + 'business-booking/create';
   static String funSearchBranches = baseUrl2 + 'business-user/search-branch';
+  static String funGetBusinessProfileData = baseUrl2 + 'business-user/profile';
 }

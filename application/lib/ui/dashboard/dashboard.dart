@@ -10,13 +10,14 @@ import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/order/Orders.dart';
 import 'package:Favorito/ui/review/reviewList.dart';
-import 'package:Favorito/ui/setting/businessSetting.dart';
+import 'package:Favorito/ui/setting/businessProfile.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class dashboard extends StatefulWidget {
   @override
   _dashboardState createState() => _dashboardState();
@@ -86,9 +87,7 @@ class _dashboardState extends State<dashboard> {
                     Text(
                         is_verified == "0"
                             ? "Offline"
-                            : is_verified == "1"
-                                ? "Live"
-                                : "Blocked",
+                            : is_verified == "1" ? "Live" : "Blocked",
                         style: TextStyle(
                             fontSize: 16,
                             color: is_verified == "0"
@@ -102,14 +101,14 @@ class _dashboardState extends State<dashboard> {
                   ],
                 ),
                 rowWithTextNButton(
-                    txt1: "Conplete Your Profile",
+                    txt1: "Complete Your Profile",
                     txt2: "Fill",
                     check: is_profile_completed,
                     function: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BusinessSetting()));
+                              builder: (context) => BusinessProfile()));
                     }),
                 rowWithTextNButton(
                     txt1: "Complete your information",
@@ -219,6 +218,7 @@ class _dashboardState extends State<dashboard> {
       business_id = value.businessId;
       business_name = value.businessName;
       business_status = value.businessStatus;
+      photoUrl = value.photo;
       is_profile_completed = value.isProfileCompleted.toString();
       is_information_completed = value.isInformationCompleted.toString();
       is_phone_verified = value.isPhoneVerified.toString();

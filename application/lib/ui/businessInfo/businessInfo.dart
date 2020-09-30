@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class businessInfo extends StatefulWidget {
   @override
   _businessInfoState createState() => _businessInfoState();
@@ -23,7 +24,6 @@ class _businessInfoState extends State<businessInfo> {
   List<String> selectedlist = [];
   void initState() {
     super.initState();
-
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
   }
 

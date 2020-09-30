@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/booking/CreateBookingModel.dart';
+import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
@@ -16,7 +17,6 @@ import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
 import 'package:Favorito/model/dashModel.dart';
 import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
-// import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
@@ -437,6 +437,19 @@ class WebService {
         data: _map, options: _opt);
     _returnData = SearchBranchResponseModel.fromJson(
         convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<BusinessProfileModel> funGetBusinessProfileData() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BusinessProfileModel _returnData = BusinessProfileModel();
+    response = await dio.post(serviceFunction.funGetBusinessProfileData,
+        data: null, options: _opt);
+    _returnData =
+        BusinessProfileModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
   }
 }

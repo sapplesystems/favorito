@@ -11,12 +11,13 @@ import 'package:Favorito/ui/jobs/JobList.dart';
 import 'package:Favorito/ui/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/notification/Notifications.dart';
 import 'package:Favorito/ui/offer/Offers.dart';
-import 'package:Favorito/ui/setting/businessSetting.dart';
+import 'package:Favorito/ui/setting/businessProfile.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:Favorito/utils/myString.Dart';
 
 class setting extends StatefulWidget {
   @override
@@ -52,14 +53,16 @@ class _settingState extends State<setting> {
               child: ListTile(
                 leading: Padding(
                   padding: const EdgeInsets.only(right: 12.0),
-                  child: Image.asset(
-                    'assets/icon/foodcircle.png',
+                  child: Image.network(
+                    photoUrl == ""
+                        ? "https://source.unsplash.com/random/400*400"
+                        : photoUrl,
+                    height: sm.scaledHeight(20),
                     fit: BoxFit.cover,
-                    height: sm.scaledWidth(200),
                   ),
                 ),
                 title: Text(
-                  "Avadh Group",
+                  business_name,
                   style: TextStyle(
                       wordSpacing: 2,
                       fontWeight: FontWeight.bold,
@@ -103,7 +106,7 @@ class _settingState extends State<setting> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => BusinessSetting()));
+                                    builder: (context) => BusinessProfile()));
                           }),
                       listItems(
                           title: "Bussiness Information",
