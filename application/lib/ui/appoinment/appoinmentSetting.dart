@@ -1,19 +1,20 @@
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/toggleSwitch.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:Favorito/utils/myString.Dart';
+// import 'package:Favorito/utils/myString.Dart';
 
-class WaitListSetting extends StatefulWidget {
+class appoinmentSetting extends StatefulWidget {
   @override
-  _WaitListSettingState createState() => _WaitListSettingState();
+  _appoinmentSettingState createState() => _appoinmentSettingState();
 }
 
-class _WaitListSettingState extends State<WaitListSetting> {
+class _appoinmentSettingState extends State<appoinmentSetting> {
   List title = [
     "Waitlist Manager",
     "Anouncement",
@@ -40,7 +41,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
   void initState() {
     super.initState();
     for (int i = 0; i < 12; i++) controller.add(TextEditingController());
-    controller[2].text = "0";
+    controller[0].text = "0";
     controller[6].text = "0";
     controller[7].text = "0";
   }
@@ -61,7 +62,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
           color: Colors.black, //change your color here
         ),
         title: Text(
-          waitlistSetting,
+          "Appoinment Setting",
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -79,42 +80,15 @@ class _WaitListSettingState extends State<WaitListSetting> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text("Start waitlist daily at",
-                            style: TextStyle(color: Colors.grey)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [fromTo("18:00"), fromTo("18:00")],
-                        ),
-                        plusMinus("Available resources", controller[2]),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                          child: txtfieldboundry(
-                            valid: true,
-                            title: title[3],
-                            hint: "Enter ${title[0]}",
-                            ctrl: controller[3],
-                            maxLines: 1,
-                            security: false,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                          child: txtfieldboundry(
-                            valid: true,
-                            title: title[4],
-                            hint: "Enter ${title[4]}",
-                            ctrl: controller[4],
-                            maxLines: 1,
-                            security: false,
-                          ),
-                        ),
+                        plusMinus("Advance Booking(Day)", controller[0]),
+                        plusMinus("Advance Booking(Hours)", controller[1]),
                         DropdownSearch<String>(
                           validator: (v) => v == '' ? "required field" : null,
                           autoValidate: true,
                           mode: Mode.MENU,
                           selectedItem: controller[5].text,
                           items: slot,
-                          label: "Slot",
+                          label: "Slot Length",
                           hint: "Please Select Slot",
                           showSearchBox: false,
                           onChanged: (value) {
@@ -129,17 +103,6 @@ class _WaitListSettingState extends State<WaitListSetting> {
                           padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
                           child: txtfieldboundry(
                             valid: true,
-                            title: title[0],
-                            hint: "Enter ${title[0]}",
-                            ctrl: controller[3],
-                            maxLines: 1,
-                            security: false,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                          child: txtfieldboundry(
-                            valid: true,
                             title: title[1],
                             hint: "Enter ${title[0]}",
                             ctrl: controller[3],
@@ -147,13 +110,9 @@ class _WaitListSettingState extends State<WaitListSetting> {
                             security: false,
                           ),
                         ),
-                        MyTags(
-                          sourceList: list,
-                          selectedList: selectedList,
-                          controller: controller[0],
-                          hint: "Please select ${title[5]}",
-                          title: title[5],
-                        ),
+                        additionalFunction("Person"),
+                        additionalFunction("Services"),
+                        additionalFunction("Restrictions"),
                       ]),
                 )),
             Padding(
@@ -219,5 +178,55 @@ class _WaitListSettingState extends State<WaitListSetting> {
         ]),
       )
     ]);
+  }
+
+  addNewLabel(String s, labelClicked) {
+    return InkWell(
+      onTap: labelClicked,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(s, style: geryTextSmall),
+        Text("Add New", style: redTextSmall)
+      ]),
+    );
+  }
+
+  labelClicked(String i) {
+    switch (i) {
+      case "0":
+        {
+          //statements;
+        }
+        break;
+      case "1":
+        {
+          //statements;
+        }
+        break;
+      default:
+        {
+          //statements;
+        }
+        break;
+    }
+  }
+
+  int i;
+  additionalFunction(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(mainAxisSize: MainAxisSize.max, children: [
+        addNewLabel(title, labelClicked(i.toString())),
+        for (i = 0; i < 2; i++)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("$title $i"),
+              ToggleSwitch(
+                switchControl: false,
+              )
+            ],
+          )
+      ]),
+    );
   }
 }

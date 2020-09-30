@@ -9,7 +9,7 @@ class TimePicker extends StatefulWidget {
       {Key key, this.selectedTime, this.onChanged, this.selectedTimeText})
       : super(key: key);
   TimeOfDay selectedTime;
-  final ValueChanged<TimeOfDay> onChanged;
+  final Function(String) onChanged;
   String selectedTimeText;
   @override
   _TimePicker createState() => _TimePicker();
@@ -26,7 +26,7 @@ class _TimePicker extends State<TimePicker> {
       initialTime: widget.selectedTime,
     );
     if (picked != null && picked != widget.selectedTime) {
-      // widget.onChanged(picked);
+      widget.onChanged(picked.format(context));
       widget.selectedTimeText = picked.format(context);
     }
   }

@@ -23,8 +23,16 @@ class _businessInfoState extends State<businessInfo> {
   List<String> selectedlist = [];
   void initState() {
     super.initState();
-
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.clear();
+    list.clear();
+    selectedlist.clear();
+    lst.clear();
   }
 
   @override

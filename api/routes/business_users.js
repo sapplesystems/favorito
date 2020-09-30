@@ -14,8 +14,8 @@ const mkdirp = require('mkdirp');
 var multer = require('multer');
 var storage_business_profile = multer.diskStorage({
   destination: function (req, file, cb) {
-    mkdirp.sync('./public/uploads/business_user/profile/');
-    cb(null, './public/uploads/business_user/profile/');
+    mkdirp.sync('./public/uploads/');
+    cb(null, './public/uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
@@ -30,8 +30,8 @@ var upload_business_profile = multer({ storage: storage_business_profile });
  */
 var storage_business_info_media = multer.diskStorage({
   destination: function (req, file, cb) {
-    mkdirp.sync('./public/uploads/business_user/information/');
-    cb(null, './public/uploads/business_user/information/');
+    mkdirp.sync('./public/uploads/');
+    cb(null, './public/uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
@@ -55,6 +55,8 @@ router.post('/profile', CheckAuth, UserController.getProfile);
 router.post('/profile/update', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfile);
 
 router.post('/owner-profile', CheckAuth, UserController.getBusinessOwnerProfile);
+
+router.post('/search-branch', CheckAuth, UserController.searchBranch);
 
 router.post('/update-owner-profile', multer().array(), CheckAuth, UserController.updateBusinessOwnerProfile);
 

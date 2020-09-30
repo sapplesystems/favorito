@@ -1,3 +1,5 @@
+import 'package:Favorito/ui/appoinment/appoinmentSetting.dart';
+import 'package:Favorito/ui/booking/Bookings.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/waitlist/ManualWaitList.dart';
 import 'package:Favorito/ui/waitlist/waitListSetting.dart';
@@ -28,8 +30,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home:
-          //  Login()
-          WaitListSetting()
-      // ManualWaitList()
-      );
+          // Login()
+          // WaitListSetting()
+          // ManualWaitList()
+          appoinmentSetting());
 }

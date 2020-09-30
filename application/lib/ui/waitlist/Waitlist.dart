@@ -1,6 +1,9 @@
-import 'package:Favorito/model/waitlist/WaitlistModel.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/booking/ManualBooking.dart';
 import 'package:Favorito/ui/waitlist/WaitlistDetail.dart';
 import 'package:Favorito/ui/waitlist/waitListSetting.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -16,21 +19,14 @@ class Waitlist extends StatefulWidget {
 }
 
 class _Waitlist extends State<Waitlist> {
-  List<WaitlistModel> waitlistData = [];
+  WaitlistListModel waitlistData;
 
   @override
   void initState() {
-    setState(() {
-      WaitlistModel model1 = WaitlistModel();
-      model1.tableCapacity = '5';
-      model1.name = 'John Hopkins';
-      model1.type = 'Wak-In';
-      model1.time = '13:40';
-      model1.notes =
-          "Here is the use notes to show the important part gf agf gsd f gfahgdhagfdg gfhagbdfh gajhfghjfjha hvjhf sgf ae ygaygayg agyfg";
-      model1.date = "12 Jan";
-      model1.slot = "13:00-14:00";
-      waitlistData.add(model1);
+    WebService.funGetWaitlist().then((value) {
+      setState(() {
+        waitlistData = value;
+      });
     });
     super.initState();
   }
@@ -57,7 +53,8 @@ class _Waitlist extends State<Waitlist> {
             IconButton(
               icon: Icon(Icons.add_circle_outline),
               onPressed: () {
-                // do something
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ManualBooking()));
               },
             ),
             IconButton(
@@ -72,11 +69,12 @@ class _Waitlist extends State<Waitlist> {
           decoration: BoxDecoration(color: myBackGround),
           margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
           child: ListView.builder(
-              itemCount: waitlistData.length,
+              itemCount: waitlistData == null ? 0 : waitlistData.data.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    showPopup(context, _popupBody(waitlistData[index]));
+                    showPopup(context,
+                        _popupBodyShowDetail(waitlistData.data[index]));
                   },
                   child: Card(
                       elevation: 5,
@@ -94,7 +92,8 @@ class _Waitlist extends State<Waitlist> {
                               SizedBox(
                                 width: sm.scaledWidth(10),
                                 child: Text(
-                                  waitlistData[index].tableCapacity,
+                                  waitlistData.data[index].noOfPerson
+                                      .toString(),
                                   style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.w400),
@@ -109,7 +108,7 @@ class _Waitlist extends State<Waitlist> {
                                     Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: Text(
-                                        waitlistData[index].name,
+                                        waitlistData.data[index].name,
                                         style: TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.w800),
@@ -118,7 +117,7 @@ class _Waitlist extends State<Waitlist> {
                                     Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: Text(
-                                        "${waitlistData[index].type} | ${waitlistData[index].time}",
+                                        "Walk-in | ${waitlistData.data[index].walkinAt}",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w400),
@@ -127,7 +126,7 @@ class _Waitlist extends State<Waitlist> {
                                     Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: AutoSizeText(
-                                        waitlistData[index].notes,
+                                        waitlistData.data[index].specialNotes,
                                         maxLines: 1,
                                         minFontSize: 16,
                                         overflow: TextOverflow.ellipsis,
@@ -144,7 +143,10 @@ class _Waitlist extends State<Waitlist> {
                                       IconButton(
                                         iconSize: sm.scaledWidth(8),
                                         icon: Icon(Icons.call, color: myRed),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          _callPhone(
+                                              'tel:${waitlistData.data[index].contact}');
+                                        },
                                       ),
                                       IconButton(
                                         iconSize: sm.scaledWidth(8),
@@ -157,7 +159,8 @@ class _Waitlist extends State<Waitlist> {
                                     children: [
                                       IconButton(
                                         iconSize: sm.scaledWidth(8),
-                                        icon: Icon(Icons.check_circle,color: myRed),
+                                        icon: Icon(Icons.check_circle,
+                                            color: myRed),
                                         onPressed: () {},
                                       ),
                                       IconButton(
@@ -197,7 +200,15 @@ class _Waitlist extends State<Waitlist> {
     );
   }
 
-  Widget _popupBody(WaitlistModel model) {
+  Widget _popupBodyShowDetail(WaitlistModel model) {
     return Container(child: WaitListDetail(waitlistData: model));
+  }
+
+  _callPhone(String phone) async {
+    if (await canLaunch(phone)) {
+      await launch(phone);
+    } else {
+      throw 'Could not Call Phone';
+    }
   }
 }

@@ -94,7 +94,7 @@ class _OfferState extends State<Offers> {
                   alignment: Alignment.center),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CreateOffer()));
+                    MaterialPageRoute(builder: (context) => CreateOffer())).whenComplete(() => null);
               },
             ),
           ],

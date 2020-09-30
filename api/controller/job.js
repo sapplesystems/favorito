@@ -102,7 +102,7 @@ exports.city_from_pincode = function (req, res, next) {
         var pincode = req.body.pincode;
         var sql = "SELECT id,city FROM cities WHERE id IN(SELECT city_id FROM pincodes WHERE pincode='" + pincode + "' GROUP BY city_id)";
         db.query(sql, function (err, result) {
-            return res.status(200).json({ status: 'success', message: 'success', data: result });
+            return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

@@ -97,21 +97,24 @@ class Data {
 class Branches {
   int id;
   String branchAddress;
-  String branchContact;
+  String branchName;
+  String branchPhoto;
 
-  Branches({this.id, this.branchAddress, this.branchContact});
+  Branches({this.id, this.branchAddress, this.branchName});
 
   Branches.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     branchAddress = json['branch_address'];
-    branchContact = json['branch_contact'];
+    branchName = json['branch_name'];
+    branchPhoto = json['branch_photo'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['branch_address'] = this.branchAddress;
-    data['branch_contact'] = this.branchContact;
+    data['branch_name'] = this.branchName;
+    data['branch_photo'] = this.branchPhoto;
     return data;
   }
 }

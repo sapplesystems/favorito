@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:outline_gradient_button/outline_gradient_button.dart';
@@ -10,7 +12,7 @@ class DatePicker extends StatefulWidget {
       {Key key, this.selectedDate, this.onChanged, this.selectedDateText})
       : super(key: key);
   final DateTime selectedDate;
-  final ValueChanged<DateTime> onChanged;
+  final Function(String) onChanged;
   String selectedDateText;
   @override
   _DatePicker createState() => _DatePicker();
@@ -25,11 +27,11 @@ class _DatePicker extends State<DatePicker> {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: widget.selectedDate,
-      firstDate: DateTime.now().subtract(Duration(days: _YEAR * 20)),
+      firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: _YEAR * 20)),
     );
     if (picked != null && picked != widget.selectedDate) {
-      // widget.onChanged(picked);
+      widget.onChanged(DateFormat('yyyy-MM-dd').format(picked).toString());
       widget.selectedDateText = DateFormat.yMMMd().format(picked);
     }
   }
