@@ -5,11 +5,18 @@ var db = require('../config/db');
  */
 exports.all_business_booking = function (req, res, next) {
     try {
+
         var business_id = req.userdata.business_id;
+
+        var Condition = " business_id='" + business_id + "' AND deleted_at IS NULL ";
+
+        if (req.body.booking_date != '' && req.body.booking_date != 'undefined' && req.body.booking_date != null) {
+            Condition += " AND DATE(created_datetime) = '" + req.body.booking_date + "' ";
+        }
         var sql = "SELECT id,`name`,contact,no_of_person,special_notes, \n\
                     DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
                     DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
-                    FROM business_booking WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
+                    FROM business_booking WHERE " + Condition;
         db.query(sql, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -40,7 +47,7 @@ exports.find_business_booking = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'success', data: result });
+            return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
