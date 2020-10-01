@@ -16,4 +16,5 @@ class User {
   String date;
   String slot;
   String noOfPeople;
+  String mobileNo;
 }

@@ -72,10 +72,10 @@ class _ContactPersonState extends State<ContactPerson> {
         for (var branch in _contactPersonData.data.branches) {
           BranchDetailsModel model = new BranchDetailsModel();
           model.id = branch.id.toString();
-          model.name = branch.branchContact;
+          model.name = branch.branchName;
           model.address = branch.branchAddress;
           model.isSelected = true;
-          model.imageUrl = "https://source.unsplash.com/random/400*400";
+          model.imageUrl = branch.branchPhoto;
           _selectedBranches.add(model);
         }
 
@@ -345,8 +345,27 @@ class _ContactPersonState extends State<ContactPerson> {
                                     suffixIcon: IconButton(
                                       icon: Icon(Icons.search),
                                       onPressed: () {
-                                        showPopup(context, _popupBody(),
-                                            'Select Branch');
+                                        WebService.funSearchBranches(
+                                                _myBranchSearchEditController
+                                                    .text)
+                                            .then((value) {
+                                          for (var branch in value.data) {
+                                            BranchDetailsModel model1 =
+                                                BranchDetailsModel();
+                                            model1.id = branch.id.toString();
+                                            model1.name = branch.businessName;
+                                            model1.address =
+                                                branch.buisnessAddress;
+                                            model1.imageUrl =
+                                                branch.photo == null
+                                                    ? ''
+                                                    : branch.photo;
+                                            model1.isSelected = false;
+                                            _searchedBranches.add(model1);
+                                          }
+                                          showPopup(context, _popupBody(),
+                                              'Select Branch');
+                                        });
                                       },
                                     ),
                                   ),
@@ -408,8 +427,8 @@ class _ContactPersonState extends State<ContactPerson> {
       context,
       PopupLayout(
         top: sm.scaledHeight(18),
-        left: sm.scaledWidth(10),
-        right: sm.scaledWidth(10),
+        left: sm.scaledWidth(5),
+        right: sm.scaledWidth(5),
         bottom: sm.scaledHeight(18),
         child: PopupContent(
           content: Scaffold(
@@ -435,22 +454,6 @@ class _ContactPersonState extends State<ContactPerson> {
   }
 
   Widget _popupBody() {
-    BranchDetailsModel model1 = BranchDetailsModel();
-    model1.id = "1";
-    model1.name = "name";
-    model1.address = "address address address";
-    model1.imageUrl = "https://source.unsplash.com/random/400*400";
-    model1.isSelected = false;
-    _searchedBranches.add(model1);
-
-    BranchDetailsModel model2 = BranchDetailsModel();
-    model2.id = "1";
-    model2.name = "name";
-    model2.address = "address address address";
-    model2.imageUrl = "https://source.unsplash.com/random/400*400";
-    model2.isSelected = false;
-    _searchedBranches.add(model2);
-
     return Container(
       child: BranchDetailsListViewAdd(
           inputList: _searchedBranches, selectedList: _selectedBranches),

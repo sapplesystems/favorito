@@ -1,4 +1,5 @@
 class CreateJobRequestModel {
+  String id;
   String title;
   String description;
   String skills;

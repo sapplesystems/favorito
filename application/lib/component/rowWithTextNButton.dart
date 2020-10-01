@@ -1,3 +1,4 @@
+import 'package:Favorito/component/TxtBorder.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -30,29 +31,10 @@ class rowWithTextNButton extends StatelessWidget {
             onTap: function,
             child: Visibility(
               visible: check == "0" ? true : false,
-              child: redButton(txt2),
+              child: TxtBorder(bosrderColor: myRed,h: 20,w:54,txt: txt2),
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget redButton(String txt2) {
-    return Container(
-      width: 54,
-      height: 20,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          color: myRed,
-          width: 1,
-        ),
-      ),
-      child: Text(
-        txt2,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.red),
       ),
     );
   }

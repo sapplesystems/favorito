@@ -1,9 +1,17 @@
+
+import 'package:flutter/material.dart';
+import '../../component/DatePicker.dart';
+import '../../component/TimePicker.dart';
+import '../../component/roundedButton.dart';
+import '../../component/txtfieldboundry.dart';
+
 import 'package:Favorito/component/DatePicker.dart';
 import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:flutter/material.dart';
-
+import 'package:Favorito/model/booking/CreateBookingModel.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:bot_toast/bot_toast.dart';
 import '../../config/SizeManager.dart';
 
 class ManualBooking extends StatefulWidget {
@@ -24,10 +32,8 @@ class _ManualBooking extends State<ManualBooking> {
   final _myNoOfPersonEditController = TextEditingController();
   final _myNotesEditController = TextEditingController();
 
-  TimeOfDay _selectedTime;
   TimeOfDay _intitialTime;
 
-  DateTime _selectedDate;
   DateTime _initialDate;
 
   initializeDefaultValues() {
@@ -40,16 +46,21 @@ class _ManualBooking extends State<ManualBooking> {
     _selectedTimeText = 'Select Time';
 
     _intitialTime = TimeOfDay.now();
-    _selectedTime = null;
 
     _initialDate = DateTime.now();
-    _selectedDate = null;
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      initializeDefaultValues();
+    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    initializeDefaultValues();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -98,6 +109,9 @@ class _ManualBooking extends State<ManualBooking> {
                                           child: DatePicker(
                                             selectedDateText: _selectedDateText,
                                             selectedDate: _initialDate,
+                                            onChanged: ((value) {
+                                              _selectedDateText = value;
+                                            }),
                                           ),
                                         ),
                                         SizedBox(
@@ -105,6 +119,9 @@ class _ManualBooking extends State<ManualBooking> {
                                           child: TimePicker(
                                             selectedTimeText: _selectedTimeText,
                                             selectedTime: _intitialTime,
+                                            onChanged: ((value) {
+                                              _selectedTimeText = value;
+                                            }),
                                           ),
                                         ),
                                       ],
@@ -156,6 +173,26 @@ class _ManualBooking extends State<ManualBooking> {
                 child: roundedButton(
                   clicker: () {
                     if (_formKey.currentState.validate()) {
+                      if (_selectedDateText == 'Select Date') {
+                        BotToast.showText(text: "Please select a date");
+                        return;
+                      }
+                      if (_selectedTimeText == 'Select Time') {
+                        BotToast.showText(text: "Please select a time");
+                        return;
+                      }
+                      CreateBookingModel request = CreateBookingModel();
+                      request.name = _myNameEditController.text;
+                      request.mobileNo = _myContactEditController.text;
+                      request.noOfPerson = _myNoOfPersonEditController.text;
+                      request.notes = _myNotesEditController.text;
+                      request.createdDate = _selectedDateText;
+                      request.createdTime = _selectedTimeText;
+                      WebService.funCreateManualBooking(request).then((value) {
+                        BotToast.showText(text: value.message);
+                        initializeDefaultValues();
+                        _autoValidateForm = true;
+                      });
                     } else {
                       initializeDefaultValues();
                       _autoValidateForm = true;

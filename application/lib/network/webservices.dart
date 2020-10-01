@@ -1,12 +1,19 @@
 import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
+import 'package:Favorito/model/booking/CreateBookingModel.dart';
+import 'package:Favorito/model/business/BusinessProfileModel.dart';
+import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
+import 'package:Favorito/model/contactPerson/SearchBranchResonseModel.dart';
 import 'package:Favorito/model/contactPerson/UpdateContactPerson.dart';
+import 'package:Favorito/model/job/CityModelResponse.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
 import 'package:Favorito/model/job/CreateJobRequiredDataModel.dart';
+import 'package:Favorito/model/job/EditJobDataModel.dart';
 import 'package:Favorito/model/job/JobListRequestModel.dart';
+import 'package:Favorito/model/job/PincodeListModel.dart';
 import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
 import 'package:Favorito/model/dashModel.dart';
 import 'package:Favorito/model/loginModel.dart';
@@ -17,7 +24,9 @@ import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
 import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
+import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
+import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
@@ -165,7 +174,9 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
-    response = await dio.post(serviceFunction.funValidPincode, options: _opt);
+    Map<String, dynamic> _map = {"pincode": pincode};
+    response = await dio.post(serviceFunction.funValidPincode,
+        data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData8:${_returnData.status}");
@@ -188,8 +199,7 @@ class WebService {
     return _returnData;
   }
 
-  static Future<CreateJobRequiredDataModel> funGetCreteJobDefaultData(
-      int jobId) async {
+  static Future<CreateJobRequiredDataModel> funGetCreteJobDefaultData() async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -334,7 +344,186 @@ class WebService {
         data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData5:${_returnData.status}");
+    return _returnData;
+  }
+
+  static Future<CityModelResponse> funGetCityByPincode(String pincode) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"pincode": pincode};
+    CityModelResponse _returnData = CityModelResponse();
+    response = await dio.post(serviceFunction.funGetCityByPincode,
+        data: _map, options: _opt);
+    _returnData =
+        CityModelResponse.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<PincodeListModel> funGetPicodesForCity(int cityId) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"city_id": cityId};
+    PincodeListModel _returnData = PincodeListModel();
+    response = await dio.post(serviceFunction.funGetPincodesForCity,
+        data: _map, options: _opt);
+    _returnData =
+        PincodeListModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<CatalogListRequestModel> funGetCatalogs() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    CatalogListRequestModel _returnData = CatalogListRequestModel();
+
+    response = await dio.post(serviceFunction.funGetCatalogs,
+        data: null, options: _opt);
+    _returnData = CatalogListRequestModel.fromJson(
+        convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<WaitlistListModel> funGetWaitlist() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    WaitlistListModel _returnData = WaitlistListModel();
+
+    response = await dio.post(serviceFunction.funGetWaitlist,
+        data: null, options: _opt);
+    _returnData =
+        WaitlistListModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> funCreateManualBooking(
+      CreateBookingModel requestData) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    Map<String, dynamic> _map = {
+      "name": requestData.name,
+      "contact": requestData.mobileNo,
+      "no_of_person": requestData.noOfPerson,
+      "special_notes": requestData.notes,
+      "created_date": requestData.createdDate,
+      "created_time": requestData.createdTime
+    };
+
+    response = await dio.post(serviceFunction.funCreateManualBooking,
+        data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<SearchBranchResponseModel> funSearchBranches(
+      String searchText) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"search_branch": searchText};
+    SearchBranchResponseModel _returnData = SearchBranchResponseModel();
+    response = await dio.post(serviceFunction.funSearchBranches,
+        data: _map, options: _opt);
+    _returnData = SearchBranchResponseModel.fromJson(
+        convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<BusinessProfileModel> funGetBusinessProfileData() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BusinessProfileModel _returnData = BusinessProfileModel();
+    response = await dio.post(serviceFunction.funGetBusinessProfileData,
+        data: null, options: _opt);
+    _returnData =
+        BusinessProfileModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<OfferListDataModel> funGetOfferData() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    OfferListDataModel _returnData = OfferListDataModel();
+    response = await dio.post(serviceFunction.funGetOfferData,
+        data: null, options: _opt);
+    _returnData =
+        OfferListDataModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> funEditOffer(var requestData) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    Map<String, dynamic> _map = {
+      "offer_id": requestData.id,
+      "offer_title": requestData.title,
+      "offer_description": requestData.description,
+      "offer_status": requestData.selectedOfferState,
+      "offer_type": requestData.selectedOfferType
+    };
+    response =
+        await dio.post(serviceFunction.funEditOffer, data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData10:${_returnData.status}");
+    return _returnData;
+  }
+
+  static Future<EditJobDataModel> funGetEditJobData(var _jobId) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"job_id": _jobId};
+    EditJobDataModel _returnData = EditJobDataModel();
+    response = await dio.post(serviceFunction.funGetEditJobData,
+        data: _map, options: _opt);
+    _returnData =
+        EditJobDataModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> funEditJob(
+      CreateJobRequestModel requestData) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    Map<String, dynamic> _map = {
+      "id": requestData.id,
+      "title": requestData.title,
+      "description": requestData.description,
+      "skills": requestData.skills,
+      "contact_via": requestData.contact_via,
+      "contact_value": requestData.contact_value,
+      "city": requestData.city,
+      "pincode": requestData.pincode
+    };
+    response =
+        await dio.post(serviceFunction.funCreateJob, data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
     return _returnData;
   }
 }

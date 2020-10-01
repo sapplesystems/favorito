@@ -55,7 +55,7 @@ class _reviewListState extends State<reviewList> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.filter_alt, color: myRed, size: 30),
+                        Icon(Icons.filter, color: myRed, size: 30),
                         Row(
                           children: [
                             Text(

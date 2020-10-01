@@ -31,42 +31,40 @@ class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   child: Center(
-                    child: Center(
-                      child: ListTile(
-                        leading: Image.network(widget.inputList[index].imageUrl,
-                            height: sm.scaledHeight(8),
-                            fit: BoxFit.fill,
-                            width: sm.scaledHeight(8)),
-                        title: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Text(
-                            widget.inputList[index].name,
-                          ),
+                    child: ListTile(
+                      leading: Image.network(widget.inputList[index].imageUrl,
+                          height: sm.scaledHeight(8),
+                          fit: BoxFit.fill,
+                          width: sm.scaledHeight(8)),
+                      title: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text(
+                          widget.inputList[index].name,
                         ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Text(
-                            widget.inputList[index].address,
-                          ),
-                        ),
-                        trailing: widget.inputList[index].isSelected
-                            ? IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.inputList[index].isSelected = false;
-                                  });
-                                },
-                              )
-                            : IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.inputList[index].isSelected = true;
-                                  });
-                                },
-                              ),
                       ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text(
+                          widget.inputList[index].address,
+                        ),
+                      ),
+                      trailing: widget.inputList[index].isSelected
+                          ? IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                setState(() {
+                                  widget.inputList[index].isSelected = false;
+                                });
+                              },
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                setState(() {
+                                  widget.inputList[index].isSelected = true;
+                                });
+                              },
+                            ),
                     ),
                   ),
                 );
