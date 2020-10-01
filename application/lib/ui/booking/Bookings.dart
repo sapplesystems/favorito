@@ -13,7 +13,7 @@ import '../../config/SizeManager.dart';
 
 class Bookings extends StatefulWidget {
   @override
-  _Bookings createState() => _Bookings();
+ _Bookings createState() => _Bookings();
 }
 
 class _Bookings extends State<Bookings> {
@@ -60,8 +60,7 @@ class _Bookings extends State<Bookings> {
 
       User user = User();
       user.name = 'Jhon Hopkins';
-      user.userNotes =
-          'hsfk aslhkf shf lskagf salf ;jsfa saf jsa;f js;fj safj saf;jds flsd;fha sai;fh sea;if hasf;';
+      user.userNotes = 'User Note wi';
       user.slot = '13:00-14:00';
       user.date = '12 Jan';
       user.noOfPeople = '2 person';
@@ -179,7 +178,9 @@ class _Bookings extends State<Bookings> {
               ),
               Container(
                 height: sm.scaledHeight(24),
-                margin: EdgeInsets.all(20.0),
+                margin: EdgeInsets.symmetric(
+                    vertical: sm.scaledHeight(4),
+                    horizontal: sm.scaledWidth(8)),
                 child: GridView.builder(
                   itemCount: _slotInputList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -265,19 +266,17 @@ class _Bookings extends State<Bookings> {
                           itemCount: _userInputList.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
-                                elevation: 1,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(14)),
-                                ),
-                                child: Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        showPopup(context,
-                                            _popupBody(_userInputList[index]));
-                                      },
-                                      child: ListTile(
+                                elevation: 2,
+                                shape: rrb,
+                                borderOnForeground: true,
+                                child: InkWell(
+                                  onTap: () {
+                                    showPopup(context,
+                                        _popupBody(_userInputList[index]));
+                                  },
+                                  child: Column(
+                                    children: [
+                                      ListTile(
                                         title: Text(
                                           "${_userInputList[index].date} | ${_userInputList[index].slot} | ${_userInputList[index].noOfPeople} person",
                                           style: TextStyle(
@@ -291,13 +290,7 @@ class _Bookings extends State<Bookings> {
                                           size: 20,
                                         ),
                                       ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        showPopup(context,
-                                            _popupBody(_userInputList[index]));
-                                      },
-                                      child: ListTile(
+                                      ListTile(
                                         title: Text(
                                           _userInputList[index].name,
                                           style: TextStyle(
@@ -327,8 +320,8 @@ class _Bookings extends State<Bookings> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ));
                           }),
                     ),
