@@ -1,9 +1,9 @@
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/model/booking/BookingModel.dart';
-import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/ui/booking/BokingDetail.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/booking/ManualBooking.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +68,8 @@ class _Bookings extends State<Bookings> {
 
       model.userList.add(user);
       model.userList.add(user);
+      model.userList.add(user);
+      model.userList.add(user);
 
       _inputList.add(model);
 
@@ -110,8 +112,10 @@ class _Bookings extends State<Bookings> {
           ),
           actions: [
             IconButton(
-              icon: SvgPicture.asset('assets/icon/addWaitlist.svg',
-                  alignment: Alignment.center),
+              icon: Icon(
+                Icons.add_circle_outline,
+                size: 34,
+              ),
               onPressed: () {
                 Navigator.push(
                         context,
@@ -137,22 +141,19 @@ class _Bookings extends State<Bookings> {
             color: Color(0xfffff4f4),
           ),
           height: sm.scaledHeight(100),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    left: sm.scaledWidth(20),
-                    right: sm.scaledWidth(20),
-                    top: 8.0,
-                    bottom: 16.0),
+              Container(
+                height: sm.scaledHeight(6),
+                padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(30)),
                 child: DropdownSearch<String>(
                   validator: (v) => v == '' ? "required field" : null,
                   mode: Mode.MENU,
                   showSelectedItem: true,
                   selectedItem: _selectedDay,
                   items: _daysList != null ? _daysList : null,
-                  label: "Day",
+                  label: "",
                   hint: "Please Select day",
                   showSearchBox: false,
                   onChanged: (value) {
@@ -177,13 +178,13 @@ class _Bookings extends State<Bookings> {
                 ),
               ),
               Container(
-                height: sm.scaledHeight(25),
-                margin: EdgeInsets.all(16.0),
+                height: sm.scaledHeight(24),
+                margin: EdgeInsets.all(20.0),
                 child: GridView.builder(
                   itemCount: _slotInputList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      crossAxisSpacing: sm.scaledWidth(5),
+                      crossAxisSpacing: sm.scaledWidth(3),
                       mainAxisSpacing: sm.scaledHeight(0)),
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
@@ -242,125 +243,93 @@ class _Bookings extends State<Bookings> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(25.0))),
-                height: sm.scaledHeight(48),
+                padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                decoration: round30,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.symmetric(vertical: 16),
                       child: Center(
                         child: Text(
                           "User Details",
                           style: TextStyle(
-                              fontSize: 24.0, fontWeight: FontWeight.bold),
+                              fontSize: 22.0, fontWeight: FontWeight.w700),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: sm.scaledHeight(40),
+                    Container(
+                      height: sm.scaledHeight(50),
                       child: ListView.builder(
                           itemCount: _userInputList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                  elevation: 5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  child: Container(
-                                    height: sm.scaledHeight(18),
-                                    margin: EdgeInsets.all(16.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                showPopup(
-                                                    context,
-                                                    _popupBody(
-                                                        _userInputList[index]));
-                                              },
-                                              child: Text(
-                                                "${_userInputList[index].date} | ${_userInputList[index].slot} | ${_userInputList[index].noOfPeople} person",
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.grey),
-                                              ),
-                                            ),
-                                            IconButton(
-                                                icon: Icon(Icons.edit),
-                                                onPressed: null)
-                                          ],
+                            return Card(
+                                elevation: 1,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(14)),
+                                ),
+                                child: Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        showPopup(context,
+                                            _popupBody(_userInputList[index]));
+                                      },
+                                      child: ListTile(
+                                        title: Text(
+                                          "${_userInputList[index].date} | ${_userInputList[index].slot} | ${_userInputList[index].noOfPeople} person",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.grey),
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                showPopup(
-                                                    context,
-                                                    _popupBody(
-                                                        _userInputList[index]));
-                                              },
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    width: sm.scaledWidth(60),
-                                                    child: Text(
-                                                      _userInputList[index]
-                                                          .name,
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0),
-                                                    child: SizedBox(
-                                                      width: sm.scaledWidth(60),
-                                                      child: AutoSizeText(
-                                                        _userInputList[index]
-                                                            .userNotes,
-                                                        maxLines: 3,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        minFontSize: 12,
-                                                        maxFontSize: 14,
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            IconButton(
-                                                icon: Icon(Icons.call),
-                                                onPressed: null)
-                                          ],
-                                        )
-                                      ],
+                                        trailing: Icon(
+                                          Icons.edit,
+                                          color: myRed,
+                                          size: 20,
+                                        ),
+                                      ),
                                     ),
-                                  )),
-                            );
+                                    InkWell(
+                                      onTap: () {
+                                        showPopup(context,
+                                            _popupBody(_userInputList[index]));
+                                      },
+                                      child: ListTile(
+                                        title: Text(
+                                          _userInputList[index].name,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black),
+                                        ),
+                                        subtitle: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12),
+                                          child: AutoSizeText(
+                                            _userInputList[index].userNotes,
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            minFontSize: 12,
+                                            maxFontSize: 14,
+                                          ),
+                                        ),
+                                        trailing: Container(
+                                          decoration: bd1Red,
+                                          padding: EdgeInsets.all(6),
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: Icon(
+                                            Icons.call,
+                                            color: Colors.white,
+                                            size: 26,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ));
                           }),
                     ),
                   ],

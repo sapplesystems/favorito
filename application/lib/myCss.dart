@@ -7,6 +7,16 @@ BoxDecoration bd1 = BoxDecoration(
     border: Border.all(color: Colors.white),
     borderRadius: BorderRadius.all(Radius.circular(20)));
 
+BoxDecoration round30 = BoxDecoration(
+    color: Colors.white,
+    border: Border.all(color: Colors.white),
+    borderRadius: BorderRadius.all(Radius.circular(30)));
+
+BoxDecoration bd1Red = BoxDecoration(
+    color: myRed,
+    border: Border.all(color: Colors.white),
+    borderRadius: BorderRadius.all(Radius.circular(20)));
+
 BoxDecoration bd2 = BoxDecoration(
     color: Colors.white,
     border: Border.all(color: Colors.white),
