@@ -1,18 +1,25 @@
 var db = require('../config/db');
 
+var today = new Date();
+var today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
 /**
  * FETCH ALL BUSINESS BOOKING
  */
-exports.all_business_booking = function (req, res, next) {
+exports.all_business_booking = async function (req, res, next) {
     try {
-
+        var today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         var business_id = req.userdata.business_id;
 
         var Condition = " business_id='" + business_id + "' AND deleted_at IS NULL ";
 
         if (req.body.booking_date != '' && req.body.booking_date != 'undefined' && req.body.booking_date != null) {
-            Condition += " AND DATE(created_datetime) = '" + req.body.booking_date + "' ";
+            today_date = req.body.booking_date
         }
+        Condition += " AND DATE(created_datetime) = '" + today_date + "' ";
+
+        var slots = await exports.getBookingSlots(business_id, today_date);
+
         var sql = "SELECT id,`name`,contact,no_of_person,special_notes, \n\
                     DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
                     DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
@@ -21,7 +28,7 @@ exports.all_business_booking = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'success', data: result });
+            return res.status(200).json({ status: 'success', message: 'success', slots: slots, data: result });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -190,3 +197,55 @@ exports.get_setting = function (req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+
+/**
+ * GET THE BOOKING SLOTS
+ */
+exports.getBookingSlots = async function (business_id, date) {
+    try {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT start_time,end_time,slot_length \n\
+                        FROM business_booking_setting WHERE business_id='"+ business_id + "'";
+            db.query(sql, function (err, result) {
+                if (err) {
+                    return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                }
+                var starttime = result[0].start_time;
+                var endtime = result[0].end_time;
+                var interval = result[0].slot_length;
+                var timeslots = [];//[starttime];
+
+                while (starttime <= endtime) {
+                    var start_datetime = date + ' ' + starttime;
+                    starttime = addMinutes(starttime, interval);
+                    var end_datetime = date + ' ' + starttime;
+
+                    var sql = "SELECT COUNT(*) AS c, DATE_FORMAT('" + start_datetime + "','%H:%i') AS start_time, \n\
+                                DATE_FORMAT('"+ end_datetime + "','%H:%i') AS end_time \n\
+                                FROM business_booking WHERE business_id='" + business_id + "' \n\
+                    AND created_datetime>='" + start_datetime + "' AND created_datetime <'" + end_datetime + "' \n\
+                    AND deleted_at IS NULL";
+                    db.query(sql, function (e, r) {
+                        var obj = { start: r[0].start_time, end: r[0].end_time, booking_count: r[0].c };
+                        timeslots.push(obj);
+                    });
+                }
+                resolve(timeslots);
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
+
+/**
+ * ADDING MINUTE IN TIME TO CREATE SLOTS
+ */
+function addMinutes(time, minutes) {
+    var date = new Date(new Date(today_date + ' ' + time).getTime() + minutes * 60000);
+    var tempTime = ((date.getHours().toString().length == 1) ? '0' + date.getHours() : date.getHours()) + ':' +
+        ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
+        ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
+    return tempTime;
+}
