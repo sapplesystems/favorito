@@ -123,8 +123,17 @@ exports.save_setting = function (req, res, next) {
         var business_id = req.userdata.business_id;
         var update_column = " updated_at=NOW() ";
 
-        if (req.body.advance_booking_days != '' && req.body.advance_booking_days != 'undefined' && req.body.advance_booking_days != null) {
-            update_column += ",advance_booking_days='" + req.body.advance_booking_days + "'";
+        if (req.body.start_time != '' && req.body.start_time != 'undefined' && req.body.start_time != null) {
+            update_column += ",start_time='" + req.body.start_time + "'";
+        }
+        if (req.body.end_time != '' && req.body.end_time != 'undefined' && req.body.end_time != null) {
+            update_column += ",end_time='" + req.body.end_time + "'";
+        }
+        if (req.body.advance_booking_start_days != '' && req.body.advance_booking_start_days != 'undefined' && req.body.advance_booking_start_days != null) {
+            update_column += ",advance_booking_start_days='" + req.body.advance_booking_start_days + "'";
+        }
+        if (req.body.advance_booking_end_days != '' && req.body.advance_booking_end_days != 'undefined' && req.body.advance_booking_end_days != null) {
+            update_column += ",advance_booking_end_days='" + req.body.advance_booking_end_days + "'";
         }
         if (req.body.advance_booking_hours != '' && req.body.advance_booking_hours != 'undefined' && req.body.advance_booking_hours != null) {
             update_column += ",advance_booking_hours='" + req.body.advance_booking_hours + "'";
@@ -161,8 +170,8 @@ exports.save_setting = function (req, res, next) {
 exports.get_setting = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT advance_booking_days,advance_booking_hours,slot_length,\n\
-                            booking_per_slot,booking_per_day,announcement \n\
+        var sql = "SELECT start_time,end_time,advance_booking_start_days,advance_booking_end_days, \n\
+                    advance_booking_hours,slot_length,booking_per_slot,booking_per_day,announcement \n\
                     FROM business_booking_setting WHERE business_id='"+ business_id + "'";
         db.query(sql, function (err, result) {
             if (err) {
