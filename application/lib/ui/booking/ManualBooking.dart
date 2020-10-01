@@ -1,3 +1,10 @@
+
+import 'package:flutter/material.dart';
+import '../../component/DatePicker.dart';
+import '../../component/TimePicker.dart';
+import '../../component/roundedButton.dart';
+import '../../component/txtfieldboundry.dart';
+
 import 'package:Favorito/component/DatePicker.dart';
 import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
@@ -5,9 +12,6 @@ import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import '../../config/SizeManager.dart';
 
 class ManualBooking extends StatefulWidget {
