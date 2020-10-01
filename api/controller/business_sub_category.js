@@ -8,7 +8,7 @@ exports.all_business_sub_category = function (req, res, next) {
         if (req.body.category_id == '' || req.body.category_id == 'undefined' || req.body.category_id == null) {
             return res.status(403).json({ status: 'error', message: 'Business category id required' });
         }
-        var sql = "SELECT id, `sub_category_name` FROM business_sub_categories WHERE business_category_id='" + req.body.category_id + "' and is_activated='1' and deleted_at IS NULL";
+        var sql = "SELECT id, category_name as `sub_category_name` FROM business_categories WHERE parent_id='" + req.body.category_id + "' and is_activated='1' and deleted_at IS NULL";
         db.query(sql, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
