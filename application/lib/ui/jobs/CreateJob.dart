@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class CreateJob extends StatefulWidget {
   final int _jobId;
   CreateJob(this._jobId);
@@ -44,28 +45,63 @@ class _CreateJobState extends State<CreateJob> {
 
   @override
   void initState() {
-    WebService.funGetCreteJobDefaultData(_jobId).then((value) {
-      setState(() {
-        _contactOptionsList.clear();
-        _cityList.clear();
-        _contactOptionsList = value.data.contactVia;
-        _cityList = value.data.cityList;
+    if (_jobId == null) {
+      WebService.funGetCreteJobDefaultData().then((value) {
+        setState(() {
+          _contactOptionsList.clear();
+          _cityList.clear();
+          _contactOptionsList = value.data.contactVia;
+          _cityList = value.data.cityList;
+        });
       });
-    });
+    } else {
+      WebService.funGetEditJobData(_jobId).then((value) {
+        setState(() {
+          _contactOptionsList.clear();
+          _cityList.clear();
+          _contactOptionsList = value.verbose.contactVia;
+          for (var temp in value.verbose.cityList) {
+            CityList city = CityList();
+            city.id = temp.id;
+            city.city = temp.city;
+            _cityList.add(city);
+          }
+          var tempList = value.data[0].skills.split(",");
+          for (var temp in tempList) {
+            SkillListRequiredDataModel skill =
+                SkillListRequiredDataModel(temp, tempList.indexOf(temp));
+            _selectedSkillList.add(skill);
+          }
+          _selectedContactOption = value.data[0].contactVia;
+          for (var city in _cityList) {
+            if (city.id == value.data[0].id) {
+              _selectedCity = city;
+              break;
+            }
+          }
+          _myTitleEditController.text = value.data[0].title;
+          _myDescriptionEditController.text = value.data[0].description;
+          _myContactEditController.text = value.data[0].contactVia;
+          _myPincodeEditController.text = value.data[0].pincode;
+        });
+      });
+    }
     super.initState();
     initializeDefaultValues();
   }
 
   initializeDefaultValues() {
-    _selectedSkillList.clear();
-    _contactHint = '';
-    _selectedContactOption = '';
-    _selectedCity = null;
-    _autoValidateForm = false;
-    _myTitleEditController.text = '';
-    _myDescriptionEditController.text = '';
-    _myContactEditController.text = '';
-    _myPincodeEditController.text = '';
+    if (_jobId == null) {
+      _selectedSkillList.clear();
+      _contactHint = '';
+      _selectedContactOption = '';
+      _selectedCity = null;
+      _autoValidateForm = false;
+      _myTitleEditController.text = '';
+      _myDescriptionEditController.text = '';
+      _myContactEditController.text = '';
+      _myPincodeEditController.text = '';
+    }
   }
 
   @override
@@ -319,15 +355,29 @@ class _CreateJobState extends State<CreateJob> {
                             _myContactEditController.text;
                         _requestData.city = _selectedCity.id.toString();
                         _requestData.pincode = _myPincodeEditController.text;
-                        WebService.funCreateJob(_requestData).then((value) {
-                          if (value.status == 'success') {
-                            setState(() {
-                              initializeDefaultValues();
-                            });
-                          } else {
-                            BotToast.showText(text: value.message);
-                          }
-                        });
+                        if (_jobId == null) {
+                          WebService.funCreateJob(_requestData).then((value) {
+                            if (value.status == 'success') {
+                              setState(() {
+                                BotToast.showText(text: value.message);
+                                initializeDefaultValues();
+                              });
+                            } else {
+                              BotToast.showText(text: value.message);
+                            }
+                          });
+                        } else {
+                          _requestData.id = _jobId.toString();
+                          WebService.funEditJob(_requestData).then((value) {
+                            if (value.status == 'success') {
+                              setState(() {
+                                BotToast.showText(text: value.message);
+                              });
+                            } else {
+                              BotToast.showText(text: value.message);
+                            }
+                          });
+                        }
                       } else {
                         _autoValidateForm = true;
                       }

@@ -28,4 +28,8 @@ class serviceFunction {
   static String funCreateManualBooking = baseUrl2 + 'business-booking/create';
   static String funSearchBranches = baseUrl2 + 'business-user/search-branch';
   static String funGetBusinessProfileData = baseUrl2 + 'business-user/profile';
+  static String funGetOfferData = baseUrl2 + 'offer/list';
+  static String funEditOffer = baseUrl2 + 'offer/edit';
+  static String funGetEditJobData = baseUrl2 + 'job/detail';
+  static String funEditJob = baseUrl2 + 'job/edit';
 }

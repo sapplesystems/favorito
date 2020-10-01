@@ -2,6 +2,7 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
+import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -11,6 +12,10 @@ import 'package:flutter/widgets.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
 class CreateOffer extends StatefulWidget {
+  final OfferDataModel offerData;
+
+  CreateOffer({this.offerData});
+
   @override
   _CreateOfferState createState() => _CreateOfferState();
 }
@@ -30,21 +35,28 @@ class _CreateOfferState extends State<CreateOffer> {
 
   @override
   void initState() {
-    WebService.funGetCreateOfferDefaultData().then((value) {
-      setState(() {
-        _offerRequiredData = value;
-      });
-    });
-    super.initState();
     initializeDefaultValues();
+    super.initState();
   }
 
   initializeDefaultValues() {
-    _selectedOfferState = '';
-    _selectedOfferType = '';
-    _autoValidateForm = false;
-    _myTitleEditController.text = '';
-    _myDescriptionEditController.text = '';
+    WebService.funGetCreateOfferDefaultData().then((value) {
+      setState(() {
+        _offerRequiredData = value;
+        if (widget.offerData == null) {
+          _selectedOfferState = '';
+          _selectedOfferType = '';
+          _myTitleEditController.text = '';
+          _myDescriptionEditController.text = '';
+        } else {
+          _selectedOfferState = widget.offerData.offerStatus;
+          _selectedOfferType = widget.offerData.offerType;
+          _myTitleEditController.text = widget.offerData.offerTitle;
+          _myDescriptionEditController.text = widget.offerData.offerDescription;
+        }
+        _autoValidateForm = false;
+      });
+    });
   }
 
   @override
@@ -62,7 +74,7 @@ class _CreateOfferState extends State<CreateOffer> {
             color: Colors.black, //change your color here
           ),
           title: Text(
-            "Create Notification",
+            "Create Offer",
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -167,15 +179,29 @@ class _CreateOfferState extends State<CreateOffer> {
                             _myDescriptionEditController.text;
                         requestData.selectedOfferState = _selectedOfferState;
                         requestData.selectedOfferType = _selectedOfferType;
-                        WebService.funCreateOffer(requestData).then((value) {
-                          if (value.status == 'success') {
-                            setState(() {
-                              initializeDefaultValues();
-                            });
-                          } else {
-                            BotToast.showText(text: value.message);
-                          }
-                        });
+                        if (widget.offerData == null) {
+                          WebService.funCreateOffer(requestData).then((value) {
+                            if (value.status == 'success') {
+                              setState(() {
+                                initializeDefaultValues();
+                                BotToast.showText(text: value.message);
+                              });
+                            } else {
+                              BotToast.showText(text: value.message);
+                            }
+                          });
+                        } else {
+                          requestData.id = widget.offerData.id.toString();
+                          WebService.funEditOffer(requestData).then((value) {
+                            if (value.status == 'success') {
+                              setState(() {
+                                BotToast.showText(text: value.message);
+                              });
+                            } else {
+                              BotToast.showText(text: value.message);
+                            }
+                          });
+                        }
                       } else {
                         _autoValidateForm = true;
                       }
