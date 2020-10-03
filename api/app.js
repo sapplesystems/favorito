@@ -21,6 +21,7 @@ var BusinessClaim = require('./routes/business_claim');
 var BusinessHighLight = require('./routes/business_highlight');
 var BusinessWaitlist = require('./routes/business_waitlist');
 var BusinessBooking = require('./routes/business_booking');
+var BusinessAppoinment = require('./routes/business_appoinment');
 var BusinessAdSpentCampaign = require('./routes/business_ad_spent_campaign');
 
 var app = express();
@@ -52,6 +53,7 @@ app.use('/api/business-claim', BusinessClaim);
 app.use('/api/business-highlight', BusinessHighLight);
 app.use('/api/business-waitlist', BusinessWaitlist);
 app.use('/api/business-booking', BusinessBooking);
+app.use('/api/business-appoinment', BusinessAppoinment);
 app.use('/api/business-ad-spent-campaign', BusinessAdSpentCampaign);
 
 // catch 404 and forward to error handler
