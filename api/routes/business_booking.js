@@ -16,6 +16,11 @@ router.post('/list', CheckAuth, BusinessBookingController.all_business_booking);
 router.post('/detail', CheckAuth, BusinessBookingController.find_business_booking);
 
 /**
+ * EDIT BUSINESS BOOKING BY ID
+ */
+router.post('/edit', CheckAuth, BusinessBookingController.edit_business_booking);
+
+/**
  * CREATE A NEW MANUAL BOOKING
  */
 router.post('/create', CheckAuth, BusinessBookingController.create_manual_booking);

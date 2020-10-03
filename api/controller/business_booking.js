@@ -63,6 +63,57 @@ exports.find_business_booking = function (req, res, next) {
 
 
 /**
+ * EDIT BUSINESS BOOKING BY ID
+ */
+exports.edit_business_booking = function (req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+        if (req.body.booking_id == '' || req.body.booking_id == 'undefined' || req.body.booking_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Booking id not found.' });
+        }
+        var booking_id = req.body.booking_id;
+        var update_columns = " updated_at=now() ";
+
+        if (req.body.name != '' && req.body.name != 'undefined' && req.body.name != null) {
+            update_columns += ", `name`='" + req.body.name + "' ";
+        }
+        if (req.body.contact != '' && req.body.contact != 'undefined' && req.body.contact != null) {
+            update_columns += ", `contact`='" + req.body.contact + "' ";
+        }
+        if (req.body.no_of_person != '' && req.body.no_of_person != 'undefined' && req.body.no_of_person != null) {
+            update_columns += ", `no_of_person`='" + req.body.no_of_person + "' ";
+        }
+        if (req.body.special_notes != '' && req.body.special_notes != 'undefined' && req.body.special_notes != null) {
+            update_columns += ", `special_notes`='" + req.body.special_notes + "' ";
+        }
+        var created_date = '';
+        var created_time = '';
+        if (req.body.created_date != '' && req.body.created_date != 'undefined' && req.body.created_date != null) {
+            created_date = req.body.created_date;
+        }
+        if (req.body.created_time != '' && req.body.created_time != 'undefined' && req.body.created_time != null) {
+            created_time = req.body.created_time;
+        }
+
+        if (created_date != '' && created_time != '') {
+            var created_datetime = created_date + ' ' + created_time;
+            update_columns += ", `created_datetime`='" + created_datetime + "' ";
+        }
+
+        var sql = "UPDATE `business_booking` SET " + update_columns + " WHERE id='" + booking_id + "'";
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'Booking updated successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+
+/**
  * CREATE A NEW MANUAL BOOKING
  */
 exports.create_manual_booking = function (req, res, next) {
