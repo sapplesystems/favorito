@@ -83,15 +83,17 @@ exports.create_manual_booking = function (req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Time not found.' });
         }
 
-        var name = req.body.name;
-        var contact = req.body.contact;
-        var no_of_person = req.body.no_of_person;
-        var special_notes = req.body.special_notes;
-        var created_datetime = req.body.created_date + ' ' + req.body.created_time;
+        var postval = {
+            business_id: business_id,
+            name: req.body.name,
+            contact: req.body.contact,
+            no_of_person: req.body.no_of_person,
+            special_notes: req.body.special_notes,
+            created_datetime: req.body.created_date + ' ' + req.body.created_time,
+        };
 
-        var sql = "INSERT INTO business_booking (business_id,`name`,contact,no_of_person,special_notes,created_datetime) \n\
-                    VALUES('" + business_id + "','" + name + "','" + contact + "','" + no_of_person + "','" + special_notes + "','" + created_datetime + "')";
-        db.query(sql, function (err, result) {
+        var sql = "INSERT INTO business_booking SET ?";
+        db.query(sql, postval, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }

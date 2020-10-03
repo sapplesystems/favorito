@@ -129,7 +129,7 @@ exports.getAllPersonList = async function (req, res, next) {
 /**
  * GET ALL SERVICE LIST
  */
-exports.getAllServiceList = async function (req, res, next) { 
+exports.getAllServiceList = async function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = await exports.getAllServices(business_id);
@@ -151,7 +151,7 @@ exports.getAllRestrictionList = async function (req, res, next) {
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
- };
+};
 
 
 /**
@@ -358,3 +358,188 @@ exports.get_setting = async function (req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+
+/**
+ * CREATE A NEW MANUAL APPOINTMENT
+ */
+exports.createAppointment = function (req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+
+        if (req.body.name == '' || req.body.name == 'undefined' || req.body.name == null) {
+            return res.status(403).json({ status: 'error', message: 'Name not found.' });
+        } else if (req.body.contact == '' || req.body.contact == 'undefined' || req.body.contact == null) {
+            return res.status(403).json({ status: 'error', message: 'Contact not found.' });
+        } else if (req.body.service_id == '' || req.body.service_id == 'undefined' || req.body.service_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Service id not found.' });
+        } else if (req.body.person_id == '' || req.body.person_id == 'undefined' || req.body.person_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Person id not found.' });
+        } else if (req.body.special_notes == '' || req.body.special_notes == 'undefined' || req.body.special_notes == null) {
+            return res.status(403).json({ status: 'error', message: 'Special notes not found.' });
+        } else if (req.body.created_date == '' || req.body.created_date == 'undefined' || req.body.created_date == null) {
+            return res.status(403).json({ status: 'error', message: 'Date not found.' });
+        } else if (req.body.created_time == '' || req.body.created_time == 'undefined' || req.body.created_time == null) {
+            return res.status(403).json({ status: 'error', message: 'Time not found.' });
+        }
+
+
+        var postval = {
+            business_id: business_id,
+            name: req.body.name,
+            contact: req.body.contact,
+            service_id: req.body.service_id,
+            person_id: req.body.person_id,
+            special_notes: req.body.special_notes,
+            created_datetime: req.body.created_date + ' ' + req.body.created_time,
+        };
+
+        var sql = "INSERT INTO business_appointment SET ?";
+        db.query(sql, postval, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'Manual appointment created successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+/**
+ * FIND BUSINESS APPOINTMENT BY ID
+ */
+exports.findAppointmentById = async function (req, res, next) {
+    try {
+        if (req.body.appointment_id == '' || req.body.appointment_id == 'undefined' || req.body.appointment_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Appointment id not found.' });
+        }
+        var business_id = req.userdata.business_id;
+        var person_list = await exports.getAllPersons(business_id);
+        var service_list = await exports.getAllServices(business_id);
+        var verbose = {
+            person_list: person_list,
+            service_list: service_list
+        };
+
+        var appointment_id = req.body.appointment_id;
+        var sql = "SELECT id,`name`,contact,service_id,person_id,special_notes, \n\
+                    DATE_FORMAT(created_datetime, '%d-%m-%Y') AS created_date, \n\
+                    DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
+                    FROM business_appointment WHERE id='"+ appointment_id + "' AND business_id='" + business_id + "' AND deleted_at IS NULL";
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'success', verbose: verbose, data: result[0] });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+/**
+ * DELETE MANUAL APPOINTMENT
+ */
+exports.deleteAppointment = function (req, res, next) {
+    try {
+        if (req.body.appointment_id == '' || req.body.appointment_id == 'undefined' || req.body.appointment_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Appointment id not found.' });
+        }
+        var business_id = req.userdata.business_id;
+        var appointment_id = req.body.appointment_id;
+
+        var sql = "UPDATE business_appointment SET deleted_at = NOW() WHERE id='" + appointment_id + "'";
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'Manual appointment deleted successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+/**
+ * FETCH ALL BUSINESS APPOINTMENT
+ */
+exports.listAllAppointment = async function (req, res, next) {
+    try {
+        var today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var business_id = req.userdata.business_id;
+
+        var Condition = " business_id='" + business_id + "' AND deleted_at IS NULL ";
+
+        if (req.body.appointment_date != '' && req.body.appointment_date != 'undefined' && req.body.appointment_date != null) {
+            today_date = req.body.appointment_date
+        }
+        Condition += " AND DATE(created_datetime) = '" + today_date + "' ";
+
+        var slots = await exports.getAppointmentSlots(business_id, today_date);
+
+        var sql = "SELECT id,`name`,contact,special_notes, \n\
+                    DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
+                    DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
+                    FROM business_appointment WHERE " + Condition;
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'success', slots: slots, data: result });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+/**
+ * GET THE APPOINTMENT SLOTS
+ */
+exports.getAppointmentSlots = async function (business_id, date) {
+    try {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT start_time,end_time,slot_length \n\
+                        FROM business_appointment_setting WHERE business_id='"+ business_id + "'";
+            db.query(sql, function (err, result) {
+                if (err) {
+                    return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                }
+                var starttime = result[0].start_time;
+                var endtime = result[0].end_time;
+                var interval = result[0].slot_length;
+                var timeslots = [];//[starttime];
+
+                while (starttime <= endtime) {
+                    var start_datetime = date + ' ' + starttime;
+                    starttime = addMinutes(starttime, interval);
+                    var end_datetime = date + ' ' + starttime;
+
+                    var sql = "SELECT COUNT(*) AS c, DATE_FORMAT('" + start_datetime + "','%H:%i') AS start_time, \n\
+                                DATE_FORMAT('"+ end_datetime + "','%H:%i') AS end_time \n\
+                                FROM business_appointment WHERE business_id='" + business_id + "' \n\
+                    AND created_datetime>='" + start_datetime + "' AND created_datetime <'" + end_datetime + "' \n\
+                    AND deleted_at IS NULL";
+                    db.query(sql, function (e, r) {
+                        var obj = { start: r[0].start_time, end: r[0].end_time, appointment_count: r[0].c };
+                        timeslots.push(obj);
+                    });
+                }
+                resolve(timeslots);
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
+
+/**
+ * ADDING MINUTE IN TIME TO CREATE SLOTS
+ */
+function addMinutes(time, minutes) {
+    var date = new Date(new Date(today_date + ' ' + time).getTime() + minutes * 60000);
+    var tempTime = ((date.getHours().toString().length == 1) ? '0' + date.getHours() : date.getHours()) + ':' +
+        ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
+        ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
+    return tempTime;
+}

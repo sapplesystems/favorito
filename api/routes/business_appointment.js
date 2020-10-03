@@ -70,4 +70,25 @@ router.post('/save-setting', CheckAuth, BusinessAppointmentController.save_setti
  */
 router.post('/setting', CheckAuth, BusinessAppointmentController.get_setting);
 
+/**
+ * CREATE A NEW APPOINTMENT
+ */
+router.post('/create', CheckAuth, BusinessAppointmentController.createAppointment);
+
+/**
+ * FIND BUSINESS APPOINTENT BY ID
+ */
+router.post('/detail', CheckAuth, BusinessAppointmentController.findAppointmentById);
+
+/**
+ * DELETE MANUAL APPOINTMENT
+ */
+router.post('/delete', CheckAuth, BusinessAppointmentController.deleteAppointment);
+
+
+/**
+ * FETCH ALL BUSINESS APPOINTMENT
+ */
+router.post('/list', CheckAuth, BusinessAppointmentController.listAllAppointment);
+
 module.exports = router;
