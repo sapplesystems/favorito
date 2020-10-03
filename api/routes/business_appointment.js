@@ -81,6 +81,11 @@ router.post('/create', CheckAuth, BusinessAppointmentController.createAppointmen
 router.post('/detail', CheckAuth, BusinessAppointmentController.findAppointmentById);
 
 /**
+ * EDIT BUSINESS APPOINTENT BY ID
+ */
+router.post('/edit', CheckAuth, BusinessAppointmentController.editAppointment);
+
+/**
  * DELETE MANUAL APPOINTMENT
  */
 router.post('/delete', CheckAuth, BusinessAppointmentController.deleteAppointment);

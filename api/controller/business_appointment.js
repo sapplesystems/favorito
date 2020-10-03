@@ -439,6 +439,59 @@ exports.findAppointmentById = async function (req, res, next) {
 };
 
 /**
+ * EDIT BUSINESS APPOINTMENT BY ID
+ */
+exports.editAppointment = function (req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+        if (req.body.appointment_id == '' || req.body.appointment_id == 'undefined' || req.body.appointment_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Appointment id not found.' });
+        }
+        var appointment_id = req.body.appointment_id;
+        var update_columns = " updated_at=now() ";
+
+        if (req.body.name != '' && req.body.name != 'undefined' && req.body.name != null) {
+            update_columns += ", `name`='" + req.body.name + "' ";
+        }
+        if (req.body.contact != '' && req.body.contact != 'undefined' && req.body.contact != null) {
+            update_columns += ", `contact`='" + req.body.contact + "' ";
+        }
+        if (req.body.service_id != '' && req.body.service_id != 'undefined' && req.body.service_id != null) {
+            update_columns += ", `service_id`='" + req.body.service_id + "' ";
+        }
+        if (req.body.person_id != '' && req.body.person_id != 'undefined' && req.body.person_id != null) {
+            update_columns += ", `person_id`='" + req.body.person_id + "' ";
+        }
+        if (req.body.special_notes != '' && req.body.special_notes != 'undefined' && req.body.special_notes != null) {
+            update_columns += ", `special_notes`='" + req.body.special_notes + "' ";
+        }
+        var created_date = '';
+        var created_time = '';
+        if (req.body.created_date != '' && req.body.created_date != 'undefined' && req.body.created_date != null) {
+            created_date = req.body.created_date;
+        }
+        if (req.body.created_time != '' && req.body.created_time != 'undefined' && req.body.created_time != null) {
+            created_time = req.body.created_time;
+        }
+
+        if (created_date != '' && created_time != '') {
+            var created_datetime = created_date + ' ' + created_time;
+            update_columns += ", `created_datetime`='" + created_datetime + "' ";
+        }
+
+        var sql = "UPDATE `business_appointment` SET " + update_columns + " WHERE id='" + appointment_id + "'";
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'Appointment updated successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+/**
  * DELETE MANUAL APPOINTMENT
  */
 exports.deleteAppointment = function (req, res, next) {
