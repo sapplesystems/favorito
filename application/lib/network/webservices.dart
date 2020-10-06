@@ -60,6 +60,7 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     dashModel _data = dashModel();
     print("Request URL:${serviceFunction.funDash}");
+    print("Response:${response.toString()}");
     response = await dio.post(serviceFunction.funDash, options: _opt);
     if (response.statusCode == 200) {
       _data = dashModel.fromJson(convert.json.decode(response.toString()));

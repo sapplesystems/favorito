@@ -3,7 +3,7 @@
   "packages": [
     {
       "name": "async",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/async-2.5.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/async-2.5.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -21,7 +21,7 @@
     },
     {
       "name": "boolean_selector",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -33,25 +33,25 @@
     },
     {
       "name": "characters",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "charcode",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/charcode-1.2.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/charcode-1.2.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "clock",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -93,7 +93,7 @@
     },
     {
       "name": "fake_async",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/fake_async-1.1.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -243,13 +243,13 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.10-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.10-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -267,7 +267,7 @@
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/path-1.8.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/path-1.8.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -393,19 +393,19 @@
     },
     {
       "name": "source_span",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0-nullsafety.2",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -417,19 +417,19 @@
     },
     {
       "name": "string_scanner",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0-nullsafety.1",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/test_api-0.2.19-nullsafety",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/test_api-0.2.19-nullsafety.2",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -441,7 +441,7 @@
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -483,7 +483,7 @@
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.3",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     },
@@ -512,7 +512,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-30T02:33:51.834097Z",
+  "generated": "2020-10-06T05:06:22.243995Z",
   "generator": "pub",
-  "generatorVersion": "2.10.0-136.0.dev"
+  "generatorVersion": "2.11.0-161.0.dev"
 }

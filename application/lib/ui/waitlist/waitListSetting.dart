@@ -1,4 +1,5 @@
 import 'package:Favorito/component/TxtBorder.dart';
+import 'package:Favorito/component/fromTo.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
@@ -84,7 +85,10 @@ class _WaitListSettingState extends State<WaitListSetting> {
                             style: TextStyle(color: Colors.grey)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [fromTo("18:00"), fromTo("18:00")],
+                          children: [
+                            fromTo(txt: "18:00", clr: myRed),
+                            fromTo(txt: "18:00", clr: myRed)
+                          ],
                         ),
                         plusMinus("Available resources", controller[2]),
                         Padding(
@@ -93,7 +97,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
                             valid: true,
                             title: title[3],
                             hint: "Enter ${title[0]}",
-                            ctrl: controller[3],
+                            controller: controller[3],
                             maxLines: 1,
                             security: false,
                           ),
@@ -104,7 +108,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
                             valid: true,
                             title: title[4],
                             hint: "Enter ${title[4]}",
-                            ctrl: controller[4],
+                            controller: controller[4],
                             maxLines: 1,
                             security: false,
                           ),
@@ -132,7 +136,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
                             valid: true,
                             title: title[0],
                             hint: "Enter ${title[0]}",
-                            ctrl: controller[3],
+                            controller: controller[3],
                             maxLines: 1,
                             security: false,
                           ),
@@ -143,7 +147,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
                             valid: true,
                             title: title[1],
                             hint: "Enter ${title[0]}",
-                            ctrl: controller[3],
+                            controller: controller[3],
                             maxLines: 4,
                             security: false,
                           ),
@@ -173,28 +177,6 @@ class _WaitListSettingState extends State<WaitListSetting> {
     );
   }
 
-  Widget fromTo(String txt) {
-    return Container(
-      margin: EdgeInsets.all(8),
-      width: sm.scaledWidth(24),
-      height: sm.scaledHeight(4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(
-          color: myRed,
-          width: 1,
-        ),
-      ),
-      child: Align(
-        alignment: Alignment.center,
-        child: Text(
-          txt,
-          style: TextStyle(color: Colors.red),
-        ),
-      ),
-    );
-  }
-
   Widget plusMinus(String _title, TextEditingController ctrl) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Text("\n$_title", style: TextStyle(color: Colors.grey)),
@@ -210,7 +192,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
               setState(() => ctrl.text = a.toString());
             },
           ),
-          fromTo(ctrl.text),
+          fromTo(txt: ctrl.text),
           IconButton(
             icon: Icon(Icons.add_circle_outline, size: 28, color: myRed),
             onPressed: () {

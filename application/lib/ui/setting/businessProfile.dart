@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:Favorito/component/MyGoogleMap.dart';
+import 'package:Favorito/component/PopupContent.dart';
+import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/workingDateTime.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -25,11 +28,13 @@ class _BusinessProfileState extends State<BusinessProfile> {
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   CameraPosition _initPosition =
       CameraPosition(target: LatLng(27.1751, 78.0421), zoom: 10.5);
-  Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _GMapcontroller = Completer();
   Set<Marker> _marker = {};
+  List<TextEditingController> _controller = List();
   @override
   void initState() {
     getBusinessProfileData();
+    for (int i = 0; i < 10; i++) _controller.add(TextEditingController());
     super.initState();
   }
 
@@ -54,7 +59,10 @@ class _BusinessProfileState extends State<BusinessProfile> {
           title: null,
           actions: [
             IconButton(
-              icon: SvgPicture.asset('assets/icon/save.svg'),
+              icon: SvgPicture.asset(
+                'assets/icon/save.svg',
+                height: sm.scaledWidth(6.4),
+              ),
               onPressed: () {},
             )
           ],
@@ -90,8 +98,8 @@ class _BusinessProfileState extends State<BusinessProfile> {
                           child: Stack(children: [
                             Positioned(
                                 top: sm.scaledHeight(7),
-                                left: sm.scaledWidth(8),
-                                right: sm.scaledWidth(8),
+                                left: sm.scaledWidth(6),
+                                right: sm.scaledWidth(6),
                                 child: Container(
                                     decoration: bd1,
                                     margin: EdgeInsets.only(
@@ -108,11 +116,11 @@ class _BusinessProfileState extends State<BusinessProfile> {
                                             padding: EdgeInsets.only(
                                                 top: sm.scaledHeight(4)),
                                             child: Image.network(
-                                              _businessProfileData.data.photo ==
-                                                      null
-                                                  ? "https://source.unsplash.com/random/400*400"
-                                                  : _businessProfileData
-                                                      .data.photo,
+                                              // _businessProfileData.data.photo ==
+                                              //         null?
+                                              "https://source.unsplash.com/random/400*400",
+                                              // : _businessProfileData
+                                              // .data.photo,
                                               height: sm.scaledHeight(20),
                                               fit: BoxFit.cover,
                                             ),
@@ -121,6 +129,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: txtfieldboundry(
+                                                controller: _controller[0],
                                                 title: "Business Name",
                                                 security: false,
                                                 hint: "Enter business name",
@@ -129,6 +138,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: txtfieldboundry(
+                                                controller: _controller[1],
                                                 title: "Business Phone",
                                                 security: false,
                                                 hint: "Enter business phone",
@@ -137,8 +147,12 @@ class _BusinessProfileState extends State<BusinessProfile> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: txtfieldboundry(
+                                                controller: _controller[2],
                                                 title: "LandLine",
                                                 security: false,
+                                                maxlen: 12,
+                                                keyboardSet:
+                                                    TextInputType.number,
                                                 hint: "Enter Landline number",
                                               )),
                                           Container(
@@ -196,10 +210,16 @@ class _BusinessProfileState extends State<BusinessProfile> {
                                                           ])
                                                         ],
                                                       ),
-                                                      Text("Add",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red))
+                                                      InkWell(
+                                                        onTap: () {
+                                                          showPopup(context,
+                                                              _popupBodyShowDetail());
+                                                        },
+                                                        child: Text("Add",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .red)),
+                                                      )
                                                     ],
                                                   )
                                                 ],
@@ -207,7 +227,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                                           Container(
                                             height: 250,
                                             child: MyGoogleMap(
-                                                controller: _controller,
+                                                controller: _GMapcontroller,
                                                 initPosition: _initPosition,
                                                 marker: _marker),
                                           ),
@@ -315,5 +335,28 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     title: "Done"))
           ]),
         ));
+  }
+
+  showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
+    SizeManager sm = SizeManager(context);
+    Navigator.push(
+      context,
+      PopupLayout(
+        top: sm.scaledHeight(10),
+        left: sm.scaledWidth(2),
+        right: sm.scaledWidth(2),
+        bottom: sm.scaledHeight(2),
+        child: PopupContent(
+          content: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            body: widget,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _popupBodyShowDetail() {
+    return Container(child: WorkingDateTime());
   }
 }

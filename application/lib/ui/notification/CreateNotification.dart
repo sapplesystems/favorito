@@ -114,7 +114,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: txtfieldboundry(
-                                ctrl: _myTitleEditController,
+                                controller: _myTitleEditController,
                                 title: "Title",
                                 security: false,
                                 valid: true,
@@ -123,7 +123,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: txtfieldboundry(
-                                ctrl: _myDescriptionEditController,
+                                controller: _myDescriptionEditController,
                                 title: "Description",
                                 security: false,
                                 maxLines: 5,
@@ -162,7 +162,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: txtfieldboundry(
-                                ctrl: _myContactEditController,
+                                controller: _myContactEditController,
                                 title: "Contact",
                                 security: false,
                                 hint: _contactHintText,
@@ -326,7 +326,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: txtfieldboundry(
-                                  ctrl: _myPincodeEditController,
+                                  controller: _myPincodeEditController,
                                   title: "Pincode",
                                   security: false,
                                   hint: 'Please enter pincode',

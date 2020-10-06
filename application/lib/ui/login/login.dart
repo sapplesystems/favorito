@@ -73,7 +73,7 @@ class _LoginState extends State<Login> {
                               child: txtfieldboundry(
                                 valid: true,
                                 title: "Email/Phone",
-                                ctrl: userCtrl,
+                                controller: userCtrl,
                                 security: false,
                               ),
                             ),
@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
                                   valid: true,
                                   maxLines: 1,
                                   title: "Password",
-                                  ctrl: passCtrl,
+                                  controller: passCtrl,
                                   security: true,
                                 )),
                             Row(

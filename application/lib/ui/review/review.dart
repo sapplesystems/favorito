@@ -86,7 +86,7 @@ class _reviewState extends State<review> {
                 child: txtfieldboundry(
                   valid: true,
                   title: "Reply",
-                  ctrl: ctrl,
+                  controller: ctrl,
                   maxLines: 5,
                   hint: "Enter reply to user",
                   security: false,

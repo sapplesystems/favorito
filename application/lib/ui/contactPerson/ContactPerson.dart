@@ -163,7 +163,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    ctrl: _myFirstNameEditController,
+                                    controller: _myFirstNameEditController,
                                     title: "First Name",
                                     security: false,
                                     valid: true,
@@ -172,7 +172,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    ctrl: _myLastNameEditController,
+                                    controller: _myLastNameEditController,
                                     title: "Last Name",
                                     security: false,
                                     valid: true,
@@ -181,7 +181,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    ctrl: _myPersonalEmailEditController,
+                                    controller: _myPersonalEmailEditController,
                                     title: "Personal Email",
                                     security: false,
                                     valid: true,
@@ -191,7 +191,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    ctrl: _myPersonalMobileEditController,
+                                    controller: _myPersonalMobileEditController,
                                     title: "Personal Mobile",
                                     security: false,
                                     valid: true,
@@ -274,7 +274,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                 padding: const EdgeInsets.all(16.0),
                                 child: Center(
                                   child: txtfieldboundry(
-                                    ctrl: _myNameEditController,
+                                    controller: _myNameEditController,
                                     title: "Name",
                                     security: false,
                                     valid: true,
@@ -284,7 +284,7 @@ class _ContactPersonState extends State<ContactPerson> {
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: txtfieldboundry(
-                                  ctrl: _myAccountNoEditController,
+                                  controller: _myAccountNoEditController,
                                   title: "A/C Number",
                                   security: false,
                                   valid: true,
@@ -293,7 +293,7 @@ class _ContactPersonState extends State<ContactPerson> {
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: txtfieldboundry(
-                                  ctrl: _myIFSCEditController,
+                                  controller: _myIFSCEditController,
                                   title: "IFSC code",
                                   security: false,
                                   valid: true,
@@ -302,7 +302,7 @@ class _ContactPersonState extends State<ContactPerson> {
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: txtfieldboundry(
-                                  ctrl: _myUPIEditController,
+                                  controller: _myUPIEditController,
                                   title: "UPI",
                                   security: false,
                                   valid: true,
