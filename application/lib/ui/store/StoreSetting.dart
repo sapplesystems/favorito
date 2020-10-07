@@ -6,28 +6,23 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
-class MenuSetting extends StatefulWidget {
+class StoreSetting extends StatefulWidget {
   @override
-  _MenuSettingState createState() => _MenuSettingState();
+  _StoreSettingState createState() => _StoreSettingState();
 }
 
-class _MenuSettingState extends State<MenuSetting> {
+class _StoreSettingState extends State<StoreSetting> {
   bool _isAcceptingOrdersSwitch = true;
-  bool _isTakeAwaySwitch = true;
-  bool _isDineInSwicth = true;
+  bool _isStorePickupSwitch = true;
   bool _isDeliverySwitch = true;
 
   TimeOfDay _intitialTime = TimeOfDay.now();
 
-  String _selectedTakeAwayStartTimeText;
-  String _selectedTakeAwayEndTimeText;
-  String _selectedDineInStartTimeText;
-  String _selectedDineInEndTimeText;
+  String _selectedStorePickupStartTimeText;
+  String _selectedStorePickupEndTimeText;
   String _selectedDeliveryStartTimeText;
   String _selectedDeliveryEndTimeText;
 
-  var _myTakeAwayMinimumAmountEditController = TextEditingController();
-  var _myTakeAwayPackagingEditController = TextEditingController();
   var _myDeliveryMinimumAmountEditController = TextEditingController();
   var _myDeliveryPackagingEditController = TextEditingController();
 
@@ -41,10 +36,8 @@ class _MenuSettingState extends State<MenuSetting> {
 
   @override
   void didChangeDependencies() {
-    _selectedTakeAwayStartTimeText = _intitialTime.format(context);
-    _selectedTakeAwayEndTimeText = _intitialTime.format(context);
-    _selectedDineInStartTimeText = _intitialTime.format(context);
-    _selectedDineInEndTimeText = _intitialTime.format(context);
+    _selectedStorePickupStartTimeText = _intitialTime.format(context);
+    _selectedStorePickupEndTimeText = _intitialTime.format(context);
     _selectedDeliveryStartTimeText = _intitialTime.format(context);
     _selectedDeliveryEndTimeText = _intitialTime.format(context);
     super.didChangeDependencies();
@@ -105,17 +98,17 @@ class _MenuSettingState extends State<MenuSetting> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Take Away",
+                    "Store Pick up",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
                   Switch(
-                    value: _isTakeAwaySwitch,
+                    value: _isStorePickupSwitch,
                     onChanged: (value) {
                       setState(() {
-                        _isTakeAwaySwitch = value;
+                        _isStorePickupSwitch = value;
                       });
                     },
                     activeTrackColor: Colors.grey,
@@ -140,102 +133,20 @@ class _MenuSettingState extends State<MenuSetting> {
                 SizedBox(
                   width: sm.scaledWidth(20),
                   child: TimePicker(
-                    selectedTimeText: _selectedTakeAwayStartTimeText,
+                    selectedTimeText: _selectedStorePickupStartTimeText,
                     selectedTime: _intitialTime,
                     onChanged: ((value) {
-                      _selectedTakeAwayStartTimeText = value;
+                      _selectedStorePickupStartTimeText = value;
                     }),
                   ),
                 ),
                 SizedBox(
                   width: sm.scaledWidth(20),
                   child: TimePicker(
-                    selectedTimeText: _selectedTakeAwayEndTimeText,
+                    selectedTimeText: _selectedStorePickupEndTimeText,
                     selectedTime: _intitialTime,
                     onChanged: ((value) {
-                      _selectedTakeAwayEndTimeText = value;
-                    }),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
-              child: txtfieldboundry(
-                ctrl: _myTakeAwayMinimumAmountEditController,
-                title: "Minimum Bill",
-                hint: "Enter minimum amount",
-                security: false,
-                valid: true,
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
-              child: txtfieldboundry(
-                ctrl: _myTakeAwayPackagingEditController,
-                title: "Packaging Charge",
-                hint: "Enter packaging charge",
-                security: false,
-                valid: true,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Dine-in",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Switch(
-                    value: _isDineInSwicth,
-                    onChanged: (value) {
-                      setState(() {
-                        _isDineInSwicth = value;
-                      });
-                    },
-                    activeTrackColor: Colors.grey,
-                    activeColor: Colors.red,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24.0, left: 32.0),
-              child: Text(
-                "Time",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: sm.scaledWidth(20),
-                  child: TimePicker(
-                    selectedTimeText: _selectedDineInStartTimeText,
-                    selectedTime: _intitialTime,
-                    onChanged: ((value) {
-                      _selectedDineInStartTimeText = value;
-                    }),
-                  ),
-                ),
-                SizedBox(
-                  width: sm.scaledWidth(20),
-                  child: TimePicker(
-                    selectedTimeText: _selectedDineInEndTimeText,
-                    selectedTime: _intitialTime,
-                    onChanged: ((value) {
-                      _selectedDineInEndTimeText = value;
+                      _selectedStorePickupEndTimeText = value;
                     }),
                   ),
                 ),
