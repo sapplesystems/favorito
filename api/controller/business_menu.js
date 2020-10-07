@@ -421,7 +421,7 @@ exports.updateMenuSetting = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'Category updated successfully.' });
+            return res.status(200).json({ status: 'success', message: 'Setting updated successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
