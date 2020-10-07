@@ -63,4 +63,16 @@ router.post('/add-category', multer().array(), CheckAuth, MenuController.addCate
  */
 router.post('/edit-category', multer().array(), CheckAuth, MenuController.editCategory);
 
+
+/**
+ * GET BUSINESS MENU SETTING
+ */
+router.post('/setting', CheckAuth, MenuController.getSetting);
+
+
+/**
+ * UPDATE BUSINESS MENU SETTING
+ */
+router.post('/setting-update', CheckAuth, MenuController.updateMenuSetting);
+
 module.exports = router;

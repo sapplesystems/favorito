@@ -348,3 +348,82 @@ exports.editCategory = function (req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+
+/**
+ * GET BUSINESS MENU SETTING
+ */
+exports.getSetting = function (req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+        var sql = "SELECT accepting_order, take_away_start_time, take_away_end_time, take_away_minimum_bill, take_away_packaging_charge, \n\
+                    dine_in_start_time, dine_in_end_time, delivery_start_time, delivery_end_time, delivery_minium_bill, delivery_packaging_charge \n\
+                    FROM business_menu_setting WHERE business_id='"+ business_id + "'";
+
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+
+/**
+ * UPDATE BUSINESS MENU SETTING
+ */
+exports.updateMenuSetting = function (req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+
+        var update_columns = " updated_at=now() ";
+
+        if (req.body.accepting_order != '' && req.body.accepting_order != 'undefined' && req.body.accepting_order != null) {
+            update_columns += ", accepting_order='" + req.body.accepting_order + "' ";
+        }
+        if (req.body.take_away_start_time != '' && req.body.take_away_start_time != 'undefined' && req.body.take_away_start_time != null) {
+            update_columns += ", take_away_start_time='" + req.body.take_away_start_time + "' ";
+        }
+        if (req.body.take_away_end_time != '' && req.body.take_away_end_time != 'undefined' && req.body.take_away_end_time != null) {
+            update_columns += ", take_away_end_time='" + req.body.take_away_end_time + "' ";
+        }
+        if (req.body.take_away_minimum_bill != '' && req.body.take_away_minimum_bill != 'undefined' && req.body.take_away_minimum_bill != null) {
+            update_columns += ", take_away_minimum_bill='" + req.body.take_away_minimum_bill + "' ";
+        }
+        if (req.body.take_away_packaging_charge != '' && req.body.take_away_packaging_charge != 'undefined' && req.body.take_away_packaging_charge != null) {
+            update_columns += ", take_away_packaging_charge='" + req.body.take_away_packaging_charge + "' ";
+        }
+        if (req.body.dine_in_start_time != '' && req.body.dine_in_start_time != 'undefined' && req.body.dine_in_start_time != null) {
+            update_columns += ", dine_in_start_time='" + req.body.dine_in_start_time + "' ";
+        }
+        if (req.body.dine_in_end_time != '' && req.body.dine_in_end_time != 'undefined' && req.body.dine_in_end_time != null) {
+            update_columns += ", dine_in_end_time='" + req.body.dine_in_end_time + "' ";
+        }
+        if (req.body.delivery_start_time != '' && req.body.delivery_start_time != 'undefined' && req.body.delivery_start_time != null) {
+            update_columns += ", delivery_start_time='" + req.body.delivery_start_time + "' ";
+        }
+        if (req.body.delivery_end_time != '' && req.body.delivery_end_time != 'undefined' && req.body.delivery_end_time != null) {
+            update_columns += ", delivery_end_time='" + req.body.delivery_end_time + "' ";
+        }
+        if (req.body.delivery_minium_bill != '' && req.body.delivery_minium_bill != 'undefined' && req.body.delivery_minium_bill != null) {
+            update_columns += ", delivery_minium_bill='" + req.body.delivery_minium_bill + "' ";
+        }
+        if (req.body.delivery_packaging_charge != '' && req.body.delivery_packaging_charge != 'undefined' && req.body.delivery_packaging_charge != null) {
+            update_columns += ", delivery_packaging_charge='" + req.body.delivery_packaging_charge + "' ";
+        }
+
+        var sql = "update business_menu_setting set " + update_columns + " where business_id='" + business_id + "'";
+
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'Category updated successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
