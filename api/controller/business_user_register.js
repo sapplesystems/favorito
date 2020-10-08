@@ -84,6 +84,10 @@ exports.register = function (req, res, next) {
                             var sql4 = "INSERT INTO business_booking_setting (business_id) VALUES ('" + business_id + "')";
                             db.query(sql4);
 
+                            /**insert row into business_appoinment_setting table */
+                            var sql5 = "INSERT INTO business_appoinment_setting (business_id) VALUES ('" + business_id + "')";
+                            db.query(sql5);
+
 
                             var token = jwt.sign({
                                 email: email,

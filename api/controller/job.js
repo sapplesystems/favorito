@@ -100,9 +100,16 @@ exports.city_from_pincode = function (req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Pincode not found.' });
         }
         var pincode = req.body.pincode;
-        var sql = "SELECT id,city FROM cities WHERE id IN(SELECT city_id FROM pincodes WHERE pincode='" + pincode + "' GROUP BY city_id)";
+        var sql = "SELECT id,city,state_id,(SELECT state FROM states WHERE id=cities.state_id) AS state_name \n\
+        FROM cities WHERE id IN(SELECT city_id FROM pincodes WHERE pincode='" + pincode + "' GROUP BY city_id)";
         db.query(sql, function (err, result) {
-            return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
+            var data = {};
+            var message = 'No data found';
+            if (result.length > 0) {
+                message = 'success';
+                data = result[0];
+            }
+            return res.status(200).json({ status: 'success', message: message, data: data });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
