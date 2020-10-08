@@ -321,7 +321,7 @@
     },
     {
       "name": "plugin_platform_interface",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-1.0.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-1.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
@@ -512,7 +512,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-10-06T05:06:22.243995Z",
+  "generated": "2020-10-06T05:13:27.382495Z",
   "generator": "pub",
   "generatorVersion": "2.11.0-161.0.dev"
 }

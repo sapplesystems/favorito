@@ -20,4 +20,9 @@ router.post('/dd-verbose', CheckAuth, BusinessOfferController.dd_verbose);
  */
 router.post('/create', CheckAuth, BusinessOfferController.add_offer);
 
+/**
+ * EDIT OFFER
+ */
+router.post('/edit', CheckAuth, BusinessOfferController.edit_offer);
+
 module.exports = router;

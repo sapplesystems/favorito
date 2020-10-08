@@ -160,8 +160,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
         padding: const EdgeInsets.all(8.0),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           IconButton(
-            icon: Icon(Icons.remove_circle_outline_outlined,
-                color: myRed, size: 28),
+            icon: Icon(Icons.remove_circle_outline, color: myRed, size: 28),
             onPressed: () {
               int a = int.parse(ctrl.text);
               a = a > 0 ? a - 1 : a;

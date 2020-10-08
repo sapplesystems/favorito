@@ -8,7 +8,7 @@ exports.getBusinessInformation = function (req, res, next) {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
         var sql = "SELECT business_informations.id AS business_information_id, business_id, business_categories.id AS category_id, business_categories.category_name, \n\
-        sub_categories as sub_categories_id, (SELECT GROUP_CONCAT(sub_category_name) FROM business_sub_categories \n\
+        sub_categories as sub_categories_id, (SELECT GROUP_CONCAT(category_name) FROM business_categories \n\
         WHERE FIND_IN_SET(id, business_informations.sub_categories) AND deleted_at IS NULL) AS sub_categories_name, \n\
         tags, price_range, payment_method, attributes \n\
         FROM business_informations INNER JOIN business_categories \n\

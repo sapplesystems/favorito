@@ -54,7 +54,9 @@ class _CatalogState extends State<Catalogs> {
                 height: sm.scaledHeight(75),
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: ListView.builder(
-                    itemCount: _catalogListdata.data.length,
+                    itemCount: _catalogListdata == null
+                        ? 0
+                        : _catalogListdata.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         elevation: 5,

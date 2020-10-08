@@ -1,4 +1,5 @@
-import 'package:Favorito/model/offer/OfferDataModel.dart';
+import 'package:Favorito/model/offer/OfferListDataModel.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/offer/CreateOffer.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -27,47 +28,44 @@ class _OfferState extends State<Offers> {
 
   @override
   void initState() {
-    setState(() {
-      OfferDataModel model1 = OfferDataModel();
-      model1.title = 'Buy 1 Get 1 Free';
-      model1.description = 'This is the decription for this offer';
-      model1.activated = '100';
-      model1.redeemed = '100';
-      activeNewUserOfferList.add(model1);
-      activeNewUserOfferList.add(model1);
-
-      OfferDataModel model2 = OfferDataModel();
-      model2.title = 'Buy 1 Get 1 Free Inactive';
-      model2.description = 'This is the decription for this offer';
-      model2.activated = '50';
-      model2.redeemed = '50';
-      inactiveNewUserOfferList.add(model2);
-
-      OfferDataModel model3 = OfferDataModel();
-      model3.title = 'Discount of Rs 100';
-      model3.description = 'This is the decription for this offer';
-      model3.activated = '100';
-      model3.redeemed = '100';
-      activeCurrentUserOfferList.add(model3);
-
-      OfferDataModel model4 = OfferDataModel();
-      model4.title = 'Discount of Rs 100 Inactive';
-      model4.description = 'This is the decription for this offer';
-      model4.activated = '32';
-      model4.redeemed = '20';
-      inactiveCurrentUserOfferList.add(model4);
-
-      _selectedOfferType = 'Activated';
-      newUserOfferInputList.clear();
-      for (var data in activeNewUserOfferList) {
-        newUserOfferInputList.add(data);
-      }
-      currentUserOfferInputList.clear();
-      for (var data in activeCurrentUserOfferList) {
-        currentUserOfferInputList.add(data);
-      }
-    });
+    initializeIntitialValues();
     super.initState();
+  }
+
+  initializeIntitialValues() {
+    WebService.funGetOfferData().then((value) {
+      setState(() {
+        _selectedOfferType = 'Activated';
+
+        activeNewUserOfferList.clear();
+        inactiveNewUserOfferList.clear();
+        activeCurrentUserOfferList.clear();
+        inactiveCurrentUserOfferList.clear();
+        for (var temp in value.data) {
+          if (temp.offerStatus == 'Activated' &&
+              temp.offerType == 'Current Offer') {
+            activeCurrentUserOfferList.add(temp);
+          } else if (temp.offerStatus == 'Inactive' &&
+              temp.offerType == 'Current Offer') {
+            inactiveCurrentUserOfferList.add(temp);
+          } else if (temp.offerStatus == 'Activated' &&
+              temp.offerType == 'New User Offer') {
+            activeNewUserOfferList.add(temp);
+          } else {
+            inactiveNewUserOfferList.add(temp);
+          }
+        }
+
+        newUserOfferInputList.clear();
+        for (var data in activeNewUserOfferList) {
+          newUserOfferInputList.add(data);
+        }
+        currentUserOfferInputList.clear();
+        for (var data in activeCurrentUserOfferList) {
+          currentUserOfferInputList.add(data);
+        }
+      });
+    });
   }
 
   @override
@@ -93,8 +91,12 @@ class _OfferState extends State<Offers> {
               icon: SvgPicture.asset('assets/icon/addWaitlist.svg',
                   alignment: Alignment.center),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CreateOffer())).whenComplete(() => null);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateOffer(
+                              offerData: null,
+                            ))).whenComplete(() => initializeIntitialValues());
               },
             ),
           ],
@@ -157,134 +159,163 @@ class _OfferState extends State<Offers> {
                   child: ListView.builder(
                       itemCount: newUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 16.0, left: 16.0),
-                                child: Text(
-                                  newUserOfferInputList[index].title,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, left: 16.0),
-                                child: AutoSizeText(
-                                  newUserOfferInputList[index].description,
-                                  maxLines: 2,
-                                  minFontSize: 12,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0, left: 16.0, bottom: 16.0),
-                                    child: Text(
-                                      "Activated : ${newUserOfferInputList[index].activated}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400),
-                                    ),
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CreateOffer(
+                                              offerData:
+                                                  newUserOfferInputList[index],
+                                            )))
+                                .whenComplete(() => initializeIntitialValues());
+                          },
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 16.0, left: 16.0),
+                                  child: Text(
+                                    newUserOfferInputList[index].offerTitle,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0,
-                                        left: 16.0,
-                                        bottom: 16.0,
-                                        right: 16.0),
-                                    child: Text(
-                                      "Redeemed : ${newUserOfferInputList[index].redeemed}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400),
-                                    ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, left: 16.0),
+                                  child: AutoSizeText(
+                                    newUserOfferInputList[index]
+                                        .offerDescription,
+                                    maxLines: 2,
+                                    minFontSize: 12,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ],
-                              )
-                            ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, left: 16.0, bottom: 16.0),
+                                      child: Text(
+                                        "Activated : ${newUserOfferInputList[index].totalActivated}",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0,
+                                          left: 16.0,
+                                          bottom: 16.0,
+                                          right: 16.0),
+                                      child: Text(
+                                        "Redeemed : ${newUserOfferInputList[index].totalRedeemed}",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         );
                       })),
-              Text("New User Offers",
-                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Text("Current Offers",
+                    style: TextStyle(fontSize: 14, color: Colors.grey)),
+              ),
               Container(
                   height: sm.scaledHeight(35),
                   child: ListView.builder(
                       itemCount: currentUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 16.0, left: 16.0),
-                                child: Text(
-                                  currentUserOfferInputList[index].title,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, left: 16.0),
-                                child: AutoSizeText(
-                                  currentUserOfferInputList[index].description,
-                                  maxLines: 2,
-                                  minFontSize: 12,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0, left: 16.0, bottom: 16.0),
-                                    child: Text(
-                                      "Activated : ${currentUserOfferInputList[index].activated}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400),
-                                    ),
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateOffer(
+                                          offerData:
+                                              currentUserOfferInputList[index],
+                                        ))).whenComplete(
+                                () => initializeIntitialValues());
+                          },
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 16.0, left: 16.0),
+                                  child: Text(
+                                    currentUserOfferInputList[index].offerTitle,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0,
-                                        left: 16.0,
-                                        bottom: 16.0,
-                                        right: 16.0),
-                                    child: Text(
-                                      "Redeemed : ${currentUserOfferInputList[index].redeemed}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400),
-                                    ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, left: 16.0),
+                                  child: AutoSizeText(
+                                    currentUserOfferInputList[index]
+                                        .offerDescription,
+                                    maxLines: 2,
+                                    minFontSize: 12,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ],
-                              )
-                            ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, left: 16.0, bottom: 16.0),
+                                      child: Text(
+                                        "Activated : ${currentUserOfferInputList[index].totalActivated}",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0,
+                                          left: 16.0,
+                                          bottom: 16.0,
+                                          right: 16.0),
+                                      child: Text(
+                                        "Redeemed : ${currentUserOfferInputList[index].totalRedeemed}",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         );
                       })),

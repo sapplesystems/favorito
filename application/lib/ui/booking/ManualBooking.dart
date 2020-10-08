@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../component/DatePicker.dart';
 import '../../component/TimePicker.dart';
@@ -165,42 +164,39 @@ class _ManualBooking extends State<ManualBooking> {
                                     ),
                                   ),
                                 ]))))),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: sm.scaledWidth(60),
-                margin: EdgeInsets.only(bottom: 16.0),
-                child: roundedButton(
-                  clicker: () {
-                    if (_formKey.currentState.validate()) {
-                      if (_selectedDateText == 'Select Date') {
-                        BotToast.showText(text: "Please select a date");
-                        return;
-                      }
-                      if (_selectedTimeText == 'Select Time') {
-                        BotToast.showText(text: "Please select a time");
-                        return;
-                      }
-                      CreateBookingModel request = CreateBookingModel();
-                      request.name = _myNameEditController.text;
-                      request.mobileNo = _myContactEditController.text;
-                      request.noOfPerson = _myNoOfPersonEditController.text;
-                      request.notes = _myNotesEditController.text;
-                      request.createdDate = _selectedDateText;
-                      request.createdTime = _selectedTimeText;
-                      WebService.funCreateManualBooking(request).then((value) {
-                        BotToast.showText(text: value.message);
-                        initializeDefaultValues();
-                        _autoValidateForm = true;
-                      });
-                    } else {
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: sm.scaledWidth(15), vertical: 16.0),
+              child: roundedButton(
+                clicker: () {
+                  if (_formKey.currentState.validate()) {
+                    if (_selectedDateText == 'Select Date') {
+                      BotToast.showText(text: "Please select a date");
+                      return;
+                    }
+                    if (_selectedTimeText == 'Select Time') {
+                      BotToast.showText(text: "Please select a time");
+                      return;
+                    }
+                    CreateBookingModel request = CreateBookingModel();
+                    request.name = _myNameEditController.text;
+                    request.mobileNo = _myContactEditController.text;
+                    request.noOfPerson = _myNoOfPersonEditController.text;
+                    request.notes = _myNotesEditController.text;
+                    request.createdDate = _selectedDateText;
+                    request.createdTime = _selectedTimeText;
+                    WebService.funCreateManualBooking(request).then((value) {
+                      BotToast.showText(text: value.message);
                       initializeDefaultValues();
                       _autoValidateForm = true;
-                    }
-                  },
-                  clr: Colors.red,
-                  title: "Save",
-                ),
+                    });
+                  } else {
+                    initializeDefaultValues();
+                    _autoValidateForm = true;
+                  }
+                },
+                clr: Colors.red,
+                title: "Save",
               ),
             ),
           ]),

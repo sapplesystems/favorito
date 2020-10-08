@@ -35,6 +35,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(8),
       child: TextFormField(
         controller: widget.controller,
         obscureText: widget.security,

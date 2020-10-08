@@ -25,18 +25,24 @@ class CityModelResponse {
 class Data {
   int id;
   String city;
+  int stateId;
+  String stateName;
 
-  Data({this.id, this.city});
+  Data({this.id, this.city, this.stateId, this.stateName});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     city = json['city'];
+    stateId = json['state_id'];
+    stateName = json['state_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['city'] = this.city;
+    data['state_id'] = this.stateId;
+    data['state_name'] = this.stateName;
     return data;
   }
 }

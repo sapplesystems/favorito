@@ -19,7 +19,6 @@ String orders = "";
 String free_credit = "";
 String paid_credit = "";
 String photoUrl = "";
-
 String welcometxt2 =
     "Now your business will be in your\nphone!. Now your business will be in \nyour phone!.NYou can grow your\nbusiness with this.";
 String pleaseEnter = 'Please Enter';

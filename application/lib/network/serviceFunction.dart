@@ -9,6 +9,7 @@ class serviceFunction {
       baseUrl2 + 'notification/dd-verbose';
   static String funCreateNotification = baseUrl2 + 'notification/add';
   static String funGetCities = baseUrl2 + 'state-city/city-list';
+  static String funGetStates = baseUrl2 + 'state-city/state-list';
   static String funValidPincode = baseUrl2 + 'notification/verify-pincode';
   static String funGetJobs = baseUrl2 + 'job/list';
   static String funGetCreateJobDefaultData = baseUrl2 + 'job/dd-verbose';
@@ -28,4 +29,8 @@ class serviceFunction {
   static String funCreateManualBooking = baseUrl2 + 'business-booking/create';
   static String funSearchBranches = baseUrl2 + 'business-user/search-branch';
   static String funGetBusinessProfileData = baseUrl2 + 'business-user/profile';
+  static String funGetOfferData = baseUrl2 + 'offer/list';
+  static String funEditOffer = baseUrl2 + 'offer/edit';
+  static String funGetEditJobData = baseUrl2 + 'job/detail';
+  static String funEditJob = baseUrl2 + 'job/edit';
 }
