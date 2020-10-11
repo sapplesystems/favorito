@@ -26,5 +26,4 @@ String pleaseEnterValid = 'Please Enter Valid';
 String waitlistSetting = "Waitlist Setting";
 String waitlist = "Waitlist";
 String appoinmentSettingtxt = "Appoinment Setting";
-
-            
+String donetxt = "Done";

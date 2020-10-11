@@ -544,4 +544,19 @@ class WebService {
     print("responseData3:${_returnData.status}");
     return _returnData;
   }
+
+//this service is used for business profile
+  static Future<WaitlistListModel> funUserProfileUpdate(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    // WaitlistListModel _returnData = WaitlistListModel();
+    print("Request URL:${serviceFunction.funBusyList}");
+    response = await dio.post(serviceFunction.funUserProfileUpdate,
+        data: _map, options: _opt);
+    // _returnData = WaitlistListModel.fromJson(convert.json.decode(response.toString()));
+    // print("responseData1:${_returnData.status}");
+    // return _returnData;
+  }
 }

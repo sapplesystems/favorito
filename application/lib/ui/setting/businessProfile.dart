@@ -21,6 +21,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class BusinessProfile extends StatefulWidget {
   @override
@@ -29,22 +30,25 @@ class BusinessProfile extends StatefulWidget {
 
 class _BusinessProfileState extends State<BusinessProfile>
     with WidgetsBindingObserver {
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   AppLifecycleState _appLifecycleState;
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
-  CameraPosition _initPosition =
-      CameraPosition(target: LatLng(27.1751, 78.0421), zoom: 10.5);
+  CameraPosition _initPosition;
   Completer<GoogleMapController> _GMapcontroller = Completer();
   Set<Marker> _marker = {};
   List<TextEditingController> _controller = List();
   Map<String, String> selecteddayList = {};
   int addressLength = 1;
-  int emialLength = 1;
+  int webSiteLength = 1;
   double pageHeight = 194;
   List<String> cityList = ["Please Select ..."];
   List<CityModel> _cityModel = [];
   List<String> _stateList = ["Please Select ..."];
   List<StateList> _stateModel = [];
   bool _autoValidateForm = false;
+  bool byAppointment = false;
+  bool onWhatsapp = false;
+  Position _position;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -52,7 +56,7 @@ class _BusinessProfileState extends State<BusinessProfile>
     WidgetsBinding.instance.addObserver(this);
     for (int i = 0; i < 16; i++) {
       _controller.add(TextEditingController());
-      _controller[i].text = "";
+      // _controller[i].text = '';
     }
 
     _controller[0].text = _businessProfileData.data != null
@@ -61,21 +65,27 @@ class _BusinessProfileState extends State<BusinessProfile>
     _cityWebData();
     _stateWebData();
     super.initState();
+    _getCurrentLocation();
   }
 
-  void addressLinePlus() {
-    setState(() {
-      if (addressLength < 3) {
-        addressLength = addressLength + 1;
-        // pageHeight = pageHeight + addressLength * 4;
-      }
+  _getCurrentLocation() async {
+    await geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      _position = position;
+      setState(() {
+        _initPosition = CameraPosition(
+            target: LatLng(_position.latitude, _position.longitude),
+            zoom: 17);
+      });
+    }).catchError((e) {
+      print(e);
     });
   }
 
-  void emialLengthPlus() {
+  void webSiteLengthPlus() {
     setState(() {
-      emialLength = emialLength + 1;
-      // pageHeight = pageHeight + 10.2;
+      webSiteLength = webSiteLength + 1;
       _controller.add(TextEditingController());
     });
   }
@@ -152,17 +162,16 @@ class _BusinessProfileState extends State<BusinessProfile>
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
                             Padding(
-                              padding: EdgeInsets.only(top: sm.scaledHeight(4)),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20.0),
-                                child: Image.network(
-                                  _controller[0].text,
-                                  height: sm.scaledHeight(20),
-                                  width: sm.scaledWidth(72),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                                padding:
+                                    EdgeInsets.only(top: sm.scaledHeight(4)),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    child: Image.network(
+                                      _controller[0].text,
+                                      height: sm.scaledHeight(20),
+                                      width: sm.scaledWidth(72),
+                                      fit: BoxFit.cover,
+                                    ))),
                             txtfieldboundry(
                               controller: _controller[1],
                               title: "Business Name",
@@ -174,85 +183,191 @@ class _BusinessProfileState extends State<BusinessProfile>
                               controller: _controller[2],
                               title: "Business Phone",
                               security: false,
+                              maxlen: 10,
+                              keyboardSet: TextInputType.number,
                               valid: true,
                               hint: "Enter business phone",
                             ),
                             txtfieldboundry(
                               controller: _controller[3],
                               title: "LandLine",
-                              valid: true,
+                              valid: false,
                               security: false,
                               maxlen: 12,
                               keyboardSet: TextInputType.number,
                               hint: "Enter Landline number",
                             ),
-                            Column(
-                              children: [
-                                Row(children: [
-                                  Text("Business Hours",
-                                      style: TextStyle(color: myGrey))
-                                ]),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                            Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: DropdownSearch<String>(
+                                    validator: (_v) {
+                                      var va;
+                                      if (_v == "") {
+                                        va = 'required field';
+                                      } else {
+                                        va = null;
+                                      }
+                                      return va;
+                                    },
+                                    autoValidate: _autoValidateForm,
+                                    mode: Mode.MENU,
+                                    showSelectedItem: true,
+                                    selectedItem: _controller[4].text,
+                                    items: ["Select Hours", "Always Open"],
+                                    label: "Working Hours",
+                                    hint: "Please Select Town/City",
+                                    showSearchBox: false,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _controller[4].text =
+                                            value != null ? value : "";
+                                      });
+                                    })),
+
+                            //  InkWell(
+                            //   onTap: () {
+                            //     setState(() {
+                            //       onWhatsapp = !onWhatsapp;
+                            //     });
+                            //   },
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.symmetric(
+                            //         vertical: 16, horizontal: 20),
+                            //     child: Row(
+                            //         mainAxisAlignment:
+                            //             MainAxisAlignment.spaceBetween,
+                            //         children: [
+                            //           Text("Reach On Whatsapp",
+                            //               style: TextStyle(
+                            //                   fontSize: 16,
+                            //                   color: Colors.grey)),
+                            //           Icon(
+                            //             onWhatsapp == false
+                            //                 ? Icons.check_box
+                            //                 : Icons.check_box_outline_blank,
+                            //             color: onWhatsapp == false
+                            //                 ? Colors.red
+                            //                 : Colors.grey,
+                            //           )
+                            //         ]),
+                            //   ),
+                            // ),
+
+                            Visibility(
+                              visible: _controller[4].text == "Select Hours",
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 18, right: 18),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: sm.scaledWidth(1)),
-                                      width: sm.scaledWidth(60),
-                                      height: sm.scaledWidth(14),
-                                      child: ListView(
-                                        scrollDirection: Axis.horizontal,
-                                        children: [
-                                          for (int i = 0;
-                                              i < selecteddayList.length;
-                                              i++)
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 6),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(children: [
-                                                    Text(
-                                                        selecteddayList.keys
-                                                            .toList()[i],
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400)),
-                                                    Text(
-                                                        selecteddayList[
-                                                            selecteddayList.keys
-                                                                .toList()[i]],
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w200)),
-                                                  ])
-                                                ],
-                                              ),
-                                            )
-                                        ],
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("Business Hours",
+                                            style: TextStyle(color: myGrey)),
+                                        InkWell(
+                                          onTap: () => setState(
+                                              () => selecteddayList.clear()),
+                                          child: Text("Reset",
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        )
+                                      ],
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        showPopup(
-                                            context, _popupBodyShowDetail());
-                                      },
-                                      child: Text("Add",
-                                          style: TextStyle(color: Colors.red)),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: sm.scaledWidth(1)),
+                                          width: sm.scaledWidth(60),
+                                          height: sm.scaledWidth(14),
+                                          child: ListView(
+                                            scrollDirection: Axis.horizontal,
+                                            children: [
+                                              for (int i = 0;
+                                                  i < selecteddayList.length;
+                                                  i++)
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(horizontal: 6),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(children: [
+                                                        Text(
+                                                            selecteddayList.keys
+                                                                .toList()[i],
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                        Text(
+                                                            selecteddayList[
+                                                                selecteddayList
+                                                                        .keys
+                                                                        .toList()[
+                                                                    i]],
+                                                            style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w200)),
+                                                      ])
+                                                    ],
+                                                  ),
+                                                )
+                                            ],
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            showPopup(context,
+                                                _popupBodyShowDetail());
+                                          },
+                                          child: Text("Add",
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                        )
+                                      ],
                                     )
                                   ],
-                                )
-                              ],
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  byAppointment = !byAppointment;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 20),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("By Appointment Only",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey)),
+                                      Icon(
+                                        byAppointment == false
+                                            ? Icons.check_box
+                                            : Icons.check_box_outline_blank,
+                                        color: byAppointment == false
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      )
+                                    ]),
+                              ),
                             ),
                             Container(
                               //_controller[5] is allign for this
@@ -273,7 +388,10 @@ class _BusinessProfileState extends State<BusinessProfile>
                                   sufixTxt: "Add Line",
                                   security: false,
                                   sifixClick: () {
-                                    addressLinePlus();
+                                    setState(() {
+                                      if (addressLength < 3)
+                                        addressLength = addressLength + 1;
+                                    });
                                   }),
                             txtfieldboundry(
                                 controller: _controller[9],
@@ -310,14 +428,20 @@ class _BusinessProfileState extends State<BusinessProfile>
                                   }
                                 }),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: DropdownSearch<String>(
-                                validator: (v) =>
-                                    v == '' ? "required field" : '',
                                 autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
-                                // showClearButton: true,
+                                validator: (_v) {
+                                  var va;
+                                  if (_v == "") {
+                                    va = 'required field';
+                                  } else {
+                                    va = null;
+                                  }
+                                  return va;
+                                },
                                 selectedItem: _controller[10].text,
                                 items: cityList != null ? cityList : null,
                                 label: "Town/City",
@@ -333,8 +457,15 @@ class _BusinessProfileState extends State<BusinessProfile>
                             Padding(
                               padding: EdgeInsets.all(8),
                               child: DropdownSearch<String>(
-                                validator: (v) =>
-                                    v == '' ? "required field" : '',
+                                validator: (_v) {
+                                  var va;
+                                  if (_v == "") {
+                                    va = 'required field';
+                                  } else {
+                                    va = null;
+                                  }
+                                  return va;
+                                },
                                 autoValidate: _autoValidateForm,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
@@ -343,9 +474,9 @@ class _BusinessProfileState extends State<BusinessProfile>
                                 label: "State",
                                 hint: "Please Select State",
                                 showSearchBox: true,
-                                onChanged: (value) {
+                                onChanged: (_value) {
                                   setState(() {
-                                    _controller[11].text = value;
+                                    _controller[11].text = _value;
                                     _controller[12].text = "India";
                                   });
                                 },
@@ -363,8 +494,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                               controller: _controller[13],
                               title: "Email",
                               security: false,
-                              valid: false,
-                              isEnabled: false,
+                              valid: true,
                               hint: "Enter Email",
                             ),
                             txtfieldboundry(
@@ -375,18 +505,18 @@ class _BusinessProfileState extends State<BusinessProfile>
                               security: false,
                               hint: "Enter Description",
                             ),
-                            for (int i = 0; i < emialLength; i++)
+                            for (int i = 0; i < webSiteLength; i++)
                               txtfieldPostAction(
                                   ctrl: _controller[i + 15],
                                   hint: "Enter Website ",
                                   title: "Website ",
                                   maxLines: 1,
-                                  valid: true,
+                                  valid: false,
                                   sufixColor: myRed,
                                   sufixTxt: "Add Line",
                                   security: false,
                                   sifixClick: () {
-                                    emialLengthPlus();
+                                    webSiteLengthPlus();
                                   }),
                           ]),
                         )),
@@ -420,12 +550,13 @@ class _BusinessProfileState extends State<BusinessProfile>
               margin: EdgeInsets.only(bottom: 12.0),
               child: roundedButton(
                   clicker: () {
-                    print("cccccc${_formKey.currentState.validate()}");
+                    print(_controller);
                     if (_formKey.currentState.validate()) {
-                      print("log 1");
+                      print("aaaaaaaDone");
                       _autoValidateForm = false;
+                      _prepareWebService();
                     } else {
-                      print("log 2");
+                      print("aaaaaaaNone");
                       setState(() {
                         pageHeight = 226;
                       });
@@ -433,7 +564,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                     }
                   },
                   clr: Colors.red,
-                  title: "Done"),
+                  title: donetxt),
             ),
           )
         ]));
@@ -441,16 +572,18 @@ class _BusinessProfileState extends State<BusinessProfile>
 
   showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
     SizeManager sm = SizeManager(context);
+
     Navigator.push(
-        context,
-        PopupLayout(
-            top: sm.scaledHeight(32),
-            left: sm.scaledWidth(2),
-            right: sm.scaledWidth(2),
-            bottom: sm.scaledHeight(30),
-            child: PopupContent(
-                content: Scaffold(
-                    resizeToAvoidBottomPadding: false, body: widget))));
+            context,
+            PopupLayout(
+                top: sm.scaledHeight(36),
+                left: sm.scaledWidth(3),
+                right: sm.scaledWidth(3),
+                bottom: sm.scaledHeight(30),
+                child: PopupContent(
+                    content: Scaffold(
+                        resizeToAvoidBottomPadding: false, body: widget))))
+        .whenComplete(() => setState(() {}));
   }
 
   Widget _popupBodyShowDetail() {
@@ -484,5 +617,38 @@ class _BusinessProfileState extends State<BusinessProfile>
         setState(() {});
       }
     });
+  }
+
+  void _prepareWebService() {
+    var website = "";
+    for (int _i = 0; _i < webSiteLength; _i++) {
+      website = website + "," + _controller[_i + 15].text;
+    }
+    // BusinessHoursModel _businessHoursModel = BusinessHoursModel();
+    // List<BusinessHoursModel> _businessHoursList = List();
+    _controller[5].text = selecteddayList.toString();
+    for (int i = 0; i < _controller.length; i++) {
+      var a = _controller[i].text;
+      print("\nttttttt$i=$a");
+    }
+
+    Map<String, dynamic> _map = {
+      "photo": _controller[0].text,
+      "business_name": _controller[1].text,
+      "business_phone": _controller[2].text,
+      "landline": _controller[3].text,
+      "working_hours": _controller[4].text,
+      "location": _GMapcontroller,
+      "address": [
+        _controller[6].text + _controller[7].text + _controller[8].text
+      ],
+      "pincode": _controller[9].text,
+      "town_city": _controller[10].text,
+      "state_id": _controller[11].text,
+      "country_id": '1',
+      "business_email": _controller[13].text,
+      "short_description": _controller[14].text,
+      "website": website,
+    };
   }
 }
