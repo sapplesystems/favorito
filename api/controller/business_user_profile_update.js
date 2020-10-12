@@ -1,5 +1,28 @@
 var db = require('../config/db');
 
+exports.updateProfilePhoto = function (req, res, next) {
+  try {
+    var id = req.userdata.id;
+    var business_id = req.userdata.business_id;
+
+    var update_columns = " updated_by='" + id + "', updated_at=now() ";
+
+    if (req.file && req.file.filename != '') {
+      update_columns += ", photo='" + req.file.filename + "' ";
+    }
+
+    var sql = "update business_master set " + update_columns + " where id='" + id + "'";
+    db.query(sql, function (err, rows, fields) {
+      if (err) {
+        return res.status(500).json({ status: 'error', message: 'Business user profile photo could not be updated.' });
+      }
+      return res.status(200).json({ status: 'success', message: 'Business user profile photo updated successfully.' });
+    });
+  } catch (e) {
+    return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+  }
+};
+
 exports.updateProfile = function (req, res, next) {
   try {
     var id = req.userdata.id;
