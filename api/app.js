@@ -26,6 +26,7 @@ var BusinessAdSpentCampaign = require('./routes/business_ad_spent_campaign');
 var BusinessMenu = require('./routes/business_menu');
 var BusinessMenuOnlineStore = require('./routes/business_menu_online_store');
 var BusinessOrder = require('./routes/business_order');
+var PageViews = require('./routes/page_views');
 
 var app = express();
 
@@ -61,6 +62,7 @@ app.use('/api/business-ad-spent-campaign', BusinessAdSpentCampaign);
 app.use('/api/business-menu', BusinessMenu);
 app.use('/api/business-menu-online-store', BusinessMenuOnlineStore);
 app.use('/api/business-order', BusinessOrder);
+app.use('/api/page-views', PageViews);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
