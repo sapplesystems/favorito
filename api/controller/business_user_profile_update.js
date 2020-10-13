@@ -7,6 +7,10 @@ exports.updateProfilePhoto = function (req, res, next) {
 
     var update_columns = " updated_by='" + id + "', updated_at=now() ";
 
+    if(!req.file || req.file.filename == ''){
+      return res.status(403).json({ status: 'error', message: 'Profile image not found' });
+    }
+
     if (req.file && req.file.filename != '') {
       update_columns += ", photo='" + req.file.filename + "' ";
     }
