@@ -75,8 +75,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       _position = position;
       setState(() {
         _initPosition = CameraPosition(
-            target: LatLng(_position.latitude, _position.longitude),
-            zoom: 17);
+            target: LatLng(_position.latitude, _position.longitude), zoom: 17);
       });
     }).catchError((e) {
       print(e);
@@ -164,14 +163,22 @@ class _BusinessProfileState extends State<BusinessProfile>
                             Padding(
                                 padding:
                                     EdgeInsets.only(top: sm.scaledHeight(4)),
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    child: Image.network(
-                                      _controller[0].text,
-                                      height: sm.scaledHeight(20),
-                                      width: sm.scaledWidth(72),
-                                      fit: BoxFit.cover,
-                                    ))),
+                                child: Stack(children: [
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: Image.network(
+                                        _controller[0].text,
+                                        height: sm.scaledHeight(20),
+                                        width: sm.scaledWidth(72),
+                                        fit: BoxFit.cover,
+                                      )),
+                                  Positioned(
+                                      child: IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons
+                                              .center_focus_strong_outlined),
+                                          color: Colors.white))
+                                ])),
                             txtfieldboundry(
                               controller: _controller[1],
                               title: "Business Name",
@@ -243,7 +250,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                             //                   color: Colors.grey)),
                             //           Icon(
                             //             onWhatsapp == false
-                            //                 ? Icons.check_box
+                            //                  ? Icons.check_box
                             //                 : Icons.check_box_outline_blank,
                             //             color: onWhatsapp == false
                             //                 ? Colors.red
@@ -622,33 +629,54 @@ class _BusinessProfileState extends State<BusinessProfile>
   void _prepareWebService() {
     var website = "";
     for (int _i = 0; _i < webSiteLength; _i++) {
-      website = website + "," + _controller[_i + 15].text;
+      website = _controller[_i + 15].text + "," + website;
     }
     // BusinessHoursModel _businessHoursModel = BusinessHoursModel();
     // List<BusinessHoursModel> _businessHoursList = List();
-    _controller[5].text = selecteddayList.toString();
-    for (int i = 0; i < _controller.length; i++) {
-      var a = _controller[i].text;
-      print("\nttttttt$i=$a");
+    List<Map> lst = List();
+    for (int i = 0; i < selecteddayList.length; i++) {
+      var va = selecteddayList[(selecteddayList.keys.toList())[i]].split("-");
+      Map<String, String> dayData = Map();
+      dayData["business_days"] =
+          "${(selecteddayList.keys.toList())[i].toString()}";
+      dayData["business_start_hours"] = "${va[0].toString()}";
+      dayData["business_end_hours"] = "${va[1].toString()}";
+      // dayData[(selecteddayList.keys.toList())[i]] =
+      //     selecteddayList[(selecteddayList.keys.toList())[i]];
+      lst.add(dayData);
+    }
+    var adderess = "";
+    _controller[5].text = lst.toString();
+    for (int i = 0; i < addressLength; i++) {
+      adderess = _controller[i + 6].text + "," + adderess;
+      // print("\nttttttt$i=$a");
     }
 
+    // print("sfsdffsdf${dayData.toString()}");
     Map<String, dynamic> _map = {
-      "photo": _controller[0].text,
       "business_name": _controller[1].text,
-      "business_phone": _controller[2].text,
       "landline": _controller[3].text,
-      "working_hours": _controller[4].text,
-      "location": _GMapcontroller,
-      "address": [
-        _controller[6].text + _controller[7].text + _controller[8].text
-      ],
+      "business_phone": _controller[2].text,
+      "address[]": adderess.split(","),
       "pincode": _controller[9].text,
       "town_city": _controller[10].text,
       "state_id": _controller[11].text,
       "country_id": '1',
+      "location": "${_position.latitude},${_position.longitude}",
+      "working_hours": _controller[4].text,
+      "website[]": website.split(","),
       "business_email": _controller[13].text,
       "short_description": _controller[14].text,
-      "website": website,
+      "photo": "${_controller[0].text}",
+      "business_hours": "${lst.toString()}"
     };
+
+    WebService.funUserProfileUpdate(_map).then((value) async {
+      if (value.status == 'success') {
+        BotToast.showLoading(duration: Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
+        BotToast.showText(text: value.message);
+      }
+    });
   }
 }

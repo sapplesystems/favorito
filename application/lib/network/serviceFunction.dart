@@ -33,5 +33,5 @@ class serviceFunction {
   static String funEditOffer = baseUrl2 + 'offer/edit';
   static String funGetEditJobData = baseUrl2 + 'job/detail';
   static String funEditJob = baseUrl2 + 'job/edit';
-  static String funUserProfileUpdate = baseUrl2 + 'user/profile/update';
+  static String funUserProfileUpdate = baseUrl1 + 'user/profile/update';
 }

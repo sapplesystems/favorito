@@ -27,11 +27,5 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Login()
-      // MenuSetting()
-      // MenuSetting()
-      // OnlineStore()
-      // WaitListSetting()
-      // ManualWaitList()R
-      // appoinmentSetting()
       );
 }

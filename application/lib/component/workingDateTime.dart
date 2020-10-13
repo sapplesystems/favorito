@@ -10,6 +10,7 @@ class WorkingDateTime extends StatefulWidget {
   TextEditingController controller = TextEditingController();
   List<bool> tempState = [];
   Map<String, String> selecteddayList;
+
   WorkingDateTime({this.selecteddayList});
 
   @override
@@ -113,7 +114,6 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
   days(int j) {
     return InkWell(
       onTap: () {
-        print(daylist[j]);
         setState(() {
           if (!widget.tempState[j]) {
             if (_daysSelectedList[j])
