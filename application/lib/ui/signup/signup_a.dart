@@ -156,7 +156,7 @@ class _signup_aState extends State<signup_a> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
                                     valid: true,
-                                    ctrl: ctrl[1],
+                                    controller: ctrl[1],
                                     title: "Business Name",
                                     security: false)),
                             Padding(
@@ -180,14 +180,14 @@ class _signup_aState extends State<signup_a> {
                             Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
-                                    ctrl: ctrl[3],
+                                    controller: ctrl[3],
                                     valid: true,
                                     title: "Postal Code",
                                     security: false)),
                             Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
-                                    ctrl: ctrl[4],
+                                    controller: ctrl[4],
                                     valid: true,
                                     title:
                                         catvisib ? "Business Phone" : "Phone",

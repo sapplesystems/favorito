@@ -53,12 +53,11 @@ class _settingState extends State<setting> {
               child: ListTile(
                 leading: Padding(
                   padding: const EdgeInsets.only(right: 12.0),
-                  child: Image.network(
-                    photoUrl == ""
-                        ? "https://source.unsplash.com/random/400*400"
-                        : photoUrl,
-                    height: sm.scaledHeight(20),
-                    fit: BoxFit.cover,
+                  child: CircleAvatar(
+                    radius: sm.scaledWidth(8),
+                    backgroundImage: NetworkImage(photoUrl != null
+                        ? photoUrl
+                        : "https://source.unsplash.com/random/600*600"),
                   ),
                 ),
                 title: Text(

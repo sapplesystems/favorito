@@ -216,7 +216,7 @@ class _StoreSettingState extends State<StoreSetting> {
               padding:
                   const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
               child: txtfieldboundry(
-                ctrl: _myDeliveryMinimumAmountEditController,
+                controller: _myDeliveryMinimumAmountEditController,
                 title: "Minimum Bill",
                 hint: "Enter minimum amount",
                 security: false,
@@ -227,7 +227,7 @@ class _StoreSettingState extends State<StoreSetting> {
               padding:
                   const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
               child: txtfieldboundry(
-                ctrl: _myDeliveryPackagingEditController,
+                controller: _myDeliveryPackagingEditController,
                 title: "Packaging Charge",
                 hint: "Enter packaging charge",
                 security: false,

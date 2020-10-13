@@ -99,7 +99,7 @@ class _CreateOfferState extends State<CreateOffer> {
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: txtfieldboundry(
-                                ctrl: _myTitleEditController,
+                                controller: _myTitleEditController,
                                 title: "Title",
                                 security: false,
                                 valid: true,
@@ -108,7 +108,7 @@ class _CreateOfferState extends State<CreateOffer> {
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: txtfieldboundry(
-                                ctrl: _myDescriptionEditController,
+                                controller: _myDescriptionEditController,
                                 title: "Description",
                                 security: false,
                                 maxLines: 5,

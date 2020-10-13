@@ -73,7 +73,7 @@ class _LoginState extends State<Login> {
                               child: txtfieldboundry(
                                 valid: true,
                                 title: "Email/Phone",
-                                ctrl: userCtrl,
+                                controller: userCtrl,
                                 security: false,
                               ),
                             ),
@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
                                   valid: true,
                                   maxLines: 1,
                                   title: "Password",
-                                  ctrl: passCtrl,
+                                  controller: passCtrl,
                                   security: true,
                                 )),
                             Row(
@@ -149,6 +149,7 @@ class _LoginState extends State<Login> {
       BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
       WebService.funGetLogin(_map).then((value) {
         if (value.status == "success") {
+          Navigator.pop(context);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => bottomNavigation()));
         } else {
@@ -163,6 +164,7 @@ class _LoginState extends State<Login> {
     if (token != null && token != "") {
       print("Token:$token");
       Future.delayed(Duration.zero, () {
+        Navigator.pop(context);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => bottomNavigation()));
       });

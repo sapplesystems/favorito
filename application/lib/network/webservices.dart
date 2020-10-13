@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
+import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
@@ -63,8 +64,10 @@ class WebService {
     dashModel _data = dashModel();
     print("Request URL:${serviceFunction.funDash}");
     response = await dio.post(serviceFunction.funDash, options: _opt);
+    print("Response:${response.toString()}");
     if (response.statusCode == 200) {
       _data = dashModel.fromJson(convert.json.decode(response.toString()));
+      print("DashBoard Data is:${_data.toString()}");
     } else if (response.statusCode != 200) {
       Prefs().clear();
     }
@@ -164,6 +167,19 @@ class WebService {
     response = await dio.post(serviceFunction.funGetCities, options: _opt);
     _returnData =
         CityListModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData3:${_returnData.status}");
+    return _returnData;
+  }
+
+  static Future<StateListModel> funGetStates() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    StateListModel _returnData = StateListModel();
+    response = await dio.post(serviceFunction.funGetStates, options: _opt);
+    _returnData =
+        StateListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_returnData.status}");
     return _returnData;
   }
@@ -354,10 +370,12 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"pincode": pincode};
     CityModelResponse _returnData = CityModelResponse();
+    print("Request URL:${serviceFunction.funGetCityByPincode}");
     response = await dio.post(serviceFunction.funGetCityByPincode,
         data: _map, options: _opt);
     _returnData =
         CityModelResponse.fromJson(convert.json.decode(response.toString()));
+    print("responseData5:${_returnData.toString()}");
     return _returnData;
   }
 
@@ -524,6 +542,25 @@ class WebService {
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_returnData.status}");
+    return _returnData;
+  }
+
+//this service is used for business profile
+  static Future<BaseResponseModel> funUserProfileUpdate(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      HttpHeaders.contentTypeHeader: 'application/json'
+    });
+    BaseResponseModel _returnData = BaseResponseModel();
+    print("Request URL:${serviceFunction.funUserProfileUpdate}");
+    print("RequestData URL:${_map.toString()}");
+    response = await dio.post(serviceFunction.funUserProfileUpdate,
+        data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    print("responseData1:${_returnData.status}");
     return _returnData;
   }
 }

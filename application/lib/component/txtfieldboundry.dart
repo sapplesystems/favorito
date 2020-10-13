@@ -10,7 +10,7 @@ class txtfieldboundry extends StatefulWidget {
   bool valid;
   bool isEnabled;
   TextInputType keyboardSet;
-  TextEditingController ctrl;
+  TextEditingController controller;
   Function myOnChanged;
   RegExp myregex;
   Function prefClick;
@@ -18,7 +18,7 @@ class txtfieldboundry extends StatefulWidget {
       {this.title,
       this.security,
       this.hint,
-      this.ctrl,
+      this.controller,
       this.maxlen,
       this.keyboardSet,
       this.myregex,
@@ -35,8 +35,9 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(8),
       child: TextFormField(
-        controller: widget.ctrl,
+        controller: widget.controller,
         obscureText: widget.security,
         maxLength: widget.maxlen,
         decoration: InputDecoration(

@@ -94,7 +94,7 @@ class _NewCatlogState extends State<NewCatlog> {
                         valid: true,
                         title: title[i],
                         hint: "Enter ${title[i]}",
-                        ctrl: controller[i],
+                        controller: controller[i],
                         maxLines: i == 2 ? 4 : 1,
                         security: false,
                       ),

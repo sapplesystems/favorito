@@ -1,8 +1,5 @@
-import 'package:Favorito/ui/booking/Bookings.dart';
-import 'package:Favorito/ui/item/NewItem.dart';
-import 'package:Favorito/ui/menu/Menu.dart';
+import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/menu/MenuSetting.dart';
-import 'package:Favorito/ui/store/OnlineStore.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,12 +26,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:
-          // Login()
-          // MenuSetting()
-          OnlineStore()
-      // WaitListSetting()
-      // ManualWaitList()
-      // appoinmentSetting()
+      home: Login()
       );
 }
