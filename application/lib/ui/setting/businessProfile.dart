@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 import 'package:Favorito/component/MyGoogleMap.dart';
 import 'package:Favorito/component/PopupContent.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 
 class BusinessProfile extends StatefulWidget {
   @override
@@ -49,23 +51,41 @@ class _BusinessProfileState extends State<BusinessProfile>
   bool byAppointment = false;
   bool onWhatsapp = false;
   Position _position;
+  int stateId = 0;
+  int cityId = 0;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  File _image;
+
+  Future getImage(ImgSource source) async {
+    var image = await ImagePickerGC.pickImage(
+      context: context,
+      source: source,
+      cameraIcon: Icon(
+        Icons.add,
+        color: Colors.red,
+      ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
+    );
+    setState(() {
+      _image = image;
+    });
+    WebService.profileImageUpdate(image).then((value) {
+      print("ImageUpdated:${value.message}");
+    });
+  }
+
   @override
   void initState() {
+    _getCurrentLocation();
     getBusinessProfileData();
     WidgetsBinding.instance.addObserver(this);
-    for (int i = 0; i < 16; i++) {
-      _controller.add(TextEditingController());
-      // _controller[i].text = '';
-    }
+    for (int i = 0; i < 16; i++) _controller.add(TextEditingController());
+    print("a12${_businessProfileData.data}");
+    // _controller[0].text = "https://source.unsplash.com/random/400*400";
 
-    _controller[0].text = _businessProfileData.data != null
-        ? _businessProfileData.data.photo
-        : "https://source.unsplash.com/random/400*400";
+    super.initState();
     _cityWebData();
     _stateWebData();
-    super.initState();
-    _getCurrentLocation();
+    getProfileData();
   }
 
   _getCurrentLocation() async {
@@ -166,18 +186,30 @@ class _BusinessProfileState extends State<BusinessProfile>
                                 child: Stack(children: [
                                   ClipRRect(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      child: Image.network(
-                                        _controller[0].text,
-                                        height: sm.scaledHeight(20),
-                                        width: sm.scaledWidth(72),
-                                        fit: BoxFit.cover,
-                                      )),
+                                      child: _image == null
+                                          ? Image.network(
+                                              _controller[0].text,
+                                              height: sm.scaledHeight(20),
+                                              width: sm.scaledWidth(72),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Container(
+                                              height: sm.scaledHeight(20),
+                                              width: sm.scaledWidth(78),
+                                              child: Image.asset(
+                                                _image.path,
+                                                fit: BoxFit.cover,
+                                                height: double.infinity,
+                                                width: double.infinity,
+                                                alignment: Alignment.center,
+                                              ))),
                                   Positioned(
                                       child: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () =>
+                                              getImage(ImgSource.Gallery),
                                           icon: Icon(Icons
                                               .center_focus_strong_outlined),
-                                          color: Colors.white))
+                                          color: Colors.deepOrange))
                                 ])),
                             txtfieldboundry(
                               controller: _controller[1],
@@ -377,12 +409,14 @@ class _BusinessProfileState extends State<BusinessProfile>
                               ),
                             ),
                             Container(
-                              //_controller[5] is allign for this
+                              //_controller[6] is allign for this
                               height: 250,
-                              child: MyGoogleMap(
-                                  controller: _GMapcontroller,
-                                  initPosition: _initPosition,
-                                  marker: _marker),
+                              child: _initPosition != null
+                                  ? MyGoogleMap(
+                                      controller: _GMapcontroller,
+                                      initPosition: _initPosition,
+                                      marker: _marker)
+                                  : Container(),
                             ),
                             for (int i = 0; i < addressLength; i++)
                               txtfieldPostAction(
@@ -409,30 +443,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                 keyboardSet: TextInputType.number,
                                 hint: "Enter Pincode",
                                 myOnChanged: (_val) {
-                                  if (_val.length == 6) {
-                                    WebService.funGetCityByPincode(
-                                            _controller[9].text)
-                                        .then((value) {
-                                      if (value.data.city == null) {
-                                        BotToast.showText(text: value.message);
-                                        return;
-                                      }
-                                      setState(() {
-                                        _controller[10].text = value.data.city;
-                                        _controller[11].text =
-                                            value.data.stateName;
-                                        _controller[12].text = "India";
-                                      });
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _controller[10].text = "";
-
-                                      _controller[11].text = "";
-
-                                      _controller[12].text = "";
-                                    });
-                                  }
+                                  pinCaller(_val);
                                 }),
                             Padding(
                               padding: EdgeInsets.all(8.0),
@@ -678,5 +689,52 @@ class _BusinessProfileState extends State<BusinessProfile>
         BotToast.showText(text: value.message);
       }
     });
+  }
+
+  void getProfileData() async {
+    await WebService.getProfileData().then((value) {
+      var va = value.data;
+      for (int i = 0; i < va.website.length - 1; i++) webSiteLengthPlus();
+      _controller[0].text = va.photo;
+      _controller[1].text = va.businessName;
+      _controller[2].text = va.businessPhone;
+      _controller[3].text = va.landline;
+      _controller[4].text = va.workingHours;
+      // _controller[5].text = va.;
+      _controller[6].text = va.address1;
+      _controller[7].text = va.address2;
+      _controller[8].text = va.address3;
+      _controller[9].text = va.pincode;
+      pinCaller(va.pincode);
+      _controller[13].text = va.businessEmail;
+      _controller[14].text = va.shortDescription;
+      for (int i = 0; i < va.website.length; i++) {
+        _controller[i + 15].text = va.website[i];
+      }
+    });
+  }
+
+  void pinCaller(_val) {
+    if (_val.length == 6) {
+      WebService.funGetCityByPincode(_controller[9].text).then((value) {
+        if (value.data.city == null) {
+          BotToast.showText(text: value.message);
+          return;
+        }
+        setState(() {
+          _controller[10].text = value.data.city;
+          _controller[11].text = value.data.stateName;
+          _controller[12].text = "India";
+        });
+      });
+    } else {
+      setState(() {
+        _controller[10].text = "";
+
+        _controller[11].text = "";
+
+        _controller[12].text = "";
+      });
+    }
   }
 }
