@@ -107,7 +107,7 @@ class WebService {
     });
     response = await dio.post(serviceFunction.funProfileUpdatephoto,
         data: formData, options: _opt);
-    return null;
+    return response.data;
   }
 
   // static Future<BaseResponseModel> profileImageUpdates(File file) async {
@@ -596,8 +596,7 @@ class WebService {
 //this service is used for business profile
   static Future<BaseResponseModel> funUserProfileUpdate(Map _map) async {
     String token = await Prefs.token;
-    Options _opt =
-        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+    Options _opt = Options(contentType: Headers.jsonContentType, headers: {
       HttpHeaders.authorizationHeader: "Bearer $token",
       HttpHeaders.contentTypeHeader: 'application/json'
     });
