@@ -53,6 +53,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   Position _position;
   int stateId = 0;
   int cityId = 0;
+  List<String> addressList = [];
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   File _image;
 
@@ -80,7 +81,6 @@ class _BusinessProfileState extends State<BusinessProfile>
     WidgetsBinding.instance.addObserver(this);
     for (int i = 0; i < 16; i++) _controller.add(TextEditingController());
     print("a12${_businessProfileData.data}");
-    // _controller[0].text = "https://source.unsplash.com/random/400*400";
 
     super.initState();
     _cityWebData();
@@ -201,7 +201,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                                 fit: BoxFit.cover,
                                                 height: double.infinity,
                                                 width: double.infinity,
-                                                alignment: Alignment.center,
+                                                // alignment: Alignment.center,
                                               ))),
                                   Positioned(
                                       child: IconButton(
@@ -658,8 +658,9 @@ class _BusinessProfileState extends State<BusinessProfile>
     }
     var adderess = "";
     _controller[5].text = lst.toString();
+    addressList.clear();
     for (int i = 0; i < addressLength; i++) {
-      adderess = _controller[i + 6].text + "," + adderess;
+      addressList.add(_controller[i + 6].text);
       // print("\nttttttt$i=$a");
     }
 
@@ -668,18 +669,18 @@ class _BusinessProfileState extends State<BusinessProfile>
       "business_name": _controller[1].text,
       "landline": _controller[3].text,
       "business_phone": _controller[2].text,
-      "address[]": adderess.split(","),
+      "address": addressList,
       "pincode": _controller[9].text,
       "town_city": _controller[10].text,
       "state_id": _controller[11].text,
       "country_id": '1',
       "location": "${_position.latitude},${_position.longitude}",
       "working_hours": _controller[4].text,
-      "website[]": website.split(","),
+      "website": website.split(","),
       "business_email": _controller[13].text,
       "short_description": _controller[14].text,
       "photo": "${_controller[0].text}",
-      "business_hours": "${lst.toString()}"
+      "business_hours": lst
     };
 
     WebService.funUserProfileUpdate(_map).then((value) async {
@@ -694,16 +695,21 @@ class _BusinessProfileState extends State<BusinessProfile>
   void getProfileData() async {
     await WebService.getProfileData().then((value) {
       var va = value.data;
+      addressList.clear();
       for (int i = 0; i < va.website.length - 1; i++) webSiteLengthPlus();
+
+      addressList.add(va.address1);
+      addressList.add(va.address2);
+      addressList.add(va.address3);
+      addressLength = addressList.length;
       _controller[0].text = va.photo;
       _controller[1].text = va.businessName;
       _controller[2].text = va.businessPhone;
       _controller[3].text = va.landline;
       _controller[4].text = va.workingHours;
-      // _controller[5].text = va.;
-      _controller[6].text = va.address1;
-      _controller[7].text = va.address2;
-      _controller[8].text = va.address3;
+      _controller[6].text = addressList[0];
+      _controller[7].text = addressList[1];
+      _controller[8].text = addressList[2];
       _controller[9].text = va.pincode;
       pinCaller(va.pincode);
       _controller[13].text = va.businessEmail;
@@ -711,6 +717,16 @@ class _BusinessProfileState extends State<BusinessProfile>
       for (int i = 0; i < va.website.length; i++) {
         _controller[i + 15].text = va.website[i];
       }
+
+      print("asasas1 ${va.hours.toList()}");
+      var _v = (va.location.split(','));
+      setState(() {
+        _initPosition = CameraPosition(
+            target: LatLng(double.parse(_v[0]), double.parse(_v[1])), zoom: 17);
+      });
+      for (int _i = 0; _i < va.hours.length; _i++)
+        selecteddayList[(va.hours.toList())[_i].day] =
+            "${(va.hours.toList())[_i].startHours}-${(va.hours.toList())[_i].endHours}";
     });
   }
 
