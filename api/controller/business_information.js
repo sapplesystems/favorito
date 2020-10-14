@@ -23,12 +23,13 @@ exports.getBusinessInformation = function (req, res, next) {
             } else if (rows.length === 0) {
                 return res.status(403).send({ status: 'error', message: 'No recored found.' });
             } else {
-                /*var sub_categories_id = rows[0].sub_categories_id;
+                var sub_categories_id = rows[0].sub_categories_id;
                 var sub_categories_name = rows[0].sub_categories_name;
                 rows[0].sub_categories_id = sub_categories_id.split(',');
-                rows[0].sub_categories_name = sub_categories_name.split(',');*/
-
+                rows[0].sub_categories_name = sub_categories_name.split(',');
                 rows[0].payment_method = (rows[0].payment_method).split(',');
+                rows[0].tags = (rows[0].tags).split(',');
+                rows[0].attributes = (rows[0].attributes).split(',');
 
                 var q = "select id, type, asset_url as photo from business_uploads where business_id='" + business_id + "' and is_deleted='0' and deleted_at is null";
                 db.query(q, function (e, r, f) {
@@ -61,7 +62,9 @@ exports.getBusinessInformationUpdate = function (req, res, next) {
             update_columns += ", sub_categories='" + sub_categories + "' ";
         }
         if (req.body.tags != '' && req.body.tags != 'undefined' && req.body.tags != null) {
-            update_columns += ", `tags`='" + req.body.tags + "' ";
+            var tags = req.body.tags;
+            tags = tags.join();
+            update_columns += ", `tags`='" + tags + "' ";
         }
         if (req.body.price_range != '' && req.body.price_range != 'undefined' && req.body.price_range != null) {
             update_columns += ", price_range='" + req.body.price_range + "' ";
