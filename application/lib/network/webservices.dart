@@ -26,12 +26,14 @@ import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
+import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 
 class WebService {
   static Response response;
@@ -87,6 +89,52 @@ class WebService {
       print("Request URL:${serviceFunction.funGetNotifications}");
       _returnData = NotificationListRequestModel.fromJson(
           convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
+    return _returnData;
+  }
+
+  static Future<BaseResponseModel> profileImageUpdate(File file) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "photo": await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+    response = await dio.post(serviceFunction.funProfileUpdatephoto,
+        data: formData, options: _opt);
+    return null;
+  }
+
+  // static Future<BaseResponseModel> profileImageUpdates(File file) async {
+  //   var uri = Uri.parse(serviceFunction.funProfileUpdatephoto);
+  //   var request = http.MultipartRequest('POST', uri)
+  //     ..headers.addAll({'authorization': 'Bearer ${await Prefs.token}'})
+  //     ..files.add(await http.MultipartFile.fromPath(
+  //       'photo',
+  //       file.path,
+  //     ));
+  //   var response = await request.send();
+  //   if (response.statusCode == 200) ;
+  //   return null;
+  // }
+
+  static Future<profileDataModel> getProfileData() async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    profileDataModel _returnData = profileDataModel();
+    response = await dio.post(serviceFunction.funUserProfile, options: _opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:${serviceFunction.funUserProfile}");
+      print("Response is :${response.toString()}");
+      _returnData =
+          profileDataModel.fromJson(convert.json.decode(response.toString()));
     } else {
       print("responseData4:${response.statusCode}");
     }

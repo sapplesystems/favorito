@@ -188,6 +188,12 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "get",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/get-3.13.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.8"
+    },
+    {
       "name": "google_api_availability",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/google_api_availability-2.0.4",
       "packageUri": "lib/",
@@ -212,6 +218,12 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "http",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/http-0.12.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.4"
+    },
+    {
       "name": "http_parser",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/http_parser-3.1.4",
       "packageUri": "lib/",
@@ -222,6 +234,24 @@
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/icon_text_button-0.1.7",
       "packageUri": "lib/",
       "languageVersion": "2.1"
+    },
+    {
+      "name": "image_picker",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.7+11",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "image_picker_gallery_camera",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/image_picker_gallery_camera-0.1.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "image_picker_platform_interface",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/image_picker_platform_interface-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.5"
     },
     {
       "name": "intl",
@@ -298,6 +328,12 @@
     {
       "name": "path_provider_windows",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-0.0.4+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "pedantic",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/pedantic-1.9.2",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
@@ -512,7 +548,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-10-11T21:44:27.207639Z",
+  "generated": "2020-10-13T20:48:39.248508Z",
   "generator": "pub",
   "generatorVersion": "2.11.0-161.0.dev"
 }
