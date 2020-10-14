@@ -1,4 +1,6 @@
 var db = require('../config/db');
+var static_payment_method = ['Cash Only', 'Cash & Cards', 'Favorito Pay'];
+var static_price_range = [10, 100, 1000, 10000];
 
 /**
  * FETCH BUSINESS USER PROFILE INFORMATION (BUSINESS USER) START HERE
@@ -26,11 +28,12 @@ exports.getBusinessInformation = function (req, res, next) {
                 rows[0].sub_categories_id = sub_categories_id.split(',');
                 rows[0].sub_categories_name = sub_categories_name.split(',');*/
 
+                rows[0].payment_method = (rows[0].payment_method).split(',');
+
                 var q = "select id, type, asset_url as photo from business_uploads where business_id='" + business_id + "' and is_deleted='0' and deleted_at is null";
                 db.query(q, function (e, r, f) {
                     rows[0].photos = r;
-                    var static_price_range = [10, 100, 1000, 10000];
-                    return res.status(200).json({ status: 'success', message: 'success', static_price_range: static_price_range, data: rows[0] });
+                    return res.status(200).json({ status: 'success', message: 'success', static_payment_method: static_payment_method, static_price_range: static_price_range, data: rows[0] });
                 });
             }
         });
@@ -64,7 +67,9 @@ exports.getBusinessInformationUpdate = function (req, res, next) {
             update_columns += ", price_range='" + req.body.price_range + "' ";
         }
         if (req.body.payment_method != '' && req.body.payment_method != 'undefined' && req.body.payment_method != null) {
-            update_columns += ", payment_method='" + req.body.payment_method + "' ";
+            var pm = req.body.payment_method;
+            pm = pm.join();
+            update_columns += ", payment_method='" + pm + "' ";
         }
         if (req.body.attributes != '' && req.body.attributes != 'undefined' && req.body.attributes != null) {
             var attributes = req.body.attributes;
