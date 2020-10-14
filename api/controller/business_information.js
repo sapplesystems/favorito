@@ -29,7 +29,8 @@ exports.getBusinessInformation = function (req, res, next) {
                 var q = "select id, type, asset_url as photo from business_uploads where business_id='" + business_id + "' and is_deleted='0' and deleted_at is null";
                 db.query(q, function (e, r, f) {
                     rows[0].photos = r;
-                    return res.status(200).json({ status: 'success', message: 'success', data: rows[0] });
+                    var static_price_range = [10, 100, 1000, 10000];
+                    return res.status(200).json({ status: 'success', message: 'success', static_price_range: static_price_range, data: rows[0] });
                 });
             }
         });
