@@ -7,10 +7,14 @@ var dd_verbose = {
 /**
  * FETCH BUSINESS USER PROFILE INFORMATION (BUSINESS USER) START HERE
  */
-exports.getBusinessInformation = function (req, res, next) {
+exports.getBusinessInformation = async function (req, res, next) {
     try {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
+
+        dd_verbose.tag_list = await exports.getTagList();
+        dd_verbose.attribute_list = await exports.geAttributeList();
+
         var sql = "SELECT business_informations.id AS business_information_id, business_id, business_categories.id AS category_id, business_categories.category_name, \n\
         sub_categories as sub_categories_id, (SELECT GROUP_CONCAT(category_name) FROM business_categories \n\
         WHERE FIND_IN_SET(id, business_informations.sub_categories) AND deleted_at IS NULL) AS sub_categories_name, \n\
@@ -19,16 +23,20 @@ exports.getBusinessInformation = function (req, res, next) {
         ON business_informations.categories = business_categories.id \n\
         WHERE business_id='"+ business_id + "' AND business_informations.deleted_at IS NULL \n\
         AND business_categories.deleted_at IS NULL";
-        db.query(sql, function (err, rows, fields) {
+        db.query(sql, async function (err, rows, fields) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
                 return res.status(403).send({ status: 'error', message: 'No recored found.' });
             } else {
                 var sub_categories_id = rows[0].sub_categories_id;
-                var sub_categories_name = rows[0].sub_categories_name;
+                var sub_categories = await exports.getSubCategories(sub_categories_id);
+                rows[0].sub_categories = sub_categories;
+
+                /*var sub_categories_name = rows[0].sub_categories_name;
                 rows[0].sub_categories_id = sub_categories_id.split(',');
-                rows[0].sub_categories_name = sub_categories_name.split(',');
+                rows[0].sub_categories_name = sub_categories_name.split(',');*/
+                
                 rows[0].payment_method = (rows[0].payment_method).split(',');
                 rows[0].tags = (rows[0].tags).split(',');
                 rows[0].attributes = (rows[0].attributes).split(',');
@@ -117,6 +125,47 @@ exports.addPhotos = function (req, res, next) {
         } else {
             return res.status(200).json({ status: 'success', message: 'No photo found to upload.' });
         }
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+
+exports.getTagList = function (req, res, next) {
+    try {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT id,tag_name FROM business_tags where deleted_at is null";
+            db.query(sql, function (err, result) {
+                resolve(result);
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+exports.geAttributeList = function (req, res, next) {
+    try {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT id,attribute_name FROM business_attributes where deleted_at is null";
+            db.query(sql, function (err, result) {
+                resolve(result);
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+exports.getSubCategories = function (sub_category_ids) {
+    try {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT id, category_name FROM business_categories \n\
+            WHERE id IN("+ sub_category_ids + ") AND deleted_at IS NULL";
+            db.query(sql, function (err, result) {
+                resolve(result);
+            });
+        });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
