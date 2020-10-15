@@ -30,6 +30,11 @@ var PageViews = require('./routes/page_views');
 var BusinessTag = require('./routes/business_tag');
 var BusinessAttribute = require('./routes/business_attribute');
 
+/**
+ * USER ROUTES DETAIL
+ */
+var BusinessUser = require('./routes/user/business_users');
+
 var app = express();
 
 // view engine setup
@@ -67,6 +72,11 @@ app.use('/api/business-order', BusinessOrder);
 app.use('/api/page-views', PageViews);
 app.use('/api/tag', BusinessTag);
 app.use('/api/attribute', BusinessAttribute);
+
+/**
+ * USING USER ROUTES
+ */
+app.use('/api/user', BusinessUser);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

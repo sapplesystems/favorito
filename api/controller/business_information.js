@@ -160,7 +160,7 @@ exports.geAttributeList = function (req, res, next) {
 exports.getSubCategories = function (sub_category_ids) {
     try {
         return new Promise(function (resolve, reject) {
-            var sql = "SELECT id, category_name FROM business_categories \n\
+            var sql = "SELECT id, category_name as `sub_category_name` FROM business_categories \n\
             WHERE id IN("+ sub_category_ids + ") AND deleted_at IS NULL";
             db.query(sql, function (err, result) {
                 resolve(result);
