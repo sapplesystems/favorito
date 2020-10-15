@@ -27,6 +27,8 @@ var BusinessMenu = require('./routes/business_menu');
 var BusinessMenuOnlineStore = require('./routes/business_menu_online_store');
 var BusinessOrder = require('./routes/business_order');
 var PageViews = require('./routes/page_views');
+var BusinessTag = require('./routes/business_tag');
+var BusinessAttribute = require('./routes/business_attribute');
 
 var app = express();
 
@@ -63,6 +65,8 @@ app.use('/api/business-menu', BusinessMenu);
 app.use('/api/business-menu-online-store', BusinessMenuOnlineStore);
 app.use('/api/business-order', BusinessOrder);
 app.use('/api/page-views', PageViews);
+app.use('/api/tag', BusinessTag);
+app.use('/api/attribute', BusinessAttribute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
