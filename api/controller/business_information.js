@@ -30,16 +30,12 @@ exports.getBusinessInformation = async function (req, res, next) {
                 return res.status(403).send({ status: 'error', message: 'No recored found.' });
             } else {
                 var sub_categories_id = rows[0].sub_categories_id;
-                var sub_categories = await exports.getSubCategories(sub_categories_id);
-                rows[0].sub_categories = sub_categories;
-
-                /*var sub_categories_name = rows[0].sub_categories_name;
-                rows[0].sub_categories_id = sub_categories_id.split(',');
-                rows[0].sub_categories_name = sub_categories_name.split(',');*/
-                
+                var tags = rows[0].tags;
+                var attributes = rows[0].attributes;
+                rows[0].sub_categories = await exports.getSubCategories(sub_categories_id);
+                rows[0].tags = await exports.getTags(tags);
+                rows[0].attributes = await exports.getAttributes(attributes);
                 rows[0].payment_method = (rows[0].payment_method).split(',');
-                rows[0].tags = (rows[0].tags).split(',');
-                rows[0].attributes = (rows[0].attributes).split(',');
 
                 var q = "select id, type, asset_url as photo from business_uploads where business_id='" + business_id + "' and is_deleted='0' and deleted_at is null";
                 db.query(q, function (e, r, f) {
@@ -162,6 +158,34 @@ exports.getSubCategories = function (sub_category_ids) {
         return new Promise(function (resolve, reject) {
             var sql = "SELECT id, category_name as `sub_category_name` FROM business_categories \n\
             WHERE id IN("+ sub_category_ids + ") AND deleted_at IS NULL";
+            db.query(sql, function (err, result) {
+                resolve(result);
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+exports.getTags = function (tag_ids) {
+    try {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT id, tag_name FROM business_tags \n\
+            WHERE id IN("+ tag_ids + ") AND deleted_at IS NULL";
+            db.query(sql, function (err, result) {
+                resolve(result);
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+exports.getAttributes = function (attibute_ids) {
+    try {
+        return new Promise(function (resolve, reject) {
+            var sql = "SELECT id, attribute_name FROM business_attributes \n\
+            WHERE id IN("+ attibute_ids + ") AND deleted_at IS NULL";
             db.query(sql, function (err, result) {
                 resolve(result);
             });
