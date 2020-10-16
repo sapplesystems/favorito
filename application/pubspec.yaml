@@ -24,6 +24,7 @@ dependencies:
   get:
   flutter_svg:
   dio:
+  neumorphic:
   flutter:
     sdk: flutter
 

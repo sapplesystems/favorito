@@ -2,6 +2,7 @@ class serviceFunction {
   static String baseUrl1 = 'http://demos.sappleserve.com:3000/api/business-';
   static String baseUrl2 = 'http://demos.sappleserve.com:3000/api/';
   static String funCatList = baseUrl1 + 'category/list';
+  static String funSubCatList = baseUrl1 + 'sub-category/list';
   static String funBusyList = baseUrl1 + 'type/list';
   static String funGetNotifications = baseUrl2 + 'notification/list';
   static String funBusyRegister = baseUrl1 + 'user/register';
@@ -36,4 +37,5 @@ class serviceFunction {
   static String funUserProfileUpdate = baseUrl1 + 'user/profile/update';
   static String funProfileUpdatephoto = baseUrl1 + 'user/profile/update-photo';
   static String funUserProfile = baseUrl1 + 'user/profile';
+  static String funUserInformation = baseUrl1 + 'user/information';
 }

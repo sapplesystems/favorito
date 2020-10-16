@@ -11,7 +11,7 @@ import 'package:Favorito/ui/jobs/JobList.dart';
 import 'package:Favorito/ui/notification/Notifications.dart';
 import 'package:Favorito/ui/offer/Offers.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
-import 'package:Favorito/ui/setting/businessProfile.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
