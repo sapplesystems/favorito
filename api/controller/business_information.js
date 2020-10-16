@@ -197,7 +197,6 @@ exports.getBusinessInformationUploads = function (business_id) {
         return new Promise(function (resolve, reject) {
             var sql = "select id, type, concat('"+ img_path + "',asset_url) as photo from business_uploads where business_id='" + business_id + "' and is_deleted='0' and deleted_at is null";
             db.query(sql, function (err, result) {
-                console.log(sql);
                 resolve(result)
             });
         });
