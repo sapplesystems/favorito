@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class ContactPerson extends StatefulWidget {
   @override
   _ContactPersonState createState() => _ContactPersonState();
@@ -91,6 +92,7 @@ class _ContactPersonState extends State<ContactPerson> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
+        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: myBackGround,
           elevation: 0,
@@ -106,319 +108,305 @@ class _ContactPersonState extends State<ContactPerson> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: Container(
-            decoration: BoxDecoration(
-              color: myBackGround,
-            ),
-            child: ListView(
-              children: [
-                Container(
-                  margin:
-                      EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
-                  child: Stack(
-                    children: [
-                      Card(
-                        margin: EdgeInsets.only(top: sm.scaledHeight(10)),
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        ),
-                        child: Builder(
-                          builder: (context) => Form(
-                            key: _form1Key,
-                            autovalidate: _autoValidateForm,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: sm.scaledHeight(12),
-                                      left: 32.0,
-                                      right: 32.0),
-                                  child: Text(
-                                    displayName,
-                                    style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: sm.scaledHeight(2),
-                                      left: 8.0,
-                                      right: 8.0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Email : ",
-                                          style: TextStyle(fontSize: 20.0),
-                                        ),
-                                        Text(
-                                          displayEmail,
-                                          style: TextStyle(fontSize: 20.0),
-                                        ),
-                                      ]),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    ctrl: _myFirstNameEditController,
-                                    title: "First Name",
-                                    security: false,
-                                    valid: true,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    ctrl: _myLastNameEditController,
-                                    title: "Last Name",
-                                    security: false,
-                                    valid: true,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    ctrl: _myPersonalEmailEditController,
-                                    title: "Personal Email",
-                                    security: false,
-                                    valid: true,
-                                    isEnabled: false,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    ctrl: _myPersonalMobileEditController,
-                                    title: "Personal Mobile",
-                                    security: false,
-                                    valid: true,
-                                    isEnabled: false,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16.0, right: 16.0, top: 16.0),
-                                  child: DropdownSearch<String>(
-                                    validator: (v) =>
-                                        v == '' ? "required field" : null,
-                                    autoValidate: _autoValidateForm,
-                                    mode: Mode.MENU,
-                                    selectedItem: _selectedRole,
-                                    items: _roleList,
-                                    label: "Role",
-                                    hint: "Please Select Role",
-                                    showSearchBox: false,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _selectedRole = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: sm.scaledWidth(10),
-                                        right: sm.scaledWidth(10)),
-                                    child: SvgPicture.asset(
-                                        'assets/icon/changePassword.svg',
-                                        alignment: Alignment.center,
-                                        height: sm.scaledHeight(20),
-                                        fit: BoxFit.contain),
-                                  ),
-                                ),
-                              ],
+        body: ListView(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+              child: Stack(
+                children: [
+                  Card(
+                    margin: EdgeInsets.only(top: sm.scaledHeight(10)),
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    child: Builder(
+                      builder: (context) => Form(
+                        key: _form1Key,
+                        autovalidate: _autoValidateForm,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: sm.scaledHeight(12),
+                                  left: 32.0,
+                                  right: 32.0),
+                              child: Text(
+                                displayName,
+                                style: TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                          top: sm.scaledWidth(5),
-                          left: sm.scaledWidth(30),
-                          right: sm.scaledWidth(30),
-                          child: SvgPicture.asset(
-                              'assets/icon/contactPerson.svg',
-                              alignment: Alignment.center,
-                              height: sm.scaledHeight(20))),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin:
-                      EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
-                  child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      ),
-                      child: Builder(
-                        builder: (context) => Form(
-                          key: _form2Key,
-                          autovalidate: _autoValidateForm,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Bank Details",
-                                  style: TextStyle(
-                                      fontSize: 24.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Center(
-                                  child: txtfieldboundry(
-                                    ctrl: _myNameEditController,
-                                    title: "Name",
-                                    security: false,
-                                    valid: true,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: txtfieldboundry(
-                                  ctrl: _myAccountNoEditController,
-                                  title: "A/C Number",
-                                  security: false,
-                                  valid: true,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: txtfieldboundry(
-                                  ctrl: _myIFSCEditController,
-                                  title: "IFSC code",
-                                  security: false,
-                                  valid: true,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: txtfieldboundry(
-                                  ctrl: _myUPIEditController,
-                                  title: "UPI",
-                                  security: false,
-                                  valid: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )),
-                ),
-                Container(
-                  margin:
-                      EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
-                  child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      ),
-                      child: Builder(
-                        builder: (context) => Form(
-                          key: _form3Key,
-                          autovalidate: _autoValidateForm,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  "Branch Details",
-                                  style: TextStyle(
-                                      fontSize: 24.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: TextFormField(
-                                  controller: _myBranchSearchEditController,
-                                  decoration: InputDecoration(
-                                    labelText: "Search Branch",
-                                    suffixIcon: IconButton(
-                                      icon: Icon(Icons.search),
-                                      onPressed: () {
-                                        WebService.funSearchBranches(
-                                                _myBranchSearchEditController
-                                                    .text)
-                                            .then((value) {
-                                          for (var branch in value.data) {
-                                            BranchDetailsModel model1 =
-                                                BranchDetailsModel();
-                                            model1.id = branch.id.toString();
-                                            model1.name = branch.businessName;
-                                            model1.address =
-                                                branch.buisnessAddress;
-                                            model1.imageUrl =
-                                                branch.photo == null
-                                                    ? ''
-                                                    : branch.photo;
-                                            model1.isSelected = false;
-                                            _searchedBranches.add(model1);
-                                          }
-                                          showPopup(context, _popupBody(),
-                                              'Select Branch');
-                                        });
-                                      },
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: sm.scaledHeight(2),
+                                  left: 8.0,
+                                  right: 8.0),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Email : ",
+                                      style: TextStyle(fontSize: 20.0),
                                     ),
-                                  ),
-                                ),
+                                    Text(
+                                      displayEmail,
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                  ]),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: txtfieldboundry(
+                                controller: _myFirstNameEditController,
+                                title: "First Name",
+                                security: false,
+                                valid: true,
                               ),
-                              Visibility(
-                                visible: _selectedBranches.length > 0,
-                                child: BranchDetailsListViewDelete(
-                                    inputList: _selectedBranches),
-                              )
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: txtfieldboundry(
+                                controller: _myLastNameEditController,
+                                title: "Last Name",
+                                security: false,
+                                valid: true,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: txtfieldboundry(
+                                controller: _myPersonalEmailEditController,
+                                title: "Personal Email",
+                                security: false,
+                                valid: true,
+                                isEnabled: false,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: txtfieldboundry(
+                                controller: _myPersonalMobileEditController,
+                                title: "Personal Mobile",
+                                security: false,
+                                valid: true,
+                                isEnabled: false,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16.0, right: 16.0, top: 16.0),
+                              child: DropdownSearch<String>(
+                                validator: (v) =>
+                                    v == '' ? "required field" : null,
+                                autoValidate: _autoValidateForm,
+                                mode: Mode.MENU,
+                                selectedItem: _selectedRole,
+                                items: _roleList,
+                                label: "Role",
+                                hint: "Please Select Role",
+                                showSearchBox: false,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedRole = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: sm.scaledWidth(10),
+                                    right: sm.scaledWidth(10)),
+                                child: SvgPicture.asset(
+                                    'assets/icon/changePassword.svg',
+                                    alignment: Alignment.center,
+                                    height: sm.scaledHeight(20),
+                                    fit: BoxFit.contain),
+                              ),
+                            ),
+                          ],
                         ),
-                      )),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: sm.scaledWidth(50),
-                    margin: EdgeInsets.only(bottom: 16.0),
-                    child: roundedButton(
-                      clicker: () {
-                        if (_form1Key.currentState.validate() &&
-                            _form2Key.currentState.validate()) {
-                          UpdateContactPerson request = UpdateContactPerson();
-                          request.firtName = _myFirstNameEditController.text;
-                          request.lastName = _myLastNameEditController.text;
-                          request.role = _selectedRole;
-                          request.name = _myNameEditController.text;
-                          request.accNo = _myAccountNoEditController.text;
-                          request.ifsc = _myIFSCEditController.text;
-                          request.upi = _myUPIEditController.text;
-                          WebService.funUpdateContactPerson(
-                                  request, _selectedBranches)
-                              .then((value) {
-                            if (value.status == 'success') {
-                              BotToast.showText(text: value.message);
-                              setState(() {
-                                initializeDefaultValues();
-                              });
-                            } else {
-                              BotToast.showText(text: value.message);
-                            }
-                          });
-                        }
-                      },
-                      clr: Colors.red,
-                      title: "Submit",
+                      ),
                     ),
                   ),
+                  Positioned(
+                      top: sm.scaledWidth(5),
+                      left: sm.scaledWidth(30),
+                      right: sm.scaledWidth(30),
+                      child: SvgPicture.asset('assets/icon/contactPerson.svg',
+                          alignment: Alignment.center,
+                          height: sm.scaledHeight(20))),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+              child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
+                  child: Builder(
+                    builder: (context) => Form(
+                      key: _form2Key,
+                      autovalidate: _autoValidateForm,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "Bank Details",
+                              style: TextStyle(
+                                  fontSize: 24.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(
+                              child: txtfieldboundry(
+                                controller: _myNameEditController,
+                                title: "Name",
+                                security: false,
+                                valid: true,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: txtfieldboundry(
+                              controller: _myAccountNoEditController,
+                              title: "A/C Number",
+                              security: false,
+                              valid: true,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: txtfieldboundry(
+                              controller: _myIFSCEditController,
+                              title: "IFSC code",
+                              security: false,
+                              valid: true,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: txtfieldboundry(
+                              controller: _myUPIEditController,
+                              title: "UPI",
+                              security: false,
+                              valid: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+              child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
+                  child: Builder(
+                    builder: (context) => Form(
+                      key: _form3Key,
+                      autovalidate: _autoValidateForm,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "Branch Details",
+                              style: TextStyle(
+                                  fontSize: 24.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: TextFormField(
+                              controller: _myBranchSearchEditController,
+                              decoration: InputDecoration(
+                                labelText: "Search Branch",
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.search),
+                                  onPressed: () {
+                                    WebService.funSearchBranches(
+                                            _myBranchSearchEditController.text)
+                                        .then((value) {
+                                      for (var branch in value.data) {
+                                        BranchDetailsModel model1 =
+                                            BranchDetailsModel();
+                                        model1.id = branch.id.toString();
+                                        model1.name = branch.businessName;
+                                        model1.address = branch.buisnessAddress;
+                                        model1.imageUrl = branch.photo == null
+                                            ? ''
+                                            : branch.photo;
+                                        model1.isSelected = false;
+                                        _searchedBranches.add(model1);
+                                      }
+                                      showPopup(context, _popupBody(),
+                                          'Select Branch');
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _selectedBranches.length > 0,
+                            child: BranchDetailsListViewDelete(
+                                inputList: _selectedBranches),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: sm.scaledWidth(50),
+                margin: EdgeInsets.only(bottom: 16.0),
+                child: roundedButton(
+                  clicker: () {
+                    if (_form1Key.currentState.validate() &&
+                        _form2Key.currentState.validate()) {
+                      UpdateContactPerson request = UpdateContactPerson();
+                      request.firtName = _myFirstNameEditController.text;
+                      request.lastName = _myLastNameEditController.text;
+                      request.role = _selectedRole;
+                      request.name = _myNameEditController.text;
+                      request.accNo = _myAccountNoEditController.text;
+                      request.ifsc = _myIFSCEditController.text;
+                      request.upi = _myUPIEditController.text;
+                      WebService.funUpdateContactPerson(
+                              request, _selectedBranches)
+                          .then((value) {
+                        if (value.status == 'success') {
+                          BotToast.showText(text: value.message);
+                          setState(() {
+                            initializeDefaultValues();
+                          });
+                        } else {
+                          BotToast.showText(text: value.message);
+                        }
+                      });
+                    }
+                  },
+                  clr: Colors.red,
+                  title: "Submit",
                 ),
-              ],
-            )));
+              ),
+            ),
+          ],
+        ));
   }
 
   showPopup(BuildContext context, Widget widget, String title,

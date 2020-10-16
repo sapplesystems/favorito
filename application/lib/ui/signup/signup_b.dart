@@ -123,7 +123,7 @@ class _signup_bState extends State<signup_b> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: txtfieldboundry(
                                     valid: true,
-                                    ctrl: ctrl[0],
+                                    controller: ctrl[0],
                                     title: namelabel,
                                     security: false)),
                             Padding(
@@ -148,7 +148,7 @@ class _signup_bState extends State<signup_b> {
                                 child: txtfieldboundry(
                                     title: maillabel,
                                     valid: true,
-                                    ctrl: ctrl[2],
+                                    controller: ctrl[2],
                                     myregex: emailRegex,
                                     security: false)),
                             Padding(
@@ -156,7 +156,7 @@ class _signup_bState extends State<signup_b> {
                                 child: txtfieldboundry(
                                     valid: true,
                                     maxLines: 1,
-                                    ctrl: ctrl[3],
+                                    controller: ctrl[3],
                                     title: "Password",
                                     security: true)),
                             Padding(
@@ -164,7 +164,7 @@ class _signup_bState extends State<signup_b> {
                                 child: txtfieldboundry(
                                     valid: true,
                                     maxLines: 1,
-                                    ctrl: ctrl[4],
+                                    controller: ctrl[4],
                                     title: "Confirm Password",
                                     security: true)),
                             CheckboxListTile(

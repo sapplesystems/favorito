@@ -54,6 +54,8 @@ router.post('/profile', CheckAuth, UserController.getProfile);
 
 router.post('/profile/update', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfile);
 
+router.post('/profile/update-photo', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfilePhoto);
+
 router.post('/owner-profile', CheckAuth, UserController.getBusinessOwnerProfile);
 
 router.post('/search-branch', CheckAuth, UserController.searchBranch);

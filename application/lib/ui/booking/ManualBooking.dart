@@ -129,7 +129,7 @@ class _ManualBooking extends State<ManualBooking> {
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: txtfieldboundry(
-                                      ctrl: _myNameEditController,
+                                      controller: _myNameEditController,
                                       title: "Name",
                                       security: false,
                                       valid: true,
@@ -138,7 +138,7 @@ class _ManualBooking extends State<ManualBooking> {
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: txtfieldboundry(
-                                      ctrl: _myContactEditController,
+                                      controller: _myContactEditController,
                                       title: "Contact",
                                       security: false,
                                       valid: true,
@@ -147,7 +147,7 @@ class _ManualBooking extends State<ManualBooking> {
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: txtfieldboundry(
-                                      ctrl: _myNoOfPersonEditController,
+                                      controller: _myNoOfPersonEditController,
                                       title: "Number of People",
                                       security: false,
                                       valid: true,
@@ -156,7 +156,7 @@ class _ManualBooking extends State<ManualBooking> {
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: txtfieldboundry(
-                                      ctrl: _myNotesEditController,
+                                      controller: _myNotesEditController,
                                       title: "Special Notes",
                                       security: false,
                                       maxLines: 5,

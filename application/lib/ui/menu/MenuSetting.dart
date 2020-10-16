@@ -163,7 +163,7 @@ class _MenuSettingState extends State<MenuSetting> {
               padding:
                   const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
               child: txtfieldboundry(
-                ctrl: _myTakeAwayMinimumAmountEditController,
+                controller: _myTakeAwayMinimumAmountEditController,
                 title: "Minimum Bill",
                 hint: "Enter minimum amount",
                 security: false,
@@ -174,7 +174,7 @@ class _MenuSettingState extends State<MenuSetting> {
               padding:
                   const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
               child: txtfieldboundry(
-                ctrl: _myTakeAwayPackagingEditController,
+                controller: _myTakeAwayPackagingEditController,
                 title: "Packaging Charge",
                 hint: "Enter packaging charge",
                 security: false,
@@ -305,7 +305,7 @@ class _MenuSettingState extends State<MenuSetting> {
               padding:
                   const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
               child: txtfieldboundry(
-                ctrl: _myDeliveryMinimumAmountEditController,
+                controller: _myDeliveryMinimumAmountEditController,
                 title: "Minimum Bill",
                 hint: "Enter minimum amount",
                 security: false,
@@ -316,7 +316,7 @@ class _MenuSettingState extends State<MenuSetting> {
               padding:
                   const EdgeInsets.only(left: 32.0, top: 16.0, right: 16.0),
               child: txtfieldboundry(
-                ctrl: _myDeliveryPackagingEditController,
+                controller: _myDeliveryPackagingEditController,
                 title: "Packaging Charge",
                 hint: "Enter packaging charge",
                 security: false,

@@ -7,7 +7,6 @@ BoxDecoration bd1 = BoxDecoration(
     border: Border.all(color: Colors.white),
     borderRadius: BorderRadius.all(Radius.circular(20)));
 
-
 BoxDecoration round30 = BoxDecoration(
     color: Colors.white,
     border: Border.all(color: Colors.white),
@@ -43,6 +42,12 @@ TextStyle titleStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
     letterSpacing: 1);
+
+TextStyle appBarStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 28,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 3);
 
 TextStyle titleStyle1 = TextStyle(
     color: Colors.black,

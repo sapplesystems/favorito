@@ -26,7 +26,7 @@ class dashData {
   int id;
   String businessId;
   String businessName;
-  Null photo;
+  String photo;
   String businessStatus;
   int isProfileCompleted;
   int isInformationCompleted;

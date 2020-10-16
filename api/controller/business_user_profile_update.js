@@ -1,5 +1,32 @@
 var db = require('../config/db');
 
+exports.updateProfilePhoto = function (req, res, next) {
+  try {
+    var id = req.userdata.id;
+    var business_id = req.userdata.business_id;
+
+    var update_columns = " updated_by='" + id + "', updated_at=now() ";
+
+    if(!req.file || req.file.filename == ''){
+      return res.status(403).json({ status: 'error', message: 'Profile image not found' });
+    }
+
+    if (req.file && req.file.filename != '') {
+      update_columns += ", photo='" + req.file.filename + "' ";
+    }
+
+    var sql = "update business_master set " + update_columns + " where id='" + id + "'";
+    db.query(sql, function (err, rows, fields) {
+      if (err) {
+        return res.status(500).json({ status: 'error', message: 'Business user profile photo could not be updated.' });
+      }
+      return res.status(200).json({ status: 'success', message: 'Business user profile photo updated successfully.' });
+    });
+  } catch (e) {
+    return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+  }
+};
+
 exports.updateProfile = function (req, res, next) {
   try {
     var id = req.userdata.id;
@@ -53,7 +80,7 @@ exports.updateProfile = function (req, res, next) {
     }
     if (req.body.working_hours != '' && req.body.working_hours != null) {
       if (req.body.working_hours === 'Select Hours') {
-        saveBusinessHours(business_id, req.body.business_days, req.body.business_start_hours, req.body.business_end_hours);
+        saveBusinessHours(business_id, req.body.business_hours);
       }
       update_columns += ", working_hours='" + req.body.working_hours + "' ";
     }
@@ -82,19 +109,19 @@ exports.updateProfile = function (req, res, next) {
   }
 };
 
-function saveBusinessHours(business_id, business_days, business_start_hours, business_end_hours) {
+function saveBusinessHours(business_id, business_hours) {
   try {
     var sql = "delete from business_hours where business_id='" + business_id + "'";
     db.query(sql, function (err, rows, fields) {
       if (err) {
         return res.status(500).json({ status: 'error', message: 'Business user profile could not be updated.' });
       } else {
-        var arr_len = business_days.length;
+        var arr_len = business_hours.length;
 
         for (var i = 0; i < arr_len; i++) {
-          var day = business_days[i];
-          var start_time = business_start_hours[i];
-          var end_time = business_end_hours[i];
+          var day = business_hours[i]['business_days'];
+          var start_time = business_hours[i]['business_start_hours'];
+          var end_time = business_hours[i]['business_end_hours'];
           db.query("insert into business_hours(business_id, `day`, start_hours, end_hours) values('" + business_id + "','" + day + "','" + start_time + "','" + end_time + "')");
         }
       }

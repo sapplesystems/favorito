@@ -105,7 +105,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                             valid: true,
                             title: title[1],
                             hint: "Enter ${title[0]}",
-                            ctrl: controller[3],
+                            controller: controller[3],
                             maxLines: 4,
                             security: false,
                           ),

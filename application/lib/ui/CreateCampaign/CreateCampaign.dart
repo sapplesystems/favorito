@@ -72,7 +72,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               txtfieldboundry(
-                                ctrl: ctrl[0],
+                                controller: ctrl[0],
                                 hint: "Enter campaign name",
                                 title: "Campaign Name",
                                 maxLines: 1,
@@ -112,7 +112,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                 padding:
                                     const EdgeInsets.only(top: 14, bottom: 14),
                                 child: txtfieldboundry(
-                                  ctrl: ctrl[3],
+                                  controller: ctrl[3],
                                   hint: "Enter Total Budget",
                                   title: "Total Budget",
                                   maxLines: 1,

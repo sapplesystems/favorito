@@ -125,7 +125,7 @@ class _businessInfoState extends State<businessInfo> {
                     selectedList: [],
                     controller: controller[0],
                     hint: "Please select category",
-                    title: "Category",
+                    title: " Sub Category",
                   ),
                   Row(children: [
                     Padding(
