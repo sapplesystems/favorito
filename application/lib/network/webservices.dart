@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
+import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
+import 'package:Favorito/model/businessInfoModel.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
@@ -33,7 +35,6 @@ import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
 
 class WebService {
   static Response response;
@@ -109,19 +110,6 @@ class WebService {
         data: formData, options: _opt);
     return response.data;
   }
-
-  // static Future<BaseResponseModel> profileImageUpdates(File file) async {
-  //   var uri = Uri.parse(serviceFunction.funProfileUpdatephoto);
-  //   var request = http.MultipartRequest('POST', uri)
-  //     ..headers.addAll({'authorization': 'Bearer ${await Prefs.token}'})
-  //     ..files.add(await http.MultipartFile.fromPath(
-  //       'photo',
-  //       file.path,
-  //     ));
-  //   var response = await request.send();
-  //   if (response.statusCode == 200) ;
-  //   return null;
-  // }
 
   static Future<profileDataModel> getProfileData() async {
     String token = await Prefs.token;
@@ -608,6 +596,45 @@ class WebService {
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData1:${_returnData.status}");
+    return _returnData;
+  }
+
+//*********************************************** Business information data  **********************/
+  static Future<businessInfoModel> getBusinessInfoData() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funUserInformation;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    businessInfoModel _returnData = businessInfoModel();
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      _returnData =
+          businessInfoModel.fromJson(convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
+    return _returnData;
+  }
+
+  static Future<SubCategoryModel> getSubCat(Map _map) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funSubCatList;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    SubCategoryModel _returnData = SubCategoryModel();
+    response = await dio.post(serviceFunction.funSubCatList, data: _map,options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      _returnData =
+          SubCategoryModel.fromJson(convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
     return _returnData;
   }
 }

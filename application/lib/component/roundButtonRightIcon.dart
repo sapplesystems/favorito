@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class roundButtonRightIcon extends StatefulWidget {
   String title;
   Color clr;
+  Color borderColor;
   IconData ico;
   Function function;
-  roundButtonRightIcon({this.title, this.clr, this.ico, this.function});
+  roundButtonRightIcon(
+      {this.title, this.clr, this.ico, this.borderColor, this.function});
   @override
   _roundButtonRightIconState createState() => _roundButtonRightIconState();
 }
@@ -23,7 +26,7 @@ class _roundButtonRightIconState extends State<roundButtonRightIcon> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: myRed,
+              color: widget.borderColor,
               width: 1,
             ),
             color: Colors.white,

@@ -7,6 +7,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class CreateCampaign extends StatefulWidget {
   @override
   _CreateCampaignState createState() => _CreateCampaignState();
@@ -82,7 +83,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
                               Padding(
                                 padding: EdgeInsets.only(top: 14),
                                 child: MyTags(
-                                  controller: ctrl[1],
+                                  // controller: ctrl[1],
                                   selectedList: selectedKeyList,
                                   sourceList: keyList,
                                   hint: "KeyWords",
