@@ -33,6 +33,7 @@ class BusinessProfile extends StatefulWidget {
 class _BusinessProfileState extends State<BusinessProfile>
     with WidgetsBindingObserver {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+ 
   AppLifecycleState _appLifecycleState;
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   CameraPosition _initPosition;

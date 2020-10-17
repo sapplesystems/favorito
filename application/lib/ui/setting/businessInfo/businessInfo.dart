@@ -1,8 +1,9 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
-import 'package:Favorito/component/txtfieldprefix.dart';
+import 'package:Favorito/model/SubCategories.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,14 +16,33 @@ class businessInfo extends StatefulWidget {
 
 class _businessInfoState extends State<businessInfo> {
   List<bool> checked = [false, false, false];
-  List<bool> radioChecked = [true, false, false];
+  List<bool> radioChecked = [];
   bool _autoValidateForm = false;
-  List<String> lst = ["a", "b", "c"];
+  var loadedImageList = [];
+  Map<int, String> catLst = {};
+  List<SubCategories> subCatLst = [];
+  List<String> subCatLstName = [];
   List<TextEditingController> controller = [];
-  List<String> list = ["pizza", "burger", "cold drink", "French fries"];
-  List<String> selectedlist = [];
+  List<String> selectedTags = [];
+  List<SubCategories> selectedSubCats = [];
+  List<String> selectedSubCatsNames = [];
+  List<int> priceRangelist = [];
+  List<String> payList = [];
+  List<String> selectPayList = [];
+  int priceRange;
+
+//tag
+  List<String> tagList = [];
+  List<String> selectTagList = [];
+
+  //attribute
+  List<String> attributeList = [];
+  List<String> selectAttributeList = [];
+
+  var catid;
   void initState() {
     super.initState();
+    gePageData();
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
   }
 
@@ -30,9 +50,8 @@ class _businessInfoState extends State<businessInfo> {
   void dispose() {
     super.dispose();
     controller.clear();
-    list.clear();
-    selectedlist.clear();
-    lst.clear();
+    selectedTags.clear();
+    catLst.clear();
   }
 
   @override
@@ -109,24 +128,29 @@ class _businessInfoState extends State<businessInfo> {
                       mode: Mode.MENU,
                       showSelectedItem: true,
                       selectedItem: controller[0].text,
-                      items: lst != null ? lst : null,
+                      enabled: false,
+                      items: catLst != null ? catLst.values.toList() : null,
                       label: "Category",
                       hint: "Please Select Category",
-                      showSearchBox: true,
                       onChanged: (value) {
-                        setState(() {
-                          controller[0].text = value;
-                        });
+                        setState(() => controller[0].text = value);
                       },
                     ),
                   ),
                   MyTags(
-                    sourceList: list,
-                    selectedList: [],
-                    controller: controller[0],
-                    hint: "Please select category",
-                    title: " Sub Category",
-                  ),
+                      sourceList: subCatLstName,
+                      selectedList: selectedSubCatsNames,
+                      hint: "Please select category",
+                      border: true,
+                      directionVeticle: false,
+                      title: " Sub Category"),
+                  MyTags(
+                      sourceList: subCatLstName,
+                      selectedList: selectedSubCatsNames,
+                      hint: "Please select Tags",
+                      border: true,
+                      directionVeticle: false,
+                      title: "Tags"),
                   Row(children: [
                     Padding(
                         padding: const EdgeInsets.only(top: 18.0),
@@ -140,16 +164,21 @@ class _businessInfoState extends State<businessInfo> {
                   ]),
                   SizedBox(
                     height: 52,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        for (int i = 0; i < 3; i++)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount:
+                            priceRangelist != null ? priceRangelist.length : 0,
+                        itemBuilder: (context, i) {
+                          return Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: InkWell(
                               onTap: () {
-                                for (int j = 0; j < 3; j++) {
-                                  if (i == j)
+                                print("priceRange ${i}");
+                                priceRange = priceRangelist[i];
+                                for (int j = 0;
+                                    j < priceRangelist.length;
+                                    j++) {
+                                  if (i == priceRange)
                                     radioChecked[i] = true;
                                   else
                                     radioChecked[i] = false;
@@ -158,27 +187,27 @@ class _businessInfoState extends State<businessInfo> {
                               },
                               child: Row(children: [
                                 Icon(
-                                  radioChecked[i]
+                                  priceRangelist[i] == priceRange
                                       ? Icons.radio_button_checked
                                       : Icons.radio_button_unchecked,
-                                  color: radioChecked[i]
+                                  color: priceRangelist[i] == priceRange
                                       ? Colors.red
                                       : Colors.grey,
                                 ),
-                                Text("${i + 1}00 \u{20B9}",
+                                Text("${priceRangelist[i]} \u{20B9}",
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: radioChecked[i]
+                                        color: priceRangelist[i] == priceRange
                                             ? Colors.red
                                             : Colors.grey))
                               ]),
                             ),
-                          ),
-                      ],
-                    ),
+                          );
+                        }),
                   ),
-                  Row(children: [
-                    Padding(
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
                         padding: const EdgeInsets.only(top: 18.0),
                         child: Text(
                           "Select payment method",
@@ -186,60 +215,71 @@ class _businessInfoState extends State<businessInfo> {
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey),
-                        ))
-                  ]),
+                        )),
+                  ),
                   Column(
                     children: [
-                      for (int i = 0; i < 3; i++)
+                      for (int i = 0; i < payList.length; i++)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                checked[i] = !checked[i];
+                                selectPayList.contains(payList[i])
+                                    ? selectPayList.remove(payList[i])
+                                    : selectPayList.add(payList[i]);
                               });
+                              print("selectPayList$selectPayList");
                             },
                             child: Row(children: [
                               Icon(
-                                checked[i] == false
+                                selectPayList.contains(payList[i])
                                     ? Icons.check_box
                                     : Icons.check_box_outline_blank,
-                                color: checked[i] == false
+                                color: selectPayList.contains(payList[i])
                                     ? Colors.red
                                     : Colors.grey,
                               ),
-                              Text("Cash only",
+                              Text(payList[i],
                                   style: TextStyle(
                                       fontSize: 16,
-                                      color: checked[i] == false
+                                      color: selectPayList.contains(payList[i])
                                           ? Colors.red
                                           : Colors.grey))
                             ]),
                           ),
                         ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6),
-                          child: txtfieldprefix(
-                              title: "Attributes",
-                              valid: true,
-                              ctrl: controller[2],
-                              prefixIco: Icons.search,
-                              security: false)),
-                      SizedBox(
-                        height: 152,
-                        child: ListView(
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            for (int i = 1; i < 5; i++)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("${i}.Live Music",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.black)),
-                              ),
-                          ],
-                        ),
+                      // Padding(
+                      //     padding: EdgeInsets.symmetric(vertical: 6),
+                      //     child: txtfieldprefix(
+                      //         title: "Attributes",
+                      //         valid: true,
+                      //         ctrl: controller[2],
+                      //         prefixIco: Icons.search,
+                      //         security: false)),
+                      MyTags(
+                        sourceList: subCatLstName,
+                        selectedList: selectedSubCatsNames,
+                        hint: "Please select Attributes",
+                        title: " Attributes",
+                        border: false,
+                        directionVeticle: true,
                       ),
+                      // SizedBox(
+                      //   height: 152,
+                      //   child: ListView(
+                      //     scrollDirection: Axis.vertical,
+                      //     children: [
+                      //       for (int i = 1; i < 5; i++)
+                      //         Padding(
+                      //           padding: const EdgeInsets.all(8.0),
+                      //           child: Text("${i}.Live Music",
+                      //               style: TextStyle(
+                      //                   fontSize: 16, color: Colors.black)),
+                      //         ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ])),
@@ -257,5 +297,41 @@ class _businessInfoState extends State<businessInfo> {
         ),
       ),
     );
+  }
+
+  void gePageData() async {
+    await WebService.getBusinessInfoData().then((value) {
+      if (value.message == "success") {
+        var _va = value.data;
+        var _vaddV = value.ddVerbose;
+        loadedImageList = _va.photos;
+        controller[0].text = _va.categoryName;
+        catid = _va.categoryId;
+        selectedSubCats = _va.subCategories;
+        loadedImageList = _va.photos;
+        priceRange = int.parse(_va.priceRange);
+        priceRangelist.addAll(_vaddV.staticPriceRange);
+        for (int i = 0; i < _vaddV.staticPriceRange.length; i++)
+          radioChecked.add(false);
+        for (int i = 0; i < selectedSubCats.length; i++)
+          selectedSubCatsNames.add(selectedSubCats[i].categoryName);
+        payList.addAll(_va.paymentMethod);
+        setState(() {});
+      }
+
+      print("aaaaaaa${value.toString()}");
+    });
+
+    await WebService.getSubCat({"category_id": catid}).then((value) {
+      if (value.message == "success") {
+        var _va = value.data;
+        subCatLst = _va;
+        for (int i = 0; i < subCatLst.length; i++)
+          if (!selectedSubCatsNames.contains(subCatLst[i].categoryName))
+            subCatLstName.add(subCatLst[i].categoryName);
+
+        setState(() {});
+      }
+    });
   }
 }

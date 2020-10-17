@@ -10,7 +10,7 @@ import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/order/Orders.dart';
 import 'package:Favorito/ui/review/reviewList.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
-import 'package:Favorito/ui/setting/businessProfile.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

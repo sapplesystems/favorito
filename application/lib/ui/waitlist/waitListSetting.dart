@@ -75,92 +75,89 @@ class _WaitListSettingState extends State<WaitListSetting> {
                 elevation: 8,
                 shape: rrb,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: sm.scaledHeight(4),
-                      horizontal: sm.scaledWidth(8)),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text("Start waitlist daily at",
-                            style: TextStyle(color: Colors.grey)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            fromTo(txt: "18:00", clr: myRed),
-                            fromTo(txt: "18:00", clr: myRed)
-                          ],
-                        ),
-                        plusMinus("Available resources", controller[2]),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                          child: txtfieldboundry(
-                            valid: true,
-                            title: title[3],
-                            hint: "Enter ${title[0]}",
-                            controller: controller[3],
-                            maxLines: 1,
-                            security: false,
+                    padding: EdgeInsets.symmetric(
+                        vertical: sm.scaledHeight(4),
+                        horizontal: sm.scaledWidth(8)),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text("Start waitlist daily at",
+                              style: TextStyle(color: Colors.grey)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              fromTo(txt: "18:00", clr: myRed),
+                              fromTo(txt: "18:00", clr: myRed)
+                            ],
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                          child: txtfieldboundry(
-                            valid: true,
-                            title: title[4],
-                            hint: "Enter ${title[4]}",
-                            controller: controller[4],
-                            maxLines: 1,
-                            security: false,
+                          plusMinus("Available resources", controller[2]),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(bottom: sm.scaledHeight(2)),
+                            child: txtfieldboundry(
+                              valid: true,
+                              title: title[3],
+                              hint: "Enter ${title[0]}",
+                              controller: controller[3],
+                              maxLines: 1,
+                              security: false,
+                            ),
                           ),
-                        ),
-                        DropdownSearch<String>(
-                          validator: (v) => v == '' ? "required field" : null,
-                          autoValidate: true,
-                          mode: Mode.MENU,
-                          selectedItem: controller[5].text,
-                          items: slot,
-                          label: "Slot",
-                          hint: "Please Select Slot",
-                          showSearchBox: false,
-                          onChanged: (value) {
-                            setState(() {
-                              controller[5].text = value;
-                            });
-                          },
-                        ),
-                        plusMinus("Booking/Slot", controller[6]),
-                        plusMinus("Booking/Day", controller[7]),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                          child: txtfieldboundry(
-                            valid: true,
-                            title: title[0],
-                            hint: "Enter ${title[0]}",
-                            controller: controller[3],
-                            maxLines: 1,
-                            security: false,
+                          Padding(
+                            padding:
+                                EdgeInsets.only(bottom: sm.scaledHeight(2)),
+                            child: txtfieldboundry(
+                              valid: true,
+                              title: title[4],
+                              hint: "Enter ${title[4]}",
+                              controller: controller[4],
+                              maxLines: 1,
+                              security: false,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                          child: txtfieldboundry(
-                            valid: true,
-                            title: title[1],
-                            hint: "Enter ${title[0]}",
-                            controller: controller[3],
-                            maxLines: 4,
-                            security: false,
-                          ),
-                        ),
-                        MyTags(
-                          sourceList: list,
-                          selectedList: selectedList,
-                          controller: controller[0],
-                          hint: "Please select ${title[5]}",
-                          title: title[5],
-                        ),
-                      ]),
-                )),
+                          DropdownSearch<String>(
+                              validator: (v) =>
+                                  v == '' ? "required field" : null,
+                              autoValidate: true,
+                              mode: Mode.MENU,
+                              selectedItem: controller[5].text,
+                              items: slot,
+                              label: "Slot",
+                              hint: "Please Select Slot",
+                              showSearchBox: false,
+                              onChanged: (value) {
+                                setState(() {
+                                  controller[5].text = value;
+                                });
+                              }),
+                          plusMinus("Booking/Slot", controller[6]),
+                          plusMinus("Booking/Day", controller[7]),
+                          Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: sm.scaledHeight(2)),
+                              child: txtfieldboundry(
+                                  valid: true,
+                                  title: title[0],
+                                  hint: "Enter ${title[0]}",
+                                  controller: controller[3],
+                                  maxLines: 1,
+                                  security: false)),
+                          Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: sm.scaledHeight(2)),
+                              child: txtfieldboundry(
+                                  valid: true,
+                                  title: title[1],
+                                  hint: "Enter ${title[0]}",
+                                  controller: controller[3],
+                                  maxLines: 4,
+                                  security: false)),
+                          MyTags(
+                              sourceList: list,
+                              selectedList: selectedList,
+                              hint: "Please select ${title[5]}",
+                              title: title[5])
+                        ]))),
             Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: sm.scaledWidth(16),
