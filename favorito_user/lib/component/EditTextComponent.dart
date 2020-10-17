@@ -45,7 +45,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
             lightSource: LightSource.topLeft,
             color: myEditTextBackground),
         boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.all(Radius.circular(24.0))),
+            BorderRadius.all(Radius.circular(30.0))),
         child: TextFormField(
           controller: widget.ctrl,
           obscureText: widget.security,
@@ -59,7 +59,9 @@ class _EditTextComponentState extends State<EditTextComponent> {
                         ? Icon(Icons.contacts)
                         : widget.prefixIcon == 'phone'
                             ? Icon(Icons.phone)
-                            : null,
+                            : widget.prefixIcon == 'search'
+                                ? Icon(Icons.search)
+                                : null,
             labelText: widget.title,
             counterText: "",
             hintText: widget.hint,

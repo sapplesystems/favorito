@@ -24,7 +24,10 @@ dependencies:
   get:
   bot_toast:
   flutter_svg:
-  flutter_neumorphic: 2.0.0
+  flutter_neumorphic:
+  carousel_slider:
+  ff_navigation_bar:
+  font_awesome_flutter:
   flutter:
     sdk: flutter
 
