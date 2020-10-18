@@ -44,6 +44,11 @@ io.on('connection', socket => {
         socket.broadcast.emit('receive', { message: message, name: user[socket.id] });
     });
 
+    socket.on('user_image', image => {
+        //io.socket.emit('addimage', 'Image Received', image)
+        socket.broadcast.emit('addimage', { message: image, name: user[socket.id] });
+    });
+
     socket.on('disconnect', message => {
         socket.broadcast.emit('disconnect', user[socket.id]);
         delete user[socket.id];
