@@ -3,6 +3,7 @@ import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
+import 'package:Favorito/model/adSpentModel.dart';
 import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
@@ -12,6 +13,7 @@ import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
 import 'package:Favorito/model/contactPerson/SearchBranchResonseModel.dart';
 import 'package:Favorito/model/contactPerson/UpdateContactPerson.dart';
+import 'package:Favorito/model/highLightesData.dart';
 import 'package:Favorito/model/job/CityModelResponse.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
 import 'package:Favorito/model/job/CreateJobRequiredDataModel.dart';
@@ -689,5 +691,70 @@ class WebService {
       print("responseData4:${response.statusCode}");
     }
     return _returnData;
+  }
+
+//*********************************************** Highlight ******************************/
+  static Future<businessInfoImage> highlightImageUpdate(List files) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {
+      "photo": va,
+    };
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(serviceFunction.funUserHighlightAddPhoto,
+        data: formData, options: _opt);
+    return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<BaseResponseModel> setHighlightData(Map _map) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funSubCatList;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(serviceFunction.funUserHighlightSave,
+        data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<highLightesData> getHighlightData() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funUserHighlightDetails;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return highLightesData.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+//*********************************************** Highlight ******************************/
+  static Future<adSpentModel> getAdSpentPageData() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funAdSpentList;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return adSpentModel.fromJson(convert.json.decode(response.toString()));
+    }
   }
 }

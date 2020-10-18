@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtFieldPostIcon.dart';

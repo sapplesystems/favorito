@@ -4,7 +4,6 @@ import 'package:Favorito/model/job/CreateJobRequestModel.dart';
 import 'package:Favorito/model/job/CreateJobRequiredDataModel.dart';
 import 'package:Favorito/model/job/PincodeListModel.dart';
 import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
-import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
