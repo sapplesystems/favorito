@@ -5,21 +5,22 @@ var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 /**
  * FETCH DETAIL OF BUSINESS HIGHLIGHT
  */
-exports.getHighlight = async function (req, res, next) {
+exports.getHighlight = async function(req, res, next) {
     try {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
         var photos = await fetchBusinessHighlightPhoto(business_id);
 
         var sql = "SELECT highlight_title,highlight_desc FROM business_highlights WHERE business_id='" + business_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.1111111' });
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'success', data: result, photos: photos });
+            result[0].photos = photos;
+            return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.2222222222' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
 
@@ -27,7 +28,7 @@ exports.getHighlight = async function (req, res, next) {
 /**
  * BUSINESS HIGHLIGHT ADD
  */
-exports.addHighlight = async function (req, res, next) {
+exports.addHighlight = async function(req, res, next) {
     try {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
@@ -49,7 +50,7 @@ exports.addHighlight = async function (req, res, next) {
             var sql = "INSERT INTO business_highlights (business_id, highlight_title, highlight_desc) VALUES('" + business_id + "','" + title + "','" + desc + "');";
         }
 
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -64,7 +65,7 @@ exports.addHighlight = async function (req, res, next) {
 /**
  * BUSINESS HIGHLIGHT ADD PHOTO
  */
-exports.addPhotos = function (req, res, next) {
+exports.addPhotos = async function(req, res, next) {
     try {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
@@ -74,10 +75,11 @@ exports.addPhotos = function (req, res, next) {
             for (var i = 0; i < file_count; i++) {
                 var filename = req.files[i].filename;
                 var sql = "INSERT INTO `business_highlight_photos`(business_id, photo) \n\
-                        VALUES ('"+ business_id + "','" + filename + "')";
+                        VALUES ('" + business_id + "','" + filename + "')";
                 db.query(sql);
             }
-            return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.' });
+            var photos = await fetchBusinessHighlightPhoto(business_id);
+            return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.', data: photos });
         } else {
             return res.status(200).json({ status: 'success', message: 'No photo found to upload.' });
         }
@@ -92,9 +94,9 @@ exports.addPhotos = function (req, res, next) {
  * CHECK BUSINESS HIGHLIGHT COUNT
  */
 function checkHightlightCount(business_id) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
         var sql = "select count(*) as c from business_highlights where business_id='" + business_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             resolve(result[0].c);
         });
     });
@@ -105,9 +107,9 @@ function checkHightlightCount(business_id) {
  * FETCH ALL PHOTOS OF BUSINESS HIGHLIGHT
  */
 function fetchBusinessHighlightPhoto(business_id) {
-    return new Promise(function (resolve, reject) {
-        var sql = "select id,photo from business_highlight_photos where business_id='" + business_id + "'";
-        db.query(sql, function (err, result) {
+    return new Promise(function(resolve, reject) {
+        var sql = "select id,concat('" + img_path + "',photo) as photo from business_highlight_photos where business_id='" + business_id + "'";
+        db.query(sql, function(err, result) {
             resolve(result);
         });
     });
