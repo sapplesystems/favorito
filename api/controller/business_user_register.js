@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 var jwt = require('jsonwebtoken');
 var uniqid = require('uniqid');
 
-exports.register = function (req, res, next) {
+exports.register = function(req, res, next) {
     try {
         if (req.body.business_type_id == '' || req.body.business_type_id == null) {
             return res.status(403).json({ status: 'error', message: 'Business type is required' });
@@ -14,11 +14,14 @@ exports.register = function (req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Business name is required' });
         } else if (req.body.postal_code == '' || req.body.postal_code == null) {
             return res.status(403).json({ status: 'error', message: 'Postal code is required' });
-        } if (req.body.business_phone == '' || req.body.business_phone == null) {
+        }
+        if (req.body.business_phone == '' || req.body.business_phone == null) {
             return res.status(403).json({ status: 'error', message: 'Phone number is required' });
-        } if (req.body.display_name == '' || req.body.display_name == null) {
+        }
+        if (req.body.display_name == '' || req.body.display_name == null) {
             return res.status(403).json({ status: 'error', message: 'Display name is required' });
-        } if (req.body.role == '' || req.body.role == null) {
+        }
+        if (req.body.role == '' || req.body.role == null) {
             return res.status(403).json({ status: 'error', message: 'Role is required' });
         } else if (req.body.email == '' || req.body.email == null) {
             return res.status(403).json({ status: 'error', message: 'Business Email is required' });
@@ -51,18 +54,18 @@ exports.register = function (req, res, next) {
         }
 
 
-        bcrypt.hash(password, 10, function (err, hash) {
+        bcrypt.hash(password, 10, function(err, hash) {
             if (err) {
                 return res.status(403).json({ status: 'error', message: 'Password encryption failed' });
             }
             var cslq = "select count(*) as c from business_users where (email='" + email + "' or phone='" + phone + "') and is_deleted=0 and deleted_at is null";
-            db.query(cslq, function (chkerr, check) {
+            db.query(cslq, function(chkerr, check) {
                 if (chkerr) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                 } else {
                     if (check[0].c === 0) {
-                        var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "')";
-                        db.query(sql, function (err, result) {
+                        var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp, business_email) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "','" + email + "')";
+                        db.query(sql, function(err, result) {
                             if (err) {
                                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                             }
@@ -85,7 +88,7 @@ exports.register = function (req, res, next) {
                             db.query(sql4);
 
                             /**insert row into business_appoinment_setting table */
-                            var sql5 = "INSERT INTO business_appoinment_setting (business_id) VALUES ('" + business_id + "')";
+                            var sql5 = "INSERT INTO business_appointment_setting (business_id) VALUES ('" + business_id + "')";
                             db.query(sql5);
 
 
