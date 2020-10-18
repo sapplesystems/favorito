@@ -7,6 +7,7 @@ import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/component/workingDateTime.dart';
+import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
@@ -33,7 +34,7 @@ class BusinessProfile extends StatefulWidget {
 class _BusinessProfileState extends State<BusinessProfile>
     with WidgetsBindingObserver {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
- 
+
   AppLifecycleState _appLifecycleState;
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   CameraPosition _initPosition;
@@ -67,9 +68,7 @@ class _BusinessProfileState extends State<BusinessProfile>
         color: Colors.red,
       ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
     );
-    setState(() {
-      _image = image;
-    });
+    setState(() => _image = image);
     WebService.profileImageUpdate(image).then((value) {
       print("ImageUpdated:${value.message}");
     });
@@ -81,7 +80,6 @@ class _BusinessProfileState extends State<BusinessProfile>
     getBusinessProfileData();
     WidgetsBinding.instance.addObserver(this);
     for (int i = 0; i < 16; i++) _controller.add(TextEditingController());
-    print("a12${_businessProfileData.data}");
 
     super.initState();
     _cityWebData();
@@ -197,12 +195,12 @@ class _BusinessProfileState extends State<BusinessProfile>
                                           : Container(
                                               height: sm.scaledHeight(20),
                                               width: sm.scaledWidth(78),
-                                              child: Image.asset(
-                                                _image.path,
+                                              child: Image.file(
+                                                _image,
                                                 fit: BoxFit.cover,
                                                 height: double.infinity,
                                                 width: double.infinity,
-                                                // alignment: Alignment.center,
+                                                alignment: Alignment.center,
                                               ))),
                                   Positioned(
                                       child: IconButton(
@@ -643,8 +641,6 @@ class _BusinessProfileState extends State<BusinessProfile>
     for (int _i = 0; _i < webSiteLength; _i++) {
       website = _controller[_i + 15].text + "," + website;
     }
-    // BusinessHoursModel _businessHoursModel = BusinessHoursModel();
-    // List<BusinessHoursModel> _businessHoursList = List();
     List<Map> lst = List();
     for (int i = 0; i < selecteddayList.length; i++) {
       var va = selecteddayList[(selecteddayList.keys.toList())[i]].split("-");
@@ -653,8 +649,6 @@ class _BusinessProfileState extends State<BusinessProfile>
           "${(selecteddayList.keys.toList())[i].toString()}";
       dayData["business_start_hours"] = "${va[0].toString()}";
       dayData["business_end_hours"] = "${va[1].toString()}";
-      // dayData[(selecteddayList.keys.toList())[i]] =
-      //     selecteddayList[(selecteddayList.keys.toList())[i]];
       lst.add(dayData);
     }
     var adderess = "";

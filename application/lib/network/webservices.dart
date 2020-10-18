@@ -5,6 +5,7 @@ import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
+import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfoModel.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
@@ -106,8 +107,19 @@ class WebService {
     FormData formData = FormData.fromMap({
       "photo": await MultipartFile.fromFile(file.path, filename: fileName),
     });
+
+    BaseResponseModel _returnData = BaseResponseModel();
     response = await dio.post(serviceFunction.funProfileUpdatephoto,
         data: formData, options: _opt);
+    print("profileImageUpdate:${response.toString()}");
+
+    if (response.statusCode == HttpStatus.ok) {
+      _returnData =
+          BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
+
     return response.data;
   }
 
@@ -116,17 +128,14 @@ class WebService {
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    profileDataModel _returnData = profileDataModel();
     response = await dio.post(serviceFunction.funUserProfile, options: _opt);
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:${serviceFunction.funUserProfile}");
       print("Response is :${response.toString()}");
-      _returnData =
-          profileDataModel.fromJson(convert.json.decode(response.toString()));
-    } else {
-      print("responseData4:${response.statusCode}");
+
+      return profileDataModel
+          .fromJson(convert.json.decode(response.toString()));
     }
-    return _returnData;
   }
 
   static Future<CreateNotificationRequiredDataModel>
@@ -619,6 +628,49 @@ class WebService {
     return _returnData;
   }
 
+  static Future<businessInfoImage> profileInfoImageUpdate(List files) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {
+      "photo": va,
+    };
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(serviceFunction.funUserInformationAddPhoto,
+        data: formData, options: _opt);
+    return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<BaseResponseModel> setBusinessInfoData(
+      Map<String, dynamic> _map) async {
+    BaseResponseModel _returnData = BaseResponseModel();
+    String token = await Prefs.token;
+    String url = serviceFunction.funUserInformationUpdate;
+    Options op = Options();
+    op = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    op.headers["content-type"] = "multipart/form-data";
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(url, data: formData, options: op);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("RequestData URL:${_map.toString()}");
+      print("Response is :${response.toString()}");
+      _returnData =
+          BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
+    return _returnData;
+  }
+
   static Future<SubCategoryModel> getSubCat(Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funSubCatList;
@@ -626,7 +678,8 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     SubCategoryModel _returnData = SubCategoryModel();
-    response = await dio.post(serviceFunction.funSubCatList, data: _map,options: opt);
+    response =
+        await dio.post(serviceFunction.funSubCatList, data: _map, options: opt);
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");

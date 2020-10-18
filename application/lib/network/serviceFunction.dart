@@ -38,4 +38,6 @@ class serviceFunction {
   static String funProfileUpdatephoto = baseUrl1 + 'user/profile/update-photo';
   static String funUserProfile = baseUrl1 + 'user/profile';
   static String funUserInformation = baseUrl1 + 'user/information';
+  static String funUserInformationUpdate = funUserInformation + '/update';
+  static String funUserInformationAddPhoto = funUserInformation + '/add-photo';
 }

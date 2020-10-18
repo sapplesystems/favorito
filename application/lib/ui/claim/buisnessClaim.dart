@@ -1,13 +1,20 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtFieldPostIcon.dart';
 import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/utils/Regexer.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:flutter/widgets.dart';
+import 'package:file_picker/file_picker.dart';
+
 class BusinessClaim extends StatefulWidget {
   @override
   _BusinessClaimState createState() => _BusinessClaimState();
@@ -15,7 +22,11 @@ class BusinessClaim extends StatefulWidget {
 
 class _BusinessClaimState extends State<BusinessClaim> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController ctrl = TextEditingController();
+  TextEditingController ctrlMobile = TextEditingController();
+  String otp = "";
+  TextEditingController ctrlMail = TextEditingController();
+  StreamController<ErrorAnimationType> errorController = StreamController();
+  TextEditingController editingController = TextEditingController();
   bool autovalidateMode;
   @override
   Widget build(BuildContext context) {
@@ -40,13 +51,10 @@ class _BusinessClaimState extends State<BusinessClaim> {
       body: Container(
         color: myBackGround,
         height: sm.scaledHeight(82),
-
         padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
         margin: EdgeInsets.only(
           top: sm.scaledHeight(2),
         ),
-        // padding:
-        //     EdgeInsets.symmetric(horizontal: sm.scaledWidth( * 10),
         child: ListView(
           children: [
             Padding(
@@ -68,15 +76,17 @@ class _BusinessClaimState extends State<BusinessClaim> {
                 child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
-                        //autovalidateMode: AutovalidateMode.always,
+                        autovalidateMode: AutovalidateMode.always,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               txtfieldPostAction(
-                                  ctrl: ctrl,
+                                  ctrl: ctrlMobile,
                                   hint: "Enter business phone",
                                   title: "Phone",
+                                  keyboardSet: TextInputType.number,
                                   maxLines: 1,
+                                  maxlen: 10,
                                   valid: true,
                                   sufixTxt: "Verify",
                                   security: false,
@@ -112,8 +122,8 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                 animationDuration: Duration(milliseconds: 300),
                                 backgroundColor: Colors.white,
                                 enableActiveFill: true,
-                                // errorAnimationController: errorController,
-                                // controller: textEditingController,
+                                errorAnimationController: errorController,
+                                controller: editingController,
                                 onCompleted: (v) {
                                   print("Completed");
                                 },
@@ -142,10 +152,12 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
                                 child: txtfieldPostIcon(
-                                    ctrl: ctrl,
+                                    ctrl: ctrlMail,
                                     hint: "Enter business Email",
                                     title: "Email",
                                     maxLines: 1,
+                                    myregex: emailRegex,
+                                    keyboardSet: TextInputType.emailAddress,
                                     valid: true,
                                     sufixIcon: Icons.check_circle,
                                     security: false,
@@ -156,18 +168,35 @@ class _BusinessClaimState extends State<BusinessClaim> {
                               MyOutlineButton(
                                 title: "Upload Document",
                                 function: () async {
+                                  FilePickerResult result = await FilePicker
+                                      .platform
+                                      .pickFiles(allowMultiple: true);
+
+                                  if (result != null) {
+                                    List<File> files = result.paths
+                                        .map((path) => File(path))
+                                        .toList();
+
+                                    print("files:${files.toString()}");
+                                  }
+                                  // if (result != null) {
+                                  //   List<File> files = result.paths
+                                  //       .map((path) => File(path))
+                                  //       .toList();
+                                  // }
+                                  if (_formKey.currentState.validate()) {}
                                   // FilePickerResult result =
                                   //     await FilePicker.platform.pickFiles();
 
-                                  // if (result != null) {
-                                  //   PlatformFile file = result.files.first;
+                                  if (result != null) {
+                                    PlatformFile file = result.files.first;
 
-                                  //   print(file.name);
-                                  //   print(file.bytes);
-                                  //   print(file.size);
-                                  //   print(file.extension);
-                                  //   print(file.path);
-                                  // }
+                                    print(file.name);
+                                    print(file.bytes);
+                                    print(file.size);
+                                    print(file.extension);
+                                    print(file.path);
+                                  }
                                 },
                               ),
                             ]))),
