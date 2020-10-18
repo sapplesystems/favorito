@@ -71,6 +71,13 @@ exports.addPhotos = async function(req, res, next) {
         var business_id = req.userdata.business_id;
 
         if (req.files && req.files.length) {
+            var highlight_count = await checkHightlightCount(business_id);
+
+            if (highlight_count == 0) {
+                var sql = "INSERT INTO business_highlights (business_id) VALUES('" + business_id + "');";
+                db.query(sql);
+            }
+
             var file_count = req.files.length;
             for (var i = 0; i < file_count; i++) {
                 var filename = req.files[i].filename;
