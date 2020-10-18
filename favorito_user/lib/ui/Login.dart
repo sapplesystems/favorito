@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import 'Home.dart';
+
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -125,7 +127,10 @@ class _LoginState extends State<_Login> {
               margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
               boxShape: NeumorphicBoxShape.roundRect(
                   BorderRadius.all(Radius.circular(24.0))),
-              onClick: () {},
+              onClick: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Home()));
+              },
               isEnabled: true,
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Center(
