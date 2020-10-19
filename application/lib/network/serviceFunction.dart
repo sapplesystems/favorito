@@ -1,6 +1,7 @@
 class serviceFunction {
   static String baseUrl1 = 'http://demos.sappleserve.com:3000/api/business-';
   static String baseUrl2 = 'http://demos.sappleserve.com:3000/api/';
+  static String adSpent = "ad-spent-campaign/";
   static String funCatList = baseUrl1 + 'category/list';
   static String funSubCatList = baseUrl1 + 'sub-category/list';
   static String funBusyList = baseUrl1 + 'type/list';
@@ -38,4 +39,12 @@ class serviceFunction {
   static String funProfileUpdatephoto = baseUrl1 + 'user/profile/update-photo';
   static String funUserProfile = baseUrl1 + 'user/profile';
   static String funUserInformation = baseUrl1 + 'user/information';
+  static String funUserInformationUpdate = funUserInformation + '/update';
+  static String funUserInformationAddPhoto = funUserInformation + '/add-photo';
+  static String funUserHighlightAddPhoto = baseUrl1 + 'highlight/add-photo';
+  static String funUserHighlightSave = baseUrl1 + 'highlight/save';
+  static String funUserHighlightDetails = baseUrl1 + 'highlight/detail';
+  static String funAdSpentList = baseUrl1 + adSpent + 'list';
+  static String funTagList = baseUrl2 + 'tag/list';
+  static String funCampainVerbose = baseUrl1 + 'ad-spent-campaign/dd-verbose';
 }

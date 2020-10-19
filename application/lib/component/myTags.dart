@@ -47,7 +47,7 @@ class _MyTagsState extends State<MyTags> {
               ? 0
               : widget.directionVeticle
                   ? widget.selectedList != null
-                      ? widget.selectedList.length * 56.0
+                      ? widget.selectedList.length * 50.0
                       : 0
                   : 52,
           child: ListView(

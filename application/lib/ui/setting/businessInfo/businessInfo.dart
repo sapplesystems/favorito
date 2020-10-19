@@ -1,13 +1,19 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
+import 'package:Favorito/model/businessInfoModel.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'dart:io';
+import 'dart:async';
+import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 
 class businessInfo extends StatefulWidget {
   @override
@@ -19,30 +25,47 @@ class _businessInfoState extends State<businessInfo> {
   List<bool> radioChecked = [];
   bool _autoValidateForm = false;
   var loadedImageList = [];
-  Map<int, String> catLst = {};
-  List<SubCategories> subCatLst = [];
-  List<String> subCatLstName = [];
   List<TextEditingController> controller = [];
-  List<String> selectedTags = [];
-  List<SubCategories> selectedSubCats = [];
-  List<String> selectedSubCatsNames = [];
+  List<String> totalpay = [];
+  List<String> selectPay = [];
+
   List<int> priceRangelist = [];
-  List<String> payList = [];
-  List<String> selectPayList = [];
   int priceRange;
 
+//sub categories
+  List<SubCategories> totalSubCategories = [];
+  List<int> totalSubCategoriesId = [];
+  List<String> totalSubCategoriesName = [];
+
+  List<SubCategories> selectedSubCategories = [];
+  List<int> selectedSubCategoriesId = [];
+  List<String> selectedSubCategoriesName = [];
+
 //tag
-  List<String> tagList = [];
-  List<String> selectTagList = [];
+  List<TagList> totalTag = [];
+  List<String> totalTagName = [];
+  List<int> totalTagId = [];
+
+  List<TagList> selectedTag = [];
+  List<String> selectedTagName = [];
+  List<int> selectedTagId = [];
 
   //attribute
-  List<String> attributeList = [];
-  List<String> selectAttributeList = [];
+  List<AttributeList> totalAttribute = [];
+  List<String> totalAttributeName = [];
+  List<int> totalAttributeListId = [];
 
+  List<AttributeList> selectAttribute = [];
+  List<int> selectAttributeId = [];
+  List<String> selectAttributeName = [];
+  //selected attribute id
+
+  List<PhotoData> photoData = [];
+  File _image;
   var catid;
   void initState() {
+    getPageData();
     super.initState();
-    gePageData();
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
   }
 
@@ -50,8 +73,6 @@ class _businessInfoState extends State<businessInfo> {
   void dispose() {
     super.dispose();
     controller.clear();
-    selectedTags.clear();
-    catLst.clear();
   }
 
   @override
@@ -79,7 +100,8 @@ class _businessInfoState extends State<businessInfo> {
         elevation: 0,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.only(
+            top: sm.scaledHeight(2), bottom: sm.scaledHeight(0)),
         child: ListView(
           children: [
             Text("Business Information",
@@ -94,14 +116,12 @@ class _businessInfoState extends State<businessInfo> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  for (int i = 0; i < 10; i++)
+                  for (int i = 0; i < photoData.length; i++)
                     Card(
                       semanticContainer: true,
                       clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Image.network(
-                        'https://eatforum.org/content/uploads/2018/05/table_with_food_top_view_900x700.jpg',
-                        fit: BoxFit.fill,
-                      ),
+                      child: Image.network(photoData[i].photo.toString(),
+                          fit: BoxFit.fill),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -113,7 +133,7 @@ class _businessInfoState extends State<businessInfo> {
             ),
             MyOutlineButton(
               title: "Add more photo",
-              function: () {},
+              function: () => getImage(ImgSource.Gallery),
             ),
             Container(
                 decoration: bd1,
@@ -129,7 +149,7 @@ class _businessInfoState extends State<businessInfo> {
                       showSelectedItem: true,
                       selectedItem: controller[0].text,
                       enabled: false,
-                      items: catLst != null ? catLst.values.toList() : null,
+                      // items: catLst != null ? catLst.values.toList() : null,
                       label: "Category",
                       hint: "Please Select Category",
                       onChanged: (value) {
@@ -138,15 +158,15 @@ class _businessInfoState extends State<businessInfo> {
                     ),
                   ),
                   MyTags(
-                      sourceList: subCatLstName,
-                      selectedList: selectedSubCatsNames,
-                      hint: "Please select category",
+                      sourceList: totalSubCategoriesName,
+                      selectedList: selectedSubCategoriesName,
+                      hint: "Please select Sub category",
                       border: true,
                       directionVeticle: false,
                       title: " Sub Category"),
                   MyTags(
-                      sourceList: subCatLstName,
-                      selectedList: selectedSubCatsNames,
+                      sourceList: totalTagName,
+                      selectedList: selectedTagName,
                       hint: "Please select Tags",
                       border: true,
                       directionVeticle: false,
@@ -219,31 +239,30 @@ class _businessInfoState extends State<businessInfo> {
                   ),
                   Column(
                     children: [
-                      for (int i = 0; i < payList.length; i++)
+                      for (int i = 0; i < totalpay.length; i++)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
                               setState(() {
-                                selectPayList.contains(payList[i])
-                                    ? selectPayList.remove(payList[i])
-                                    : selectPayList.add(payList[i]);
+                                selectPay.contains(totalpay[i])
+                                    ? selectPay.remove(totalpay[i])
+                                    : selectPay.add(totalpay[i]);
                               });
-                              print("selectPayList$selectPayList");
                             },
                             child: Row(children: [
                               Icon(
-                                selectPayList.contains(payList[i])
+                                selectPay.contains(totalpay[i])
                                     ? Icons.check_box
                                     : Icons.check_box_outline_blank,
-                                color: selectPayList.contains(payList[i])
+                                color: selectPay.contains(totalpay[i])
                                     ? Colors.red
                                     : Colors.grey,
                               ),
-                              Text(payList[i],
+                              Text(totalpay[i],
                                   style: TextStyle(
                                       fontSize: 16,
-                                      color: selectPayList.contains(payList[i])
+                                      color: selectPay.contains(totalpay[i])
                                           ? Colors.red
                                           : Colors.grey))
                             ]),
@@ -258,8 +277,8 @@ class _businessInfoState extends State<businessInfo> {
                       //         prefixIco: Icons.search,
                       //         security: false)),
                       MyTags(
-                        sourceList: subCatLstName,
-                        selectedList: selectedSubCatsNames,
+                        sourceList: totalAttributeName,
+                        selectedList: selectAttributeName,
                         hint: "Please select Attributes",
                         title: " Attributes",
                         border: false,
@@ -283,13 +302,14 @@ class _businessInfoState extends State<businessInfo> {
                     ],
                   ),
                 ])),
-            Padding(
+            Container(
+                margin: EdgeInsets.only(bottom: sm.scaledWidth(30)),
                 padding: EdgeInsets.symmetric(
                     horizontal: sm.scaledWidth(16),
                     vertical: sm.scaledHeight(2)),
                 child: roundedButton(
                     clicker: () {
-                      // funSublim();
+                      funSublim();
                     },
                     clr: Colors.red,
                     title: "Done"))
@@ -299,23 +319,45 @@ class _businessInfoState extends State<businessInfo> {
     );
   }
 
-  void gePageData() async {
-    await WebService.getBusinessInfoData().then((value) {
+  void getPageData() async {
+    await WebService.getBusinessInfoData().then((value) async {
       if (value.message == "success") {
+        await clearDataList();
+
         var _va = value.data;
         var _vaddV = value.ddVerbose;
         loadedImageList = _va.photos;
         controller[0].text = _va.categoryName;
         catid = _va.categoryId;
-        selectedSubCats = _va.subCategories;
+
+        selectedSubCategories = _va.subCategories;
+        for (int i = 0; i < selectedSubCategories.length; i++)
+          selectedSubCategoriesName.add(selectedSubCategories[i].categoryName);
+
         loadedImageList = _va.photos;
         priceRange = int.parse(_va.priceRange);
         priceRangelist.addAll(_vaddV.staticPriceRange);
         for (int i = 0; i < _vaddV.staticPriceRange.length; i++)
           radioChecked.add(false);
-        for (int i = 0; i < selectedSubCats.length; i++)
-          selectedSubCatsNames.add(selectedSubCats[i].categoryName);
-        payList.addAll(_va.paymentMethod);
+
+        totalpay.addAll(_vaddV.staticPaymentMethod);
+        selectPay.addAll(_va.paymentMethod);
+        totalTag.addAll(_vaddV.tagList);
+        for (int i = 0; i < totalTag.length; i++)
+          totalTagName.add(totalTag[i].tagName);
+
+        selectedTag.addAll(_va.tags);
+        for (int i = 0; i < selectedTag.length; i++)
+          selectedTagName.add(selectedTag[i].tagName);
+
+        totalAttribute.addAll(_vaddV.attributeList);
+        for (int i = 0; i < totalAttribute.length; i++)
+          totalAttributeName.add(totalAttribute[i].attributeName);
+
+        selectAttribute.addAll(_va.attributes);
+        for (int i = 0; i < selectAttribute.length; i++)
+          selectAttributeName.add(totalAttribute[i].attributeName);
+        photoData.addAll(_va.photos);
         setState(() {});
       }
 
@@ -325,13 +367,95 @@ class _businessInfoState extends State<businessInfo> {
     await WebService.getSubCat({"category_id": catid}).then((value) {
       if (value.message == "success") {
         var _va = value.data;
-        subCatLst = _va;
-        for (int i = 0; i < subCatLst.length; i++)
-          if (!selectedSubCatsNames.contains(subCatLst[i].categoryName))
-            subCatLstName.add(subCatLst[i].categoryName);
+
+        totalSubCategories = _va;
+        for (int i = 0; i < totalSubCategories.length; i++)
+          totalSubCategoriesName.add(totalSubCategories[i].categoryName);
 
         setState(() {});
       }
     });
+  }
+
+  void funSublim() {
+    for (int i = 0; i < totalSubCategories.length; i++)
+      if (selectedSubCategoriesName
+          .contains(totalSubCategories[i].categoryName))
+        selectedSubCategoriesId.add(totalSubCategories[i].id);
+
+    for (int i = 0; i < totalTag.length; i++)
+      if (selectedTagName.contains(totalTag[i].tagName))
+        selectedTagId.add(totalTag[i].id);
+
+    for (int i = 0; i < totalAttribute.length; i++)
+      if (selectAttributeName.contains(totalAttribute[i].attributeName))
+        selectAttributeId.add(totalAttribute[i].id);
+
+    if (priceRange != null && selectPay.isNotEmpty) {
+      Map<String, dynamic> _map = {
+        "sub_categories": selectedSubCategoriesId,
+        "tags": selectedTagId,
+        "price_range": priceRange,
+        "payment_method": selectPay,
+        "attributes": selectAttributeId
+      };
+      WebService.setBusinessInfoData(_map).then((value) {
+        if (value.status == "success") {
+          BotToast.showText(text: value.message);
+          Navigator.pop(context);
+        }
+      });
+    }
+  }
+
+  Future getImage(ImgSource source) async {
+    List img = [];
+    var image = await ImagePickerGC.pickImage(
+        context: context,
+        imageQuality: 70,
+        source: source,
+        cameraIcon: Icon(Icons.add, color: Colors.red));
+    img.add(image);
+
+    await WebService.profileInfoImageUpdate(img).then((value) async {
+      if (value.status == "success") {
+        BotToast.showText(text: value.message);
+        photoData.clear();
+        photoData.addAll(value.data);
+      }
+    });
+    setState(() => _image = image);
+  }
+
+  clearDataList() {
+    checked.clear();
+    radioChecked.clear();
+    totalpay.clear();
+    selectPay.clear();
+
+    totalSubCategories.clear();
+    totalSubCategoriesName.clear();
+    totalSubCategoriesName.clear();
+
+    selectedSubCategories.clear();
+    selectedSubCategoriesId.clear();
+    selectedSubCategoriesName.clear();
+
+    totalTag.clear();
+    totalTagName.clear();
+    totalTagId.clear();
+    selectedTag.clear();
+    selectedTagName.clear();
+    selectedTagId.clear();
+
+    totalAttribute.clear();
+    totalAttributeName.clear();
+    totalAttributeListId.clear();
+    selectAttribute.clear();
+    selectAttributeId.clear();
+    selectAttributeName.clear();
+
+    priceRangelist.clear();
+    photoData.clear();
   }
 }

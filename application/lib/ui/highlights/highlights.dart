@@ -1,9 +1,15 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
+import 'package:get/route_manager.dart';
 
 class highlights extends StatefulWidget {
   @override
@@ -11,16 +17,19 @@ class highlights extends StatefulWidget {
 }
 
 class _highlightsState extends State<highlights> {
-  List<bool> checked = [false, false, false];
-  List<bool> radioChecked = [true, false, false];
-  bool _autoValidateForm = false;
-  List<String> lst = ["a", "b", "c"];
   List<TextEditingController> controller = [];
-  List<String> list = ["pizza", "burger", "cold drink", "French fries"];
-  List<String> selectedlist = [];
-  void initState() {
-    super.initState();
 
+  List<File> imgFiles = List();
+  List<String> imgUrls = List();
+  List<int> imgUrlsId = List();
+  TextEditingController ctrlTitle = TextEditingController();
+  TextEditingController ctrlDisc = TextEditingController();
+  bool _autovalidate = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void initState() {
+    getPageData();
+    super.initState();
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
   }
 
@@ -50,78 +59,164 @@ class _highlightsState extends State<highlights> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 8),
-        child: ListView(
-          children: [
-            Text("Highlights",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2)),
-            Container(
-              height: sm.scaledHeight(12),
-              margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (int i = 0; i < 10; i++)
-                    Card(
-                      semanticContainer: true,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Image.network(
-                        'https://eatforum.org/content/uploads/2018/05/table_with_food_top_view_900x700.jpg',
-                        fit: BoxFit.fill,
+        child: Builder(
+          builder: (context) => Form(
+            key: _formKey,
+            autovalidate: _autovalidate,
+            child: ListView(
+              children: [
+                Text("Highlights",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2)),
+                Container(
+                  height: sm.scaledHeight(20),
+                  margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      InkWell(
+                          onTap: () async {
+                            FilePickerResult result = await FilePicker.platform
+                                .pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['jpg'],
+                                    allowMultiple: true);
+                            if (result != null)
+                              setState(() => imgFiles.addAll(result.paths
+                                  .map((path) => File(path))
+                                  .toList()));
+
+                            if (result != null) {
+                              PlatformFile file = result.files.first;
+                              print(file.name);
+                              print(file.bytes);
+                              print(file.size);
+                              print(file.extension);
+                              print(file.path);
+                              WebService.highlightImageUpdate(result.files)
+                                  .then((value) {
+                                if (value.status == "success") {
+                                  for (int i = 0; i < value.data.length; i++) {
+                                    if (!imgUrlsId.contains(value.data[i].id)) {
+                                      imgUrls.add(value.data[i].photo);
+                                      imgUrlsId.add(value.data[i].id);
+                                    }
+                                  }
+                                }
+                                setState(() {});
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: sm.scaledHeight(18),
+                            child: Card(
+                                semanticContainer: true,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(18),
+                                    child: Icon(
+                                      Icons.cloud_upload_outlined,
+                                      size: 30,
+                                    )),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                elevation: 5,
+                                margin: EdgeInsets.all(10)),
+                          )),
+                      for (int i = imgUrls.length - 1; i > 0; i--) //Network
+                        Container(
+                          width: sm.scaledHeight(20),
+                          child: Card(
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Image.network(imgUrls[i].toString(),
+                                  fit: BoxFit.fill),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              elevation: 5,
+                              margin: EdgeInsets.all(10)),
+                        )
+                    ],
+                  ),
+                ),
+                Container(
+                    decoration: bd1,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20, vertical: 40.0),
+                    margin: EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                        child: txtfieldboundry(
+                          valid: true,
+                          title: "Title",
+                          hint: "Enter title of highlights",
+                          controller: ctrlTitle,
+                          security: false,
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                      Padding(
+                        padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                        child: txtfieldboundry(
+                          valid: true,
+                          title: "Discription",
+                          maxLines: 4,
+                          hint: "Enter Discription highlights",
+                          controller: ctrlDisc,
+                          security: false,
+                        ),
                       ),
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                    )
-                ],
-              ),
+                    ])),
+                Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: sm.scaledWidth(16),
+                        vertical: sm.scaledHeight(2)),
+                    child: roundedButton(
+                        clicker: () {
+                          if (_formKey.currentState.validate()) {
+                            _autovalidate = false;
+                            WebService.setHighlightData({
+                              "highlight_title": ctrlTitle.text,
+                              "highlight_desc": ctrlDisc.text
+                            }).then((value) {
+                              if (value.status == "success")
+                                BotToast.showText(text: value.message);
+                            });
+                          } else {
+                            _autovalidate = true;
+                          }
+                        },
+                        clr: Colors.red,
+                        title: "Done"))
+              ],
             ),
-            Container(
-                decoration: bd1,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40.0),
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                child: Column(children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
-                    child: txtfieldboundry(
-                      valid: true,
-                      title: "Title",
-                      hint: "Enter title of highlights",
-                      // ctrl: userCtrl,
-                      security: false,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: sm.scaledHeight(1)),
-                    child: txtfieldboundry(
-                      valid: true,
-                      title: "Discription",
-                      maxLines: 4,
-                      hint: "Enter Discription highlights",
-                      // ctrl: userCtrl,
-                      security: false,
-                    ),
-                  ),
-                ])),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: sm.scaledWidth(16),
-                    vertical: sm.scaledHeight(2)),
-                child: roundedButton(
-                    clicker: () {
-                      // funSublim();
-                    },
-                    clr: Colors.red,
-                    title: "Done"))
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  void getPageData() async {
+    int t = 1;
+    BotToast.showLoading(duration: Duration(seconds: t));
+    await WebService.getHighlightData().then((value) {
+      setState(() {
+        t = 0;
+      });
+      if (value.status == "success") {
+        for (int i = 0; i < value.data.photos.length; i++) {
+          if (!imgUrlsId.contains(value.data.photos[i].id)) {
+            imgUrls.add(value.data.photos[i].photo);
+            imgUrlsId.add(value.data.photos[i].id);
+          }
+        }
+        ctrlTitle.text = value.data.highlightTitle;
+        setState(() => ctrlDisc.text = value.data.highlightDesc);
+      }
+    });
   }
 }
