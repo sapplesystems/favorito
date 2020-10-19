@@ -36,15 +36,15 @@ var db = require('../config/db');
 const io = require('socket.io')(server);
 const user = {};
 io.on('connection', socket => {
-    socket.on('new-user-joined', name => {
-        user[socket.id] = name;
-        socket.broadcast.emit('user-joined', name);
+    socket.on('new-user-joined', data => {
+        user[socket.id] = data;
+        socket.broadcast.emit('user-joined', data.user_name);
     });
 
     socket.on('send', args => {
         var postdata = {
-            user_id: socket.id,
-            user_name: user[socket.id],
+            user_id: user[socket.id].user_id,
+            user_name: user[socket.id].user_name,
             message: args.message,
             photo: args.photo
         };
@@ -52,13 +52,13 @@ io.on('connection', socket => {
         var sql = "INSERT INTO business_chats SET ?";
         db.query(sql, postdata, function(err, result) {
             if (!err) {
-                socket.broadcast.emit('receive', { message: postdata.message, photo: postdata.photo, name: user[socket.id] });
+                socket.broadcast.emit('receive', { message: postdata.message, photo: postdata.photo, name: user[socket.id].user_name });
             }
         });
     });
 
     socket.on('disconnect', message => {
-        socket.broadcast.emit('disconnect', user[socket.id]);
+        socket.broadcast.emit('disconnect', user[socket.id].user_name);
         delete user[socket.id];
     });
 });
