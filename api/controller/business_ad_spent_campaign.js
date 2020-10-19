@@ -5,14 +5,28 @@ var ad_status = ['Active', 'Pause', 'Stop'];
 /**
  * FETCH ALL BUSINESS AD SPENT CAMPAIGN
  */
-exports.all_business_campaign = function(req, res, next) {
+exports.all_business_campaign = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
+        var COND = "business_id='" + business_id + "' AND deleted_at IS NULL";
+        if (req.body.campaign_id != '' && req.body.campaign_id != 'undefined' && req.body.campaign_id != null) {
+            COND += " AND id='" + req.body.campaign_id + "'";
+        }
+
         var sql = "SELECT id,`name`,keyword,cpc,total_budget,impressions,clicks,status \n\
-        FROM business_ad_spent_campaign WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
-        db.query(sql, function(err, result) {
+        FROM business_ad_spent_campaign WHERE " + COND;
+        db.query(sql, async function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            var res_len = result.length;
+            var data = [];
+            if (res_len > 0) {
+                for (var i = 0; i < res_len; i++) {
+                    var keyword = result[i].keyword;
+                    result[i].keyword = await exports.getTags(keyword);
+                    data.push(result[i]);
+                }
             }
             return res.status(200).json({
                 status: 'success',
@@ -20,7 +34,7 @@ exports.all_business_campaign = function(req, res, next) {
                 total_spent: 1000,
                 free_credit: 400,
                 paid_credit: 800,
-                data: result
+                data: data
             });
         });
     } catch (e) {
@@ -32,7 +46,7 @@ exports.all_business_campaign = function(req, res, next) {
 /**
  * FIND AD SPENT CAMPAIGN BY ID
  */
-exports.find_campaign = function(req, res, next) {
+exports.find_campaign = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.campaign_id == '' || req.body.campaign_id == 'undefined' || req.body.campaign_id == null) {
@@ -42,10 +56,12 @@ exports.find_campaign = function(req, res, next) {
         var id = req.body.campaign_id;
         var sql = "SELECT id,`name`,keyword,cpc,total_budget,impressions,clicks,status \n\
         FROM business_ad_spent_campaign WHERE business_id='" + business_id + "'AND id='" + id + "' AND deleted_at IS NULL";
-        db.query(sql, function(err, result) {
+        db.query(sql, async function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
+            var keyword = result[0].keyword;
+            result[0].keyword = await exports.getTags(keyword);
             return res.status(200).json({
                 status: 'success',
                 message: 'success',
@@ -177,6 +193,20 @@ exports.delete_campaign = function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
             return res.status(200).json({ status: 'success', message: 'Campaign deleted successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+exports.getTags = function(tag_ids) {
+    try {
+        return new Promise(function(resolve, reject) {
+            var sql = "SELECT id, tag_name FROM business_tags \n\
+            WHERE id IN(" + tag_ids + ") AND deleted_at IS NULL";
+            db.query(sql, function(err, result) {
+                resolve(result);
+            });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
