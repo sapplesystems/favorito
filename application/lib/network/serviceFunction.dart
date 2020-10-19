@@ -45,4 +45,6 @@ class serviceFunction {
   static String funUserHighlightSave = baseUrl1 + 'highlight/save';
   static String funUserHighlightDetails = baseUrl1 + 'highlight/detail';
   static String funAdSpentList = baseUrl1 + adSpent + 'list';
+  static String funTagList = baseUrl2 + 'tag/list';
+  static String funCampainVerbose = baseUrl1 + 'ad-spent-campaign/dd-verbose';
 }

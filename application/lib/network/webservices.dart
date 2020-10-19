@@ -8,6 +8,7 @@ import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfoModel.dart';
+import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
@@ -33,6 +34,7 @@ import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
+import 'package:Favorito/model/tagModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
@@ -745,7 +747,7 @@ class WebService {
     }
   }
 
-//*********************************************** Highlight ******************************/
+//*********************************************** adSpent ******************************/
   static Future<adSpentModel> getAdSpentPageData() async {
     String token = await Prefs.token;
     String url = serviceFunction.funAdSpentList;
@@ -755,6 +757,30 @@ class WebService {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
       return adSpentModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<tagModel> getTagList() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funTagList;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return tagModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<campainVerbose> getCampainVerbose() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funCampainVerbose;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return campainVerbose.fromJson(convert.json.decode(response.toString()));
     }
   }
 }
