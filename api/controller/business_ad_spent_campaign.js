@@ -1,15 +1,16 @@
 var db = require('../config/db');
 var cpc = [0.5, 0.10, 0.50, 1.00];
+var ad_status = ['Active', 'Pause', 'Stop'];
 
 /**
  * FETCH ALL BUSINESS AD SPENT CAMPAIGN
  */
-exports.all_business_campaign = function (req, res, next) {
+exports.all_business_campaign = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id,`name`,keyword,cpc,total_budget,impressions,clicks,status \n\
         FROM business_ad_spent_campaign WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -31,7 +32,7 @@ exports.all_business_campaign = function (req, res, next) {
 /**
  * FIND AD SPENT CAMPAIGN BY ID
  */
-exports.find_campaign = function (req, res, next) {
+exports.find_campaign = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.campaign_id == '' || req.body.campaign_id == 'undefined' || req.body.campaign_id == null) {
@@ -41,7 +42,7 @@ exports.find_campaign = function (req, res, next) {
         var id = req.body.campaign_id;
         var sql = "SELECT id,`name`,keyword,cpc,total_budget,impressions,clicks,status \n\
         FROM business_ad_spent_campaign WHERE business_id='" + business_id + "'AND id='" + id + "' AND deleted_at IS NULL";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -60,10 +61,11 @@ exports.find_campaign = function (req, res, next) {
 /**
  * STATIC DROP DONW DETAI TO CREATE THE CAMPAIGN
  */
-exports.dd_verbose = function (req, res, next) {
+exports.dd_verbose = function(req, res, next) {
     try {
         var verbose = {};
         verbose.cpc = cpc;
+        verbose.ad_status = ad_status;
         return res.status(200).json({ status: 'success', message: 'success', data: verbose });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -74,7 +76,7 @@ exports.dd_verbose = function (req, res, next) {
 /**
  * CREATE A NEW MANUAL AD SPENT CAMPAIGN
  */
-exports.create_campaign = function (req, res, next) {
+exports.create_campaign = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -86,17 +88,20 @@ exports.create_campaign = function (req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Cost per click not found.' });
         } else if (req.body.total_budget == '' || req.body.total_budget == 'undefined' || req.body.total_budget == null) {
             return res.status(403).json({ status: 'error', message: 'Total budget not found.' });
+        } else if (req.body.status == '' || req.body.status == 'undefined' || req.body.status == null) {
+            return res.status(403).json({ status: 'error', message: 'Status not found.' });
         }
 
         var name = req.body.name;
         var keyword = req.body.keyword;
         var cpc = req.body.cpc;
         var total_budget = req.body.total_budget;
+        var status = req.body.status;
         keyword = keyword.join();
 
-        var sql = "INSERT INTO business_ad_spent_campaign (business_id,`name`,keyword,cpc,total_budget) \n\
-        VALUES('" + business_id + "','" + name + "','" + keyword + "','" + cpc + "','" + total_budget + "')";
-        db.query(sql, function (err, result) {
+        var sql = "INSERT INTO business_ad_spent_campaign (business_id,`name`,keyword,cpc,total_budget,status) \n\
+        VALUES('" + business_id + "','" + name + "','" + keyword + "','" + cpc + "','" + total_budget + "','" + status + "')";
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -111,7 +116,7 @@ exports.create_campaign = function (req, res, next) {
 /**
  * EDIT A MANUAL AD SPENT CAMPAIGN
  */
-exports.edit_campaign = function (req, res, next) {
+exports.edit_campaign = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -139,14 +144,9 @@ exports.edit_campaign = function (req, res, next) {
         }
 
         var id = req.body.campaign_id;
-        var name = req.body.name;
-        var keyword = req.body.keyword;
-        var cpc = req.body.cpc;
-        var total_budget = req.body.total_budget;
-        keyword = keyword.join();
 
         var sql = "update business_ad_spent_campaign set " + update_column + " where id='" + id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -161,7 +161,7 @@ exports.edit_campaign = function (req, res, next) {
 /**
  * DELETE MANUAL AD SPENT CAMPAIGN
  */
-exports.delete_campaign = function (req, res, next) {
+exports.delete_campaign = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -172,7 +172,7 @@ exports.delete_campaign = function (req, res, next) {
         var campaign_id = req.body.campaign_id;
 
         var sql = "UPDATE business_ad_spent_campaign SET deleted_at = NOW() WHERE id='" + campaign_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
