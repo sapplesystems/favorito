@@ -8,8 +8,14 @@ const messageContainer = document.querySelector('.container');
 /*do {
     name = prompt('Enter your name to join the chat');
 } while (!name)*/
-const name = prompt('Enter your name to join the chat');
 
+
+const user_id = (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)).toUpperCase();
+const user_name = 'User-' + Math.floor(Math.random() * 11);
+const user_detail = {
+    user_id: user_id,
+    user_name: user_name,
+};
 
 const append = (message, position) => {
     const messageElement = document.createElement('div');
@@ -56,7 +62,7 @@ function readFileAsync(file) {
     })
 }
 
-socket.emit('new-user-joined', name);
+socket.emit('new-user-joined', user_detail);
 
 socket.on('user-joined', name => {
     append(name + ' join the chat', 'right');
