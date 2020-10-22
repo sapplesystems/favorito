@@ -1,13 +1,12 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Signup.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-
-import 'Home.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -36,6 +35,7 @@ class _Login extends StatefulWidget {
 class _LoginState extends State<_Login> {
   bool _autoValidateForm = false;
   var _myUserNameEditTextController = TextEditingController();
+  var _myPasswordEditTextController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -82,11 +82,12 @@ class _LoginState extends State<_Login> {
                       Padding(
                         padding: EdgeInsets.only(top: sm.scaledHeight(4)),
                         child: EditTextComponent(
-                          ctrl: _myUserNameEditTextController,
+                          ctrl: _myPasswordEditTextController,
                           title: "Password",
-                          security: false,
+                          security: true,
                           valid: true,
                           prefixIcon: 'password',
+                          maxLines: 1,
                         ),
                       ),
                     ]))),
@@ -128,8 +129,8 @@ class _LoginState extends State<_Login> {
               boxShape: NeumorphicBoxShape.roundRect(
                   BorderRadius.all(Radius.circular(24.0))),
               onClick: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BottomNavBar()));
               },
               isEnabled: true,
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),

@@ -28,6 +28,8 @@ dependencies:
   carousel_slider:
   ff_navigation_bar:
   font_awesome_flutter:
+  dropdown_search:
+  intl:
   flutter:
     sdk: flutter
 

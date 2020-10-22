@@ -1,6 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -38,6 +38,7 @@ class _SearchState extends State<_Search> {
     return SafeArea(
       child: Container(
         height: sm.scaledHeight(100),
+        decoration: BoxDecoration(color: myBackGround),
         child: ListView(
           shrinkWrap: true,
           children: [
@@ -52,6 +53,13 @@ class _SearchState extends State<_Search> {
                 security: false,
                 valid: true,
                 prefixIcon: 'search',
+                prefClick: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SearchResult(_mySearchEditTextController.text)));
+                },
               ),
             ),
             header(sm, "Trending Nearby"),
@@ -342,7 +350,7 @@ class _SearchState extends State<_Search> {
               borderRadius: BorderRadius.all(Radius.circular(12)),
               child: Image.network(
                 "https://source.unsplash.com/random/600*400",
-                height: sm.scaledHeight(22),
+                height: sm.scaledHeight(20),
                 fit: BoxFit.cover,
                 width: sm.scaledWidth(32),
               ),
