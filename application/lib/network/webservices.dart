@@ -3,14 +3,18 @@ import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
+import 'package:Favorito/model/adSpentModel.dart';
 import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
+import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfoModel.dart';
+import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
 import 'package:Favorito/model/contactPerson/SearchBranchResonseModel.dart';
 import 'package:Favorito/model/contactPerson/UpdateContactPerson.dart';
+import 'package:Favorito/model/highLightesData.dart';
 import 'package:Favorito/model/job/CityModelResponse.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
 import 'package:Favorito/model/job/CreateJobRequiredDataModel.dart';
@@ -30,6 +34,7 @@ import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
+import 'package:Favorito/model/tagModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
@@ -106,8 +111,19 @@ class WebService {
     FormData formData = FormData.fromMap({
       "photo": await MultipartFile.fromFile(file.path, filename: fileName),
     });
+
+    BaseResponseModel _returnData = BaseResponseModel();
     response = await dio.post(serviceFunction.funProfileUpdatephoto,
         data: formData, options: _opt);
+    print("profileImageUpdate:${response.toString()}");
+
+    if (response.statusCode == HttpStatus.ok) {
+      _returnData =
+          BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
+
     return response.data;
   }
 
@@ -116,17 +132,14 @@ class WebService {
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    profileDataModel _returnData = profileDataModel();
     response = await dio.post(serviceFunction.funUserProfile, options: _opt);
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:${serviceFunction.funUserProfile}");
       print("Response is :${response.toString()}");
-      _returnData =
-          profileDataModel.fromJson(convert.json.decode(response.toString()));
-    } else {
-      print("responseData4:${response.statusCode}");
+
+      return profileDataModel
+          .fromJson(convert.json.decode(response.toString()));
     }
-    return _returnData;
   }
 
   static Future<CreateNotificationRequiredDataModel>
@@ -619,6 +632,49 @@ class WebService {
     return _returnData;
   }
 
+  static Future<businessInfoImage> profileInfoImageUpdate(List files) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {
+      "photo": va,
+    };
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(serviceFunction.funUserInformationAddPhoto,
+        data: formData, options: _opt);
+    return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<BaseResponseModel> setBusinessInfoData(
+      Map<String, dynamic> _map) async {
+    BaseResponseModel _returnData = BaseResponseModel();
+    String token = await Prefs.token;
+    String url = serviceFunction.funUserInformationUpdate;
+    Options op = Options();
+    op = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    op.headers["content-type"] = "multipart/form-data";
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(url, data: formData, options: op);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("RequestData URL:${_map.toString()}");
+      print("Response is :${response.toString()}");
+      _returnData =
+          BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    } else {
+      print("responseData4:${response.statusCode}");
+    }
+    return _returnData;
+  }
+
   static Future<SubCategoryModel> getSubCat(Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funSubCatList;
@@ -626,7 +682,8 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     SubCategoryModel _returnData = SubCategoryModel();
-    response = await dio.post(serviceFunction.funSubCatList, data: _map,options: opt);
+    response =
+        await dio.post(serviceFunction.funSubCatList, data: _map, options: opt);
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
@@ -636,5 +693,94 @@ class WebService {
       print("responseData4:${response.statusCode}");
     }
     return _returnData;
+  }
+
+//*********************************************** Highlight ******************************/
+  static Future<businessInfoImage> highlightImageUpdate(List files) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {
+      "photo": va,
+    };
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(serviceFunction.funUserHighlightAddPhoto,
+        data: formData, options: _opt);
+    return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<BaseResponseModel> setHighlightData(Map _map) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funSubCatList;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(serviceFunction.funUserHighlightSave,
+        data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<highLightesData> getHighlightData() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funUserHighlightDetails;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return highLightesData.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+//*********************************************** adSpent ******************************/
+  static Future<adSpentModel> getAdSpentPageData() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funAdSpentList;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return adSpentModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<tagModel> getTagList() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funTagList;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return tagModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<campainVerbose> getCampainVerbose() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funCampainVerbose;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return campainVerbose.fromJson(convert.json.decode(response.toString()));
+    }
   }
 }

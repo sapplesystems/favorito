@@ -1,3 +1,4 @@
+import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
 
 class businessInfoModel {
@@ -120,12 +121,12 @@ class Data {
   String categoryName;
   String subCategoriesId;
   String subCategoriesName;
-  List<String> tags;
+  List<TagList> tags;
   String priceRange;
   List<String> paymentMethod;
-  List<String> attributes;
+  List<AttributeList> attributes;
   List<SubCategories> subCategories;
-  List<String> photos;
+  List<PhotoData> photos;
 
   Data(
       {this.businessInformationId,
@@ -148,17 +149,32 @@ class Data {
     categoryName = json['category_name'];
     subCategoriesId = json['sub_categories_id'];
     subCategoriesName = json['sub_categories_name'];
-    tags = json['tags'].cast<String>();
+    if (json['tags'] != null) {
+      tags = new List<TagList>();
+      json['tags'].forEach((v) {
+        tags.add(new TagList.fromJson(v));
+      });
+    }
     priceRange = json['price_range'];
     paymentMethod = json['payment_method'].cast<String>();
-    attributes = json['attributes'].cast<String>();
+    if (json['attributes'] != null) {
+      attributes = new List<AttributeList>();
+      json['attributes'].forEach((v) {
+        attributes.add(new AttributeList.fromJson(v));
+      });
+    }
     if (json['sub_categories'] != null) {
       subCategories = new List<SubCategories>();
       json['sub_categories'].forEach((v) {
         subCategories.add(new SubCategories.fromJson(v));
       });
     }
-    photos = json['photos'].cast<String>();
+    if (json['photos'] != null) {
+      photos = new List<PhotoData>();
+      json['photos'].forEach((v) {
+        photos.add(new PhotoData.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -169,16 +185,21 @@ class Data {
     data['category_name'] = this.categoryName;
     data['sub_categories_id'] = this.subCategoriesId;
     data['sub_categories_name'] = this.subCategoriesName;
-    data['tags'] = this.tags;
+    if (this.tags != null) {
+      data['tags'] = this.tags.map((v) => v.toJson()).toList();
+    }
     data['price_range'] = this.priceRange;
     data['payment_method'] = this.paymentMethod;
-    data['attributes'] = this.attributes;
+    if (this.attributes != null) {
+      data['attributes'] = this.attributes.map((v) => v.toJson()).toList();
+    }
     if (this.subCategories != null) {
       data['sub_categories'] =
           this.subCategories.map((v) => v.toJson()).toList();
     }
-    data['photos'] = this.photos;
+    if (this.photos != null) {
+      data['photos'] = this.photos.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
-

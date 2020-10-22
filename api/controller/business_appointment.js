@@ -6,7 +6,7 @@ var today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + toda
 /**
  * STATIC VARIABLES
  */
-exports.dd_verbose = async function (req, res, next) {
+exports.dd_verbose = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var person_list = await exports.getAllPersons(business_id);
@@ -24,20 +24,29 @@ exports.dd_verbose = async function (req, res, next) {
 /**
  * SAVE PERSON
  */
-exports.savePerson = function (req, res, next) {
+exports.savePerson = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.person_name == '' || req.body.person_name == 'undefined' || req.body.person_name == null) {
             return res.status(403).json({ status: 'error', message: 'Person not found.' });
+        } else if (req.body.service_id == '' || req.body.service_id == 'undefined' || req.body.service_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Service not found.' });
         }
 
         var postval = {
             business_id: business_id,
-            person_name: req.body.person_name
+            person_name: req.body.person_name,
+            service_id: req.body.service_id
         };
+        if (req.body.person_mobile != '' && req.body.person_mobile != 'undefined' && req.body.person_mobile != null) {
+            postval.person_mobile = req.body.person_mobile;
+        }
+        if (req.body.person_email != '' && req.body.person_email != 'undefined' && req.body.person_email != null) {
+            postval.person_email = req.body.person_email;
+        }
 
         var sql = "INSERT INTO business_appointment_person SET ?";
-        db.query(sql, postval, function (err, result) {
+        db.query(sql, postval, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -51,7 +60,7 @@ exports.savePerson = function (req, res, next) {
 /**
  * SAVE SERVICE
  */
-exports.saveService = function (req, res, next) {
+exports.saveService = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.service_name == '' || req.body.service_name == 'undefined' || req.body.service_name == null) {
@@ -64,7 +73,7 @@ exports.saveService = function (req, res, next) {
         };
 
         var sql = "INSERT INTO business_appointment_service SET ?";
-        db.query(sql, postval, function (err, result) {
+        db.query(sql, postval, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -78,7 +87,7 @@ exports.saveService = function (req, res, next) {
 /**
  * SAVE RESTRICTION
  */
-exports.saveRestriction = function (req, res, next) {
+exports.saveRestriction = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var postval = { business_id: business_id };
@@ -99,7 +108,7 @@ exports.saveRestriction = function (req, res, next) {
         postval.end_datetime = req.body.end_datetime;
 
         var sql = "INSERT INTO business_appointment_restriction SET ?";
-        db.query(sql, postval, function (err, result) {
+        db.query(sql, postval, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -115,7 +124,7 @@ exports.saveRestriction = function (req, res, next) {
 /**
  * GET ALL PERSON LIST
  */
-exports.getAllPersonList = async function (req, res, next) {
+exports.getAllPersonList = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = await exports.getAllPersons(business_id);
@@ -129,7 +138,7 @@ exports.getAllPersonList = async function (req, res, next) {
 /**
  * GET ALL SERVICE LIST
  */
-exports.getAllServiceList = async function (req, res, next) {
+exports.getAllServiceList = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = await exports.getAllServices(business_id);
@@ -143,7 +152,7 @@ exports.getAllServiceList = async function (req, res, next) {
 /**
  * GET ALL RESTRICTION LIST
  */
-exports.getAllRestrictionList = async function (req, res, next) {
+exports.getAllRestrictionList = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = await exports.getAllRestriction(business_id);
@@ -157,10 +166,12 @@ exports.getAllRestrictionList = async function (req, res, next) {
 /**
  * GET ALL PERSONS
  */
-exports.getAllPersons = function (business_id) {
-    return new Promise(function (resolve, reject) {
-        var sql = "SELECT id,person_name,is_active FROM business_appointment_person WHERE business_id='" + business_id + "' AND is_active='1'";
-        db.query(sql, function (err, person_list) {
+exports.getAllPersons = function(business_id) {
+    return new Promise(function(resolve, reject) {
+        var sql = "SELECT id,person_name,person_mobile,person_email,service_id, \n\
+        (select service_name from business_appointment_service where id=service_id) as service_name, \n\
+        is_active FROM business_appointment_person WHERE business_id='" + business_id + "' AND is_active='1'";
+        db.query(sql, function(err, person_list) {
             resolve(person_list);
         });
     });
@@ -169,10 +180,10 @@ exports.getAllPersons = function (business_id) {
 /**
  * GET ALL SERVICES
  */
-exports.getAllServices = function (business_id) {
-    return new Promise(function (resolve, reject) {
+exports.getAllServices = function(business_id) {
+    return new Promise(function(resolve, reject) {
         var sql = "SELECT id,service_name,is_active FROM business_appointment_service WHERE business_id='" + business_id + "' AND is_active='1'";
-        db.query(sql, function (err, service_list) {
+        db.query(sql, function(err, service_list) {
             resolve(service_list);
         });
     });
@@ -181,15 +192,15 @@ exports.getAllServices = function (business_id) {
 /**
  * GET ALL RESTRICTIONS
  */
-exports.getAllRestriction = function (business_id) {
-    return new Promise(function (resolve, reject) {
+exports.getAllRestriction = function(business_id) {
+    return new Promise(function(resolve, reject) {
         var sql = "SELECT id, \n\
                 person_id, (SELECT person_name FROM business_appointment_person WHERE id=person_id) AS person_name, \n\
                 service_id, (SELECT service_name FROM business_appointment_service WHERE id=service_id) AS service_name, \n\
                 CONCAT(DATE_FORMAT(start_datetime, '%d'), '-', DATE_FORMAT(end_datetime, '%d %b')) AS date_time \n\
                 FROM business_appointment_restriction \n\
-                WHERE business_id='"+ business_id + "' AND deleted_at IS NULL";
-        db.query(sql, function (err, restriction_list) {
+                WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
+        db.query(sql, function(err, restriction_list) {
             resolve(restriction_list);
         });
     });
@@ -199,7 +210,7 @@ exports.getAllRestriction = function (business_id) {
 /**
  * DELETE RESTRICTION
  */
-exports.deleteRestriction = function (req, res, next) {
+exports.deleteRestriction = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.restriction_id == '' || req.body.restriction_id == 'undefined' || req.body.restriction_id == null) {
@@ -207,7 +218,7 @@ exports.deleteRestriction = function (req, res, next) {
         }
 
         var sql = "UPDATE business_appointment_restriction SET deleted_at=NOW() WHERE id='" + req.body.restriction_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -222,7 +233,7 @@ exports.deleteRestriction = function (req, res, next) {
 /**
  * GET RESTRICTION DETAIL
  */
-exports.getRestrictionDetail = function (req, res, next) {
+exports.getRestrictionDetail = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.restriction_id == '' || req.body.restriction_id == 'undefined' || req.body.restriction_id == null) {
@@ -230,7 +241,7 @@ exports.getRestrictionDetail = function (req, res, next) {
         }
         var restriction_id = req.body.restriction_id;
         var sql = "SELECT person_id, service_id, start_datetime, end_datetime FROM business_appointment_restriction WHERE id='" + restriction_id + "' AND deleted_at IS NULL";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -245,7 +256,7 @@ exports.getRestrictionDetail = function (req, res, next) {
 /**
  * EDIT RESTRICTION
  */
-exports.editRestriction = function (req, res, next) {
+exports.editRestriction = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.restriction_id == '' || req.body.restriction_id == 'undefined' || req.body.restriction_id == null) {
@@ -268,7 +279,7 @@ exports.editRestriction = function (req, res, next) {
         }
 
         var sql = "UPDATE business_appointment_restriction SET " + update_column + " WHERE id='" + restriction_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -283,7 +294,7 @@ exports.editRestriction = function (req, res, next) {
 /**
  * SAVE SETTING
  */
-exports.save_setting = function (req, res, next) {
+exports.save_setting = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var update_column = " updated_at=NOW() ";
@@ -317,7 +328,7 @@ exports.save_setting = function (req, res, next) {
         }
 
         var sql = "UPDATE business_appointment_setting SET " + update_column + " WHERE business_id='" + business_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -332,7 +343,7 @@ exports.save_setting = function (req, res, next) {
 /**
  * GET SETTING
  */
-exports.get_setting = async function (req, res, next) {
+exports.get_setting = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var person_list = await exports.getAllPersons(business_id);
@@ -346,8 +357,8 @@ exports.get_setting = async function (req, res, next) {
 
         var sql = "SELECT start_time,end_time,advance_booking_start_days,advance_booking_end_days, \n\
                     advance_booking_hours,slot_length,booking_per_slot,booking_per_day,announcement \n\
-                    FROM business_appointment_setting WHERE business_id='"+ business_id + "'";
-        db.query(sql, function (err, result) {
+                    FROM business_appointment_setting WHERE business_id='" + business_id + "'";
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -363,7 +374,7 @@ exports.get_setting = async function (req, res, next) {
 /**
  * CREATE A NEW MANUAL APPOINTMENT
  */
-exports.createAppointment = function (req, res, next) {
+exports.createAppointment = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -395,7 +406,7 @@ exports.createAppointment = function (req, res, next) {
         };
 
         var sql = "INSERT INTO business_appointment SET ?";
-        db.query(sql, postval, function (err, result) {
+        db.query(sql, postval, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -409,7 +420,7 @@ exports.createAppointment = function (req, res, next) {
 /**
  * FIND BUSINESS APPOINTMENT BY ID
  */
-exports.findAppointmentById = async function (req, res, next) {
+exports.findAppointmentById = async function(req, res, next) {
     try {
         if (req.body.appointment_id == '' || req.body.appointment_id == 'undefined' || req.body.appointment_id == null) {
             return res.status(403).json({ status: 'error', message: 'Appointment id not found.' });
@@ -426,8 +437,8 @@ exports.findAppointmentById = async function (req, res, next) {
         var sql = "SELECT id,`name`,contact,service_id,person_id,special_notes, \n\
                     DATE_FORMAT(created_datetime, '%d-%m-%Y') AS created_date, \n\
                     DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
-                    FROM business_appointment WHERE id='"+ appointment_id + "' AND business_id='" + business_id + "' AND deleted_at IS NULL";
-        db.query(sql, function (err, result) {
+                    FROM business_appointment WHERE id='" + appointment_id + "' AND business_id='" + business_id + "' AND deleted_at IS NULL";
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -441,7 +452,7 @@ exports.findAppointmentById = async function (req, res, next) {
 /**
  * EDIT BUSINESS APPOINTMENT BY ID
  */
-exports.editAppointment = function (req, res, next) {
+exports.editAppointment = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.appointment_id == '' || req.body.appointment_id == 'undefined' || req.body.appointment_id == null) {
@@ -480,7 +491,7 @@ exports.editAppointment = function (req, res, next) {
         }
 
         var sql = "UPDATE `business_appointment` SET " + update_columns + " WHERE id='" + appointment_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -494,7 +505,7 @@ exports.editAppointment = function (req, res, next) {
 /**
  * DELETE MANUAL APPOINTMENT
  */
-exports.deleteAppointment = function (req, res, next) {
+exports.deleteAppointment = function(req, res, next) {
     try {
         if (req.body.appointment_id == '' || req.body.appointment_id == 'undefined' || req.body.appointment_id == null) {
             return res.status(403).json({ status: 'error', message: 'Appointment id not found.' });
@@ -503,7 +514,7 @@ exports.deleteAppointment = function (req, res, next) {
         var appointment_id = req.body.appointment_id;
 
         var sql = "UPDATE business_appointment SET deleted_at = NOW() WHERE id='" + appointment_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -517,7 +528,7 @@ exports.deleteAppointment = function (req, res, next) {
 /**
  * FETCH ALL BUSINESS APPOINTMENT
  */
-exports.listAllAppointment = async function (req, res, next) {
+exports.listAllAppointment = async function(req, res, next) {
     try {
         var today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
         var business_id = req.userdata.business_id;
@@ -535,7 +546,7 @@ exports.listAllAppointment = async function (req, res, next) {
                     DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
                     DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
                     FROM business_appointment WHERE " + Condition;
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -549,19 +560,19 @@ exports.listAllAppointment = async function (req, res, next) {
 /**
  * GET THE APPOINTMENT SLOTS
  */
-exports.getAppointmentSlots = async function (business_id, date) {
+exports.getAppointmentSlots = async function(business_id, date) {
     try {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             var sql = "SELECT start_time,end_time,slot_length \n\
-                        FROM business_appointment_setting WHERE business_id='"+ business_id + "'";
-            db.query(sql, function (err, result) {
+                        FROM business_appointment_setting WHERE business_id='" + business_id + "'";
+            db.query(sql, function(err, result) {
                 if (err) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                 }
                 var starttime = result[0].start_time;
                 var endtime = result[0].end_time;
                 var interval = result[0].slot_length;
-                var timeslots = [];//[starttime];
+                var timeslots = []; //[starttime];
 
                 while (starttime <= endtime) {
                     var start_datetime = date + ' ' + starttime;
@@ -569,11 +580,11 @@ exports.getAppointmentSlots = async function (business_id, date) {
                     var end_datetime = date + ' ' + starttime;
 
                     var sql = "SELECT COUNT(*) AS c, DATE_FORMAT('" + start_datetime + "','%H:%i') AS start_time, \n\
-                                DATE_FORMAT('"+ end_datetime + "','%H:%i') AS end_time \n\
+                                DATE_FORMAT('" + end_datetime + "','%H:%i') AS end_time \n\
                                 FROM business_appointment WHERE business_id='" + business_id + "' \n\
                     AND created_datetime>='" + start_datetime + "' AND created_datetime <'" + end_datetime + "' \n\
                     AND deleted_at IS NULL";
-                    db.query(sql, function (e, r) {
+                    db.query(sql, function(e, r) {
                         var obj = { start: r[0].start_time, end: r[0].end_time, appointment_count: r[0].c };
                         timeslots.push(obj);
                     });

@@ -1,9 +1,12 @@
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/CreateCampaign/CreateCampaign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
+import '../../model/adSpentModel.dart';
+
 class adSpent extends StatefulWidget {
   @override
   _adSpentState createState() => _adSpentState();
@@ -11,6 +14,17 @@ class adSpent extends StatefulWidget {
 
 class _adSpentState extends State<adSpent> {
   SizeManager sm;
+  int totalSpent = 0;
+  int freeCredit = 0;
+  int paidCredit = 0;
+  List<Data> list = [];
+
+  @override
+  void initState() {
+    getPageData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -57,7 +71,9 @@ class _adSpentState extends State<adSpent> {
                             // padding: EdgeInsets.only(bottom: 40),
                             child: ListView(
                               children: [
-                                for (int i = 0; i < 10; i++)
+                                for (int i = 0;
+                                    i < (list != null ? list.length : 0);
+                                    i++)
                                   Card(
                                     elevation: 2,
                                     child: Padding(
@@ -66,7 +82,7 @@ class _adSpentState extends State<adSpent> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text("Restaurant Ad\n"),
+                                          Text("${list[i].name}\n"),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -75,12 +91,13 @@ class _adSpentState extends State<adSpent> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text("CPC:2.3\$",
+                                                  Text("CPC:${list[i].name}\$",
                                                       textAlign:
                                                           TextAlign.start,
                                                       style: TextStyle(
                                                           fontSize: 16)),
-                                                  Text("Impressions:12k",
+                                                  Text(
+                                                      "Impressions:${list[i].impressions}",
                                                       style: TextStyle(
                                                           fontSize: 16))
                                                 ],
@@ -90,12 +107,14 @@ class _adSpentState extends State<adSpent> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text("Spent:200\$",
+                                                  Text(
+                                                      "Spent:${list[i].totalBudget}\$",
                                                       textAlign:
                                                           TextAlign.start,
                                                       style: TextStyle(
                                                           fontSize: 16)),
-                                                  Text("Click:5k",
+                                                  Text(
+                                                      "Click:${list[i].clicks}",
                                                       style: TextStyle(
                                                           fontSize: 16))
                                                 ],
@@ -152,7 +171,7 @@ class _adSpentState extends State<adSpent> {
         Text("Total Spent", style: TextStyle(color: Colors.grey)),
         RichText(
             text: TextSpan(
-                text: '500',
+                text: totalSpent.toString(),
                 style: TextStyle(
                     color: Colors.black, fontSize: 28, letterSpacing: 1),
                 children: <TextSpan>[
@@ -162,9 +181,22 @@ class _adSpentState extends State<adSpent> {
             ]))
       ]),
       Column(children: [
-        credit("Free Credit", "200", "assets/icon/warning.svg"),
-        credit("Paid Credit", "100", "null")
+        credit("Free Credit", freeCredit.toString(), "assets/icon/warning.svg"),
+        credit("Paid Credit", paidCredit.toString(), "null")
       ]),
     ]);
+  }
+
+  void getPageData() {
+    WebService.getAdSpentPageData().then((value) {
+      if (value.status == "success") {
+        setState(() {
+          totalSpent = value.totalSpent;
+          freeCredit = value.freeCredit;
+          paidCredit = value.paidCredit;
+          list.addAll(value.data);
+        });
+      }
+    });
   }
 }
