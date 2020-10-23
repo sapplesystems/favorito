@@ -3,6 +3,7 @@ import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
+import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/model/businessInfoModel.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';

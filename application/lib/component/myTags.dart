@@ -10,13 +10,14 @@ class MyTags extends StatefulWidget {
   bool border = true;
   String title;
   String hint;
+  Function refresh;
   MyTags(
       {this.sourceList,
       this.title,
       this.border,
       this.hint,
       this.selectedList,
-      this.directionVeticle});
+      this.directionVeticle,this.refresh});
   @override
   _MyTagsState createState() => _MyTagsState();
 }
@@ -28,7 +29,15 @@ class _MyTagsState extends State<MyTags> {
       Padding(
           padding: EdgeInsets.symmetric(vertical: 8),
           child: DropdownSearch<String>(
-              validator: (v) => v == '' ? "required field" : null,
+              validator: (_v) {
+                var va;
+                if (widget.selectedList.length > 0) {
+                  va = null;
+                } else {
+                  va = 'required field';
+                }
+                return va;
+              },
               autoValidate: true,
               mode: Mode.MENU,
               showSelectedItem: true,
@@ -67,4 +76,5 @@ class _MyTagsState extends State<MyTags> {
               ]))
     ]);
   }
+  
 }

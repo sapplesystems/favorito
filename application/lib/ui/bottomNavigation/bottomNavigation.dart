@@ -1,3 +1,5 @@
+import 'package:Favorito/ui/booking/Bookings.dart';
+import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/dashboard/dashboard.dart';
 import 'package:Favorito/ui/setting/setting.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +14,14 @@ class _bottomNavigationState extends State<bottomNavigation> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
     dashboard(),
-    dashboard(),
+    Bookings(),
+    setting(),
+    checkins(),
     setting()
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() => _selectedIndex = index);
   }
 
   @override
@@ -29,14 +31,17 @@ class _bottomNavigationState extends State<bottomNavigation> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("")),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today), title: Text("")),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.cog),
-            title: Text(""),
-          )
+              icon: Icon(FontAwesomeIcons.comment), title: Text("")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.format_list_bulleted), title: Text("")),
+          BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.cog), title: Text("")),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],

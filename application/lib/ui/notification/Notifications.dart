@@ -42,10 +42,7 @@ class _NotificationsState extends State<Notifications> {
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: Text(
-            "Notification",
-            style: TextStyle(color: Colors.black),
-          ),
+          title: Text("Notification", style: TextStyle(color: Colors.black)),
         ),
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Container(
@@ -57,27 +54,23 @@ class _NotificationsState extends State<Notifications> {
                   return Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(20.0))),
                     child: Container(
                         height: sm.scaledHeight(10),
                         width: sm.scaledWidth(80),
                         decoration: BoxDecoration(
                             color: Colors.white,
-                            border: Border.all(
-                              color: Colors.white,
-                            ),
+                            border: Border.all(color: Colors.white),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(40))),
                         margin: EdgeInsets.symmetric(vertical: 2.0),
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
                           title: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text(
-                              _notificationsListdata.notifications[index].title,
-                            ),
-                          ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Text(_notificationsListdata
+                                  .notifications[index].title)),
                           subtitle: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: Container(

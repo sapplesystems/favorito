@@ -1,4 +1,3 @@
-import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/toggleSwitch.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';

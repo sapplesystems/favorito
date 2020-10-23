@@ -1,4 +1,5 @@
 import 'package:Favorito/ui/PageViews/PageViews.dart';
+import 'package:Favorito/ui/appoinment/appoinmentSetting.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/menu/MenuSetting.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
       ),
       home:
           // signup_a()
-          // PageViews()
-          Login());
+          Login()
+      // PageViews()
+      // appoinmentSetting()
+      );
 }

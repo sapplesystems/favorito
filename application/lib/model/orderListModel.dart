@@ -1,20 +1,19 @@
-import 'package:Favorito/model/TagList.dart';
-import 'package:Favorito/model/businessInfoModel.dart';
+import 'package:Favorito/model/OrderDetail.dart';
 
-class tagModel {
+class orderListModel {
   String status;
   String message;
-  List<TagList> data;
+  List<OrderData> data;
 
-  tagModel({this.status, this.message, this.data});
+  orderListModel({this.status, this.message, this.data});
 
-  tagModel.fromJson(Map<String, dynamic> json) {
+  orderListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<TagList>();
+      data = new List<OrderData>();
       json['data'].forEach((v) {
-        data.add(new TagList.fromJson(v));
+        data.add(new OrderData.fromJson(v));
       });
     }
   }

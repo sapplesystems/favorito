@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
+import 'package:Favorito/model/OrderDetail.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/adSpentModel.dart';
@@ -32,6 +33,7 @@ import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
+import 'package:Favorito/model/orderListModel.dart';
 import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
 import 'package:Favorito/model/tagModel.dart';
@@ -129,14 +131,10 @@ class WebService {
 
   static Future<profileDataModel> getProfileData() async {
     String token = await Prefs.token;
-    Options _opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Options _opt =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(serviceFunction.funUserProfile, options: _opt);
     if (response.statusCode == HttpStatus.ok) {
-      print("Request URL:${serviceFunction.funUserProfile}");
-      print("Response is :${response.toString()}");
-
       return profileDataModel
           .fromJson(convert.json.decode(response.toString()));
     }
@@ -748,7 +746,7 @@ class WebService {
   }
 
 //*********************************************** adSpent ******************************/
-  static Future<adSpentModel> getAdSpentPageData() async {
+  static Future<AdSpentModels> getAdSpentPageData() async {
     String token = await Prefs.token;
     String url = serviceFunction.funAdSpentList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -756,7 +754,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return adSpentModel.fromJson(convert.json.decode(response.toString()));
+      return AdSpentModels.fromJson(convert.json.decode(response.toString()));
     }
   }
 
@@ -781,6 +779,32 @@ class WebService {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
       return campainVerbose.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<campainVerbose> createCampain(Map _map, bool edit) async {
+    String token = await Prefs.token;
+    String url = edit
+        ? serviceFunction.funCreateCampainEdit
+        : serviceFunction.funCreateCampain;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return campainVerbose.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<orderListModel> orderList(Map _map) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funOrderList;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return orderListModel.fromJson(convert.json.decode(response.toString()));
     }
   }
 }

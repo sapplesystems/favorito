@@ -47,4 +47,7 @@ class serviceFunction {
   static String funAdSpentList = baseUrl1 + adSpent + 'list';
   static String funTagList = baseUrl2 + 'tag/list';
   static String funCampainVerbose = baseUrl1 + 'ad-spent-campaign/dd-verbose';
+  static String funCreateCampain = baseUrl1 + 'ad-spent-campaign/create';
+  static String funCreateCampainEdit = baseUrl1 + 'ad-spent-campaign/edit';
+  static String funOrderList = baseUrl1 + 'order/list';
 }

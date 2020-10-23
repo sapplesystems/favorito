@@ -1,4 +1,3 @@
-import 'package:Favorito/component/TxtBorder.dart';
 import 'package:Favorito/component/fromTo.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';

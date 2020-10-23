@@ -1,4 +1,7 @@
-class adSpentModel {
+import 'package:Favorito/model/TagList.dart';
+import 'package:Favorito/model/businessInfoModel.dart';
+
+class AdSpentModels {
   String status;
   String message;
   int totalSpent;
@@ -6,7 +9,7 @@ class adSpentModel {
   int paidCredit;
   List<Data> data;
 
-  adSpentModel(
+  AdSpentModels(
       {this.status,
       this.message,
       this.totalSpent,
@@ -14,7 +17,7 @@ class adSpentModel {
       this.paidCredit,
       this.data});
 
-  adSpentModel.fromJson(Map<String, dynamic> json) {
+  AdSpentModels.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     totalSpent = json['total_spent'];
@@ -45,7 +48,7 @@ class adSpentModel {
 class Data {
   int id;
   String name;
-  String keyword;
+  List<TagList> keyword;
   double cpc;
   int totalBudget;
   int impressions;
@@ -65,7 +68,12 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    keyword = json['keyword'];
+    if (json['keyword'] != null) {
+      keyword = new List<TagList>();
+      json['keyword'].forEach((v) {
+        keyword.add(new TagList.fromJson(v));
+      });
+    }
     cpc = json['cpc'];
     totalBudget = json['total_budget'];
     impressions = json['impressions'];
@@ -77,7 +85,9 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['keyword'] = this.keyword;
+    if (this.keyword != null) {
+      data['keyword'] = this.keyword.map((v) => v.toJson()).toList();
+    }
     data['cpc'] = this.cpc;
     data['total_budget'] = this.totalBudget;
     data['impressions'] = this.impressions;

@@ -2,6 +2,7 @@ import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/model/booking/BookingModel.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/ui/booking/BookingSetting.dart';
 import 'package:Favorito/ui/booking/ManualBooking.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -13,7 +14,7 @@ import '../../config/SizeManager.dart';
 
 class Bookings extends StatefulWidget {
   @override
- _Bookings createState() => _Bookings();
+  _Bookings createState() => _Bookings();
 }
 
 class _Bookings extends State<Bookings> {
@@ -129,8 +130,8 @@ class _Bookings extends State<Bookings> {
               icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
                   alignment: Alignment.center),
               onPressed: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => CreateJob(null)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BookingSetting()));
               },
             )
           ],
@@ -319,6 +320,7 @@ class _Bookings extends State<Bookings> {
                                             size: 26,
                                           ),
                                         ),
+                                        
                                       ),
                                     ],
                                   ),

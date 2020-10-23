@@ -23,13 +23,13 @@ class campainVerbose {
 }
 
 class Data {
-  List<double> cpc;
+  List<dynamic> cpc;
   List<String> adStatus;
 
   Data({this.cpc, this.adStatus});
 
   Data.fromJson(Map<String, dynamic> json) {
-    cpc = json['cpc'].cast<double>();
+    cpc = json['cpc'].cast<dynamic>();
     adStatus = json['ad_status'].cast<String>();
   }
 

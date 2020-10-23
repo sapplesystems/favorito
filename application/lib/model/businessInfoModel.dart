@@ -1,11 +1,12 @@
 import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
+import 'package:Favorito/model/TagList.dart';
 
 class businessInfoModel {
   String status;
   String message;
   DdVerbose ddVerbose;
-  Data data;
+  BusinessInfoData data;
 
   businessInfoModel({this.status, this.message, this.ddVerbose, this.data});
 
@@ -15,7 +16,9 @@ class businessInfoModel {
     ddVerbose = json['dd_verbose'] != null
         ? new DdVerbose.fromJson(json['dd_verbose'])
         : null;
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? new BusinessInfoData.fromJson(json['data'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -76,24 +79,7 @@ class DdVerbose {
   }
 }
 
-class TagList {
-  int id;
-  String tagName;
 
-  TagList({this.id, this.tagName});
-
-  TagList.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    tagName = json['tag_name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['tag_name'] = this.tagName;
-    return data;
-  }
-}
 
 class AttributeList {
   int id;
@@ -114,7 +100,7 @@ class AttributeList {
   }
 }
 
-class Data {
+class BusinessInfoData {
   int businessInformationId;
   String businessId;
   int categoryId;
@@ -128,7 +114,7 @@ class Data {
   List<SubCategories> subCategories;
   List<PhotoData> photos;
 
-  Data(
+  BusinessInfoData(
       {this.businessInformationId,
       this.businessId,
       this.categoryId,
@@ -142,7 +128,7 @@ class Data {
       this.subCategories,
       this.photos});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  BusinessInfoData.fromJson(Map<String, dynamic> json) {
     businessInformationId = json['business_information_id'];
     businessId = json['business_id'];
     categoryId = json['category_id'];

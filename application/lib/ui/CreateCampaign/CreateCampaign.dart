@@ -2,16 +2,25 @@ import 'package:Favorito/component/MyRadioGroup.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/model/businessInfoModel.dart';
+import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/services.dart';
+import '../../model/adSpentModel.dart';
 
 class CreateCampaign extends StatefulWidget {
+  bool campStat;
+  
+  Data data;
+  CreateCampaign(campStat, data) {
+    this.campStat = campStat;
+    this.data = data;
+  }
   @override
   _CreateCampaignState createState() => _CreateCampaignState();
 }
@@ -19,11 +28,10 @@ class CreateCampaign extends StatefulWidget {
 class _CreateCampaignState extends State<CreateCampaign> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<TextEditingController> ctrl = List();
-  List<String> keywordList = [];
+  
 
-  String _selectedRole;
   List<String> _totalCpc = [];
-  String _selecteCpc = "";
+  var _selecteCpc;
   bool _autovalidate = false;
 
   List<TagList> totalTag = [];
@@ -41,7 +49,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
     getTags();
     funCpc();
     super.initState();
-    for (int i = 0; i < 4; i++) ctrl.add(TextEditingController());
+    for (int i = 0; i < 2; i++) ctrl.add(TextEditingController());
   }
 
   @override
@@ -53,12 +61,10 @@ class _CreateCampaignState extends State<CreateCampaign> {
         backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop()),
+        iconTheme: IconThemeData(color: Colors.black //change your color here
+            ),
         title: Text(
           "Create Campaign",
           style: barTitleStyle,
@@ -106,18 +112,24 @@ class _CreateCampaignState extends State<CreateCampaign> {
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: DropdownSearch<String>(
-                                  validator: (v) =>
-                                      v == '' ? "required field" : null,
-                                  autoValidate: true,
+                                  validator: (_v) {
+                                    var va;
+                                    if (_v != "" && _v != null) {
+                                      va = null;
+                                    } else {
+                                      va = 'required field';
+                                    }
+                                    return va;
+                                  },
+                                  autoValidate: _autovalidate,
                                   mode: Mode.MENU,
-                                  selectedItem: _selectedRole,
+                                  selectedItem: _selecteCpc,
                                   items: _totalCpc,
                                   label: "Cost per click",
-                                  hint: "",
-                                  showSearchBox: true,
+                                  showSearchBox: false,
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedRole = value;
+                                      _selecteCpc = value != null ? value : "";
                                     });
                                   },
                                 ),
@@ -126,7 +138,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                 padding:
                                     const EdgeInsets.only(top: 14, bottom: 14),
                                 child: txtfieldboundry(
-                                  controller: ctrl[3],
+                                  controller: ctrl[1],
                                   hint: "Enter Total Budget",
                                   title: "Total Budget",
                                   maxLines: 1,
@@ -135,17 +147,23 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                   security: false,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                  "Status",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey),
+                              Visibility(
+                                visible: widget.campStat,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    "Status",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey),
+                                  ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: MyRadioGroup(dataList: statusData),
+                              Visibility(
+                                visible: widget.campStat,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: MyRadioGroup(dataList: statusData),
+                                ),
                               )
                             ]))),
               ),
@@ -155,9 +173,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
                     horizontal: sm.scaledWidth(16),
                     vertical: sm.scaledHeight(4)),
                 child: roundedButton(
-                    clicker: () {
-                      // funSublim();
-                    },
+                    clicker: () => funSublim(),
                     clr: Colors.red,
                     title: "Run Ad"))
           ],
@@ -166,31 +182,83 @@ class _CreateCampaignState extends State<CreateCampaign> {
     );
   }
 
-  void getTags() {
-    WebService.getTagList().then((value) {
+  void getTags() async {
+    await WebService.getTagList().then((value) {
       if (value.status == "success") {
         totalTag.addAll(value.data);
+
         List<String> temp = [];
         for (int i = 0; i < totalTag.length; i++) {
-          temp.add(value.data[i].tagName);
+          temp.add(totalTag[i].tagName);
         }
         setState(() {
           totalTagName.addAll(temp);
         });
+        if (widget.campStat) {
+          ctrl[0].text = widget.data.name;
+          ctrl[1].text = widget.data.totalBudget.toString();
+          for (int i = 0; i < statusData.keys.toList().length; i++)
+            statusData[(statusData.keys.toList())[i]] = false;
+          statusData[widget.data.status] = true;
+          _selecteCpc = widget.data.cpc.toString();
+          for (int j = 0; j < widget.data.keyword.length; j++) {
+            for (int i = 0; i < totalTag.length; i++) {
+              if (widget.data.keyword[j].id == totalTag[i].id) {
+                selectedTagId.add(widget.data.keyword[j].id);
+                selectedTagName.add(widget.data.keyword[j].tagName);
+                setState(() => totalTagName.remove(totalTag[i].tagName));
+                break;
+              }
+            }
+          }
+        }
       }
     });
   }
 
-  void funCpc() {
-    WebService.getCampainVerbose().then((value) {
+  void funCpc() async {
+    await WebService.getCampainVerbose().then((value) {
       if (value.status == "success") {
         List<String> _temp = [];
         for (int i = 0; i < value.data.cpc.length; i++) {
-          _temp.add(value.data.cpc[i].toString());
+          _temp.add("${value.data.cpc[i]}");
         }
-        print("_temp:${_temp.toString()}");
         setState(() => _totalCpc = _temp);
       }
     });
+  }
+
+  void funSublim() {
+    selectedTagId.clear();
+    for (int i = 0; i < totalTag.length; i++) {
+      if (selectedTagName.contains(totalTag[i].tagName))
+        selectedTagId.add(totalTag[i].id);
+      else
+        selectedTagId.remove(totalTag[i].id);
+    }
+    List<String> va = statusData.keys.toList();
+    Map _map = {
+      "campaign_id": widget.campStat ? widget.data.id : "",
+      "name": ctrl[0].text,
+      "keyword": selectedTagId,
+      "cpc": _selecteCpc,
+      "total_budget": ctrl[1].text,
+      "status": statusData[va[0]] == true
+          ? va[0]
+          : statusData[va[1]] == true
+              ? va[1]
+              : va[2]
+    };
+    if (_formKey.currentState.validate()) {
+      _autovalidate = false;
+      print("_map:${_map.toString()}");
+      WebService.createCampain(_map, widget.campStat).then((value) {
+        if (value.status == "success") {
+          BotToast.showText(text: value.message);
+          Navigator.pop(context);
+        }
+      });
+    } else
+      _autovalidate = true;
   }
 }

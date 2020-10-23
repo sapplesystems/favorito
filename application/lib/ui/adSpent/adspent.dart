@@ -18,6 +18,7 @@ class _adSpentState extends State<adSpent> {
   int freeCredit = 0;
   int paidCredit = 0;
   List<Data> list = [];
+  Data data = Data();
 
   @override
   void initState() {
@@ -43,9 +44,11 @@ class _adSpentState extends State<adSpent> {
                 icon: Icon(Icons.add_circle_outline, color: Colors.black),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateCampaign()));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateCampaign(false, null)))
+                      .whenComplete(() => getPageData());
                 })
           ],
         ),
@@ -54,10 +57,7 @@ class _adSpentState extends State<adSpent> {
             child: ListView(
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(28.0),
-                  child: topArea(),
-                ),
+                Padding(padding: const EdgeInsets.all(28.0), child: topArea()),
                 Card(
                     shape: rrbTop,
                     child: Padding(
@@ -68,60 +68,69 @@ class _adSpentState extends State<adSpent> {
                         children: [
                           Container(
                             height: sm.scaledHeight(64),
-                            // padding: EdgeInsets.only(bottom: 40),
                             child: ListView(
                               children: [
                                 for (int i = 0;
                                     i < (list != null ? list.length : 0);
                                     i++)
-                                  Card(
-                                    elevation: 2,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${list[i].name}\n"),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("CPC:${list[i].name}\$",
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                          fontSize: 16)),
-                                                  Text(
-                                                      "Impressions:${list[i].impressions}",
-                                                      style: TextStyle(
-                                                          fontSize: 16))
-                                                ],
-                                              ),
-                                              Container(),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      "Spent:${list[i].totalBudget}\$",
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                          fontSize: 16)),
-                                                  Text(
-                                                      "Click:${list[i].clicks}",
-                                                      style: TextStyle(
-                                                          fontSize: 16))
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        ],
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        data = list[i];
+                                        return CreateCampaign(true, data);
+                                      })).whenComplete(() => getPageData());
+                                    },
+                                    child: Card(
+                                      elevation: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("${list[i].name}\n"),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("CPC:${list[i].cpc}\$",
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: TextStyle(
+                                                            fontSize: 16)),
+                                                    Text(
+                                                        "Impressions:${list[i].impressions}",
+                                                        style: TextStyle(
+                                                            fontSize: 16))
+                                                  ],
+                                                ),
+                                                Container(),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        "Spent:${list[i].totalBudget}\$",
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: TextStyle(
+                                                            fontSize: 16)),
+                                                    Text(
+                                                        "Click:${list[i].clicks}",
+                                                        style: TextStyle(
+                                                            fontSize: 16))
+                                                  ],
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -155,8 +164,7 @@ class _adSpentState extends State<adSpent> {
 
   Widget credit(String title, String ammount, String ico) {
     return Row(children: [
-      Text("${title} : "),
-      Text("${ammount}  "),
+      Text("$title : $ammount"),
       SvgPicture.asset(
         ico,
         alignment: Alignment.center,
@@ -194,6 +202,7 @@ class _adSpentState extends State<adSpent> {
           totalSpent = value.totalSpent;
           freeCredit = value.freeCredit;
           paidCredit = value.paidCredit;
+          list.clear();
           list.addAll(value.data);
         });
       }

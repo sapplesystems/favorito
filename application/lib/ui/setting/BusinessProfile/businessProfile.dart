@@ -7,7 +7,6 @@ import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/component/workingDateTime.dart';
-import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
@@ -44,7 +43,6 @@ class _BusinessProfileState extends State<BusinessProfile>
   Map<String, String> selecteddayList = {};
   int addressLength = 1;
   int webSiteLength = 1;
-  double pageHeight = 194;
   List<String> cityList = ["Please Select ..."];
   List<CityModel> _cityModel = [];
   List<String> _stateList = ["Please Select ..."];
@@ -63,6 +61,7 @@ class _BusinessProfileState extends State<BusinessProfile>
     var image = await ImagePickerGC.pickImage(
       context: context,
       source: source,
+      imageQuality: 10,
       cameraIcon: Icon(
         Icons.add,
         color: Colors.red,
@@ -569,16 +568,10 @@ class _BusinessProfileState extends State<BusinessProfile>
                   clicker: () {
                     print(_controller);
                     if (_formKey.currentState.validate()) {
-                      print("aaaaaaaDone");
                       _autoValidateForm = false;
                       _prepareWebService();
-                    } else {
-                      print("aaaaaaaNone");
-                      setState(() {
-                        pageHeight = 226;
-                      });
+                    } else
                       _autoValidateForm = true;
-                    }
                   },
                   clr: Colors.red,
                   title: donetxt),
@@ -651,15 +644,15 @@ class _BusinessProfileState extends State<BusinessProfile>
       dayData["business_end_hours"] = "${va[1].toString()}";
       lst.add(dayData);
     }
-    var adderess = "";
     _controller[5].text = lst.toString();
-    addressList.clear();
-    for (int i = 0; i < addressLength; i++) {
-      addressList.add(_controller[i + 6].text);
-      // print("\nttttttt$i=$a");
+    if (_controller[4].text == "Select Hours" && lst.length == 0) {
+      BotToast.showText(text: "Please select time stols!!");
+      return;
     }
+    addressList.clear();
+    for (int i = 0; i < addressLength; i++)
+      addressList.add(_controller[i + 6].text);
 
-    // print("sfsdffsdf${dayData.toString()}");
     Map<String, dynamic> _map = {
       "business_name": _controller[1].text,
       "landline": _controller[3].text,
@@ -741,9 +734,7 @@ class _BusinessProfileState extends State<BusinessProfile>
     } else {
       setState(() {
         _controller[10].text = "";
-
         _controller[11].text = "";
-
         _controller[12].text = "";
       });
     }
