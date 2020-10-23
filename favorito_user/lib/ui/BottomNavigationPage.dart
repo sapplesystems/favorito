@@ -1,6 +1,7 @@
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/Home.dart';
-import 'package:favorito_user/ui/Search.dart';
+import 'package:favorito_user/ui/search/Search.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   static List<Widget> _widgetOptions = <Widget>[
     Home(),
     Search(),
+    BookingOrAppointmentList(),
   ];
 
   void _onItemTapped(int index) {
@@ -41,7 +43,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         selectedIndex: _selectedIndex,
         onSelectTab: (index) {
           setState(() {
-            _selectedIndex = index < 2 ? index : 0;
+            _selectedIndex = index < 3 ? index : 0;
           });
         },
         items: [

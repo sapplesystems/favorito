@@ -1,7 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Login.dart';
-import 'package:favorito_user/ui/Search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -27,5 +25,5 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: BottomNavBar());
+      home: Login());
 }

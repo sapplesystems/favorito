@@ -52,19 +52,37 @@ class _EditTextComponentState extends State<EditTextComponent> {
           maxLength: widget.maxlen,
           decoration: InputDecoration(
             prefixIcon: widget.prefixIcon == 'mail'
-                ? Icon(Icons.mail_outline)
+                ? InkWell(
+                    child: Icon(Icons.mail_outline),
+                    onTap: () {},
+                  )
                 : widget.prefixIcon == 'password'
-                    ? Icon(Icons.lock_outline)
+                    ? InkWell(
+                        child: Icon(Icons.lock_outline),
+                        onTap: () {},
+                      )
                     : widget.prefixIcon == 'name'
-                        ? Icon(Icons.contacts)
+                        ? InkWell(
+                            child: Icon(Icons.contacts),
+                            onTap: () {},
+                          )
                         : widget.prefixIcon == 'phone'
-                            ? Icon(Icons.phone)
+                            ? InkWell(
+                                child: Icon(Icons.phone),
+                                onTap: () {},
+                              )
                             : widget.prefixIcon == 'search'
-                                ? Icon(Icons.search)
+                                ? InkWell(
+                                    child: Icon(Icons.search),
+                                    onTap: () {
+                                      widget.prefClick();
+                                    },
+                                  )
                                 : null,
             labelText: widget.title,
             counterText: "",
             hintText: widget.hint,
+            contentPadding: EdgeInsets.only(left: 16.0, top: 16.0),
             fillColor: Colors.transparent,
             border: InputBorder.none,
           ),

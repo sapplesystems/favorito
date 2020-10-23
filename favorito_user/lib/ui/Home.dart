@@ -47,6 +47,7 @@ class _HomeState extends State<_Home> {
     SizeManager sm = SizeManager(context);
     return SafeArea(
       child: Container(
+        decoration: BoxDecoration(color: myBackGround),
         height: sm.scaledHeight(100),
         child: ListView(
           children: [

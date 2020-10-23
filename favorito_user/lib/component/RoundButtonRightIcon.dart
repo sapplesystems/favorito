@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class roundButtonRightIcon extends StatefulWidget {
+class RoundButtonRightIcon extends StatefulWidget {
   String title;
   Color clr;
   Color borderColor;
-  IconData ico;
+  IconData icon;
   Function function;
-  roundButtonRightIcon(
-      {this.title, this.clr, this.ico, this.borderColor, this.function});
+  RoundButtonRightIcon(
+      {this.title, this.clr, this.icon, this.borderColor, this.function});
   @override
-  _roundButtonRightIconState createState() => _roundButtonRightIconState();
+  _RoundButtonRightIconState createState() => _RoundButtonRightIconState();
 }
 
-class _roundButtonRightIconState extends State<roundButtonRightIcon> {
+class _RoundButtonRightIconState extends State<RoundButtonRightIcon> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,7 +23,7 @@ class _roundButtonRightIconState extends State<roundButtonRightIcon> {
         },
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(30),
             border: Border.all(
               color: widget.borderColor,
               width: 1,
@@ -44,7 +44,7 @@ class _roundButtonRightIconState extends State<roundButtonRightIcon> {
                 ),
               ),
               SizedBox(width: 23),
-              Icon(widget.ico, color: widget.clr),
+              Icon(widget.icon, color: widget.clr),
             ],
           ),
         ),

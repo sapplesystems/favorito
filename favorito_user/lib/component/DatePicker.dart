@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:outline_gradient_button/outline_gradient_button.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import '../config/SizeManager.dart';
+
+import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
   DatePicker(
@@ -29,28 +29,30 @@ class _DatePicker extends State<DatePicker> {
       lastDate: DateTime.now().add(Duration(days: _YEAR * 20)),
     );
     if (picked != null && picked != widget.selectedDate) {
-      widget.onChanged(DateFormat('yyyy-MM-dd').format(picked).toString());
-      widget.selectedDateText = DateFormat.yMMMd().format(picked);
+      widget.onChanged(DateFormat('dd/MM/yyyy').format(picked).toString());
+      widget.selectedDateText = DateFormat('dd/MM/yyyy').format(picked);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    return Row(crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
-      Expanded(
-          child: InkWell(
-              onTap: () => _selectDate(context),
-              child: SizedBox(
-                width: sm.scaledWidth(40),
-                child: OutlineGradientButton(
-                  child: Center(child: Text(widget.selectedDateText)),
-                  gradient: LinearGradient(colors: [Colors.red, Colors.red]),
-                  strokeWidth: 1,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  radius: Radius.circular(8),
-                ),
-              )))
-    ]);
+    return InkWell(
+        onTap: () => _selectDate(context),
+        child: Neumorphic(
+          style: NeumorphicStyle(
+              shape: NeumorphicShape.convex,
+              depth: 8,
+              lightSource: LightSource.top,
+              color: Colors.white),
+          margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+          boxShape: NeumorphicBoxShape.roundRect(
+              BorderRadius.all(Radius.circular(8.0))),
+          child: Center(
+            child: Text(widget.selectedDateText,
+                style: TextStyle(color: Colors.grey)),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 12),
+        ));
   }
 }
