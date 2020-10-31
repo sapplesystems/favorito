@@ -1,11 +1,20 @@
+import 'dart:io';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/myCss.dart';
+import 'package:Favorito/model/catalog/Catalog.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:bot_toast/bot_toast.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class NewCatlog extends StatefulWidget {
+  CatalogModel ct;
+  NewCatlog(ct) {
+    this.ct = ct;
+  }
   @override
   _NewCatlogState createState() => _NewCatlogState();
 }
@@ -13,15 +22,34 @@ class NewCatlog extends StatefulWidget {
 class _NewCatlogState extends State<NewCatlog> {
   List<bool> checked = [false, false, false];
   List<bool> radioChecked = [true, false, false];
-  bool _autoValidateForm = false;
-  List<String> lst = ["a", "b", "c"];
+
+  bool _autovalidate = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var submitBtnTxt = "Submit";
+  List<String> lst = [];
   List<TextEditingController> controller = [];
-  List<String> list = ["pizza", "burger", "cold drink", "French fries"];
   List<String> selectedlist = [];
   List title = ["Title", "Price", "Discription", "Url", "Id"];
+
+  List<File> imgFiles = List();
+  List<String> imgUrls = List();
+  List<String> imgUrlsId = List();
   void initState() {
+    imgUrls = (widget.ct != null && widget.ct.photos != null)
+        ? widget.ct.photos.split(",")
+        : null;
+    imgUrlsId = (widget.ct != null && widget.ct.photos != null)
+        ? widget.ct.photosId.split(",")
+        : null;
     super.initState();
-    for (int i = 0; i < 6; i++) controller.add(TextEditingController());
+    for (int i = 0; i < 5; i++) controller.add(TextEditingController());
+    if (widget.ct != null) {
+      controller[0].text = widget.ct.catalogTitle;
+      controller[1].text = widget.ct.catalogPrice.toString();
+      controller[2].text = widget.ct.catalogDesc;
+      controller[3].text = widget.ct.productUrl;
+      controller[4].text = widget.ct.productId;
+    }
   }
 
   @override
@@ -31,7 +59,7 @@ class _NewCatlogState extends State<NewCatlog> {
       backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text("Highlights",
+        title: Text("Catalog",
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.black,
@@ -39,10 +67,10 @@ class _NewCatlogState extends State<NewCatlog> {
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2)),
         actions: [
-          IconButton(
-            icon: Icon(Icons.error_outline, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          )
+          // IconButton(
+          //   icon: Icon(Icons.error_outline, color: Colors.black),
+          //   onPressed: () => Navigator.of(context).pop(),
+          // )
         ],
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -54,65 +82,140 @@ class _NewCatlogState extends State<NewCatlog> {
         ),
         elevation: 0,
       ),
-      body: Container(
+      body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: ListView(
           children: [
             Container(
-              height: sm.scaledHeight(14),
-              margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+              height: sm.scaledHeight(20),
+              margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  for (int i = 0; i < 10; i++)
-                    Card(
-                      semanticContainer: true,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Image.network(
-                        'https://eatforum.org/content/uploads/2018/05/table_with_food_top_view_900x700.jpg',
-                        fit: BoxFit.fill,
-                        width: sm.scaledHeight(8),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                    )
+                  InkWell(
+                      onTap: () async {
+                        FilePickerResult result = await FilePicker.platform
+                            .pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: ['jpg'],
+                                allowMultiple: true);
+                        if (result != null)
+                          setState(() => imgFiles.addAll(
+                              result.paths.map((path) => File(path)).toList()));
+
+                        if (result != null) {
+                          PlatformFile file = result.files.first;
+                          print(file.name);
+                          print(file.bytes);
+                          print(file.size);
+                          print(file.extension);
+                          print(file.path);
+
+                          WebService.catlogImageUpdate(result.files,
+                                  widget.ct != null ? widget.ct.id : null)
+                              .then((value) {
+                            if (value.status == "success") {
+                              imgUrls.clear();
+                              imgUrlsId.clear();
+                              for (int i = 0; i < value.data.length; i++) {
+                                if (!imgUrlsId.contains(value.data[i].id)) {
+                                  imgUrls.add(value.data[i].photo);
+                                  imgUrlsId.add(value.data[i].id.toString());
+                                }
+                              }
+                            }
+                            setState(() {});
+                          });
+                        }
+                      },
+                      child: Container(
+                        width: sm.scaledHeight(18),
+                        child: Card(
+                            semanticContainer: true,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            child: Padding(
+                                padding: const EdgeInsets.all(18),
+                                child: Icon(
+                                  Icons.cloud_upload_outlined,
+                                  size: 30,
+                                )),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            elevation: 5,
+                            margin: EdgeInsets.all(10)),
+                      )),
+                  if (imgUrls != null)
+                    for (int i = imgUrls.length - 1; i >= 0; i--) //Network
+                      Container(
+                        width: sm.scaledHeight(20),
+                        child: Card(
+                            semanticContainer: true,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            child: FadeInImage.memoryNetwork(
+                                placeholder: kTransparentImage,
+                                image: imgUrls[i]),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            elevation: 5,
+                            margin: EdgeInsets.all(10)),
+                      )
                 ],
               ),
             ),
-            Container(
-                decoration: bd1,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40.0),
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                child: Column(children: [
-                  for (int i = 0; i < 4; i++)
-                    Padding(
-                      padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
-                      child: txtfieldboundry(
-                        valid: true,
-                        title: title[i],
-                        hint: "Enter ${title[i]}",
-                        controller: controller[i],
-                        maxLines: i == 2 ? 4 : 1,
-                        security: false,
-                      ),
-                    ),
-                ])),
+            Builder(
+                builder: (context) => Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(children: [
+                      for (int i = 0; i < 5; i++)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                          child: txtfieldboundry(
+                            valid: true,
+                            title: title[i],
+                            hint: "Enter ${title[i]}",
+                            controller: controller[i],
+                            maxLines: i == 2 ? 4 : 1,
+                            security: false,
+                          ),
+                        ),
+                    ]))),
             Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: sm.scaledWidth(16),
                     vertical: sm.scaledHeight(2)),
                 child: roundedButton(
                     clicker: () {
-                      // funSublim();
+                      if (_formKey.currentState.validate()) funSublim();
                     },
                     clr: Colors.red,
-                    title: "Done"))
+                    title: submitBtnTxt))
           ],
         ),
       ),
     );
+  }
+
+  funSublim() async {
+    Map _map = {
+      "catalog_id": widget.ct.id,
+      "catalog_title": controller[0].text,
+      "catalog_price": controller[1].text,
+      "catalog_desc": controller[2].text,
+      "product_url": controller[3].text,
+      "product_id": controller[4].text
+    };
+    setState(() => submitBtnTxt = "Please Wait..");
+    await WebService.catlogEdit(_map).then((value) {
+      if (value.status == "success") {
+        // for (var va in controller) va.text = "";
+        BotToast.showText(text: value.message);
+        BotToast.showLoading(duration: Duration(seconds: 1));
+        // Navigator.pop(context);
+
+        setState(() => submitBtnTxt = "Submit");
+      } else
+        BotToast.showText(text: value.message);
+    });
   }
 }

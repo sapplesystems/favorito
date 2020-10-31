@@ -23,9 +23,9 @@ class _signup_aState extends State<signup_a> {
   List<String> cat = [];
   List<catData> catdata = [];
   List<busData> busdata = [];
-  bool _autovalidate = false;
   bool catvisib = false;
   String type_id;
+  bool _autovalidate = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<State> _busKey = GlobalKey<State>();
   final GlobalKey<State> _vatKey = GlobalKey<State>();

@@ -1,5 +1,5 @@
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/model/Detail.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:Favorito/model/OrderDetail.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
@@ -64,23 +64,9 @@ class _Orders extends State<Orders> {
                       setState(() {
                         selectedTab = 'New Orders';
                         inputOrdersList.clear();
-                        for (var temp in allOrdersList) {
-                          OrderData model = OrderData();
-                          model.order.name = temp.order.name;
-                          model.order.mobile = temp.order.mobile;
-                          model.order.orderDate = temp.order.orderDate;
-                          model.order.totalAmount = temp.order.totalAmount;
-                          model.order.orderType = temp.order.orderType;
-                          model.order.payType = temp.order.payType;
-                          model.detail = [];
-                          for (var temp1 in temp.detail) {
-                            Detail detail = Detail();
-                            detail.categoryName = temp1.categoryName;
-                            detail.quantity = temp1.quantity;
-                            model.detail.add(detail);
-                          }
-                          inputOrdersList.add(model);
-                        }
+                        for (var temp in allOrdersList)
+                          if (temp.order.isAccepted == 0)
+                            inputOrdersList.add(temp);
                       })
                     },
                     child: Text("New Orders",
@@ -96,24 +82,9 @@ class _Orders extends State<Orders> {
                       setState(() {
                         selectedTab = 'All Orders';
                         inputOrdersList.clear();
-                        for (var temp in allOrdersList) {
-                          if (temp.order.isAccepted != 0) {
-                            OrderData model = OrderData();
-                            model.order.name = temp.order.name;
-                            model.order.mobile = temp.order.mobile;
-                            model.order.orderDate = temp.order.orderDate;
-                            model.order.totalAmount = temp.order.totalAmount;
-                            model.order.orderType = temp.order.orderType;
-                            model.detail = [];
-                            for (var temp1 in temp.detail) {
-                              Detail detail = Detail();
-                              detail.categoryName = temp1.categoryName;
-                              detail.quantity = temp1.quantity;
-                              model.detail.add(detail);
-                            }
-                            inputOrdersList.add(model);
-                          }
-                        }
+                        for (var temp in allOrdersList)
+                          if (temp.order.isAccepted != 0)
+                            inputOrdersList.add(temp);
                       })
                     },
                     child: Text("All Orders",
@@ -183,7 +154,8 @@ class _Orders extends State<Orders> {
                                           ],
                                         ),
                                         InkWell(
-                                            onTap: () {},
+                                            onTap: () => launch(
+                                                "tel://${inputOrdersList[index].order.mobile}"),
                                             child: Container(
                                                 decoration: bd1Red,
                                                 padding: EdgeInsets.all(6),
@@ -291,8 +263,56 @@ class _Orders extends State<Orders> {
     WebService.orderList(null).then((value) {
       if (value.status == "success") {
         allOrdersList.addAll(value.data);
-        setState(() => inputOrdersList.addAll(value.data));
+        setState(() {
+          for (var va in allOrdersList)
+            if (va.order.isAccepted == 0) inputOrdersList.add(va);
+        });
       }
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
   }
 }

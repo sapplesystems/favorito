@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
-import 'package:Favorito/model/OrderDetail.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/adSpentModel.dart';
@@ -11,6 +10,7 @@ import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfoModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
+import 'package:Favorito/model/catalog/CatlogListModel.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
 import 'package:Favorito/model/contactPerson/SearchBranchResonseModel.dart';
@@ -38,6 +38,7 @@ import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
 import 'package:Favorito/model/tagModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
+import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
@@ -440,7 +441,9 @@ class WebService {
     return _returnData;
   }
 
-  static Future<CatalogListRequestModel> funGetCatalogs() async {
+  //**************************************************Catalog*****************************************************
+
+  static Future<CatlogListModel> funGetCatalogs() async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -449,8 +452,94 @@ class WebService {
 
     response = await dio.post(serviceFunction.funGetCatalogs,
         data: null, options: _opt);
-    _returnData = CatalogListRequestModel.fromJson(
-        convert.json.decode(response.toString()));
+    print("funGetCatalogs:${response.toString()}");
+    return CatlogListModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+//this api is used to upload photo of catalog
+  static Future<businessInfoImage> catlogImageUpdate(List files, var id) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {"photo": va, "catalog_id": id};
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(serviceFunction.funCatalogAddPhoto,
+        data: formData, options: _opt);
+    return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  // funCatalogEdit
+  static Future<businessInfoImage> catlogEdit(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    print("_map:${_map.toString()}");
+    response = await dio.post(serviceFunction.funCatalogEdit,
+        data: _map, options: _opt);
+    print("catlogEdit:${response.toString()}");
+    return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  //********************************************************Waitlist***************************************************
+
+  static Future<waitListSettingModel> funWaitlistSetting() async {
+    String token = await Prefs.token;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(serviceFunction.funWaitlistSetting,
+        data: null, options: opt);
+    print("funGetCatalogs:${response.toString()}");
+    return waitListSettingModel
+        .fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<BaseResponseModel> funWaitlistUpdateStatus(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+    response = await dio.post(serviceFunction.funWaitlistUpdateStatus,
+        data: _map, options: opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  //this is used for delete waitlist
+  static Future<BaseResponseModel> funWaitlistDelete(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+
+    response = await dio.post(serviceFunction.funWaitlistDelete,
+        data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+//used to save waitlist setting
+  static Future<BaseResponseModel> funWaitlistSaveSetting(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    BaseResponseModel _returnData = BaseResponseModel();
+
+    response = await dio.post(serviceFunction.funWaitlistSaveSetting,
+        data: _map, options: _opt);
+    _returnData =
+        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
   }
 
@@ -461,8 +550,21 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     WaitlistListModel _returnData = WaitlistListModel();
 
-    response = await dio.post(serviceFunction.funGetWaitlist,
-        data: null, options: _opt);
+    response = await dio.post(serviceFunction.funGetWaitlist, options: _opt);
+    _returnData =
+        WaitlistListModel.fromJson(convert.json.decode(response.toString()));
+    return _returnData;
+  }
+
+  static Future<WaitlistListModel> funCreateWaitlist(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    WaitlistListModel _returnData = WaitlistListModel();
+
+    response = await dio.post(serviceFunction.funCreateWaitlist,
+        data: _map, options: _opt);
     _returnData =
         WaitlistListModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;

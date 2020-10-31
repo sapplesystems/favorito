@@ -33,10 +33,6 @@ class _settingState extends State<setting> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text("Settings", style: titleStyle),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         centerTitle: true,
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here

@@ -14,6 +14,7 @@ class BookingSetting extends StatefulWidget {
 }
 
 class _BookingSettingState extends State<BookingSetting> {
+  List<String> titleList =[""];
   List<String> slot = [
     "10",
     "10:30",

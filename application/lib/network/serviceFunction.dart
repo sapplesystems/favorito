@@ -27,7 +27,13 @@ class serviceFunction {
   static String funGetCityByPincode = baseUrl2 + 'job/city-from-pincode';
   static String funGetPincodesForCity = baseUrl2 + 'job/city-pincode';
   static String funGetCatalogs = baseUrl2 + 'catalog/list';
-  static String funGetWaitlist = baseUrl2 + 'business-waitlist/list';
+
+  static String funGetWaitlist = baseUrl1 + 'waitlist/list';
+  static String funCreateWaitlist = baseUrl1 + 'waitlist/create';
+  static String funWaitlistUpdateStatus = baseUrl1 + 'waitlist/update-status';
+  static String funWaitlistSaveSetting = baseUrl1 + 'waitlist/save-setting';
+  static String funWaitlistSetting = baseUrl1 + 'waitlist/setting';
+  static String funWaitlistDelete = baseUrl1 + 'waitlist/delete';
   static String funCreateManualBooking = baseUrl2 + 'business-booking/create';
   static String funSearchBranches = baseUrl2 + 'business-user/search-branch';
   static String funGetBusinessProfileData = baseUrl2 + 'business-user/profile';
@@ -50,4 +56,7 @@ class serviceFunction {
   static String funCreateCampain = baseUrl1 + 'ad-spent-campaign/create';
   static String funCreateCampainEdit = baseUrl1 + 'ad-spent-campaign/edit';
   static String funOrderList = baseUrl1 + 'order/list';
+  static String funCatalogAddPhoto = baseUrl2 + 'catalog/add-photo';
+  static String funCatalogEdit = baseUrl2 + 'catalog/edit';
+  static String funBookingSetting = baseUrl1 + 'booking/setting';
 }

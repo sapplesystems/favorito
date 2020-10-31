@@ -27,3 +27,5 @@ String waitlistSetting = "Waitlist Setting";
 String waitlist = "Waitlist";
 String appoinmentSettingtxt = "Appoinment Setting";
 String donetxt = "Done";
+
+String bookingSetting = "Booking Setting";

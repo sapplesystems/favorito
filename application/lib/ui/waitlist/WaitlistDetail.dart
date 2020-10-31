@@ -1,12 +1,15 @@
+import 'package:Favorito/model/waitlist/WaitlistModel.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
 class WaitListDetail extends StatefulWidget {
   WaitlistModel waitlistData;
-  WaitListDetail({this.waitlistData});
+  Function action;
+  Function delete;
+  int index;
+  WaitListDetail({this.waitlistData, this.action, this.delete, this.index});
 
   @override
   _WaitListDetail createState() => _WaitListDetail();
@@ -26,7 +29,7 @@ class _WaitListDetail extends State<WaitListDetail> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Text(
-              "${widget.waitlistData.waitlistDate} | pending",
+              "${widget.waitlistData.waitlistDate} |${widget.waitlistData.waitlistStatus} ",
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -83,19 +86,26 @@ class _WaitListDetail extends State<WaitListDetail> {
                   },
                 ),
                 IconButton(
-                  iconSize: sm.scaledWidth(8),
-                  icon: Icon(Icons.check_circle),
-                  onPressed: () {},
-                ),
+                    iconSize: sm.scaledWidth(8),
+                    icon: Icon(Icons.check_circle),
+                    onPressed: () {
+                      widget.action("accepted", widget.waitlistData.id);
+                      Navigator.pop(context);
+                    }),
                 IconButton(
-                  iconSize: sm.scaledWidth(8),
-                  icon: Icon(Icons.close),
-                  onPressed: () {},
-                ),
+                    iconSize: sm.scaledWidth(8),
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      widget.action("rejected", widget.waitlistData.id);
+                      Navigator.pop(context);
+                    }),
                 IconButton(
                   iconSize: sm.scaledWidth(8),
                   icon: Icon(Icons.delete),
-                  onPressed: () {},
+                  onPressed: () {
+                    widget.delete(widget.waitlistData.id, widget.index);
+                    Navigator.pop(context);
+                  },
                 ),
               ],
             ),

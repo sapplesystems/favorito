@@ -5,10 +5,10 @@ class txtfieldboundry extends StatefulWidget {
   String title;
   String hint;
   bool security;
-  int maxLines;
-  int maxlen;
   bool valid;
   bool isEnabled;
+  int maxLines;
+  int maxlen;
   TextInputType keyboardSet;
   TextEditingController controller;
   Function myOnChanged;

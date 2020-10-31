@@ -1,13 +1,13 @@
 import 'package:Favorito/model/catalog/Catalog.dart';
 
-class CatalogListRequestModel {
+class CatlogListModel {
   String status;
   String message;
   List<CatalogModel> data;
 
-  CatalogListRequestModel({this.status, this.message, this.data});
+  CatlogListModel({this.status, this.message, this.data});
 
-  CatalogListRequestModel.fromJson(Map<String, dynamic> json) {
+  CatlogListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
@@ -28,4 +28,5 @@ class CatalogListRequestModel {
     return data;
   }
 }
+
 

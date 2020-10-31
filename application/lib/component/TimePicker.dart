@@ -20,7 +20,7 @@ class _TimePicker extends State<TimePicker> {
   static const _YEAR = 365;
   Future<Null> _selectDate(BuildContext context) async {
     FocusScope.of(context).requestFocus(FocusNode());
-    await Future.delayed(Duration(milliseconds: 100));
+    // await Future.delayed(Duration(milliseconds: 100));
     final TimeOfDay picked = await showTimePicker(
       context: context,
       initialTime: widget.selectedTime,

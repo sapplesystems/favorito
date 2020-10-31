@@ -1,5 +1,4 @@
 import 'package:Favorito/model/TagList.dart';
-import 'package:Favorito/model/businessInfoModel.dart';
 
 class AdSpentModels {
   String status;

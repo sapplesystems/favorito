@@ -23,6 +23,10 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     decide();
+    setState(() {
+      userCtrl.text = "rohan@gm.co";
+      passCtrl.text = "rohan@123";
+    });
   }
 
   @override

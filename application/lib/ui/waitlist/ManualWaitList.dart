@@ -1,7 +1,9 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
@@ -11,14 +13,10 @@ class ManualWaitList extends StatefulWidget {
 }
 
 class _ManualWaitListState extends State<ManualWaitList> {
-  List<bool> checked = [false, false, false];
-  List<bool> radioChecked = [true, false, false];
-  bool _autoValidateForm = false;
-  List<String> lst = ["a", "b", "c"];
   List<TextEditingController> controller = [];
-  List<String> list = ["pizza", "burger", "cold drink", "French fries"];
   List<String> selectedlist = [];
-  List title = ["Title", "Price", "Discription", "Url", "Id"];
+  GlobalKey<FormState> _frmKey  = GlobalKey();
+  List title = ["User Name", "Contact", "Number of Persons", "Special Notes"];
   SizeManager sm;
   void initState() {
     super.initState();
@@ -55,11 +53,12 @@ class _ManualWaitListState extends State<ManualWaitList> {
         ),
         elevation: 0,
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: ListView(
-          children: [
-            Container(
+      body: ListView(
+        children: [
+          Builder(builder: (context)=>Form(
+            key:_frmKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Container(
                 decoration: bd1,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40.0),
                 margin: EdgeInsets.symmetric(horizontal: 12),
@@ -72,24 +71,41 @@ class _ManualWaitListState extends State<ManualWaitList> {
                         title: title[i],
                         hint: "Enter ${title[i]}",
                         controller: controller[i],
-                        maxLines: i == 2 ? 4 : 1,
+                        keyboardSet:(i == 1 || i == 2) ?TextInputType.number:TextInputType.text,
+                        maxlen: i == 1 ?10:50,
+                        maxLines: i == 3 ? 4 : 1,
                         security: false,
                       ),
                     ),
                 ])),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: sm.scaledWidth(16),
-                    vertical: sm.scaledHeight(2)),
-                child: roundedButton(
-                    clicker: () {
-                      // funSublim();
-                    },
-                    clr: Colors.red,
-                    title: "Done"))
-          ],
-        ),
+          )),
+          Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: sm.scaledWidth(16),
+                  vertical: sm.scaledHeight(2)),
+              child: roundedButton(
+                  clicker: () {
+                    if(_frmKey.currentState.validate())
+                    funSublim();
+                  },
+                  clr: Colors.red,
+                  title: "Done"))
+        ],
       ),
     );
+  }
+  void funSublim(){
+    Map _map ={
+      "name": controller[0].text,
+      "contact":controller[1].text,
+      "no_of_person": controller[2].text,
+      "special_notes": controller[3].text
+    };
+    WebService.funCreateWaitlist(_map).then((value) {
+      if(value.status=="success"){
+        BotToast.showText(text: value.message);
+        Navigator.pop(context);
+      }
+    });
   }
 }
