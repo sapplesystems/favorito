@@ -15,7 +15,7 @@ exports.listCatalog = function (req, res, next) {
             cond = " AND c.id='" + req.body.catalog_id + "' ";
         }
 
-        var sql = "SELECT c.id,catalog_title,catalog_price,catalog_desc,product_url,product_id,GROUP_CONCAT(p.id) AS photos_id,GROUP_CONCAT(p.photos) AS photos \n\
+        var sql = "SELECT c.id,catalog_title,catalog_price,catalog_desc,product_url,product_id,GROUP_CONCAT(p.id) AS photos_id,GROUP_CONCAT('" + img_path + "',p.photos) AS photos \n\
                 FROM business_catalogs AS c  \n\
                 LEFT JOIN business_catalog_photos AS p ON  \n\
                 c.id=p.business_catalog_id \n\
@@ -47,7 +47,7 @@ exports.findCatalog = function (req, res, next) {
 
         var cond = " AND c.id='" + req.body.catalog_id + "' ";
 
-        var sql = "SELECT c.id,catalog_title,catalog_price,catalog_desc,product_url,product_id,GROUP_CONCAT(p.id) AS photos_id,GROUP_CONCAT(p.photos) AS photos \n\
+        var sql = "SELECT c.id,catalog_title,catalog_price,catalog_desc,product_url,product_id,GROUP_CONCAT(p.id) AS photos_id,GROUP_CONCAT('" + img_path + "',p.photos) AS photos \n\
                 FROM business_catalogs AS c  \n\
                 LEFT JOIN business_catalog_photos AS p ON  \n\
                 c.id=p.business_catalog_id \n\
@@ -150,8 +150,8 @@ exports.updateCatalog = function (req, res, next) {
         if (req.body.catalog_price != '' && req.body.catalog_price != 'undefined' && req.body.catalog_price != null) {
             update_columns += ", catalog_price='" + req.body.catalog_price + "' ";
         }
-        if (req.body.catalog_desc != '' && req.body.catalog_desc == 'undefined' && req.body.catalog_desc != null) {
-            update_columns += ", catalog_desc='" + req.body.catalog_desc + "' ";
+        if (req.body.catalog_desc != '' && req.body.catalog_desc!= 'undefined' && req.body.catalog_desc != null) {
+            update_columns += ", catalog_desc ='" + req.body.catalog_desc + "' ";
         }
         if (req.body.product_url != '' && req.body.product_url != 'undefined' && req.body.product_url != null) {
             update_columns += ", product_url='" + req.body.product_url + "' ";
@@ -179,29 +179,71 @@ exports.updateCatalog = function (req, res, next) {
 /**
  * BUSINESS CATALOG ADD PHOTO
  */
-exports.addPhotos = function (req, res, next) {
+exports.addPhotos = async function (req, res, next) {
     try {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
-
+        var catalogid = req.body.catalog_id;
         if (req.body.catalog_id == '' || req.body.catalog_id == 'undefined' || req.body.catalog_id == null) {
-            return res.status(403).json({ status: 'error', message: 'Catelog id not found.' });
-        }
-        var catalog_id = req.body.catalog_id;
-
-        if (req.files && req.files.length) {
-            var file_count = req.files.length;
-            for (var i = 0; i < file_count; i++) {
-                var filename = req.files[i].filename;
-                var sql = "INSERT INTO `business_catalog_photos`(business_id, business_catalog_id, photos) \n\
-                        VALUES ('"+ business_id + "','" + catalog_id + "','" + filename + "')";
-                db.query(sql);
-            }
-            return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.' });
-        } else {
-            return res.status(200).json({ status: 'success', message: 'No photo found to upload.' });
-        }
+            var sql1 = "INSERT INTO `business_catalogs`(business_id) VALUES ('"+ business_id + "')";				
+		    db.query(sql1, async function (err, result) {
+				if (err) {
+					return result.status(500).json({ status: 'error', message: 'Something went wrong.' });
+				}
+			    catalogid = result.insertId;
+				if(catalogid){
+					if (req.files && req.files.length) {
+						var file_count = req.files.length;
+						for (var i = 0; i < file_count; i++) {
+							var filename = req.files[i].filename;
+							var sql = "INSERT INTO `business_catalog_photos`(business_id, business_catalog_id, photos) \n\
+									VALUES ('"+ business_id + "','" + catalogid + "','" + filename + "')";
+							db.query(sql);
+						}
+						
+						var photos = await fetchBusinessCatalogsPhoto(business_id,catalogid);
+						return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.', data: photos, catalog_id:catalogid });
+					} else {
+						return res.status(200).json({ status: 'success', message: 'No photo found to upload.' });
+					}
+				}else{
+					return res.status(500).json({ status: 'error', message: 'There is no catalog Id.' });
+				}				
+			}); 
+        }else{
+			if(catalogid){
+				if (req.files && req.files.length) {
+					var file_count = req.files.length;
+					for (var i = 0; i < file_count; i++) {
+						var filename = req.files[i].filename;
+						var sql = "INSERT INTO `business_catalog_photos`(business_id, business_catalog_id, photos) \n\
+								VALUES ('"+ business_id + "','" + catalogid + "','" + filename + "')";
+						db.query(sql);
+					}
+					var photos = await fetchBusinessCatalogsPhoto(business_id,catalogid);
+					return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.', data: photos,catalog_id:catalogid });
+				} else {
+					return res.status(200).json({ status: 'success', message: 'No photo found to upload.' });
+				}
+			}else{
+				return res.status(500).json({ status: 'error', message: 'There is no catalog Id.' });
+			}
+		} 
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+/**
+ * FETCH ALL PHOTOS OF BUSINESS CATALOG
+ */
+ function fetchBusinessCatalogsPhoto(business_id,catalogid) {
+	 
+    return new Promise(function(resolve, reject) {
+        var sql = "select id,concat('" + img_path + "',photos) as photo from business_catalog_photos where business_id='" + business_id + "' and business_catalog_id= '" + catalogid + "'";
+        db.query(sql, function(err, result) {
+            resolve(result);
+        });
+    });
+}
+

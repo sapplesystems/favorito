@@ -19,17 +19,34 @@ exports.all_business_booking = async function (req, res, next) {
         Condition += " AND DATE(created_datetime) = '" + today_date + "' ";
 
         var slots = await exports.getBookingSlots(business_id, today_date);
-
-        var sql = "SELECT id,`name`,contact,no_of_person,special_notes, \n\
-                    DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
-                    DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
-                    FROM business_booking WHERE " + Condition;
-        db.query(sql, function (err, result) {
-            if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
-            }
-            return res.status(200).json({ status: 'success', message: 'success', slots: slots, data: result });
-        });
+        
+		var sql1 = "SELECT start_time,end_time,slot_length FROM business_booking_setting WHERE business_id='"+ business_id + "'";
+        
+		db.query(sql1, function (err, result) {
+			if (err){
+				return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+			}
+            var slot_lenght=result[0].slot_length;
+            var starttime=result[0].start_time;
+            var endtime=result[0].end_time;
+			
+			var sql = "SELECT id,`name`,contact,no_of_person,special_notes, \n\
+						DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
+						DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
+						FROM business_booking WHERE " + Condition;
+			db.query(sql, function (err, result) {
+				if (err) {
+					return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+				}else{
+					if(result!=null && result!=''){
+					   return res.status(200).json({ status: 'success', message: 'success', slot_lenght:slot_lenght, starttime:starttime,endtime:endtime, slots: slots});	
+					}else{
+						return res.status(200).json({ status: 'success', message: 'No Data Found',starttime:starttime,endtime:endtime,slot_lenght:slot_lenght, slots:[]});
+					}
+				}
+			});
+		});
+        
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
@@ -54,7 +71,12 @@ exports.find_business_booking = function (req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
+			if(result.length>0){
+				return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
+			}else{
+				return res.status(200).json({ status: 'success', message: 'No data found for this Booking', data:[] });
+			}
+            
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -267,24 +289,25 @@ exports.getBookingSlots = async function (business_id, date) {
                 var starttime = result[0].start_time;
                 var endtime = result[0].end_time;
                 var interval = result[0].slot_length;
-                var timeslots = [];//[starttime];
-
+                var timeslots = [];
+				
                 while (starttime <= endtime) {
                     var start_datetime = date + ' ' + starttime;
                     starttime = addMinutes(starttime, interval);
                     var end_datetime = date + ' ' + starttime;
 
-                    var sql = "SELECT COUNT(*) AS c, DATE_FORMAT('" + start_datetime + "','%H:%i') AS start_time, \n\
-                                DATE_FORMAT('"+ end_datetime + "','%H:%i') AS end_time \n\
-                                FROM business_booking WHERE business_id='" + business_id + "' \n\
+                    var sql = "SELECT id,`name`,contact,no_of_person,special_notes,DATE_FORMAT(created_datetime, '%d %b') AS created_date, DATE_FORMAT(created_datetime, '%H:%i') AS created_time , DATE_FORMAT('" + start_datetime + "','%H:%i') AS start_time, DATE_FORMAT('"+ end_datetime + "','%H:%i') AS end_time FROM business_booking WHERE business_id='" + business_id + "' \n\
                     AND created_datetime>='" + start_datetime + "' AND created_datetime <'" + end_datetime + "' \n\
                     AND deleted_at IS NULL";
                     db.query(sql, function (e, r) {
-                        var obj = { start: r[0].start_time, end: r[0].end_time, booking_count: r[0].c };
-                        timeslots.push(obj);
+						if(r.length>0){
+							var resultArray = JSON.parse(JSON.stringify(r));
+                            timeslots.push(resultArray);							
+						}
                     });
                 }
                 resolve(timeslots);
+				
             });
         });
     } catch (e) {
@@ -292,6 +315,24 @@ exports.getBookingSlots = async function (business_id, date) {
     }
 }
 
+/**
+ * FETCH BOOKING DATA AS PER TIME SLOT
+ */
+    async function getBusinessBookingData(business_id,date,start_time,end_time) {
+		var start_datetime = date + ' ' + start_time;
+        var end_datetime = date + ' ' + end_time;
+		return new Promise(function(resolve, reject){
+			var sql = "SELECT id,`name`,contact,no_of_person,special_notes, \n\
+				DATE_FORMAT(created_datetime, '%d %b') AS created_date, \n\
+				DATE_FORMAT(created_datetime, '%H:%i') AS created_time  \n\
+				FROM business_booking WHERE business_id='" + business_id + "' \n\
+				AND created_datetime>='" + start_datetime + "' AND created_datetime <'" + end_datetime + "' \n\
+				AND deleted_at IS NULL";				
+			db.query(sql, function(err, result) {	
+				resolve(result);
+			});
+		}); 
+    }
 /**
  * ADDING MINUTE IN TIME TO CREATE SLOTS
  */

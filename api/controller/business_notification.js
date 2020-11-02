@@ -108,3 +108,21 @@ exports.add_notification = function (req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.detail_notification = function (req, res, next) {
+    try {
+        if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
+            return res.status(403).json({ status: 'error', message: 'Notification id not found.' });
+        }
+        var notification_id=req.body.id;
+        var sql = "SELECT title, description, `action`, contact, audience, `area`, area_detail, quantity, business_id, business_user_id FROM business_notifications WHERE business_id='" + req.userdata.business_id + "' AND id='" + notification_id + "' AND is_deleted='0' AND deleted_at IS NULL";
+        db.query(sql, function (err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'success', data: result });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};

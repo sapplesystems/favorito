@@ -26,4 +26,10 @@ router.post('/verify-pincode', CheckAuth, BusinessNotificatonController.verify_p
  */
 router.post('/add', CheckAuth, BusinessNotificatonController.add_notification);
 
+/**
+ * VIEW ONLY ONE NOTIFICATION
+ */
+
+router.post('/detail', CheckAuth, BusinessNotificatonController.detail_notification);
+
 module.exports = router;

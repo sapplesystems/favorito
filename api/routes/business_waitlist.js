@@ -30,4 +30,8 @@ router.post('/save-setting', multer().array(), CheckAuth, BusinessWaitlistContro
  */
 router.post('/setting', CheckAuth, BusinessWaitlistController.get_setting);
 
+/**
+ * WAITLIST ACCEPT/REJECT/PENDING
+ **/
+router.post('/update-status', CheckAuth, BusinessWaitlistController.updateWaitlistStatus);
 module.exports = router;

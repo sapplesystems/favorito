@@ -29,6 +29,7 @@ var BusinessOrder = require('./routes/business_order');
 var PageViews = require('./routes/page_views');
 var BusinessTag = require('./routes/business_tag');
 var BusinessAttribute = require('./routes/business_attribute');
+var BusinessChecklist = require('./routes/business_checklist');
 
 /**
  * USER ROUTES DETAIL
@@ -72,6 +73,7 @@ app.use('/api/business-order', BusinessOrder);
 app.use('/api/page-views', PageViews);
 app.use('/api/tag', BusinessTag);
 app.use('/api/attribute', BusinessAttribute);
+app.use('/api/business-checklist', BusinessChecklist);
 
 /**
  * USING USER ROUTES

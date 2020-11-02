@@ -96,4 +96,10 @@ router.post('/delete', CheckAuth, BusinessAppointmentController.deleteAppointmen
  */
 router.post('/list', CheckAuth, BusinessAppointmentController.listAllAppointment);
 
+
+/**
+ * APPOINTMENT ACCEPT/REJECT/PENDING
+ **/
+router.post('/update-status', CheckAuth, BusinessAppointmentController.updateAppointmentStatus);
+
 module.exports = router;

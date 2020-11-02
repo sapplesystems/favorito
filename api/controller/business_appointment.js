@@ -595,7 +595,44 @@ exports.getAppointmentSlots = async function(business_id, date) {
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
-}
+};
+
+/**
+ * APPOINTMENT ACCEPT/REJECT/PENDING
+ **/
+exports.updateAppointmentStatus = function (req, res, next) {
+    try{
+        var business_id = req.userdata.business_id;
+        if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
+            return res.status(403).json({ status: 'error', message: 'Appointment Id Not Found.' });
+        }else if (req.body.status == '' || req.body.status == 'undefined' || req.body.status == null) {
+            return res.status(403).json({ status: 'error', message: 'Appointment Status Not Found' });
+        }
+        var appointment_id = req.body.id;
+
+        var update_columns = " updated_at=now() ";
+
+        if (req.body.status != '' && req.body.status != 'undefined' && req.body.status != null) {
+            if(req.body.status == 'accepted' || req.body.status == 'rejected' || req.body.status=='pending'){
+                update_columns += ", appointment_status='" + req.body.status + "' ";
+                var sql = "UPDATE business_appointment SET " + update_columns + " WHERE id='" + appointment_id + "' AND business_id='" + business_id + "'";
+                db.query(sql, function (err, result) {
+                    if (err) {
+                        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                    }
+                    return res.status(200).json({status: 'success',message: 'Appointment updated successfully.'});
+                });
+            }else{
+                return res.status(200).json({status: 'error',message: 'Please Send Correct Status' });
+            }  
+        }else{
+            return res.status(200).json({status: 'error', message: 'Please Dont send null status' });
+        }
+       
+    }catch(e){
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });  
+    }
+};
 
 /**
  * ADDING MINUTE IN TIME TO CREATE SLOTS
