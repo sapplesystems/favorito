@@ -102,7 +102,7 @@ class _BusinessProfileState extends State<BusinessProfile>
 
   void webSiteLengthPlus() {
     setState(() {
-      webSiteLength = webSiteLength + 1;
+      webSiteLength++;
       _controller.add(TextEditingController());
     });
   }
@@ -521,7 +521,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                               security: false,
                               hint: "Enter Description",
                             ),
-                            for (int i = 0; i < webSiteLength; i++)
+                            for (int i = 0; i < webSiteLength - 1; i++)
                               txtfieldPostAction(
                                   ctrl: _controller[i + 15],
                                   hint: "Enter Website ",
@@ -684,7 +684,13 @@ class _BusinessProfileState extends State<BusinessProfile>
     await WebService.getProfileData().then((value) {
       var va = value.data;
       addressList.clear();
-      for (int i = 0; i < va.website.length - 1; i++) webSiteLengthPlus();
+      for (int i = 0; i < va.website.length; i++) {
+        va.website[i] = va.website[i].trim();
+        if (va.website[i].length > 4) {
+          webSiteLengthPlus();
+        } else
+          va.website.removeAt(i);
+      }
 
       addressList.add(va.address1);
       addressList.add(va.address2);
@@ -702,8 +708,11 @@ class _BusinessProfileState extends State<BusinessProfile>
       pinCaller(va.pincode);
       _controller[13].text = va.businessEmail;
       _controller[14].text = va.shortDescription;
-      for (int i = 0; i < va.website.length; i++) {
-        _controller[i + 15].text = va.website[i];
+      for (int i = 0, m = -1; i < va.website.length; i++) {
+        if (va.website[i].length > 4) {
+          m++;
+          _controller[m + 15].text = va.website[i];
+        }
       }
 
       print("asasas1 ${va.hours.toList()}");

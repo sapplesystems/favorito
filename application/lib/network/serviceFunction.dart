@@ -1,18 +1,14 @@
+import 'package:Favorito/network/BaseUrl.dart';
+import 'package:Favorito/network/ServeControl.dart';
+
 class serviceFunction {
-  static String baseUrl1 = 'http://demos.sappleserve.com:3000/api/business-';
-  static String baseUrl2 = 'http://demos.sappleserve.com:3000/api/';
   static String adSpent = "ad-spent-campaign/";
   static String funCatList = baseUrl1 + 'category/list';
   static String funSubCatList = baseUrl1 + 'sub-category/list';
   static String funBusyList = baseUrl1 + 'type/list';
-  static String funGetNotifications = baseUrl2 + 'notification/list';
   static String funBusyRegister = baseUrl1 + 'user/register';
-  static String funGetCreateNotificationDefaultData =
-      baseUrl2 + 'notification/dd-verbose';
-  static String funCreateNotification = baseUrl2 + 'notification/add';
   static String funGetCities = baseUrl2 + 'state-city/city-list';
   static String funGetStates = baseUrl2 + 'state-city/state-list';
-  static String funValidPincode = baseUrl2 + 'notification/verify-pincode';
   static String funGetJobs = baseUrl2 + 'job/list';
   static String funGetCreateJobDefaultData = baseUrl2 + 'job/dd-verbose';
   static String funLogin = baseUrl1 + 'user/login';
@@ -34,11 +30,10 @@ class serviceFunction {
   static String funWaitlistSaveSetting = baseUrl1 + 'waitlist/save-setting';
   static String funWaitlistSetting = baseUrl1 + 'waitlist/setting';
   static String funWaitlistDelete = baseUrl1 + 'waitlist/delete';
-  static String funCreateManualBooking = baseUrl2 + 'business-booking/create';
   static String funSearchBranches = baseUrl2 + 'business-user/search-branch';
   static String funGetBusinessProfileData = baseUrl2 + 'business-user/profile';
-  static String funGetOfferData = baseUrl2 + 'offer/list';
-  static String funEditOffer = baseUrl2 + 'offer/edit';
+  static String funGetOfferData = funOffer + 'list';
+  static String funEditOffer = funOffer + 'edit';
   static String funGetEditJobData = baseUrl2 + 'job/detail';
   static String funEditJob = baseUrl2 + 'job/edit';
   static String funUserProfileUpdate = baseUrl1 + 'user/profile/update';
@@ -58,5 +53,17 @@ class serviceFunction {
   static String funOrderList = baseUrl1 + 'order/list';
   static String funCatalogAddPhoto = baseUrl2 + 'catalog/add-photo';
   static String funCatalogEdit = baseUrl2 + 'catalog/edit';
-  static String funBookingSetting = baseUrl1 + 'booking/setting';
+
+  static String funCreateManualBooking = funBooking + 'create';
+  static String funBookingSetting = funBooking + 'setting';
+  static String funBookingSaveSetting = funBooking + 'save-setting';
+
+  static String funNotificationsList = funNotification + 'list';
+  static String funGetCreateNotificationDefaultData =
+      funNotification + 'dd-verbose';
+  static String funCreateNotification = funNotification + 'add';
+  static String funValidPincode = funNotification + 'verify-pincode';
+  static String funNotificationsDetail = funNotification + 'detail';
+  static String funAppoinmentCreate = funAppointment + 'create';
+  static String funAppoinmentDetail = funAppointment + 'detail';
 }

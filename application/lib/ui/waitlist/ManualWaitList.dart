@@ -15,7 +15,7 @@ class ManualWaitList extends StatefulWidget {
 class _ManualWaitListState extends State<ManualWaitList> {
   List<TextEditingController> controller = [];
   List<String> selectedlist = [];
-  GlobalKey<FormState> _frmKey  = GlobalKey();
+  GlobalKey<FormState> _frmKey = GlobalKey();
   List title = ["User Name", "Contact", "Number of Persons", "Special Notes"];
   SizeManager sm;
   void initState() {
@@ -55,38 +55,41 @@ class _ManualWaitListState extends State<ManualWaitList> {
       ),
       body: ListView(
         children: [
-          Builder(builder: (context)=>Form(
-            key:_frmKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Container(
-                decoration: bd1,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40.0),
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                child: Column(children: [
-                  for (int i = 0; i < 4; i++)
-                    Padding(
-                      padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
-                      child: txtfieldboundry(
-                        valid: true,
-                        title: title[i],
-                        hint: "Enter ${title[i]}",
-                        controller: controller[i],
-                        keyboardSet:(i == 1 || i == 2) ?TextInputType.number:TextInputType.text,
-                        maxlen: i == 1 ?10:50,
-                        maxLines: i == 3 ? 4 : 1,
-                        security: false,
-                      ),
-                    ),
-                ])),
-          )),
+          Builder(
+              builder: (context) => Form(
+                    key: _frmKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Container(
+                        decoration: bd1,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 40.0),
+                        margin: EdgeInsets.symmetric(horizontal: 12),
+                        child: Column(children: [
+                          for (int i = 0; i < 4; i++)
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                              child: txtfieldboundry(
+                                valid: true,
+                                title: title[i],
+                                hint: "Enter ${title[i]}",
+                                controller: controller[i],
+                                keyboardSet: (i == 1 || i == 2)
+                                    ? TextInputType.number
+                                    : TextInputType.text,
+                                maxlen: i == 1 ? 10 : 50,
+                                maxLines: i == 3 ? 4 : 1,
+                                security: false,
+                              ),
+                            ),
+                        ])),
+                  )),
           Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: sm.scaledWidth(16),
-                  vertical: sm.scaledHeight(2)),
+                  horizontal: sm.scaledWidth(16), vertical: sm.scaledHeight(2)),
               child: roundedButton(
                   clicker: () {
-                    if(_frmKey.currentState.validate())
-                    funSublim();
+                    if (_frmKey.currentState.validate()) funSublim();
                   },
                   clr: Colors.red,
                   title: "Done"))
@@ -94,15 +97,16 @@ class _ManualWaitListState extends State<ManualWaitList> {
       ),
     );
   }
-  void funSublim(){
-    Map _map ={
+
+  void funSublim() {
+    Map _map = {
       "name": controller[0].text,
-      "contact":controller[1].text,
+      "contact": controller[1].text,
       "no_of_person": controller[2].text,
       "special_notes": controller[3].text
     };
     WebService.funCreateWaitlist(_map).then((value) {
-      if(value.status=="success"){
+      if (value.status == "success") {
         BotToast.showText(text: value.message);
         Navigator.pop(context);
       }

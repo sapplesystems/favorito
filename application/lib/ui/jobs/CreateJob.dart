@@ -245,6 +245,8 @@ class _CreateJobState extends State<CreateJob> {
                                 controller: _myContactEditController,
                                 title: "Contact",
                                 security: false,
+                                keyboardSet: TextInputType.number,
+                                maxlen: 10,
                                 hint: _contactHint,
                                 maxLines: 1,
                                 valid: true,

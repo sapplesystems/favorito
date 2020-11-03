@@ -1,7 +1,11 @@
+import 'package:Favorito/ui/appoinment/appoinment.dart';
+import 'package:Favorito/ui/appoinment/appoinmentSetting.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
 import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/dashboard/dashboard.dart';
+import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/setting/setting.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -16,9 +20,16 @@ class _bottomNavigationState extends State<bottomNavigation> {
     dashboard(),
     Bookings(),
     setting(),
-    checkins(),
+    // checkins(),
+    Appoinment(),
     setting()
   ];
+
+  @override
+  void initState() {
+    decide();
+    super.initState();
+  }
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
@@ -48,5 +59,14 @@ class _bottomNavigationState extends State<bottomNavigation> {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  void decide() async {
+    var token = await Prefs.token;
+    if (token == null || token == "") {
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    } else
+      print("Token:$token");
   }
 }

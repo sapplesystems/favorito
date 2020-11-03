@@ -32,8 +32,8 @@ class _OfferState extends State<Offers> {
     super.initState();
   }
 
-  initializeIntitialValues() {
-    WebService.funGetOfferData().then((value) {
+  initializeIntitialValues() async {
+    await WebService.funGetOfferData().then((value) {
       setState(() {
         _selectedOfferType = 'Activated';
 
@@ -72,6 +72,7 @@ class _OfferState extends State<Offers> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
+        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: myBackGround,
           elevation: 0,
@@ -101,14 +102,9 @@ class _OfferState extends State<Offers> {
             ),
           ],
         ),
-        body: Container(
-          padding: EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            color: myBackGround,
-          ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: EdgeInsets.only(
@@ -155,7 +151,7 @@ class _OfferState extends State<Offers> {
               Text("New User Offers",
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
               Container(
-                  height: sm.scaledHeight(35),
+                  height: sm.scaledHeight(34),
                   child: ListView.builder(
                       itemCount: newUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {

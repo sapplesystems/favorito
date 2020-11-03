@@ -4,7 +4,8 @@ import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/adSpentModel.dart';
-import 'package:Favorito/model/booking/CreateBookingModel.dart';
+import 'package:Favorito/model/appoinment/appoinmentSeviceModel.dart';
+import 'package:Favorito/model/booking/bookingSettingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfoModel.dart';
@@ -30,6 +31,7 @@ import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart'
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
 import 'package:Favorito/model/busyListModel.dart';
+import 'package:Favorito/model/notification/NotificationOneModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
@@ -93,9 +95,9 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     NotificationListRequestModel _returnData = NotificationListRequestModel();
     response =
-        await dio.post(serviceFunction.funGetNotifications, options: _opt);
+        await dio.post(serviceFunction.funNotificationsList, options: _opt);
     if (response.statusCode == HttpStatus.ok) {
-      print("Request URL:${serviceFunction.funGetNotifications}");
+      print("Request URL:${serviceFunction.funNotificationsList}");
       _returnData = NotificationListRequestModel.fromJson(
           convert.json.decode(response.toString()));
     } else {
@@ -141,6 +143,7 @@ class WebService {
     }
   }
 
+//*************************************/notification/*********************************/
   static Future<CreateNotificationRequiredDataModel>
       funGetCreateNotificationDefaultData() async {
     String token = await Prefs.token;
@@ -158,6 +161,19 @@ class WebService {
         convert.json.decode(response.toString()));
     print("responseData5:${_returnData.status}");
     return _returnData;
+  }
+
+  static Future<NotificationOneModel> funNotificationsDetail(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    print("Request URL:${serviceFunction.funGetCreateNotificationDefaultData}");
+    response = await dio.post(serviceFunction.funNotificationsDetail,
+        data: _map, options: _opt);
+    return NotificationOneModel.fromJson(
+        convert.json.decode(response.toString()));
   }
 
   static Future<BaseResponseModel> funCreateNotification(
@@ -570,27 +586,29 @@ class WebService {
     return _returnData;
   }
 
-  static Future<BaseResponseModel> funCreateManualBooking(
-      CreateBookingModel requestData) async {
+//********************************Booking***************************/
+  static Future<BaseResponseModel> funCreateManualBooking(Map _map) async {
     String token = await Prefs.token;
-    Options _opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    BaseResponseModel _returnData = BaseResponseModel();
-    Map<String, dynamic> _map = {
-      "name": requestData.name,
-      "contact": requestData.mobileNo,
-      "no_of_person": requestData.noOfPerson,
-      "special_notes": requestData.notes,
-      "created_date": requestData.createdDate,
-      "created_time": requestData.createdTime
-    };
-
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(serviceFunction.funCreateManualBooking,
-        data: _map, options: _opt);
-    _returnData =
-        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    return _returnData;
+        data: _map, options: opt);
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<BaseResponseModel> funBookingSaveSetting(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(serviceFunction.funBookingSaveSetting,
+        data: _map, options: opt);
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<bookingSettingModel> funBookingSetting() async {
+    String token = await Prefs.token;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(serviceFunction.funBookingSetting, options: opt);
+    return bookingSettingModel
+        .fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<SearchBranchResponseModel> funSearchBranches(
@@ -666,6 +684,7 @@ class WebService {
         data: _map, options: _opt);
     _returnData =
         EditJobDataModel.fromJson(convert.json.decode(response.toString()));
+    print("_returnData:${_returnData.data[0].toString}");
     return _returnData;
   }
 
@@ -907,6 +926,34 @@ class WebService {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
       return orderListModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  //***********************************************appointment*****************************/
+
+  static Future<BaseResponseModel> funAppoinmentCreate(Map _map) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funAppoinmentCreate;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<appoinmentSeviceModel> funAppoinmentDetail() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funAppoinmentCreate;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return appoinmentSeviceModel.fromJson(
+          convert.json.decode(response.toString()));
     }
   }
 }

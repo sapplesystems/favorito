@@ -1,7 +1,6 @@
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistModel.dart';
 import 'package:Favorito/ui/waitlist/ManualWaitList.dart';
-import 'package:Favorito/ui/waitlist/waitlistSettingContrller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:Favorito/component/PopupContent.dart';

@@ -3,6 +3,8 @@ import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/model/booking/BookingModel.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/ui/appoinment/ManualAppoinment.dart';
+import 'package:Favorito/ui/appoinment/appoinmentSetting.dart';
 import 'package:Favorito/ui/booking/BookingSetting.dart';
 import 'package:Favorito/ui/booking/ManualBooking.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -13,12 +15,12 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../config/SizeManager.dart';
 
-class Bookings extends StatefulWidget {
+class Appoinment extends StatefulWidget {
   @override
-  _Bookings createState() => _Bookings();
+  _Appoinment createState() => _Appoinment();
 }
 
-class _Bookings extends State<Bookings> {
+class _Appoinment extends State<Appoinment> {
   SizeManager sm;
   List<String> _daysList = ['Today'];
   List<Slots> _slotInputList = [];
@@ -111,7 +113,7 @@ class _Bookings extends State<Bookings> {
             color: Colors.black, //change your color here
           ),
           title: Text(
-            "Bookings",
+            "Appoinment",
             style: TextStyle(color: Colors.black),
           ),
           actions: [
@@ -124,9 +126,9 @@ class _Bookings extends State<Bookings> {
                 Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ManualBooking()))
+                            builder: (context) => ManualAppoinment()))
                     .whenComplete(() {
-                  // call the page reload here
+                  //   // call the page reload here
                 });
               },
             ),
@@ -134,8 +136,10 @@ class _Bookings extends State<Bookings> {
               icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
                   alignment: Alignment.center),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => BookingSetting()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => appoinmentSetting()));
               },
             )
           ],

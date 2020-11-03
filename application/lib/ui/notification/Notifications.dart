@@ -32,6 +32,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
+        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: myBackGround,
           elevation: 0,
@@ -42,7 +43,9 @@ class _NotificationsState extends State<Notifications> {
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: Text("Notification", style: TextStyle(color: Colors.black)),
+          centerTitle: true,
+          title: Text("Notifications",
+              style: TextStyle(color: Colors.black, letterSpacing: 2.0)),
         ),
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Container(
@@ -51,39 +54,51 @@ class _NotificationsState extends State<Notifications> {
             child: ListView.builder(
                 itemCount: _notificationsListdata.notifications.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                    child: Container(
-                        height: sm.scaledHeight(10),
-                        width: sm.scaledWidth(80),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.white),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(40))),
-                        margin: EdgeInsets.symmetric(vertical: 2.0),
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Padding(
+                  return InkWell(
+                    onTap: () {
+                      var id = _notificationsListdata.notifications[index].id;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateNotification(id: id)));
+                    },
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20.0))),
+                      child: Container(
+                          height: sm.scaledHeight(10),
+                          width: sm.scaledWidth(80),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.white),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(40))),
+                          margin: EdgeInsets.symmetric(vertical: 2.0),
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            title: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
+                                child: Text(_notificationsListdata
+                                    .notifications[index].title)),
+                            subtitle: Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 4.0),
-                              child: Text(_notificationsListdata
-                                  .notifications[index].title)),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Container(
-                              child: AutoSizeText(
-                                _notificationsListdata
-                                    .notifications[index].description,
-                                minFontSize: 14,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                              child: Container(
+                                child: AutoSizeText(
+                                  _notificationsListdata
+                                      .notifications[index].description,
+                                  minFontSize: 14,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
-                          ),
-                        )),
+                          )),
+                    ),
                   );
                 }),
           ),
@@ -96,7 +111,7 @@ class _NotificationsState extends State<Notifications> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CreateNotification()));
+                          builder: (context) => CreateNotification(id: null)));
                 },
                 clr: Colors.red,
                 title: "Create New",

@@ -3,6 +3,7 @@ import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
+import 'package:Favorito/model/notification/NotificationOneModel.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
 class CreateNotification extends StatefulWidget {
+  int id;
+  CreateNotification({this.id});
   @override
   _CreateNotificationState createState() => _CreateNotificationState();
 }
@@ -21,6 +24,7 @@ class _CreateNotificationState extends State<CreateNotification> {
   List<String> _quantityList = ['quantity 1', 'quantity 2'];
   CreateNotificationRequiredDataModel _notificationRequiredData =
       CreateNotificationRequiredDataModel();
+  NotificationOneModel notificationOneModel;
   CityListModel _cityListModel = CityListModel();
   String _contactHintText = '';
   String _selectedAction = '';
@@ -46,13 +50,39 @@ class _CreateNotificationState extends State<CreateNotification> {
 
   @override
   void initState() {
-    WebService.funGetCreateNotificationDefaultData().then((value) {
-      setState(() {
-        _notificationRequiredData = value;
-      });
-    });
+    WebService.funGetCreateNotificationDefaultData()
+        .then((value) => _notificationRequiredData = value);
     super.initState();
     initializeDefaultValues();
+    if (widget.id != null) {
+      WebService.funNotificationsDetail({"id": widget.id}).then((value) {
+        setState(() {
+          notificationOneModel = value;
+          _contactHintText = value.data[0].contact;
+          _selectedAction = value.data[0].action;
+          _selectedAudience = value.data[0].audience;
+          _selectedArea = value.data[0].area;
+          _selectedCountry = value.data[0].areaDetail;
+          // _selectedState = value.data[0].sta;
+          // _selectedCity = value.data[0].city;
+          _selectedQuantity = value.data[0].quantity;
+          _countryVisible = false;
+          _stateVisible = false;
+          _cityVisible = false;
+          _pincodeVisible = false;
+          _validatePincode = false;
+          _autoValidateForm = false;
+          _myTitleEditController.text = value.data[0].title;
+          _myDescriptionEditController.text = value.data[0].description;
+          _myContactEditController.text = value.data[0].contact;
+
+          setState(() {
+            // _myPincodeEditController.text = value.data[0].;
+          });
+        });
+      });
+    }
+    setState(() {});
   }
 
   initializeDefaultValues() {
@@ -165,6 +195,8 @@ class _CreateNotificationState extends State<CreateNotification> {
                                 controller: _myContactEditController,
                                 title: "Contact",
                                 security: false,
+                                keyboardSet: TextInputType.number,
+                                maxlen: 10,
                                 hint: _contactHintText,
                                 maxLines: 1,
                                 valid: true,
@@ -381,53 +413,56 @@ class _CreateNotificationState extends State<CreateNotification> {
                       ),
                     )),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: sm.scaledWidth(50),
-                  margin: EdgeInsets.only(bottom: 16.0),
-                  child: roundedButton(
-                    clicker: () {
-                      if (_formKey.currentState.validate()) {
-                        var requestData = CreateNotificationRequestModel();
-                        requestData.title = _myTitleEditController.text;
-                        requestData.description =
-                            _myDescriptionEditController.text;
-                        requestData.selectedAction = _selectedAction;
-                        requestData.contact = _myContactEditController.text;
-                        requestData.selectedAudience = _selectedAudience;
-                        requestData.selectedArea = _selectedArea;
-                        if (_selectedArea ==
-                            _notificationRequiredData.data.area[0]) {
-                          requestData.areaDetail = _selectedCountry;
-                        } else if (_selectedArea ==
-                            _notificationRequiredData.data.area[1]) {
-                          requestData.areaDetail = _selectedState.state;
-                        } else if (_selectedArea ==
-                            _notificationRequiredData.data.area[2]) {
-                          requestData.areaDetail = _selectedCity.city;
-                        } else if (_selectedArea ==
-                            _notificationRequiredData.data.area[3]) {
-                          requestData.areaDetail =
-                              _myPincodeEditController.text;
-                        }
-                        requestData.selectedQuantity = _selectedQuantity;
-                        WebService.funCreateNotification(requestData)
-                            .then((value) {
-                          if (value.status == 'success') {
-                            setState(() {
-                              initializeDefaultValues();
-                            });
-                          } else {
-                            BotToast.showText(text: value.message);
+              Visibility(
+                visible: widget.id == null,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: sm.scaledWidth(50),
+                    margin: EdgeInsets.only(bottom: 16.0),
+                    child: roundedButton(
+                      clicker: () {
+                        if (_formKey.currentState.validate()) {
+                          var requestData = CreateNotificationRequestModel();
+                          requestData.title = _myTitleEditController.text;
+                          requestData.description =
+                              _myDescriptionEditController.text;
+                          requestData.selectedAction = _selectedAction;
+                          requestData.contact = _myContactEditController.text;
+                          requestData.selectedAudience = _selectedAudience;
+                          requestData.selectedArea = _selectedArea;
+                          if (_selectedArea ==
+                              _notificationRequiredData.data.area[0]) {
+                            requestData.areaDetail = _selectedCountry;
+                          } else if (_selectedArea ==
+                              _notificationRequiredData.data.area[1]) {
+                            requestData.areaDetail = _selectedState.state;
+                          } else if (_selectedArea ==
+                              _notificationRequiredData.data.area[2]) {
+                            requestData.areaDetail = _selectedCity.city;
+                          } else if (_selectedArea ==
+                              _notificationRequiredData.data.area[3]) {
+                            requestData.areaDetail =
+                                _myPincodeEditController.text;
                           }
-                        });
-                      } else {
-                        _autoValidateForm = true;
-                      }
-                    },
-                    clr: Colors.red,
-                    title: "Send",
+                          requestData.selectedQuantity = _selectedQuantity;
+                          WebService.funCreateNotification(requestData)
+                              .then((value) {
+                            if (value.status == 'success') {
+                              setState(() {
+                                initializeDefaultValues();
+                              });
+                            } else {
+                              BotToast.showText(text: value.message);
+                            }
+                          });
+                        } else {
+                          _autoValidateForm = true;
+                        }
+                      },
+                      clr: Colors.red,
+                      title: "Send",
+                    ),
                   ),
                 ),
               ),

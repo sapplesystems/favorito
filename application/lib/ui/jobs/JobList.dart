@@ -17,11 +17,7 @@ class _JobListState extends State<JobList> {
 
   @override
   void initState() {
-    WebService.funGetJobs().then((value) {
-      setState(() {
-        _jobList = value;
-      });
-    });
+    getPageData();
     super.initState();
   }
 
@@ -29,6 +25,7 @@ class _JobListState extends State<JobList> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
+        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: myBackGround,
           elevation: 0,
@@ -44,77 +41,104 @@ class _JobListState extends State<JobList> {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: Container(
-            decoration: BoxDecoration(
-              color: myBackGround,
-            ),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Container(
-                height: sm.scaledHeight(75),
-                margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
-                child: ListView.builder(
-                    itemCount: _jobList.data == null ? 0 : _jobList.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateJob(_jobList.data[index].id)));
-                        },
-                        child: Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          child: Container(
-                              height: sm.scaledHeight(10),
-                              width: sm.scaledWidth(80),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(40))),
-                              margin: EdgeInsets.symmetric(vertical: 2.0),
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: ListTile(
-                                  trailing: SvgPicture.asset(
-                                      'assets/icon/forward_arrow.svg'),
-                                  title: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4.0),
-                                    child: Text(
-                                      _jobList.data[index].title,
-                                    ),
-                                  ),
-                                ),
-                              )),
-                        ),
-                      );
-                    }),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: sm.scaledWidth(50),
-                  child: roundedButton(
-                    clicker: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateJob(null)));
-                    },
-                    clr: Colors.red,
-                    title: "Add New",
+        body: FutureBuilder<JobListRequestModel>(
+          future: WebService.funGetJobs(),
+          builder: (BuildContext context,
+              AsyncSnapshot<JobListRequestModel> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: Text('Please wait its loading...'));
+            } else {
+              if (snapshot.hasError)
+                return Center(child: Text('Error: ${snapshot.error}'));
+              else {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: myBackGround,
                   ),
-                ),
-              ),
-            ])));
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: sm.scaledHeight(75),
+                          margin: EdgeInsets.only(
+                              left: 16.0, right: 16.0, bottom: 32.0),
+                          child: ListView.builder(
+                              itemCount: _jobList.data == null
+                                  ? 0
+                                  : _jobList.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => CreateJob(
+                                                    _jobList.data[index].id)))
+                                        .whenComplete(() => getPageData());
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0)),
+                                    ),
+                                    child: Container(
+                                        height: sm.scaledHeight(10),
+                                        width: sm.scaledWidth(80),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: Colors.white,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(40))),
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 2.0),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: ListTile(
+                                            trailing: SvgPicture.asset(
+                                                'assets/icon/forward_arrow.svg'),
+                                            title: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 4.0),
+                                              child: Text(
+                                                _jobList.data[index].title,
+                                              ),
+                                            ),
+                                          ),
+                                        )),
+                                  ),
+                                );
+                              }),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: sm.scaledWidth(50),
+                            child: roundedButton(
+                              clicker: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CreateJob(null)));
+                              },
+                              clr: Colors.red,
+                              title: "Add New",
+                            ),
+                          ),
+                        ),
+                      ]),
+                );
+              }
+            }
+          },
+        ));
+  }
+
+  void getPageData() async {
+    await WebService.funGetJobs()
+        .then((value) => setState(() => _jobList = value));
   }
 }

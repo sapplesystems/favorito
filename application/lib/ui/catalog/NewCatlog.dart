@@ -162,24 +162,28 @@ class _NewCatlogState extends State<NewCatlog> {
                 ],
               ),
             ),
-            Builder(
-                builder: (context) => Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(children: [
-                      for (int i = 0; i < 5; i++)
-                        Padding(
-                          padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
-                          child: txtfieldboundry(
-                            valid: true,
-                            title: title[i],
-                            hint: "Enter ${title[i]}",
-                            controller: controller[i],
-                            maxLines: i == 2 ? 4 : 1,
-                            security: false,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Builder(
+                  builder: (context) => Form(
+                      key: _formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: Column(children: [
+                        for (int i = 0; i < 5; i++)
+                          Padding(
+                            padding:
+                                EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                            child: txtfieldboundry(
+                              valid: true,
+                              title: title[i],
+                              hint: "Enter ${title[i]}",
+                              controller: controller[i],
+                              maxLines: i == 2 ? 4 : 1,
+                              security: false,
+                            ),
                           ),
-                        ),
-                    ]))),
+                      ]))),
+            ),
             Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: sm.scaledWidth(16),

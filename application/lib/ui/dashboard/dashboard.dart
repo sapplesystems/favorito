@@ -5,7 +5,9 @@ import 'package:Favorito/component/cart3.dart';
 import 'package:Favorito/component/rowWithTextNButton.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/checkins/checkins.dart';
+import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/order/Orders.dart';
 import 'package:Favorito/ui/review/reviewList.dart';
@@ -87,7 +89,9 @@ class _dashboardState extends State<dashboard> {
                     Text(
                         is_verified == "0"
                             ? "Offline"
-                            : is_verified == "1" ? "Live" : "Blocked",
+                            : is_verified == "1"
+                                ? "Live"
+                                : "Blocked",
                         style: TextStyle(
                             fontSize: 16,
                             color: is_verified == "0"
@@ -124,7 +128,12 @@ class _dashboardState extends State<dashboard> {
                     txt1: "Send for verification",
                     txt2: "Verify",
                     check: is_verified,
-                    function: () {}),
+                    function: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BusinessClaim()));
+                    }),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
                   child: Row(
@@ -155,7 +164,15 @@ class _dashboardState extends State<dashboard> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          card3(txt1: "Catalogoues", txt2: catalogoues),
+                          InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Catalogs()));
+                              },
+                              child: card3(
+                                  txt1: "Catalogoues", txt2: catalogoues)),
                           InkWell(
                               onTap: () {
                                 Navigator.push(

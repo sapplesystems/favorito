@@ -1,8 +1,4 @@
-import 'package:Favorito/ui/PageViews/PageViews.dart';
-import 'package:Favorito/ui/appoinment/appoinmentSetting.dart';
-import 'package:Favorito/ui/login/login.dart';
-import 'package:Favorito/ui/menu/MenuSetting.dart';
-import 'package:Favorito/ui/signup/signup_a.dart';
+import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +27,8 @@ class MyApp extends StatelessWidget {
       ),
       home:
           // signup_a()
-          Login()
+          // Login()
+          bottomNavigation()
       // PageViews()
       // appoinmentSetting()
       );

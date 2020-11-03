@@ -1,59 +1,50 @@
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import '../../component/DatePicker.dart';
 import '../../component/TimePicker.dart';
 import '../../component/roundedButton.dart';
 import '../../component/txtfieldboundry.dart';
-
 import 'package:Favorito/component/DatePicker.dart';
 import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import '../../config/SizeManager.dart';
 
-class ManualBooking extends StatefulWidget {
+class ManualAppoinment extends StatefulWidget {
   @override
-  _ManualBooking createState() => _ManualBooking();
+  _ManualAppoinment createState() => _ManualAppoinment();
 }
 
-class _ManualBooking extends State<ManualBooking> {
+class _ManualAppoinment extends State<ManualAppoinment> {
   SizeManager sm;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _autoValidateForm = false;
 
   String _selectedDateText = '';
   String _selectedTimeText = '';
-
-  final _myNameEditController = TextEditingController();
-  final _myContactEditController = TextEditingController();
-  final _myNoOfPersonEditController = TextEditingController();
-  final _myNotesEditController = TextEditingController();
+  List<TextEditingController> controller = List();
 
   TimeOfDay _intitialTime;
 
   DateTime _initialDate;
 
   initializeDefaultValues() {
-    _autoValidateForm = false;
-    _myNameEditController.text = '';
-    _myContactEditController.text = '';
-    _myNoOfPersonEditController.text = '';
-    _myNotesEditController.text = '';
-    _selectedDateText = 'Select Date';
-    _selectedTimeText = 'Select Time';
     _intitialTime = TimeOfDay.now();
     setState(() => _initialDate = DateTime.now());
   }
 
   @override
   void initState() {
+    for (int i = 0; i < 7; i++) controller.add(TextEditingController());
+    getPageData();
     setState(() {
       initializeDefaultValues();
     });
+    controller[0].text = 'Select Date';
+    controller[1].text = 'Select Time';
     super.initState();
   }
 
@@ -69,7 +60,8 @@ class _ManualBooking extends State<ManualBooking> {
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Manual Booking", style: TextStyle(color: Colors.black)),
+          title:
+              Text("Manual Appointment", style: TextStyle(color: Colors.black)),
         ),
         body: ListView(children: [
           Padding(
@@ -82,7 +74,7 @@ class _ManualBooking extends State<ManualBooking> {
                   child: Builder(
                       builder: (context) => Form(
                           key: _formKey,
-                          autovalidate: _autoValidateForm,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -95,21 +87,23 @@ class _ManualBooking extends State<ManualBooking> {
                                         SizedBox(
                                           width: sm.scaledWidth(40),
                                           child: DatePicker(
-                                            selectedDateText: _selectedDateText,
+                                            selectedDateText:
+                                                controller[0].text,
                                             selectedDate: _initialDate,
                                             onChanged: ((value) {
-                                              _selectedDateText = value;
+                                              controller[0].text = value;
                                             }),
                                           ),
                                         ),
                                         SizedBox(
                                           width: sm.scaledWidth(40),
                                           child: TimePicker(
-                                            selectedTimeText: _selectedTimeText,
+                                            selectedTimeText:
+                                                controller[1].text,
                                             selectedTime: _intitialTime,
                                             onChanged: ((value) {
                                               print("value $value");
-                                              _selectedTimeText = value;
+                                              controller[1].text = value;
                                             }),
                                           ),
                                         ),
@@ -118,7 +112,7 @@ class _ManualBooking extends State<ManualBooking> {
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    controller: _myNameEditController,
+                                    controller: controller[2],
                                     title: "Name",
                                     security: false,
                                     valid: true,
@@ -127,7 +121,7 @@ class _ManualBooking extends State<ManualBooking> {
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    controller: _myContactEditController,
+                                    controller: controller[3],
                                     title: "Contact",
                                     security: false,
                                     maxlen: 10,
@@ -137,10 +131,25 @@ class _ManualBooking extends State<ManualBooking> {
                                   ),
                                 ),
                                 Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 24),
+                                  child: DropdownSearch<String>(
+                                      validator: (v) =>
+                                          v == '' ? "required field" : null,
+                                      autoValidate: true,
+                                      mode: Mode.MENU,
+                                      selectedItem: controller[4].text,
+                                      items: [],
+                                      label: "Service",
+                                      hint: "Please Select Service",
+                                      showSearchBox: false,
+                                      onChanged: (value) => setState(
+                                          () => controller[4].text = value)),
+                                ),
+                                Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    controller: _myNoOfPersonEditController,
-                                    title: "Number of People",
+                                    controller: controller[5],
+                                    title: "Person",
                                     keyboardSet: TextInputType.number,
                                     security: false,
                                     valid: true,
@@ -149,7 +158,7 @@ class _ManualBooking extends State<ManualBooking> {
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: txtfieldboundry(
-                                    controller: _myNotesEditController,
+                                    controller: controller[6],
                                     title: "Special Notes",
                                     security: false,
                                     maxLines: 5,
@@ -163,38 +172,27 @@ class _ManualBooking extends State<ManualBooking> {
             child: roundedButton(
               clicker: () {
                 if (_formKey.currentState.validate()) {
-                  if (_selectedDateText == 'Select Date') {
+                  if (controller[0].text == 'Select Date') {
                     BotToast.showText(text: "Please select a date");
                     return;
                   }
-                  if (_selectedTimeText == 'Select Time') {
+                  if (controller[1].text == 'Select Time') {
                     BotToast.showText(text: "Please select a time");
                     return;
                   }
-                  // CreateBookingModel request = CreateBookingModel();
-                  // request.name = _myNameEditController.text;
-                  // request.mobileNo = _myContactEditController.text;
-                  // request.noOfPerson = _myNoOfPersonEditController.text;
-                  // request.notes = _myNotesEditController.text;
-                  // request.createdDate = _selectedDateText;
-                  // request.createdTime = _selectedTimeText;
-
                   Map<String, dynamic> _map = {
-                    "name": _myNameEditController.text,
-                    "contact": _myContactEditController.text,
-                    "no_of_person": _myNoOfPersonEditController.text,
-                    "special_notes": _myNotesEditController.text,
-                    "created_date": _selectedDateText,
-                    "created_time": _selectedTimeText
+                    "created_date": controller[0].text,
+                    "created_time": controller[1].text,
+                    "name": controller[2].text,
+                    "contact": controller[3].text,
+                    "service_id": controller[4].text,
+                    "person_id": controller[5].text,
+                    "special_notes": controller[6].text
                   };
-                  WebService.funCreateManualBooking(_map).then((value) {
+                  WebService.funAppoinmentCreate(_map).then((value) {
                     BotToast.showText(text: value.message);
                     initializeDefaultValues();
-                    _autoValidateForm = true;
                   });
-                } else {
-                  // initializeDefaultValues();
-                  _autoValidateForm = true;
                 }
               },
               clr: Colors.red,
@@ -202,5 +200,13 @@ class _ManualBooking extends State<ManualBooking> {
             ),
           ),
         ]));
+  }
+
+  void getPageData() {
+    WebService.funAppoinmentDetail().then((value) {
+      if (value.status == "success") {
+        // controller[0].text = value.data[]
+      }
+    });
   }
 }
