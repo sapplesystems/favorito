@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:outline_gradient_button/outline_gradient_button.dart';
-
+import 'package:intl/intl.dart';
 import '../config/SizeManager.dart';
 
 class TimePicker extends StatefulWidget {
@@ -16,19 +16,28 @@ class TimePicker extends StatefulWidget {
 }
 
 class _TimePicker extends State<TimePicker> {
+  MaterialLocalizations localizations;
   SizeManager sm;
   static const _YEAR = 365;
   Future<Null> _selectDate(BuildContext context) async {
     FocusScope.of(context).requestFocus(FocusNode());
-    // await Future.delayed(Duration(milliseconds: 100));
+    localizations = MaterialLocalizations.of(context);
     final TimeOfDay picked = await showTimePicker(
       context: context,
-      initialTime: widget.selectedTime,
-    );
-    if (picked != null && picked != widget.selectedTime) {
-      widget.onChanged(picked.format(context));
-      widget.selectedTimeText = picked.format(context);
-    }
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child,
+        );
+      },
+    ).then((value) {
+      setState(() {
+        widget.selectedTimeText =
+            localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
+      });
+      print("picked ${widget.selectedTimeText.toString()}");
+    });
   }
 
   @override

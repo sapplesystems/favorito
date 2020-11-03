@@ -1,6 +1,9 @@
 import 'package:Favorito/utils/Regexer.dart';
+import 'package:Favorito/utils/dateformate.dart';
+import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
+import 'package:outline_gradient_button/outline_gradient_button.dart';
 import '../../component/DatePicker.dart';
 import '../../component/TimePicker.dart';
 import '../../component/roundedButton.dart';
@@ -10,7 +13,6 @@ import 'package:Favorito/component/DatePicker.dart';
 import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/model/booking/CreateBookingModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import '../../config/SizeManager.dart';
@@ -94,13 +96,59 @@ class _ManualBooking extends State<ManualBooking> {
                                       children: [
                                         SizedBox(
                                           width: sm.scaledWidth(40),
-                                          child: DatePicker(
-                                            selectedDateText: _selectedDateText,
-                                            selectedDate: _initialDate,
-                                            onChanged: ((value) {
-                                              _selectedDateText = value;
-                                            }),
-                                          ),
+                                          child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: <Widget>[
+                                                Expanded(
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          showDatePicker(
+                                                                  context:
+                                                                      context,
+                                                                  initialDate:
+                                                                      DateTime
+                                                                          .now(),
+                                                                  firstDate:
+                                                                      DateTime(
+                                                                          2020),
+                                                                  lastDate:
+                                                                      DateTime(
+                                                                          2022))
+                                                              .then((_val) {
+                                                            setState(() {
+                                                              _selectedDateText =
+                                                                  dateFormat1
+                                                                      .format(
+                                                                          _val);
+                                                            });
+                                                          });
+                                                        },
+                                                        child: SizedBox(
+                                                          width: sm
+                                                              .scaledWidth(40),
+                                                          child:
+                                                              OutlineGradientButton(
+                                                            child: Center(
+                                                                child: Text(
+                                                                    _selectedDateText)),
+                                                            gradient:
+                                                                LinearGradient(
+                                                                    colors: [
+                                                                  Colors.red,
+                                                                  Colors.red
+                                                                ]),
+                                                            strokeWidth: 1,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    vertical:
+                                                                        12),
+                                                            radius:
+                                                                Radius.circular(
+                                                                    8),
+                                                          ),
+                                                        )))
+                                              ]),
                                         ),
                                         SizedBox(
                                           width: sm.scaledWidth(40),
@@ -171,13 +219,6 @@ class _ManualBooking extends State<ManualBooking> {
                     BotToast.showText(text: "Please select a time");
                     return;
                   }
-                  // CreateBookingModel request = CreateBookingModel();
-                  // request.name = _myNameEditController.text;
-                  // request.mobileNo = _myContactEditController.text;
-                  // request.noOfPerson = _myNoOfPersonEditController.text;
-                  // request.notes = _myNotesEditController.text;
-                  // request.createdDate = _selectedDateText;
-                  // request.createdTime = _selectedTimeText;
 
                   Map<String, dynamic> _map = {
                     "name": _myNameEditController.text,
@@ -187,11 +228,12 @@ class _ManualBooking extends State<ManualBooking> {
                     "created_date": _selectedDateText,
                     "created_time": _selectedTimeText
                   };
-                  WebService.funCreateManualBooking(_map).then((value) {
-                    BotToast.showText(text: value.message);
-                    initializeDefaultValues();
-                    _autoValidateForm = true;
-                  });
+                  print("map:${_map.toString()}");
+                  // WebService.funCreateManualBooking(_map).then((value) {
+                  //   BotToast.showText(text: value.message);
+                  //   initializeDefaultValues();
+                  //   _autoValidateForm = true;
+                  // });
                 } else {
                   // initializeDefaultValues();
                   _autoValidateForm = true;

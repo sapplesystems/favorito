@@ -3,6 +3,7 @@ import 'package:Favorito/component/listItem.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/PageViews/PageViews.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
+import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
@@ -25,6 +26,47 @@ class setting extends StatefulWidget {
 }
 
 class _settingState extends State<setting> {
+  List<String> _title = [
+    "Bussiness Profile",
+    "Bussiness Information",
+    "Claim Bussiness",
+    "Owner Profile",
+    "Create Offer",
+    "Jobs",
+    "Waitlist",
+    "catalogs",
+    "Create Highlights",
+    "Page View",
+    "Appoinment"
+  ];
+  List<String> _icon = [
+    "shop",
+    "circlenotyfy",
+    "claim",
+    "owner",
+    "offer",
+    "jobs",
+    "waiting",
+    "catlog",
+    "highlights",
+    "eye",
+    "eye"
+  ];
+  List<Widget> _pages = [
+    BusinessProfile(),
+    businessInfo(),
+    BusinessClaim(),
+    ContactPerson(),
+    Offers(),
+    JobList(),
+    Waitlist(),
+    Catalogs(),
+    highlights(),
+    PageViews(),
+    Appoinment()
+  ];
+  double settingHeight = 0.0;
+
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
@@ -84,57 +126,36 @@ class _settingState extends State<setting> {
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                     ),
-                    trailing: Icon(
-                      Icons.arrow_drop_up,
-                      size: 28,
-                      color: Colors.black,
+                    trailing: InkWell(
+                      onTap: () {
+                        double _v = settingHeight == 0.0 ? 168.0 : 0.0;
+                        setState(() => settingHeight = _v);
+                      },
+                      child: Icon(
+                        Icons.arrow_drop_up,
+                        size: 28,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   Container(
+                    height: settingHeight,
                     padding:
                         EdgeInsets.symmetric(horizontal: sm.scaledWidth(14)),
                     child: Column(children: [
-                      listItems(
-                          title: "Bussiness Profile",
-                          ico: "shop",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BusinessProfile()));
-                          }),
-                      listItems(
-                          title: "Bussiness Information",
-                          ico: "circlenotyfy",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => businessInfo()));
-                          }),
-                      listItems(
-                          title: "Claim Bussiness",
-                          ico: "claim",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BusinessClaim()));
-                          }),
-                      listItems(
-                          title: "Owner Profile",
-                          ico: "owner",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ContactPerson()));
-                          }),
+                      for (int i = 0; i < 4; i++)
+                        listItems(
+                            title: _title[i],
+                            ico: _icon[i],
+                            clicker: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => _pages[i]));
+                            }),
                     ]),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   ListTile(
                     leading: SvgPicture.asset('assets/icon/menu.svg',
                         alignment: Alignment.center,
@@ -154,69 +175,16 @@ class _settingState extends State<setting> {
                     padding:
                         EdgeInsets.symmetric(horizontal: sm.scaledWidth(14)),
                     child: Column(children: [
-                      listItems(
-                          title: "Create Offer",
-                          ico: "offer",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Offers()));
-                          }),
-                      listItems(
-                          title: "Jobs",
-                          ico: "jobs",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => JobList()));
-                          }),
-                      listItems(
-                          title: "Waitlist",
-                          ico: "waiting",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Waitlist()));
-                          }),
-                      listItems(
-                          title: "catalogs",
-                          ico: "catlog",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Catalogs()));
-                          }),
-                      listItems(
-                          title: "Create Notification",
-                          ico: "bell",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Notifications()));
-                          }),
-                      listItems(
-                          title: "Create Highlights",
-                          ico: "highlights",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => highlights()));
-                          }),
-                      listItems(
-                          title: "Page View",
-                          ico: "eye",
-                          clicker: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PageViews()));
-                          }),
+                      for (int _i = 4; _i < 11; _i++)
+                        listItems(
+                            title: _title[_i],
+                            ico: _icon[_i],
+                            clicker: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => _pages[_i]));
+                            })
                     ]),
                   ),
                   InkWell(

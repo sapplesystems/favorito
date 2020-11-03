@@ -608,7 +608,7 @@ class WebService {
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(serviceFunction.funBookingSetting, options: opt);
     return bookingSettingModel
-        .fromJson(convert.json.decode(response.toString()));
+      .fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<SearchBranchResponseModel> funSearchBranches(

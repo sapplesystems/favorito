@@ -19,13 +19,8 @@ class listItems extends StatelessWidget {
           children: [
             SvgPicture.asset("assets/icon/$ico.svg",
                 alignment: Alignment.center, height: sm.scaledHeight(3)),
-            SizedBox(
-              width: 20,
-            ),
-            Text(
-              title,
-              style: TextStyle(fontSize: 18),
-            )
+            SizedBox(width: 20),
+            Text(title.trim(), style: TextStyle(fontSize: 18))
           ],
         ),
       ),
