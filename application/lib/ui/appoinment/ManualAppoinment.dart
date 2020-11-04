@@ -1,3 +1,4 @@
+import 'package:Favorito/model/appoinment/ServiceData.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -19,6 +20,9 @@ class ManualAppoinment extends StatefulWidget {
 
 class _ManualAppoinment extends State<ManualAppoinment> {
   SizeManager sm;
+  List<ServiceList> serviceList = List();
+  List<String> serviceListText = List();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   MaterialLocalizations localizations;
 
@@ -36,6 +40,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
   @override
   void initState() {
     for (int i = 0; i < 7; i++) controller.add(TextEditingController());
+    getDataVerbode();
     getPageData();
     setState(() {
       initializeDefaultValues();
@@ -227,7 +232,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                       autoValidate: true,
                                       mode: Mode.MENU,
                                       selectedItem: controller[4].text,
-                                      items: [],
+                                      items: serviceListText,
                                       label: "Service",
                                       hint: "Please Select Service",
                                       showSearchBox: false,
@@ -295,6 +300,16 @@ class _ManualAppoinment extends State<ManualAppoinment> {
     WebService.funAppoinmentDetail().then((value) {
       if (value.status == "success") {
         // controller[0].text = value.data[]
+      }
+    });
+  }
+
+  void getDataVerbode() async {
+    await WebService.funAppoinmentVerbose().then((value) {
+      if (value.status == "success") {
+        serviceList = value.data.serviceList;
+        for (var va in serviceList) serviceListText.add(va.serviceName);
+        setState(() {});
       }
     });
   }

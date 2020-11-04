@@ -1,11 +1,11 @@
-class ServiceData {
+class ServiceList {
   int id;
   String serviceName;
   int isActive;
 
-  ServiceData({this.id, this.serviceName, this.isActive});
+  ServiceList({this.id, this.serviceName, this.isActive});
 
-  ServiceData.fromJson(Map<String, dynamic> json) {
+  ServiceList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     serviceName = json['service_name'];
     isActive = json['is_active'];

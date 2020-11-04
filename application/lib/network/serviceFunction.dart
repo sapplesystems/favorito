@@ -68,4 +68,5 @@ class serviceFunction {
   static String funNotificationsDetail = funNotification + 'detail';
   static String funAppoinmentCreate = funAppointment + 'create';
   static String funAppoinmentDetail = funAppointment + 'detail';
+  static String funAppoinmentVerbose = funAppointment + 'dd-verbose';
 }

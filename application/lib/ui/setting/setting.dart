@@ -9,7 +9,6 @@ import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
 import 'package:Favorito/ui/highlights/highlights.dart';
 import 'package:Favorito/ui/jobs/JobList.dart';
-import 'package:Favorito/ui/notification/Notifications.dart';
 import 'package:Favorito/ui/offer/Offers.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
@@ -37,7 +36,8 @@ class _settingState extends State<setting> {
     "catalogs",
     "Create Highlights",
     "Page View",
-    "Appoinment"
+    "Appoinment",
+    "Ch"
   ];
   List<String> _icon = [
     "shop",

@@ -965,7 +965,19 @@ class WebService {
 
   static Future<appoinmentSeviceModel> funAppoinmentDetail() async {
     String token = await Prefs.token;
-    String url = serviceFunction.funAppoinmentCreate;
+    String url = serviceFunction.funAppoinmentDetail;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return appoinmentSeviceModel
+          .fromJson(convert.json.decode(response.toString()));
+    }
+  }
+  static Future<appoinmentSeviceModel> funAppoinmentVerbose() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funAppoinmentVerbose;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(url, options: opt);
     if (response.statusCode == HttpStatus.ok) {
