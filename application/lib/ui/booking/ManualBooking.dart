@@ -1,23 +1,20 @@
+import 'package:Favorito/model/booking/SlotData.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/Regexer.dart';
-import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
-import '../../component/DatePicker.dart';
-import '../../component/TimePicker.dart';
 import '../../component/roundedButton.dart';
 import '../../component/txtfieldboundry.dart';
-
-import 'package:Favorito/component/DatePicker.dart';
-import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import '../../config/SizeManager.dart';
 
 class ManualBooking extends StatefulWidget {
+  SlotData data;
+  ManualBooking({this.data});
   @override
   _ManualBooking createState() => _ManualBooking();
 }
@@ -25,7 +22,6 @@ class ManualBooking extends StatefulWidget {
 class _ManualBooking extends State<ManualBooking> {
   SizeManager sm;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _autoValidateForm = false;
 
   String _selectedDateText = '';
   String _selectedTimeText = '';
@@ -34,13 +30,13 @@ class _ManualBooking extends State<ManualBooking> {
   final _myContactEditController = TextEditingController();
   final _myNoOfPersonEditController = TextEditingController();
   final _myNotesEditController = TextEditingController();
+  MaterialLocalizations localizations;
 
   TimeOfDay _intitialTime;
 
   DateTime _initialDate;
 
   initializeDefaultValues() {
-    _autoValidateForm = false;
     _myNameEditController.text = '';
     _myContactEditController.text = '';
     _myNoOfPersonEditController.text = '';
@@ -53,14 +49,26 @@ class _ManualBooking extends State<ManualBooking> {
 
   @override
   void initState() {
-    setState(() {
-      initializeDefaultValues();
-    });
+    if (widget.data != null) {
+      var va = widget.data;
+      _myNameEditController.text = va.name;
+      _myContactEditController.text = va.contact;
+      _myNoOfPersonEditController.text = va.noOfPerson.toString();
+      _myNotesEditController.text = va.specialNotes;
+      _selectedDateText = va.createdDate;
+      setState(() {
+        _selectedTimeText = va.startTime;
+      });
+    } else
+      setState(() {
+        initializeDefaultValues();
+      });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    localizations = MaterialLocalizations.of(context);
     sm = SizeManager(context);
     return Scaffold(
         backgroundColor: myBackGround,
@@ -84,7 +92,7 @@ class _ManualBooking extends State<ManualBooking> {
                   child: Builder(
                       builder: (context) => Form(
                           key: _formKey,
-                          autovalidate: _autoValidateForm,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -102,28 +110,7 @@ class _ManualBooking extends State<ManualBooking> {
                                               children: <Widget>[
                                                 Expanded(
                                                     child: InkWell(
-                                                        onTap: () {
-                                                          showDatePicker(
-                                                                  context:
-                                                                      context,
-                                                                  initialDate:
-                                                                      DateTime
-                                                                          .now(),
-                                                                  firstDate:
-                                                                      DateTime(
-                                                                          2020),
-                                                                  lastDate:
-                                                                      DateTime(
-                                                                          2022))
-                                                              .then((_val) {
-                                                            setState(() {
-                                                              _selectedDateText =
-                                                                  dateFormat1
-                                                                      .format(
-                                                                          _val);
-                                                            });
-                                                          });
-                                                        },
+                                                        onTap: () => showDate(),
                                                         child: SizedBox(
                                                           width: sm
                                                               .scaledWidth(40),
@@ -151,16 +138,29 @@ class _ManualBooking extends State<ManualBooking> {
                                               ]),
                                         ),
                                         SizedBox(
-                                          width: sm.scaledWidth(40),
-                                          child: TimePicker(
-                                            selectedTimeText: _selectedTimeText,
-                                            selectedTime: _intitialTime,
-                                            onChanged: ((value) {
-                                              print("value $value");
-                                              _selectedTimeText = value;
-                                            }),
-                                          ),
-                                        ),
+                                            width: sm.scaledWidth(40),
+                                            child: InkWell(
+                                                onTap: () {
+                                                  showTime();
+                                                },
+                                                child: SizedBox(
+                                                  width: sm.scaledHeight(40),
+                                                  child: OutlineGradientButton(
+                                                    child: Center(
+                                                        child: Text(
+                                                            _selectedTimeText)),
+                                                    gradient: LinearGradient(
+                                                        colors: [
+                                                          Colors.red,
+                                                          Colors.red
+                                                        ]),
+                                                    strokeWidth: 1,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 12),
+                                                    radius: Radius.circular(8),
+                                                  ),
+                                                ))),
                                       ]),
                                 ),
                                 Padding(
@@ -221,6 +221,7 @@ class _ManualBooking extends State<ManualBooking> {
                   }
 
                   Map<String, dynamic> _map = {
+                    "booking_id": widget.data == null ? "" : widget.data.id,
                     "name": _myNameEditController.text,
                     "contact": _myContactEditController.text,
                     "no_of_person": _myNoOfPersonEditController.text,
@@ -229,20 +230,53 @@ class _ManualBooking extends State<ManualBooking> {
                     "created_time": _selectedTimeText
                   };
                   print("map:${_map.toString()}");
-                  // WebService.funCreateManualBooking(_map).then((value) {
-                  //   BotToast.showText(text: value.message);
-                  //   initializeDefaultValues();
-                  //   _autoValidateForm = true;
-                  // });
-                } else {
-                  // initializeDefaultValues();
-                  _autoValidateForm = true;
+                  widget.data == null
+                      ? WebService.funCreateManualBooking(_map).then((value) {
+                          BotToast.showText(text: value.message);
+                          initializeDefaultValues();
+                        })
+                      : WebService.funBookingEdit(_map).then((value) {
+                          BotToast.showText(text: value.message);
+                          initializeDefaultValues();
+                        });
                 }
               },
               clr: Colors.red,
-              title: "Save",
+              title: widget.data == null ? "Save" : "Update",
             ),
           ),
         ]));
+  }
+
+  showDate() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime(2022))
+        .then((_val) {
+      setState(() {
+        _selectedDateText = dateFormat1.format(_val);
+      });
+    });
+  }
+
+  showTime() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child,
+        );
+      },
+    ).then((value) {
+      setState(() {
+        _selectedTimeText =
+            localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
+      });
+      print("picked $_selectedTimeText");
+    });
   }
 }

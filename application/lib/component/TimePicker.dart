@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:outline_gradient_button/outline_gradient_button.dart';
-import 'package:intl/intl.dart';
 import '../config/SizeManager.dart';
 
 class TimePicker extends StatefulWidget {

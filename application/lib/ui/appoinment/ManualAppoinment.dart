@@ -1,13 +1,11 @@
 import 'package:Favorito/utils/Regexer.dart';
+import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import '../../component/DatePicker.dart';
-import '../../component/TimePicker.dart';
+import 'package:outline_gradient_button/outline_gradient_button.dart';
 import '../../component/roundedButton.dart';
 import '../../component/txtfieldboundry.dart';
-import 'package:Favorito/component/DatePicker.dart';
-import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/network/webservices.dart';
@@ -22,9 +20,8 @@ class ManualAppoinment extends StatefulWidget {
 class _ManualAppoinment extends State<ManualAppoinment> {
   SizeManager sm;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  MaterialLocalizations localizations;
 
-  String _selectedDateText = '';
-  String _selectedTimeText = '';
   List<TextEditingController> controller = List();
 
   TimeOfDay _intitialTime;
@@ -50,6 +47,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
 
   @override
   Widget build(BuildContext context) {
+    localizations = MaterialLocalizations.of(context);
     sm = SizeManager(context);
     return Scaffold(
         backgroundColor: myBackGround,
@@ -80,34 +78,125 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        SizedBox(
-                                          width: sm.scaledWidth(40),
-                                          child: DatePicker(
-                                            selectedDateText:
-                                                controller[0].text,
-                                            selectedDate: _initialDate,
-                                            onChanged: ((value) {
-                                              controller[0].text = value;
-                                            }),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          SizedBox(
+                                            width: sm.scaledWidth(40),
+                                            child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                      child: InkWell(
+                                                          onTap: () {
+                                                            showDatePicker(
+                                                                    context:
+                                                                        context,
+                                                                    initialDate:
+                                                                        DateTime
+                                                                            .now(),
+                                                                    firstDate:
+                                                                        DateTime(
+                                                                            2020),
+                                                                    lastDate:
+                                                                        DateTime(
+                                                                            2022))
+                                                                .then((_val) {
+                                                              setState(() {
+                                                                controller[0]
+                                                                        .text =
+                                                                    dateFormat1
+                                                                        .format(
+                                                                            _val);
+                                                              });
+                                                            });
+                                                          },
+                                                          child: SizedBox(
+                                                            width:
+                                                                sm.scaledWidth(
+                                                                    40),
+                                                            child:
+                                                                OutlineGradientButton(
+                                                              child: Center(
+                                                                  child: Text(
+                                                                      controller[
+                                                                              0]
+                                                                          .text)),
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                      colors: [
+                                                                    Colors.red,
+                                                                    Colors.red
+                                                                  ]),
+                                                              strokeWidth: 1,
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          12),
+                                                              radius: Radius
+                                                                  .circular(8),
+                                                            ),
+                                                          )))
+                                                ]),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: sm.scaledWidth(40),
-                                          child: TimePicker(
-                                            selectedTimeText:
-                                                controller[1].text,
-                                            selectedTime: _intitialTime,
-                                            onChanged: ((value) {
-                                              print("value $value");
-                                              controller[1].text = value;
-                                            }),
-                                          ),
-                                        ),
-                                      ]),
+                                          SizedBox(
+                                              width: sm.scaledWidth(40),
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    showTimePicker(
+                                                      context: context,
+                                                      initialTime:
+                                                          TimeOfDay.now(),
+                                                      builder:
+                                                          (BuildContext context,
+                                                              Widget child) {
+                                                        return MediaQuery(
+                                                          data: MediaQuery.of(
+                                                                  context)
+                                                              .copyWith(
+                                                                  alwaysUse24HourFormat:
+                                                                      true),
+                                                          child: child,
+                                                        );
+                                                      },
+                                                    ).then((value) {
+                                                      setState(() {
+                                                        controller[1].text =
+                                                            localizations
+                                                                .formatTimeOfDay(
+                                                                    value,
+                                                                    alwaysUse24HourFormat:
+                                                                        true);
+                                                      });
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    width: sm.scaledHeight(40),
+                                                    child:
+                                                        OutlineGradientButton(
+                                                      child: Center(
+                                                          child: Text(
+                                                              controller[1]
+                                                                  .text)),
+                                                      gradient: LinearGradient(
+                                                          colors: [
+                                                            Colors.red,
+                                                            Colors.red
+                                                          ]),
+                                                      strokeWidth: 1,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 12),
+                                                      radius:
+                                                          Radius.circular(8),
+                                                    ),
+                                                  ))),
+                                        ]),
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),

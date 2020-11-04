@@ -123,6 +123,7 @@ class _Appoinment extends State<Appoinment> {
                 size: 34,
               ),
               onPressed: () {
+                print("ManualAppoinment:ManualAppoinment");
                 Navigator.push(
                         context,
                         MaterialPageRoute(

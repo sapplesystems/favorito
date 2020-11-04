@@ -386,6 +386,12 @@
       "languageVersion": "2.0"
     },
     {
+      "name": "progress_dialog",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/progress_dialog-1.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
       "name": "provider",
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/provider-4.3.2+2",
       "packageUri": "lib/",
@@ -566,7 +572,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-11-02T15:06:40.916151Z",
+  "generated": "2020-11-03T22:44:13.769567Z",
   "generator": "pub",
   "generatorVersion": "2.11.0-213.1.beta"
 }

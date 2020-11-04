@@ -54,9 +54,11 @@ class serviceFunction {
   static String funCatalogAddPhoto = baseUrl2 + 'catalog/add-photo';
   static String funCatalogEdit = baseUrl2 + 'catalog/edit';
 
-  static String funCreateManualBooking = funBooking + 'create';
+  static String funManualBooking = funBooking + 'create';
   static String funBookingSetting = funBooking + 'setting';
   static String funBookingSaveSetting = funBooking + 'save-setting';
+  static String funBookingList = funBooking + 'list';
+  static String funBookingEdit = funBooking + 'edit';
 
   static String funNotificationsList = funNotification + 'list';
   static String funGetCreateNotificationDefaultData =
