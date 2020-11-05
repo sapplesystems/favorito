@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 var jwt = require('jsonwebtoken');
 var uniqid = require('uniqid');
 
-exports.register = function (req, res, next) {
+exports.register = function(req, res, next) {
     try {
         if (req.body.full_name == '' || req.body.full_name == 'undefined' || req.body.full_name == null) {
             return res.status(403).json({ status: 'error', message: 'Name is required' });
@@ -43,12 +43,12 @@ exports.register = function (req, res, next) {
         }
 
 
-        bcrypt.hash(password, 10, function (err, hash) {
+        bcrypt.hash(password, 10, function(err, hash) {
             if (err) {
                 return res.status(403).json({ status: 'error', message: 'Password encryption failed' });
             }
             var cslq = "select count(*) as c from users where (email='" + email + "' or phone='" + phone + "') and deleted_at is null";
-            db.query(cslq, function (chkerr, check) {
+            db.query(cslq, function(chkerr, check) {
                 if (chkerr) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                 } else {
@@ -65,7 +65,7 @@ exports.register = function (req, res, next) {
                         };
 
                         var sql = "INSERT INTO users SET ?";
-                        db.query(sql, postval, function (err, result) {
+                        db.query(sql, postval, function(err, result) {
                             if (err) {
                                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                             }

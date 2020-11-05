@@ -74,6 +74,9 @@ app.use('/api/page-views', PageViews);
 app.use('/api/tag', BusinessTag);
 app.use('/api/attribute', BusinessAttribute);
 app.use('/api/business-checklist', BusinessChecklist);
+app.use('/api/amit', (req, res) => {
+    res.send("SADfasdfadsfsdfdsfsdf");
+});
 
 /**
  * USING USER ROUTES
