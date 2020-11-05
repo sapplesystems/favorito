@@ -1,5 +1,5 @@
 var db = require('../config/db');
-var menu_type_id = 1;
+var menu_type_id = 1;// BY Default for business is 1 and for freelancer is 2
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 
 /**
@@ -67,7 +67,7 @@ exports.listAllMenu = async function (req, res, next) {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id, category_name FROM business_menu_category \n\
                     WHERE business_id='"+ business_id + "' AND menu_type_id='" + menu_type_id + "' \n\
-                    AND parent_id='0' AND is_activated='1' AND deleted_at IS NULL";
+                    AND parent_id='0' AND is_activated='1' AND deleted_at IS NULL";            
         db.query(sql, async function (err, result) {
             var data = [];
             var result_length = result.length;
@@ -99,12 +99,14 @@ exports.getCategoryMenusItems = async function (business_id, category_id) {
                         (SELECT GROUP_CONCAT(id) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photo_id, \n\
                         (SELECT GROUP_CONCAT(CONCAT('"+ img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos \n\
                         FROM business_menu_item \n\
-                        WHERE business_id='" + business_id + "' AND menu_category_id='" + category_id + "'";
+                        WHERE business_id='" + business_id + "' AND menu_category_id='" + category_id + "'";           
             db.query(sql, async function (e, items) {
                 var items_length = items.length;
                 for (var i = 0; i < items_length; i++) {
-                    items[i].photo_id = (items[i].photo_id).split(',');
-                    items[i].photos = (items[i].photos).split(',');
+                    if(items[i].photo_id!=null && items[i].photos!=null){
+                        items[i].photo_id = (items[i].photo_id).split(',');
+                        items[i].photos = (items[i].photos).split(',');
+                    }
                 }
                 return resolve(items);
             });

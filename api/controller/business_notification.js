@@ -119,8 +119,13 @@ exports.detail_notification = function (req, res, next) {
         db.query(sql, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            } 
+            if(result.length>0){
+                return res.status(200).json({ status: 'success', message: 'success', data: result });
+            }else{
+                return res.status(200).json({ status: 'success', message: 'Data Not Found', data: [] });
             }
-            return res.status(200).json({ status: 'success', message: 'success', data: result });
+           
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

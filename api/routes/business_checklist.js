@@ -13,6 +13,6 @@ router.post('/list', CheckAuth, BusinessChecklistController.all_business_reviewl
 /**
  * FETCH  REVIEW 
  */
-//router.post('/review', CheckAuth, BusinessChecklistController.business_review);
+router.post('/check-in-list', CheckAuth, BusinessChecklistController.business_check_in_list);
 
 module.exports = router;
