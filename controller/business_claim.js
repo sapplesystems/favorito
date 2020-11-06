@@ -82,7 +82,7 @@ exports.getClaim = async function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
             if (result.is_phone_verified == null || result.is_email_verified == null) {
-                // return res.status(500).json({ status: 'error', message: 'Either email or phone is not found' });
+                return res.status(500).json({ status: 'error', message: 'Either email or phone is not found' });
             }
             return res.status(200).send({ status: 'success', message: 'respone successfull', data: result[0] })
         })
