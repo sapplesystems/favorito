@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 var jwt = require('jsonwebtoken');
 var uniqid = require('uniqid');
 
-exports.register = function (req, res, next) {
+exports.register = function(req, res, next) {
     try {
         if (req.body.full_name == '' || req.body.full_name == 'undefined' || req.body.full_name == null) {
             return res.status(403).json({ status: 'error', message: 'Name is required' });
@@ -43,12 +43,12 @@ exports.register = function (req, res, next) {
         }
 
 
-        bcrypt.hash(password, 10, function (err, hash) {
+        bcrypt.hash(password, 10, function(err, hash) {
             if (err) {
                 return res.status(403).json({ status: 'error', message: 'Password encryption failed' });
             }
             var cslq = "select count(*) as c from users where (email='" + email + "' or phone='" + phone + "') and deleted_at is null";
-            db.query(cslq, function (chkerr, check) {
+            db.query(cslq, function(chkerr, check) {
                 if (chkerr) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                 } else {
@@ -65,7 +65,7 @@ exports.register = function (req, res, next) {
                         };
 
                         var sql = "INSERT INTO users SET ?";
-                        db.query(sql, postval, function (err, result) {
+                        db.query(sql, postval, function(err, result) {
                             if (err) {
                                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                             }
@@ -76,7 +76,7 @@ exports.register = function (req, res, next) {
                                 expiresIn: "2 days"
                             });
 
-                            var messageId = main(res, result.insertId, result).catch(console.error);
+                            var messageId = main(res, result.insertId, result, email).catch(console.error);
                             if (messageId) {
                                 return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, phone: phone, token: token });
                             } else {
@@ -95,29 +95,45 @@ exports.register = function (req, res, next) {
 };
 
 // async..await is not allowed in global scope, must use a wrapper
-async function main() {
+async function main(p1, p2, p3, email) {
+
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
     let testAccount = await nodemailer.createTestAccount();
 
     // create reusable transporter object using the default SMTP transport
+    // let transporter = nodemailer.createTransport({
+    //     host: "smtp.ethereal.email",
+    //     port: 587,
+    //     secure: false, // true for 465, false for other ports
+    //     auth: {
+    //         user: testAccount.user, // generated ethereal user
+    //         pass: testAccount.pass, // generated ethereal password
+    //     },
     let transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for 465, false for other ports
+        service: 'gmail',
         auth: {
-            user: testAccount.user, // generated ethereal user
-            pass: testAccount.pass, // generated ethereal password
-        },
+            user: 'amittullu11@gmail.com',
+            pass: '9450533280'
+        }
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: "bar@example.com, baz@example.com", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>", // html body
+        from: 'amittullu11@gmail.com',
+        to: 'amittullu11@gmail.com',
+        subject: 'Thankyou for this registration',
+        text: `
+        Hi ,
+        Greetings of the day.
+
+        We welcome you on our portal.
+        Thank you for chosing this task app.
+        Please feel free to contact in case of any query.
+        
+        Thanks and regards
+        Sapple favorito
+        `
     });
 
     console.log("Message sent: %s", info.messageId);
