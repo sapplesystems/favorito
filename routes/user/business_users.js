@@ -20,6 +20,7 @@ var storage_business_profile = multer.diskStorage({
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
+
 var upload_business_profile = multer({ storage: storage_business_profile });
 /*to upload the media use multer: end here*/
 
@@ -28,6 +29,5 @@ router.post('/register', UserRegisterController.register);
 router.post('/login', UserLoginController.login);
 
 // claim data api business phn, email, status
-
 router.post('/claim-data', CheckAuth, BusinessClaim.getClaim);
 module.exports = router;

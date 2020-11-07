@@ -76,7 +76,7 @@ exports.register = function(req, res, next) {
                                 expiresIn: "2 days"
                             });
 
-                            var messageId = main(res, result.insertId, result, email).catch(console.error);
+                            var messageId = mail(res, result.insertId, result, email).catch(console.error);
                             if (messageId) {
                                 return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, phone: phone, token: token });
                             } else {
@@ -95,7 +95,7 @@ exports.register = function(req, res, next) {
 };
 
 // async..await is not allowed in global scope, must use a wrapper
-async function main(p1, p2, p3, email) {
+async function mail(p1, insertId, p3, email) {
 
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
@@ -110,18 +110,19 @@ async function main(p1, p2, p3, email) {
     //         user: testAccount.user, // generated ethereal user
     //         pass: testAccount.pass, // generated ethereal password
     //     },
+
     let transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: process.env.EMAIL_SERVICE,
         auth: {
-            user: 'amittullu11@gmail.com',
-            pass: '9450533280'
+            user: process.env.EMAIL_AUTH_USER,
+            pass: process.env.EMAIL_AUTH_PASSWORD
         }
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: 'amittullu11@gmail.com',
-        to: 'amittullu11@gmail.com',
+        from: process.env.EMAIL_FROM,
+        to: email,
         subject: 'Thankyou for this registration',
         text: `
         Hi ,
