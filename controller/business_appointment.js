@@ -1,3 +1,4 @@
+const { log } = require('debug');
 var db = require('../config/db');
 
 var today = new Date();
@@ -20,6 +21,16 @@ exports.dd_verbose = async function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.appointment_service = async function(req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+        var service_list = await exports.getAllServices(business_id);
+        return res.status(200).json({ status: 'success', message: 'success', data: service_list });
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
 
 /**
  * SAVE PERSON
@@ -299,14 +310,20 @@ exports.save_setting = function(req, res, next) {
         var business_id = req.userdata.business_id;
         var update_column = " updated_at=NOW() ";
 
-        if (req.body.start_time != '' && req.body.start_time != 'undefined' && req.body.start_time != null) {
+        if ((req.body.start_time != '') && (req.body.start_time != 'undefined') && (req.body.start_time != 'null')) {
             update_column += ",start_time='" + req.body.start_time + "'";
+        } else {
+            update_column += ",start_time='" + 00 + "'";
         }
-        if (req.body.end_time != '' && req.body.end_time != 'undefined' && req.body.end_time != null) {
+        if (req.body.end_time != '' && req.body.end_time != 'undefined' && req.body.end_time != 'null') {
             update_column += ",end_time='" + req.body.end_time + "'";
+        } else {
+            update_column += ",end_time='" + 00 + "'";
         }
-        if (req.body.advance_booking_start_days != '' && req.body.advance_booking_start_days != 'undefined' && req.body.advance_booking_start_days != null) {
+        if (req.body.advance_booking_start_days != '' && req.body.advance_booking_start_days != 'undefined' && req.body.advance_booking_start_days != 'null') {
             update_column += ",advance_booking_start_days='" + req.body.advance_booking_start_days + "'";
+        } else {
+            update_column += ",advance_booking_start_days='" + 00 + "'";
         }
         if (req.body.advance_booking_end_days != '' && req.body.advance_booking_end_days != 'undefined' && req.body.advance_booking_end_days != null) {
             update_column += ",advance_booking_end_days='" + req.body.advance_booking_end_days + "'";

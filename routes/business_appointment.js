@@ -10,6 +10,11 @@ var multer = require('multer');
 router.post('/dd-verbose', CheckAuth, BusinessAppointmentController.dd_verbose);
 
 /**
+ * appointment  service
+ */
+router.post('/appointment-service', CheckAuth, BusinessAppointmentController.appointment_service);
+
+/**
  * SAVE PERSON
  */
 router.post('/save-person', CheckAuth, BusinessAppointmentController.savePerson);
