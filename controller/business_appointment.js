@@ -363,6 +363,12 @@ exports.save_setting = function(req, res, next) {
 exports.get_setting = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
+        //change here by amit
+        // var business_slot = await exports.getBusinessSlot('KIR4WQ4N7KF697HRQ')
+        // var business_slot = await exports.getBusinessSlot(business_id)
+        // console.log("data" + business_slot)
+        // return res.send(business_slot);
+        // change end by done
         var person_list = await exports.getAllPersons(business_id);
         var service_list = await exports.getAllServices(business_id);
         var restriction_list = await exports.getAllRestriction(business_id);
@@ -387,6 +393,42 @@ exports.get_setting = async function(req, res, next) {
     }
 };
 
+/**
+ * API FOR BUSINESS HOUR SLOTS
+ */
+
+exports.getBusinessSlot = async function(business_id) {
+    console.log('id is ' + business_id);
+    var sql = "SELECT working_hours FROM business_master WHERE business_id='" + business_id + "'"
+    var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var today_day = days[new Date().getDay()];
+    try {
+        var working_hours_type = new Promise(function(resolve, reject) {
+            db.query(sql, function(err, result) {
+                resolve(result);
+            })
+        })
+        if (((await working_hours_type)[0].working_hours) == 'Select Hours') {
+            var sql_select_slot = "SELECT start_hours, end_hours FROM business_hours WHERE business_id = '" + business_id + "' AND day = '" + today_day + "'"
+            return new Promise(function(resolve, reject) {
+                db.query(sql_select_slot, function(err, result) {
+                    if (err) {
+                        reject(new Error('Error in query'));
+                    } else {
+                        resolve(result);
+                    }
+                })
+            })
+
+        }
+
+        // if (((await working_hours_type)[0].working_hours) == 'Always open') {
+
+        // }
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
 
 /**
  * CREATE A NEW MANUAL APPOINTMENT

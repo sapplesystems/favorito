@@ -34,7 +34,7 @@ var BusinessChecklist = require('./routes/business_checklist');
 /**
  * USER ROUTES DETAIL
  */
-var BusinessUser = require('./routes/user/business_users');
+var BusinessUser = require('./routes/user/users');
 
 var app = express();
 

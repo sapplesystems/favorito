@@ -10,13 +10,13 @@ const mkdirp = require('mkdirp');
 /*to upload the media use multer: start here*/
 var multer = require('multer');
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    mkdirp.sync('./public/uploads/');
-    cb(null, './public/uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    destination: function(req, file, cb) {
+        mkdirp.sync('./public/uploads/');
+        cb(null, './public/uploads/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
 });
 var upload = multer({ storage: storage });
 /*to upload the media use multer: end here*/
@@ -68,6 +68,12 @@ router.post('/edit-category', multer().array(), CheckAuth, MenuController.editCa
  * GET BUSINESS MENU SETTING
  */
 router.post('/setting', CheckAuth, MenuController.getSetting);
+
+
+/**
+ * GET BUSINESS MENU ITEM DETAIL BY menu_item_id
+ */
+router.post('/menu-item-detail', CheckAuth, MenuController.getMenuItems);
 
 
 /**

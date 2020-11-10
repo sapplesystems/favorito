@@ -7,7 +7,7 @@ var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 /**
  * USER LOGIN START HERE
  */
-exports.login = function (req, res, next) {
+exports.login = function(req, res, next) {
     try {
         if (req.body.username == '' || req.body.username == null) {
             return res.status(403).json({ status: 'error', message: 'User email or phone required.' });
@@ -17,14 +17,14 @@ exports.login = function (req, res, next) {
         var username = req.body.username;
 
         var sql = "select * from users where (email='" + username + "' or phone='" + username + "') and deleted_at is null";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             } else {
                 if (result.length === 0) {
                     return res.status(403).json({ status: 'error', message: 'Incorrect username or password' });
                 }
-                bcrypt.compare(req.body.password, result[0].password, function (err, enc_result) {
+                bcrypt.compare(req.body.password, result[0].password, function(err, enc_result) {
                     if (err) {
                         return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
                     }
