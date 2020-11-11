@@ -205,10 +205,17 @@ exports.getAllServices = function(business_id) {
  */
 exports.getAllRestriction = function(business_id) {
     return new Promise(function(resolve, reject) {
+        // var sql = "SELECT id, \n\
+        //         person_id, (SELECT person_name FROM business_appointment_person WHERE id=person_id) AS person_name, \n\
+        //         service_id, (SELECT service_name FROM business_appointment_service WHERE id=service_id) AS service_name, \n\
+        //         CONCAT(DATE_FORMAT(start_datetime, '%d'), '-', DATE_FORMAT(end_datetime, '%d %b')) AS date_time \n\
+        //         FROM business_appointment_restriction \n\
+        //         WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
+
         var sql = "SELECT id, \n\
                 person_id, (SELECT person_name FROM business_appointment_person WHERE id=person_id) AS person_name, \n\
                 service_id, (SELECT service_name FROM business_appointment_service WHERE id=service_id) AS service_name, \n\
-                CONCAT(DATE_FORMAT(start_datetime, '%d'), '-', DATE_FORMAT(end_datetime, '%d %b')) AS date_time \n\
+                CONCAT(DATE_FORMAT(start_datetime, '%Y-%m-%d %H:%i:%s'), ' - ', DATE_FORMAT(end_datetime, '%Y-%m-%d %H:%i:%s')) AS date_time \n\
                 FROM business_appointment_restriction \n\
                 WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
         db.query(sql, function(err, restriction_list) {

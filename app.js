@@ -36,7 +36,7 @@ var BusinessChecklist = require('./routes/business_checklist');
  */
 var BusinessUser = require('./routes/user/users');
 
-var userProfile = require('./routes/user/users');
+var userProfileRoute = require('./routes/user/user_profile_route');
 
 var app = express();
 
@@ -85,7 +85,7 @@ app.use('/api/user', BusinessUser);
 /**
  * USER ROUTES FOR PROFILE 
  */
-app.use('/api/user-profile', userProfile)
+app.use('/api/user-profile', userProfileRoute)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -84,7 +84,7 @@ exports.register = function(req, res, next) {
                             }
                         });
                     } else {
-                        return res.status(403).json({ status: 'error', message: 'Username already exist' });
+                        return res.status(403).json({ status: 'error', message: 'Username already exist.' });
                     }
                 }
             });
