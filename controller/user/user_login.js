@@ -32,6 +32,7 @@ exports.login = function(req, res, next) {
                         var token = jwt.sign({
                             email: result[0].email,
                             phone: result[0].phone,
+                            id: result[0].id
                         }, 'secret', {
                             expiresIn: "2 days"
                         });

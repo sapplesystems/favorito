@@ -1,15 +1,15 @@
 var db = require('../../config/db');
-
+var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 exports.businessCarouselList = async function(req, res, next) {
-    await exports.getCaruoselData(1, res)
+    await exports.getCaruoselData(res)
 }
 
-exports.getCaruoselData = async function(business_id, res) {
+exports.getCaruoselData = async function(res) {
     try {
-        var sql = 'SELECT business_phone, business_email, is_phone_verified,is_email_verified FROM business_master WHERE business_id="' + business_id + '"'
+        var sql = 'SELECT business_id,CONCAT("' + img_path + '",photo) as photo FROM business_master ORDER BY created_at DESC LIMIT 15'
         await db.query(sql, function(err, result) {
             if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }
             return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
         })
