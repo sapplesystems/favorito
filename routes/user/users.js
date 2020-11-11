@@ -10,6 +10,7 @@ const mkdirp = require('mkdirp');
 //router.use(bodyParser.urlencoded({extended: true}));
 
 /*to upload the media use multer: start here*/
+
 var multer = require('multer');
 var storage_business_profile = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -27,6 +28,8 @@ var upload_business_profile = multer({ storage: storage_business_profile });
 router.post('/register', UserRegisterController.register);
 
 router.post('/login', UserLoginController.login);
+
+
 
 // claim data api business phn, email, status
 router.post('/claim-data', CheckAuth, BusinessClaim.getClaim);

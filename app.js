@@ -36,6 +36,8 @@ var BusinessChecklist = require('./routes/business_checklist');
  */
 var BusinessUser = require('./routes/user/users');
 
+var userProfile = require('./routes/user/users');
+
 var app = express();
 
 // view engine setup
@@ -79,6 +81,11 @@ app.use('/api/business-checklist', BusinessChecklist);
  * USING USER ROUTES
  */
 app.use('/api/user', BusinessUser);
+
+/**
+ * USER ROUTES FOR PROFILE 
+ */
+app.use('/api/user-profile', userProfile)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
