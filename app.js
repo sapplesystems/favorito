@@ -38,6 +38,10 @@ var BusinessUser = require('./routes/user/users');
 
 var userProfileRoute = require('./routes/user/user_profile_route');
 
+var userWaitlistRoute = require('./routes/user/user_waitlist_route');
+
+var userBookingRoute = require('./routes/user/user_booking_route');
+
 var app = express();
 
 // view engine setup
@@ -81,6 +85,8 @@ app.use('/api/business-checklist', BusinessChecklist);
  * USING USER ROUTES
  */
 app.use('/api/user', BusinessUser);
+app.use('/api/user-waitlist', userWaitlistRoute);
+app.use('/api/user-booking', userBookingRoute);
 
 /**
  * USER ROUTES FOR PROFILE 
