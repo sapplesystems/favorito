@@ -1,5 +1,6 @@
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
+var moment = require('moment');
 
 // get all booking by user_id
 exports.getBookings = async function(req, res, next) {
@@ -70,15 +71,86 @@ exports.setBookingNote = async function(req, res, next) {
     }
 
     var sql = "UPDATE business_booking SET special_notes = '" + req.body.special_notes + "'" + condition;
-    console.log(sql);
     try {
         db.query(sql, function(err, result) {
             if (err) {
-                return res.status(500).send(error);
+                return res.status(500).send({ status: 'Failed', message: 'Failed', error: err });
+            } else {
+                return res.status(200).send({ status: 'success', message: 'success', result: result })
             }
-            return res.status(200).send({ status: 'success', message: 'success' })
         })
     } catch (error) {
         return res.status(500).send(error);
     }
 }
+
+
+// delete api for the user by user_id , booking_id and business_id
+exports.deleteBooking = async function(req, res, next) {
+    if ((req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') &&
+        (req.body.booking_id != null && req.body.booking_id != undefined && req.body.booking_id != '') &&
+        (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '')
+    ) {
+        var condition = " WHERE user_id = '" + req.body.user_id + "' AND id = '" + req.body.booking_id + "' AND business_id = '" + req.body.business_id + "' AND deleted_at IS NULL"
+    } else {
+        return res.status(403).send({ status: 'failed', message: 'wrong input' })
+    }
+    // setting the deleted_at 1 as it denote that it is deleted
+    var sql = "UPDATE business_booking SET deleted_at = '" + moment(new Date()).format('YYYY:MM:DD h:mm:ss') + "'" + condition;
+    try {
+        db.query(sql, function(err, result) {
+            if (err) {
+                return res.status(400).send({ status: "failed", message: "Could not delete the request", error: err })
+            } else {
+                console.log('result' + result);
+                return res.status(200).send({ status: 'success', message: 'success' })
+            }
+        })
+    } catch (error) {
+        return res.send(error)
+    }
+}
+
+// setting the booking booked by the user
+exports.setBookings = async function(req, res, next) {
+    if ((req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') &&
+        (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '') &&
+        (req.body.name != null && req.body.name != undefined && req.body.name != '') &&
+        (req.body.contact != null && req.body.contact != undefined && req.body.contact != '') &&
+        (req.body.service_id != null && req.body.service_id != undefined && req.body.service_id != '') &&
+        (req.body.person_id != null && req.body.person_id != undefined && req.body.person_id != '') &&
+        (req.body.datetime != null && req.body.datetime != undefined && req.body.datetime != '')
+    ) {
+        var sql = "INSERT INTO business_appointment (business_id, user_id, name, contact, service_id, person_id, created_datetime) values('" + req.body.business_id + "','" + req.body.user_id + "','" + req.body.name + "','" + req.body.contact + "','" + req.body.service_id + "','" + req.body.person_id + "','" + req.body.datetime + "')";
+    } else {
+        return res.status(403).send({ status: 'failed', message: 'wrong input' })
+    }
+    try {
+        db.query(sql, function(err, result) {
+            if (err) {
+                res.status(500).send({ status: "failed", message: "Database error" })
+            }
+            return res.status(200).send({ status: 'success', message: 'success' })
+        })
+    } catch (error) {
+        res.status(500).send({ status: "failed", message: "Something went wrong" })
+    }
+}
+
+// exports.setBookings = async function(req, res, next) {
+//     if ((req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '')) {
+//         var sql = "SELECT ?? FROM ??";
+//     } else {
+//         return res.status(403).send({ status: 'failed', message: 'wrong input' })
+//     }
+//     try {
+//         db.query(sql, ["full_name", "users"], function(err, result, fields) {
+//             if (err) {
+//                 return res.status(500).send({ status: "failed", message: "Database error", error: err })
+//             }
+//             return res.status(200).send({ status: 'success', message: 'success', result: result })
+//         })
+//     } catch (error) {
+//         return res.status(500).send({ status: "failed", message: "Something went wrong" })
+//     }
+// }

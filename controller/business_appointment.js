@@ -308,6 +308,58 @@ exports.editRestriction = function(req, res, next) {
     }
 };
 
+// change active on or off of person
+exports.setPersonStatus = function(req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+        if (req.body.person_id == '' || req.body.person_id == 'undefined' || req.body.person_id == null) {
+            return res.status(403).json({ status: 'error', message: 'person id is not found.' });
+        }
+        var person_id = req.body.person_id;
+
+        var update_column = " updated_at=NOW() ";
+        if (req.body.is_active != '' && req.body.is_active != 'undefined' && req.body.is_active != null) {
+            update_column += ", is_active='" + req.body.is_active + "'";
+        }
+
+        var sql = "UPDATE business_appointment_person SET " + update_column + " WHERE id='" + person_id + "'";
+        db.query(sql, function(err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
+            }
+            return res.status(200).json({ status: 'success', message: 'Restriction saved successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+// change active on or off of service
+exports.setServiceStatus = function(req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+        if (req.body.service_id == '' || req.body.service_id == 'undefined' || req.body.service_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Service id not found.' });
+        }
+        var service_id = req.body.service_id;
+
+        var update_column = " updated_at=NOW() ";
+        if (req.body.is_active != '' && req.body.is_active != 'undefined' && req.body.is_active != null) {
+            update_column += ", is_active='" + req.body.is_active + "'";
+        }
+
+        var sql = "UPDATE business_appointment_service SET " + update_column + " WHERE id='" + service_id + "'";
+        db.query(sql, function(err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
+            }
+            return res.status(200).json({ status: 'success', message: 'Restriction saved successfully.' });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
 
 /**
  * SAVE SETTING

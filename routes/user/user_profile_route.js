@@ -6,6 +6,7 @@ var UserProfileBusinessDetailController = require('../../controller/user/user_pr
 var UserProfilBusinessOverview = require('../../controller/user/user_profile_business_detail_controller');
 
 router.post('/business-carousel', CheckAuth, UserProfileController.businessCarouselList);
+router.post('/user-review', CheckAuth, UserProfileController.getUserReview);
 router.post('/business-detail', CheckAuth, UserProfileBusinessDetailController.businessDetail);
 router.post('/business-overview', CheckAuth, UserProfilBusinessOverview.businessDetail);
 router.post('/business-catalog-list', CheckAuth, UserProfileBusinessDetailController.getListCatalog);

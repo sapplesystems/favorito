@@ -64,6 +64,16 @@ router.post('/get-restriction-detail', CheckAuth, BusinessAppointmentController.
  */
 router.post('/edit-restriction', CheckAuth, BusinessAppointmentController.editRestriction);
 
+/**
+ * set person status active or in active
+ */
+router.post('/set-person-status', CheckAuth, BusinessAppointmentController.setPersonStatus);
+
+/**
+ * set service status active or in active
+ */
+router.post('/set-service-status', CheckAuth, BusinessAppointmentController.setServiceStatus);
+
 
 /**
  * SAVE SETTING
