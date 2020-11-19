@@ -137,20 +137,53 @@ exports.setBookings = async function(req, res, next) {
     }
 }
 
-// exports.setBookings = async function(req, res, next) {
-//     if ((req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '')) {
-//         var sql = "SELECT ?? FROM ??";
-//     } else {
-//         return res.status(403).send({ status: 'failed', message: 'wrong input' })
-//     }
-//     try {
-//         db.query(sql, ["full_name", "users"], function(err, result, fields) {
-//             if (err) {
-//                 return res.status(500).send({ status: "failed", message: "Database error", error: err })
-//             }
-//             return res.status(200).send({ status: 'success', message: 'success', result: result })
-//         })
-//     } catch (error) {
-//         return res.status(500).send({ status: "failed", message: "Something went wrong" })
-//     }
-// }
+// Join waitlist
+exports.setJoinWaitlist = function(req, res, next) {
+    if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
+        return res.status(403).json({ status: 'error', message: 'business_id is required' });
+    } else if (req.body.user_id == '' || req.body.user_id == 'undefined' || req.body.user_id == null) {
+        return res.status(403).json({ status: 'error', message: 'user_id is required' });
+    }
+}
+
+exports.setBookTable = function(req, res, next) {
+    try {
+
+        if (req.body.user_id == '' || req.body.user_id == 'undefined' || req.body.user_id == null) {
+            return res.status(403).json({ status: 'error', message: 'user_id not found.' });
+        } else if (req.body.no_of_person == '' || req.body.no_of_person == 'undefined' || req.body.no_of_person == null) {
+            return res.status(403).json({ status: 'error', message: 'Number of guest not found.' });
+        } else if (req.body.date_time == '' || req.body.date_time == 'undefined' || req.body.date_time == null) {
+            return res.status(403).json({ status: 'error', message: 'Date or time not found.' });
+        } else if (req.body.name == '' || req.body.name == 'undefined' || req.body.name == null) {
+            return res.status(403).json({ status: 'error', message: 'Name not found.' });
+        } else if (req.body.phone == '' || req.body.phone == 'undefined' || req.body.phone == null) {
+            return res.status(403).json({ status: 'error', message: 'Phone not found.' });
+        } else if (req.body.business_id == '' || req.body.business_id == 'undefined' || req.body.business_id == null) {
+            return res.status(403).json({ status: 'error', message: 'business_id not found.' });
+        }
+
+        dataToInsert = {
+            user_id: req.body.user_id,
+            no_of_person: req.body.no_of_person,
+            created_datetime: req.body.date_time,
+            name: req.body.name,
+            contact: req.body.contact,
+            business_id: req.body.business_id,
+        }
+
+        if (req.body.special_notes != '') {
+            dataToInsert.special_notes = req.body.special_notes
+        }
+        var sql = "INSERT INTO business_booking SET ?";
+        db.query(sql, dataToInsert, function(error, result) {
+            if (error) {
+                return res.status(500).send({ status: "failed", message: "Something went wrong", error: error })
+            } else {
+                return res.status(200).send({ status: "success", message: "Table is booked" })
+            }
+        })
+    } catch (error) {
+        res.status(500).send({ status: "failed", message: "Something went wrong", error: error })
+    }
+}

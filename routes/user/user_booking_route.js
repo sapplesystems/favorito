@@ -20,4 +20,7 @@ router.post('/set-booking', CheckAuth, UserBookingController.setBookings)
 // addig user note 
 router.post('/set-booking-usernote', CheckAuth, UserBookingController.setBookingNote);
 
+// set book table 
+router.post('/set-book-table', CheckAuth, UserBookingController.setBookTable);
+
 module.exports = router;

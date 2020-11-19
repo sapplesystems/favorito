@@ -179,9 +179,12 @@ exports.getAllRestrictionList = async function(req, res, next) {
  */
 exports.getAllPersons = function(business_id) {
     return new Promise(function(resolve, reject) {
+        // var sql = "SELECT id,person_name,person_mobile,person_email,service_id, \n\
+        // (select service_name from business_appointment_service where id=service_id) as service_name, \n\
+        // is_active FROM business_appointment_person WHERE business_id='" + business_id + "' AND is_active='1'";
         var sql = "SELECT id,person_name,person_mobile,person_email,service_id, \n\
         (select service_name from business_appointment_service where id=service_id) as service_name, \n\
-        is_active FROM business_appointment_person WHERE business_id='" + business_id + "' AND is_active='1'";
+        is_active FROM business_appointment_person WHERE business_id='" + business_id + "'";
         db.query(sql, function(err, person_list) {
             resolve(person_list);
         });
@@ -193,7 +196,8 @@ exports.getAllPersons = function(business_id) {
  */
 exports.getAllServices = function(business_id) {
     return new Promise(function(resolve, reject) {
-        var sql = "SELECT id,service_name,is_active FROM business_appointment_service WHERE business_id='" + business_id + "' AND is_active='1'";
+        // var sql = "SELECT id,service_name,is_active FROM business_appointment_service WHERE business_id='" + business_id + "' AND is_active='1'";
+        var sql = "SELECT id,service_name,is_active FROM business_appointment_service WHERE business_id='" + business_id + "'";
         db.query(sql, function(err, service_list) {
             resolve(service_list);
         });
@@ -327,7 +331,7 @@ exports.setPersonStatus = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }
-            return res.status(200).json({ status: 'success', message: 'Restriction saved successfully.' });
+            return res.status(200).json({ status: 'success', message: 'Person status changed' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -353,7 +357,7 @@ exports.setServiceStatus = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }
-            return res.status(200).json({ status: 'success', message: 'Restriction saved successfully.' });
+            return res.status(200).json({ status: 'success', message: 'Service status changed.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

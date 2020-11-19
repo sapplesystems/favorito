@@ -42,6 +42,10 @@ var userWaitlistRoute = require('./routes/user/user_waitlist_route');
 
 var userBookingRoute = require('./routes/user/user_booking_route');
 
+var userAppointmentRoute = require('./routes/user/user_appointment_route');
+
+var userOrderRoute = require('./routes/user/user_order_route');
+
 var app = express();
 
 // view engine setup
@@ -87,11 +91,18 @@ app.use('/api/business-checklist', BusinessChecklist);
 app.use('/api/user', BusinessUser);
 app.use('/api/user-waitlist', userWaitlistRoute);
 app.use('/api/user-booking', userBookingRoute);
+app.use('/api/user-appointment', userAppointmentRoute);
 
 /**
  * USER ROUTES FOR PROFILE 
  */
 app.use('/api/user-profile', userProfileRoute)
+
+/**
+ * USER ROUTES FOR ORDER 
+ */
+app.use('/api/user-order', userOrderRoute)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
