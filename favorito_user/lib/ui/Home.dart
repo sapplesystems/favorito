@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/search_after/fearch-after.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -158,6 +159,10 @@ class _HomeState extends State<_Home> {
                 security: false,
                 valid: true,
                 prefixIcon: 'search',
+                prefClick: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SearchAfter()));
+                },
               ),
             ),
             Container(

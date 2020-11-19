@@ -173,7 +173,6 @@ class _BookingSettingState extends State<BookingSetting> {
       "start_time": "00:00",
       "end_time": "00:00",
       "advance_booking_start_days": controller[0].text,
-      // "advance_booking_end_days": controller[1].text,
       "advance_booking_hours": controller[1].text,
       "slot_length": controller[2].text,
       "booking_per_slot": controller[3].text,

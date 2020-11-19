@@ -1,5 +1,6 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -184,6 +185,8 @@ class _SignupState extends State<_Signup> {
               child: InkWell(
                 onTap: () {
                   Navigator.of(context).pop();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Login()));
                 },
                 child: Text(
                   "Login",

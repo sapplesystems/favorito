@@ -20,8 +20,8 @@ class _bottomNavigationState extends State<bottomNavigation> {
     dashboard(),
     Bookings(),
     setting(),
-    // checkins(),
-    Appoinment(),
+    checkins(),
+    // Appoinment(),
     setting()
   ];
 

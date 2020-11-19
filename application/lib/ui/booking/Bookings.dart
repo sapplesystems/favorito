@@ -105,7 +105,7 @@ class _Bookings extends State<Bookings> {
                       vertical: sm.scaledHeight(4),
                       horizontal: sm.scaledWidth(8)),
                   child: GridView.builder(
-                    itemCount: blm.slots != null ? blm.slots.length : 0,
+                    itemCount: blm.slots.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         crossAxisSpacing: sm.scaledWidth(3),
@@ -196,7 +196,7 @@ class _Bookings extends State<Bookings> {
                       Container(
                         height: sm.scaledHeight(40),
                         child: ListView.builder(
-                            itemCount: blm.slots != null
+                            itemCount: blm.slots.length != 0
                                 ? blm.slots[selectedSlot].slotData.length
                                 : 0,
                             itemBuilder: (BuildContext context, int _index) {
@@ -212,7 +212,7 @@ class _Bookings extends State<Bookings> {
                                     borderOnForeground: true,
                                     child: InkWell(
                                       onTap: () {
-                                        // showPopup(context, _popupBody(va));
+                                        showPopup(context, _popupBody(va));
                                       },
                                       child: Column(
                                         children: [

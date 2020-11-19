@@ -1,3 +1,4 @@
+import 'package:Favorito/model/appoinment/PersonList.dart';
 import 'package:Favorito/model/appoinment/ServiceData.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:Favorito/utils/dateformate.dart';
@@ -14,6 +15,10 @@ import 'package:bot_toast/bot_toast.dart';
 import '../../config/SizeManager.dart';
 
 class ManualAppoinment extends StatefulWidget {
+  var data;
+  String start;
+  String end;
+  ManualAppoinment({this.data, this.start, this.end});
   @override
   _ManualAppoinment createState() => _ManualAppoinment();
 }
@@ -22,6 +27,9 @@ class _ManualAppoinment extends State<ManualAppoinment> {
   SizeManager sm;
   List<ServiceList> serviceList = List();
   List<String> serviceListText = List();
+
+  List<PersonList> personList;
+  List<String> personListText = List();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   MaterialLocalizations localizations;
@@ -34,19 +42,30 @@ class _ManualAppoinment extends State<ManualAppoinment> {
 
   initializeDefaultValues() {
     _intitialTime = TimeOfDay.now();
+    for (var v in controller) v.text = "";
     setState(() => _initialDate = DateTime.now());
+    controller[0].text = 'Select Date';
+    controller[1].text = 'Select Time';
   }
 
   @override
   void initState() {
     for (int i = 0; i < 7; i++) controller.add(TextEditingController());
     getDataVerbode();
-    getPageData();
-    setState(() {
+    // getPageData();
+    if (widget.data != null) {
+      controller[0].text = widget.data.createdDate;
+      controller[1].text = widget.start + "-" + widget.end;
+      controller[2].text = widget.data.name;
+      controller[3].text = widget.data.contact;
+      controller[4].text = widget.data.service_name;
+      controller[5].text = widget.data.person_name;
+      controller[6].text = widget.data.specialNotes;
+      print(
+          "controller[3,4]:${widget.data.service_name}${widget.data.person_name}");
+    } else
       initializeDefaultValues();
-    });
-    controller[0].text = 'Select Date';
-    controller[1].text = 'Select Time';
+
     super.initState();
   }
 
@@ -240,14 +259,20 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                           () => controller[4].text = value)),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    controller: controller[5],
-                                    title: "Person",
-                                    keyboardSet: TextInputType.number,
-                                    security: false,
-                                    valid: true,
-                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 12),
+                                  child: DropdownSearch<String>(
+                                      validator: (v) =>
+                                          v == '' ? "required field" : null,
+                                      autoValidate: true,
+                                      mode: Mode.MENU,
+                                      selectedItem: controller[5].text,
+                                      items: personListText,
+                                      label: "Person",
+                                      hint: "Please Select Person",
+                                      showSearchBox: false,
+                                      onChanged: (value) => setState(
+                                          () => controller[5].text = value)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
@@ -260,55 +285,68 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                   ),
                                 ),
                               ]))))),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: sm.scaledWidth(15), vertical: 16.0),
-            child: roundedButton(
-              clicker: () {
-                if (_formKey.currentState.validate()) {
-                  if (controller[0].text == 'Select Date') {
-                    BotToast.showText(text: "Please select a date");
-                    return;
+          Visibility(
+            visible: widget.data == null,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: sm.scaledWidth(15), vertical: 16.0),
+              child: roundedButton(
+                clicker: () {
+                  if (_formKey.currentState.validate()) {
+                    if (controller[0].text == 'Select Date') {
+                      BotToast.showText(text: "Please select a date");
+                      return;
+                    }
+                    if (controller[1].text == 'Select Time') {
+                      BotToast.showText(text: "Please select a time");
+                      return;
+                    }
+                    var selectedService;
+                    var selectedPerson;
+                    for (var v in serviceList) {
+                      if (v.serviceName == controller[4].text)
+                        selectedService = v.id;
+                    }
+                    for (var v in personList) {
+                      if (v.personName == controller[5].text)
+                        selectedPerson = v.id;
+                    }
+
+                    Map<String, dynamic> _map = {
+                      "created_date": controller[0].text,
+                      "created_time": controller[1].text,
+                      "name": controller[2].text,
+                      "contact": controller[3].text,
+                      "service_id": selectedService,
+                      "person_id": selectedPerson,
+                      "special_notes": controller[6].text
+                    };
+
+                    print("_map ${_map.toString()}");
+                    WebService.funAppoinmentCreate(_map).then((value) {
+                      if (value.status == "success") {
+                        BotToast.showText(text: value.message);
+                        initializeDefaultValues();
+                      }
+                    });
                   }
-                  if (controller[1].text == 'Select Time') {
-                    BotToast.showText(text: "Please select a time");
-                    return;
-                  }
-                  Map<String, dynamic> _map = {
-                    "created_date": controller[0].text,
-                    "created_time": controller[1].text,
-                    "name": controller[2].text,
-                    "contact": controller[3].text,
-                    "service_id": controller[4].text,
-                    "person_id": controller[5].text,
-                    "special_notes": controller[6].text
-                  };
-                  WebService.funAppoinmentCreate(_map).then((value) {
-                    BotToast.showText(text: value.message);
-                    initializeDefaultValues();
-                  });
-                }
-              },
-              clr: Colors.red,
-              title: "Save",
+                },
+                clr: Colors.red,
+                title: widget.data != null ? "Update" : "Save",
+              ),
             ),
           ),
         ]));
   }
 
-  void getPageData() {
-    WebService.funAppoinmentDetail().then((value) {
-      if (value.status == "success") {
-        // controller[0].text = value.data[]
-      }
-    });
-  }
-
   void getDataVerbode() async {
     await WebService.funAppoinmentVerbose().then((value) {
       if (value.status == "success") {
-        serviceList = value.data.serviceList;
+        var va = value.data;
+        serviceList = va.serviceList;
         for (var va in serviceList) serviceListText.add(va.serviceName);
+        personList = va.personList;
+        for (var va in personList) personListText.add(va.personName);
         setState(() {});
       }
     });

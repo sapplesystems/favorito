@@ -57,7 +57,7 @@ class _ManualBooking extends State<ManualBooking> {
       _myNotesEditController.text = va.specialNotes;
       _selectedDateText = va.createdDate;
       setState(() {
-        _selectedTimeText = va.startTime;
+        _selectedTimeText = va.createdTime??"00:00";
       });
     } else
       setState(() {

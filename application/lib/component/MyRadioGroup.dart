@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class MyRadioGroup extends StatefulWidget {
   Map dataList;
-  MyRadioGroup({this.dataList});
+  String selected;
+  MyRadioGroup({this.dataList, this.selected});
   @override
   _MyRadioGroupState createState() => _MyRadioGroupState();
 }
@@ -19,6 +20,9 @@ class _MyRadioGroupState extends State<MyRadioGroup> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
+                onFocusChange: (va) {
+                  print("va$va");
+                },
                 onTap: () {
                   for (int j = 0;
                       j < widget.dataList.values.toList().length;
@@ -27,6 +31,7 @@ class _MyRadioGroupState extends State<MyRadioGroup> {
                       setState(() {
                         widget.dataList[widget.dataList.keys.toList()[j]] =
                             true;
+                        widget.selected = widget.dataList.keys.toList()[j];
                       });
                     else
                       setState(() {

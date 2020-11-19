@@ -66,7 +66,27 @@ class serviceFunction {
   static String funCreateNotification = funNotification + 'add';
   static String funValidPincode = funNotification + 'verify-pincode';
   static String funNotificationsDetail = funNotification + 'detail';
+
+  //appoinment
   static String funAppoinmentCreate = funAppointment + 'create';
   static String funAppoinmentDetail = funAppointment + 'detail';
   static String funAppoinmentVerbose = funAppointment + 'dd-verbose';
+  static String funAppoinmentList = funAppointment + 'list';
+  static String funAppoinmentSaveSetting = funAppointment + 'save-setting';
+  static String funAppoinmentSetting = funAppointment + 'setting';
+  static String funAppoinmentSaveService = funAppointment + 'save-service';
+  static String funAppoinmentService = funAppointment + 'appointment-service';
+  static String funAppoinmentSavePerson = funAppointment + 'save-person';
+  static String funAppoinmentPerson = funAppointment + 'get-all-person';
+  static String funAppoinmentRestriction =
+      funAppointment + 'get-all-restriction';
+  static String funAppoinmentSaveRestriction =
+      funAppointment + 'save-restriction';
+  static String funAppoinmentEditRestriction =
+      funAppointment + 'edit-restriction';
+  static String funAppoinmentDeleteRestriction =
+      funAppointment + 'delete-restriction';
+  static String funAppoinmentPersonOnOff = funAppointment + 'set-person-status';
+  static String funAppoinmentServiceOnOff =
+      funAppointment + 'set-service-status';
 }

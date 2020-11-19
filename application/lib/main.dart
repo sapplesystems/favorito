@@ -29,6 +29,8 @@ class MyApp extends StatelessWidget {
           // signup_a()
           // Login()
           bottomNavigation()
+      // appoinmentSetting()
+
       // PageViews()
       // appoinmentSetting()
       );
