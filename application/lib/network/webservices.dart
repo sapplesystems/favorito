@@ -964,11 +964,10 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return appointmentSettingModel.fromJson(
-          convert.json.decode(response.toString()));
+      return appointmentSettingModel
+          .fromJson(convert.json.decode(response.toString()));
     }
   }
-
 
   static Future<RestrictionModel> funAppoinmentRestriction() async {
     String token = await Prefs.token;

@@ -30,6 +30,7 @@ dependencies:
   font_awesome_flutter:
   dropdown_search:
   intl:
+  dio:
   flutter:
     sdk: flutter
 

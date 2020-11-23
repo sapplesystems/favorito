@@ -111,18 +111,18 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             style: TextStyle(color: Colors.black),
           ),
           actions: [
-            IconButton(
-              icon: Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: Icon(Icons.refresh),
-              ),
-              onPressed: ()async {
+            // IconButton(
+            //   icon: Padding(
+            //     padding: const EdgeInsets.only(right: 20.0),
+            //     child: Icon(Icons.refresh),
+            //   ),
+            //   onPressed: ()async {
 
-               await getRestriction();
-               await getPerson();
-               getService(true);
-              },
-            )
+            //    await getRestriction();
+            //    await getPerson();
+            //    getService(true);
+            //   },
+            // )
           ],
         ),
         body: Builder(
@@ -187,7 +187,6 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                                     ),
                               ],
                             ),
-
                             Column(
                               children: [
                                 addNewLabel("Person", labelClicked),
@@ -203,12 +202,10 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                                     ),
                               ],
                             ),
-
                             Divider(color: myGrey, height: 2),
                             if (_restrictionList != null)
                               additionalFunctionRistrict(
                                   "Restrictions", _restrictionList),
-
                           ]),
                     )),
                 Padding(
@@ -242,10 +239,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     pr?.show();
     WebService.funAppoinmentSaveSetting(_map).then((value) {
       pr?.hide();
-      if (value.status == "success")
-        BotToast.showText(text: value.message);
-
-
+      if (value.status == "success") BotToast.showText(text: value.message);
     });
   }
 
@@ -307,10 +301,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     );
   }
 
-
   int j;
   additionalFunctionRistrict(String title, List<RestrictionOnlyModel> data) {
-
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -352,7 +344,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                             WebService.funAppoinmentDeleteRestriction(
                                 {"restriction_id": _va.id}).then((value) {
                               pr?.hide();
-                                  if (value.status == "success") {
+                              if (value.status == "success") {
                                 setState(() {
                                   _restrictionList.remove(_va);
                                 });
@@ -368,9 +360,10 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             ),
 
         Padding(
-          padding:  EdgeInsets.symmetric(horizontal: sm.scaledWidth(12),vertical: sm.scaledWidth(4)),
+          padding: EdgeInsets.symmetric(
+              horizontal: sm.scaledWidth(12), vertical: sm.scaledWidth(4)),
           child: Divider(color: myGrey, height: 2),
-        ),        //for person
+        ), //for person
         Row(
           children: [Text("Appointmentd", style: TextStyle(fontSize: 16))],
         ),
@@ -386,7 +379,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                         children: [
                           Text(_va.personName ?? ""),
                           Text(dateFormat4.format(DateTime.parse(
-                              ((_va.dateTime ?? "").split(" - "))[0])) +
+                                  ((_va.dateTime ?? "").split(" - "))[0])) +
                               " - " +
                               dateFormat4.format(DateTime.parse(
                                   ((_va.dateTime ?? "").split(" - "))[1])))
@@ -415,13 +408,12 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                             });
                           },
                           child:
-                          Text(" Delete", style: TextStyle(color: myRed)))
+                              Text(" Delete", style: TextStyle(color: myRed)))
                     ],
                   )
                 ],
               ),
             )
-
       ]),
     );
   }
@@ -839,7 +831,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     controller[2].text = "";
     controller[3].text = "0";
     setState(() {
-      controller[4].text = "0";});
+      controller[4].text = "0";
+    });
   }
 
   Widget myDropDown(
@@ -877,9 +870,9 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
   }
 
   void getService(bool _val) async {
-      if(_val)pr?.show();
+    if (_val) pr?.show();
     await WebService.funAppoinmentService().then((_value) {
-      if(_val)pr?.hide();
+      if (_val) pr?.hide();
       if (_value.status == "success") {
         servicesList = _value.data;
         servicesString.clear();
@@ -892,7 +885,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
   void getPerson() async {
     pr?.show();
     await WebService.funAppoinmentPerson().then((_value) {
-        pr?.hide();
+      pr?.hide();
       if (_value.status == "success") {
         _personList = _value.data;
         _personListTxt.clear();
@@ -923,15 +916,14 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
   postRestriction(_map, isNew) async {
     pr?.show();
-      await WebService.funAppoinmentSaveRestriction(_map, isNew).then((_value) {
-        pr?.hide();
-        if (_value.status == "success") {
-          BotToast.showText(text: _value.message);
-          getRestriction();
-          Navigator.pop(context);
-        }
-      });
-
+    await WebService.funAppoinmentSaveRestriction(_map, isNew).then((_value) {
+      pr?.hide();
+      if (_value.status == "success") {
+        BotToast.showText(text: _value.message);
+        getRestriction();
+        Navigator.pop(context);
+      }
+    });
   }
 
   void cleanAll() {
@@ -962,7 +954,6 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     }
 
     if (identifire == "s") {
-
       setState(() {
         servicesList[i].isActive = val ? 0 : 1;
       });
@@ -981,11 +972,11 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     }
   }
 
-  getSettingdata()async{
+  getSettingdata() async {
     pr?.show();
-   await WebService.funAppoinmentSetting().then((value) {
+    await WebService.funAppoinmentSetting().then((value) {
       pr?.hide();
-      if(value.status == 'success'){
+      if (value.status == 'success') {
         _settingData = value.data[0];
         controller[0].text = _settingData.advanceBookingEndDays.toString();
         controller[1].text = _settingData.advanceBookingHours.toString();
@@ -993,12 +984,13 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
         controller[3].text = _settingData.bookingPerSlot.toString();
         controller[4].text = _settingData.bookingPerDay.toString();
 
-    setState(() => controller[5].text = _settingData.announcement??"");
-    print("_settingData.announcement :${_settingData.announcement}");
+        setState(() => controller[5].text = _settingData.announcement ?? "");
+        print("_settingData.announcement :${_settingData.announcement}");
       }
     });
   }
 }
+
 class my_ServiceSwitch extends StatelessWidget {
   const my_ServiceSwitch({
     Key key,
@@ -1032,5 +1024,4 @@ class my_ServiceSwitch extends StatelessWidget {
       ],
     );
   }
-
 }
