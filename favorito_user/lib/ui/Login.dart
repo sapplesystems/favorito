@@ -6,7 +6,6 @@ import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Signup.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';

@@ -15,16 +15,18 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Favorito-User',
-      builder: BotToastInit(),
-      navigatorObservers: [BotToastNavigatorObserver()],
-      theme: ThemeData(
-        iconTheme: IconThemeData(
-          color: Colors.red, //change your color here
+        debugShowCheckedModeBanner: false,
+        title: 'Favorito-User',
+        builder: BotToastInit(),
+        navigatorObservers: [BotToastNavigatorObserver()],
+        theme: ThemeData(
+          iconTheme: IconThemeData(
+            color: Colors.red, //change your color here
+          ),
+          primarySwatch: Colors.red,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        primarySwatch: Colors.red,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Signup());
+        home: Signup(),
+        // home: BottomAppBar(),
+      );
 }

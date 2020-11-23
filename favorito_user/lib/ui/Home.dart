@@ -3,10 +3,8 @@ import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
-import 'package:favorito_user/ui/search_after/fearch-after.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

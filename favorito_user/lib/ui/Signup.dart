@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
@@ -40,9 +41,19 @@ class _Signup extends StatelessWidget {
   List<String> prefix = ['name', 'phone', 'mail', 'password', 'postal'];
   bool newValue = false;
   bool newValue1 = false;
+  GlobalKey key = GlobalKey();
+
+  void decideit() async {
+    String token = await Prefs.token;
+    if (token.length < 10 || token == null || token.isEmpty || token == "") {
+      Navigator.push(key.currentContext,
+          MaterialPageRoute(builder: (context) => BottomNavBar()));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    decideit();
     SizeManager sm = SizeManager(context);
     return Container(
       height: sm.scaledHeight(100),
