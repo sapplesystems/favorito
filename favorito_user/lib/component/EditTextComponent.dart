@@ -52,7 +52,9 @@ class _EditTextComponentState extends State<EditTextComponent> {
         controller: widget.ctrl,
         obscureText: widget.security,
         maxLength: widget.maxlen,
-        inputFormatters: [widget.formate],
+        inputFormatters: [
+          widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
+        ],
         decoration: InputDecoration(
           prefixIcon: widget.prefixIcon == 'mail'
               ? InkWell(

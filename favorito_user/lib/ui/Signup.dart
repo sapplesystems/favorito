@@ -4,6 +4,7 @@ import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -87,7 +88,7 @@ class _Signup extends StatelessWidget {
                                 ? 10
                                 : i == 4
                                     ? 6
-                                    : 20,
+                                    : 50,
                             keyboardSet: i == 2
                                 ? TextInputType.emailAddress
                                 : (i == 1 || i == 4)
@@ -119,17 +120,25 @@ class _Signup extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
               boxShape: NeumorphicBoxShape.roundRect(
                   BorderRadius.all(Radius.circular(24.0))),
-              onClick: () {
+              onClick: () async {
                 if (_formKey.currentState.validate()) {
-                  if (!newValue) {
+                  if (newValue) {
                     Map _map = {
                       "full_name": controller[0].text,
-                      "email": controller[1].text,
-                      "phone": controller[2].text,
-                      "postal_code": controller[3].text,
-                      "password": controller[4].text
+                      "phone": controller[1].text,
+                      "email": controller[2].text,
+                      "password": controller[3].text,
+                      "postal_code": controller[4].text
                     };
-                    APIManager.register(_map).then((value) {});
+                    print("map:${_map.toString()}");
+                    await APIManager.register(_map).then((value) {
+                      if (value.status == "success") {
+                        Prefs.setPOSTEL(int.parse(controller[4].text));
+                        Navigator.pop(context);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Login()));
+                      }
+                    });
                   } else {
                     BotToast.showText(text: "Please check T&C.");
                   }

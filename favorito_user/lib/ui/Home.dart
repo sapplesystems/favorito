@@ -1,9 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/search_after/fearch-after.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -33,15 +36,14 @@ class _Home extends StatefulWidget {
 
 class _HomeState extends State<_Home> {
   String _selectedAddress = "selected Address 1";
-  final List<String> imgList = [
-    'https://source.unsplash.com/random/800*400',
-    'https://source.unsplash.com/random/800*400',
-    'https://source.unsplash.com/random/800*400',
-    'https://source.unsplash.com/random/800*400',
-    'https://source.unsplash.com/random/800*400',
-    'https://source.unsplash.com/random/800*400'
-  ];
+  final List<String> imgList = [];
   var _mySearchEditTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getCarousel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,76 +51,75 @@ class _HomeState extends State<_Home> {
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(color: myBackGround),
-        height: sm.scaledHeight(100),
+        padding: EdgeInsets.only(top: 10),
         child: ListView(
           children: [
-            Container(
-              color: Colors.white,
-              height: sm.scaledHeight(15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: sm.scaledWidth(5)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        "https://source.unsplash.com/random/400*400",
-                        height: sm.scaledHeight(10),
-                        fit: BoxFit.cover,
-                        width: sm.scaledHeight(10),
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: sm.scaledWidth(4), right: sm.scaledWidth(2)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      "https://source.unsplash.com/random/400*400",
+                      height: sm.scaledHeight(10),
+                      fit: BoxFit.cover,
+                      width: sm.scaledHeight(10),
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: sm.scaledWidth(1)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Jessica Saint",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                          DropdownButton<String>(
-                            value: _selectedAddress,
-                            underline: Container(), // this is the magic
-                            items: <String>[
-                              'selected Address 1',
-                              'selected Address 2',
-                              'selected Address 3',
-                              'selected Address 4'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String value) {
-                              setState(() {
-                                _selectedAddress = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: sm.scaledWidth(5)),
-                    child: IconButton(
-                        icon: SvgPicture.asset(
-                          'assets/icon/image_scanner.svg',
-                          height: sm.scaledHeight(10),
-                          fit: BoxFit.fill,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Jessica Saint",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         ),
-                        onPressed: null),
-                  )
-                ],
-              ),
+                        DropdownButton<String>(
+                          value: _selectedAddress,
+                          underline: Container(), // this is the magic
+                          items: <String>[
+                            'selected Address 1',
+                            'selected Address 2',
+                            'selected Address 3',
+                            'selected Address 4'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String value) {
+                            setState(() {
+                              _selectedAddress = value;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      right: sm.scaledWidth(2), bottom: sm.scaledWidth(4)),
+                  child: IconButton(
+                      icon: SvgPicture.asset(
+                        'assets/icon/image_scanner.svg',
+                        height: sm.scaledHeight(3),
+                        fit: BoxFit.fill,
+                      ),
+                      onPressed: () {
+                        print("clicked()");
+                        getCarousel();
+                      }),
+                )
+              ],
             ),
             Container(
               height: sm.scaledHeight(30),
@@ -160,8 +161,11 @@ class _HomeState extends State<_Home> {
                 valid: true,
                 prefixIcon: 'search',
                 prefClick: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SearchAfter()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SearchResult(_mySearchEditTextController.text)));
                 },
               ),
             ),
@@ -323,5 +327,16 @@ class _HomeState extends State<_Home> {
         ),
       ),
     );
+  }
+
+  void getCarousel() async {
+    await APIManager.carousel().then((value) {
+      if (value.status == 'success') {
+        if (value.data.length > 0) imgList.clear();
+        for (var _va in value.data) imgList.add(_va.photo);
+        setState(() {});
+        print("imgList:${imgList.toString()}");
+      }
+    });
   }
 }
