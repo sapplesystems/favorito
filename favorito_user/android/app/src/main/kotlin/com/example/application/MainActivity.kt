@@ -1,4 +1,4 @@
-package com.example.favorito_user
+package com.example.application
 
 import io.flutter.embedding.android.FlutterActivity
 

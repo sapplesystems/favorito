@@ -46,8 +46,8 @@ class _Signup extends StatelessWidget {
   void decideit() async {
     String token = await Prefs.token;
     if (token.length < 10 || token == null || token.isEmpty || token == "") {
-      Navigator.push(key.currentContext,
-          MaterialPageRoute(builder: (context) => BottomNavBar()));
+      Navigator.push(
+          key.currentContext, MaterialPageRoute(builder: (context) => Login()));
     }
   }
 

@@ -215,25 +215,12 @@ class _SearchResultState extends State<_SearchResult> {
                                 fontWeight: FontWeight.w300,
                                 color: Colors.green)),
                       ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: sm.scaledWidth(2),
-                                top: sm.scaledHeight(1)),
-                            child: Text("Opens | 12:00",
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w300)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: sm.scaledWidth(2),
-                                top: sm.scaledHeight(1)),
-                            child: Text("Closes | 09:00",
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w300)),
-                          ),
-                        ],
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                        child: Text("Opens | 12:00  Closes | 09:00",
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w300)),
                       ),
                     ],
                   ),
