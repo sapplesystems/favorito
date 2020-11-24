@@ -154,25 +154,24 @@ class _SearchResultState extends State<_SearchResult> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
+            Padding(
+              padding: EdgeInsets.only(left: 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12),
+                    ),
+                    child: Image.network(
+                      "https://source.unsplash.com/random/600*400",
+                      height: sm.scaledHeight(18),
+                      fit: BoxFit.cover,
+                      width: sm.scaledWidth(28),
+                    ),
                   ),
-                  child: Image.network(
-                    "https://source.unsplash.com/random/600*400",
-                    height: sm.scaledHeight(21),
-                    fit: BoxFit.cover,
-                    width: sm.scaledWidth(36),
-                  ),
-                ),
-                SizedBox(
-                  width: sm.scaledWidth(44),
-                  child: Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -195,7 +194,11 @@ class _SearchResultState extends State<_SearchResult> {
                             left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
                         child: Row(
                           children: [
-                            for (var i = 0; i < 5; i++) Icon(Icons.star)
+                            for (var i = 0; i < 5; i++)
+                              Icon(
+                                Icons.star,
+                                size: sm.scaledHeight(1.5),
+                              )
                           ],
                         ),
                       ),
@@ -224,9 +227,9 @@ class _SearchResultState extends State<_SearchResult> {
                       ),
                     ],
                   ),
-                ),
-                IconButton(icon: Icon(Icons.call), onPressed: null)
-              ],
+                  IconButton(icon: Icon(Icons.call_outlined), onPressed: () {})
+                ],
+              ),
             ),
             Padding(
               padding: EdgeInsets.all(sm.scaledHeight(2)),

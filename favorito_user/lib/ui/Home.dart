@@ -33,7 +33,8 @@ class _Home extends StatefulWidget {
 }
 
 class _HomeState extends State<_Home> {
-  String _selectedAddress = "selected Address 1";
+  String _selectedAddress = "selected Address";
+  List<String> _addressList = [];
   final List<String> imgList = [];
   var _mySearchEditTextController = TextEditingController();
 
@@ -41,6 +42,7 @@ class _HomeState extends State<_Home> {
   void initState() {
     super.initState();
     getCarousel();
+    getAddress();
   }
 
   @override
@@ -81,12 +83,8 @@ class _HomeState extends State<_Home> {
                         DropdownButton<String>(
                           value: _selectedAddress,
                           underline: Container(), // this is the magic
-                          items: <String>[
-                            'selected Address 1',
-                            'selected Address 2',
-                            'selected Address 3',
-                            'selected Address 4'
-                          ].map<DropdownMenuItem<String>>((String value) {
+                          items: _addressList
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
@@ -328,6 +326,17 @@ class _HomeState extends State<_Home> {
   }
 
   void getCarousel() async {
+    await APIManager.carousel().then((value) {
+      if (value.status == 'success') {
+        if (value.data.length > 0) imgList.clear();
+        for (var _va in value.data) imgList.add(_va.photo);
+        setState(() {});
+        print("imgList:${imgList.toString()}");
+      }
+    });
+  }
+
+  void getAddress() async {
     await APIManager.carousel().then((value) {
       if (value.status == 'success') {
         if (value.data.length > 0) imgList.clear();
