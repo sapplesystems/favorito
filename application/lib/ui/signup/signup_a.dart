@@ -234,7 +234,7 @@ class _signup_aState extends State<signup_a> {
   }
 
   void getCategory() {
-    WebService.funGetCatList({"type_id": type_id}).then((value) {
+    WebService.funGetCatList({"type_id": type_id},context).then((value) {
       cat.clear();
       catdata.clear();
       catdata.addAll(value.data);
@@ -248,7 +248,7 @@ class _signup_aState extends State<signup_a> {
   }
 
   void getBusiness() {
-    WebService.funGetBusyList().then((value) {
+    WebService.funGetBusyList(context).then((value) {
       busy.clear();
       busdata.clear();
       busdata.addAll(value.data);

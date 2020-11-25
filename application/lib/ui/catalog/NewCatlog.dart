@@ -112,7 +112,7 @@ class _NewCatlogState extends State<NewCatlog> {
                           print(file.path);
 
                           WebService.catlogImageUpdate(result.files,
-                                  widget.ct != null ? widget.ct.id : null)
+                                  widget.ct != null ? widget.ct.id : null,context)
                               .then((value) {
                             if (value.status == "success") {
                               imgUrls.clear();
@@ -210,7 +210,7 @@ class _NewCatlogState extends State<NewCatlog> {
       "product_id": controller[4].text
     };
     setState(() => submitBtnTxt = "Please Wait..");
-    await WebService.catlogEdit(_map).then((value) {
+    await WebService.catlogEdit(_map,context).then((value) {
       if (value.status == "success") {
         // for (var va in controller) va.text = "";
         BotToast.showText(text: value.message);

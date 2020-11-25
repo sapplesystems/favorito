@@ -121,7 +121,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                     }
                                     return va;
                                   },
-                                  autoValidate: _autovalidate,
+                                  autoValidateMode: AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
                                   selectedItem: _selecteCpc,
                                   items: _totalCpc,
@@ -183,7 +183,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
   }
 
   void getTags() async {
-    await WebService.getTagList().then((value) {
+    await WebService.getTagList(context).then((value) {
       if (value.status == "success") {
         totalTag.addAll(value.data);
 
@@ -217,7 +217,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
   }
 
   void funCpc() async {
-    await WebService.getCampainVerbose().then((value) {
+    await WebService.getCampainVerbose(context).then((value) {
       if (value.status == "success") {
         List<String> _temp = [];
         for (int i = 0; i < value.data.cpc.length; i++) {
@@ -252,7 +252,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
     if (_formKey.currentState.validate()) {
       _autovalidate = false;
       print("_map:${_map.toString()}");
-      WebService.createCampain(_map, widget.campStat).then((value) {
+      WebService.createCampain(_map, widget.campStat,context).then((value) {
         if (value.status == "success") {
           BotToast.showText(text: value.message);
           Navigator.pop(context);

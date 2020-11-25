@@ -33,7 +33,7 @@ class _OfferState extends State<Offers> {
   }
 
   initializeIntitialValues() async {
-    await WebService.funGetOfferData().then((value) {
+    await WebService.funGetOfferData(context).then((value) {
       setState(() {
         _selectedOfferType = 'Activated';
 

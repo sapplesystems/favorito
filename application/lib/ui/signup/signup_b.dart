@@ -240,7 +240,7 @@ class _signup_bState extends State<signup_b> {
       };
       print("Request:${_map}");
       BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
-      WebService.funRegister(_map).then((value) {
+      WebService.funRegister(_map,context).then((value) {
         if (value.status == 'success') {
           BotToast.showText(text: "Registration SuccessFull!!");
           Navigator.pop(context);

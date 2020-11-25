@@ -185,7 +185,8 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                             validator: (v) => v == ''
                                                 ? "required field"
                                                 : null,
-                                            autoValidate: true,
+                                            autoValidateMode: AutovalidateMode
+                                                .onUserInteraction,
                                             mode: Mode.MENU,
                                             selectedItem: controller[2].text,
                                             items: slot,
@@ -274,7 +275,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
   }
 
   void getPageData() async {
-    await WebService.funWaitlistSetting().then((value) {
+    await WebService.funWaitlistSetting(context).then((value) {
       if (value.status == "success") {
         var va = value.data[0];
         startTime = va.startTime;
@@ -309,7 +310,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
       "announcement": controller[6].text,
       "except_days": days
     };
-    WebService.funWaitlistSaveSetting(_map).then((value) {
+    WebService.funWaitlistSaveSetting(_map,context).then((value) {
       if (value.status == "success") {
         BotToast.showText(text: value.message);
       }

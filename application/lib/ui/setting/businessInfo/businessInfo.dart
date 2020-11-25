@@ -145,7 +145,7 @@ class _businessInfoState extends State<businessInfo> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: DropdownSearch<String>(
                       validator: (v) => v == '' ? "required field" : null,
-                      autoValidate: _autoValidateForm,
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
                       mode: Mode.MENU,
                       showSelectedItem: true,
                       selectedItem: controller[0].text,
@@ -321,7 +321,7 @@ class _businessInfoState extends State<businessInfo> {
   }
 
   void getPageData() async {
-    await WebService.getBusinessInfoData().then((value) async {
+    await WebService.getBusinessInfoData(context).then((value) async {
       if (value.message == "success") {
         await clearDataList();
 
@@ -365,7 +365,7 @@ class _businessInfoState extends State<businessInfo> {
       print("aaaaaaa${value.toString()}");
     });
 
-    await WebService.getSubCat({"category_id": catid}).then((value) {
+    await WebService.getSubCat({"category_id": catid},context).then((value) {
       if (value.message == "success") {
         var _va = value.data;
 
@@ -400,7 +400,7 @@ class _businessInfoState extends State<businessInfo> {
         "payment_method": selectPay,
         "attributes": selectAttributeId
       };
-      WebService.setBusinessInfoData(_map).then((value) {
+      WebService.setBusinessInfoData(_map,context).then((value) {
         if (value.status == "success") {
           BotToast.showText(text: value.message);
           Navigator.pop(context);
@@ -418,7 +418,7 @@ class _businessInfoState extends State<businessInfo> {
         cameraIcon: Icon(Icons.add, color: Colors.red));
     img.add(image);
 
-    await WebService.profileInfoImageUpdate(img).then((value) async {
+    await WebService.profileInfoImageUpdate(img,context).then((value) async {
       if (value.status == "success") {
         BotToast.showText(text: value.message);
         photoData.clear();

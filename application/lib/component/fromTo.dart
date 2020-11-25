@@ -1,5 +1,4 @@
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class fromTo extends StatelessWidget {

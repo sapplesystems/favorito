@@ -248,7 +248,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                   child: DropdownSearch<String>(
                                       validator: (v) =>
                                           v == '' ? "required field" : null,
-                                      autoValidate: true,
+                                      autoValidateMode: AutovalidateMode.onUserInteraction,
                                       mode: Mode.MENU,
                                       selectedItem: controller[4].text,
                                       items: serviceListText,
@@ -264,7 +264,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                   child: DropdownSearch<String>(
                                       validator: (v) =>
                                           v == '' ? "required field" : null,
-                                      autoValidate: true,
+                                      autoValidateMode: AutovalidateMode.onUserInteraction,
                                       mode: Mode.MENU,
                                       selectedItem: controller[5].text,
                                       items: personListText,
@@ -323,7 +323,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                     };
 
                     print("_map ${_map.toString()}");
-                    WebService.funAppoinmentCreate(_map).then((value) {
+                    WebService.funAppoinmentCreate(_map,context).then((value) {
                       if (value.status == "success") {
                         BotToast.showText(text: value.message);
                         initializeDefaultValues();
@@ -340,7 +340,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
   }
 
   void getDataVerbode() async {
-    await WebService.funAppoinmentVerbose().then((value) {
+    await WebService.funAppoinmentVerbose(context).then((value) {
       if (value.status == "success") {
         var va = value.data;
         serviceList = va.serviceList;

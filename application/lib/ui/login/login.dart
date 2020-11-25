@@ -151,7 +151,7 @@ class _LoginState extends State<Login> {
         "password": passCtrl.text
       };
       BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
-      WebService.funGetLogin(_map).then((value) {
+      WebService.funGetLogin(_map,context).then((value) {
         if (value.status == "success") {
           Navigator.pop(context);
           Navigator.push(context,

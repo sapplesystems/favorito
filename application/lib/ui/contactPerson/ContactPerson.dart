@@ -51,7 +51,7 @@ class _ContactPersonState extends State<ContactPerson> {
   }
 
   void initializeDefaultValues() {
-    WebService.funContactPersonRequiredData().then((value) {
+    WebService.funContactPersonRequiredData(context).then((value) {
       setState(() {
         _contactPersonData = value;
         displayName = _contactPersonData.data.firstName +
@@ -200,7 +200,7 @@ class _ContactPersonState extends State<ContactPerson> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: _autoValidateForm,
+                                autoValidateMode: AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 selectedItem: _selectedRole,
                                 items: _roleList,
@@ -337,7 +337,7 @@ class _ContactPersonState extends State<ContactPerson> {
                                   icon: Icon(Icons.search),
                                   onPressed: () {
                                     WebService.funSearchBranches(
-                                            _myBranchSearchEditController.text)
+                                            _myBranchSearchEditController.text,context)
                                         .then((value) {
                                       for (var branch in value.data) {
                                         BranchDetailsModel model1 =
@@ -387,7 +387,7 @@ class _ContactPersonState extends State<ContactPerson> {
                       request.ifsc = _myIFSCEditController.text;
                       request.upi = _myUPIEditController.text;
                       WebService.funUpdateContactPerson(
-                              request, _selectedBranches)
+                              request, _selectedBranches,context)
                           .then((value) {
                         if (value.status == 'success') {
                           BotToast.showText(text: value.message);

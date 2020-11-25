@@ -9,7 +9,6 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
-import 'package:get/route_manager.dart';
 
 class highlights extends StatefulWidget {
   @override
@@ -31,6 +30,8 @@ class _highlightsState extends State<highlights> {
     getPageData();
     super.initState();
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
+
+
   }
 
   @override
@@ -97,7 +98,7 @@ class _highlightsState extends State<highlights> {
                               print(file.size);
                               print(file.extension);
                               print(file.path);
-                              WebService.highlightImageUpdate(result.files)
+                              WebService.highlightImageUpdate(result.files,context)
                                   .then((value) {
                                 if (value.status == "success") {
                                   for (int i = 0; i < value.data.length; i++) {
@@ -182,7 +183,7 @@ class _highlightsState extends State<highlights> {
                             WebService.setHighlightData({
                               "highlight_title": ctrlTitle.text,
                               "highlight_desc": ctrlDisc.text
-                            }).then((value) {
+                            },context).then((value) {
                               if (value.status == "success")
                                 BotToast.showText(text: value.message);
                             });
@@ -203,7 +204,7 @@ class _highlightsState extends State<highlights> {
   void getPageData() async {
     int t = 1;
     BotToast.showLoading(duration: Duration(seconds: t));
-    await WebService.getHighlightData().then((value) {
+    await WebService.getHighlightData(context).then((value) {
       setState(() {
         t = 0;
       });

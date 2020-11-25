@@ -55,7 +55,7 @@ class _CatalogState extends State<Catalogs> {
           ],
         ),
         body: FutureBuilder<CatlogListModel>(
-          future: WebService.funGetCatalogs(),
+          future: WebService.funGetCatalogs(context),
           builder:
               (BuildContext context, AsyncSnapshot<CatlogListModel> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -184,7 +184,7 @@ class _CatalogState extends State<Catalogs> {
   }
 
   void getPageData() {
-    WebService.funGetCatalogs()
+    WebService.funGetCatalogs(context)
         .then((value) => setState(() => _catalogListdata = value));
   }
 }

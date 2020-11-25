@@ -90,7 +90,7 @@ class _HomeState extends State<_Home> {
                               child: Text(value),
                             );
                           }).toList(),
-                          onChanged: (String value) {
+                          onChanged: (value) {
                             setState(() {
                               _selectedAddress = value;
                             });

@@ -21,7 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  get:
+  # get:
   flutter_svg:
   dio:
   neumorphic:
@@ -29,18 +29,19 @@ dependencies:
   file_picker:
   image_picker_gallery_camera:
   url_launcher:
-  bot_toast:
+  dropdown_search: ^0.4.8
+  
   flutter:
     sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   combos: ^1.2.0
+  bot_toast: ^3.0.5
   grouped_checkbox: ^1.0.0
   easy_rich_text: ^0.5.0
   introduction_screen: ^1.0.9
   font_awesome_flutter: ^8.8.1
-  dropdown_search: ^0.4.4
   auto_size_text: ^2.1.0
   flutter_tagging: ^2.2.0+3
   shared_preferences: ^0.5.6+3

@@ -42,7 +42,7 @@ class _JobListState extends State<JobList> {
           ),
         ),
         body: FutureBuilder<JobListRequestModel>(
-          future: WebService.funGetJobs(),
+          future: WebService.funGetJobs(context),
           builder: (BuildContext context,
               AsyncSnapshot<JobListRequestModel> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -138,7 +138,7 @@ class _JobListState extends State<JobList> {
   }
 
   void getPageData() async {
-    await WebService.funGetJobs()
+    await WebService.funGetJobs(context)
         .then((value) => setState(() => _jobList = value));
   }
 }

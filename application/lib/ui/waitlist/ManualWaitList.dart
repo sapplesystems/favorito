@@ -105,7 +105,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
       "no_of_person": controller[2].text,
       "special_notes": controller[3].text
     };
-    WebService.funCreateWaitlist(_map).then((value) {
+    WebService.funCreateWaitlist(_map,context).then((value) {
       if (value.status == "success") {
         BotToast.showText(text: value.message);
         Navigator.pop(context);

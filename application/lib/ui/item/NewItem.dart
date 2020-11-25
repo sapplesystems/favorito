@@ -115,7 +115,7 @@ class _NewItemState extends State<NewItem> {
                     padding: EdgeInsets.only(bottom: sm.scaledHeight(4)),
                     child: DropdownSearch<String>(
                       validator: (v) => v == '' ? "required field" : null,
-                      autoValidate: _autoValidateForm,
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
                       mode: Mode.MENU,
                       selectedItem: _selectedCategory,
                       items: _categoryList,
@@ -168,7 +168,7 @@ class _NewItemState extends State<NewItem> {
                       visible: _isFoodItem,
                       child: DropdownSearch<String>(
                         validator: (v) => v == '' ? "required field" : null,
-                        autoValidate: _autoValidateForm,
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
                         mode: Mode.MENU,
                         selectedItem: _selectedType,
                         items: _categoryList,

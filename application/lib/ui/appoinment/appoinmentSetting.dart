@@ -145,7 +145,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                             DropdownSearch<String>(
                               validator: (v) =>
                                   v == '' ? "required field" : null,
-                              autoValidate: true,
+                              autoValidateMode: AutovalidateMode.onUserInteraction,
                               mode: Mode.MENU,
                               selectedItem: controller[2].text,
                               items: slot,
@@ -237,7 +237,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
       "announcement": controller[6].text,
     };
     pr?.show();
-    WebService.funAppoinmentSaveSetting(_map).then((value) {
+    WebService.funAppoinmentSaveSetting(_map,context).then((value) {
       pr?.hide();
       if (value.status == "success") BotToast.showText(text: value.message);
     });
@@ -342,7 +342,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                           onTap: () {
                             pr?.show();
                             WebService.funAppoinmentDeleteRestriction(
-                                {"restriction_id": _va.id}).then((value) {
+                                {"restriction_id": _va.id},context).then((value) {
                               pr?.hide();
                               if (value.status == "success") {
                                 setState(() {
@@ -398,7 +398,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                           onTap: () {
                             pr?.show();
                             WebService.funAppoinmentDeleteRestriction(
-                                {"restriction_id": _va.id}).then((value) {
+                                {"restriction_id": _va.id},context).then((value) {
                               pr?.hide();
                               if (value.status == "success") {
                                 setState(() {
@@ -471,7 +471,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             if (controller[6].text != null && controller[6].text != "") {
               pr?.show();
               WebService.funAppoinmentSaveService(
-                  {"service_name": controller[6].text}).then((value) {
+                  {"service_name": controller[6].text},context).then((value) {
                 pr?.hide();
                 if (value.status == "success") {
                   BotToast.showText(text: value.message);
@@ -539,7 +539,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
           };
           if (controller[7].text != null && controller[7].text != "") {
             pr?.show();
-            WebService.funAppoinmentSavePerson(_map).then((value) {
+            WebService.funAppoinmentSavePerson(_map,context).then((value) {
               pr?.hide();
               if (value.status == "success") {
                 getPerson();
@@ -611,7 +611,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                 }
                 return va;
               },
-              autoValidate: _autoValidateForm,
+              autoValidateMode: AutovalidateMode.onUserInteraction,
               mode: Mode.MENU,
               showSelectedItem: false,
               items: ["Services", "Person", "Both"],
@@ -851,7 +851,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             }
             return va;
           },
-          autoValidate: _autoValidateForm,
+          autoValidateMode: AutovalidateMode.onUserInteraction,
           mode: Mode.MENU,
           showSelectedItem: true,
           selectedItem: _controller.text,
@@ -871,7 +871,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
   void getService(bool _val) async {
     if (_val) pr?.show();
-    await WebService.funAppoinmentService().then((_value) {
+    await WebService.funAppoinmentService(context).then((_value) {
       if (_val) pr?.hide();
       if (_value.status == "success") {
         servicesList = _value.data;
@@ -884,7 +884,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
   void getPerson() async {
     pr?.show();
-    await WebService.funAppoinmentPerson().then((_value) {
+    await WebService.funAppoinmentPerson(context).then((_value) {
       pr?.hide();
       if (_value.status == "success") {
         _personList = _value.data;
@@ -897,7 +897,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
   getRestriction() async {
     pr?.show();
-    await WebService.funAppoinmentRestriction().then((_value) {
+    await WebService.funAppoinmentRestriction(context).then((_value) {
       pr?.hide();
       if (_value.status == "success") {
         try {
@@ -916,7 +916,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
   postRestriction(_map, isNew) async {
     pr?.show();
-    await WebService.funAppoinmentSaveRestriction(_map, isNew).then((_value) {
+    await WebService.funAppoinmentSaveRestriction(_map, isNew,context).then((_value) {
       pr?.hide();
       if (_value.status == "success") {
         BotToast.showText(text: _value.message);
@@ -945,7 +945,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
         "person_id": _personList[i].id,
         "is_active": _personList[i].isActive
       };
-      WebService.funAppoinmentServicePersonOnOff(_va, false).then((value) {
+      WebService.funAppoinmentServicePersonOnOff(_va, false,context).then((value) {
         pr?.hide();
         if (value.status == "success") {
           BotToast.showText(text: value.message);
@@ -963,7 +963,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
       };
       print("data:$_va");
       pr?.show();
-      WebService.funAppoinmentServicePersonOnOff(_va, true).then((value) {
+      WebService.funAppoinmentServicePersonOnOff(_va, true,context).then((value) {
         pr?.hide();
         if (value.status == "success") {
           BotToast.showText(text: value.message);
@@ -974,7 +974,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
   getSettingdata() async {
     pr?.show();
-    await WebService.funAppoinmentSetting().then((value) {
+    await WebService.funAppoinmentSetting(context).then((value) {
       pr?.hide();
       if (value.status == 'success') {
         _settingData = value.data[0];

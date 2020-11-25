@@ -172,7 +172,7 @@ class _dashboardState extends State<dashboard> {
                                         builder: (context) => Catalogs()));
                               },
                               child: card3(
-                                  txt1: "Catalogoues", txt2: catalogoues)),
+                                  txt1: "Catalogoues", title: catalogoues)),
                           InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -180,7 +180,7 @@ class _dashboardState extends State<dashboard> {
                                     MaterialPageRoute(
                                         builder: (context) => Orders()));
                               },
-                              child: card3(txt1: "Orders", txt2: orders))
+                              child: card3(txt1: "Orders", title: orders))
                         ])),
                 Row(children: [
                   Text(
@@ -201,19 +201,18 @@ class _dashboardState extends State<dashboard> {
             )));
   }
 
-  Widget rowCard(String title, String subtitle, Function function) {
-    return InkWell(
-      onTap: function,
-      child: Container(
-          padding: EdgeInsets.symmetric(vertical: 6),
-          margin: EdgeInsets.symmetric(vertical: 12),
-          decoration: bd3,
-          child: ListTile(
-              title: Text(title,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              subtitle: Text(subtitle))),
-    );
-  }
+  Widget rowCard(String title, String subtitle, Function function) => InkWell(
+        onTap: function,
+        child: Container(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            margin: EdgeInsets.symmetric(vertical: 12),
+            decoration: bd3,
+            child: ListTile(
+                title: Text(title,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                subtitle: Text(subtitle))),
+      );
 
   Widget credit(String title, String ammount, String ico) {
     return Padding(
@@ -231,7 +230,7 @@ class _dashboardState extends State<dashboard> {
   }
 
   void calldashBoard() {
-    WebService.funGetDashBoard().then((value) {
+    WebService.funGetDashBoard(context).then((value) {
       business_id = value.businessId;
       business_name = value.businessName;
       business_status = value.businessStatus;

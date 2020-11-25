@@ -68,7 +68,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
     );
     setState(() => _image = image);
-    WebService.profileImageUpdate(image).then((value) {
+    WebService.profileImageUpdate(image,context).then((value) {
       print("ImageUpdated:${value.message}");
     });
   }
@@ -123,7 +123,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   }
 
   getBusinessProfileData() {
-    WebService.funGetBusinessProfileData().then((value) {
+    WebService.funGetBusinessProfileData(context).then((value) {
       setState(() {
         _businessProfileData = value;
       });
@@ -246,7 +246,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                       }
                                       return va;
                                     },
-                                    autoValidate: _autoValidateForm,
+                                    autoValidateMode: AutovalidateMode.onUserInteraction,
                                     mode: Mode.MENU,
                                     showSelectedItem: true,
                                     selectedItem: _controller[4].text,
@@ -446,7 +446,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: DropdownSearch<String>(
-                                autoValidate: _autoValidateForm,
+                                autoValidateMode: AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 validator: (_v) {
@@ -482,7 +482,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                   }
                                   return va;
                                 },
-                                autoValidate: _autoValidateForm,
+                                autoValidateMode: AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 selectedItem: _controller[11].text,
@@ -604,7 +604,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   }
 
   void _cityWebData() async {
-    WebService.funGetCities().then((value) {
+    WebService.funGetCities(context).then((value) {
       if (value.message == "success") {
         _cityModel.clear();
         cityList.clear();
@@ -617,7 +617,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   }
 
   void _stateWebData() async {
-    WebService.funGetStates().then((value) {
+    WebService.funGetStates(context).then((value) {
       if (value.message == "success") {
         _stateModel.clear();
         _stateList.clear();
@@ -671,7 +671,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       "business_hours": lst
     };
 
-    WebService.funUserProfileUpdate(_map).then((value) async {
+    WebService.funUserProfileUpdate(_map,context).then((value) async {
       if (value.status == 'success') {
         BotToast.showLoading(duration: Duration(seconds: 1));
         await Future.delayed(const Duration(seconds: 1));
@@ -681,7 +681,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   }
 
   void getProfileData() async {
-    await WebService.getProfileData().then((value) {
+    await WebService.getProfileData(context).then((value) {
       var va = value.data;
       addressList.clear();
       for (int i = 0; i < va.website.length; i++) {
@@ -729,7 +729,7 @@ class _BusinessProfileState extends State<BusinessProfile>
 
   void pinCaller(_val) {
     if (_val.length == 6) {
-      WebService.funGetCityByPincode(_controller[9].text).then((value) {
+      WebService.funGetCityByPincode(_controller[9].text,context).then((value) {
         if (value.data.city == null) {
           BotToast.showText(text: value.message);
           return;

@@ -325,7 +325,7 @@ class _Appoinment extends State<Appoinment> {
   }
 
   void getPageData() async {
-    await WebService.funAppoinmentList().then((value) {
+    await WebService.funAppoinmentList(context).then((value) {
       if (value.status == "success") {
         setState(() {
           blm = value;

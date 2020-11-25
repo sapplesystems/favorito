@@ -64,7 +64,7 @@ class Waitlists extends State<Waitlist> {
           ],
         ),
         body: FutureBuilder<WaitlistListModel>(
-          future: WebService.funGetWaitlist(),
+          future: WebService.funGetWaitlist(context),
           builder: (BuildContext context,
               AsyncSnapshot<WaitlistListModel> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -264,11 +264,11 @@ class Waitlists extends State<Waitlist> {
   }
 
   UpdateWaitList(String str, int id) async {
-    await WebService.funWaitlistUpdateStatus({"id": id, "status": str})
+    await WebService.funWaitlistUpdateStatus({"id": id, "status": str},context)
         .then((value) {
       print(value.message);
       if (value.status == "success") {
-        WebService.funGetWaitlist().then((value) {
+        WebService.funGetWaitlist(context).then((value) {
           setState(() {});
           return value;
         });
@@ -277,7 +277,7 @@ class Waitlists extends State<Waitlist> {
   }
 
   getPageData() async {
-    await WebService.funGetWaitlist().then((value) {
+    await WebService.funGetWaitlist(context).then((value) {
       if (value.status == "succcess") {
         setState(() {
           waitlistData = value;
@@ -287,7 +287,7 @@ class Waitlists extends State<Waitlist> {
   }
 
   waitListDelete(int id, int index) {
-    WebService.funWaitlistDelete({"waitlist_id": id}).then((value) {
+    WebService.funWaitlistDelete({"waitlist_id": id},context).then((value) {
       setState(() => waitlistData.data.removeAt(index));
     });
   }

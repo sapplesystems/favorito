@@ -3,9 +3,9 @@
   "packages": [
     {
       "name": "async",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/async-2.5.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/async-2.5.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "async_loader",
@@ -21,39 +21,39 @@
     },
     {
       "name": "boolean_selector",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "bot_toast",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/bot_toast-3.0.4",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/bot_toast-3.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.1"
     },
     {
       "name": "characters",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.3",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/characters-1.1.0-nullsafety.5",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "charcode",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/charcode-1.2.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/charcode-1.2.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "clock",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0-nullsafety.3",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0-nullsafety.5",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "combos",
@@ -81,7 +81,7 @@
     },
     {
       "name": "dropdown_search",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/dropdown_search-0.4.4",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/dropdown_search-0.4.8",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     },
@@ -99,9 +99,9 @@
     },
     {
       "name": "fake_async",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "ffi",
@@ -131,7 +131,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/rohitshukla/Downloads/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter_multi_chip_select",
@@ -167,7 +167,7 @@
       "name": "flutter_test",
       "rootUri": "file:///Users/rohitshukla/Downloads/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter_typeahead_web",
@@ -179,7 +179,7 @@
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/rohitshukla/Downloads/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "2.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "font_awesome_flutter",
@@ -192,12 +192,6 @@
       "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/geolocator-5.3.2+2",
       "packageUri": "lib/",
       "languageVersion": "2.1"
-    },
-    {
-      "name": "get",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/get-3.13.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.8"
     },
     {
       "name": "google_api_availability",
@@ -273,9 +267,9 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/js-0.6.3-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/js-0.6.3-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "location_permissions",
@@ -285,15 +279,15 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.10-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.10-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.4",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.6",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "nested",
@@ -315,9 +309,9 @@
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/path-1.8.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/path-1.8.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "path_drawing",
@@ -449,25 +443,25 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/rohitshukla/Downloads/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "1.11"
+      "languageVersion": "2.12"
     },
     {
       "name": "source_span",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0-nullsafety.4",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "stack_trace",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0-nullsafety.6",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "stream_transform",
@@ -477,21 +471,21 @@
     },
     {
       "name": "string_scanner",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0-nullsafety.1",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0-nullsafety.3",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/test_api-0.2.19-nullsafety.2",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/test_api-0.2.19-nullsafety.6",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "transparent_image",
@@ -501,9 +495,9 @@
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0-nullsafety.3",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0-nullsafety.5",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "url_launcher",
@@ -543,9 +537,9 @@
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.3",
+      "rootUri": "file:///Users/rohitshukla/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.5",
       "packageUri": "lib/",
-      "languageVersion": "2.10"
+      "languageVersion": "2.12"
     },
     {
       "name": "win32",
@@ -572,7 +566,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-11-20T11:22:54.304691Z",
+  "generated": "2020-11-25T22:27:41.964664Z",
   "generator": "pub",
-  "generatorVersion": "2.11.0-213.1.beta"
+  "generatorVersion": "2.12.0-29.10.beta"
 }

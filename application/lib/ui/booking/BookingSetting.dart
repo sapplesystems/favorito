@@ -83,7 +83,7 @@ class _BookingSettingState extends State<BookingSetting> {
                               DropdownSearch<String>(
                                   validator: (v) =>
                                       v == '' ? "required field" : null,
-                                  autoValidate: true,
+                                  autoValidateMode: AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
                                   selectedItem: controller[2].text,
                                   items: slot,
@@ -180,7 +180,7 @@ class _BookingSettingState extends State<BookingSetting> {
       "announcement": controller[5].text
     };
     print("controller[2].text:${controller[2].text}");
-    await WebService.funBookingSaveSetting(_map).then((value) {
+    await WebService.funBookingSaveSetting(_map,context).then((value) {
       if (value.status == "success") BotToast.showText(text: value.message);
     });
   }

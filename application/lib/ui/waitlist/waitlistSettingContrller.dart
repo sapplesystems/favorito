@@ -1,15 +1,17 @@
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
+import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 
 class WaitListController {
   Function function;
   Waitlists wc;
-  WaitListController({this.function});
+  BuildContext context;
+  WaitListController({this.function, this.context});
 
   UpdateWaitList(String str, int id) async {
-    await WebService.funWaitlistUpdateStatus({"id": id, "status": str})
+    await WebService.funWaitlistUpdateStatus({"id": id, "status": str}, context)
         .then((value) {
       print(value.message);
       if (value.status == "success") {
@@ -19,7 +21,7 @@ class WaitListController {
   }
 
   Future<WaitlistListModel> getPageData() async {
-    await WebService.funGetWaitlist().then((value) {
+    await WebService.funGetWaitlist(context).then((value) {
       return value;
     });
   }

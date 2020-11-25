@@ -38,7 +38,7 @@ class _MyTagsState extends State<MyTags> {
                 }
                 return va;
               },
-              autoValidate: true,
+              autoValidateMode: AutovalidateMode.onUserInteraction,
               mode: Mode.MENU,
               showSelectedItem: true,
               items: widget.sourceList != null ? widget.sourceList : null,

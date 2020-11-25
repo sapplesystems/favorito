@@ -45,7 +45,7 @@ class _CreateJobState extends State<CreateJob> {
   @override
   void initState() {
     if (_jobId == null) {
-      WebService.funGetCreteJobDefaultData().then((value) {
+      WebService.funGetCreteJobDefaultData(context).then((value) {
         setState(() {
           _contactOptionsList.clear();
           _cityList.clear();
@@ -54,7 +54,7 @@ class _CreateJobState extends State<CreateJob> {
         });
       });
     } else {
-      WebService.funGetEditJobData(_jobId).then((value) {
+      WebService.funGetEditJobData(_jobId,context).then((value) {
         setState(() {
           _contactOptionsList.clear();
           _cityList.clear();
@@ -220,7 +220,7 @@ class _CreateJobState extends State<CreateJob> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidate: _autoValidateForm,
+                                autoValidateMode: AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 selectedItem: _selectedContactOption,
                                 items: _contactOptionsList,
@@ -257,7 +257,7 @@ class _CreateJobState extends State<CreateJob> {
                               child: DropdownSearch<CityList>(
                                 validator: (v) =>
                                     v == null ? "required field" : null,
-                                autoValidate: _autoValidateForm,
+                                autoValidateMode: AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 compareFn: (CityList i, CityList s) =>
@@ -273,7 +273,7 @@ class _CreateJobState extends State<CreateJob> {
                                     _selectedCity = value;
                                     _pincodesForCity.clear();
                                     WebService.funGetPicodesForCity(
-                                            _selectedCity.id)
+                                            _selectedCity.id,context)
                                         .then((value) {
                                       setState(() {
                                         _pincodesForCity = value.pincodeModel;
@@ -314,7 +314,7 @@ class _CreateJobState extends State<CreateJob> {
                                       }
                                     } else {
                                       WebService.funGetCityByPincode(
-                                              _myPincodeEditController.text)
+                                              _myPincodeEditController.text,context)
                                           .then((value) {
                                         setState(() {
                                           CityList city = CityList();
@@ -357,7 +357,7 @@ class _CreateJobState extends State<CreateJob> {
                         _requestData.city = _selectedCity.id.toString();
                         _requestData.pincode = _myPincodeEditController.text;
                         if (_jobId == null) {
-                          WebService.funCreateJob(_requestData).then((value) {
+                          WebService.funCreateJob(_requestData,context).then((value) {
                             if (value.status == 'success') {
                               setState(() {
                                 BotToast.showText(text: value.message);
@@ -369,7 +369,7 @@ class _CreateJobState extends State<CreateJob> {
                           });
                         } else {
                           _requestData.id = _jobId.toString();
-                          WebService.funEditJob(_requestData).then((value) {
+                          WebService.funEditJob(_requestData,context).then((value) {
                             if (value.status == 'success') {
                               setState(() {
                                 BotToast.showText(text: value.message);

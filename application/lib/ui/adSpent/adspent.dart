@@ -196,7 +196,7 @@ class _adSpentState extends State<adSpent> {
   }
 
   void getPageData() {
-    WebService.getAdSpentPageData().then((value) {
+    WebService.getAdSpentPageData(context).then((value) {
       if (value.status == "success") {
         setState(() {
           totalSpent = value.totalSpent;

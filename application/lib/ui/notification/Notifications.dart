@@ -19,7 +19,7 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   void initState() {
-    WebService.funGetNotifications().then((value) {
+    WebService.funGetNotifications(context).then((value) {
       setState(() {
         _notificationsListdata = value;
       });
