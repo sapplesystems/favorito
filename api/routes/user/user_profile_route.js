@@ -16,4 +16,7 @@ router.post('/user-all-photo', CheckAuth, UserProfileController.userAllPhoto);
 router.post('/user-favourite-business', CheckAuth, UserProfileController.userFavouriteBusiness);
 router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 
+
+
+
 module.exports = router;

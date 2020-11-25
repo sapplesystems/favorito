@@ -75,6 +75,7 @@ exports.login = function(req, res, next) {
                     if (err) {
                         return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
                     }
+                    // change token expire here
                     if (enc_result == true) {
                         var token = jwt.sign({
                             email: result[0].email,
@@ -82,7 +83,7 @@ exports.login = function(req, res, next) {
                             id: result[0].id,
                             business_id: result[0].business_id,
                         }, 'secret', {
-                            expiresIn: "2 days"
+                            expiresIn: "1 day"
                         });
 
                         var user_data = {

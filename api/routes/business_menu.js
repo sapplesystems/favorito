@@ -51,6 +51,11 @@ router.post('/add-photos', upload.array('photo[]', 1000), CheckAuth, MenuControl
  */
 router.post('/category-list', CheckAuth, MenuController.getMenuCategoryList);
 
+/**
+ * GET MENU CATEGORY BY PAGINATION
+ */
+router.post('/category-list-pagination', CheckAuth, MenuController.getMenuCategoryListByPagination);
+
 
 /**
  * ADD BUSINESS MENU CATEGORY

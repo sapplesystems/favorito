@@ -33,6 +33,34 @@ exports.getMenuCategoryList = async function(req, res, next) {
     }
 };
 
+/**
+ * GET MENU CATEGORY LIST BY PAGINATION
+ */
+exports.getMenuCategoryListByPagination = async function(req, res, next) {
+    try {
+        if (req.body.page_size == null || req.body.page_size == undefined || req.body.page_size == '' || req.body.page_size == 0) {
+            var data_from = 0;
+        } else {
+            var num = parseInt(req.body.page_size.trim());
+            var data_from = num;
+        }
+        var business_id = req.userdata.business_id;
+        var COND = "business_id='" + business_id + "' AND menu_type_id='" + menu_type_id + "' AND is_activated='1' AND deleted_at IS NULL";
+        var sql = "SELECT id, category_name, details, slot_start_time, slot_end_time, available_on, out_of_stock \n\
+            FROM business_menu_category \n\
+            WHERE " + COND + " LIMIT 20 OFFSET " + data_from;
+        db.query(sql, function(e, cat) {
+            if (e) {
+                return res.status(500).json({ status: 'failed', message: 'failed', error: e });
+            }
+            var data = (cat.length > 1) ? cat : cat[0];
+            return res.status(500).json({ status: 'success', message: 'success', data: data });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
 
 /**
  * GET MENU CATEGORY
