@@ -47,9 +47,8 @@ class _Bookings extends State<Bookings> {
           backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+              icon: Icon(Icons.arrow_back, color: myBackGround),
+              onPressed: null),
           iconTheme: IconThemeData(color: Colors.black //change your color here
               ),
           title: Text(

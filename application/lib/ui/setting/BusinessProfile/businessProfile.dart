@@ -68,7 +68,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
     );
     setState(() => _image = image);
-    WebService.profileImageUpdate(image,context).then((value) {
+    WebService.profileImageUpdate(image, context).then((value) {
       print("ImageUpdated:${value.message}");
     });
   }
@@ -246,7 +246,8 @@ class _BusinessProfileState extends State<BusinessProfile>
                                       }
                                       return va;
                                     },
-                                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                                    autoValidateMode:
+                                        AutovalidateMode.onUserInteraction,
                                     mode: Mode.MENU,
                                     showSelectedItem: true,
                                     selectedItem: _controller[4].text,
@@ -446,7 +447,8 @@ class _BusinessProfileState extends State<BusinessProfile>
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: DropdownSearch<String>(
-                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 validator: (_v) {
@@ -482,7 +484,8 @@ class _BusinessProfileState extends State<BusinessProfile>
                                   }
                                   return va;
                                 },
-                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 selectedItem: _controller[11].text,
@@ -671,7 +674,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       "business_hours": lst
     };
 
-    WebService.funUserProfileUpdate(_map,context).then((value) async {
+    WebService.funUserProfileUpdate(_map, context).then((value) async {
       if (value.status == 'success') {
         BotToast.showLoading(duration: Duration(seconds: 1));
         await Future.delayed(const Duration(seconds: 1));
@@ -729,7 +732,8 @@ class _BusinessProfileState extends State<BusinessProfile>
 
   void pinCaller(_val) {
     if (_val.length == 6) {
-      WebService.funGetCityByPincode(_controller[9].text,context).then((value) {
+      WebService.funGetCityByPincode(_controller[9].text, context)
+          .then((value) {
         if (value.data.city == null) {
           BotToast.showText(text: value.message);
           return;

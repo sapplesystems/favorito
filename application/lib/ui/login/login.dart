@@ -1,6 +1,7 @@
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -122,10 +123,38 @@ class _LoginState extends State<Login> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: sm.scaledWidth(16), vertical: sm.scaledWidth(12)),
+              padding: EdgeInsets.only(
+                  top: 16, left: sm.scaledWidth(16), right: sm.scaledWidth(16)),
+              // padding: EdgeInsets.symmetric(
+              //     horizontal: sm.scaledWidth(16), vertical: sm.scaledWidth(12)),
               child: roundedButton(
                   clicker: () => funClick(), clr: Colors.red, title: "Login")),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: sm.scaledHeight(6)),
+              child: Text(
+                "Dont have account yet?",
+                style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => signup_a()));
+                },
+                child: Text(
+                  "Sign Up",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18, color: myRed),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: sm.scaledWidth(10)),
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Text(
@@ -151,7 +180,7 @@ class _LoginState extends State<Login> {
         "password": passCtrl.text
       };
       BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
-      WebService.funGetLogin(_map,context).then((value) {
+      WebService.funGetLogin(_map, context).then((value) {
         if (value.status == "success") {
           Navigator.pop(context);
           Navigator.push(context,

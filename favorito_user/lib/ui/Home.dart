@@ -34,7 +34,7 @@ class _Home extends StatefulWidget {
 
 class _HomeState extends State<_Home> {
   String _selectedAddress = "selected Address";
-  List<String> _addressList = [];
+  List<String> _addressList = ["selected Address"];
   final List<String> imgList = [];
   var _mySearchEditTextController = TextEditingController();
 
@@ -236,7 +236,6 @@ class _HomeState extends State<_Home> {
             ),
           ),
           InkWell(
-            onTap: () {},
             child: Text(
               "View all",
               style: TextStyle(
@@ -336,13 +335,16 @@ class _HomeState extends State<_Home> {
     });
   }
 
-  void getAddress() async {
+  void getAddress(context) async {
     await APIManager.carousel().then((value) {
+      print("_addressList:${imgList.toString()}");
       if (value.status == 'success') {
-        if (value.data.length > 0) imgList.clear();
-        for (var _va in value.data) imgList.add(_va.photo);
+        if (value.data?.length > 0) {
+          _addressList.clear();
+          for (var _va in value.data) _addressList.add(_va.photo);
+        }
         setState(() {});
-        print("imgList:${imgList.toString()}");
+        print("_addressList:${imgList.toString()}");
       }
     });
   }

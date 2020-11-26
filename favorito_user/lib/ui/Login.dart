@@ -112,10 +112,8 @@ class _LoginState extends State<_Login> {
             child: Padding(
               padding: EdgeInsets.only(top: sm.scaledHeight(1)),
               child: InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Signup()));
-                },
+                onTap: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Signup())),
                 child: Text(
                   "Sign Up",
                   style: TextStyle(

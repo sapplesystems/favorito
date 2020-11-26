@@ -8,7 +8,10 @@ import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
 
 import 'package:favorito_user/services/function.dart';
+import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/utils/Prefs.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class APIManager {
   static Response response;
@@ -42,5 +45,27 @@ class APIManager {
     print("Request URL:${service.register}");
     print("responseData1:${response.toString()}");
     return CarouselModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<CarouselModel> getAddress(context) async {
+    String token = await Prefs.token;
+    String url = service.getAddress;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return CarouselModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static onErrorCall(onError, context) async {
+    if (onError.error == "Http status error [401]") {
+      Prefs().clear();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    }
   }
 }
