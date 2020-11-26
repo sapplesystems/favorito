@@ -10,6 +10,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class signup_b extends StatefulWidget {
   List<TextEditingController> preData;
@@ -30,6 +31,7 @@ class _signup_bState extends State<signup_b> {
   var ddlabel;
   var namelabel;
   var maillabel;
+  ProgressDialog pr;
 
   void initState() {
     super.initState();
@@ -48,6 +50,20 @@ class _signup_bState extends State<signup_b> {
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
     SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
@@ -216,7 +232,7 @@ class _signup_bState extends State<signup_b> {
     if (_formKey.currentState.validate()) {
       _autovalidate = false;
       var cat = "";
-      ;
+
       for (int i = 0; i < widget.catData.length; i++) {
         if (widget.catData[i].categoryName == widget.preData[2].text)
           cat = widget.catData[i].id.toString();
@@ -239,8 +255,9 @@ class _signup_bState extends State<signup_b> {
             widget.preData[0].text.contains("Bus") ? ctrl[1].text : "freelancer"
       };
       print("Request:${_map}");
-      BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
-      WebService.funRegister(_map,context).then((value) {
+      pr?.show();
+      WebService.funRegister(_map, context).then((value) {
+        pr?.hide();
         if (value.status == 'success') {
           BotToast.showText(text: "Registration SuccessFull!!");
           Navigator.pop(context);

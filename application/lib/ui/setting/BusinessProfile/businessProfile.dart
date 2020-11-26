@@ -524,7 +524,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                               security: false,
                               hint: "Enter Description",
                             ),
-                            for (int i = 0; i < webSiteLength - 1; i++)
+                            for (int i = 0; i < webSiteLength; i++)
                               txtfieldPostAction(
                                   ctrl: _controller[i + 15],
                                   hint: "Enter Website ",
@@ -686,6 +686,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   void getProfileData() async {
     await WebService.getProfileData(context).then((value) {
       var va = value.data;
+      print("datam${value.data.toString()}");
       addressList.clear();
       for (int i = 0; i < va.website.length; i++) {
         va.website[i] = va.website[i].trim();
@@ -704,10 +705,12 @@ class _BusinessProfileState extends State<BusinessProfile>
       _controller[2].text = va.businessPhone;
       _controller[3].text = va.landline;
       _controller[4].text = va.workingHours;
+      print(" va.workingHours${va.workingHours}");
       _controller[6].text = addressList[0];
       _controller[7].text = addressList[1];
       _controller[8].text = addressList[2];
       _controller[9].text = va.pincode;
+      setState(() {});
       pinCaller(va.pincode);
       _controller[13].text = va.businessEmail;
       _controller[14].text = va.shortDescription;
@@ -732,8 +735,7 @@ class _BusinessProfileState extends State<BusinessProfile>
 
   void pinCaller(_val) {
     if (_val.length == 6) {
-      WebService.funGetCityByPincode(_controller[9].text, context)
-          .then((value) {
+      WebService.funGetCityByPincode(_val, context).then((value) {
         if (value.data.city == null) {
           BotToast.showText(text: value.message);
           return;

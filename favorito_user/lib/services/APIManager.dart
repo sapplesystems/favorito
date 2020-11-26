@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:favorito_user/model/serviceModel/Carousel/CarouselData.dart';
 import 'package:favorito_user/model/serviceModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/serviceModel/login/loginModel.dart';
 import 'package:favorito_user/model/serviceModel/registerModel.dart';
@@ -36,7 +34,7 @@ class APIManager {
     return loginModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<CarouselModel> carousel() async {
+  static Future<CarouselModel> carousel(context) async {
     String token = await Prefs.token;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,

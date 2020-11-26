@@ -38,6 +38,7 @@ class _HomeState extends State<_Home> {
   final List<String> imgList = [];
   var _mySearchEditTextController = TextEditingController();
 
+  GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -325,7 +326,7 @@ class _HomeState extends State<_Home> {
   }
 
   void getCarousel() async {
-    await APIManager.carousel().then((value) {
+    await APIManager.carousel(context).then((value) {
       if (value.status == 'success') {
         if (value.data.length > 0) imgList.clear();
         for (var _va in value.data) imgList.add(_va.photo);
@@ -335,8 +336,8 @@ class _HomeState extends State<_Home> {
     });
   }
 
-  void getAddress(context) async {
-    await APIManager.carousel().then((value) {
+  void getAddress() async {
+    await APIManager.carousel(_globalKey.currentContext).then((value) {
       print("_addressList:${imgList.toString()}");
       if (value.status == 'success') {
         if (value.data?.length > 0) {
