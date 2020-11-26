@@ -1,12 +1,12 @@
 var db = require('../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 
-exports.getDashboardDetail = function (req, res, next) {
+exports.getDashboardDetail = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` \n\
                     WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
-        db.query(sql, function (err, result_set, fields) {
+        db.query(sql, function(err, result_set, fields) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
             } else if (result_set.length === 0) {
@@ -36,5 +36,72 @@ exports.getDashboardDetail = function (req, res, next) {
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+exports.trendingNearby = function(req, res, next) {
+    try {
+        var sql = "SELECT id, business_id, business_name, postal_code, landline, reach_whatsapp, business_email, address1, address2, address3, pincode, town_city, location, website, short_description, CONCAT('" + img_path + "', photo) as photo, business_status FROM `business_master` WHERE is_activated='1' AND deleted_at IS NULL LIMIT 5";
+        db.query(sql, function(err, result_set, fields) {
+            if (err) {
+                return res.status(500).send({ status: 'error', message: 'Something went wrong.', error: err });
+            } else if (result_set.length === 0) {
+                return res.status(403).send({ status: 'error', message: 'No record found.' });
+            }
+
+            return res.status(200).send({ status: 'success', message: 'success', data: result_set });
+        });
+    } catch (e) {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong...' });
+    }
+};
+
+exports.newBusiness = function(req, res, next) {
+    try {
+        var sql = "SELECT id, business_id, business_name, postal_code, landline, reach_whatsapp, business_email, address1, address2, address3, pincode, town_city, location, website, short_description, CONCAT('" + img_path + "', photo) as photo, business_status FROM `business_master` WHERE is_activated='1' AND deleted_at IS NULL LIMIT 5";
+        db.query(sql, function(err, result_set, fields) {
+            if (err) {
+                return res.status(500).send({ status: 'error', message: 'Something went wrong.', error: err });
+            } else if (result_set.length === 0) {
+                return res.status(403).send({ status: 'error', message: 'No record found.' });
+            }
+
+            return res.status(200).send({ status: 'success', message: 'success', data: result_set });
+        });
+    } catch (e) {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong...' });
+    }
+};
+
+exports.topRated = function(req, res, next) {
+    try {
+        var sql = "SELECT id, business_id, business_name, postal_code, landline, reach_whatsapp, business_email, address1, address2, address3, pincode, town_city, location, website, short_description, CONCAT('" + img_path + "', photo) as photo, business_status FROM `business_master` WHERE is_activated='1' AND deleted_at IS NULL LIMIT 5";
+        db.query(sql, function(err, result_set, fields) {
+            if (err) {
+                return res.status(500).send({ status: 'error', message: 'Something went wrong.', error: err });
+            } else if (result_set.length === 0) {
+                return res.status(403).send({ status: 'error', message: 'No record found.' });
+            }
+
+            return res.status(200).send({ status: 'success', message: 'success', data: result_set });
+        });
+    } catch (e) {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong...' });
+    }
+};
+exports.mostPopular = function(req, res, next) {
+    try {
+        var sql = "SELECT id, business_id, business_name, postal_code, landline, reach_whatsapp, business_email, address1, address2, address3, pincode, town_city, location, website, short_description, CONCAT('" + img_path + "', photo) as photo, business_status FROM `business_master` WHERE is_activated='1' AND deleted_at IS NULL LIMIT 5";
+        db.query(sql, function(err, result_set, fields) {
+            if (err) {
+                return res.status(500).send({ status: 'error', message: 'Something went wrong.', error: err });
+            } else if (result_set.length === 0) {
+                return res.status(403).send({ status: 'error', message: 'No record found.' });
+            }
+
+            return res.status(200).send({ status: 'success', message: 'success', data: result_set });
+        });
+    } catch (e) {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong...' });
     }
 };

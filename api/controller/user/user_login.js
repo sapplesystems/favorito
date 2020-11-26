@@ -41,6 +41,7 @@ exports.login = function(req, res, next) {
                             id: result[0].id,
                             email: result[0].email,
                             phone: result[0].phone,
+                            postal: result[0].postal
                         };
                         return res.status(200).json({ status: 'success', message: 'success', data: user_data, token: token });
                     } else {

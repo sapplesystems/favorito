@@ -4,7 +4,7 @@ exports.getAddress = async function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT address1, address2, address3, pincode, town_city, state_id, country_id, location FROM business_master WHERE business_id = '" + req.userdata.business_id + "'";
     } else if (req.userdata.id) {
-        var sql = "SELECT * FROM business_master WHERE id = '" + req.userdata.id + "'";
+        var sql = "SELECT * FROM user_address WHERE id = '" + req.userdata.id + "'";
     } else {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
     }
@@ -60,35 +60,81 @@ exports.changeAddress = async function(req, res, next) {
             return res.status(400).json({ status: 'failed', message: 'New address is missing' });
         }
     } else if (req.userdata.id) {
-        // For update the user address by the address
-        // if (req.body.address_id) {
-        //     var set = "updated_at=NOW() "
-        //     if (req.body.city) {
-        //         set += ", city = '" + req.body.city + "'"
-        //     }
-        //     if (req.body.state) {
-        //         set += ", state = '" + req.body.state + "'"
-        //     }
-        //     if (req.body.pincode) {
-        //         set += ", pincode = '" + req.body.pincode + "'"
-        //     }
-        //     if (req.body.country) {
-        //         set += ", country = '" + req.body.country + "'"
-        //     }
-        //     if (req.body.address) {
-        //         set += ", address = '" + req.body.address + "'"
-        //     }
-        //     try {
-        //         var sql = "UPDATE user_address SET " + set + " WHERE id='" + req.body.address_id + "'";
-        //         update_result = await exports.executeSql(sql, res)
-        //         if (parseInt(update_result.affectedRows) > 0) {
-        //             return res.status(200).send({ status: 'success', message: 'update done' })
-        //         }
-        //     } catch (error) {
-        //         return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
-        //     }
+        // For update the user address by the address id
+        if (req.body.address_id) {
+            var set = "updated_at=NOW() "
+            if (req.body.city) {
+                set += ", city = '" + req.body.city + "'"
+            }
+            if (req.body.state) {
+                set += ", state = '" + req.body.state + "'"
+            }
+            if (req.body.pincode) {
+                set += ", pincode = '" + req.body.pincode + "'"
+            }
+            if (req.body.country) {
+                set += ", country = '" + req.body.country + "'"
+            }
+            if (req.body.landmark) {
+                set += ", landmark = '" + req.body.landmark + "'"
+            }
+            if (req.body.address) {
+                set += ", address = '" + req.body.address + "'"
+            }
+            try {
+                var sql = "UPDATE user_address SET " + set + " WHERE id='" + req.body.address_id + "'";
+                update_result = await exports.executeSql(sql, res)
+                if (parseInt(update_result.affectedRows) > 0) {
+                    return res.status(200).send({ status: 'success', message: 'update done' })
+                }
+            } catch (error) {
+                return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+            }
 
-        // }
+        } else {
+            try {
+
+                if (req.body.city) {
+                    city = req.body.city
+                }
+                if (req.body.state) {
+                    state = req.body.state
+                }
+                if (req.body.pincode) {
+                    pincode = req.body.pincode
+                }
+                if (req.body.country) {
+                    country = req.body.country
+                }
+                if (req.body.landmark) {
+                    landmark = req.body.landmark
+                }
+                if (req.body.address) {
+                    address = req.body.address
+                }
+                var user_id = req.userdata.id
+                data_to_enter = {
+                    city: city,
+                    state: state,
+                    pincode: pincode,
+                    country: country,
+                    landmark: landmark,
+                    address: address,
+                    user_id: user_id
+                }
+
+                var sql = "INSERT user_address SET ?";
+                db.query(sql, data_to_enter, function(err, result) {
+                    if (err) {
+                        return res.status(400).json({ status: 'failed', message: 'Something went wrong', error: err });
+                    } else {
+                        return res.status(200).send({ status: "success", message: "insert successfull" })
+                    }
+                })
+            } catch (error) {
+                return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+            }
+        }
     }
 
 
