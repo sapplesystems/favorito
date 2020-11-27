@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:favorito_user/model/serviceModel/AddressListModel.dart';
 import 'package:favorito_user/model/serviceModel/Carousel/CarouselModel.dart';
+import 'package:favorito_user/model/serviceModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/serviceModel/login/loginModel.dart';
 import 'package:favorito_user/model/serviceModel/registerModel.dart';
 import 'package:dio/dio.dart';
@@ -46,7 +48,7 @@ class APIManager {
     return CarouselModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<CarouselModel> getAddress(context) async {
+  static Future<AddressListModel> getAddress(context) async {
     String token = await Prefs.token;
     String url = service.getAddress;
     opt = Options(
@@ -58,7 +60,20 @@ class APIManager {
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
-    return CarouselModel.fromJson(convert.json.decode(response.toString()));
+    return AddressListModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<ProfileImageModel> getUserImage(context) async {
+    String token = await Prefs.token;
+    String url = service.getUserImage;
+    opt = Options(
+        contentType: Headers.jsonContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    return ProfileImageModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static onErrorCall(onError, context) async {

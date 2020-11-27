@@ -9,5 +9,6 @@ class service {
   static final login = baseUrl + "login";
   static final businessCarousel = baseUrl1 + "business-carousel";
   static final getAddress = baseUrl2 + "user-address/get-address";
+  static final getUserImage = baseUrl2 + "business-user/profile-photo";
   static final search = baseUrl2 + "user-business/search-by-name";
 }
