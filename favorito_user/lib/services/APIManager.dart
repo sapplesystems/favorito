@@ -3,6 +3,7 @@ import 'package:favorito_user/model/serviceModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/serviceModel/login/loginModel.dart';
 import 'package:favorito_user/model/serviceModel/registerModel.dart';
 import 'package:dio/dio.dart';
+import 'package:favorito_user/model/serviceModel/search/SearchBusinessListModel.dart';
 import 'dart:convert' as convert;
 
 import 'package:favorito_user/services/function.dart';
@@ -65,5 +66,23 @@ class APIManager {
       Prefs().clear();
       Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
     }
+  }
+
+  static Future<SearchBusinessListModel> search(
+      context, String searchString) async {
+    String token = await Prefs.token;
+    String url = service.search;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"keyword": searchString};
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
   }
 }

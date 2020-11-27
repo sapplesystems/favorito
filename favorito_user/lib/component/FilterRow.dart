@@ -62,15 +62,14 @@ class _FilterRow extends State<FilterRow> {
                   shape: NeumorphicShape.convex,
                   depth: 4,
                   lightSource: LightSource.topLeft,
-                  color: myButtonBackground),
+                  color: myButtonBackground,
+                  boxShape: NeumorphicBoxShape.roundRect(
+                      BorderRadius.all(Radius.circular(24.0)))),
               margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-              boxShape: NeumorphicBoxShape.roundRect(
-                  BorderRadius.all(Radius.circular(24.0))),
-              onClick: () {
+              onPressed: () {
                 widget.doneFunction();
                 Navigator.of(context).pop();
               },
-              isEnabled: true,
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Center(
                 child: Text(

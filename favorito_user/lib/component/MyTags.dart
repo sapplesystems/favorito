@@ -29,7 +29,7 @@ class _MyTagsState extends State<MyTags> {
           padding: EdgeInsets.symmetric(vertical: 8),
           child: DropdownSearch<String>(
               validator: (v) => v == '' ? "required field" : null,
-              autoValidate: true,
+              autoValidateMode: AutovalidateMode.onUserInteraction,
               mode: Mode.MENU,
               showSelectedItem: true,
               items: widget.sourceList != null ? widget.sourceList : null,

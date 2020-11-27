@@ -21,7 +21,7 @@ class Login extends StatelessWidget {
           variantColor: Colors.black38,
           depth: 8,
           intensity: 0.65),
-      usedTheme: UsedTheme.LIGHT,
+      themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
           child: _Login(),
@@ -129,11 +129,11 @@ class _LoginState extends State<_Login> {
                   shape: NeumorphicShape.convex,
                   depth: 4,
                   lightSource: LightSource.topLeft,
-                  color: myButtonBackground),
+                  color: myButtonBackground,
+                  boxShape: NeumorphicBoxShape.roundRect(
+                      BorderRadius.all(Radius.circular(24.0)))),
               margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-              boxShape: NeumorphicBoxShape.roundRect(
-                  BorderRadius.all(Radius.circular(24.0))),
-              onClick: () {
+              onPressed: () {
                 if (_formKey.currentState.validate()) {
                   Map _map = {
                     "username": controller[0].text,
@@ -154,7 +154,6 @@ class _LoginState extends State<_Login> {
                   });
                 }
               },
-              isEnabled: true,
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Center(
                 child: Text(

@@ -21,7 +21,7 @@ class Signup extends StatelessWidget {
           variantColor: Colors.black38,
           depth: 8,
           intensity: 0.65),
-      usedTheme: UsedTheme.LIGHT,
+      themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
           child: _Signup(),
@@ -127,11 +127,11 @@ class _Signup extends StatelessWidget {
                   shape: NeumorphicShape.convex,
                   depth: 4,
                   lightSource: LightSource.topLeft,
-                  color: myButtonBackground),
+                  color: myButtonBackground,
+                  boxShape: NeumorphicBoxShape.roundRect(
+                      BorderRadius.all(Radius.circular(24.0)))),
               margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-              boxShape: NeumorphicBoxShape.roundRect(
-                  BorderRadius.all(Radius.circular(24.0))),
-              onClick: () async {
+              onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   if (newValue) {
                     Map _map = {
@@ -155,7 +155,6 @@ class _Signup extends StatelessWidget {
                   }
                 }
               },
-              isEnabled: true,
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Center(
                 child: Text(

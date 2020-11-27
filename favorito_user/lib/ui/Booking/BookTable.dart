@@ -22,7 +22,7 @@ class BookTable extends StatelessWidget {
           variantColor: Colors.black38,
           depth: 8,
           intensity: 0.65),
-      usedTheme: UsedTheme.LIGHT,
+      themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
           child: _BookTable(identifier, data),
@@ -156,9 +156,10 @@ class _BookTableState extends State<_BookTable> {
                                     shape: NeumorphicShape.convex,
                                     depth: -8,
                                     lightSource: LightSource.topLeft,
-                                    color: myEditTextBackground),
-                                boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.all(Radius.circular(30.0))),
+                                    color: myEditTextBackground,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.all(
+                                            Radius.circular(30.0)))),
                                 child: TextFormField(
                                   controller: _noOfPeopleEditTextController,
                                   obscureText: false,
@@ -191,11 +192,12 @@ class _BookTableState extends State<_BookTable> {
                                       shape: NeumorphicShape.convex,
                                       depth: 8,
                                       lightSource: LightSource.top,
-                                      color: Colors.white),
+                                      color: Colors.white,
+                                      boxShape: NeumorphicBoxShape.roundRect(
+                                          BorderRadius.all(
+                                              Radius.circular(30.0)))),
                                   margin: EdgeInsets.symmetric(
                                       horizontal: sm.scaledWidth(2)),
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                      BorderRadius.all(Radius.circular(8.0))),
                                   child: Center(
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
@@ -227,11 +229,12 @@ class _BookTableState extends State<_BookTable> {
                                       shape: NeumorphicShape.convex,
                                       depth: 8,
                                       lightSource: LightSource.top,
-                                      color: Colors.white),
+                                      color: Colors.white,
+                                      boxShape: NeumorphicBoxShape.roundRect(
+                                          BorderRadius.all(
+                                              Radius.circular(8.0)))),
                                   margin: EdgeInsets.symmetric(
                                       horizontal: sm.scaledWidth(2)),
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                      BorderRadius.all(Radius.circular(8.0))),
                                   child: Center(
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
@@ -308,16 +311,15 @@ class _BookTableState extends State<_BookTable> {
                       shape: NeumorphicShape.convex,
                       depth: 4,
                       lightSource: LightSource.topLeft,
-                      color: myButtonBackground),
+                      color: myButtonBackground,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.all(Radius.circular(24.0)))),
                   margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-                  boxShape: NeumorphicBoxShape.roundRect(
-                      BorderRadius.all(Radius.circular(24.0))),
-                  onClick: () {
+                  onPressed: () {
                     BotToast.showText(text: "Appointment sheduled");
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
-                  isEnabled: true,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: Center(
                     child: Text(
@@ -365,10 +367,10 @@ class _BookTableState extends State<_BookTable> {
                         shape: NeumorphicShape.convex,
                         depth: 8,
                         lightSource: LightSource.top,
-                        color: Colors.white),
+                        color: Colors.white,
+                        boxShape: NeumorphicBoxShape.roundRect(
+                            BorderRadius.all(Radius.circular(8.0)))),
                     margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
-                    boxShape: NeumorphicBoxShape.roundRect(
-                        BorderRadius.all(Radius.circular(8.0))),
                     child: Center(
                       child: Padding(
                         padding:
@@ -399,10 +401,10 @@ class _BookTableState extends State<_BookTable> {
                 shape: NeumorphicShape.convex,
                 depth: 8,
                 lightSource: LightSource.top,
-                color: Colors.white),
+                color: Colors.white,
+                boxShape: NeumorphicBoxShape.roundRect(
+                    BorderRadius.all(Radius.circular(8.0)))),
             margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-            boxShape: NeumorphicBoxShape.roundRect(
-                BorderRadius.all(Radius.circular(8.0))),
             child: DropdownButton<String>(
               isExpanded: true,
               value: _selectedOccasion,

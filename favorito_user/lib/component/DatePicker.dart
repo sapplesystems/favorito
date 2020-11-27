@@ -41,13 +41,14 @@ class _DatePicker extends State<DatePicker> {
         onTap: () => _selectDate(context),
         child: Neumorphic(
           style: NeumorphicStyle(
-              shape: NeumorphicShape.convex,
-              depth: 8,
-              lightSource: LightSource.top,
-              color: Colors.white),
+            shape: NeumorphicShape.convex,
+            depth: 8,
+            lightSource: LightSource.top,
+            color: Colors.white,
+            boxShape: NeumorphicBoxShape.roundRect(
+                BorderRadius.all(Radius.circular(8.0))),
+          ),
           margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-          boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.all(Radius.circular(8.0))),
           child: Center(
             child: Text(widget.selectedDateText,
                 style: TextStyle(color: Colors.grey)),

@@ -18,7 +18,7 @@ class Home extends StatelessWidget {
           variantColor: Colors.black38,
           depth: 8,
           intensity: 0.65),
-      usedTheme: UsedTheme.LIGHT,
+      themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
           child: _Home(),
@@ -38,12 +38,13 @@ class _HomeState extends State<_Home> {
   final List<String> imgList = [];
   var _mySearchEditTextController = TextEditingController();
 
-  GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
-    getCarousel();
-    getAddress();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getCarousel();
+      getAddress();
+    });
   }
 
   @override
@@ -182,9 +183,9 @@ class _HomeState extends State<_Home> {
                                 shape: NeumorphicShape.convex,
                                 depth: 8,
                                 lightSource: LightSource.topLeft,
-                                color: myButtonBackground),
-                            boxShape: NeumorphicBoxShape.roundRect(
-                                BorderRadius.all(Radius.circular(12.0))),
+                                color: myButtonBackground,
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.all(Radius.circular(12.0)))),
                             child: Image.network(
                               "https://source.unsplash.com/random/40*40",
                               height: sm.scaledHeight(6),
@@ -337,10 +338,10 @@ class _HomeState extends State<_Home> {
   }
 
   void getAddress() async {
-    await APIManager.carousel(_globalKey.currentContext).then((value) {
+    await APIManager.carousel(context).then((value) {
       print("_addressList:${imgList.toString()}");
       if (value.status == 'success') {
-        if (value.data?.length > 0) {
+        if (value.data.length > 0) {
           _addressList.clear();
           for (var _va in value.data) _addressList.add(_va.photo);
         }

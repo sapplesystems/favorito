@@ -24,7 +24,7 @@ dependencies:
   get:
   bot_toast: ^3.0.5
   flutter_svg:
-  flutter_neumorphic:
+  flutter_neumorphic: ^3.0.3
   carousel_slider:
   ff_navigation_bar:
   font_awesome_flutter:
@@ -32,6 +32,7 @@ dependencies:
   shared_preferences:
   intl:
   dio:
+  progress_dialog:
   flutter:
     sdk: flutter
 

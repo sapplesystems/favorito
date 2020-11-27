@@ -45,9 +45,9 @@ class _EditTextComponentState extends State<EditTextComponent> {
           shape: NeumorphicShape.convex,
           depth: -8,
           lightSource: LightSource.topLeft,
-          color: myEditTextBackground),
-      boxShape:
-          NeumorphicBoxShape.roundRect(BorderRadius.all(Radius.circular(30.0))),
+          color: myEditTextBackground,
+          boxShape: NeumorphicBoxShape.roundRect(
+              BorderRadius.all(Radius.circular(30.0)))),
       child: TextFormField(
         controller: widget.ctrl,
         obscureText: widget.security,
