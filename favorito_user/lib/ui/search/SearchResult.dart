@@ -5,12 +5,15 @@ import 'package:favorito_user/component/PopupLayout.dart';
 import 'package:favorito_user/component/RoundButtonRightIcon.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/SearchFilterList.dart';
+import 'package:favorito_user/model/serviceModel/search/SearchBusinessListModel.dart';
+import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/NewAppointment.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class SearchResult extends StatelessWidget {
   String searchedText;
@@ -26,7 +29,7 @@ class SearchResult extends StatelessWidget {
           variantColor: Colors.black38,
           depth: 8,
           intensity: 0.65),
-      usedTheme: UsedTheme.LIGHT,
+      themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
           child: _SearchResult(searchedText),
@@ -48,6 +51,7 @@ class _SearchResultState extends State<_SearchResult> {
   var _mySearchEditTextController = TextEditingController();
   List<String> selectedFilters = [];
   List<ServiceFilterList> allFilters = List<ServiceFilterList>();
+  SearchBusinessListModel searchResult;
 
   @override
   void initState() {
@@ -55,11 +59,31 @@ class _SearchResultState extends State<_SearchResult> {
     ServiceFilterList filter2 = ServiceFilterList("Cafe", false);
     allFilters.add(filter1);
     allFilters.add(filter2);
-    selectedFilters.add("Restro");
-    selectedFilters.add("Cafe");
+    // selectedFilters.add("Restro");
+    // selectedFilters.add("Cafe");
 
-    _mySearchEditTextController.text = widget.searchedText;
+    //_mySearchEditTextController.text = widget.searchedText;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      search(widget.searchedText);
+    });
+
     super.initState();
+  }
+
+  void search(String searchString) async {
+    ProgressDialog pr =
+        ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(message: 'Fetching Data, please wait');
+    pr.show();
+    await APIManager.search(context, searchString).then((value) {
+      if (value.status == "success") {
+        pr.hide();
+        setState(() {
+          searchResult = value;
+        });
+      }
+    });
   }
 
   @override
@@ -71,71 +95,83 @@ class _SearchResultState extends State<_SearchResult> {
         decoration: BoxDecoration(color: myBackGround),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.scaledWidth(5),
-                        right: sm.scaledWidth(5),
-                        top: sm.scaledHeight(5)),
-                    child: EditTextComponent(
-                      ctrl: _mySearchEditTextController,
-                      title: widget.searchedText,
-                      security: false,
-                      valid: true,
-                      prefixIcon: 'search',
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: sm.scaledWidth(5), top: sm.scaledHeight(5)),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                    ),
-                    elevation: 10,
-                    child: IconButton(
-                        icon: Icon(FontAwesomeIcons.filter),
-                        onPressed: () {
-                          showPopup(
-                              sm, context, _popupBody(sm), 'Select Filters');
-                        }),
-                  ),
-                ),
-              ],
-            ),
             Container(
-              margin: EdgeInsets.all(sm.scaledWidth(4)),
-              height: sm.scaledHeight(7),
-              width: sm.scaledWidth(100),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+              height: sm.scaledHeight(8),
+              child: Row(
                 children: [
-                  for (var i = 0; i < selectedFilters.length; i++)
-                    RoundButtonRightIcon(
-                        borderColor: myRed,
-                        title: selectedFilters[i],
-                        clr: myRed,
-                        icon: Icons.close,
-                        function: () => setState(() {
-                              for (var temp in allFilters) {
-                                if (temp.filter == selectedFilters[i]) {
-                                  temp.selected = false;
-                                }
-                              }
-                              selectedFilters.removeAt(i);
-                            }))
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: sm.scaledWidth(5),
+                          right: sm.scaledWidth(5),
+                          top: sm.scaledHeight(1)),
+                      child: EditTextComponent(
+                        ctrl: _mySearchEditTextController,
+                        title: "Search",
+                        security: false,
+                        valid: true,
+                        prefixIcon: 'search',
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: sm.scaledWidth(5), top: sm.scaledHeight(1)),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      elevation: 10,
+                      child: IconButton(
+                          icon: Icon(FontAwesomeIcons.filter),
+                          onPressed: () {
+                            showPopup(
+                                sm, context, _popupBody(sm), 'Select Filters');
+                          }),
+                    ),
+                  ),
                 ],
               ),
             ),
-            ListView(
-              shrinkWrap: true,
-              children: [
-                for (var i = 0; i < 2; i++)
-                  i == 0 ? searchResultChild(sm, 1) : searchResultChild(sm, 2),
-              ],
+            Visibility(
+              visible: selectedFilters.length > 0,
+              child: Container(
+                margin: EdgeInsets.only(
+                    left: sm.scaledWidth(2), right: sm.scaledWidth(2)),
+                height: sm.scaledHeight(7),
+                width: sm.scaledWidth(100),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    for (var i = 0; i < selectedFilters.length; i++)
+                      RoundButtonRightIcon(
+                          borderColor: myRed,
+                          title: selectedFilters[i],
+                          clr: myRed,
+                          icon: Icons.close,
+                          function: () => setState(() {
+                                for (var temp in allFilters) {
+                                  if (temp.filter == selectedFilters[i]) {
+                                    temp.selected = false;
+                                  }
+                                }
+                                selectedFilters.removeAt(i);
+                              }))
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              height: selectedFilters.length > 0
+                  ? sm.scaledHeight(80)
+                  : sm.scaledHeight(88),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  for (var i = 0; i < searchResult.data?.length; i++)
+                    searchResultChild(sm, searchResult.data[i], 1),
+                ],
+              ),
             )
           ],
         ),
@@ -143,7 +179,8 @@ class _SearchResultState extends State<_SearchResult> {
     );
   }
 
-  Widget searchResultChild(SizeManager sm, int identifier) {
+  Widget searchResultChild(
+      SizeManager sm, SearchResultModel result, int identifier) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -165,7 +202,7 @@ class _SearchResultState extends State<_SearchResult> {
                       Radius.circular(12),
                     ),
                     child: Image.network(
-                      "https://source.unsplash.com/random/600*400",
+                      result.photo,
                       height: sm.scaledHeight(18),
                       fit: BoxFit.cover,
                       width: sm.scaledWidth(28),
@@ -178,14 +215,14 @@ class _SearchResultState extends State<_SearchResult> {
                       Padding(
                         padding: EdgeInsets.only(
                             left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-                        child: Text("The Cake Shop",
+                        child: Text(result.businessName,
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w400)),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
                             left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-                        child: Text("Bakery | cake shop",
+                        child: Text(result.shortDescription ?? "",
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w300)),
                       ),
@@ -238,11 +275,11 @@ class _SearchResultState extends State<_SearchResult> {
                     shape: NeumorphicShape.convex,
                     depth: 4,
                     lightSource: LightSource.topLeft,
-                    color: myButtonBackground),
+                    color: myButtonBackground,
+                    boxShape: NeumorphicBoxShape.roundRect(
+                        BorderRadius.all(Radius.circular(24.0)))),
                 margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-                boxShape: NeumorphicBoxShape.roundRect(
-                    BorderRadius.all(Radius.circular(24.0))),
-                onClick: () {
+                onPressed: () {
                   identifier == 1
                       ? Navigator.push(
                           context,
@@ -253,7 +290,6 @@ class _SearchResultState extends State<_SearchResult> {
                           MaterialPageRoute(
                               builder: (context) => BookTable(0, null)));
                 },
-                isEnabled: true,
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Center(
                   child: identifier == 1

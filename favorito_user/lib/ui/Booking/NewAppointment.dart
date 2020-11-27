@@ -22,7 +22,7 @@ class NewAppointment extends StatelessWidget {
           variantColor: Colors.black38,
           depth: 8,
           intensity: 0.65),
-      usedTheme: UsedTheme.LIGHT,
+      themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
           child: _NewAppointment(identifier, data),
@@ -181,11 +181,12 @@ class _NewAppointmentState extends State<_NewAppointment> {
                                         shape: NeumorphicShape.convex,
                                         depth: 8,
                                         lightSource: LightSource.top,
-                                        color: Colors.white),
+                                        color: Colors.white,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.all(
+                                                Radius.circular(8.0)))),
                                     margin: EdgeInsets.symmetric(
                                         horizontal: sm.scaledWidth(2)),
-                                    boxShape: NeumorphicBoxShape.roundRect(
-                                        BorderRadius.all(Radius.circular(8.0))),
                                     child: Center(
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
@@ -231,16 +232,15 @@ class _NewAppointmentState extends State<_NewAppointment> {
                       shape: NeumorphicShape.convex,
                       depth: 4,
                       lightSource: LightSource.topLeft,
-                      color: myButtonBackground),
+                      color: myButtonBackground,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.all(Radius.circular(24.0)))),
                   margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-                  boxShape: NeumorphicBoxShape.roundRect(
-                      BorderRadius.all(Radius.circular(24.0))),
-                  onClick: () {
+                  onPressed: () {
                     BotToast.showText(text: "Appointment sheduled");
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
-                  isEnabled: true,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: Center(
                     child: Text(
@@ -266,10 +266,10 @@ class _NewAppointmentState extends State<_NewAppointment> {
             shape: NeumorphicShape.convex,
             depth: 8,
             lightSource: LightSource.top,
-            color: Colors.white),
+            color: Colors.white,
+            boxShape: NeumorphicBoxShape.roundRect(
+                BorderRadius.all(Radius.circular(8.0)))),
         margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-        boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.all(Radius.circular(8.0))),
         child: DropdownButton<String>(
           value: _selectedService,
           isExpanded: true,
@@ -311,10 +311,10 @@ class _NewAppointmentState extends State<_NewAppointment> {
             shape: NeumorphicShape.convex,
             depth: 8,
             lightSource: LightSource.top,
-            color: Colors.white),
+            color: Colors.white,
+            boxShape: NeumorphicBoxShape.roundRect(
+                BorderRadius.all(Radius.circular(8.0)))),
         margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
-        boxShape: NeumorphicBoxShape.roundRect(
-            BorderRadius.all(Radius.circular(8.0))),
         child: DropdownButton<String>(
           isExpanded: true,
           value: _selectedServicePerson,

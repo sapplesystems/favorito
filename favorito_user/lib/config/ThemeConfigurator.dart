@@ -7,10 +7,10 @@ class ThemeConfigurator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NeumorphicButton(
-      boxShape: NeumorphicBoxShape.circle(),
       padding: EdgeInsets.all(18),
       style: NeumorphicStyle(
         shape: NeumorphicShape.flat,
+        boxShape: NeumorphicBoxShape.circle(),
       ),
       child: Icon(
         Icons.settings,
@@ -18,7 +18,7 @@ class ThemeConfigurator extends StatelessWidget {
             ? Colors.white70
             : Colors.black87,
       ),
-      onClick: () {
+      onPressed: () {
         _changeColor(context);
       },
     );
@@ -36,7 +36,7 @@ class ThemeConfigurator extends StatelessWidget {
         actions: <Widget>[
           NeumorphicButton(
             child: const Text('Close'),
-            onClick: () {
+            onPressed: () {
               Navigator.of(context).pop();
             },
           ),
