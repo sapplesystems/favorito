@@ -303,7 +303,7 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
-    Map<String, dynamic> _map = {"pincode": pincode};
+    Map<String, dynamic> _map = {"pincode": int.parse(pincode)};
     response = await dio
         .post(serviceFunction.funValidPincode, data: _map, options: _opt)
         .catchError((onError) => onErrorCall(onError, context));
@@ -495,12 +495,12 @@ class WebService {
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    Map<String, dynamic> _map = {"pincode": pincode};
+    Map<String, dynamic> _map = {"pincode": int.parse(pincode)};
     CityModelResponse _returnData = CityModelResponse();
     print("Request URL:${serviceFunction.funGetCityByPincode}");
-    response = await dio
-        .post(serviceFunction.funGetCityByPincode, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetCityByPincode,
+        data: _map, options: _opt);
+    // .catchError((onError) => onErrorCall(onError, context));
     _returnData =
         CityModelResponse.fromJson(convert.json.decode(response.toString()));
     print("responseData5:${_returnData.toString()}");

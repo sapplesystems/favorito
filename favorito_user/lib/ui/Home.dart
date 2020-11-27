@@ -41,8 +41,10 @@ class _HomeState extends State<_Home> {
   @override
   void initState() {
     super.initState();
-    getCarousel();
-    getAddress();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getCarousel();
+      getAddress();
+    });
   }
 
   @override
@@ -325,7 +327,7 @@ class _HomeState extends State<_Home> {
   }
 
   void getCarousel() async {
-    await APIManager.carousel().then((value) {
+    await APIManager.carousel(context).then((value) {
       if (value.status == 'success') {
         if (value.data.length > 0) imgList.clear();
         for (var _va in value.data) imgList.add(_va.photo);
@@ -336,7 +338,7 @@ class _HomeState extends State<_Home> {
   }
 
   void getAddress() async {
-    await APIManager.carousel().then((value) {
+    await APIManager.carousel(context).then((value) {
       print("_addressList:${imgList.toString()}");
       if (value.status == 'success') {
         if (value.data.length > 0) {
