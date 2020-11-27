@@ -55,6 +55,10 @@ class _BusinessProfileState extends State<BusinessProfile>
   int cityId = 0;
   List<String> addressList = [];
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final dd1 = GlobalKey<DropdownSearchState<String>>();
+  final ddCity = GlobalKey<DropdownSearchState<String>>();
+  final ddState = GlobalKey<DropdownSearchState<String>>();
+
   File _image;
 
   Future getImage(ImgSource source) async {
@@ -246,6 +250,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                       }
                                       return va;
                                     },
+                                    key: dd1,
                                     autoValidateMode:
                                         AutovalidateMode.onUserInteraction,
                                     mode: Mode.MENU,
@@ -253,7 +258,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                     selectedItem: _controller[4].text,
                                     items: ["Select Hours", "Always Open"],
                                     label: "Working Hours",
-                                    hint: "Please Select Town/City",
+                                    hint: "Please Select",
                                     showSearchBox: false,
                                     onChanged: (value) {
                                       setState(() {
@@ -450,6 +455,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                 autoValidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
+                                key: ddCity,
                                 showSelectedItem: true,
                                 validator: (_v) {
                                   var va;
@@ -487,6 +493,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                 autoValidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
+                                key: ddState,
                                 showSelectedItem: true,
                                 selectedItem: _controller[11].text,
                                 items: _stateList != null ? _stateList : null,
@@ -696,16 +703,16 @@ class _BusinessProfileState extends State<BusinessProfile>
           va.website.removeAt(i);
       }
 
-      addressList.add(va.address1);
-      addressList.add(va.address2);
-      addressList.add(va.address3);
+      addressList.add(va.address1.replaceAll('undefined', ''));
+      addressList.add(va.address2.replaceAll('undefined', ''));
+      addressList.add(va.address3.replaceAll('undefined', ''));
       addressLength = addressList.length;
       _controller[0].text = va.photo;
       _controller[1].text = va.businessName;
       _controller[2].text = va.businessPhone;
       _controller[3].text = va.landline;
       _controller[4].text = va.workingHours;
-      print(" va.workingHours${va.workingHours}");
+      dd1.currentState.changeSelectedItem(va.workingHours);
       _controller[6].text = addressList[0];
       _controller[7].text = addressList[1];
       _controller[8].text = addressList[2];
@@ -740,11 +747,9 @@ class _BusinessProfileState extends State<BusinessProfile>
           BotToast.showText(text: value.message);
           return;
         }
-        setState(() {
-          _controller[10].text = value.data.city;
-          _controller[11].text = value.data.stateName;
-          _controller[12].text = "India";
-        });
+        ddCity.currentState.changeSelectedItem(value.data.city);
+        ddState.currentState.changeSelectedItem(value.data.stateName);
+        setState(() => _controller[12].text = "India");
       });
     } else {
       setState(() {
