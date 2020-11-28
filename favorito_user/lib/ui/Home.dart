@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/serviceModel/AddressListModel.dart';
+import 'package:favorito_user/model/serviceModel/ProfileImageModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -34,16 +36,16 @@ class _Home extends StatefulWidget {
 
 class _HomeState extends State<_Home> {
   String _selectedAddress = "selected Address";
-  List<String> _addressList = ["selected Address"];
   final List<String> imgList = [];
   var _mySearchEditTextController = TextEditingController();
+  AddressListModel addressData;
+  ProfileImageModel profileImage;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getCarousel();
-      getAddress();
+      getUserImage();
     });
   }
 
@@ -65,7 +67,7 @@ class _HomeState extends State<_Home> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      "https://source.unsplash.com/random/400*400",
+                      profileImage == null ? "" : profileImage.result[0].photo,
                       height: sm.scaledHeight(10),
                       fit: BoxFit.cover,
                       width: sm.scaledHeight(10),
@@ -78,26 +80,11 @@ class _HomeState extends State<_Home> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Jessica Saint",
+                          addressData.data?.userName,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
-                        DropdownButton<String>(
-                          value: _selectedAddress,
-                          underline: Container(), // this is the magic
-                          items: _addressList
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedAddress = value;
-                            });
-                          },
-                        ),
+                        Text(_selectedAddress),
                         SizedBox(height: 10),
                       ],
                     ),
@@ -332,21 +319,33 @@ class _HomeState extends State<_Home> {
         if (value.data.length > 0) imgList.clear();
         for (var _va in value.data) imgList.add(_va.photo);
         setState(() {});
-        print("imgList:${imgList.toString()}");
+        getAddress();
       }
     });
   }
 
   void getAddress() async {
-    await APIManager.carousel(context).then((value) {
-      print("_addressList:${imgList.toString()}");
+    await APIManager.getAddress(context).then((value) {
       if (value.status == 'success') {
-        if (value.data.length > 0) {
-          _addressList.clear();
-          for (var _va in value.data) _addressList.add(_va.photo);
+        addressData = value;
+        for (Addresses temp in addressData.data.addresses) {
+          if (temp.defaultAddress == 1) {
+            _selectedAddress = temp.address;
+            break;
+          }
         }
         setState(() {});
-        print("_addressList:${imgList.toString()}");
+      }
+    });
+  }
+
+  void getUserImage() async {
+    await APIManager.getUserImage(context).then((value) {
+      if (value.status == 'success') {
+        setState(() {
+          profileImage = value;
+        });
+        getCarousel();
       }
     });
   }
