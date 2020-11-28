@@ -31,6 +31,8 @@ var BusinessTag = require('./routes/business_tag');
 var BusinessAttribute = require('./routes/business_attribute');
 var BusinessChecklist = require('./routes/business_checklist');
 
+var BusinessReviewController = require('./routes/business_review_route');
+
 /*** USER ROUTES DETAIL START****/
 var BusinessUser = require('./routes/user/business_users');
 var userProfileRoute = require('./routes/user/user_profile_route');
@@ -81,6 +83,7 @@ app.use('/api/page-views', PageViews);
 app.use('/api/tag', BusinessTag);
 app.use('/api/attribute', BusinessAttribute);
 app.use('/api/business-checklist', BusinessChecklist);
+app.use('/api/business-review', BusinessReviewController);
 
 /**
  * USING USER ROUTES

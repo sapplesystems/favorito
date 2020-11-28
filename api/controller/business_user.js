@@ -308,3 +308,20 @@ exports.getProfilePhoto = function(req, res, next) {
 
     }
 }
+
+exports.getRegisteredEmailMobile = function(req, res, next) {
+    if (req.userdata.business_id) {
+        var sql = "SELECT business_email, business_phone, is_email_verified, is_phone_verified FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
+        try {
+            db.query(sql, function(error, result) {
+                if (error) {
+                    return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: error });
+                }
+                return res.status(200).json({ status: 'success', message: ' result successfully', result: result });
+            })
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        }
+
+    }
+}

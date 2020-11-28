@@ -5,12 +5,19 @@ exports.getAddress = async function(req, res, next) {
         var sql = "SELECT address1, address2, address3, pincode, town_city, state_id, country_id, location FROM business_master WHERE business_id = '" + req.userdata.business_id + "'";
     } else if (req.userdata.id) {
         var sql = "SELECT * FROM user_address WHERE id = '" + req.userdata.id + "'";
+        var sql_name = "SELECT full_name FROM users WHERE id = '" + req.userdata.id + "'"
+
     } else {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
     }
     try {
+        var user_name
+        db.query(sql_name, function(err, result) {
+            user_name = result[0].full_name
+        })
         db.query(sql, function(err, result) {
-            return res.status(200).json({ status: 'success', message: 'success', data: result });
+            return res.status(200).json({ status: 'success', message: 'success', data: { user_name: user_name, addresses: result } });
+            // return res.status(200).json({ status: 'success', message: 'success', data: result });
         })
     } catch (error) {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.', error: error });

@@ -72,4 +72,6 @@ router.post('/information/add-photo', upload_business_info_media.array('photo[]'
 
 router.post('/profile-photo', CheckAuth, UserController.getProfilePhoto);
 
+router.post('/get-registered-email-phone', CheckAuth, UserController.getRegisteredEmailMobile);
+
 module.exports = router;
