@@ -28,8 +28,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
   TextEditingController ctrlMail = TextEditingController();
   StreamController<ErrorAnimationType> errorController = StreamController();
   claimInfo clm = claimInfo();
+  TextEditingController textEditingController = TextEditingController();
   bool sentOtp = false;
   ProgressDialog pr;
+  String otpverify = "verify";
+  String emailverify = "verify";
   List<File> files = [];
   @override
   void initState() {
@@ -60,6 +63,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
     return Scaffold(
       backgroundColor: myBackGround,
       appBar: AppBar(
+        // actions: [Icon(Icons.refresh, color: Colors.black)],
         backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
@@ -117,24 +121,24 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         valid: true,
                                         sufixTxt:
                                             clm?.result[0]?.isPhoneVerified == 0
-                                                ? "verify"
+                                                ? otpverify
                                                 : null,
                                         sufixIcon:
                                             clm?.result[0]?.isPhoneVerified == 0
                                                 ? null
                                                 : Icons.check_circle,
                                         security: false,
-                                        sufixClick: () {
+                                        sufixClick: () async {
                                           if (clm?.result[0]?.isPhoneVerified ==
                                               0) {
                                             pr.show();
-                                            WebService.funSendOtpSms(
-                                                    {"mobile": ctrlMobile.text},
-                                                    context)
+                                            await WebService.funSendOtpSms(
+                                                    {"mobile": ctrlMobile.text})
                                                 .then((value) {
                                               pr.hide();
                                               if (value.status == 'success') {
                                                 setState(() {
+                                                  otpverify = "";
                                                   sentOtp = true;
                                                 });
                                               }
@@ -158,6 +162,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           ),
                                           PinCodeTextField(
                                             length: 5,
+                                            controller: textEditingController,
                                             obscureText: true,
                                             appContext: context,
                                             animationType: AnimationType.fade,
@@ -181,17 +186,24 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                             enableActiveFill: true,
                                             errorAnimationController:
                                                 errorController,
-                                            onCompleted: (v) {
+                                            onCompleted: (v) async {
                                               pr.show();
-                                              WebService.funClaimVerifyOtp(
-                                                      {"otp": v.toString()},
-                                                      context)
+                                              await WebService
+                                                      .funClaimVerifyOtp(
+                                                          {"otp": v.toString()},
+                                                          context)
                                                   .then((value) {
                                                 pr.hide();
                                                 BotToast.showText(
                                                     text: value.message);
                                                 if (value.status == 'success') {
+                                                  sentOtp = false;
                                                   getClaimData();
+                                                } else if (value.status ==
+                                                    'fail') {
+                                                  textEditingController.clear();
+                                                  print(
+                                                      "value.message:${value.message}");
                                                 }
                                               });
                                             },
@@ -216,12 +228,12 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                 ),
                                               ),
                                               InkWell(
-                                                onTap: () {
+                                                onTap: () async {
                                                   pr.show();
-                                                  WebService.funSendOtpSms({
+                                                  await WebService
+                                                      .funSendOtpSms({
                                                     "mobile": ctrlMobile.text
-                                                  }, context)
-                                                      .then((value) {
+                                                  }).then((value) {
                                                     pr.hide();
                                                     if (value.status ==
                                                         'success') {
@@ -262,7 +274,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           sufixTxt:
                                               clm?.result[0]?.isEmailVerified ==
                                                       0
-                                                  ? "verify"
+                                                  ? emailverify
                                                   : null,
                                           sufixIcon:
                                               clm?.result[0]?.isEmailVerified ==
@@ -270,15 +282,19 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   ? null
                                                   : Icons.check_circle,
                                           security: false,
-                                          sufixClick: () {
+                                          sufixClick: () async {
                                             pr.show();
-                                            WebService.funSendEmailVerifyLink(
-                                                    context)
+                                            await WebService
+                                                    .funSendEmailVerifyLink(
+                                                        context)
                                                 .then((value) {
                                               pr.hide();
                                               BotToast.showText(
                                                   text: value.message);
                                               if (value.status == 'success') {
+                                                setState(() {
+                                                  emailverify = "";
+                                                });
                                                 getClaimData();
                                               }
                                             });
@@ -325,9 +341,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
                           vertical: sm.scaledHeight(4)),
                       child: roundedButton(
                           clicker: () async {
+                            pr.show();
                             await WebService.funClaimAdd(ctrlMobile.text,
                                     ctrlMail.text, files, context)
                                 .then((value) {
+                              pr.hide();
                               BotToast.showText(text: value.message);
                             });
                           },
@@ -340,13 +358,16 @@ class _BusinessClaimState extends State<BusinessClaim> {
   }
 
   getClaimData() async {
+    pr.show();
     await WebService.funClaimInfo(context).then((value) {
+      pr.hide();
       if (value.status == 'success') {
-        setState(() {
-          ctrlMail.text = value?.result[0]?.businessEmail;
-          ctrlMobile.text = value?.result[0]?.businessPhone;
-          clm = value;
-        });
+        ctrlMail.text = value?.result[0]?.businessEmail;
+        ctrlMobile.text = value?.result[0]?.businessPhone;
+
+        setState(() => clm = value);
+        if (clm?.result[0]?.isPhoneVerified == 1) otpverify = "";
+        if (clm?.result[0]?.isEmailVerified == 1) emailverify = "";
       }
     });
   }

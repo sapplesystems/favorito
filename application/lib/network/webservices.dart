@@ -91,13 +91,13 @@ class WebService {
   static Future<dashData> funGetDashBoard(BuildContext context) async {
     // pr = ProgressDialog(context);
     String token = await Prefs.token;
-    Options _opt = Options(
+    opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     dashModel _data = dashModel();
     print("Request URL:${serviceFunction.funDash}");
     response = await dio
-        .post(serviceFunction.funDash, options: _opt)
+        .post(serviceFunction.funDash, options: opt)
         .catchError((onError) => onErrorCall(onError, context))
         .catchError((onError) => onErrorCall(onError, context));
 
@@ -1365,9 +1365,9 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funClaimInfo;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    print("Request URL:$url");
+    response = await dio.post(url, options: opt);
+    // .catchError((onError) => onErrorCall(onError, context));
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1376,16 +1376,16 @@ class WebService {
     }
   }
 
-  static Future<BaseResponseModel> funSendOtpSms(
-      Map _map, BuildContext context) async {
+  static Future<BaseResponseModel> funSendOtpSms(Map _map) async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funSendOtpSms;
-    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     print("mobile is :${_map.toString()}");
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
+    // .catchError((onError) => onErrorCall(onError, context));
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1400,7 +1400,9 @@ class WebService {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funClaimVerifyOtp;
-    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio
         .post(url, data: _map, options: opt)
         .catchError((onError) => onErrorCall(onError, context));
@@ -1418,7 +1420,9 @@ class WebService {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funSendEmailVerifyLink;
-    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio
         .post(url, options: opt)
         .catchError((onError) => onErrorCall(onError, context));
@@ -1436,7 +1440,9 @@ class WebService {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funClaimAdd;
-    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
 
     List va = [];
     for (var v in files)
