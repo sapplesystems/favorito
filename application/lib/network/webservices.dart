@@ -17,6 +17,8 @@ import 'package:Favorito/model/businessInfoModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
+import 'package:Favorito/model/checkinsModel.dart';
+import 'package:Favorito/model/claimInfo.dart';
 import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
 import 'package:Favorito/model/contactPerson/SearchBranchResonseModel.dart';
@@ -68,7 +70,7 @@ class WebService {
     response = await dio
         .post(serviceFunction.funBusyList)
         .catchError((onError) => onErrorCall(onError, context));
-    ;
+
     _data = busyListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData1:${_data.status}");
     return _data;
@@ -1336,6 +1338,121 @@ class WebService {
       print("Response is :${response.toString()}");
       return bookingListModel
           .fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  //*************************************/Checkins/*********************************/
+//this is used to get checkinslist
+  static Future<checkinsModel> funCheckinslist(BuildContext context) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funCheckinslist;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return checkinsModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  //*************************************/Claims/*********************************/
+
+  static Future<claimInfo> funClaimInfo(BuildContext context) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funClaimInfo;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return claimInfo.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> funSendOtpSms(
+      Map _map, BuildContext context) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funSendOtpSms;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("mobile is :${_map.toString()}");
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> funClaimVerifyOtp(
+      Map _map, BuildContext context) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funClaimVerifyOtp;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> funSendEmailVerifyLink(
+      BuildContext context) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funSendEmailVerifyLink;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> funClaimAdd(
+      String mono, String mail, List files, BuildContext context) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funClaimAdd;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {"photo": va, "phone": mono, "email": mail};
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(url, data: formData, options: opt);
+    // .catchError((onError) => onErrorCall(onError, context));
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
     }
   }
 

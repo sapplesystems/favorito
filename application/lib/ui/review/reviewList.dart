@@ -3,6 +3,8 @@ import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/review/review.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
 class reviewList extends StatefulWidget {
   @override
@@ -34,7 +36,8 @@ class _reviewListState extends State<reviewList> {
       ),
       body: Column(children: [
         Padding(
-          padding: EdgeInsets.all(12),
+          padding: EdgeInsets.symmetric(
+              horizontal: sm.scaledWidth(4), vertical: sm.scaledHeight(3)),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Row(children: [
@@ -44,8 +47,15 @@ class _reviewListState extends State<reviewList> {
             Text("100 Rating\n75 Reviews", style: TextStyle(fontSize: 14))
           ]),
         ),
+        Padding(
+          padding: EdgeInsets.only(bottom: sm.scaledHeight(6)),
+          child: SvgPicture.asset(
+            'assets/icon/reviewlist.svg',
+            height: sm.scaledHeight(14),
+          ),
+        ),
         Container(
-          height: sm.scaledHeight(64),
+          height: sm.scaledHeight(57),
           child: Card(
             shape: rrb28,
             child: Padding(
@@ -55,7 +65,7 @@ class _reviewListState extends State<reviewList> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.filter, color: myRed, size: 30),
+                        Icon(Icons.filter_alt, color: myRed, size: 30),
                         Row(
                           children: [
                             Text(

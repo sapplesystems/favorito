@@ -89,4 +89,16 @@ class serviceFunction {
   static String funAppoinmentPersonOnOff = funAppointment + 'set-person-status';
   static String funAppoinmentServiceOnOff =
       funAppointment + 'set-service-status';
+
+  //checkins
+  static String funCheckinslist = funChecklist + 'list';
+
+  //claim
+
+  static String funClaimSendMail = funClaim + 'send-email-verify-link';
+  static String funSendOtpSms = funClaim + 'send-otp-sms';
+  static String funClaimInfo = funUser + 'get-registered-email-phone';
+  static String funClaimVerifyOtp = funClaim + 'verify-otp';
+  static String funSendEmailVerifyLink = funClaim + 'send-email-verify-link';
+  static String funClaimAdd = funClaim + 'add';
 }

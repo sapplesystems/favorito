@@ -58,9 +58,9 @@ class _CatalogState extends State<Catalogs> {
           future: WebService.funGetCatalogs(context),
           builder:
               (BuildContext context, AsyncSnapshot<CatlogListModel> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting)
               return Center(child: Text('Please wait its loading...'));
-            } else {
+            else {
               if (snapshot.hasError)
                 return Center(child: Text('Error: ${snapshot.error}'));
               else {
