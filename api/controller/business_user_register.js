@@ -64,10 +64,10 @@ exports.register = function(req, res, next) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                 } else {
                     if (check[0].c === 0) {
-                        var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp, business_email) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "','" + email + "')";
+                        var sql = "INSERT INTO business_master (business_id, business_type_id, business_category_id, business_name, postal_code, business_phone, reach_whatsapp, business_email, password) values('" + business_id + "','" + business_type_id + "','" + business_category_id + "','" + business_name + "','" + postal_code + "','" + business_phone + "','" + reach_whatsapp + "','" + email + "','" + hash + "')";
                         db.query(sql, function(err, result) {
                             if (err) {
-                                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
                             }
 
                             /**insert row into business_owner_profile table */

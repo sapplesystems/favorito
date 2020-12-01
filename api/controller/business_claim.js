@@ -15,7 +15,7 @@ exports.addClaim = async function(req, res, next) {
         var claim_count = await checkClaimCount(business_id);
 
         if (claim_count >= 3) {
-            return res.status(403).json({ status: 'error', message: 'You can not claim to this business as you have already claimed ' + claim_count + ' times.' });
+            return res.status(200).json({ status: 'fail', message: 'You can not claim to this business as you have already claimed more than ' + claim_count + ' times.' });
         }
 
         var postval = { business_id: business_id };
@@ -132,7 +132,7 @@ exports.sendEmailVerifyLink = function(req, res, next) {
 
     var mailOptions = {
         from: process.env.EMAIL_AUTH_USER,
-        to: 'amit8896406322@gmail.com',
+        to: req.userdata.email,
         subject: 'Verification link',
         text: `Verification link`,
         html: `<h1>Welcome</p><br><a href="${full_url}/api/business-claim/let-me-verify/${token}">Click here to verify the Email</a>`
@@ -162,7 +162,7 @@ exports.verifyEmailLink = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).send({ status: 'success', message: 'email verified updated' })
+            return res.status(301).redirect("https://www.sapple.co.in")
         })
     } catch (error) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
@@ -208,7 +208,7 @@ exports.verifyOtp = async function(req, res, next) {
                     return res.status(200).send({ status: 'success', message: 'phone is verified' })
                 })
             } else {
-                return res.status(401).json({ status: 'error', message: 'OTP is incorrect' })
+                return res.status(200).json({ status: 'fail', message: 'OTP is incorrect' })
             }
 
         } catch (error) {
@@ -218,7 +218,7 @@ exports.verifyOtp = async function(req, res, next) {
 }
 
 exports.sendSms = async function(phone, otp) {
-    var options = { authorization: process.env.FASTSENDSMS_API_KEY, message: `You one time password is ${otp}`, numbers: [phone] }
+    var options = { authorization: process.env.FASTSENDSMS_API_KEY, message: `You one time password is ${otp}`, numbers: [phone], }
     fast2sms.sendMessage(options).then(function(data) {
         console.log('OTP is sent successfully', data);
         return true
