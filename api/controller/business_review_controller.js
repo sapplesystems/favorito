@@ -11,21 +11,19 @@ exports.all_business_reviewlist = function(req, res, next) {
         }
 
         if (req.body.review_id != '' && req.body.review_id != undefined && req.body.review_id != null) {
-            var sql = "SELECT b_r.id, u.full_name,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
+            var sql = "SELECT b_r.id, u.full_name, b_r.user_id as user_id,b_r.business_id as business_id,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
             DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
             FROM business_reviews as b_r\n\
             JOIN users as u ON u.id = b_r.user_id  \n\
             JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
             WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 AND b_r.id = '" + req.body.review_id + "'  ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
         } else {
-            var sql = "SELECT b_r.id, u.full_name,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
+            var sql = "SELECT b_r.id, u.full_name, b_r.user_id as user_id,b_r.business_id as business_id,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
             DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
             FROM business_reviews as b_r\n\
             JOIN users as u ON u.id = b_r.user_id  \n\
             JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
             WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
-
-
         }
         db.query(sql, function(err, result) {
             if (err) {

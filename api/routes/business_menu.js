@@ -27,9 +27,14 @@ var upload = multer({ storage: storage });
 router.post('/dd-verbose', CheckAuth, MenuController.dd_verbose);
 
 /**
- * CREATE NEW MENU ITEM
+ * GET LIST ALL MENU
  */
 router.post('/list', CheckAuth, MenuController.listAllMenu);
+
+/**
+ * GET LIST ALL MENU
+ */
+router.post('/change-menu-status', CheckAuth, MenuController.changeMenuStatus);
 
 /**
  * CREATE NEW MENU ITEM
@@ -40,6 +45,11 @@ router.post('/create', upload.array('photo[]', 1000), CheckAuth, MenuController.
  * EDIT MENU ITEM
  */
 router.post('/edit', upload.array('photo[]', 1000), CheckAuth, MenuController.editMenuItem);
+
+/**
+ * DELETE MENU ITEM
+ */
+router.post('/delete-menu-item', CheckAuth, MenuController.deleteMenuItem);
 
 /**
  * ADD MENU ITEM PHOTOS
