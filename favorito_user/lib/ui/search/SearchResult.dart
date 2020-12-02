@@ -111,6 +111,9 @@ class _SearchResultState extends State<_SearchResult> {
                         security: false,
                         valid: true,
                         prefixIcon: 'search',
+                        prefClick: () {
+                          search(_mySearchEditTextController.text);
+                        },
                       ),
                     ),
                   ),
@@ -168,8 +171,9 @@ class _SearchResultState extends State<_SearchResult> {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  for (var i = 0; i < searchResult.data?.length; i++)
-                    searchResultChild(sm, searchResult.data[i], 1),
+                  if (searchResult != null && searchResult.data != null)
+                    for (var i = 0; i < searchResult.data.length; i++)
+                      searchResultChild(sm, searchResult.data[i], 1),
                 ],
               ),
             )

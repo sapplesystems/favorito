@@ -67,7 +67,11 @@ class _HomeState extends State<_Home> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      profileImage == null ? "" : profileImage.result[0].photo,
+                      profileImage == null
+                          ? "https://source.unsplash.com/random/40*40"
+                          : profileImage.data.length == 0
+                              ? "https://source.unsplash.com/random/40*40"
+                              : profileImage.data[0].photo,
                       height: sm.scaledHeight(10),
                       fit: BoxFit.cover,
                       width: sm.scaledHeight(10),
@@ -80,7 +84,7 @@ class _HomeState extends State<_Home> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          addressData.data?.userName,
+                          addressData == null ? "" : addressData.data.userName,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
