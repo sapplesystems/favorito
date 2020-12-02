@@ -147,7 +147,7 @@ class _signup_bState extends State<signup_b> {
                               child: DropdownSearch<String>(
                                   mode: Mode.MENU,
                                   maxHeight: busy.length * 58.0,
-                                  showSelectedItem: true,
+                                  showSelectedItem: true, 
                                   items: busy,
                                   label: ddlabel,
                                   hint: "Please Select Business Type",

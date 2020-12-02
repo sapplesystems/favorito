@@ -45,6 +45,9 @@ import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/model/orderListModel.dart';
 import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
+import 'package:Favorito/model/review/ReviewListModel.dart';
+import 'package:Favorito/model/review/ReviewModel.dart';
+import 'package:Favorito/model/review/ReviewintroModel.dart';
 import 'package:Favorito/model/tagModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
@@ -1459,6 +1462,71 @@ class WebService {
       print("Response is :${response.toString()}");
       return BaseResponseModel.fromJson(
           convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<ReviewintroModel> funReviewIntro(BuildContext context) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funReviewIntro;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return ReviewintroModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<ReviewListModel> funReviewList(page) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funReviewList;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: page, options: opt);
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return ReviewListModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<ReviewModel> funReviewgetReviewReplies(page) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funReviewgetReviewReplies;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: page, options: opt);
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return ReviewModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<ReviewModel> funReviewReply(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funReviewReply;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return ReviewModel.fromJson(convert.json.decode(response.toString()));
     }
   }
 

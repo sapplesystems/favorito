@@ -165,8 +165,9 @@ class _signup_aState extends State<signup_a> {
                                   visible: catvisib,
                                   child: DropdownSearch<String>(
                                       mode: Mode.MENU,
-                                      maxHeight: busy.length * 58.0,
+                                      // maxHeight: busy.length * 58.0,
                                       showSelectedItem: true,
+                                      showSearchBox: true,
                                       items: cat,
                                       label: "Business Category",
                                       hint: "Please Select Business Category",
@@ -234,7 +235,7 @@ class _signup_aState extends State<signup_a> {
   }
 
   void getCategory() {
-    WebService.funGetCatList({"type_id": type_id},context).then((value) {
+    WebService.funGetCatList({"type_id": type_id}, context).then((value) {
       cat.clear();
       catdata.clear();
       catdata.addAll(value.data);

@@ -1,4 +1,3 @@
-import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';
 import 'package:Favorito/component/BranchDetailsListViewDelete.dart';
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
@@ -10,6 +9,7 @@ import 'package:Favorito/model/contactPerson/UpdateContactPerson.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -36,7 +36,7 @@ class _ContactPersonState extends State<ContactPerson> {
   final GlobalKey<FormState> _form1Key = GlobalKey<FormState>();
   final GlobalKey<FormState> _form2Key = GlobalKey<FormState>();
   final GlobalKey<FormState> _form3Key = GlobalKey<FormState>();
-
+  final _roleKey = GlobalKey<DropdownSearchState<String>>();
   String _selectedRole = '';
   List<String> _roleList = [];
   List<BranchDetailsModel> _searchedBranches = [];
@@ -50,39 +50,39 @@ class _ContactPersonState extends State<ContactPerson> {
     super.initState();
   }
 
-  void initializeDefaultValues() {
-    WebService.funContactPersonRequiredData(context).then((value) {
+  void initializeDefaultValues() async {
+    await WebService.funContactPersonRequiredData(context).then((value) {
+      _contactPersonData = value;
+      displayName = _contactPersonData.data.firstName +
+          ' ' +
+          _contactPersonData.data.lastName;
+      displayEmail = _contactPersonData.data.email;
+      _myFirstNameEditController.text = _contactPersonData.data.firstName;
+      _myLastNameEditController.text = _contactPersonData.data.lastName;
+      _myPersonalEmailEditController.text = _contactPersonData.data.email;
+      _myPersonalMobileEditController.text = _contactPersonData.data.phone;
+
+      _myNameEditController.text =
+          _contactPersonData.data.bankAcHolderName ?? "";
+      _myAccountNoEditController.text =
+          _contactPersonData.data.accountNumber ?? "";
+      _myIFSCEditController.text = _contactPersonData.data.ifscCode ?? "";
+      _myUPIEditController.text = _contactPersonData.data.upi ?? "";
+      _selectedBranches.clear();
+      for (var branch in _contactPersonData.data.branches) {
+        BranchDetailsModel model = new BranchDetailsModel();
+        model.id = branch.id.toString();
+        model.name = branch.branchName;
+        model.address = branch.branchAddress;
+        model.isSelected = true;
+        model.imageUrl = branch.branchPhoto;
+        _selectedBranches.add(model);
+      }
       setState(() {
-        _contactPersonData = value;
-        displayName = _contactPersonData.data.firstName +
-            ' ' +
-            _contactPersonData.data.lastName;
-        displayEmail = _contactPersonData.data.email;
-        _myFirstNameEditController.text = _contactPersonData.data.firstName;
-        _myLastNameEditController.text = _contactPersonData.data.lastName;
-        _myPersonalEmailEditController.text = _contactPersonData.data.email;
-        _myPersonalMobileEditController.text = _contactPersonData.data.phone;
-        _selectedRole = _contactPersonData.data.role;
+        for (var role in _contactPersonData.userRole)
+          setState(() => _roleList.add(role));
 
-        _myNameEditController.text = _contactPersonData.data.bankAcHolderName;
-        _myAccountNoEditController.text = _contactPersonData.data.accountNumber;
-        _myIFSCEditController.text = _contactPersonData.data.ifscCode;
-        _myUPIEditController.text = _contactPersonData.data.upi;
-
-        _selectedBranches.clear();
-        for (var branch in _contactPersonData.data.branches) {
-          BranchDetailsModel model = new BranchDetailsModel();
-          model.id = branch.id.toString();
-          model.name = branch.branchName;
-          model.address = branch.branchAddress;
-          model.isSelected = true;
-          model.imageUrl = branch.branchPhoto;
-          _selectedBranches.add(model);
-        }
-
-        for (var role in _contactPersonData.userRole) {
-          _roleList.add(role);
-        }
+        _roleKey.currentState.changeSelectedItem(_contactPersonData.data.role);
       });
     });
   }
@@ -198,9 +198,11 @@ class _ContactPersonState extends State<ContactPerson> {
                               padding: const EdgeInsets.only(
                                   left: 16.0, right: 16.0, top: 16.0),
                               child: DropdownSearch<String>(
+                                key: _roleKey,
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 selectedItem: _selectedRole,
                                 items: _roleList,
@@ -316,7 +318,7 @@ class _ContactPersonState extends State<ContactPerson> {
                   child: Builder(
                     builder: (context) => Form(
                       key: _form3Key,
-                      autovalidate: _autoValidateForm,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
                         children: [
                           Padding(
@@ -337,7 +339,8 @@ class _ContactPersonState extends State<ContactPerson> {
                                   icon: Icon(Icons.search),
                                   onPressed: () {
                                     WebService.funSearchBranches(
-                                            _myBranchSearchEditController.text,context)
+                                            _myBranchSearchEditController.text,
+                                            context)
                                         .then((value) {
                                       for (var branch in value.data) {
                                         BranchDetailsModel model1 =
@@ -387,7 +390,7 @@ class _ContactPersonState extends State<ContactPerson> {
                       request.ifsc = _myIFSCEditController.text;
                       request.upi = _myUPIEditController.text;
                       WebService.funUpdateContactPerson(
-                              request, _selectedBranches,context)
+                              request, _selectedBranches, context)
                           .then((value) {
                         if (value.status == 'success') {
                           BotToast.showText(text: value.message);

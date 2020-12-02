@@ -101,4 +101,14 @@ class serviceFunction {
   static String funClaimVerifyOtp = funClaim + 'verify-otp';
   static String funSendEmailVerifyLink = funClaim + 'send-email-verify-link';
   static String funClaimAdd = funClaim + 'add';
+
+  //Review
+
+  static String funReviewIntro = funReview + 'get-review-detail';
+
+  static String funReviewList = funReview + 'review-list';
+
+  static String funReviewgetReviewReplies = funReview + 'get-review-replies';
+
+  static String funReviewReply = funReview + 'set-review';
 }
