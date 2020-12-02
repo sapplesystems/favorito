@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
     decide();
     super.initState();
     setState(() {
-      userCtrl.text = "rohan@gm.co";
+      userCtrl.text = "rohit.shukla@sapple.co.in";
       passCtrl.text = "rohan@123";
     });
   }

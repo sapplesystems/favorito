@@ -10,12 +10,13 @@ class txtfieldPostAction extends StatefulWidget {
   bool valid;
   TextInputType keyboardSet;
   TextEditingController ctrl;
-  String sufixTxt;
-  Color sufixColor;
   IconData sufixIcon;
   Function myOnChanged;
   RegExp myregex;
-  Function sifixClick;
+  Function sufixClick;
+  String sufixTxt;
+  Color sufixColor;
+
   txtfieldPostAction(
       {this.title,
       this.security,
@@ -27,9 +28,10 @@ class txtfieldPostAction extends StatefulWidget {
       this.valid,
       this.maxLines,
       this.myOnChanged,
-      this.sufixTxt,
+      this.sufixClick,
       this.sufixColor,
-      this.sifixClick});
+      this.sufixTxt,
+      this.sufixIcon});
   @override
   _txtfieldPostActionState createState() => _txtfieldPostActionState();
 }
@@ -47,14 +49,22 @@ class _txtfieldPostActionState extends State<txtfieldPostAction> {
             labelText: widget.title,
             counterText: "",
             suffix: InkWell(
-                onTap: () => widget.sifixClick(),
-                child: Text(
-                  widget.sufixTxt,
-                  style: TextStyle(
-                      color: widget.sufixColor != null
-                          ? widget.sufixColor
-                          : Colors.blue),
-                )),
+                onTap: () => widget.sufixClick(),
+                child: widget.sufixTxt == null
+                    ? Icon(widget.sufixIcon,
+                        size: 16,
+                        semanticLabel: "dhjh",
+                        textDirection: TextDirection.ltr,
+                        color: widget.sufixColor != null
+                            ? widget.sufixColor
+                            : Colors.blue)
+                    : Text(
+                        widget.sufixTxt,
+                        style: TextStyle(
+                            color: widget.sufixColor != null
+                                ? widget.sufixColor
+                                : Colors.blue),
+                      )),
             hintText: widget.hint,
             fillColor: Colors.transparent,
             border: OutlineInputBorder(

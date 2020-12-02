@@ -26,6 +26,7 @@ class _businessInfoState extends State<businessInfo> {
   List<bool> radioChecked = [];
   bool _autoValidateForm = false;
   var loadedImageList = [];
+  final _keyCategory = GlobalKey<DropdownSearchState<String>>();
   List<TextEditingController> controller = [];
   List<String> totalpay = [];
   List<String> selectPay = [];
@@ -147,6 +148,7 @@ class _businessInfoState extends State<businessInfo> {
                       validator: (v) => v == '' ? "required field" : null,
                       autoValidateMode: AutovalidateMode.onUserInteraction,
                       mode: Mode.MENU,
+                      key: _keyCategory,
                       showSelectedItem: true,
                       selectedItem: controller[0].text,
                       enabled: false,
@@ -328,7 +330,7 @@ class _businessInfoState extends State<businessInfo> {
         var _va = value.data;
         var _vaddV = value.ddVerbose;
         loadedImageList = _va.photos;
-        controller[0].text = _va.categoryName;
+        _keyCategory.currentState.changeSelectedItem(_va.categoryName);
         catid = _va.categoryId;
 
         selectedSubCategories = _va.subCategories;
@@ -365,7 +367,7 @@ class _businessInfoState extends State<businessInfo> {
       print("aaaaaaa${value.toString()}");
     });
 
-    await WebService.getSubCat({"category_id": catid},context).then((value) {
+    await WebService.getSubCat({"category_id": catid}, context).then((value) {
       if (value.message == "success") {
         var _va = value.data;
 
@@ -400,7 +402,7 @@ class _businessInfoState extends State<businessInfo> {
         "payment_method": selectPay,
         "attributes": selectAttributeId
       };
-      WebService.setBusinessInfoData(_map,context).then((value) {
+      WebService.setBusinessInfoData(_map, context).then((value) {
         if (value.status == "success") {
           BotToast.showText(text: value.message);
           Navigator.pop(context);
@@ -418,7 +420,7 @@ class _businessInfoState extends State<businessInfo> {
         cameraIcon: Icon(Icons.add, color: Colors.red));
     img.add(image);
 
-    await WebService.profileInfoImageUpdate(img,context).then((value) async {
+    await WebService.profileInfoImageUpdate(img, context).then((value) async {
       if (value.status == "success") {
         BotToast.showText(text: value.message);
         photoData.clear();

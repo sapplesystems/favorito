@@ -1,9 +1,13 @@
 import 'dart:ui';
+import 'package:Favorito/model/checkinsModel.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/dateformate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class checkins extends StatefulWidget {
   @override
   _checkinsState createState() => _checkinsState();
@@ -11,6 +15,7 @@ class checkins extends StatefulWidget {
 
 class _checkinsState extends State<checkins> {
   SizeManager sm;
+  List<checkinsModel> dataList = [];
   @override
   void initState() {
     super.initState();
@@ -45,37 +50,62 @@ class _checkinsState extends State<checkins> {
             ),
           ),
         ),
-        body: Container(
-            height: sm.scaledHeight(100),
-            color: myBackGround,
-            padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                Row(
-                  children: [
-                    Text("   New"),
-                  ],
-                ),
-                for (int i = 0; i < 2; i++)
-                  rowCard(
-                      "Olivia carr",
-                      "Reach new audience searching for related services",
-                      () {}),
-                Row(
-                  children: [
-                    Text("   All"),
-                  ],
-                ),
-                for (int i = 0; i < 2; i++)
-                  rowCard(
-                      "Randal charles",
-                      "Reach new audience searching for related services",
-                      () {}),
-              ]),
-            )));
+        body: FutureBuilder<checkinsModel>(
+          future: WebService.funCheckinslist(context),
+          builder:
+              (BuildContext context, AsyncSnapshot<checkinsModel> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                  color: myBackGround,
+                  child:
+                      Center(child: Text('Please wait its loading data.....')));
+            } else {
+              if (snapshot.hasError)
+                return Center(child: Text('Error: ${snapshot.error}'));
+              else {
+                print("snapshot:${snapshot.data.toString()}");
+                return Container(
+                  height: sm.scaledHeight(100),
+                  color: myBackGround,
+                  padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      Row(
+                        children: [
+                          Text("   New"),
+                        ],
+                      ),
+                      for (int i = 0; i < snapshot.data.data.length; i++)
+                        if (snapshot.data.data[i].isNew?.toString() != '0')
+                          rowCard(
+                              snapshot.data.data[i].name,
+                              "Review: ${snapshot.data.data[i].reviews}\nCreated At: ${snapshot.data.data[i].reviewAt} , ${dateFormat5.format(DateTime.parse(snapshot.data.data[i].reviewDate))}",
+                              () {},
+                              snapshot.data.data[i].rating?.toString()),
+                      Divider(height: sm.scaledHeight(4)),
+                      Row(
+                        children: [
+                          Text("   All"),
+                        ],
+                      ),
+                      for (int i = 0; i < snapshot.data.data.length; i++)
+                        if (snapshot.data.data[i].isNew?.toString() != '1')
+                          rowCard(
+                              snapshot.data.data[i].name,
+                              "Review: ${snapshot.data.data[i].reviews}\nCreated At: ${snapshot.data.data[i].reviewAt} , ${dateFormat5.format(DateTime.parse(snapshot.data.data[i].reviewDate))}",
+                              () {},
+                              snapshot.data.data[i].rating?.toString()),
+                    ]),
+                  ),
+                );
+              }
+            }
+          },
+        ));
   }
 
-  Widget rowCard(String title, String subtitle, Function function) {
+  Widget rowCard(
+      String title, String subtitle, Function function, String rating) {
     return InkWell(
       onTap: function,
       child: Container(
@@ -86,10 +116,21 @@ class _checkinsState extends State<checkins> {
               title: Text(title,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
               subtitle: Text(subtitle),
-              trailing: CircleAvatar(
-                backgroundColor: Colors.red,
-                child: Text("4", style: TextStyle(fontSize: 12)),
-                maxRadius: 12,
+              trailing: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Text(
+                      "Rating",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.red,
+                    child: Text(rating, style: TextStyle(fontSize: 12)),
+                    maxRadius: 12,
+                  ),
+                ],
               ))),
     );
   }

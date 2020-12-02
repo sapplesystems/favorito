@@ -432,7 +432,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                   sufixColor: myRed,
                                   sufixTxt: "Add Line",
                                   security: false,
-                                  sifixClick: () {
+                                  sufixClick: () {
                                     setState(() {
                                       if (addressLength < 3)
                                         addressLength = addressLength + 1;
@@ -541,7 +541,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                   sufixColor: myRed,
                                   sufixTxt: "Add Line",
                                   security: false,
-                                  sifixClick: () {
+                                  sufixClick: () {
                                     webSiteLengthPlus();
                                   }),
                           ]),
