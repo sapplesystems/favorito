@@ -192,11 +192,10 @@ class _dashboardState extends State<dashboard> {
                   credit("Free Credit", free_credit, "assets/icon/warning.svg"),
                   credit("Paid Credit", paid_credit, "assets/icon/warning.svg")
                 ]),
-                for (int i = 0; i < 2; i++)
-                  rowCard(
-                      "Advertise",
-                      "Reach new audience searching for related services",
-                      () {}),
+                rowCard("Advertise",
+                    "Reach new audience searching for related services", () {}),
+                rowCard(
+                    "Notifications", "Send Direct Update to Customer", () {}),
               ]),
             )));
   }

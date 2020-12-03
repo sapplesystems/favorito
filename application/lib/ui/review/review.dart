@@ -57,13 +57,13 @@ class _reviewState extends State<review> {
         appBar: AppBar(
           backgroundColor: myBackGround,
           elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
+          // leading: IconButton(
+          //   icon: Icon(Icons.arrow_back, color: Colors.black),
+          //   onPressed: () => Navigator.of(context).pop(),
+          // ),
+          // iconTheme: IconThemeData(
+          //   color: Colors.black, //change your color here
+          // ),
           centerTitle: true,
           title: Text(
             "Review List",
@@ -122,6 +122,7 @@ class _reviewState extends State<review> {
                             pr?.hide();
                             rm.data.clear();
                             setState(() {
+                              ctrl.text = "";
                               rm.data = value.data;
                             });
                           });

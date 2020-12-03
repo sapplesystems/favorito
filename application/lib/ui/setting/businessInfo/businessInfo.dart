@@ -151,7 +151,7 @@ class _businessInfoState extends State<businessInfo> {
                       key: _keyCategory,
                       showSelectedItem: true,
                       selectedItem: controller[0].text,
-                      enabled: false,
+                      // enabled: false,
                       // items: catLst != null ? catLst.values.toList() : null,
                       label: "Category",
                       hint: "Please Select Category",
@@ -369,13 +369,9 @@ class _businessInfoState extends State<businessInfo> {
 
     await WebService.getSubCat({"category_id": catid}, context).then((value) {
       if (value.message == "success") {
-        var _va = value.data;
-
-        totalSubCategories = _va;
+        totalSubCategories = value.data;
         for (int i = 0; i < totalSubCategories.length; i++)
           totalSubCategoriesName.add(totalSubCategories[i].categoryName);
-
-        setState(() {});
       }
     });
   }

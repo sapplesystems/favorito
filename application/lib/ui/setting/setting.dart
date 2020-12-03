@@ -66,6 +66,7 @@ class _settingState extends State<setting> {
     Appoinment()
   ];
   double settingHeight = 0.0;
+  double settingTool = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +133,9 @@ class _settingState extends State<setting> {
                         setState(() => settingHeight = _v);
                       },
                       child: Icon(
-                        Icons.arrow_drop_up,
+                        settingHeight != 0
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
                         size: 28,
                         color: Colors.black,
                       ),
@@ -165,13 +168,22 @@ class _settingState extends State<setting> {
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                     ),
-                    trailing: Icon(
-                      Icons.arrow_drop_up,
-                      size: 28,
-                      color: Colors.black,
+                    trailing: IconButton(
+                      icon: Icon(
+                        settingTool != 0
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        size: 28,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        double _v = settingTool == 0.0 ? 300.0 : 0.0;
+                        setState(() => settingTool = _v);
+                      },
                     ),
                   ),
                   Container(
+                    height: settingTool,
                     padding:
                         EdgeInsets.symmetric(horizontal: sm.scaledWidth(14)),
                     child: Column(children: [

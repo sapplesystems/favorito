@@ -1530,6 +1530,22 @@ class WebService {
     }
   }
 
+  static Future<ReviewModel> funCategoryList(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funCategoryList;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return ReviewModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
   static onErrorCall(onError, context) async {
     if (onError.error == "Http status error [401]") {
       Prefs().clear();
