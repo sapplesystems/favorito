@@ -58,16 +58,18 @@ class _Signup extends StatelessWidget {
     return Container(
       height: sm.scaledHeight(100),
       width: sm.scaledWidth(100),
-      padding: EdgeInsets.symmetric(
-          horizontal: sm.scaledWidth(10), vertical: sm.scaledHeight(5)),
+      padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
       decoration: BoxDecoration(color: myBackGround),
       child: ListView(
         shrinkWrap: true,
         children: [
-          SvgPicture.asset(
-            'assets/icon/signup_image.svg',
-            height: sm.scaledHeight(20),
-            fit: BoxFit.fitHeight,
+          Padding(
+            padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+            child: SvgPicture.asset(
+              'assets/icon/signup_image.svg',
+              height: sm.scaledHeight(20),
+              fit: BoxFit.fitHeight,
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(top: sm.scaledHeight(2)),
@@ -120,8 +122,34 @@ class _Signup extends StatelessWidget {
                       ),
                     ]))),
           ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: sm.scaledHeight(4)),
+              child: Text(
+                "Already have an account?",
+                style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Login()));
+                },
+                child: Text(
+                  "Login",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18, color: myRed),
+                ),
+              ),
+            ),
+          ),
           Padding(
-            padding: EdgeInsets.only(top: sm.scaledHeight(6)),
+            padding: EdgeInsets.only(top: sm.scaledHeight(4)),
             child: NeumorphicButton(
               style: NeumorphicStyle(
                   shape: NeumorphicShape.convex,
@@ -160,32 +188,6 @@ class _Signup extends StatelessWidget {
                 child: Text(
                   "Submit",
                   style: TextStyle(fontWeight: FontWeight.w400, color: myRed),
-                ),
-              ),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(6)),
-              child: Text(
-                "Already have an account?",
-                style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
-              ),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(1)),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Login()));
-                },
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18, color: myRed),
                 ),
               ),
             ),

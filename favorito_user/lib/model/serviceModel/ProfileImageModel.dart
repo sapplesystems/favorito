@@ -1,17 +1,17 @@
 class ProfileImageModel {
   String status;
   String message;
-  List<Result> result;
+  List<Result> data;
 
-  ProfileImageModel({this.status, this.message, this.result});
+  ProfileImageModel({this.status, this.message, this.data});
 
   ProfileImageModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    if (json['result'] != null) {
-      result = new List<Result>();
-      json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+    if (json['data'] != null) {
+      data = new List<Result>();
+      json['data'].forEach((v) {
+        data.add(new Result.fromJson(v));
       });
     }
   }
@@ -20,8 +20,8 @@ class ProfileImageModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+    if (this.data != null) {
+      data['data'] = this.data.map((v) => v.toJson()).toList();
     }
     return data;
   }

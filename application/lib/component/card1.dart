@@ -42,7 +42,7 @@ class _card1State extends State<card1> {
         elevation: 4,
         child: Container(
           padding: EdgeInsets.only(
-              bottom: sm.scaledHeight(3),
+              bottom: sm.scaledHeight(2),
               right: sm.scaledHeight(3),
               top: sm.scaledHeight(1),
               left: sm.scaledHeight(2)),

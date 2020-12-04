@@ -37,6 +37,7 @@ class _dashboardState extends State<dashboard> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
+        backgroundColor: myBackGround,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70.0),
           child: AppBar(
@@ -77,12 +78,12 @@ class _dashboardState extends State<dashboard> {
             ),
           ),
         ),
-        body: Container(
-            color: myBackGround,
+        body: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                Row(
+            child: ListView(children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text("Status : ", style: TextStyle(fontSize: 16)),
@@ -104,100 +105,99 @@ class _dashboardState extends State<dashboard> {
                     )
                   ],
                 ),
-                rowWithTextNButton(
-                    txt1: "Complete Your Profile",
-                    txt2: "Fill",
-                    check: is_profile_completed,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BusinessProfile()));
-                    }),
-                rowWithTextNButton(
-                    txt1: "Complete your information",
-                    txt2: "Now",
-                    check: is_information_completed,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => businessInfo()));
-                    }),
-                rowWithTextNButton(
-                    txt1: "Send for verification",
-                    txt2: "Verify",
-                    check: is_verified,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BusinessClaim()));
-                    }),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      card1(
-                          checkins: check_ins,
-                          function: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => checkins()));
-                          }),
-                      card2(
-                        ratings: ratings,
+              ),
+              rowWithTextNButton(
+                  txt1: "Complete Your Profile",
+                  txt2: "Fill",
+                  check: is_profile_completed,
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BusinessProfile()));
+                  }),
+              rowWithTextNButton(
+                  txt1: "Complete your information",
+                  txt2: "Now",
+                  check: is_information_completed,
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => businessInfo()));
+                  }),
+              rowWithTextNButton(
+                  txt1: "Send for verification",
+                  txt2: "Verify",
+                  check: is_verified,
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BusinessClaim()));
+                  }),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    card1(
+                        checkins: check_ins,
                         function: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => reviewList()));
-                        },
-                      )
-                    ],
-                  ),
+                                  builder: (context) => checkins()));
+                        }),
+                    card2(
+                      ratings: ratings,
+                      function: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => reviewList()));
+                      },
+                    )
+                  ],
                 ),
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Catalogs()));
-                              },
-                              child: card3(
-                                  txt1: "Catalogoues", title: catalogoues)),
-                          InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Orders()));
-                              },
-                              child: card3(txt1: "Orders", title: orders))
-                        ])),
-                Row(children: [
-                  Text(
-                    "Grow your Business",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  )
-                ]),
-                Row(children: [
-                  credit("Free Credit", free_credit, "assets/icon/warning.svg"),
-                  credit("Paid Credit", paid_credit, "assets/icon/warning.svg")
-                ]),
-                rowCard("Advertise",
-                    "Reach new audience searching for related services", () {}),
-                rowCard(
-                    "Notifications", "Send Direct Update to Customer", () {}),
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Catalogs()));
+                            },
+                            child:
+                                card3(txt1: "Catalogoues", title: catalogoues)),
+                        InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Orders()));
+                            },
+                            child: card3(txt1: "Orders", title: orders))
+                      ])),
+              Row(children: [
+                Text(
+                  "Grow your Business",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                )
               ]),
-            )));
+              Row(children: [
+                credit("Free Credit", free_credit, "assets/icon/warning.svg"),
+                credit("Paid Credit", paid_credit, "assets/icon/warning.svg")
+              ]),
+              rowCard("Advertise",
+                  "Reach new audience searching for related services", () {}),
+              rowCard("Notifications", "Send Direct Update to Customer", () {}),
+            ])));
   }
 
   Widget rowCard(String title, String subtitle, Function function) => InkWell(
