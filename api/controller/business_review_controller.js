@@ -196,7 +196,6 @@ exports.run_query = (sql, param = false) => {
         return new Promise((resolve, reject) => {
             db.query(sql, param, (error, result) => {
                 if (error) {
-                    console.log(error)
                     reject(error);
                 } else {
                     resolve(result);

@@ -69,11 +69,11 @@ exports.login = function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             } else {
                 if (result.length === 0) {
-                    return res.status(403).json({ status: 'error', message: 'Incorrect username or password.' });
+                    return res.status(200).json({ status: 'Failed', message: 'Incorrect username or password.' });
                 }
                 bcrypt.compare(req.body.password, result[0].password, function(err, enc_result) {
                     if (err) {
-                        return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
+                        return res.status(200).json({ status: 'Failed', message: 'Password', data: err });
                     }
                     // change token expire here
                     if (enc_result == true) {
