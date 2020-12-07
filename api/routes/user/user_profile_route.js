@@ -35,7 +35,7 @@ router.post('/user-all-photo', CheckAuth, UserProfileController.userAllPhoto);
 router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 
 // Favorite apis
-router.post('/set-favorite', CheckAuth, UserProfileController.setFavorite);
+router.post('/set-relation', CheckAuth, UserProfileController.setRelation);
 
 
 
