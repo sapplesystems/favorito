@@ -1,6 +1,5 @@
 import 'package:Favorito/network/BaseUrl.dart';
 import 'package:Favorito/network/ServeControl.dart';
-
 class serviceFunction {
   static String adSpent = "ad-spent-campaign/";
   static String funCatList = baseUrl1 + 'category/list';
@@ -101,4 +100,17 @@ class serviceFunction {
   static String funClaimVerifyOtp = funClaim + 'verify-otp';
   static String funSendEmailVerifyLink = funClaim + 'send-email-verify-link';
   static String funClaimAdd = funClaim + 'add';
+
+  //Review
+
+  static String funReviewIntro = funReview + 'get-review-detail';
+
+  static String funReviewList = funReview + 'review-list';
+
+  static String funReviewgetReviewReplies = funReview + 'get-review-replies';
+
+  static String funReviewReply = funReview + 'set-review';
+
+  //Category
+  static String funCategoryList = funCategory + 'list';
 }

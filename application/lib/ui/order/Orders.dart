@@ -169,40 +169,34 @@ class _Orders extends State<Orders> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 12.0, top: 8.0),
-                                              child: Text(
+                                        Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
                                                 "Items : ",
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.w400),
                                               ),
-                                            ),
-                                            for (var item
-                                                in inputOrdersList[index]
-                                                    .detail)
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 4.0, top: 8.0),
-                                                child: AutoSizeText(
+                                              for (var item
+                                                  in inputOrdersList[index]
+                                                      .detail)
+                                                Text(
                                                   "${item.quantity} X ${item.categoryName},",
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
                                                           FontWeight.w400),
-                                                  maxLines: 2,
-                                                  minFontSize: 6,
+                                                  // maxLines: 2,
+                                                  // minFontSize: 6,
                                                 ),
-                                              ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 12.0, top: 8.0),
+                                          padding: EdgeInsets.only(left: 8.0),
                                           child: Text(
                                             "Total : ${inputOrdersList[index].order.totalAmount} | ${inputOrdersList[index].order.orderType} | ${inputOrdersList[index].order.payType} ",
                                             style: TextStyle(
@@ -260,7 +254,7 @@ class _Orders extends State<Orders> {
   }
 
   void callPageData() {
-    WebService.orderList(null,context).then((value) {
+    WebService.orderList(null, context).then((value) {
       if (value.status == "success") {
         allOrdersList.addAll(value.data);
         setState(() {
@@ -269,50 +263,5 @@ class _Orders extends State<Orders> {
         });
       }
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
   }
 }

@@ -23,6 +23,5 @@ class roundedButton2 extends StatelessWidget {
                     fontFamily: "Gilroy",
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1))));
-    ;
   }
 }

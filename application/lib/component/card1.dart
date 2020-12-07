@@ -1,5 +1,8 @@
+import 'package:Favorito/config/SizeManager.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class card1 extends StatefulWidget {
   String checkins;
   Function function;
@@ -9,210 +12,44 @@ class card1 extends StatefulWidget {
 }
 
 class _card1State extends State<card1> {
+  List<double> hList = [
+    3.56,
+    1.46,
+    7.28,
+    32.98,
+    32.65,
+    6.56,
+    7.89,
+    21.41,
+    10.12,
+    21.39,
+    3.56,
+    1.46,
+    7.28,
+    32.98,
+    32.65,
+    6.56,
+    21.39
+  ];
+
   @override
   Widget build(BuildContext context) {
+    SizeManager sm = SizeManager(context);
     return InkWell(
       onTap: widget.function,
-      child: Stack(
-        children: [
-          Stack(
+      child: Card(
+        shape: rrb,
+        elevation: 4,
+        child: Container(
+          padding: EdgeInsets.only(
+              bottom: sm.scaledHeight(2),
+              right: sm.scaledHeight(3),
+              top: sm.scaledHeight(1),
+              left: sm.scaledHeight(2)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 162,
-                height: 173,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            left: 24,
-            top: 120,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 3.56,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 1.46,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 7.28,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 32.98,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 32.65,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 6.56,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 7.89,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 21.41,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 10.12,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 21.39,
-                    color: myRed,
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 3.56,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 1.46,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 7.28,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 32.98,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 32.65,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 6.56,
-                    color: Color(0xffefefef),
-                  ),
-                ),
-                SizedBox(width: 3.77),
-                Opacity(
-                  opacity: 0.50,
-                  child: Container(
-                    width: 3.10,
-                    height: 21.39,
-                    color: myRed,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            left: 24,
-            top: 47,
-            child: SizedBox(
-              width: 112,
-              height: 17,
-              child: Text(
-                "Check-in(s) ",
-                style: TextStyle(
-                  color: Color(0xff9996a3),
-                  fontSize: 13,
-                  fontFamily: "Roboto",
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.26,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 24,
-            top: 15,
-            child: SizedBox(
-              width: 58,
-              height: 32,
-              child: Text(
+              Text(
                 widget.checkins,
                 style: TextStyle(
                   color: Colors.black,
@@ -222,9 +59,31 @@ class _card1State extends State<card1> {
                   letterSpacing: 0.60,
                 ),
               ),
-            ),
+              Text(
+                "Check-in(s) ",
+                style: TextStyle(
+                  color: Color(0xff9996a3),
+                  fontSize: 13,
+                  fontFamily: "Roboto",
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.26,
+                ),
+              ),
+              SizedBox(height: sm.scaledHeight(6)),
+              Row(
+                children: [
+                  for (int i = 0; i < hList.length; i++)
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 1.6),
+                      width: 3.22,
+                      height: hList[i],
+                      color: i % 3 == 1 ? myRed : Color(0xffefefef),
+                    ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -7,3 +7,5 @@ String funAppointment = baseUrl1 + 'appointment/';
 String funChecklist = baseUrl1 + 'checklist/';
 String funClaim = baseUrl1 + 'claim/';
 String funUser = baseUrl1 + 'user/';
+String funReview = baseUrl1 + 'review/';
+String funCategory = baseUrl1 + 'category/';

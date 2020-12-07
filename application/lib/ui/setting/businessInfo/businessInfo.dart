@@ -138,173 +138,155 @@ class _businessInfoState extends State<businessInfo> {
               function: () => getImage(ImgSource.Gallery),
             ),
             Container(
-                decoration: bd1,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16.0),
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                child: Column(children: [
+              decoration: bd1,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16.0),
+              margin: EdgeInsets.symmetric(horizontal: 12),
+              child: Column(children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: DropdownSearch<String>(
+                    validator: (v) => v == '' ? "required field" : null,
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                    mode: Mode.MENU,
+                    key: _keyCategory,
+                    showSelectedItem: true,
+                    selectedItem: controller[0].text,
+                    // enabled: false,
+                    // items: catLst != null ? catLst.values.toList() : null,
+                    label: "Category",
+                    hint: "Please Select Category",
+                    onChanged: (value) {
+                      setState(() => controller[0].text = value);
+                    },
+                  ),
+                ),
+                MyTags(
+                    sourceList: totalSubCategoriesName,
+                    selectedList: selectedSubCategoriesName,
+                    hint: "Please select Sub category",
+                    border: true,
+                    directionVeticle: false,
+                    title: " Sub Category"),
+                MyTags(
+                    sourceList: totalTagName,
+                    selectedList: selectedTagName,
+                    hint: "Please select Tags",
+                    border: true,
+                    directionVeticle: false,
+                    title: "Tags"),
+                Row(children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: DropdownSearch<String>(
-                      validator: (v) => v == '' ? "required field" : null,
-                      autoValidateMode: AutovalidateMode.onUserInteraction,
-                      mode: Mode.MENU,
-                      key: _keyCategory,
-                      showSelectedItem: true,
-                      selectedItem: controller[0].text,
-                      enabled: false,
-                      // items: catLst != null ? catLst.values.toList() : null,
-                      label: "Category",
-                      hint: "Please Select Category",
-                      onChanged: (value) {
-                        setState(() => controller[0].text = value);
-                      },
-                    ),
-                  ),
-                  MyTags(
-                      sourceList: totalSubCategoriesName,
-                      selectedList: selectedSubCategoriesName,
-                      hint: "Please select Sub category",
-                      border: true,
-                      directionVeticle: false,
-                      title: " Sub Category"),
-                  MyTags(
-                      sourceList: totalTagName,
-                      selectedList: selectedTagName,
-                      hint: "Please select Tags",
-                      border: true,
-                      directionVeticle: false,
-                      title: "Tags"),
-                  Row(children: [
-                    Padding(
-                        padding: const EdgeInsets.only(top: 18.0),
-                        child: Text(
-                          "Select price range",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey),
-                        ))
-                  ]),
-                  SizedBox(
-                    height: 52,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount:
-                            priceRangelist != null ? priceRangelist.length : 0,
-                        itemBuilder: (context, i) {
-                          return Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: InkWell(
-                              onTap: () {
-                                print("priceRange ${i}");
-                                priceRange = priceRangelist[i];
-                                for (int j = 0;
-                                    j < priceRangelist.length;
-                                    j++) {
-                                  if (i == priceRange)
-                                    radioChecked[i] = true;
-                                  else
-                                    radioChecked[i] = false;
-                                }
-                                setState(() {});
-                              },
-                              child: Row(children: [
-                                Icon(
-                                  priceRangelist[i] == priceRange
-                                      ? Icons.radio_button_checked
-                                      : Icons.radio_button_unchecked,
-                                  color: priceRangelist[i] == priceRange
-                                      ? Colors.red
-                                      : Colors.grey,
-                                ),
-                                Text("${priceRangelist[i]} \u{20B9}",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: priceRangelist[i] == priceRange
-                                            ? Colors.red
-                                            : Colors.grey))
-                              ]),
-                            ),
-                          );
-                        }),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                        padding: const EdgeInsets.only(top: 18.0),
-                        child: Text(
-                          "Select payment method",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey),
-                        )),
-                  ),
-                  Column(
-                    children: [
-                      for (int i = 0; i < totalpay.length; i++)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(top: 18.0),
+                      child: Text(
+                        "Select price range",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
+                      ))
+                ]),
+                SizedBox(
+                  height: 52,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount:
+                          priceRangelist != null ? priceRangelist.length : 0,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
-                              setState(() {
-                                selectPay.contains(totalpay[i])
-                                    ? selectPay.remove(totalpay[i])
-                                    : selectPay.add(totalpay[i]);
-                              });
+                              print("priceRange ${i}");
+                              priceRange = priceRangelist[i];
+                              for (int j = 0; j < priceRangelist.length; j++) {
+                                if (i == priceRange)
+                                  radioChecked[i] = true;
+                                else
+                                  radioChecked[i] = false;
+                              }
+                              setState(() {});
                             },
                             child: Row(children: [
                               Icon(
-                                selectPay.contains(totalpay[i])
-                                    ? Icons.check_box
-                                    : Icons.check_box_outline_blank,
-                                color: selectPay.contains(totalpay[i])
+                                priceRangelist[i] == priceRange
+                                    ? Icons.radio_button_checked
+                                    : Icons.radio_button_unchecked,
+                                color: priceRangelist[i] == priceRange
                                     ? Colors.red
                                     : Colors.grey,
                               ),
-                              Text(totalpay[i],
+                              Text("${priceRangelist[i]} \u{20B9}",
                                   style: TextStyle(
                                       fontSize: 16,
-                                      color: selectPay.contains(totalpay[i])
+                                      color: priceRangelist[i] == priceRange
                                           ? Colors.red
                                           : Colors.grey))
                             ]),
                           ),
-                        ),
-                      // Padding(
-                      //     padding: EdgeInsets.symmetric(vertical: 6),
-                      //     child: txtfieldprefix(
-                      //         title: "Attributes",
-                      //         valid: true,
-                      //         ctrl: controller[2],
-                      //         prefixIco: Icons.search,
-                      //         security: false)),
-                      MyTags(
-                        sourceList: totalAttributeName,
-                        selectedList: selectAttributeName,
-                        hint: "Please select Attributes",
-                        title: " Attributes",
-                        border: false,
-                        directionVeticle: true,
+                        );
+                      }),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 18.0),
+                      child: Text(
+                        "Select payment method",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
+                      )),
+                ),
+                Column(children: [
+                  for (int i = 0; i < totalpay.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectPay.contains(totalpay[i])
+                                ? selectPay.remove(totalpay[i])
+                                : selectPay.add(totalpay[i]);
+                          });
+                        },
+                        child: Row(children: [
+                          Icon(
+                            selectPay.contains(totalpay[i])
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                            color: selectPay.contains(totalpay[i])
+                                ? Colors.red
+                                : Colors.grey,
+                          ),
+                          Text(totalpay[i],
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: selectPay.contains(totalpay[i])
+                                      ? Colors.red
+                                      : Colors.grey))
+                        ]),
                       ),
-                      // SizedBox(
-                      //   height: 152,
-                      //   child: ListView(
-                      //     scrollDirection: Axis.vertical,
-                      //     children: [
-                      //       for (int i = 1; i < 5; i++)
-                      //         Padding(
-                      //           padding: const EdgeInsets.all(8.0),
-                      //           child: Text("${i}.Live Music",
-                      //               style: TextStyle(
-                      //                   fontSize: 16, color: Colors.black)),
-                      //         ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
+                    ),
+                  // Padding(
+                  //     padding: EdgeInsets.symmetric(vertical: 6),
+                  //     child: txtfieldprefix(
+                  //         title: "Attributes",
+                  //         valid: true,
+                  //         ctrl: controller[2],
+                  //         prefixIco: Icons.search,
+                  //         security: false)),
+                  MyTags(
+                    sourceList: totalAttributeName,
+                    selectedList: selectAttributeName,
+                    hint: "Please select Attributes",
+                    title: " Attributes",
+                    border: false,
+                    directionVeticle: true,
                   ),
-                ])),
+                ]),
+              ]),
+            ),
             Container(
                 margin: EdgeInsets.only(bottom: sm.scaledWidth(30)),
                 padding: EdgeInsets.symmetric(
@@ -363,19 +345,13 @@ class _businessInfoState extends State<businessInfo> {
         photoData.addAll(_va.photos);
         setState(() {});
       }
-
-      print("aaaaaaa${value.toString()}");
     });
 
     await WebService.getSubCat({"category_id": catid}, context).then((value) {
       if (value.message == "success") {
-        var _va = value.data;
-
-        totalSubCategories = _va;
+        totalSubCategories = value.data;
         for (int i = 0; i < totalSubCategories.length; i++)
           totalSubCategoriesName.add(totalSubCategories[i].categoryName);
-
-        setState(() {});
       }
     });
   }

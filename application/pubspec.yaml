@@ -30,6 +30,7 @@ dependencies:
   image_picker_gallery_camera:
   url_launcher:
   dropdown_search:
+  percent_indicator:
   
   flutter:
     sdk: flutter
