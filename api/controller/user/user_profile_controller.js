@@ -62,7 +62,8 @@ exports.setUserProfilePhoto = async function(req, res, next) {
                 if (err) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                 }
-                return res.status(200).send({ status: 'success', message: 'respone successfull' })
+                user_profile_pic_link = img_path + req.file.filename
+                return res.status(200).send({ status: 'success', message: 'respone successfull', data: user_profile_pic_link })
             })
         }
     } catch (error) {
@@ -245,6 +246,7 @@ exports.setRelation = async(req, res, next) => {
     }
 }
 
+// ending the relation like unblock , unfriend, unfollow, unfavorite
 exports.endRelation = async(req, res, next) => {
     if (req.body.relation_id != null || req.body.relation_id != undefined || req.body.relation_id != '') {
         try {
@@ -260,6 +262,24 @@ exports.endRelation = async(req, res, next) => {
         }
     } else {
         return res.status(400).send({ status: 'failed', message: 'relation_type is missing' })
+    }
+}
+
+exports.getAllRelation = async(req, res, next) => {
+    if (req.body.relation_type == null || req.body.relation_type == undefined || req.body.relation_type == '') {
+        return res.status(400).send({ status: 'failed', message: 'relation_type is missing' })
+    } else if (req.userdata.business_id == null && req.userdata.business_id == undefined && req.userdata.business_id == '') {
+        user_id = req.userdata.id
+    }
+    try {
+
+        where = `b_m.business_status = offline`
+        sql_get_all_business_relation = `SELECT u_b_r.id as relation_id, u_b_r.source_id as source_id, u_b_r.target_id as target_id ,b_m.business_name as business_name, b_m.website as websites, b_m.short_description as short_description, CONCAT('${img_path}' , b_m.photo) as photo FROM user_business_relation AS u_b_r JOIN business_master as b_m WHERE u_b_r.target_id = b_m.business_id AND b_m.business_status = 'offline' AND u_b_r.relation_type = '${req.body.relation_type}'`
+
+        result_get_all_business_relation = await exports.run_query(sql_get_all_business_relation)
+        return res.send(result_get_all_business_relation)
+    } catch (error) {
+        return res.status(500).send({ status: 'failed', message: 'Something went wrong', error })
     }
 }
 

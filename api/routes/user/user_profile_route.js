@@ -38,6 +38,8 @@ router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 router.post('/set-relation', CheckAuth, UserProfileController.setRelation);
 // end relation by relation_id
 router.post('/end-relation', CheckAuth, UserProfileController.endRelation);
+// get all relation by the relation_type
+router.post('/get-all-relation', CheckAuth, UserProfileController.getAllRelation);
 
 
 
