@@ -4,6 +4,8 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 
+import '../../utils/MyColors.dart';
+
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -89,109 +91,90 @@ class _ProfileState extends State<_Profile> {
             "My Profile",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
           )),
-      body: Container(
-        height: sm.scaledHeight(95),
-        width: sm.scaledWidth(100),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(5)),
-              height: sm.scaledHeight(20),
-              width: sm.scaledWidth(100),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileDetail()));
-                        },
-                        child: Container(
-                            width: sm.scaledWidth(25),
-                            height: sm.scaledWidth(25),
-                            decoration: new BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: new DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: new NetworkImage(
-                                        "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Jessica Saint",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            Text("9718594728",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: myGrey)),
-                            Text("Surat, Gujrat",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: myGrey))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: sm.scaledHeight(2)),
-                    child: Text(
-                      "Business manager at Avadh group of companies and always open for collaborations",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: myGrey,
-                      ),
+      body: ListView(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(5)),
+            height: sm.scaledHeight(20),
+            width: sm.scaledWidth(100),
+            child: ListView(
+              children: [
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileDetail()));
+                      },
+                      child: Container(
+                          width: sm.scaledWidth(25),
+                          height: sm.scaledWidth(25),
+                          decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: new NetworkImage(
+                                      "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
                     ),
-                  )
-                ],
-              ),
+                    Padding(
+                      padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Jessica Saint",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          Text("9718594728",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: myGrey)),
+                          Text("Surat, Gujrat",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: myGrey))
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+                  child: Text(
+                    "Business manager at Avadh group of companies and always open for collaborations",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: myGrey,
+                    ),
+                  ),
+                )
+              ],
             ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(5)),
-              height: sm.scaledHeight(0.1),
-              color: myGrey,
+          ),
+          Divider(height: 10, color: myGrey),
+          Container(
+            height: sm.scaledHeight(64),
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                for (int i = 0; i < 8; i++) menuItems(sm, i),
+                Divider(height: 10, color: myGrey),
+                for (int i = 8; i < 15; i++) menuItems(sm, i),
+                Divider(height: 10, color: myGrey),
+                for (int i = 15; i < 18; i++) menuItems(sm, i),
+                Divider(height: 10, color: myGrey),
+                for (int i = 18; i < 20; i++) menuItems(sm, i),
+                Divider(height: 10, color: myGrey),
+              ],
             ),
-            Container(
-              height: sm.scaledHeight(64),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  for (int i = 0; i < 8; i++) menuItems(sm, i),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(5)),
-                    height: sm.scaledHeight(0.1),
-                    color: myGrey,
-                  ),
-                  for (int i = 8; i < 15; i++) menuItems(sm, i),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(5)),
-                    height: sm.scaledHeight(0.1),
-                    color: myGrey,
-                  ),
-                  for (int i = 15; i < 18; i++) menuItems(sm, i),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(5)),
-                    height: sm.scaledHeight(0.1),
-                    color: myGrey,
-                  ),
-                  for (int i = 18; i < 20; i++) menuItems(sm, i),
-                ],
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

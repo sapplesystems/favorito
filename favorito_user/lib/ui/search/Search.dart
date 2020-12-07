@@ -9,12 +9,6 @@ class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NeumorphicTheme(
-      theme: NeumorphicThemeData(
-          defaultTextColor: myRed,
-          accentColor: Colors.grey,
-          variantColor: Colors.black38,
-          depth: 8,
-          intensity: 0.65),
       themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(

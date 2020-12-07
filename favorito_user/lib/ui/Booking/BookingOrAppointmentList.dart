@@ -8,6 +8,8 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import '../../utils/MyColors.dart';
+
 class BookingOrAppointmentList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -146,8 +148,8 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                                 style: TextStyle(
                                     fontSize: 16.0,
                                     color: selectedTab == 'New'
-                                        ? Colors.grey
-                                        : null)),
+                                        ? Colors.black
+                                        : myGrey)),
                           ),
                         ),
                         Text("|"),
@@ -185,8 +187,8 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                               style: TextStyle(
                                   fontSize: 16.0,
                                   color: selectedTab == 'History'
-                                      ? Colors.grey
-                                      : null),
+                                      ? Colors.black
+                                      : myGrey),
                             ),
                           ),
                         ),

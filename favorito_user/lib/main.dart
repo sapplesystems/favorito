@@ -2,6 +2,9 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/ui/Signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
+import 'utils/MyColors.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,19 +16,16 @@ void main() {
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  Widget build(BuildContext context) => NeumorphicApp(
         debugShowCheckedModeBanner: false,
-        title: 'Favorito-User',
         builder: BotToastInit(),
         navigatorObservers: [BotToastNavigatorObserver()],
-        theme: ThemeData(
-          iconTheme: IconThemeData(
-            color: Colors.red, //change your color here
-          ),
-          primarySwatch: Colors.red,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        theme: NeumorphicThemeData(
+            defaultTextColor: myRed,
+            accentColor: Colors.grey,
+            variantColor: Colors.black38,
+            depth: 8,
+            intensity: 0.65),
         home: Signup(),
-        // home: BottomAppBar(),
       );
 }
