@@ -29,5 +29,10 @@ router.post('/create', CheckAuth, OrderController.createNewOrder);
  * LIST ALL ORDER
  */
 router.post('/list', CheckAuth, OrderController.listAllOrder);
+/**
+ * ORDER ACCEPT/REJECT/PENDING
+ **/
+router.post('/update-status', CheckAuth, OrderController.updateOrderStatus);
 
+router.post('/delete', CheckAuth, OrderController.deleteOrder);
 module.exports = router;

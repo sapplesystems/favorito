@@ -84,7 +84,7 @@ exports.updateProfile = function (req, res, next) {
       }
       update_columns += ", working_hours='" + req.body.working_hours + "' ";
     }
-    if (website_arr && website_arr != 'undefined') {
+    if (website_arr!= '' && website_arr != 'undefined') {
       update_columns += ", website='" + website_arr.join('|_|') + "' ";
     }
     if (req.body.business_email != '' && req.body.business_email != null) {

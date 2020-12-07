@@ -7,7 +7,7 @@ var uniqid = require('uniqid');
 /**
  * GET STATIC VARIABLE
  */
-exports.dd_verbose = async function (req, res, next) {
+exports.dd_verbose = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = {
@@ -24,9 +24,9 @@ exports.dd_verbose = async function (req, res, next) {
 /**
  * GET MENU CATEGORY
  */
-exports.getCategories = function (business_id, req) {
+exports.getCategories = function(business_id, req) {
     try {
-        return new Promise(async function (resolve, reject) {
+        return new Promise(async function(resolve, reject) {
             var business_id = req.userdata.business_id;
             var cat = await exports.getOnlyCategoryList(business_id, req);
             if (cat.length) {
@@ -52,7 +52,7 @@ exports.getCategories = function (business_id, req) {
 /**
  * GET CATEGORY LIST
  */
-exports.getCategoryList = async function (req, res, next) {
+exports.getCategoryList = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = await exports.getOnlyCategoryList(business_id, req);
@@ -69,7 +69,7 @@ exports.getCategoryList = async function (req, res, next) {
 /**
  * GET ITEM LIST BY CATEGORY ID
  */
-exports.getItemByCategoryId = async function (req, res, next) {
+exports.getItemByCategoryId = async function(req, res, next) {
     try {
         if (req.body.category_id == '' || req.body.category_id == 'undefined' || req.body.category_id == null) {
             return res.status(403).json({ status: 'error', message: 'Category id not found.' });
@@ -91,9 +91,9 @@ exports.getItemByCategoryId = async function (req, res, next) {
 /**
  * GET ONLY CATEGORY LIST
  */
-exports.getOnlyCategoryList = function (business_id, req) {
+exports.getOnlyCategoryList = function(business_id, req) {
     try {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             var COND = "business_id='" + business_id + "' AND menu_type_id='" + menu_type_id + "' AND is_activated='1' AND deleted_at IS NULL";
             COND += " AND CURTIME() >= slot_start_time && CURTIME() <= slot_end_time AND FIND_IN_SET(DATE_FORMAT(CURDATE(),'%a'), available_on) ";
             if (req.body.category_id != '' && req.body.category_id != 'undefined' && req.body.category_id != null) {
@@ -101,7 +101,7 @@ exports.getOnlyCategoryList = function (business_id, req) {
             }
 
             var sql = "SELECT id, category_name FROM business_menu_category WHERE " + COND;
-            db.query(sql, async function (e, cat) {
+            db.query(sql, async function(e, cat) {
                 resolve(cat);
             });
         });
@@ -114,11 +114,11 @@ exports.getOnlyCategoryList = function (business_id, req) {
 /**
  * GET CATEGORY ITEMS
  */
-exports.getCategoryItems = function (category_id) {
+exports.getCategoryItems = function(category_id) {
     try {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             var sql2 = "SELECT id, title, price, quantity, max_qty_per_order FROM business_menu_item WHERE menu_category_id='" + category_id + "'";
-            db.query(sql2, function (e2, item) {
+            db.query(sql2, function(e2, item) {
                 resolve(item);
             });
         });
@@ -131,7 +131,7 @@ exports.getCategoryItems = function (category_id) {
 /**
  * CREATE NEW ORDER
  */
-exports.createNewOrder = function (req, res, next) {
+exports.createNewOrder = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var category;
@@ -199,10 +199,12 @@ exports.createNewOrder = function (req, res, next) {
             mobile: req.body.mobile,
             notes: req.body.notes,
             order_type: req.body.order_type,
-            total_amount: total_amount
+            total_amount: total_amount,
+            payment_type: req.body.payment_type
         };
         var sql = "INSERT INTO business_orders set ?";
-        db.query(sql, order, function (err, result) {
+
+        db.query(sql, order, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -217,19 +219,19 @@ exports.createNewOrder = function (req, res, next) {
 /**
  * LIST ALL ORDERS
  */
-exports.listAllOrder = function (req, res, next) {
+exports.listAllOrder = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var COND = "business_id='" + business_id + "'";
+        var COND = "business_id='" + business_id + "' AND deleted_at IS NULL ";
 
         if (req.body.order_id != '' && req.body.order_id != 'undefined' && req.body.order_id != null) {
             COND += " AND order_id='" + req.body.order_id + "' ";
         }
 
-        var sql = "SELECT order_id,`name`,`mobile`,`notes`,order_type,total_amount,is_accepted, \n\
-                    is_rejected,DATE_FORMAT(created_at,'%d-%b-%Y at %H:%i') AS order_date \n\
+        var sql = "SELECT order_id,`name`,`mobile`,`notes`,order_type,total_amount,order_status,DATE_FORMAT(created_at,'%d-%b-%Y at %H:%i') AS order_date,payment_type \n\
                     FROM business_orders WHERE " + COND;
-        db.query(sql, async function (err, result) {
+
+        db.query(sql, async function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -256,19 +258,86 @@ exports.listAllOrder = function (req, res, next) {
 /**
  * GET ORDER ITEM DETAIL
  */
-exports.orderItemDetail = function (business_id, order_id) {
+exports.orderItemDetail = function(business_id, order_id) {
     try {
-        return new Promise(async function (resolve, reject) {
+        return new Promise(async function(resolve, reject) {
             var sql = "SELECT category_id, \n\
                         (SELECT category_name FROM business_menu_category WHERE id=category_id) AS category_name, \n\
                         item_id, \n\
                         (SELECT title FROM business_menu_item WHERE id=item_id) AS category_name, \n\
                         quantity,price,tax,amount \n\
                         FROM business_order_detail \n\
-                        WHERE business_id='"+ business_id + "' AND order_id='" + order_id + "'";
-            db.query(sql, function (err, result) {
+                        WHERE business_id='" + business_id + "' AND order_id='" + order_id + "'";
+            db.query(sql, function(err, result) {
                 resolve(result);
             });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+
+/**
+ * UPDATE ORDER STATUS 
+ **/
+
+exports.updateOrderStatus = function(req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+        if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
+            return res.status(403).json({ status: 'error', message: 'Order Id Not Found.' });
+        } else if (req.body.status == '' || req.body.status == 'undefined' || req.body.status == null) {
+            return res.status(403).json({ status: 'error', message: 'Order Status Not Found' });
+        }
+        var order_id = req.body.id;
+
+        var update_columns = " updated_at=now() ";
+
+        if (req.body.status != '' && req.body.status != 'undefined' && req.body.status != null) {
+            if (req.body.status == 'accepted' || req.body.status == 'rejected' || req.body.status == 'pending') {
+                update_columns += ", order_status='" + req.body.status + "' ";
+                var sql = "UPDATE business_orders SET " + update_columns + " WHERE order_id='" + order_id + "' AND business_id='" + business_id + "'";
+                db.query(sql, function(err, result) {
+                    if (err) {
+                        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                    }
+                    return res.status(200).json({
+                        status: 'success',
+                        message: 'Order updated successfully.',
+                    });
+                });
+            } else {
+                return res.status(200).json({ status: 'error', message: 'Please Send Correct Status' });
+            }
+        } else {
+            return res.status(200).json({ status: 'error', message: 'Please Dont send null status' });
+        }
+
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+/**
+ * DELETE ORDER
+ */
+exports.deleteOrder = function(req, res, next) {
+    try {
+        var business_id = req.userdata.business_id;
+
+        if (req.body.order_id == '' || req.body.order_id == 'undefined' || req.body.order_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Order id not found.' });
+        }
+
+        var order_id = req.body.order_id;
+
+        var sql = "UPDATE business_orders SET deleted_at = NOW() WHERE id='" + order_id + "'";
+        db.query(sql, function(err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'Order deleted successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

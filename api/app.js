@@ -13,6 +13,8 @@ var BusinessSubCategoryRouter = require('./routes/business_sub_category');
 var BusinessDashboardRouter = require('./routes/business_dashboard');
 var CountryStateCityRouter = require('./routes/country_state_city');
 var ChangePasswordRouter = require('./routes/change_password');
+var BusinessNotificationRouter = require('./routes/business_notification');
+var BusinessOfferRouter = require('./routes/business_offer');
 var JobRouter = require('./routes/job');
 var BusinessCatalog = require('./routes/business_catalog');
 var BusinessClaim = require('./routes/business_claim');
@@ -27,11 +29,22 @@ var BusinessOrder = require('./routes/business_order');
 var PageViews = require('./routes/page_views');
 var BusinessTag = require('./routes/business_tag');
 var BusinessAttribute = require('./routes/business_attribute');
+var BusinessChecklist = require('./routes/business_checklist');
 
-/**
- * USER ROUTES DETAIL
- */
+var BusinessReviewController = require('./routes/business_review_route');
+
+/*** USER ROUTES DETAIL START****/
 var BusinessUser = require('./routes/user/business_users');
+var userProfileRoute = require('./routes/user/user_profile_route');
+var userWaitlistRoute = require('./routes/user/user_waitlist_route');
+var userBookingRoute = require('./routes/user/user_booking_route');
+var userAppointmentRoute = require('./routes/user/user_appointment_route');
+var userOrderRoute = require('./routes/user/user_order_route');
+var userBusinessRoute = require('./routes/user/user_business_route');
+var userAddressRoute = require('./routes/user/user_address_route');
+
+/*** USER ROUTES DETAIL END *****/
+
 
 var app = express();
 
@@ -45,9 +58,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', indexRouter);
+
 app.use('/api/business-user', BusinessUsersRouter);
-//app.use('/api/product', ProductsRouter);
 app.use('/api/business-type', BusinessTypeRouter);
 app.use('/api/business-category', BusinessCategoryRouter);
 app.use('/api/business-sub-category', BusinessSubCategoryRouter);
@@ -70,11 +82,37 @@ app.use('/api/business-order', BusinessOrder);
 app.use('/api/page-views', PageViews);
 app.use('/api/tag', BusinessTag);
 app.use('/api/attribute', BusinessAttribute);
+app.use('/api/business-checklist', BusinessChecklist);
+app.use('/api/business-review', BusinessReviewController);
 
 /**
  * USING USER ROUTES
  */
 app.use('/api/user', BusinessUser);
+app.use('/api/user-waitlist', userWaitlistRoute);
+app.use('/api/user-booking', userBookingRoute);
+app.use('/api/user-appointment', userAppointmentRoute);
+
+/**
+ * USER ROUTES FOR PROFILE 
+ */
+app.use('/api/user-profile', userProfileRoute);
+
+/**
+ * USER ROUTES FOR ORDER 
+ */
+app.use('/api/user-order', userOrderRoute);
+
+/**
+ * USER ROUTES FOR USER BUSINESS
+ */
+app.use('/api/user-business', userBusinessRoute)
+
+/**
+ * USER ROUTES FOR ADDRESS
+ */
+app.use('/api/user-address', userAddressRoute)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

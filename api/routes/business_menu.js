@@ -10,13 +10,13 @@ const mkdirp = require('mkdirp');
 /*to upload the media use multer: start here*/
 var multer = require('multer');
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    mkdirp.sync('./public/uploads/');
-    cb(null, './public/uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    destination: function(req, file, cb) {
+        mkdirp.sync('./public/uploads/');
+        cb(null, './public/uploads/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
 });
 var upload = multer({ storage: storage });
 /*to upload the media use multer: end here*/
@@ -27,9 +27,14 @@ var upload = multer({ storage: storage });
 router.post('/dd-verbose', CheckAuth, MenuController.dd_verbose);
 
 /**
- * CREATE NEW MENU ITEM
+ * GET LIST ALL MENU
  */
 router.post('/list', CheckAuth, MenuController.listAllMenu);
+
+/**
+ * GET LIST ALL MENU
+ */
+router.post('/change-menu-status', CheckAuth, MenuController.changeMenuStatus);
 
 /**
  * CREATE NEW MENU ITEM
@@ -42,6 +47,11 @@ router.post('/create', upload.array('photo[]', 1000), CheckAuth, MenuController.
 router.post('/edit', upload.array('photo[]', 1000), CheckAuth, MenuController.editMenuItem);
 
 /**
+ * DELETE MENU ITEM
+ */
+router.post('/delete-menu-item', CheckAuth, MenuController.deleteMenuItem);
+
+/**
  * ADD MENU ITEM PHOTOS
  */
 router.post('/add-photos', upload.array('photo[]', 1000), CheckAuth, MenuController.addMenuPhotos);
@@ -50,6 +60,11 @@ router.post('/add-photos', upload.array('photo[]', 1000), CheckAuth, MenuControl
  * GET MENU CATEGORY LIST
  */
 router.post('/category-list', CheckAuth, MenuController.getMenuCategoryList);
+
+/**
+ * GET MENU CATEGORY BY PAGINATION
+ */
+router.post('/category-list-pagination', CheckAuth, MenuController.getMenuCategoryListByPagination);
 
 
 /**
@@ -68,6 +83,12 @@ router.post('/edit-category', multer().array(), CheckAuth, MenuController.editCa
  * GET BUSINESS MENU SETTING
  */
 router.post('/setting', CheckAuth, MenuController.getSetting);
+
+
+/**
+ * GET BUSINESS MENU ITEM DETAIL BY menu_item_id
+ */
+router.post('/menu-item-detail', CheckAuth, MenuController.getMenuItems);
 
 
 /**

@@ -10,6 +10,11 @@ var multer = require('multer');
 router.post('/dd-verbose', CheckAuth, BusinessAppointmentController.dd_verbose);
 
 /**
+ * appointment  service
+ */
+router.post('/appointment-service', CheckAuth, BusinessAppointmentController.appointment_service);
+
+/**
  * SAVE PERSON
  */
 router.post('/save-person', CheckAuth, BusinessAppointmentController.savePerson);
@@ -59,6 +64,16 @@ router.post('/get-restriction-detail', CheckAuth, BusinessAppointmentController.
  */
 router.post('/edit-restriction', CheckAuth, BusinessAppointmentController.editRestriction);
 
+/**
+ * set person status active or in active
+ */
+router.post('/set-person-status', CheckAuth, BusinessAppointmentController.setPersonStatus);
+
+/**
+ * set service status active or in active
+ */
+router.post('/set-service-status', CheckAuth, BusinessAppointmentController.setServiceStatus);
+
 
 /**
  * SAVE SETTING
@@ -95,5 +110,11 @@ router.post('/delete', CheckAuth, BusinessAppointmentController.deleteAppointmen
  * FETCH ALL BUSINESS APPOINTMENT
  */
 router.post('/list', CheckAuth, BusinessAppointmentController.listAllAppointment);
+
+
+/**
+ * APPOINTMENT ACCEPT/REJECT/PENDING
+ **/
+router.post('/update-status', CheckAuth, BusinessAppointmentController.updateAppointmentStatus);
 
 module.exports = router;

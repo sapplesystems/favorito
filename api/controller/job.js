@@ -135,7 +135,7 @@ exports.detail_job = function (req, res, next) {
             db.query(sql, function (err, city_list) {
                 verbose.city_list = city_list;
 
-                var sql = "SELECT id,title,description,skills,contact_via,city,pincode FROM jobs WHERE id='" + req.body.job_id + "'";
+                var sql = "SELECT id,title,description,skills,contact_via,contact_value,city,pincode FROM jobs WHERE id='" + req.body.job_id + "'";
                 db.query(sql, function (err, result) {
                     if (err) {
                         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

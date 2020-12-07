@@ -13,13 +13,13 @@ const mkdirp = require('mkdirp');
 /*to upload the media use multer: start here*/
 var multer = require('multer');
 var storage_business_profile = multer.diskStorage({
-  destination: function (req, file, cb) {
-    mkdirp.sync('./public/uploads/');
-    cb(null, './public/uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    destination: function(req, file, cb) {
+        mkdirp.sync('./public/uploads/');
+        cb(null, './public/uploads/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
 });
 var upload_business_profile = multer({ storage: storage_business_profile });
 /*to upload the media use multer: end here*/
@@ -29,21 +29,21 @@ var upload_business_profile = multer({ storage: storage_business_profile });
  * BUSINESS INFORMATION MEDIA UPLOAD CONFIGURATION START HERE
  */
 var storage_business_info_media = multer.diskStorage({
-  destination: function (req, file, cb) {
-    mkdirp.sync('./public/uploads/');
-    cb(null, './public/uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    destination: function(req, file, cb) {
+        mkdirp.sync('./public/uploads/');
+        cb(null, './public/uploads/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
 });
 var upload_business_info_media = multer({ storage: storage_business_info_media });
 /**END HERE */
 
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.json('respond with a resource');
+router.get('/', function(req, res, next) {
+    res.json('respond with a resource');
 });
 
 router.post('/register', UserRegisterController.register);
@@ -69,5 +69,9 @@ router.post('/information', CheckAuth, UpdateBusinessInformationController.getBu
 router.post('/information/update', multer().array(), CheckAuth, UpdateBusinessInformationController.getBusinessInformationUpdate);
 
 router.post('/information/add-photo', upload_business_info_media.array('photo[]', 1000), CheckAuth, UpdateBusinessInformationController.addPhotos);
+
+router.post('/profile-photo', CheckAuth, UserController.getProfilePhoto);
+
+router.post('/get-registered-email-phone', CheckAuth, UserController.getRegisteredEmailMobile);
 
 module.exports = router;
