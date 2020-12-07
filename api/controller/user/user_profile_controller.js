@@ -247,12 +247,17 @@ exports.setRelation = async(req, res, next) => {
 
 exports.endRelation = async(req, res, next) => {
     if (req.body.relation_id != null || req.body.relation_id != undefined || req.body.relation_id != '') {
-        var sql_delete = `DELETE FROM user_business_relation WHERE id = ${req.body.relation_id}`
-        result_insert = await exports.run_query(sql_delete)
-        if (result_insert.affectedRows > 0) {
-            return res.status(200).send({ status: 'success', message: 'relation is updated' })
+        try {
+            var sql_delete = `DELETE FROM user_business_relation WHERE id = ${req.body.relation_id}`
+            result_insert = await exports.run_query(sql_delete)
+            if (result_insert.affectedRows > 0) {
+                return res.status(200).send({ status: 'success', message: 'relation is updated' })
+            } else {
+                return res.status(200).send({ status: 'success', message: 'relation is updated' })
+            }
+        } catch (error) {
+            return res.status(400).send({ status: 'failed', message: 'Something went wrong' })
         }
-
     } else {
         return res.status(400).send({ status: 'failed', message: 'relation_type is missing' })
     }

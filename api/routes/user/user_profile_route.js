@@ -34,8 +34,10 @@ router.post('/user-all-photo', CheckAuth, UserProfileController.userAllPhoto);
 // router.post('/user-favourite-business', CheckAuth, UserProfileController.userFavouriteBusiness);
 router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 
-// Favorite apis
+// Relation apis
 router.post('/set-relation', CheckAuth, UserProfileController.setRelation);
+// end relation by relation_id
+router.post('/end-relation', CheckAuth, UserProfileController.endRelation);
 
 
 
