@@ -176,7 +176,7 @@ class _SearchResultState extends State<_SearchResult> {
                       searchResultChild(sm, searchResult.data[i], 1),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
