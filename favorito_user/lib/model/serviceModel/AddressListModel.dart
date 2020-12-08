@@ -57,10 +57,7 @@ class Addresses {
   String country;
   String landmark;
   String address;
-  Null defaultAddress;
-  String createdAt;
-  Null updatedAt;
-  Null deletedAt;
+  int defaultAddress;
 
   Addresses(
       {this.id,
@@ -71,10 +68,7 @@ class Addresses {
       this.country,
       this.landmark,
       this.address,
-      this.defaultAddress,
-      this.createdAt,
-      this.updatedAt,
-      this.deletedAt});
+      this.defaultAddress});
 
   Addresses.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -86,9 +80,6 @@ class Addresses {
     landmark = json['landmark'];
     address = json['address'];
     defaultAddress = json['default_address'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    deletedAt = json['deleted_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -102,9 +93,6 @@ class Addresses {
     data['landmark'] = this.landmark;
     data['address'] = this.address;
     data['default_address'] = this.defaultAddress;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['deleted_at'] = this.deletedAt;
     return data;
   }
 }
