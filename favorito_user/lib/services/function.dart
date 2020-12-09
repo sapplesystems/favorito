@@ -1,14 +1,18 @@
 class service {
   //base
-  static final baseUrl = 'http://demos.sappleserve.com:3000/api/user/';
-  static final baseUrl1 = 'http://demos.sappleserve.com:3000/api/user-profile/';
-  static final baseUrl2 = 'http://demos.sappleserve.com:3000/api/';
+  static final baseApi = 'http://demos.sappleserve.com:3000/api/';
+  static final baseUser = baseApi + 'user';
+  static final baseBusiness = baseApi + 'business';
+  static final baseUserBusiness = baseUser + 'business';
+  static final baseUserProfile = baseUser + '-profile/';
+  static final baseBusinessDashboard = baseBusiness + '-dashboard/';
 
 //function
-  static final register = baseUrl + "register";
-  static final login = baseUrl + "login";
-  static final businessCarousel = baseUrl1 + "business-carousel";
-  static final getAddress = baseUrl2 + "user-address/get-address";
-  static final getUserImage = baseUrl2 + "user-profile/user-profile-photo";
-  static final search = baseUrl2 + "user-business/search-by-name";
+  static final register = baseUser + 'register';
+  static final login = baseUser + 'login';
+  static final businessCarousel = baseUserProfile + 'business-carousel';
+  static final getAddress = baseApi + 'user-address/get-address';
+  static final getUserImage = baseApi + 'user-profile/user-profile-photo';
+  static final search = baseApi + 'user-business/search-by-name';
+  static final hotAndNewBusiness = baseBusinessDashboard + 'get-new-business';
 }

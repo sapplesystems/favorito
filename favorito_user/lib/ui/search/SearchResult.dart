@@ -5,7 +5,7 @@ import 'package:favorito_user/component/PopupLayout.dart';
 import 'package:favorito_user/component/RoundButtonRightIcon.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/SearchFilterList.dart';
-import 'package:favorito_user/model/serviceModel/search/SearchBusinessListModel.dart';
+import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/NewAppointment.dart';

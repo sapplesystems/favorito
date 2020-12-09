@@ -146,10 +146,7 @@ class _LoginState extends State<_Login> {
                       print("token : ${value.token}");
                       BotToast.showText(text: value.message);
                       Navigator.pop(context);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BottomNavBar()));
+                      Navigator.of(context).pushNamed('/navbar');
                     }
                   });
                 }

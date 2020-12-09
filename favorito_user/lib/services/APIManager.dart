@@ -1,11 +1,12 @@
 import 'dart:io';
-import 'package:favorito_user/model/serviceModel/AddressListModel.dart';
-import 'package:favorito_user/model/serviceModel/Carousel/CarouselModel.dart';
-import 'package:favorito_user/model/serviceModel/ProfileImageModel.dart';
-import 'package:favorito_user/model/serviceModel/login/loginModel.dart';
-import 'package:favorito_user/model/serviceModel/registerModel.dart';
+import 'package:favorito_user/model/appModel/AddressListModel.dart';
+import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
+import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
+import 'package:favorito_user/model/appModel/login/loginModel.dart';
+import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
+import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
+import 'package:favorito_user/model/appModel/registerModel.dart';
 import 'package:dio/dio.dart';
-import 'package:favorito_user/model/serviceModel/search/SearchBusinessListModel.dart';
 import 'dart:convert' as convert;
 
 import 'package:favorito_user/services/function.dart';
@@ -99,5 +100,23 @@ class APIManager {
     print("responseData1:${response.toString()}");
     return SearchBusinessListModel.fromJson(
         convert.json.decode(response.toString()));
+  }
+
+//this is used for get small list of hot and new businesses
+  static Future<NewBusinessModel> hotAndNewBusiness(context) async {
+    String token = await Prefs.token;
+    print("token:$token");
+
+    String url = service.hotAndNewBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("hotAndNewBusiness Request URL:$url");
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("hotAndNewBusiness responseData:${response.toString()}");
+    return NewBusinessModel.fromJson(convert.json.decode(response.toString()));
   }
 }

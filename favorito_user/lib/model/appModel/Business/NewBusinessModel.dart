@@ -1,19 +1,19 @@
-import 'package:favorito_user/model/serviceModel/Carousel/CarouselData.dart';
+import 'package:favorito_user/model/appModel/Business/NewBusinessData.dart';
 
-class CarouselModel {
+class NewBusinessModel {
   String status;
   String message;
-  List<CarouselData> data;
+  List<NewBusinessData> data;
 
-  CarouselModel({this.status, this.message, this.data});
+  NewBusinessModel({this.status, this.message, this.data});
 
-  CarouselModel.fromJson(Map<String, dynamic> json) {
+  NewBusinessModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<CarouselData>();
+      data = new List<NewBusinessData>();
       json['data'].forEach((v) {
-        data.add(new CarouselData.fromJson(v));
+        data.add(new NewBusinessData.fromJson(v));
       });
     }
   }

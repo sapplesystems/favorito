@@ -1,4 +1,4 @@
-import 'package:favorito_user/model/serviceModel/login/LoginData.dart';
+import 'package:favorito_user/model/appModel/login/LoginData.dart';
 
 class loginModel {
   String status;

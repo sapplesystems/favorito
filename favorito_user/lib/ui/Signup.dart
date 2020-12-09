@@ -34,10 +34,9 @@ class _SignupState extends State<Signup> {
 
   void decideit() async {
     String token = await Prefs.token;
-    if (token.length < 10 || token == null || token.isEmpty || token == "") {
-      Navigator.push(
-          key.currentContext, MaterialPageRoute(builder: (context) => Login()));
-    }
+    print("token : $token");
+    if (token.length < 10 || token == null || token.isEmpty || token == "")
+      Navigator.of(context).pushNamed('/login');
   }
 
   @override
