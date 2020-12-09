@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
@@ -32,7 +33,11 @@ class APIManager {
 
   static Future<loginModel> login(Map _map) async {
     print("responseData1:${_map.toString()}");
-    response = await dio.post(service.login, data: _map, options: opt);
+    try {
+      response = await dio.post(service.login, data: _map, options: opt);
+    } catch (e) {
+      BotToast.showText(text: e.toString());
+    }
     print("Request URL:${service.register}");
     print("responseData1:${response.toString()}");
     return loginModel.fromJson(convert.json.decode(response.toString()));
@@ -43,7 +48,13 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(service.businessCarousel, options: opt);
+
+    print("businessCarousel URL:${service.businessCarousel}");
+    try {
+      response = await dio.post(service.businessCarousel, options: opt);
+    } catch (e) {
+      BotToast.showText(text: e.toString());
+    }
     print("Request URL:${service.register}");
     print("responseData1:${response.toString()}");
     return CarouselModel.fromJson(convert.json.decode(response.toString()));

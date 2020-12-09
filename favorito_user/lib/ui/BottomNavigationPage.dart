@@ -5,6 +5,7 @@ import 'package:favorito_user/ui/profile/Profile.dart';
 import 'package:favorito_user/ui/search/Search.dart';
 import 'package:favorito_user/ui/chat/Chat.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/Prefs.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
     Chat(),
     Profile()
   ];
+
+  @override
+  void initState() {
+    decideit();
+    super.initState();
+  }
+
+  void decideit() async {
+    String token = await Prefs.token;
+    print("token : $token");
+    if (token.length < 10 || token == null || token.isEmpty || token == "") {
+      Prefs().clear();
+      Navigator.pop(context);
+      Navigator.of(context).pushNamed('/login');
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {

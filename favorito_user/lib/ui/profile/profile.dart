@@ -2,7 +2,6 @@ import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/profile/ProfileDetail.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/get.dart';
 
 import '../../utils/MyColors.dart';
 
@@ -48,7 +47,8 @@ class _Profile extends StatefulWidget {
     "Privacy policy",
     "Licenses",
     "Change login details",
-    "Delete Acount"
+    "Delete Acount",
+    'Logout'
   ];
 
   List<Icon> menuIconList = [
@@ -72,6 +72,7 @@ class _Profile extends StatefulWidget {
     Icon(Icons.local_police_rounded),
     Icon(Icons.login_outlined),
     Icon(Icons.delete_forever_outlined),
+    Icon(Icons.power_settings_new),
   ];
 }
 
@@ -159,19 +160,19 @@ class _ProfileState extends State<_Profile> {
           ),
           Divider(height: 10, color: myGrey),
           Container(
-            height: sm.scaledHeight(64),
-            child: ListView(
+            height: sm.scaledHeight(60),
+            child: ListView.builder(
+              itemCount: widget.menuTitleList.length,
               shrinkWrap: true,
-              children: [
-                for (int i = 0; i < 8; i++) menuItems(sm, i),
-                Divider(height: 10, color: myGrey),
-                for (int i = 8; i < 15; i++) menuItems(sm, i),
-                Divider(height: 10, color: myGrey),
-                for (int i = 15; i < 18; i++) menuItems(sm, i),
-                Divider(height: 10, color: myGrey),
-                for (int i = 18; i < 20; i++) menuItems(sm, i),
-                Divider(height: 10, color: myGrey),
-              ],
+              itemBuilder: (BuildContext context, int index) {
+                List<int> _ls = [7, 14, 17];
+                return !_ls.contains(index)
+                    ? menuItems(sm, index)
+                    : Column(children: [
+                        menuItems(sm, index),
+                        Divider(height: 10, color: myGrey),
+                      ]);
+              },
             ),
           )
         ],

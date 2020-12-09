@@ -16,6 +16,9 @@ class RouteGenerator {
       case '/navbar':
         return MaterialPageRoute(builder: (_) => BottomNavBar());
 
+      case '/login':
+        return MaterialPageRoute(builder: (_) => Login());
+
         return _errorRoute();
       default:
         return _errorRoute();
