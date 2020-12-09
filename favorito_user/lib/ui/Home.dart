@@ -10,207 +10,163 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicTheme(
-      theme: NeumorphicThemeData(
-          defaultTextColor: myRed,
-          accentColor: Colors.grey,
-          variantColor: Colors.black38,
-          depth: 8,
-          intensity: 0.65),
-      themeMode: ThemeMode.system,
-      child: Material(
-        child: NeumorphicBackground(
-          child: _Home(),
-        ),
-      ),
-    );
-  }
-}
-
-class _Home extends StatefulWidget {
+class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
+
+  List<String> image = ['pizza', 'table', 'callender', 'ala', 'bag', 'home'];
+  List<String> imagName = [
+    'Food',
+    'Book A Table',
+    'Book An\nAppoinent',
+    'Doctor',
+    'Jobs',
+    'Freelancers'
+  ];
 }
 
-class _HomeState extends State<_Home> {
+class _HomeState extends State<Home> {
   String _selectedAddress = "selected Address";
   final List<String> imgList = [];
   var _mySearchEditTextController = TextEditingController();
   AddressListModel addressData;
   ProfileImageModel profileImage;
-
+  SizeManager sm;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      getUserImage();
-    });
+    getUserImage();
+    getAddress();
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeManager sm = SizeManager(context);
-    return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(color: myBackGround),
-        padding: EdgeInsets.only(top: 10),
-        child: ListView(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: sm.scaledWidth(4), right: sm.scaledWidth(2)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      profileImage == null
-                          ? "https://source.unsplash.com/random/40*40"
-                          : profileImage.data.length == 0
-                              ? "https://source.unsplash.com/random/40*40"
-                              : profileImage.data[0].photo,
-                      height: sm.scaledHeight(10),
-                      fit: BoxFit.cover,
-                      width: sm.scaledHeight(10),
+    sm = SizeManager(context);
+    return Scaffold(
+      backgroundColor: myBackGround,
+      body: ListView(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(sm.scaledWidth(4)),
+                child: myClipRect(profileImage: profileImage, sm: sm),
+              ),
+              usernameAddress(
+                  addressData: addressData, selectedAddress: _selectedAddress),
+              Padding(
+                padding: EdgeInsets.only(
+                    right: sm.scaledWidth(2), bottom: sm.scaledWidth(4)),
+                child: IconButton(
+                    icon: SvgPicture.asset(
+                      'assets/icon/image_scanner.svg',
+                      height: sm.scaledHeight(3),
+                      fit: BoxFit.fill,
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          addressData == null ? "" : addressData.data.userName,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                        Text(_selectedAddress),
-                        SizedBox(height: 10),
-                      ],
+                    onPressed: () {
+                      getAddress();
+                      getCarousel();
+                    }),
+              )
+            ],
+          ),
+          Container(
+            height: sm.scaledHeight(30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CarouselSlider(
+                    options: CarouselOptions(
+                      autoPlay: false,
+                      aspectRatio: 2.0,
+                      enlargeCenterPage: true,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      right: sm.scaledWidth(2), bottom: sm.scaledWidth(4)),
-                  child: IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/icon/image_scanner.svg',
-                        height: sm.scaledHeight(3),
-                        fit: BoxFit.fill,
-                      ),
-                      onPressed: () {
-                        print("clicked()");
-                        getCarousel();
-                      }),
-                )
-              ],
-            ),
-            Container(
-              height: sm.scaledHeight(30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CarouselSlider(
-                      options: CarouselOptions(
-                        autoPlay: false,
-                        aspectRatio: 2.0,
-                        enlargeCenterPage: true,
-                      ),
-                      items: imgList
-                          .map((item) => Container(
-                                child: Container(
-                                  margin: EdgeInsets.all(5.0),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(
-                                      item,
-                                      height: sm.scaledHeight(10),
-                                      fit: BoxFit.cover,
-                                      width: sm.scaledHeight(90),
-                                    ),
+                    items: imgList
+                        .map((item) => Container(
+                              child: Container(
+                                margin: EdgeInsets.all(5.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    item,
+                                    height: sm.scaledHeight(10),
+                                    fit: BoxFit.cover,
+                                    width: sm.scaledHeight(90),
                                   ),
                                 ),
-                              ))
-                          .toList()),
-                ],
-              ),
+                              ),
+                            ))
+                        .toList()),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: sm.scaledWidth(5), right: sm.scaledWidth(5)),
-              child: EditTextComponent(
-                ctrl: _mySearchEditTextController,
-                title: "Search",
-                security: false,
-                valid: true,
-                prefixIcon: 'search',
-                prefClick: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              SearchResult(_mySearchEditTextController.text)));
-                },
-              ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                left: sm.scaledWidth(5), right: sm.scaledWidth(5)),
+            child: EditTextComponent(
+              ctrl: _mySearchEditTextController,
+              title: "Search",
+              security: false,
+              valid: true,
+              prefixIcon: 'search',
+              prefClick: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SearchResult(_mySearchEditTextController.text)));
+              },
             ),
-            Container(
-              padding: EdgeInsets.all(sm.scaledWidth(4)),
-              child: Wrap(
-                runSpacing: sm.scaledHeight(5),
-                spacing: sm.scaledHeight(5),
-                alignment: WrapAlignment.center,
-                children: [
-                  for (var i = 0; i < 8; i++)
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Neumorphic(
-                            style: NeumorphicStyle(
-                                shape: NeumorphicShape.convex,
-                                depth: 8,
-                                lightSource: LightSource.topLeft,
-                                color: myButtonBackground,
-                                boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.all(Radius.circular(12.0)))),
-                            child: Image.network(
-                              "https://source.unsplash.com/random/40*40",
-                              height: sm.scaledHeight(6),
-                              fit: BoxFit.cover,
-                              width: sm.scaledHeight(6),
-                            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(sm.scaledWidth(4)),
+            child: Wrap(
+              runSpacing: sm.scaledHeight(5),
+              spacing: sm.scaledHeight(5),
+              alignment: WrapAlignment.center,
+              children: [
+                for (var i = 0; i < 6; i++)
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Neumorphic(
+                        style: NeumorphicStyle(
+                            shape: NeumorphicShape.convex,
+                            depth: 8,
+                            lightSource: LightSource.topLeft,
+                            color: myButtonBackground,
+                            boxShape: NeumorphicBoxShape.roundRect(
+                                BorderRadius.all(Radius.circular(12.0)))),
+                        child: Padding(
+                          padding: EdgeInsets.all(sm.scaledHeight(2.5)),
+                          child: SvgPicture.asset(
+                            'assets/icon/${widget.image[i]}.svg',
+                            height: sm.scaledHeight(5.5),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2.0),
-                            child: Text("Food"),
-                          ),
-                        ]),
-                ],
-              ),
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(top: sm.scaledHeight(2.5)),
+                      child: Text(widget.imagName[i].toString(),
+                          textAlign: TextAlign.center),
+                    ),
+                  ]),
+              ],
             ),
-            header(sm, "Hot & New Business"),
-            Container(
-              height: sm.scaledHeight(26),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (var i = 0; i < 5; i++)
-                      InkWell(
-                        onTap: () {},
-                        child: hotAndNewBusinessChild(sm),
-                      ),
-                  ],
-                ),
-              ),
+          ),
+          header(sm, "Hot & New Business"),
+          Container(
+            padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
+            height: sm.scaledHeight(26),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (var i = 0; i < 5; i++)
+                  InkWell(
+                    onTap: () {},
+                    child: hotAndNewBusinessChild(sm),
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -323,7 +279,6 @@ class _HomeState extends State<_Home> {
         if (value.data.length > 0) imgList.clear();
         for (var _va in value.data) imgList.add(_va.photo);
         setState(() {});
-        getAddress();
       }
     });
   }
@@ -352,5 +307,74 @@ class _HomeState extends State<_Home> {
         getCarousel();
       }
     });
+  }
+}
+
+class usernameAddress extends StatefulWidget {
+  const usernameAddress({
+    Key key,
+    @required this.addressData,
+    @required String selectedAddress,
+  })  : _selectedAddress = selectedAddress,
+        super(key: key);
+
+  final AddressListModel addressData;
+  final String _selectedAddress;
+
+  @override
+  _usernameAddressState createState() => _usernameAddressState();
+}
+
+class _usernameAddressState extends State<usernameAddress> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.addressData?.data?.userName ?? 'user',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            Text(widget._selectedAddress),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class myClipRect extends StatefulWidget {
+  const myClipRect({
+    Key key,
+    @required this.profileImage,
+    @required this.sm,
+  }) : super(key: key);
+
+  final ProfileImageModel profileImage;
+  final SizeManager sm;
+
+  @override
+  _myClipRectState createState() => _myClipRectState();
+}
+
+class _myClipRectState extends State<myClipRect> {
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.network(
+        widget.profileImage == null
+            ? "https://source.unsplash.com/random/40*40"
+            : widget.profileImage.data.length == 0
+                ? "https://source.unsplash.com/random/40*40"
+                : widget.profileImage.data[0].photo,
+        height: widget.sm.scaledHeight(8),
+        fit: BoxFit.cover,
+        width: widget.sm.scaledHeight(8),
+      ),
+    );
   }
 }
