@@ -88,17 +88,11 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400)),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-                              child: Text("Restaurant | Cafe",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300)),
-                            ),
+                            ServicesOfBusiness(sm: sm),
                             Padding(
                               padding: EdgeInsets.only(left: sm.scaledWidth(2)),
                               child: Text(
-                                  "1.2 km | ${newBusinessData.data[index].landline}",
+                                  "${newBusinessData.data[index].distance} km | ${newBusinessData.data[index].townCity}",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w300)),
@@ -120,5 +114,23 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
             }
           }
         });
+  }
+}
+
+class ServicesOfBusiness extends StatelessWidget {
+  const ServicesOfBusiness({
+    Key key,
+    @required this.sm,
+  }) : super(key: key);
+
+  final SizeManager sm;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+      child: Text("Restaurant | Cafe",
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)),
+    );
   }
 }
