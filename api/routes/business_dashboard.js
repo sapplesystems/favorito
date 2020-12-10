@@ -18,4 +18,14 @@ router.post('/get-top-rated', CheckAuth, dashboardController.topRated);
 
 router.post('/get-most-popular', CheckAuth, dashboardController.mostPopular);
 
+router.post('/get-business-by-appintment', CheckAuth, dashboardController.getBusinessByAppointment);
+
+router.post('/get-business-by-food', CheckAuth, dashboardController.getBusinessByFood);
+
+router.post('/get-business-by-book-table', CheckAuth, dashboardController.getBusinessByBookTable);
+
+router.post('/get-business-by-job', CheckAuth, dashboardController.getBusinessByJob);
+
+router.post('/get-business-by-doctor', CheckAuth, dashboardController.getBusinessByDoctor);
+
 module.exports = router;
