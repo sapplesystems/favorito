@@ -7,7 +7,6 @@ var UserProfileController = require('../../controller/user/user_profile_controll
 var UserProfileBusinessDetailController = require('../../controller/user/user_profile_business_detail_controller');
 var UserProfilBusinessOverview = require('../../controller/user/user_profile_business_detail_controller');
 
-
 var multer = require('multer');
 var storage_user_profile = multer.diskStorage({
     destination: function(req, file, cb) {
