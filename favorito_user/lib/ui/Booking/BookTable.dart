@@ -3,7 +3,7 @@ import 'package:favorito_user/component/DatePicker.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
-import 'package:favorito_user/model/serviceModel/BookingOrAppointmentListModel.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';

@@ -1,4 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/ui/Login.dart';
+import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/ui/Signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +28,7 @@ class MyApp extends StatelessWidget {
             variantColor: Colors.black38,
             depth: 8,
             intensity: 0.65),
-        home: Signup(),
+        initialRoute: '/',
+        onGenerateRoute: RouteGenerator.generateRoute,
       );
 }

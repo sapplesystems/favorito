@@ -34,7 +34,7 @@ class ColorSelector extends StatelessWidget {
     showDialog(
       context: context,
       child: AlertDialog(
-        title: const Text('Pick a color!'),
+        title: Text('Pick a color!'),
         content: SingleChildScrollView(),
         actions: <Widget>[
           FlatButton(
