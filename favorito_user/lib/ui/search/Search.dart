@@ -1,29 +1,17 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
+import 'package:favorito_user/ui/search/TrendingNearby.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class Search extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicTheme(
-      themeMode: ThemeMode.system,
-      child: Material(
-        child: NeumorphicBackground(
-          child: _Search(),
-        ),
-      ),
-    );
-  }
-}
-
-class _Search extends StatefulWidget {
+class Search extends StatefulWidget {
   _SearchState createState() => _SearchState();
 }
 
-class _SearchState extends State<_Search> {
+class _SearchState extends State<Search> {
   var _mySearchEditTextController = TextEditingController();
 
   @override
@@ -57,38 +45,13 @@ class _SearchState extends State<_Search> {
               ),
             ),
             header(sm, "Trending Nearby"),
-            Container(
-              height: sm.scaledHeight(25),
-              width: sm.scaledWidth(90),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (var i = 0; i < 5; i++)
-                      InkWell(
-                        onTap: () {},
-                        child: trendingNearbyChild(sm),
-                      ),
-                  ],
-                ),
-              ),
-            ),
+            trendingNearby(),
             header(sm, "Hot & New Business"),
             Container(
               height: sm.scaledHeight(26),
               child: Padding(
                 padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (var i = 0; i < 5; i++)
-                      InkWell(
-                        onTap: () {},
-                        child: hotAndNewBusinessChild(sm),
-                      ),
-                  ],
-                ),
+                child: HotAndNewBusiness(),
               ),
             ),
             header(sm, "Top Rated"),
@@ -156,175 +119,6 @@ class _SearchState extends State<_Search> {
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget hotAndNewBusinessChild(SizeManager sm) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-        ),
-        elevation: 10,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    "https://source.unsplash.com/random/600*400",
-                    height: sm.scaledHeight(11),
-                    fit: BoxFit.cover,
-                    width: sm.scaledWidth(38),
-                  ),
-                ),
-                Positioned(
-                  top: sm.scaledHeight(1),
-                  left: sm.scaledWidth(1),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    width: sm.scaledWidth(18),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.star),
-                          Text(
-                            "4.6",
-                            style: TextStyle(color: Colors.green),
-                          )
-                        ]),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-              child: Text("Mr. Cafe",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-              child: Text("Restaurant | Cafe",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-              child: Text("1.2 km | Varachha",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-              child: Text("Open Now",
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.green)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget trendingNearbyChild(SizeManager sm) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-        ),
-        elevation: 10,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: sm.scaledWidth(40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-                    child: Text("Orange",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-                    child: Text("Restaurant",
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w300)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.pink[50],
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      width: sm.scaledWidth(18),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.star),
-                            Text(
-                              "4.6",
-                              style: TextStyle(color: Colors.green),
-                            )
-                          ]),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-                    child: Text("Open Now",
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.green)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-                    child: Text("Opens | 12:00",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w300)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-                    child: Text("Closes | 09:00",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w300)),
-                  ),
-                ],
-              ),
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-              ),
-              child: Image.network(
-                "https://source.unsplash.com/random/600*400",
-                height: sm.scaledHeight(21),
-                fit: BoxFit.cover,
-                width: sm.scaledWidth(38),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

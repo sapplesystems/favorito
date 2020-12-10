@@ -1,6 +1,9 @@
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
+import 'package:favorito_user/model/appModel/Business/SubCategory.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/home/RatingHolder.dart';
+import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRRect.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -56,27 +59,10 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                                 Positioned(
                                   top: sm.scaledHeight(1),
                                   left: sm.scaledWidth(1),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xfffff6ea),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                    ),
-                                    width: sm.scaledWidth(18),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.star, color: myOrangeBase),
-                                          //here id is used to show but rating need to be
-                                          Text(
-                                            newBusinessData.data[index].id
-                                                .toString(),
-                                            style:
-                                                TextStyle(color: myOrangeBase),
-                                          )
-                                        ]),
-                                  ),
+                                  child: RatingHolder(
+                                      sm: sm,
+                                      rate: newBusinessData.data[index].id
+                                          .toString()),
                                 ),
                               ],
                             ),
@@ -88,7 +74,13 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400)),
                             ),
-                            ServicesOfBusiness(sm: sm),
+                            Padding(
+                              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                              child: ServicesOfBusiness(
+                                  sm: sm,
+                                  data:
+                                      newBusinessData.data[index].subCategory),
+                            ),
                             Padding(
                               padding: EdgeInsets.only(left: sm.scaledWidth(2)),
                               child: Text(
@@ -98,13 +90,19 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                                       fontWeight: FontWeight.w300)),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                              padding: EdgeInsets.only(
+                                  left: sm.scaledWidth(2),
+                                  bottom: sm.scaledWidth(2)),
                               child: Text(
                                   newBusinessData.data[index].businessStatus,
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w300,
-                                      color: Colors.green)),
+                                      color: (newBusinessData
+                                                  .data[index].businessStatus)
+                                              .contains('Off')
+                                          ? myGrey
+                                          : Colors.green)),
                             ),
                           ],
                         ),
@@ -114,23 +112,5 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
             }
           }
         });
-  }
-}
-
-class ServicesOfBusiness extends StatelessWidget {
-  const ServicesOfBusiness({
-    Key key,
-    @required this.sm,
-  }) : super(key: key);
-
-  final SizeManager sm;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-      child: Text("Restaurant | Cafe",
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)),
-    );
   }
 }
