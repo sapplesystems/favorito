@@ -65,7 +65,7 @@ class TrendingCard extends StatelessWidget {
                         color: (data.businessStatus).contains('Off')
                             ? myGrey
                             : Colors.green)),
-                Text("Opens | 12:00",
+                Text("Opens | ${data.avgRating}",
                     style:
                         TextStyle(fontSize: 12, fontWeight: FontWeight.w300)),
                 Text("Closes | 09:00",
