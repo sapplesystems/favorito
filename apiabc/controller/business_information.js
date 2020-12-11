@@ -128,7 +128,7 @@ exports.addPhotos = async function(req, res, next) {
 exports.getTagList = function(req, res, next) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id,tag_name FROM business_tags where deleted_at is null";
+            var sql = "SELECT id,tag_name FROM business_tags_master where deleted_at is null";
             db.query(sql, function(err, result) {
                 resolve(result);
             });
@@ -141,7 +141,7 @@ exports.getTagList = function(req, res, next) {
 exports.geAttributeList = function(req, res, next) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id,attribute_name FROM business_attributes where deleted_at is null";
+            var sql = "SELECT id,attribute_name FROM business_attributes_master where deleted_at is null";
             db.query(sql, function(err, result) {
                 resolve(result);
             });
@@ -168,7 +168,7 @@ exports.getSubCategories = function(sub_category_ids) {
 exports.getTags = function(tag_ids) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id, tag_name FROM business_tags \n\
+            var sql = "SELECT id, tag_name FROM business_tags_master \n\
             WHERE id IN(" + tag_ids + ") AND deleted_at IS NULL";
             db.query(sql, function(err, result) {
                 resolve(result);
@@ -182,7 +182,7 @@ exports.getTags = function(tag_ids) {
 exports.getAttributes = function(attibute_ids) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id, attribute_name FROM business_attributes \n\
+            var sql = "SELECT id, attribute_name FROM business_attributes_master \n\
             WHERE id IN(" + attibute_ids + ") AND deleted_at IS NULL";
             db.query(sql, function(err, result) {
                 resolve(result);

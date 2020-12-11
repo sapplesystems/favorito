@@ -202,7 +202,7 @@ exports.delete_campaign = function(req, res, next) {
 exports.getTags = function(tag_ids) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id, tag_name FROM business_tags \n\
+            var sql = "SELECT id, tag_name FROM business_tags_master \n\
             WHERE id IN(" + tag_ids + ") AND deleted_at IS NULL";
             db.query(sql, function(err, result) {
                 resolve(result);

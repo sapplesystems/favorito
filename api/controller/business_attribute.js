@@ -1,14 +1,14 @@
 var db = require('../config/db');
 
-exports.addAttribute = function (req, res, next) {
+exports.addAttribute = function(req, res, next) {
     try {
         if (req.body.attribute_name == '' || req.body.attribute_name == 'undefined' || req.body.attribute_name == null) {
             return res.status(403).json({ status: 'error', message: 'Attribute name not found.' });
         }
         var postval = { attribute_name: req.body.attribute_name };
 
-        var sql = "INSERT INTO business_attributes SET ?";
-        db.query(sql, postval, function (err, result) {
+        var sql = "INSERT INTO business_attributes_master SET ?";
+        db.query(sql, postval, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -19,14 +19,14 @@ exports.addAttribute = function (req, res, next) {
     }
 };
 
-exports.listAttribute = function (req, res, next) {
+exports.listAttribute = function(req, res, next) {
     try {
         var cond = "";
         if (req.body.attribute_id != '' && req.body.attribute_id != 'undefined' && req.body.attribute_id != null) {
             cond = " AND id='" + req.body.attribute_id + "'";
         }
-        var sql = "SELECT id, `attribute_name` FROM business_attributes WHERE deleted_at IS NULL" + cond;
-        db.query(sql, function (err, result) {
+        var sql = "SELECT id, `attribute_name` FROM business_attributes_master WHERE deleted_at IS NULL" + cond;
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -37,7 +37,7 @@ exports.listAttribute = function (req, res, next) {
     }
 };
 
-exports.updateAttribute = function (req, res, next) {
+exports.updateAttribute = function(req, res, next) {
     try {
         if (req.body.attribute_id == '' || req.body.attribute_id == 'undefined' || req.body.attribute_id == null) {
             return res.status(403).json({ status: 'error', message: 'Attribute id required.' });
@@ -48,8 +48,8 @@ exports.updateAttribute = function (req, res, next) {
         var attribute_id = req.body.attribute_id;
         var attribute_name = req.body.attribute_name;
 
-        var sql = "update business_attributes set attribute_name = '" + attribute_name + "', updated_at=now() where id = '" + attribute_id + "'";
-        db.query(sql, function (err, result) {
+        var sql = "update business_attributes_master set attribute_name = '" + attribute_name + "', updated_at=now() where id = '" + attribute_id + "'";
+        db.query(sql, function(err, result) {
             if (err) {
                 res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             }
@@ -60,15 +60,15 @@ exports.updateAttribute = function (req, res, next) {
     }
 };
 
-exports.deleteAttribute = function (req, res, next) {
+exports.deleteAttribute = function(req, res, next) {
     try {
         if (req.body.attribute_id == '' || req.body.attribute_id == 'undefined' || req.body.attribute_id == null) {
             return res.status(403).json({ status: 'error', message: 'Attribute id required.' });
         }
         var attribute_id = req.body.attribute_id;
 
-        var sql = "update business_attributes set deleted_at = now() where id = '" + attribute_id + "'";
-        db.query(sql, function (err, result) {
+        var sql = "update business_attributes_master set deleted_at = now() where id = '" + attribute_id + "'";
+        db.query(sql, function(err, result) {
             if (err) {
                 res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             }
