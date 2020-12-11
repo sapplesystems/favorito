@@ -8,6 +8,7 @@ import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
 import 'package:dio/dio.dart';
+import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'dart:convert' as convert;
 
 import 'package:favorito_user/services/function.dart';
@@ -129,5 +130,24 @@ class APIManager {
 
     print("hotAndNewBusiness responseData:${response.toString()}");
     return NewBusinessModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  //this is used for get small list of hot and new businesses
+  static Future<TrendingBusinessModel> trendingBusiness(context) async {
+    String token = await Prefs.token;
+    print("token:$token");
+
+    String url = service.trendingBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("hotAndNewBusiness Request URL:$url");
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("hotAndNewBusiness responseData:${response.toString()}");
+    return TrendingBusinessModel.fromJson(
+        convert.json.decode(response.toString()));
   }
 }

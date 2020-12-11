@@ -22,4 +22,5 @@ class service {
   static final getUserImage = base + 'user-profile/user-profile-photo';
   static final search = base + 'user-business/search-by-name';
   static final hotAndNewBusiness = baseBusinessDashboard + 'get-new-business';
+  static final trendingBusiness = baseBusinessDashboard + 'get-trending-nearby';
 }

@@ -1,6 +1,6 @@
 import 'package:favorito_user/model/appModel/Business/SubCategory.dart';
 
-class NewBusinessData {
+class TrendingBusinessData {
   int id;
   String businessId;
   int avgRating;
@@ -12,7 +12,7 @@ class NewBusinessData {
   String businessStatus;
   List<SubCategory> subCategory;
 
-  NewBusinessData(
+  TrendingBusinessData(
       {this.id,
       this.businessId,
       this.avgRating,
@@ -24,7 +24,7 @@ class NewBusinessData {
       this.businessStatus,
       this.subCategory});
 
-  NewBusinessData.fromJson(Map<String, dynamic> json) {
+  TrendingBusinessData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     businessId = json['business_id'];
     avgRating = json['avg_rating'];
