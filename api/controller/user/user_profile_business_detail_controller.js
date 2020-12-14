@@ -13,11 +13,48 @@ exports.getBusinessDetail = async function(req, res) {
         } else {
             business_id = req.body.business_id
         }
-        var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
-        business_email,concat('" + img_path + "',photo) as photo, address1,address2,address3,pincode,town_city,state_id,country_id, \n\
-        location, by_appointment_only, working_hours, website,short_description,business_status \n\
-        FROM business_master WHERE business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
-        await db.query(sql, function(err, result) {
+        try {
+            sql_count_rating = "SELECT AVG(rating) as count FROM business_ratings WHERE business_id = '" + business_id + "'"
+            result_count_rating = await exports.run_query(sql_count_rating)
+            if (result_count_rating[0].count == null) {
+                avg_rating = 0
+            } else {
+                avg_rating = result_count_rating[0].count
+            }
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+        }
+        var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r LEFT JOIN business_reviews as b_rev ON b_m.business_id = b_r.business_id AND b_m.business_id = b_rev.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
+        db.query(sql, function(err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
+            }
+            result[0].avg_rating = avg_rating;
+            console.log(result.data)
+            return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
+        })
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+    }
+}
+
+// Detail of the overview of the business
+exports.getBusinessOverview = async function(req, res) {
+    try {
+        if (req.body.business_id == null || req.body.business_id == undefined || req.body.business_id == '') {
+            return res.status(400).json({ status: 'error', message: 'business_id is missing' });
+        } else {
+            business_id = req.body.business_id
+        }
+        // var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
+        // business_email,concat('" + img_path + "',photo) as photo, address1,address2,address3,pincode,town_city,state_id,country_id, \n\
+        // location, by_appointment_only, working_hours, website,short_description,business_status \n\
+        // FROM business_master WHERE business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
+
+
+        var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours,b_m.website, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, b_m.address1 as address1,b_m.address2 as address2,b_m.address3 as address3,b_m.short_description as short_description,b_i.payment_method as payment_method, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r JOIN business_informations as b_i ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id AND b_i.business_id = b_m.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
+
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }
@@ -77,3 +114,28 @@ exports.all_business_reviewlist = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+}

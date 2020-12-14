@@ -3,21 +3,21 @@ var db = require('../config/db');
 /**
  * FETCH ALL BUSINESS WAITLIST
  */
-exports.all_business_waitlist = function (req, res, next) {
+exports.all_business_waitlist = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id,`name`,contact,no_of_person,special_notes,waitlist_status, DATE_FORMAT(created_at, '%d %b') as waitlist_date, \n\
         DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-			if(result.length>0){
-				return res.status(200).json({ status: 'success', message: 'success', data: result });
-			}else{
-				return res.status(200).json({ status: 'success', message: 'NO Data Found', data:[] });
-			}
-            
+            if (result.length > 0) {
+                return res.status(200).json({ status: 'success', message: 'success', data: result });
+            } else {
+                return res.status(200).json({ status: 'success', message: 'NO Data Found', data: [] });
+            }
+
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -28,7 +28,7 @@ exports.all_business_waitlist = function (req, res, next) {
 /**
  * CREATE A NEW MANUAL WAITLIST
  */
-exports.create_manual_waitlist = function (req, res, next) {
+exports.create_manual_waitlist = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -48,7 +48,7 @@ exports.create_manual_waitlist = function (req, res, next) {
         var special_notes = req.body.special_notes;
 
         var sql = "INSERT INTO business_waitlist (business_id,`name`,contact,no_of_person,special_notes) VALUES('" + business_id + "','" + name + "','" + contact + "','" + no_of_person + "','" + special_notes + "')";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -63,7 +63,7 @@ exports.create_manual_waitlist = function (req, res, next) {
 /**
  * DELETE MANUAL WAITLIST
  */
-exports.delete_manual_waitlist = function (req, res, next) {
+exports.delete_manual_waitlist = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -74,7 +74,7 @@ exports.delete_manual_waitlist = function (req, res, next) {
         var waitlist_id = req.body.waitlist_id;
 
         var sql = "UPDATE business_waitlist SET deleted_at = NOW() WHERE id='" + waitlist_id + "'";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -89,7 +89,7 @@ exports.delete_manual_waitlist = function (req, res, next) {
 /**
  * SAVE MANUAL WAITLIST SETTING
  */
-exports.save_setting = function (req, res, next) {
+exports.save_setting = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var update_column = " updated_at=NOW() ";
@@ -127,7 +127,7 @@ exports.save_setting = function (req, res, next) {
 
         var sql = "UPDATE business_waitlist_setting SET " + update_column + " WHERE business_id='" + business_id + "'";
 
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -142,13 +142,13 @@ exports.save_setting = function (req, res, next) {
 /**
  * GET MANUAL WAITLIST SETTING
  */
-exports.get_setting = function (req, res, next) {
+exports.get_setting = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT start_time,end_time,available_resource,minium_wait_time,slot_length,booking_per_slot,\n\
                     booking_per_day,waitlist_manager_name,announcement,except_days \n\
-                    FROM business_waitlist_setting WHERE business_id='"+ business_id + "'";
-        db.query(sql, function (err, result) {
+                    FROM business_waitlist_setting WHERE business_id='" + business_id + "'";
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -163,37 +163,37 @@ exports.get_setting = function (req, res, next) {
 /**
  * UPDATE WAITLIST STATUS 
  **/
-exports.updateWaitlistStatus = function (req, res, next) {
-    try{
+exports.updateWaitlistStatus = function(req, res, next) {
+    try {
         var business_id = req.userdata.business_id;
         if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
             return res.status(403).json({ status: 'error', message: 'Waitlist Id Not Found.' });
-        }else if (req.body.status == '' || req.body.status == 'undefined' || req.body.status == null) {
+        } else if (req.body.status == '' || req.body.status == 'undefined' || req.body.status == null) {
             return res.status(403).json({ status: 'error', message: 'Waitlist Status Not Found' });
         }
         var waitlist_id = req.body.id;
 
         var update_columns = " updated_at=now() ";
 
-        if (req.body.status != '' && req.body.status != 'undefined' && req.body.status != null ) {
-            if(req.body.status == 'accepted' || req.body.status == 'rejected' || req.body.status=='pending'){
+        if (req.body.status != '' && req.body.status != 'undefined' && req.body.status != null) {
+            if (req.body.status == 'accepted' || req.body.status == 'rejected' || req.body.status == 'pending') {
                 update_columns += ", waitlist_status='" + req.body.status + "' ";
                 var sql = "UPDATE business_waitlist SET " + update_columns + " WHERE id='" + waitlist_id + "' AND business_id='" + business_id + "'";
-                    db.query(sql, function (err, result) {
-                        if (err) {
+                db.query(sql, function(err, result) {
+                    if (err) {
                         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
-                        }
-                        return res.status(200).json({status: 'success',message: 'Waitlist updated successfully.'});
-                    });
-            }else{
-                return res.status(200).json({status: 'error',message: 'Please Send Correct Status' });
+                    }
+                    return res.status(200).json({ status: 'success', message: 'Waitlist updated successfully.' });
+                });
+            } else {
+                return res.status(200).json({ status: 'error', message: 'Please Send Correct Status' });
             }
-           
-        }else{
-            return res.status(200).json({status: 'error', message: 'Please Dont send null status' });  
+
+        } else {
+            return res.status(200).json({ status: 'error', message: 'Please Dont send null status' });
         }
-        
-    }catch(e){
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });  
+
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
