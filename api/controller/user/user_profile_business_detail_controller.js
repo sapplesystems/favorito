@@ -8,14 +8,23 @@ exports.businessDetail = async function(req, res, next) {
 // Details of business by business id 
 exports.getBusinessDetail = async function(req, res) {
     try {
+
         if (req.body.business_id == null || req.body.business_id == undefined || req.body.business_id == '') {
             return res.status(400).json({ status: 'error', message: 'business_id is missing' });
         } else {
+            user_id = req.userdata.id
             business_id = req.body.business_id
+
         }
         try {
             sql_count_rating = "SELECT AVG(rating) as count FROM business_ratings WHERE business_id = '" + business_id + "'"
             result_count_rating = await exports.run_query(sql_count_rating)
+            sql_attributes = `SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attributes_master as b_a_m ON b_a_m.id = b_a.attributes_id WHERE b_a.business_id= '${business_id}'`
+            result_attributes = await exports.run_query(sql_attributes)
+
+            sql_relation = `SELECT r_c.relationship_description as relation FROM user_business_relation AS u_b_r LEFT JOIN relationship_code AS r_c ON u_b_r.relation_type = r_c.relationship_code WHERE source_id = '${user_id}' AND target_id = '${business_id}'`
+
+            result_relation = await exports.run_query(sql_relation)
             if (result_count_rating[0].count == null) {
                 avg_rating = 0
             } else {
@@ -24,12 +33,15 @@ exports.getBusinessDetail = async function(req, res) {
         } catch (error) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
         }
-        var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r LEFT JOIN business_reviews as b_rev ON b_m.business_id = b_r.business_id AND b_m.business_id = b_rev.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
+        var sql = "SELECT b_m.id, b_m.business_id,IFNULL(b_m.short_description,'') as short_desciption,IFNULL(b_i.price_range ,0) AS price_range, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations AS b_i JOIN business_hours as b_h  JOIN business_ratings AS b_r LEFT JOIN business_reviews as b_rev ON b_m.business_id = b_r.business_id AND b_m.business_id = b_rev.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
         db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }
             result[0].avg_rating = avg_rating;
+            result[0].attributes = result_attributes;
+            result[0].relation = result_relation;
+
             console.log(result.data)
             return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
         })
