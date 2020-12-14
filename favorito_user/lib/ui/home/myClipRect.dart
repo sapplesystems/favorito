@@ -27,9 +27,9 @@ class _myClipRectState extends State<myClipRect> {
             : widget.profileImage.data.length == 0
                 ? "https://source.unsplash.com/random/40*40"
                 : widget.profileImage.data[0].photo,
-        height: widget.sm.scaledHeight(8),
+        height: widget.sm.h(8),
         fit: BoxFit.cover,
-        width: widget.sm.scaledHeight(8),
+        width: widget.sm.h(8),
       ),
     );
   }

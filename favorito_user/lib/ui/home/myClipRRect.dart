@@ -22,9 +22,9 @@ class _myClipRRectState extends State<myClipRRect> {
       borderRadius: BorderRadius.circular(12),
       child: Image.network(
         widget.image,
-        height: widget.sm.scaledHeight(11),
+        height: widget.sm.h(11),
         fit: BoxFit.cover,
-        width: widget.sm.scaledWidth(38),
+        width: widget.sm.w(38),
       ),
     );
   }

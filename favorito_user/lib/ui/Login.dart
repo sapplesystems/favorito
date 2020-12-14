@@ -51,21 +51,20 @@ class _LoginState extends State<_Login> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Container(
-      height: sm.scaledHeight(100),
-      width: sm.scaledWidth(100),
-      padding: EdgeInsets.symmetric(
-          horizontal: sm.scaledWidth(10), vertical: sm.scaledHeight(5)),
+      height: sm.h(100),
+      width: sm.w(100),
+      padding: EdgeInsets.symmetric(horizontal: sm.w(10), vertical: sm.h(5)),
       decoration: BoxDecoration(color: myBackGround),
       child: ListView(
         shrinkWrap: true,
         children: [
           SvgPicture.asset(
             'assets/icon/login_image.svg',
-            height: sm.scaledHeight(30),
+            height: sm.h(30),
             fit: BoxFit.fill,
           ),
           Padding(
-            padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+            padding: EdgeInsets.only(top: sm.h(2)),
             child: Text(
               "Welcome Back.",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
@@ -101,7 +100,7 @@ class _LoginState extends State<_Login> {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(6)),
+              padding: EdgeInsets.only(top: sm.h(6)),
               child: Text(
                 "Dont have account yet?",
                 style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
@@ -110,7 +109,7 @@ class _LoginState extends State<_Login> {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+              padding: EdgeInsets.only(top: sm.h(1)),
               child: InkWell(
                 onTap: () => Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Signup())),
@@ -123,7 +122,7 @@ class _LoginState extends State<_Login> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: sm.scaledHeight(6)),
+            padding: EdgeInsets.only(top: sm.h(6)),
             child: NeumorphicButton(
               style: NeumorphicStyle(
                   shape: NeumorphicShape.convex,
@@ -132,7 +131,7 @@ class _LoginState extends State<_Login> {
                   color: myButtonBackground,
                   boxShape: NeumorphicBoxShape.roundRect(
                       BorderRadius.all(Radius.circular(24.0)))),
-              margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+              margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   Map _map = {

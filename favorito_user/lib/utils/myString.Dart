@@ -1,8 +1,7 @@
 //shared prefrence
 String TOKEN = "TOKEN";
 String POSTEL = "POSTEL";
-
-const String welcometxt = "Welcome to Favorito";
+String welcometxt = "Welcome to Favorito";
 String business_id = "";
 String business_name = "";
 String business_status = "";
@@ -26,5 +25,5 @@ String waitlistSetting = "Waitlist Setting";
 String waitlist = "Waitlist";
 String appoinmentSettingtxt = "Appoinment Setting";
 String donetxt = "Done";
-
+String loading = 'Loading...';
 String bookingSetting = "Booking Setting";

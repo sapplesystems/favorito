@@ -10,11 +10,11 @@ class SizeManager {
     _screenWidth = MediaQuery.of(_context).size.width;
   }
 
-  double scaledHeight(double value) {
+  double h(double value) {
     return value * _screenHeight / 100;
   }
 
-  double scaledWidth(double value) {
+  double w(double value) {
     return value * _screenWidth / 100;
   }
 }

@@ -24,8 +24,8 @@ class TrendingCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: sm.scaledWidth(36),
-            padding: EdgeInsets.only(left: sm.scaledHeight(1.5)),
+            width: sm.w(36),
+            padding: EdgeInsets.only(left: sm.h(1.5)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -35,29 +35,27 @@ class TrendingCard extends StatelessWidget {
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
                 ServicesOfBusiness(sm: sm, data: data.subCategory),
                 Padding(
-                  padding: EdgeInsets.only(
-                      left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                  padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Color(0xfffff6ea),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    width: sm.scaledWidth(18),
+                    width: sm.w(18),
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: sm.scaledHeight(1)),
+                      padding: EdgeInsets.symmetric(horizontal: sm.h(1)),
                       child:
                           RatingHolder(sm: sm, rate: data.avgRating.toString()),
                     ),
                   ),
                 ),
-                SizedBox(height: sm.scaledHeight(1)),
+                SizedBox(height: sm.h(1)),
                 Text('${data.distance} km | ' + data.townCity,
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
                         color: myGrey)),
-                SizedBox(height: sm.scaledHeight(.5)),
+                SizedBox(height: sm.h(.5)),
                 Text(data.businessStatus,
                     style: TextStyle(
                         fontSize: 12,
@@ -65,10 +63,8 @@ class TrendingCard extends StatelessWidget {
                         color: (data.businessStatus).contains('Off')
                             ? myGrey
                             : Colors.green)),
-                Text("Opens | ${data.avgRating}",
-                    style:
-                        TextStyle(fontSize: 12, fontWeight: FontWeight.w300)),
-                Text("Closes | 09:00",
+                Text(
+                    "Opens | ${data?.startHours?.substring(0, 5)}\nCloses | ${data?.endHours?.substring(0, 5)}",
                     style:
                         TextStyle(fontSize: 12, fontWeight: FontWeight.w300)),
               ],
@@ -81,9 +77,9 @@ class TrendingCard extends StatelessWidget {
             ),
             child: Image.network(
               "https://source.unsplash.com/random/600*400",
-              height: sm.scaledHeight(26),
+              height: sm.h(26),
               fit: BoxFit.cover,
-              width: sm.scaledWidth(38),
+              width: sm.w(38),
             ),
           ),
         ],

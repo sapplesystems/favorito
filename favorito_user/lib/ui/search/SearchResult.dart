@@ -91,20 +91,18 @@ class _SearchResultState extends State<_SearchResult> {
     SizeManager sm = SizeManager(context);
     return SafeArea(
       child: Container(
-        height: sm.scaledHeight(100),
+        height: sm.h(100),
         decoration: BoxDecoration(color: myBackGround),
         child: Column(
           children: [
             Container(
-              height: sm.scaledHeight(8),
+              height: sm.h(8),
               child: Row(
                 children: [
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(
-                          left: sm.scaledWidth(5),
-                          right: sm.scaledWidth(5),
-                          top: sm.scaledHeight(1)),
+                          left: sm.w(5), right: sm.w(5), top: sm.h(1)),
                       child: EditTextComponent(
                         ctrl: _mySearchEditTextController,
                         title: "Search",
@@ -118,8 +116,7 @@ class _SearchResultState extends State<_SearchResult> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                        right: sm.scaledWidth(5), top: sm.scaledHeight(1)),
+                    padding: EdgeInsets.only(right: sm.w(5), top: sm.h(1)),
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -139,10 +136,9 @@ class _SearchResultState extends State<_SearchResult> {
             Visibility(
               visible: selectedFilters.length > 0,
               child: Container(
-                margin: EdgeInsets.only(
-                    left: sm.scaledWidth(2), right: sm.scaledWidth(2)),
-                height: sm.scaledHeight(7),
-                width: sm.scaledWidth(100),
+                margin: EdgeInsets.only(left: sm.w(2), right: sm.w(2)),
+                height: sm.h(7),
+                width: sm.w(100),
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
@@ -165,9 +161,7 @@ class _SearchResultState extends State<_SearchResult> {
               ),
             ),
             Container(
-              height: selectedFilters.length > 0
-                  ? sm.scaledHeight(80)
-                  : sm.scaledHeight(88),
+              height: selectedFilters.length > 0 ? sm.h(80) : sm.h(88),
               child: ListView(
                 shrinkWrap: true,
                 children: [
@@ -207,9 +201,9 @@ class _SearchResultState extends State<_SearchResult> {
                     ),
                     child: Image.network(
                       result.photo,
-                      height: sm.scaledHeight(18),
+                      height: sm.h(18),
                       fit: BoxFit.cover,
-                      width: sm.scaledWidth(28),
+                      width: sm.w(28),
                     ),
                   ),
                   Column(
@@ -217,42 +211,37 @@ class _SearchResultState extends State<_SearchResult> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                         child: Text(result.businessName,
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w400)),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                         child: Text(result.shortDescription ?? "",
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w300)),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                         child: Row(
                           children: [
                             for (var i = 0; i < 5; i++)
                               Icon(
                                 Icons.star,
-                                size: sm.scaledHeight(1.5),
+                                size: sm.h(1.5),
                               )
                           ],
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                         child: Text("1.2 km | Varaccha",
                             style: TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.w300)),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                         child: Text("Open Now",
                             style: TextStyle(
                                 fontSize: 12,
@@ -260,8 +249,7 @@ class _SearchResultState extends State<_SearchResult> {
                                 color: Colors.green)),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                         child: Text("Opens | 12:00  Closes | 09:00",
                             style: TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.w300)),
@@ -273,7 +261,7 @@ class _SearchResultState extends State<_SearchResult> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(sm.scaledHeight(2)),
+              padding: EdgeInsets.all(sm.h(2)),
               child: NeumorphicButton(
                 style: NeumorphicStyle(
                     shape: NeumorphicShape.convex,
@@ -282,7 +270,7 @@ class _SearchResultState extends State<_SearchResult> {
                     color: myButtonBackground,
                     boxShape: NeumorphicBoxShape.roundRect(
                         BorderRadius.all(Radius.circular(24.0)))),
-                margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+                margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                 onPressed: () {
                   identifier == 1
                       ? Navigator.push(
@@ -321,10 +309,10 @@ class _SearchResultState extends State<_SearchResult> {
     Navigator.push(
       context,
       PopupLayout(
-        top: sm.scaledHeight(18),
-        left: sm.scaledWidth(5),
-        right: sm.scaledWidth(5),
-        bottom: sm.scaledHeight(18),
+        top: sm.h(18),
+        left: sm.w(5),
+        right: sm.w(5),
+        bottom: sm.h(18),
         child: PopupContent(
           content: SafeArea(
             child: widget,

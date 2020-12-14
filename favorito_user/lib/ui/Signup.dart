@@ -45,23 +45,23 @@ class _SignupState extends State<Signup> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Container(
-        height: sm.scaledHeight(100),
-        width: sm.scaledWidth(100),
-        padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+        height: sm.h(100),
+        width: sm.w(100),
+        padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
         decoration: BoxDecoration(color: myBackGround),
         child: ListView(
           shrinkWrap: true,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+              padding: EdgeInsets.only(top: sm.h(1)),
               child: SvgPicture.asset(
                 'assets/icon/signup_image.svg',
-                height: sm.scaledHeight(20),
+                height: sm.h(20),
                 fit: BoxFit.fitHeight,
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+              padding: EdgeInsets.only(top: sm.h(2)),
               child: Text(
                 "Welcome.",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
@@ -113,7 +113,7 @@ class _SignupState extends State<Signup> {
             ),
             Center(
               child: Padding(
-                padding: EdgeInsets.only(top: sm.scaledHeight(4)),
+                padding: EdgeInsets.only(top: sm.h(4)),
                 child: Text(
                   "Already have an account?",
                   style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
@@ -122,7 +122,7 @@ class _SignupState extends State<Signup> {
             ),
             Center(
               child: Padding(
-                padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                padding: EdgeInsets.only(top: sm.h(1)),
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -140,7 +140,7 @@ class _SignupState extends State<Signup> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(4)),
+              padding: EdgeInsets.only(top: sm.h(4)),
               child: NeumorphicButton(
                 style: NeumorphicStyle(
                     shape: NeumorphicShape.convex,
@@ -149,7 +149,7 @@ class _SignupState extends State<Signup> {
                     color: myButtonBackground,
                     boxShape: NeumorphicBoxShape.roundRect(
                         BorderRadius.all(Radius.circular(24.0)))),
-                margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+                margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     if (newValue) {
@@ -211,7 +211,7 @@ class _tcpState extends State<tcp> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: widget.sm.scaledHeight(1)),
+      padding: EdgeInsets.only(top: widget.sm.h(1)),
       child: Column(
         children: [
           t_c(

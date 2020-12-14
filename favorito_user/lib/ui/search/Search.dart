@@ -1,11 +1,16 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
+import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
+import 'package:favorito_user/ui/search/TopRated.dart';
 import 'package:favorito_user/ui/search/TrendingNearby.dart';
+import 'package:favorito_user/ui/search/mostPopular.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import '../../utils/Extentions.dart';
 
 class Search extends StatefulWidget {
   _SearchState createState() => _SearchState();
@@ -17,86 +22,62 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    return SafeArea(
-      child: Container(
-        height: sm.scaledHeight(100),
-        decoration: BoxDecoration(color: myBackGround),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  left: sm.scaledWidth(5),
-                  right: sm.scaledWidth(5),
-                  top: sm.scaledHeight(5)),
-              child: EditTextComponent(
-                ctrl: _mySearchEditTextController,
-                title: "Search for ...",
-                security: false,
-                valid: true,
-                prefixIcon: 'search',
-                prefClick: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              SearchResult(_mySearchEditTextController.text)));
-                },
-              ),
+    return Container(
+      height: sm.h(100),
+      decoration: BoxDecoration(color: myBackGround),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding:
+                EdgeInsets.only(right: sm.h(5), top: sm.h(5), left: sm.h(5)),
+            child: EditTextComponent(
+              ctrl: _mySearchEditTextController,
+              title: "Search for ...",
+              security: false,
+              valid: true,
+              prefixIcon: 'search',
+              prefClick: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SearchResult(_mySearchEditTextController.text)));
+              },
             ),
-            header(sm, "Trending Nearby"),
-            trendingNearby(),
-            header(sm, "Hot & New Business"),
-            Container(
-              height: sm.scaledHeight(26),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                child: HotAndNewBusiness(),
-              ),
+          ),
+          header(sm, "Trending Nearby"),
+          trendingNearby(),
+          header(sm, "Hot & New Business"),
+          Container(
+            height: sm.h(26),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: sm.h(2)),
+              child: HotAndNewBusiness(),
             ),
-            header(sm, "Top Rated"),
-            Container(
-              height: sm.scaledHeight(35),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (var i = 0; i < 5; i++)
-                      InkWell(
-                        onTap: () {},
-                        child: topRatedChild(sm),
-                      ),
-                  ],
-                ),
-              ),
+          ),
+          header(sm, "Top Rated"),
+          Container(
+            height: sm.h(35),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: sm.h(2)),
+              child: TopRated(sm: sm),
             ),
-            header(sm, "Most Popular"),
-            Container(
-              height: sm.scaledHeight(32),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (var i = 0; i < 5; i++)
-                      InkWell(
-                        onTap: () {},
-                        child: mostPopularChild(sm),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+          header(sm, "Most Popular"),
+          Container(
+            height: sm.h(32),
+            padding: EdgeInsets.only(bottom: sm.h(2)),
+            child: MostPopular(),
+          ),
+        ],
       ),
-    );
+    ).safe();
   }
 
   Widget header(SizeManager sm, String title) {
     return Padding(
-      padding: EdgeInsets.all(sm.scaledWidth(5)),
+      padding: EdgeInsets.all(sm.w(5)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -118,102 +99,6 @@ class _SearchState extends State<Search> {
                   color: Colors.grey),
             ),
           )
-        ],
-      ),
-    );
-  }
-
-  Widget topRatedChild(SizeManager sm) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            elevation: 10,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              child: Image.network(
-                "https://source.unsplash.com/random/600*400",
-                height: sm.scaledHeight(20),
-                fit: BoxFit.cover,
-                width: sm.scaledWidth(32),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-            child: Text("Orange",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-            child: Text("Restaurant",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: sm.scaledWidth(1)),
-            child: Row(
-              children: [for (var i = 0; i < 5; i++) Icon(Icons.star)],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget mostPopularChild(SizeManager sm) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            elevation: 10,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              child: Image.network(
-                "https://source.unsplash.com/random/600*400",
-                height: sm.scaledHeight(16),
-                fit: BoxFit.cover,
-                width: sm.scaledWidth(34),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: sm.scaledWidth(2), top: sm.scaledHeight(1)),
-            child: Text("Eggeterian",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-            child: Text("Cafe | Restro",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: sm.scaledWidth(2)),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              width: sm.scaledWidth(18),
-              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Icon(Icons.star),
-                Text(
-                  "4.6",
-                  style: TextStyle(color: Colors.green),
-                )
-              ]),
-            ),
-          ),
         ],
       ),
     );

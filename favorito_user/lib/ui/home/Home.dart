@@ -53,26 +53,25 @@ class _HomeState extends State<Home> {
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.all(sm.scaledWidth(4)),
-            margin: EdgeInsets.only(top: sm.scaledHeight(2)),
+            padding: EdgeInsets.all(sm.w(4)),
+            margin: EdgeInsets.only(top: sm.h(2)),
             color: Colors.white,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+                  padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
                   child: myClipRect(profileImage: profileImage, sm: sm),
                 ),
                 usernameAddress(
                     addressData: addressData,
                     selectedAddress: _selectedAddress),
                 Padding(
-                  padding: EdgeInsets.only(
-                      right: sm.scaledWidth(2), bottom: sm.scaledWidth(4)),
+                  padding: EdgeInsets.only(right: sm.w(2), bottom: sm.w(4)),
                   child: IconButton(
                       icon: SvgPicture.asset(
                         'assets/icon/image_scanner.svg',
-                        height: sm.scaledHeight(3),
+                        height: sm.h(3),
                         fit: BoxFit.fill,
                       ),
                       onPressed: () {
@@ -84,7 +83,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Container(
-            height: sm.scaledHeight(30),
+            height: sm.h(30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -102,9 +101,9 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(12),
                               child: Image.network(
                                 item,
-                                height: sm.scaledHeight(10),
+                                height: sm.h(10),
                                 fit: BoxFit.cover,
-                                width: sm.scaledHeight(90),
+                                width: sm.h(90),
                               ),
                             ),
                           ),
@@ -114,8 +113,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                left: sm.scaledWidth(5), right: sm.scaledWidth(5)),
+            padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
             child: EditTextComponent(
               ctrl: _mySearchEditTextController,
               title: "Search",
@@ -134,10 +132,10 @@ class _HomeState extends State<Home> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(sm.scaledWidth(4)),
+            padding: EdgeInsets.all(sm.w(4)),
             child: Wrap(
-              runSpacing: sm.scaledHeight(5),
-              spacing: sm.scaledHeight(5),
+              runSpacing: sm.h(5),
+              spacing: sm.h(5),
               alignment: WrapAlignment.center,
               children: [
                 for (var i = 0; i < widget.imagName.length; i++)
@@ -153,14 +151,14 @@ class _HomeState extends State<Home> {
                             )),
                         child: Container(
                           color: Colors.white,
-                          padding: EdgeInsets.all(sm.scaledHeight(3.5)),
+                          padding: EdgeInsets.all(sm.h(3.5)),
                           child: SvgPicture.asset(
                             'assets/icon/${widget.image[i]}.svg',
-                            height: sm.scaledHeight(3.5),
+                            height: sm.h(3.5),
                           ),
                         )),
                     Padding(
-                      padding: EdgeInsets.only(top: sm.scaledHeight(2.5)),
+                      padding: EdgeInsets.only(top: sm.h(2.5)),
                       child: Text(widget.imagName[i].toString(),
                           textAlign: TextAlign.center),
                     ),
@@ -170,8 +168,8 @@ class _HomeState extends State<Home> {
           ),
           header(sm, "Hot & New Business"),
           Container(
-            padding: EdgeInsets.only(bottom: sm.scaledHeight(2)),
-            height: sm.scaledHeight(26),
+            padding: EdgeInsets.only(bottom: sm.h(2)),
+            height: sm.h(26),
             child: HotAndNewBusiness(),
           ),
         ],
@@ -181,7 +179,7 @@ class _HomeState extends State<Home> {
 
   Widget header(SizeManager sm, String title) {
     return Padding(
-      padding: EdgeInsets.all(sm.scaledWidth(5)),
+      padding: EdgeInsets.all(sm.w(5)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
