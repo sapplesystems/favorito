@@ -6,14 +6,17 @@ exports.getAddress = async function(req, res, next) {
     } else if (req.userdata.id) {
         var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address FROM user_address WHERE user_id = '" + req.userdata.id + "'";
         var sql_name = "SELECT first_name, last_name FROM users WHERE id = '" + req.userdata.id + "'"
-
     } else {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
     }
     try {
         var user_name
         db.query(sql_name, function(err, result) {
-            user_name = `${result[0].first_name} ${result[0].last_name}`
+            if (result != '' && result != undefined && result != null) {
+                user_name = `${result[0].first_name} ${result[0].last_name}`
+            } else {
+                user_name = ''
+            }
         })
         db.query(sql, function(err, result) {
             return res.status(200).json({ status: 'success', message: 'success', data: { user_name: user_name, addresses: result } });

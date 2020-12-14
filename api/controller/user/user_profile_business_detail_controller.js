@@ -8,7 +8,11 @@ exports.businessDetail = async function(req, res, next) {
 // Details of business by business id 
 exports.getBusinessDetail = async function(req, res) {
     try {
-        business_id = req.body.business_id
+        if (req.body.business_id == null || req.body.business_id == undefined || req.body.business_id == '') {
+            return res.status(400).json({ status: 'error', message: 'business_id is missing' });
+        } else {
+            business_id = req.body.business_id
+        }
         var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
         business_email,concat('" + img_path + "',photo) as photo, address1,address2,address3,pincode,town_city,state_id,country_id, \n\
         location, by_appointment_only, working_hours, website,short_description,business_status \n\

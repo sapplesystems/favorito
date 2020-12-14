@@ -33,9 +33,9 @@ exports.getBusinessInformation = async function(req, res, next) {
                 var sub_categories_id = rows[0].sub_categories_id;
                 var tags = rows[0].tags;
                 var attributes = rows[0].attributes;
-                rows[0].sub_categories = await exports.getSubCategories(sub_categories_id);
-                rows[0].tags = await exports.getTags(tags);
-                rows[0].attributes = await exports.getAttributes(attributes);
+                rows[0].sub_categories = await exports.getSubCategories(business_id);
+                rows[0].tags = await exports.getTags(business_id);
+                rows[0].attributes = await exports.getAttributes(business_id);
                 rows[0].payment_method = (rows[0].payment_method).split(',');
                 rows[0].photos = await exports.getBusinessInformationUploads(business_id);
                 return res.status(200).json({ status: 'success', message: 'success', dd_verbose: dd_verbose, data: rows[0] });
@@ -46,11 +46,10 @@ exports.getBusinessInformation = async function(req, res, next) {
     }
 };
 
-
 /**
  * BUSINESS USER PROFILE INFORMATION (BUSINESS USER) START HERE
  */
-exports.getBusinessInformationUpdate = function(req, res, next) {
+exports.getBusinessInformationUpdate = async function(req, res, next) {
     try {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
@@ -59,15 +58,38 @@ exports.getBusinessInformationUpdate = function(req, res, next) {
         if (req.body.categories != '' && req.body.categories != 'undefined' && req.body.categories != null) {
             update_columns += ", categories='" + req.body.categories + "' ";
         }
+
         if (req.body.sub_categories != '' && req.body.sub_categories != 'undefined' && req.body.sub_categories != null) {
-            var sub_categories = req.body.sub_categories;
-            sub_categories = sub_categories.join();
-            update_columns += ", sub_categories='" + sub_categories + "' ";
+            all_sub_categories = []
+            sub_categories = req.body.sub_categories
+            sub_categories.forEach(element => {
+                all_sub_categories.push([business_id, element])
+            });
+            try {
+                // This will work on update also
+                var sql_sub_delete = `DELETE FROM business_sub_category WHERE business_id = '${business_id}'`
+                await exports.run_query(sql_sub_delete)
+                var sql_sub_category = 'INSERT INTO business_sub_category (business_id,sub_category_id) VALUES ?'
+                await exports.run_query(sql_sub_category, [all_sub_categories])
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+            }
         }
         if (req.body.tags != '' && req.body.tags != 'undefined' && req.body.tags != null) {
-            var tags = req.body.tags;
-            tags = tags.join();
-            update_columns += ", `tags`='" + tags + "' ";
+            all_tags = []
+            tags = req.body.tags
+            tags.forEach(element => {
+                all_tags.push([business_id, element])
+            });
+            try {
+                // This will work on update also
+                var sql_tag_delete = `DELETE FROM business_tags WHERE business_id = '${business_id}'`
+                await exports.run_query(sql_tag_delete)
+                var sql_tag_insert = 'INSERT INTO business_tags (business_id,tag_id) VALUES ?'
+                await exports.run_query(sql_tag_insert, [all_tags])
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+            }
         }
         if (req.body.price_range != '' && req.body.price_range != 'undefined' && req.body.price_range != null) {
             update_columns += ", price_range='" + req.body.price_range + "' ";
@@ -78,9 +100,20 @@ exports.getBusinessInformationUpdate = function(req, res, next) {
             update_columns += ", payment_method='" + pm + "' ";
         }
         if (req.body.attributes != '' && req.body.attributes != 'undefined' && req.body.attributes != null) {
-            var attributes = req.body.attributes;
-            attributes = attributes.join();
-            update_columns += ", attributes='" + attributes + "' ";
+            all_attributes = []
+            attributes = req.body.attributes
+            attributes.forEach(element => {
+                all_attributes.push([business_id, element])
+            });
+            try {
+                // This will work on update also
+                var sql_attribute = `DELETE FROM business_attributes WHERE business_id = '${business_id}'`
+                await exports.run_query(sql_attribute)
+                var sql_attributes_insert = 'INSERT INTO business_attributes (business_id,attributes_id) VALUES ?'
+                await exports.run_query(sql_attributes_insert, [all_attributes])
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+            }
         }
 
         var sql = "update business_informations set " + update_columns + " where business_id='" + business_id + "'";
@@ -94,9 +127,34 @@ exports.getBusinessInformationUpdate = function(req, res, next) {
             }
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', e });
     }
 };
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+}
 
 /**
  * BUSINESS OWNER PROFILE ADD ANOTHER BRANCH
@@ -124,11 +182,10 @@ exports.addPhotos = async function(req, res, next) {
     }
 };
 
-
 exports.getTagList = function(req, res, next) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id,tag_name FROM business_tags where deleted_at is null";
+            var sql = "SELECT id,tag_name FROM business_tags_master where deleted_at is null";
             db.query(sql, function(err, result) {
                 resolve(result);
             });
@@ -141,7 +198,7 @@ exports.getTagList = function(req, res, next) {
 exports.geAttributeList = function(req, res, next) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id,attribute_name FROM business_attributes where deleted_at is null";
+            var sql = "SELECT id,attribute_name FROM business_attributes_master where deleted_at is null";
             db.query(sql, function(err, result) {
                 resolve(result);
             });
@@ -151,11 +208,10 @@ exports.geAttributeList = function(req, res, next) {
     }
 };
 
-exports.getSubCategories = function(sub_category_ids) {
+exports.getSubCategories = function(business_id) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id, category_name as `sub_category_name` FROM business_categories \n\
-            WHERE id IN(" + sub_category_ids + ") AND deleted_at IS NULL";
+            var sql = `SELECT b_c.id as id, b_c.category_name as sub_category_name FROM business_sub_category as b_s_c JOIN business_categories as b_c WHERE b_s_c.sub_category_id = b_c.id AND b_s_c.business_id = '${business_id}'`
             db.query(sql, function(err, result) {
                 resolve(result);
             });
@@ -165,11 +221,12 @@ exports.getSubCategories = function(sub_category_ids) {
     }
 };
 
-exports.getTags = function(tag_ids) {
+exports.getTags = function(business_id) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id, tag_name FROM business_tags \n\
-            WHERE id IN(" + tag_ids + ") AND deleted_at IS NULL";
+            // var sql = "SELECT id, tag_name FROM business_tags_master \n\
+            // WHERE id IN(" + tag_ids + ") AND deleted_at IS NULL";
+            var sql = `SELECT b_t_m.id as id, b_t_m.tag_name as tag_name FROM business_tags as b_t JOIN business_tags_master as b_t_m WHERE b_t.tag_id = b_t_m.id AND b_t.business_id = '${business_id}'`
             db.query(sql, function(err, result) {
                 resolve(result);
             });
@@ -179,11 +236,10 @@ exports.getTags = function(tag_ids) {
     }
 };
 
-exports.getAttributes = function(attibute_ids) {
+exports.getAttributes = function(business_id) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = "SELECT id, attribute_name FROM business_attributes \n\
-            WHERE id IN(" + attibute_ids + ") AND deleted_at IS NULL";
+            var sql = `SELECT b_a_m.id as id, b_a_m.attribute_name as attribute_name FROM business_attributes as b_a JOIN business_attributes_master as b_a_m WHERE b_a.attributes_id = b_a_m.id AND b_a.business_id = '${business_id}'`
             db.query(sql, function(err, result) {
                 resolve(result);
             });
