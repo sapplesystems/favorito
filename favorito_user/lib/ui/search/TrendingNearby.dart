@@ -3,7 +3,6 @@ import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/search/TrendingCard.dart';
-import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class trendingNearby extends StatefulWidget {
@@ -25,24 +24,20 @@ class _trendingNearbyState extends State<trendingNearby> {
             return Center(child: Text('Please wait its loading...'));
           } else {
             if (snapshot.hasError)
-              return Center(child: Text('Loading...'));
+              return Center(child: Text('Error: ${snapshot.error}'));
             else {
-              if (snapshot.hasError)
-                return Center(child: Text('Error: ${snapshot.error}'));
-              else {
-                if (trendingBusinessData != snapshot.data.data)
-                  trendingBusinessData = snapshot.data.data;
-                return Container(
-                    height: sm.scaledHeight(26),
-                    padding: EdgeInsets.all(4.0),
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: trendingBusinessData.length,
-                        itemBuilder: (BuildContext context, int Index) {
-                          return TrendingCard(
-                              sm: sm, data: trendingBusinessData[Index]);
-                        }));
-              }
+              if (trendingBusinessData != snapshot.data.data)
+                trendingBusinessData = snapshot.data.data;
+              return Container(
+                  height: sm.h(26),
+                  padding: EdgeInsets.all(4.0),
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: trendingBusinessData.length,
+                      itemBuilder: (BuildContext context, int Index) {
+                        return TrendingCard(
+                            sm: sm, data: trendingBusinessData[Index]);
+                      }));
             }
           }
         });

@@ -8,6 +8,7 @@ import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
 import 'package:dio/dio.dart';
+import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'dart:convert' as convert;
 
@@ -147,6 +148,37 @@ class APIManager {
         .catchError((onError) => onErrorCall(onError, context));
 
     print("hotAndNewBusiness responseData:${response.toString()}");
+    return TrendingBusinessModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+  //this is used for get small list of hot and new businesses
+  static Future<TrendingBusinessModel> topRatedBusiness(context) async {
+    String token = await Prefs.token;
+    print("token:$token");
+
+    String url = service.topRatedBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("topRatedBusiness Request URL:$url");
+    response = await dio
+        .post(url, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+    print("topRatedBusiness responseData:${response.toString()}");
+    return TrendingBusinessModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+  static Future<TrendingBusinessModel> mostPopulerBusiness() async {
+    String token = await Prefs.token;
+    print("token:$token");
+    String url = service.mostPopulerBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    response = await dio.post(url, options: opt);
+    print("topRatedBusiness responseData:${response.toString()}");
     return TrendingBusinessModel.fromJson(
         convert.json.decode(response.toString()));
   }

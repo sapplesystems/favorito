@@ -53,7 +53,7 @@ class Addresses {
   int userId;
   String city;
   String state;
-  int pincode;
+  String pincode;
   String country;
   String landmark;
   String address;
@@ -75,7 +75,7 @@ class Addresses {
     userId = json['user_id'];
     city = json['city'];
     state = json['state'];
-    pincode = json['pincode'];
+    pincode = json['pincode'].toString();
     country = json['country'];
     landmark = json['landmark'];
     address = json['address'];

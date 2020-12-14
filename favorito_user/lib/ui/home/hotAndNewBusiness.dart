@@ -57,8 +57,8 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                                     image: newBusinessData.data[index].photo,
                                     sm: sm),
                                 Positioned(
-                                  top: sm.scaledHeight(1),
-                                  left: sm.scaledWidth(1),
+                                  top: sm.h(1),
+                                  left: sm.w(1),
                                   child: RatingHolder(
                                       sm: sm,
                                       rate: newBusinessData.data[index].id
@@ -67,7 +67,7 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                              padding: EdgeInsets.only(left: sm.w(2)),
                               child: Text(
                                   newBusinessData.data[index].businessName,
                                   style: TextStyle(
@@ -75,14 +75,14 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                                       fontWeight: FontWeight.w400)),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                              padding: EdgeInsets.only(left: sm.w(2)),
                               child: ServicesOfBusiness(
                                   sm: sm,
                                   data:
                                       newBusinessData.data[index].subCategory),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                              padding: EdgeInsets.only(left: sm.w(2)),
                               child: Text(
                                   "${newBusinessData.data[index].distance} km | ${newBusinessData.data[index].townCity}",
                                   style: TextStyle(
@@ -91,8 +91,7 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: sm.scaledWidth(2),
-                                  bottom: sm.scaledWidth(2)),
+                                  left: sm.w(2), bottom: sm.w(2)),
                               child: Text(
                                   newBusinessData.data[index].businessStatus,
                                   style: TextStyle(

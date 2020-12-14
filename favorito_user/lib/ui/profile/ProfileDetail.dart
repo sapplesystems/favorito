@@ -39,7 +39,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
     return Scaffold(
       backgroundColor: myButtonBackground,
       appBar: AppBar(
-        toolbarHeight: sm.scaledHeight(5),
+        toolbarHeight: sm.h(5),
         backgroundColor: myAppBarBackground,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black //change your color here
@@ -58,8 +58,8 @@ class _ProfileDetailState extends State<_ProfileDetail> {
       body: Column(
         children: [
           Container(
-            height: sm.scaledHeight(33),
-            width: sm.scaledWidth(100),
+            height: sm.h(33),
+            width: sm.w(100),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -69,8 +69,8 @@ class _ProfileDetailState extends State<_ProfileDetail> {
             child: Column(
               children: [
                 Container(
-                    width: sm.scaledWidth(25),
-                    height: sm.scaledWidth(25),
+                    width: sm.w(25),
+                    height: sm.w(25),
                     decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
@@ -78,7 +78,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                             image: new NetworkImage(
                                 "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
                 Padding(
-                  padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                  padding: EdgeInsets.only(top: sm.h(1)),
                   child: Text(
                     "Jessica Saint",
                     textAlign: TextAlign.center,
@@ -87,8 +87,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: sm.scaledWidth(8),
-                      vertical: sm.scaledHeight(1)),
+                      horizontal: sm.w(8), vertical: sm.h(1)),
                   child: Text(
                     "Business manager at Avadh group of companies and always open for collaborations",
                     textAlign: TextAlign.center,
@@ -104,7 +103,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                         fontSize: 12,
                         color: myGrey)),
                 Padding(
-                  padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                  padding: EdgeInsets.only(top: sm.h(1)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -145,7 +144,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                    padding: EdgeInsets.only(top: sm.h(1)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -157,12 +156,12 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                               color: myButtonBackground,
                               boxShape: NeumorphicBoxShape.roundRect(
                                   BorderRadius.all(Radius.circular(4)))),
-                          margin: EdgeInsets.only(left: sm.scaledWidth(4)),
+                          margin: EdgeInsets.only(left: sm.w(4)),
                           onPressed: () {},
                           padding:
                               EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                           child: Container(
-                            width: sm.scaledWidth(24),
+                            width: sm.w(24),
                             child: Text(
                               "Add as friend",
                               style: TextStyle(
@@ -178,12 +177,12 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                               color: myButtonBackground,
                               boxShape: NeumorphicBoxShape.roundRect(
                                   BorderRadius.all(Radius.circular(4)))),
-                          margin: EdgeInsets.only(left: sm.scaledWidth(4)),
+                          margin: EdgeInsets.only(left: sm.w(4)),
                           onPressed: () {},
                           padding:
                               EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                           child: Container(
-                            width: sm.scaledWidth(24),
+                            width: sm.w(24),
                             child: Text(
                               "Follow",
                               textAlign: TextAlign.center,
@@ -200,14 +199,13 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                               color: myButtonBackground,
                               boxShape: NeumorphicBoxShape.roundRect(
                                   BorderRadius.all(Radius.circular(4)))),
-                          margin: EdgeInsets.only(
-                              left: sm.scaledWidth(4),
-                              right: sm.scaledWidth(4)),
+                          margin:
+                              EdgeInsets.only(left: sm.w(4), right: sm.w(4)),
                           onPressed: () {},
                           padding:
                               EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                           child: Container(
-                            width: sm.scaledWidth(25),
+                            width: sm.w(25),
                             child: Text(
                               "Message",
                               textAlign: TextAlign.center,
@@ -222,8 +220,8 @@ class _ProfileDetailState extends State<_ProfileDetail> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: sm.scaledWidth(2), vertical: sm.scaledHeight(2)),
+            padding:
+                EdgeInsets.symmetric(horizontal: sm.w(2), vertical: sm.h(2)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -282,14 +280,14 @@ class _ProfileDetailState extends State<_ProfileDetail> {
   Widget getPhotosWidget(SizeManager sm, double viewHeight, int noOfItems,
       double tileHeight, double tileWidth) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
-      height: sm.scaledHeight(viewHeight),
+      margin: EdgeInsets.symmetric(horizontal: sm.w(2)),
+      height: sm.h(viewHeight),
       child: StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: noOfItems,
         itemBuilder: (BuildContext context, int index) => Container(
-            width: sm.scaledWidth(30),
-            height: sm.scaledWidth(30),
+            width: sm.w(30),
+            height: sm.w(30),
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -307,8 +305,8 @@ class _ProfileDetailState extends State<_ProfileDetail> {
 
   Widget getReviewsWidget(SizeManager sm) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
-      height: sm.scaledHeight(51),
+      margin: EdgeInsets.symmetric(horizontal: sm.w(2)),
+      height: sm.h(51),
       child: ListView(
         children: [
           for (int i = 0; i < 2; i++)
@@ -318,7 +316,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                 ),
                 elevation: 10,
                 child: Padding(
-                  padding: EdgeInsets.all(sm.scaledWidth(2)),
+                  padding: EdgeInsets.all(sm.w(2)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -329,13 +327,13 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
                               "https://source.unsplash.com/random/40*40",
-                              height: sm.scaledHeight(8),
+                              height: sm.h(8),
                               fit: BoxFit.cover,
-                              width: sm.scaledHeight(8),
+                              width: sm.h(8),
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                            padding: EdgeInsets.only(left: sm.w(2)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -353,12 +351,12 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(top: sm.h(1)),
                         child: Row(
                           children: [
                             for (int i = 0; i < 4; i++) Icon(Icons.star),
                             Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(1)),
+                              padding: EdgeInsets.only(left: sm.w(1)),
                               child: Text(
                                 "4.0",
                                 style: TextStyle(color: Colors.black),
@@ -373,7 +371,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                             color: Colors.black, fontWeight: FontWeight.w300),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(top: sm.h(1)),
                         child: getPhotosWidget(sm, 32, 4, 2, 1),
                       ),
                       Row(
@@ -396,7 +394,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(top: sm.h(1)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -412,12 +410,11 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(4)),
+                              padding: EdgeInsets.only(left: sm.w(4)),
                               child: Icon(Icons.share_outlined),
                             ),
                             Padding(
-                                padding:
-                                    EdgeInsets.only(left: sm.scaledWidth(2)),
+                                padding: EdgeInsets.only(left: sm.w(2)),
                                 child: Text(
                                   "Share",
                                   style: TextStyle(
@@ -438,8 +435,8 @@ class _ProfileDetailState extends State<_ProfileDetail> {
 
   Widget getFavouritesWidget(SizeManager sm) {
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
-        height: sm.scaledHeight(51),
+        margin: EdgeInsets.symmetric(horizontal: sm.w(2)),
+        height: sm.h(51),
         child: ListView(children: [
           for (int i = 0; i < 2; i++)
             Card(
@@ -448,7 +445,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
               ),
               elevation: 10,
               child: Padding(
-                padding: EdgeInsets.all(sm.scaledWidth(2)),
+                padding: EdgeInsets.all(sm.w(2)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -456,9 +453,9 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
                         "https://source.unsplash.com//40*40",
-                        height: sm.scaledHeight(8),
+                        height: sm.h(8),
                         fit: BoxFit.cover,
-                        width: sm.scaledHeight(8),
+                        width: sm.h(8),
                       ),
                     ),
                     Column(
@@ -474,7 +471,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                           children: [
                             for (int i = 0; i < 4; i++) Icon(Icons.star),
                             Padding(
-                              padding: EdgeInsets.only(left: sm.scaledWidth(1)),
+                              padding: EdgeInsets.only(left: sm.w(1)),
                               child: Text(
                                 "4.0",
                                 style: TextStyle(color: Colors.black),
@@ -492,12 +489,11 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                           color: myButtonBackground,
                           boxShape: NeumorphicBoxShape.roundRect(
                               BorderRadius.all(Radius.circular(4)))),
-                      margin: EdgeInsets.only(
-                          left: sm.scaledWidth(4), right: sm.scaledWidth(4)),
+                      margin: EdgeInsets.only(left: sm.w(4), right: sm.w(4)),
                       onPressed: () {},
                       padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                       child: Container(
-                        width: sm.scaledWidth(25),
+                        width: sm.w(25),
                         child: Text(
                           "Follow",
                           textAlign: TextAlign.center,

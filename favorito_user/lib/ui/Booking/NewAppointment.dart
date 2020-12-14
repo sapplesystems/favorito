@@ -125,7 +125,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
             ),
             Expanded(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(8)),
+                margin: EdgeInsets.symmetric(horizontal: sm.w(8)),
                 child: ListView(
                   shrinkWrap: true,
                   children: [
@@ -141,7 +141,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
                     myServiceDropDown(sm),
                     myServicePersonDropDown(sm),
                     Padding(
-                      padding: EdgeInsets.only(top: sm.scaledHeight(3)),
+                      padding: EdgeInsets.only(top: sm.h(3)),
                       child: Center(
                         child: DatePicker(
                           selectedDateText: _selectedDateText,
@@ -153,10 +153,10 @@ class _NewAppointmentState extends State<_NewAppointment> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+                      padding: EdgeInsets.only(top: sm.h(2)),
                       child: Container(
-                        width: sm.scaledWidth(100),
-                        height: sm.scaledHeight(10),
+                        width: sm.w(100),
+                        height: sm.h(10),
                         decoration: BoxDecoration(color: Colors.transparent),
                         child: ListView(
                           scrollDirection: Axis.horizontal,
@@ -173,9 +173,9 @@ class _NewAppointmentState extends State<_NewAppointment> {
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.only(
-                                      right: sm.scaledWidth(1),
-                                      top: sm.scaledHeight(2),
-                                      bottom: sm.scaledHeight(2)),
+                                      right: sm.w(1),
+                                      top: sm.h(2),
+                                      bottom: sm.h(2)),
                                   child: Neumorphic(
                                     style: NeumorphicStyle(
                                         shape: NeumorphicShape.convex,
@@ -186,11 +186,11 @@ class _NewAppointmentState extends State<_NewAppointment> {
                                             BorderRadius.all(
                                                 Radius.circular(8.0)))),
                                     margin: EdgeInsets.symmetric(
-                                        horizontal: sm.scaledWidth(2)),
+                                        horizontal: sm.w(2)),
                                     child: Center(
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: sm.scaledWidth(4)),
+                                            horizontal: sm.w(4)),
                                         child: Text(temp.slot,
                                             style: TextStyle(
                                                 color: temp.selected
@@ -209,7 +209,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: sm.scaledHeight(4)),
+                      padding: EdgeInsets.only(top: sm.h(4)),
                       child: EditTextComponent(
                         ctrl: _myNotesEditTextController,
                         title: "Special Notes",
@@ -225,8 +225,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(
-                    top: sm.scaledHeight(4), bottom: sm.scaledHeight(2)),
+                padding: EdgeInsets.only(top: sm.h(4), bottom: sm.h(2)),
                 child: NeumorphicButton(
                   style: NeumorphicStyle(
                       shape: NeumorphicShape.convex,
@@ -235,7 +234,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
                       color: myButtonBackground,
                       boxShape: NeumorphicBoxShape.roundRect(
                           BorderRadius.all(Radius.circular(24.0)))),
-                  margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+                  margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                   onPressed: () {
                     BotToast.showText(text: "Appointment sheduled");
                     Navigator.of(context).pop();
@@ -260,7 +259,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
 
   Widget myServiceDropDown(SizeManager sm) {
     return Padding(
-      padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+      padding: EdgeInsets.only(top: sm.h(2)),
       child: Neumorphic(
         style: NeumorphicStyle(
             shape: NeumorphicShape.convex,
@@ -269,12 +268,12 @@ class _NewAppointmentState extends State<_NewAppointment> {
             color: Colors.white,
             boxShape: NeumorphicBoxShape.roundRect(
                 BorderRadius.all(Radius.circular(8.0)))),
-        margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+        margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
         child: DropdownButton<String>(
           value: _selectedService,
           isExpanded: true,
           hint: Padding(
-            padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+            padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
             child: Text("Select Service"),
           ),
           underline: Container(), // this is the magic
@@ -288,7 +287,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
             return DropdownMenuItem<String>(
               value: value,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+                padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
                 child: Text(value),
               ),
             );
@@ -305,7 +304,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
 
   Widget myServicePersonDropDown(SizeManager sm) {
     return Padding(
-      padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+      padding: EdgeInsets.only(top: sm.h(2)),
       child: Neumorphic(
         style: NeumorphicStyle(
             shape: NeumorphicShape.convex,
@@ -314,12 +313,12 @@ class _NewAppointmentState extends State<_NewAppointment> {
             color: Colors.white,
             boxShape: NeumorphicBoxShape.roundRect(
                 BorderRadius.all(Radius.circular(8.0)))),
-        margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+        margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
         child: DropdownButton<String>(
           isExpanded: true,
           value: _selectedServicePerson,
           hint: Padding(
-            padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+            padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
             child: Text("Select Service Person"),
           ),
           underline: Container(), // this is the magic
@@ -328,7 +327,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
             return DropdownMenuItem<String>(
               value: value,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+                padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
                 child: Text(value),
               ),
             );

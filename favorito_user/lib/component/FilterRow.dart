@@ -20,14 +20,14 @@ class _FilterRow extends State<FilterRow> {
     SizeManager sm = SizeManager(context);
     return Container(
       child: Container(
-        height: sm.scaledHeight(40),
-        width: sm.scaledWidth(80),
+        height: sm.h(40),
+        width: sm.w(80),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Container(
-              height: sm.scaledHeight(40),
-              width: sm.scaledWidth(80),
+              height: sm.h(40),
+              width: sm.w(80),
               child: ListView(
                 children: [
                   for (var i = 0; i < widget.allFilters.length; i++)
@@ -65,7 +65,7 @@ class _FilterRow extends State<FilterRow> {
                   color: myButtonBackground,
                   boxShape: NeumorphicBoxShape.roundRect(
                       BorderRadius.all(Radius.circular(24.0)))),
-              margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+              margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
               onPressed: () {
                 widget.doneFunction();
                 Navigator.of(context).pop();

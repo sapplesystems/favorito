@@ -48,7 +48,7 @@ class _DatePicker extends State<DatePicker> {
             boxShape: NeumorphicBoxShape.roundRect(
                 BorderRadius.all(Radius.circular(8.0))),
           ),
-          margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+          margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
           child: Center(
             child: Text(widget.selectedDateText,
                 style: TextStyle(color: Colors.grey)),

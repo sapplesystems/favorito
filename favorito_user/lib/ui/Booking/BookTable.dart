@@ -127,7 +127,7 @@ class _BookTableState extends State<_BookTable> {
             ),
             Expanded(
               child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(8)),
+                  margin: EdgeInsets.symmetric(horizontal: sm.w(8)),
                   decoration: BoxDecoration(color: myBackGround),
                   child: ListView(
                     shrinkWrap: true,
@@ -141,7 +141,7 @@ class _BookTableState extends State<_BookTable> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+                        padding: EdgeInsets.only(top: sm.h(2)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -186,7 +186,7 @@ class _BookTableState extends State<_BookTable> {
                                 }
                               },
                               child: SizedBox(
-                                width: sm.scaledWidth(18),
+                                width: sm.w(18),
                                 child: Neumorphic(
                                   style: NeumorphicStyle(
                                       shape: NeumorphicShape.convex,
@@ -196,12 +196,12 @@ class _BookTableState extends State<_BookTable> {
                                       boxShape: NeumorphicBoxShape.roundRect(
                                           BorderRadius.all(
                                               Radius.circular(30.0)))),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: sm.scaledWidth(2)),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: sm.w(2)),
                                   child: Center(
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: sm.scaledWidth(4)),
+                                          horizontal: sm.w(4)),
                                       child: Text(
                                         "-",
                                         style: TextStyle(
@@ -223,7 +223,7 @@ class _BookTableState extends State<_BookTable> {
                                     temp.toString();
                               },
                               child: SizedBox(
-                                width: sm.scaledWidth(18),
+                                width: sm.w(18),
                                 child: Neumorphic(
                                   style: NeumorphicStyle(
                                       shape: NeumorphicShape.convex,
@@ -233,12 +233,12 @@ class _BookTableState extends State<_BookTable> {
                                       boxShape: NeumorphicBoxShape.roundRect(
                                           BorderRadius.all(
                                               Radius.circular(8.0)))),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: sm.scaledWidth(2)),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: sm.w(2)),
                                   child: Center(
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: sm.scaledWidth(4)),
+                                          horizontal: sm.w(4)),
                                       child: Text(
                                         "+",
                                         style: TextStyle(
@@ -255,7 +255,7 @@ class _BookTableState extends State<_BookTable> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(3)),
+                        padding: EdgeInsets.only(top: sm.h(3)),
                         child: Center(
                           child: DatePicker(
                             selectedDateText: _selectedDateText,
@@ -269,7 +269,7 @@ class _BookTableState extends State<_BookTable> {
                       mySlotSelector(sm),
                       myOccasionDropDown(sm),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(4)),
+                        padding: EdgeInsets.only(top: sm.h(4)),
                         child: EditTextComponent(
                           ctrl: _myUserNameEditTextController,
                           title: "Name",
@@ -279,7 +279,7 @@ class _BookTableState extends State<_BookTable> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(4)),
+                        padding: EdgeInsets.only(top: sm.h(4)),
                         child: EditTextComponent(
                           ctrl: _myMobileEditTextController,
                           title: "Mobile",
@@ -289,7 +289,7 @@ class _BookTableState extends State<_BookTable> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(4)),
+                        padding: EdgeInsets.only(top: sm.h(4)),
                         child: EditTextComponent(
                           ctrl: _myNotesEditTextController,
                           title: "Special Notes",
@@ -304,8 +304,7 @@ class _BookTableState extends State<_BookTable> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(
-                    top: sm.scaledHeight(4), bottom: sm.scaledHeight(2)),
+                padding: EdgeInsets.only(top: sm.h(4), bottom: sm.h(2)),
                 child: NeumorphicButton(
                   style: NeumorphicStyle(
                       shape: NeumorphicShape.convex,
@@ -314,7 +313,7 @@ class _BookTableState extends State<_BookTable> {
                       color: myButtonBackground,
                       boxShape: NeumorphicBoxShape.roundRect(
                           BorderRadius.all(Radius.circular(24.0)))),
-                  margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+                  margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                   onPressed: () {
                     BotToast.showText(text: "Appointment sheduled");
                     Navigator.of(context).pop();
@@ -339,10 +338,10 @@ class _BookTableState extends State<_BookTable> {
 
   Widget mySlotSelector(SizeManager sm) {
     return Padding(
-      padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+      padding: EdgeInsets.only(top: sm.h(2)),
       child: Container(
-        width: sm.scaledWidth(100),
-        height: sm.scaledHeight(10),
+        width: sm.w(100),
+        height: sm.h(10),
         decoration: BoxDecoration(color: Colors.transparent),
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -359,9 +358,7 @@ class _BookTableState extends State<_BookTable> {
                 },
                 child: Padding(
                   padding: EdgeInsets.only(
-                      right: sm.scaledWidth(1),
-                      top: sm.scaledHeight(2),
-                      bottom: sm.scaledHeight(2)),
+                      right: sm.w(1), top: sm.h(2), bottom: sm.h(2)),
                   child: Neumorphic(
                     style: NeumorphicStyle(
                         shape: NeumorphicShape.convex,
@@ -370,11 +367,10 @@ class _BookTableState extends State<_BookTable> {
                         color: Colors.white,
                         boxShape: NeumorphicBoxShape.roundRect(
                             BorderRadius.all(Radius.circular(8.0)))),
-                    margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+                    margin: EdgeInsets.symmetric(horizontal: sm.w(2)),
                     child: Center(
                       child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
+                        padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
                         child: Text(temp.slot,
                             style: TextStyle(
                                 color: temp.selected
@@ -393,7 +389,7 @@ class _BookTableState extends State<_BookTable> {
 
   Widget myOccasionDropDown(SizeManager sm) {
     return Padding(
-      padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+      padding: EdgeInsets.only(top: sm.h(2)),
       child: Center(
         child: SizedBox(
           child: Neumorphic(
@@ -404,12 +400,12 @@ class _BookTableState extends State<_BookTable> {
                 color: Colors.white,
                 boxShape: NeumorphicBoxShape.roundRect(
                     BorderRadius.all(Radius.circular(8.0)))),
-            margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(10)),
+            margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
             child: DropdownButton<String>(
               isExpanded: true,
               value: _selectedOccasion,
               hint: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+                padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
                 child: Text("Select Occasion"),
               ),
               underline: Container(), // this is the magic
@@ -422,8 +418,7 @@ class _BookTableState extends State<_BookTable> {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: sm.scaledWidth(2)),
+                    padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
                     child: Text(value),
                   ),
                 );

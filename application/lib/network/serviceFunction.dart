@@ -1,5 +1,6 @@
 import 'package:Favorito/network/BaseUrl.dart';
 import 'package:Favorito/network/ServeControl.dart';
+
 class serviceFunction {
   static String adSpent = "ad-spent-campaign/";
   static String funCatList = baseUrl1 + 'category/list';
@@ -52,7 +53,6 @@ class serviceFunction {
   static String funOrderList = baseUrl1 + 'order/list';
   static String funCatalogAddPhoto = baseUrl2 + 'catalog/add-photo';
   static String funCatalogEdit = baseUrl2 + 'catalog/edit';
-
   static String funManualBooking = funBooking + 'create';
   static String funBookingSetting = funBooking + 'setting';
   static String funBookingSaveSetting = funBooking + 'save-setting';

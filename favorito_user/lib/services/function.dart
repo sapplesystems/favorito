@@ -23,4 +23,7 @@ class service {
   static final search = base + 'user-business/search-by-name';
   static final hotAndNewBusiness = baseBusinessDashboard + 'get-new-business';
   static final trendingBusiness = baseBusinessDashboard + 'get-trending-nearby';
+  static final topRatedBusiness = baseBusinessDashboard + 'get-top-rated';
+
+  static final mostPopulerBusiness = baseBusinessDashboard + 'get-most-popular';
 }

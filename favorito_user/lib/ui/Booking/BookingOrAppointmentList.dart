@@ -106,7 +106,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                   ],
                 ),
                 SizedBox(
-                  width: sm.scaledWidth(45),
+                  width: sm.w(45),
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
@@ -197,10 +197,9 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                   ),
                 ),
                 Container(
-                  width: sm.scaledWidth(100),
+                  width: sm.w(100),
                   padding: EdgeInsets.symmetric(
-                      horizontal: sm.scaledWidth(4),
-                      vertical: sm.scaledHeight(2)),
+                      horizontal: sm.w(4), vertical: sm.h(2)),
                   decoration: BoxDecoration(color: myBackGround),
                   child: ListView(
                     shrinkWrap: true,
@@ -227,7 +226,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
         child: Padding(
-          padding: EdgeInsets.all(sm.scaledWidth(2)),
+          padding: EdgeInsets.all(sm.w(2)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -269,7 +268,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                   Visibility(
                     visible: data.isHistory,
                     child: SizedBox(
-                      width: sm.scaledWidth(70),
+                      width: sm.w(70),
                       child: Text(
                         "Review : ${data.review}",
                         style: TextStyle(
@@ -282,7 +281,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                     ),
                   ),
                   SizedBox(
-                    width: sm.scaledWidth(70),
+                    width: sm.w(70),
                     child: Text(
                       data.notes,
                       style: TextStyle(
@@ -296,7 +295,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(right: sm.scaledWidth(5)),
+                padding: EdgeInsets.only(right: sm.w(5)),
                 child: Icon(
                   Icons.call,
                   size: 30,
@@ -320,7 +319,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
         child: Padding(
-          padding: EdgeInsets.all(sm.scaledWidth(2)),
+          padding: EdgeInsets.all(sm.w(2)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -362,7 +361,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                   Visibility(
                     visible: data.isHistory,
                     child: SizedBox(
-                      width: sm.scaledWidth(70),
+                      width: sm.w(70),
                       child: Text(
                         "Review : ${data.review}",
                         style: TextStyle(
@@ -375,7 +374,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                     ),
                   ),
                   SizedBox(
-                    width: sm.scaledWidth(70),
+                    width: sm.w(70),
                     child: Text(
                       data.notes,
                       style: TextStyle(
@@ -389,7 +388,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(right: sm.scaledWidth(5)),
+                padding: EdgeInsets.only(right: sm.w(5)),
                 child: Icon(
                   Icons.call,
                   size: 30,
@@ -407,7 +406,7 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
     Navigator.push(
       context,
       PopupLayout(
-        top: sm.scaledHeight(4),
+        top: sm.h(4),
         child: PopupContent(
           content: SafeArea(
             child: widget,

@@ -83,7 +83,7 @@ class _ProfileState extends State<_Profile> {
     return Scaffold(
       backgroundColor: myBackGround,
       appBar: AppBar(
-          toolbarHeight: sm.scaledHeight(5),
+          toolbarHeight: sm.h(5),
           backgroundColor: myBackGround,
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black //change your color here
@@ -95,9 +95,9 @@ class _ProfileState extends State<_Profile> {
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(5)),
-            height: sm.scaledHeight(20),
-            width: sm.scaledWidth(100),
+            padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
+            height: sm.h(20),
+            width: sm.w(100),
             child: ListView(
               children: [
                 Row(
@@ -110,8 +110,8 @@ class _ProfileState extends State<_Profile> {
                                 builder: (context) => ProfileDetail()));
                       },
                       child: Container(
-                          width: sm.scaledWidth(25),
-                          height: sm.scaledWidth(25),
+                          width: sm.w(25),
+                          height: sm.w(25),
                           decoration: new BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
@@ -120,7 +120,7 @@ class _ProfileState extends State<_Profile> {
                                       "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: sm.scaledWidth(2)),
+                      padding: EdgeInsets.only(left: sm.w(2)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +146,7 @@ class _ProfileState extends State<_Profile> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+                  padding: EdgeInsets.only(top: sm.h(2)),
                   child: Text(
                     "Business manager at Avadh group of companies and always open for collaborations",
                     style: TextStyle(
@@ -160,7 +160,7 @@ class _ProfileState extends State<_Profile> {
           ),
           Divider(height: 10, color: myGrey),
           Container(
-            height: sm.scaledHeight(60),
+            height: sm.h(60),
             child: ListView.builder(
               itemCount: widget.menuTitleList.length,
               shrinkWrap: true,
@@ -184,13 +184,12 @@ class _ProfileState extends State<_Profile> {
     return InkWell(
       onTap: () {},
       child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: sm.scaledWidth(5), vertical: sm.scaledHeight(1)),
+        padding: EdgeInsets.symmetric(horizontal: sm.w(5), vertical: sm.h(1)),
         child: Row(
           children: [
             widget.menuIconList[identifier],
             Padding(
-              padding: EdgeInsets.only(left: sm.scaledWidth(4)),
+              padding: EdgeInsets.only(left: sm.w(4)),
               child: Text(widget.menuTitleList[identifier],
                   style: TextStyle(
                     fontSize: 16,

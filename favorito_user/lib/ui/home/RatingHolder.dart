@@ -19,7 +19,7 @@ class RatingHolder extends StatelessWidget {
         color: Color(0xfffff6ea),
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
-      width: sm.scaledWidth(18),
+      width: sm.w(18),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Icon(Icons.star, color: myOrangeBase),
         //here id is used to show but rating need to be

@@ -4,6 +4,8 @@ class TrendingBusinessData {
   int id;
   String businessId;
   int avgRating;
+  String startHours;
+  String endHours;
   int distance;
   int businessCategoryId;
   String businessName;
@@ -16,6 +18,8 @@ class TrendingBusinessData {
       {this.id,
       this.businessId,
       this.avgRating,
+      this.startHours,
+      this.endHours,
       this.distance,
       this.businessCategoryId,
       this.businessName,
@@ -28,6 +32,8 @@ class TrendingBusinessData {
     id = json['id'];
     businessId = json['business_id'];
     avgRating = json['avg_rating'];
+    startHours = json['start_hours'];
+    endHours = json['end_hours'];
     distance = json['distance'];
     businessCategoryId = json['business_category_id'];
     businessName = json['business_name'];
@@ -47,6 +53,8 @@ class TrendingBusinessData {
     data['id'] = this.id;
     data['business_id'] = this.businessId;
     data['avg_rating'] = this.avgRating;
+    data['start_hours'] = this.startHours;
+    data['end_hours'] = this.endHours;
     data['distance'] = this.distance;
     data['business_category_id'] = this.businessCategoryId;
     data['business_name'] = this.businessName;
