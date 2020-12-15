@@ -28,4 +28,6 @@ router.post('/get-business-by-job', CheckAuth, dashboardController.getBusinessBy
 
 router.post('/get-business-by-doctor', CheckAuth, dashboardController.getBusinessByDoctor);
 
+router.post('/get-business-by-freelancer', CheckAuth, dashboardController.getBusinessByFreelancer);
+
 module.exports = router;
