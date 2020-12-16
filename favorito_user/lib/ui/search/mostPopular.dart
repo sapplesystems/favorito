@@ -1,5 +1,5 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
@@ -13,7 +13,7 @@ class MostPopular extends StatefulWidget {
 }
 
 class _mostPopularState extends State<MostPopular> {
-  List<TrendingBusinessData> dataList;
+  List<BusinessProfileData> dataList;
   SizeManager sm;
   @override
   void initState() {

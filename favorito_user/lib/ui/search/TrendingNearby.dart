@@ -1,5 +1,5 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/search/TrendingCard.dart';
@@ -11,7 +11,7 @@ class trendingNearby extends StatefulWidget {
 }
 
 class _trendingNearbyState extends State<trendingNearby> {
-  List<TrendingBusinessData> trendingBusinessData;
+  List<BusinessProfileData> trendingBusinessData;
   SizeManager sm;
   @override
   Widget build(BuildContext context) {

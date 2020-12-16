@@ -1,6 +1,10 @@
+import 'package:favorito_user/component/Following.dart';
 import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/Signup.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
+import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class RouteGenerator {
@@ -18,6 +22,19 @@ class RouteGenerator {
 
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
+
+      case '/profile':
+        return MaterialPageRoute(builder: (_) => Profile());
+
+      case '/profileDetail':
+        return MaterialPageRoute(builder: (_) => ProfileDetail());
+
+      case '/businessProfile':
+        return MaterialPageRoute(
+            builder: (_) => BusinessProfile(businessId: args));
+
+      case '/following':
+        return MaterialPageRoute(builder: (_) => Following());
 
         return _errorRoute();
       default:

@@ -1,9 +1,9 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/ui/profile/ProfileDetail.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-import '../../utils/MyColors.dart';
+import '../../../utils/MyColors.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -107,7 +107,7 @@ class _ProfileState extends State<_Profile> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProfileDetail()));
+                                builder: (context) => BusinessProfile()));
                       },
                       child: Container(
                           width: sm.w(25),

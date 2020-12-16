@@ -2,13 +2,14 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
+import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
 import 'package:dio/dio.dart';
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'dart:convert' as convert;
 
@@ -130,7 +131,10 @@ class APIManager {
         .catchError((onError) => onErrorCall(onError, context));
 
     print("hotAndNewBusiness responseData:${response.toString()}");
-    return NewBusinessModel.fromJson(convert.json.decode(response.toString()));
+    NewBusinessModel data =
+        NewBusinessModel.fromJson(convert.json.decode(response.toString()));
+
+    return data;
   }
 
   //this is used for get small list of hot and new businesses
@@ -173,13 +177,40 @@ class APIManager {
   static Future<TrendingBusinessModel> mostPopulerBusiness() async {
     String token = await Prefs.token;
     print("token:$token");
-    String url = service.mostPopulerBusiness;
+
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    response = await dio.post(url, options: opt);
+    response = await dio.post(service.mostPopulerBusiness, options: opt);
     print("topRatedBusiness responseData:${response.toString()}");
     return TrendingBusinessModel.fromJson(
         convert.json.decode(response.toString()));
+  }
+
+  static Future<dynamic> baseUserProfileOverview() async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    response = await dio.post(service.baseUserProfileOverview, options: opt);
+    print("service.mostPopulerBusiness : ${response.toString}");
+    // retutn null;
+  }
+
+  static Future<businessProfileModel> baseUserProfileDetail(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserProfileDetail : ${service.baseUserProfileDetail}");
+
+    response =
+        await dio.post(service.baseUserProfileDetail, data: _map, options: opt);
+    print("service.mostPopulerBusiness : ${response.toString}");
+    return businessProfileModel
+        .fromJson(convert.jsonDecode(response.toString()));
   }
 }

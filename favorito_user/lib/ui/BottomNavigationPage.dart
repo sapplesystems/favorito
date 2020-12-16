@@ -1,7 +1,7 @@
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/home/Home.dart';
-import 'package:favorito_user/ui/profile/Profile.dart';
+import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:favorito_user/ui/search/Search.dart';
 import 'package:favorito_user/ui/chat/Chat.dart';
 import 'package:favorito_user/utils/MyColors.dart';

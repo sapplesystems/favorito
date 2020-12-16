@@ -1,12 +1,12 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/ui/home/RatingHolder.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class TrendingCard extends StatelessWidget {
-  TrendingBusinessData data;
+  BusinessProfileData data;
   TrendingCard({
     Key key,
     @required this.sm,

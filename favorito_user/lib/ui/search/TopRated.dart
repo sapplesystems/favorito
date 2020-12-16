@@ -1,6 +1,5 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
@@ -16,7 +15,7 @@ class TopRated extends StatefulWidget {
 }
 
 class _TopRatedState extends State<TopRated> {
-  List<TrendingBusinessData> data;
+  List<BusinessProfileData> data;
   var br = BorderRadius.all(Radius.circular(12));
   @override
   Widget build(BuildContext context) {

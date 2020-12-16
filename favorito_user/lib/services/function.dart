@@ -26,4 +26,7 @@ class service {
   static final topRatedBusiness = baseBusinessDashboard + 'get-top-rated';
 
   static final mostPopulerBusiness = baseBusinessDashboard + 'get-most-popular';
+
+  static final baseUserProfileOverview = baseUserProfile + 'business-overview';
+  static final baseUserProfileDetail = baseUserProfile + 'business-detail';
 }
