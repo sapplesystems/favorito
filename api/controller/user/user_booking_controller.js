@@ -2,6 +2,7 @@ var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 var moment = require('moment');
 const e = require('express');
+const async = require('async');
 
 // setting and updating the appointment booking booked by the user
 exports.setBookingAppointment = async function(req, res, next) {
@@ -78,18 +79,21 @@ exports.setBookingAppointment = async function(req, res, next) {
 
 // get all booking by user_id
 exports.getBookingAppointment = async function(req, res, next) {
-    if (req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') {
-        var condition = "WHERE user_id = '" + req.body.user_id + "' AND deleted_at IS NULL"
-    } else {
+    if (req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') {} else {
         return res.status(400).json({ status: 'failed', message: 'user_id is missing' });
     }
-    var sql = "SELECT * FROM business_appointment " + condition;
+    var sql = "SELECT b_a.id, b_a.user_id as user_id, b_a.business_id, IFNULL(b_m.business_name,''), IFNULL(b_m.business_phone,''), b_a.service_id, b_a.person_id,IFNULL(b_a_p.person_name,'') AS person_name,IFNULL(b_a_p.person_email,'') as person_email ,IFNULL(b_a_p.person_mobile,'') as person_mobile, b_a.special_notes,b_a.appointment_status, b_a.created_datetime \n\
+    FROM business_appointment as b_a \n\
+    JOIN business_appointment_person as b_a_p \n\
+    JOIN business_master as b_m \n\
+    ON b_m.business_id= b_a.business_id \n\
+    AND b_a.person_id = b_a_p.id \n\
+    WHERE b_a.user_id = '" + req.body.user_id + "' AND b_a.deleted_at IS NULL GROUP BY business_id"
+    result = await exports.run_query(sql);
     try {
-        db.query(sql, function(err, result) {
-            res.send(result)
-        })
+        return res.status(200).send({ status: 'success', message: 'Success', data: result })
     } catch (error) {
-        res.send(error)
+        return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
     }
 }
 
@@ -124,7 +128,9 @@ exports.setBookingNote = async function(req, res, next) {
     if (req.body.special_notes == null || req.body.special_notes == undefined || req.body.special_notes == '') {
         return res.status(403).send({ status: 'failed', message: 'special_notes is missing' })
     }
+
     var sql = "UPDATE business_booking SET special_notes = '" + req.body.special_notes + "'" + condition;
+
     try {
         db.query(sql, function(err, result) {
             if (err) {
@@ -219,17 +225,34 @@ exports.setBookTable = function(req, res, next) {
 // get all booking by user_id
 exports.getBookTable = async function(req, res, next) {
     if (req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') {
-        var condition = "WHERE user_id = '" + req.body.user_id + "' AND deleted_at IS NULL"
+        var condition = " WHERE b_b.user_id = '" + req.body.user_id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.business_id"
     } else {
         return res.status(400).json({ status: 'failed', message: 'user_id is missing' });
     }
-    var sql = "SELECT * FROM business_booking " + condition;
+
+    var sql = "SELECT b_b.id,b_b.user_id, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, AVG(b_r.rating) as avg_rating,b_m.business_phone, b_b.business_id,b_b.user_id,b_b.no_of_person,b_b.created_datetime \n\
+    FROM business_booking AS b_b \n\
+    JOIN business_master AS b_m \n\
+    JOIN business_ratings AS b_r \n\
+    ON b_m.business_id = b_b.business_id \n\
+    AND b_r.business_id = b_b.business_id" + condition;
     try {
-        db.query(sql, function(err, result) {
-            res.send(result)
-        })
+        result = await exports.run_query(sql)
+        final_data = []
+        async.eachSeries(result, function(data, callback) {
+            db.query(`SELECT reviews FROM business_reviews WHERE user_id = '${data.user_id}' AND business_id = '${data.business_id}'`, function(error, results1) {
+                if (error) {
+                    return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
+                }
+                data.review = results1[0].reviews
+                final_data.push(data)
+                callback();
+            });
+        }, function(err, results) {
+            return res.status(200).send({ status: 'success', message: 'Success', data: final_data })
+        });
     } catch (error) {
-        res.send(error)
+        return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
     }
 }
 

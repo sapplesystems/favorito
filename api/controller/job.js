@@ -6,7 +6,11 @@ var contact_via = ['Phone', 'Email'];
  */
 exports.all_jobs = function(req, res, next) {
     try {
-        var business_id = req.userdata.business_id;
+        if (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '') {
+            business_id = req.body.business_id
+        } else {
+            var business_id = req.userdata.business_id;
+        }
         var where_condition = " WHERE business_id='" + business_id + "' AND deleted_at IS NULL ";
 
         if (req.body.job_id != '' && req.body.job_id != 'undefined' && req.body.job_id != null) {
@@ -44,7 +48,6 @@ exports.dd_verbose = async function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
-
 
 /**
  * GET SKILL LIST

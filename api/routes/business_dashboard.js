@@ -18,6 +18,8 @@ router.post('/get-top-rated', CheckAuth, dashboardController.topRated);
 
 router.post('/get-most-popular', CheckAuth, dashboardController.mostPopular);
 
+router.post('/get-sponsor', CheckAuth, dashboardController.sponsored);
+
 router.post('/get-business-by-appintment', CheckAuth, dashboardController.getBusinessByAppointment);
 
 router.post('/get-business-by-food', CheckAuth, dashboardController.getBusinessByFood);
