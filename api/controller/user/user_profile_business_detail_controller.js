@@ -62,7 +62,7 @@ exports.getBusinessOverview = async function(req, res) {
         // FROM business_master WHERE business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
 
 
-        var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours,b_m.website, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, b_m.address1 as address1,b_m.address2 as address2,b_m.address3 as address3,b_m.short_description as short_description,b_i.payment_method as payment_method, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r JOIN business_informations as b_i ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id AND b_i.business_id = b_m.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
+        var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code, IFNULL(b_m.location,'0,0') as location,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours,b_m.website, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, b_m.address1 as address1,b_m.address2 as address2,b_m.address3 as address3,b_m.short_description as short_description,b_i.payment_method as payment_method, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r JOIN business_informations as b_i ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id AND b_i.business_id = b_m.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
 
         db.query(sql, function(err, result) {
             if (err) {
@@ -124,6 +124,24 @@ exports.all_business_reviewlist = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.getAllHoursBusiness = async function(req, res, next) {
+    if (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '') {
+        business_id = req.body.business_id
+    } else if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
+        business_id = req.body.business_id
+    } else {
+        return res.status(400).json({ status: 'error', message: 'business_id is missing' });
+    }
+
+    try {
+        var sql_get_hours = `SELECT business_id,day, start_hours,end_hours FROM business_hours WHERE business_id = '${business_id}'`
+        var result_get_hours = await exports.run_query(sql_get_hours)
+        return res.status(200).json({ status: 'success', message: 'success', data: result_get_hours });
+    } catch (error) {
+        return res.status(400).json({ status: 'error', message: 'Something went wrong', error });
+    }
+}
 
 exports.run_query = (sql, param = false) => {
     if (param == false) {

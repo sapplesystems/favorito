@@ -5,8 +5,9 @@ var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 exports.getDashboardDetail = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` \n\
-                    WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
+        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified \n\
+        FROM `business_master` \n\
+        WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
         db.query(sql, function(err, result_set, fields) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });

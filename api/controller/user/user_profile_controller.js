@@ -6,15 +6,19 @@ exports.businessCarouselList = async function(req, res, next) {
 
 exports.getCaruoselData = async function(req, res) {
     try {
+        var business_id = null
         if (req.body.business_id != null && req.body.business_id != '' && req.body.business_id != undefined) {
             business_id = req.body.business_id
         } else if (req.userdata.business_id != null && req.userdata.business_id != '' && req.userdata.business_id != undefined) {
             business_id = req.body.business_id
-        } else {
-            return res.status(500).json({ status: 'error', message: 'business_id is missing' });
         }
 
-        var sql = 'SELECT id, business_id, CONCAT("' + img_path + '",asset_url) as photo FROM business_uploads WHERE type = "Photo" AND business_id = "' + business_id + '" LIMIT 8'
+        if (business_id != null) {
+            var sql = 'SELECT id, business_id, CONCAT("' + img_path + '",asset_url) as photo FROM business_uploads WHERE type = "Photo" AND business_id = "' + business_id + '" LIMIT 8'
+        } else {
+            var sql = 'SELECT id, business_id, CONCAT("' + img_path + '",asset_url) as photo FROM business_uploads WHERE type = "Photo" GROUP BY business_id LIMIT 20'
+        }
+
         db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
