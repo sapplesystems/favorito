@@ -22,7 +22,7 @@ var upload_profile_photo = multer({ storage: storage_user_profile });
 router.post('/business-carousel', CheckAuth, UserProfileController.businessCarouselList);
 router.post('/user-review', CheckAuth, UserProfileController.getUserReview);
 router.post('/business-detail', CheckAuth, UserProfileBusinessDetailController.businessDetail);
-router.post('/business-overview', CheckAuth, UserProfilBusinessOverview.businessDetail);
+router.post('/business-overview', CheckAuth, UserProfilBusinessOverview.getBusinessOverview);
 router.post('/business-catalog-list', CheckAuth, UserProfileBusinessDetailController.getListCatalog);
 router.post('/business-review-list', CheckAuth, UserProfileBusinessDetailController.all_business_reviewlist);
 router.post('/user-profile-photo', CheckAuth, UserProfileController.userProfilePhoto);

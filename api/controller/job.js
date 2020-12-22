@@ -4,17 +4,21 @@ var contact_via = ['Phone', 'Email'];
 /**
  * FETCH ALL JOB
  */
-exports.all_jobs = function (req, res, next) {
+exports.all_jobs = function(req, res, next) {
     try {
-        var business_id = req.userdata.business_id;
+        if (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '') {
+            business_id = req.body.business_id
+        } else {
+            var business_id = req.userdata.business_id;
+        }
         var where_condition = " WHERE business_id='" + business_id + "' AND deleted_at IS NULL ";
 
         if (req.body.job_id != '' && req.body.job_id != 'undefined' && req.body.job_id != null) {
             where_condition += " AND id='" + req.body.job_id + "' ";
         }
 
-        var sql = "SELECT id,title,description FROM jobs " + where_condition;
-        db.query(sql, function (err, result) {
+        var sql = "SELECT id,title,description,no_of_position FROM jobs " + where_condition;
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -33,7 +37,7 @@ exports.all_jobs = function (req, res, next) {
 /**
  * STATIC DROP DONW DETAI TO CREATE THE JOB
  */
-exports.dd_verbose = async function (req, res, next) {
+exports.dd_verbose = async function(req, res, next) {
     try {
         var verbose = {};
         verbose.contact_via = contact_via;
@@ -45,14 +49,13 @@ exports.dd_verbose = async function (req, res, next) {
     }
 };
 
-
 /**
  * GET SKILL LIST
  */
-exports.getSkillList = function () {
-    return new Promise(function (resolve, reject) {
+exports.getSkillList = function() {
+    return new Promise(function(resolve, reject) {
         var sql = "SELECT id,skill FROM skills";
-        db.query(sql, function (err, skill_list) {
+        db.query(sql, function(err, skill_list) {
             resolve(skill_list);
         });
     });
@@ -62,10 +65,10 @@ exports.getSkillList = function () {
 /**
  * GET CITY LIST
  */
-exports.getCityList = function () {
-    return new Promise(function (resolve, reject) {
+exports.getCityList = function() {
+    return new Promise(function(resolve, reject) {
         var sql = "SELECT id,city FROM cities";
-        db.query(sql, function (err, city_list) {
+        db.query(sql, function(err, city_list) {
             resolve(city_list);
         });
     });
@@ -75,14 +78,14 @@ exports.getCityList = function () {
 /**
  * GET PINCODE LIST OF THE CITY
  */
-exports.city_pincode = function (req, res, next) {
+exports.city_pincode = function(req, res, next) {
     try {
         if (req.body.city_id == '' || req.body.city_id == 'undefined' || req.body.city_id == null) {
             return res.status(403).json({ status: 'error', message: 'City id not found.' });
         }
         var city_id = req.body.city_id;
         var sql = "SELECT id,pincode FROM pincodes where city_id='" + city_id + "'";
-        db.query(sql, function (err, pincode) {
+        db.query(sql, function(err, pincode) {
             return res.status(200).json({ status: 'success', message: 'success', data: pincode });
         });
     } catch (e) {
@@ -94,7 +97,7 @@ exports.city_pincode = function (req, res, next) {
 /**
  * GET CITY NAME FROM PINCODE
  */
-exports.city_from_pincode = function (req, res, next) {
+exports.city_from_pincode = function(req, res, next) {
     try {
         if (req.body.pincode == '' || req.body.pincode == 'undefined' || req.body.pincode == null) {
             return res.status(403).json({ status: 'error', message: 'Pincode not found.' });
@@ -102,7 +105,7 @@ exports.city_from_pincode = function (req, res, next) {
         var pincode = req.body.pincode;
         var sql = "SELECT id,city,state_id,(SELECT state FROM states WHERE id=cities.state_id) AS state_name \n\
         FROM cities WHERE id IN(SELECT city_id FROM pincodes WHERE pincode='" + pincode + "' GROUP BY city_id)";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             var data = {};
             var message = 'No data found';
             if (result.length > 0) {
@@ -120,7 +123,7 @@ exports.city_from_pincode = function (req, res, next) {
 /**
  * STATIC DROP DONW AND JOB DETAI TO EDIT THE JOB
  */
-exports.detail_job = function (req, res, next) {
+exports.detail_job = function(req, res, next) {
     try {
         if (req.body.job_id == '' || req.body.job_id == 'undefined' || req.body.job_id == null) {
             return res.status(403).json({ status: 'error', message: 'Job id not found.' });
@@ -129,14 +132,14 @@ exports.detail_job = function (req, res, next) {
         var verbose = {};
         verbose.contact_via = contact_via;
         var sql = "SELECT id,skill FROM skills";
-        db.query(sql, function (err, skill_list) {
+        db.query(sql, function(err, skill_list) {
             verbose.skill_list = skill_list;
             var sql = "SELECT id,city FROM cities";
-            db.query(sql, function (err, city_list) {
+            db.query(sql, function(err, city_list) {
                 verbose.city_list = city_list;
 
                 var sql = "SELECT id,title,description,skills,contact_via,contact_value,city,pincode FROM jobs WHERE id='" + req.body.job_id + "'";
-                db.query(sql, function (err, result) {
+                db.query(sql, function(err, result) {
                     if (err) {
                         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                     }
@@ -158,7 +161,7 @@ exports.detail_job = function (req, res, next) {
 /**
  * CREATE NEW JOB
  */
-exports.add_job = function (req, res, next) {
+exports.add_job = function(req, res, next) {
     try {
         if (req.body.title == '' || req.body.title == 'undefined' || req.body.title == null) {
             return res.status(403).json({ status: 'error', message: 'Job title not found.' });
@@ -197,7 +200,7 @@ exports.add_job = function (req, res, next) {
         };
 
         var sql = "INSERT INTO jobs set ?";
-        db.query(sql, postval, function (err, result) {
+        db.query(sql, postval, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -212,7 +215,7 @@ exports.add_job = function (req, res, next) {
 /**
  * EDIT JOB
  */
-exports.edit_job = function (req, res, next) {
+exports.edit_job = function(req, res, next) {
     try {
         if (req.body.job_id == '' || req.body.job_id == 'undefined' || req.body.job_id == null) {
             return res.status(403).json({ status: 'error', message: 'Job id not found.' });
@@ -246,7 +249,7 @@ exports.edit_job = function (req, res, next) {
 
         var sql = "update jobs set " + update_columns + "  WHERE id='" + job_id + "' AND business_id='" + business_id + "'";
 
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }

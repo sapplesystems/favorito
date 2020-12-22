@@ -1,13 +1,25 @@
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 exports.businessCarouselList = async function(req, res, next) {
-    await exports.getCaruoselData(res)
+    await exports.getCaruoselData(req, res)
 }
 
-exports.getCaruoselData = async function(res) {
+exports.getCaruoselData = async function(req, res) {
     try {
-        var sql = 'SELECT business_id,CONCAT("' + img_path + '",photo) as photo FROM business_master ORDER BY created_at DESC LIMIT 15'
-        await db.query(sql, function(err, result) {
+        var business_id = null
+        if (req.body.business_id != null && req.body.business_id != '' && req.body.business_id != undefined) {
+            business_id = req.body.business_id
+        } else if (req.userdata.business_id != null && req.userdata.business_id != '' && req.userdata.business_id != undefined) {
+            business_id = req.body.business_id
+        }
+
+        if (business_id != null) {
+            var sql = 'SELECT id, business_id, CONCAT("' + img_path + '",asset_url) as photo FROM business_uploads WHERE type = "Photo" AND business_id = "' + business_id + '" LIMIT 8'
+        } else {
+            var sql = 'SELECT id, business_id, CONCAT("' + img_path + '",asset_url) as photo FROM business_uploads WHERE type = "Photo" GROUP BY business_id LIMIT 20'
+        }
+
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }

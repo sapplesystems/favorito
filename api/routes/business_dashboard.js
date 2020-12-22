@@ -18,6 +18,8 @@ router.post('/get-top-rated', CheckAuth, dashboardController.topRated);
 
 router.post('/get-most-popular', CheckAuth, dashboardController.mostPopular);
 
+router.post('/get-sponsor', CheckAuth, dashboardController.sponsored);
+
 router.post('/get-business-by-appintment', CheckAuth, dashboardController.getBusinessByAppointment);
 
 router.post('/get-business-by-food', CheckAuth, dashboardController.getBusinessByFood);
@@ -27,5 +29,7 @@ router.post('/get-business-by-book-table', CheckAuth, dashboardController.getBus
 router.post('/get-business-by-job', CheckAuth, dashboardController.getBusinessByJob);
 
 router.post('/get-business-by-doctor', CheckAuth, dashboardController.getBusinessByDoctor);
+
+router.post('/get-business-by-freelancer', CheckAuth, dashboardController.getBusinessByFreelancer);
 
 module.exports = router;
