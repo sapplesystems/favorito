@@ -4,6 +4,7 @@ import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
+import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
@@ -194,9 +195,11 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    response = await dio.post(service.baseUserProfileOverview,data:_map, options: opt);
+    response = await dio.post(service.baseUserProfileOverview,
+        data: _map, options: opt);
     print("service.mostPopulerBusiness : ${response.toString}");
-    return businessOverViewModel.fromJson(convert.jsonDecode(response.toString()));
+    return businessOverViewModel
+        .fromJson(convert.jsonDecode(response.toString()));
   }
 
   static Future<businessProfileModel> baseUserProfileDetail(Map _map) async {
@@ -205,12 +208,29 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserProfileDetail : ${service.baseUserProfileDetail}");
+    print(
+        "service.baseUserProfileDetail url: ${service.baseUserProfileDetail}");
+    print("service.baseUserProfileDetail request: ${_map.toString()}");
 
     response =
         await dio.post(service.baseUserProfileDetail, data: _map, options: opt);
-    print("service.mostPopulerBusiness : ${response.toString}");
+    print("service.mostPopulerBusiness response: ${response.toString}");
     return businessProfileModel
         .fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<CatlogModel> baseUserProfileBusinessCatalogList(
+      Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserProfileDetail : ${service.baseUserProfileDetail}");
+
+    response = await dio.post(service.baseUserProfileBusinessCatalogList,
+        data: _map, options: opt);
+    print("service.mostPopulerBusiness : ${response.toString}");
+    return CatlogModel.fromJson(convert.jsonDecode(response.toString()));
   }
 }

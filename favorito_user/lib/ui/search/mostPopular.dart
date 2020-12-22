@@ -17,7 +17,6 @@ class _mostPopularState extends State<MostPopular> {
   SizeManager sm;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

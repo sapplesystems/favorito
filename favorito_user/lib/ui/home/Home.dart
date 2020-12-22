@@ -30,7 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String _selectedAddress = "selected Address";
-  final List<String> imgList = [];
+
   var _mySearchEditTextController = TextEditingController();
   AddressListModel addressData;
   ProfileImageModel profileImage;
@@ -79,15 +79,12 @@ class _HomeState extends State<Home> {
                         height: sm.h(3),
                         fit: BoxFit.fill,
                       ),
-                      onPressed: () {
-                        getAddress();
-                        getCarousel();
-                      }),
+                      onPressed: () => getAddress()),
                 )
               ],
             ),
           ),
-          Container(height: sm.h(30), child: myCarousel(dataList: imgList)),
+          Container(height: sm.h(30), child: myCarousel()),
           Padding(
             padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
             child: EditTextComponent(
@@ -180,18 +177,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void getCarousel() async {
-    pr?.show();
-    await APIManager.carousel(context).then((value) {
-      pr?.hide();
-      if (value.status == 'success') {
-        if (value.data.length > 0) imgList.clear();
-        for (var _va in value.data) imgList.add(_va.photo);
-        setState(() {});
-      }
-    });
-  }
-
   void getAddress() async {
     pr?.show();
     await APIManager.getAddress(context).then((value) {
@@ -214,7 +199,6 @@ class _HomeState extends State<Home> {
       pr?.hide();
       if (value.status == 'success') {
         profileImage = value;
-        getCarousel();
       }
     });
   }

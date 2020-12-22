@@ -35,6 +35,7 @@ dependencies:
   dio:
   progress_dialog:
   google_maps_flutter:
+  transparent_image:
   flutter:
     sdk: flutter
 

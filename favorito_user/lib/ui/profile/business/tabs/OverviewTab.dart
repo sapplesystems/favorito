@@ -10,15 +10,15 @@ import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Overview extends StatefulWidget {
+class OverviewTab extends StatefulWidget {
   BusinessProfileData data;
-  Overview({this.data});
+  OverviewTab({this.data});
 
   @override
   _OverviewState createState() => _OverviewState();
 }
 
-class _OverviewState extends State<Overview> {
+class _OverviewState extends State<OverviewTab> {
   List<String> imgList = [
     'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F747245763149464166%2F&psig=AOvVaw01ayL99DVuQCObmuC7Iptn&ust=1608613543107000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKiN2s6m3u0CFQAAAAAdAAAAABAP,https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.outlookindia.com%2Foutlooktraveller%2Fexplore%2Fstory%2F69698%2Fmust-eat-foods-of-29-states-of-india&psig=AOvVaw01ayL99DVuQCObmuC7Iptn&ust=1608613543107000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKiN2s6m3u0CFQAAAAAdAAAAABAU'
   ];
@@ -78,7 +78,7 @@ class _OverviewState extends State<Overview> {
                 Text(shortDisc,
                     style:
                         TextStyle(fontSize: 15, fontFamily: 'Gilroy-Regular')),
-                myCarousel(dataList: imgList),
+                myCarousel(),
                 Text(
                   longDisc,
                   style: TextStyle(fontSize: 15, fontFamily: 'Gilroy-Regular'),

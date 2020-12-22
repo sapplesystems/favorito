@@ -7,12 +7,14 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../utils/Extentions.dart';
 
 class BusinessProfile extends StatefulWidget {
   String businessId;
   BusinessProfile({this.businessId});
   List<String> relations = [];
+  List<String> attribute = [];
   List<String> service = [];
   @override
   _BusinessProfileState createState() => _BusinessProfileState();
@@ -41,9 +43,13 @@ class _BusinessProfileState extends State<BusinessProfile> {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(child: Text(loading));
             else {
+              widget.relations.clear();
               if (data != snapshot.data) data = snapshot.data;
               for (var _v in data.data[0].relation)
                 widget.relations.add(_v.relation);
+              widget.attribute.clear();
+              for (var _v in data.data[0].attributes)
+                widget.attribute.add(_v.attributeName);
               return Stack(
                 children: [
                   ListView(
@@ -253,14 +259,26 @@ class _BusinessProfileState extends State<BusinessProfile> {
     );
   }
 
-  List<String> service = [
-    'Call Now',
-    'Chat',
-    'Appointment',
-    'Waitlist',
-    'Catlog'
-  ];
   ServicCart() {
+    List<String> service = [
+      'Call Now',
+      'Chat',
+      (widget.attribute.contains('Booking')
+          ? 'Booking'
+          : (widget.attribute.contains('Appointment'))
+              ? 'Appointment'
+              : null),
+      (widget.attribute.contains('Waitlist') ? 'Waitlist' : null),
+      'Catlog'
+    ];
+    List<IconData> serviceIcons = [
+      Icons.call_outlined,
+      FontAwesomeIcons.comment,
+      Icons.calendar_today,
+      Icons.alarm,
+      Icons.alarm
+    ];
+    service.remove(null);
     return Container(
       height: sm.w(21),
       child: ListView(
@@ -281,7 +299,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.call_outlined, color: myRed),
+                        child: Icon(serviceIcons[i], color: myRed),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
