@@ -4,12 +4,12 @@ import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
+import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
 import 'package:dio/dio.dart';
-import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'dart:convert' as convert;
 
@@ -187,16 +187,16 @@ class APIManager {
         convert.json.decode(response.toString()));
   }
 
-  static Future<dynamic> baseUserProfileOverview() async {
+  static Future<businessOverViewModel> baseUserProfileOverview(Map _map) async {
     String token = await Prefs.token;
     print('token : ${token.toString()}');
 
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    response = await dio.post(service.baseUserProfileOverview, options: opt);
+    response = await dio.post(service.baseUserProfileOverview,data:_map, options: opt);
     print("service.mostPopulerBusiness : ${response.toString}");
-    // retutn null;
+    return businessOverViewModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
   static Future<businessProfileModel> baseUserProfileDetail(Map _map) async {

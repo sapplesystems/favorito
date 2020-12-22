@@ -1,5 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
+import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
@@ -41,6 +41,11 @@ class _HomeState extends State<Home> {
     super.initState();
     getUserImage();
     getAddress();
+    try {
+      pr?.isShowing() ?? false ? pr?.hide() : "";
+    } catch (e) {
+      print('Error: ${e.toString()}');
+    }
   }
 
   @override
@@ -82,36 +87,7 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          Container(
-            height: sm.h(30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CarouselSlider(
-                    options: CarouselOptions(
-                      autoPlay: false,
-                      aspectRatio: 2.0,
-                      enlargeCenterPage: true,
-                    ),
-                    items: imgList
-                        .map(
-                          (item) => Container(
-                            margin: EdgeInsets.all(5.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                item,
-                                height: sm.h(10),
-                                fit: BoxFit.cover,
-                                width: sm.h(90),
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList()),
-              ],
-            ),
-          ),
+          Container(height: sm.h(30), child: myCarousel(dataList: imgList)),
           Padding(
             padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
             child: EditTextComponent(
@@ -167,11 +143,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           header(sm, "Hot & New Business"),
-          Container(
-            padding: EdgeInsets.only(bottom: sm.h(2)),
-            height: sm.h(26),
-            child: HotAndNewBusiness(),
-          ),
+          HotAndNewBusiness(),
         ],
       ),
     );
@@ -242,7 +214,6 @@ class _HomeState extends State<Home> {
       pr?.hide();
       if (value.status == 'success') {
         profileImage = value;
-
         getCarousel();
       }
     });

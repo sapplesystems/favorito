@@ -1,17 +1,19 @@
-import 'package:favorito_user/component/Following.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/profile/business/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../utils/Extentions.dart';
 
 class BusinessProfile extends StatefulWidget {
   String businessId;
   BusinessProfile({this.businessId});
+  List<String> relations = [];
+  List<String> service = [];
   @override
   _BusinessProfileState createState() => _BusinessProfileState();
 }
@@ -20,6 +22,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
   SizeManager sm;
   businessProfileModel data = businessProfileModel();
   var fut;
+
   @override
   void initState() {
     super.initState();
@@ -39,26 +42,25 @@ class _BusinessProfileState extends State<BusinessProfile> {
               return Center(child: Text(loading));
             else {
               if (data != snapshot.data) data = snapshot.data;
+              for (var _v in data.data[0].relation)
+                widget.relations.add(_v.relation);
               return Stack(
                 children: [
                   ListView(
                     children: [
                       headerPart(),
-                      midLavel(),
+                      midLavel(data.data[0]),
                       followingAndFavorite(),
                       Padding(
                         padding: EdgeInsets.only(left: sm.w(4), top: sm.h(4)),
-                        child: Text(
-                            // data?.data[0]?.businessName ?? "",
-                            'Restaurent And Banquet Hall',
+                        child: Text(data?.data[0]?.shortDesciption ?? "",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w400)),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                         child: Text(
-                            // data?.data[0]?.businessName ?? "",
-                            'Pare point, Surat',
+                            '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
                             style: TextStyle(
                                 color: myGrey,
                                 fontSize: 16,
@@ -69,11 +71,12 @@ class _BusinessProfileState extends State<BusinessProfile> {
                           Padding(
                             padding:
                                 EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                            child: Text(
-                                // data?.data[0]?.businessName ?? "",
-                                'Open Now',
+                            child: Text(data?.data[0]?.businessStatus ?? "",
                                 style: TextStyle(
-                                    color: Colors.green,
+                                    color: data?.data[0]?.businessStatus ==
+                                            'Offline'
+                                        ? myRed
+                                        : Colors.green,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w300)),
                           ),
@@ -81,8 +84,11 @@ class _BusinessProfileState extends State<BusinessProfile> {
                             padding:
                                 EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                             child: Text(
-                                // data?.data[0]?.businessName ?? "",
-                                '11 am - 12 midnight(Todat)',
+                                am_pm_from24Hours(data?.data[0]?.startHours) +
+                                        " - " +
+                                        am_pm_from24Hours(
+                                            data?.data[0]?.endHours) ??
+                                    "",
                                 style: TextStyle(
                                     color: myGrey,
                                     fontSize: 16,
@@ -92,26 +98,25 @@ class _BusinessProfileState extends State<BusinessProfile> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                        child: Text(
-                            // data?.data[0]?.businessName ?? "",
-                            'R R R R',
+                        child: Text(data?.data[0]?.priceRange ?? "",
                             style: TextStyle(
                                 color: myGrey,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w300)),
                       ),
-                      ServicCart()
+                      ServicCart(),
+                      Container(height: 1270, child: Tabber(data: data.data[0]))
                     ],
                   ),
                   Positioned(
-                    top: sm.h(31),
-                    left: sm.w(35),
+                    top: sm.h(30),
+                    left: sm.w(34),
                     right: sm.w(35),
                     child: CircleAvatar(
                       radius: sm.w(15),
                       backgroundColor: Colors.red,
                       child: CircleAvatar(
-                        radius: sm.w(14.5),
+                        radius: sm.w(7) * sm.w(7),
                         backgroundImage: NetworkImage(data?.data[0]?.photo),
                         backgroundColor: Colors.red,
                       ),
@@ -125,10 +130,11 @@ class _BusinessProfileState extends State<BusinessProfile> {
   }
 
   Widget headerPart() {
+    // data.data[0].businessEmail
     return Stack(
       children: [
         Image.network(
-          'https://via.placeholder.com/150',
+          data?.data[0]?.photo,
           height: sm.h(38),
           width: sm.w(100),
           fit: BoxFit.fill,
@@ -190,44 +196,56 @@ class _BusinessProfileState extends State<BusinessProfile> {
     );
   }
 
-  Widget midLavel() {
+  Widget midLavel(BusinessProfileData _data) {
     return Column(children: [
       Padding(
         padding: EdgeInsets.only(top: sm.h(9), left: sm.w(4)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Foodie Circles',
+        child:
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            Text(_data.businessName,
                 style: TextStyle(fontSize: 28, fontFamily: 'Gilroy-Bold')),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: Icon(
-                FontAwesomeIcons.solidCheckCircle,
-                color: Color(0xff2196f3),
-              ),
-            )
-          ],
-        ),
+        //     Padding(
+        //       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+        //       child: Icon(
+        //         FontAwesomeIcons.solidCheckCircle,
+        //         color: Color(0xff2196f3),
+        //       ),
+        //     )
+        //   ],
+        // ),
       ),
-      Row(
-        children: [],
-      )
     ]);
   }
 
   followingAndFavorite() {
+    print("Relaton size :${widget.relations.length}");
+    bool fav = widget.relations.contains('follow');
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(width: sm.w(8)),
-        Following(
-          clr: Colors.blue,
-          txt: 'Following',
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.blue, //   width: 1,
+            ),
+            color: fav ? Colors.blue : Colors.white,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            fav ? 'Following' : 'Follow',
+            style: TextStyle(color: fav ? Colors.white : Colors.blue),
+          ),
         ),
         Padding(
           padding: EdgeInsets.only(left: sm.w(4)),
           child: Icon(
-            Icons.favorite_border,
+            widget.relations.contains('favorite')
+                ? Icons.favorite
+                : Icons.favorite_border,
             color: Color(0xffdd2626),
           ),
         )
@@ -263,17 +281,11 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.call_outlined,
-                          color: myRed,
-                        ),
+                        child: Icon(Icons.call_outlined, color: myRed),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                        child: Text(
-                          service[i],
-                          style: TextStyle(fontSize: 12),
-                        ),
+                        child: Text(service[i], style: TextStyle(fontSize: 12)),
                       )
                     ],
                   )),
@@ -281,5 +293,12 @@ class _BusinessProfileState extends State<BusinessProfile> {
         ],
       ),
     );
+  }
+
+  String am_pm_from24Hours(String time) {
+    int hh = int.parse(time.substring(0, 2));
+    String turn = 12 > hh ? 'pm' : 'am';
+    print("HH:${hh.toString()}${turn.toLowerCase()}");
+    return "$hh $turn";
   }
 }

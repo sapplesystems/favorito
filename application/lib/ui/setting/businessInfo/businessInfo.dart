@@ -30,7 +30,6 @@ class _businessInfoState extends State<businessInfo> {
   List<TextEditingController> controller = [];
   List<String> totalpay = [];
   List<String> selectPay = [];
-
   List<int> priceRangelist = [];
   int priceRange;
 

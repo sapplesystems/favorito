@@ -31,7 +31,9 @@ class RouteGenerator {
 
       case '/businessProfile':
         return MaterialPageRoute(
-            builder: (_) => BusinessProfile(businessId: args));
+            builder: (_) => BusinessProfile(businessId: args)
+            // builder: (_) => Tabber(),
+            );
 
       case '/following':
         return MaterialPageRoute(builder: (_) => Following());

@@ -8,6 +8,7 @@ class BusinessProfileData {
   String shortDesciption;
   String priceRange;
   String postalCode;
+  String location;
   String phone;
   String landline;
   String businessEmail;
@@ -18,9 +19,16 @@ class BusinessProfileData {
   int businessCategoryId;
   String businessName;
   String townCity;
+  String state;
   String photo;
   String businessStatus;
   int avgRating;
+  String address1;
+  String address2;
+  String address3;
+  String website;
+  String shortDescription;
+  String paymentMethod;
   List<Attributes> attributes;
   List<Relation> relation;
   List<SubCategory> subCategory;
@@ -31,6 +39,7 @@ class BusinessProfileData {
       this.shortDesciption,
       this.priceRange,
       this.postalCode,
+      this.location,
       this.phone,
       this.landline,
       this.businessEmail,
@@ -41,9 +50,16 @@ class BusinessProfileData {
       this.businessCategoryId,
       this.businessName,
       this.townCity,
+      this.state,
       this.photo,
       this.businessStatus,
+      this.website,
+      this.address1,
+      this.address2,
+      this.address3,
       this.avgRating,
+      this.shortDescription,
+      this.paymentMethod,
       this.attributes,
       this.relation,
       this.subCategory});
@@ -54,6 +70,7 @@ class BusinessProfileData {
     shortDesciption = json['short_desciption'];
     priceRange = json['price_range'];
     postalCode = json['postal_code'];
+    location = json['location'];
     phone = json['phone'];
     landline = json['landline'];
     businessEmail = json['business_email'];
@@ -64,8 +81,15 @@ class BusinessProfileData {
     businessCategoryId = json['business_category_id'];
     businessName = json['business_name'];
     townCity = json['town_city'];
+    state = json['state'];
     photo = json['photo'];
+    address1 = json['address1'];
+    address2 = json['address2'];
+    address3 = json['address3'];
     businessStatus = json['business_status'];
+    website = json['website'];
+    shortDescription = json['shortDescription;'];
+    paymentMethod = json['payment_method'];
     avgRating = json['avg_rating'];
     if (json['attributes'] != null) {
       attributes = new List<Attributes>();
@@ -94,6 +118,7 @@ class BusinessProfileData {
     data['short_desciption'] = this.shortDesciption;
     data['price_range'] = this.priceRange;
     data['postal_code'] = this.postalCode;
+    data['location'] = this.location;
     data['phone'] = this.phone;
     data['landline'] = this.landline;
     data['business_email'] = this.businessEmail;
@@ -104,9 +129,16 @@ class BusinessProfileData {
     data['business_category_id'] = this.businessCategoryId;
     data['business_name'] = this.businessName;
     data['town_city'] = this.townCity;
+    data['state'] = this.state;
     data['photo'] = this.photo;
+    data['address1'] = this.address1;
+    data['address2'] = this.address2;
+    data['address3'] = this.address3;
     data['business_status'] = this.businessStatus;
+    data['shortDescription'] = this.shortDescription;
+    data['payment_method'] = this.paymentMethod;
     data['avg_rating'] = this.avgRating;
+    data['website'] = this.website;
     if (this.attributes != null) {
       data['attributes'] = this.attributes.map((v) => v.toJson()).toList();
     }

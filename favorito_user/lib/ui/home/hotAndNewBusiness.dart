@@ -35,85 +35,92 @@ class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
                 newBusinessData = snapshot.data;
               print(
                   "newBusinessData?.data?.length:${newBusinessData?.data?.length}");
-              return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: newBusinessData?.data?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushNamed('/businessProfile',
-                              arguments:
-                                  newBusinessData.data[index].businessId);
-                        },
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                          elevation: 10,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Stack(
-                                children: [
-                                  myClipRRect(
-                                      image: newBusinessData.data[index].photo,
-                                      sm: sm),
-                                  Positioned(
-                                    top: sm.h(1),
-                                    left: sm.w(1),
-                                    child: RatingHolder(
-                                        sm: sm,
-                                        rate: newBusinessData.data[index].id
-                                            .toString()),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: sm.w(2)),
-                                child: Text(
-                                    newBusinessData.data[index].businessName,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400)),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: sm.w(2)),
-                                child: ServicesOfBusiness(
-                                    sm: sm,
-                                    data: newBusinessData
-                                        .data[index].subCategory),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: sm.w(2)),
-                                child: Text(
-                                    "${newBusinessData.data[index].distance} km | ${newBusinessData.data[index].townCity}",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w300)),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: sm.w(2), bottom: sm.w(2)),
-                                child: Text(
-                                    newBusinessData.data[index].businessStatus,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w300,
-                                        color: (newBusinessData
-                                                    .data[index].businessStatus)
-                                                .contains('Off')
-                                            ? myGrey
-                                            : Colors.green)),
-                              ),
-                            ],
+              return Container(
+                padding: EdgeInsets.only(bottom: sm.h(2)),
+                height: sm.h(27),
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: newBusinessData?.data?.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/businessProfile',
+                                arguments:
+                                    newBusinessData.data[index].businessId);
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12)),
+                            ),
+                            elevation: 10,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Stack(
+                                  children: [
+                                    myClipRRect(
+                                        image:
+                                            newBusinessData.data[index].photo,
+                                        sm: sm),
+                                    Positioned(
+                                      top: sm.h(1),
+                                      left: sm.w(1),
+                                      child: RatingHolder(
+                                          sm: sm,
+                                          rate: newBusinessData.data[index].id
+                                              .toString()),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: sm.w(2)),
+                                  child: Text(
+                                      newBusinessData.data[index].businessName,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400)),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: sm.w(2)),
+                                  child: ServicesOfBusiness(
+                                      sm: sm,
+                                      data: newBusinessData
+                                          .data[index].subCategory),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: sm.w(2)),
+                                  child: Text(
+                                      "${newBusinessData.data[index].distance} km | ${newBusinessData.data[index].townCity}",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300)),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: sm.w(2), bottom: sm.w(2)),
+                                  child: Text(
+                                      newBusinessData
+                                          .data[index].businessStatus,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300,
+                                          color: (newBusinessData.data[index]
+                                                      .businessStatus)
+                                                  .contains('Off')
+                                              ? myGrey
+                                              : Colors.green)),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  });
+                      );
+                    }),
+              );
             }
           }
         });

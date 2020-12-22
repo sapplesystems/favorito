@@ -56,8 +56,8 @@ class _BusinessProfileState extends State<BusinessProfile>
   List<String> addressList = [];
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final dd1 = GlobalKey<DropdownSearchState<String>>();
-    final ddCity = GlobalKey<DropdownSearchState<String>>();
-    final ddState = GlobalKey<DropdownSearchState<String>>();
+  final ddCity = GlobalKey<DropdownSearchState<String>>();
+  final ddState = GlobalKey<DropdownSearchState<String>>();
 
   File _image;
 
