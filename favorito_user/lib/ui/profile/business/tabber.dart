@@ -1,5 +1,6 @@
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/ui/profile/business/tabs/CatlogTab.dart';
+import 'package:favorito_user/ui/profile/business/tabs/JobTab.dart';
 import 'package:favorito_user/ui/profile/business/tabs/OverviewTab.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -27,7 +28,7 @@ class profilePageState extends State<Tabber>
       OverviewTab(data: widget.data),
       CatlogTab(data: widget.data),
       OverviewTab(),
-      OverviewTab()
+      JobTab(data: widget.data)
     ];
   }
 

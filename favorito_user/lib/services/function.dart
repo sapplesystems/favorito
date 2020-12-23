@@ -31,4 +31,6 @@ class service {
   static final baseUserProfileDetail = baseUserProfile + 'business-detail';
   static final baseUserProfileBusinessCatalogList =
       baseUserProfile + 'business-catalog-list';
+
+  static final joblist = base + 'job/list';
 }
