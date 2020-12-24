@@ -1,3 +1,6 @@
+import 'package:favorito_user/component/FollowBtn.dart';
+import 'package:favorito_user/component/Friend.dart';
+import 'package:favorito_user/component/Message.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -55,10 +58,10 @@ class _ProfileDetailState extends State<_ProfileDetail> {
           )
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           Container(
-            height: sm.h(33),
+            height: sm.h(36),
             width: sm.w(100),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -147,74 +150,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                     padding: EdgeInsets.only(top: sm.h(1)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        NeumorphicButton(
-                          style: NeumorphicStyle(
-                              shape: NeumorphicShape.convex,
-                              depth: 4,
-                              lightSource: LightSource.topLeft,
-                              color: myButtonBackground,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                  BorderRadius.all(Radius.circular(4)))),
-                          margin: EdgeInsets.only(left: sm.w(4)),
-                          onPressed: () {},
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                          child: Container(
-                            width: sm.w(24),
-                            child: Text(
-                              "Add as friend",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400, color: myRed),
-                            ),
-                          ),
-                        ),
-                        NeumorphicButton(
-                          style: NeumorphicStyle(
-                              shape: NeumorphicShape.convex,
-                              depth: 4,
-                              lightSource: LightSource.topLeft,
-                              color: myButtonBackground,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                  BorderRadius.all(Radius.circular(4)))),
-                          margin: EdgeInsets.only(left: sm.w(4)),
-                          onPressed: () {},
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                          child: Container(
-                            width: sm.w(24),
-                            child: Text(
-                              "Follow",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400, color: myRed),
-                            ),
-                          ),
-                        ),
-                        NeumorphicButton(
-                          style: NeumorphicStyle(
-                              shape: NeumorphicShape.convex,
-                              depth: 4,
-                              lightSource: LightSource.topLeft,
-                              color: myButtonBackground,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                  BorderRadius.all(Radius.circular(4)))),
-                          margin:
-                              EdgeInsets.only(left: sm.w(4), right: sm.w(4)),
-                          onPressed: () {},
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                          child: Container(
-                            width: sm.w(25),
-                            child: Text(
-                              "Message",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400, color: myRed),
-                            ),
-                          ),
-                        )
-                      ],
+                      children: [FriendBtn(), FollowBtn(), MessageBtn()],
                     ))
               ],
             ),
@@ -481,27 +417,7 @@ class _ProfileDetailState extends State<_ProfileDetail> {
                         ),
                       ],
                     ),
-                    NeumorphicButton(
-                      style: NeumorphicStyle(
-                          shape: NeumorphicShape.convex,
-                          depth: 4,
-                          lightSource: LightSource.topLeft,
-                          color: myButtonBackground,
-                          boxShape: NeumorphicBoxShape.roundRect(
-                              BorderRadius.all(Radius.circular(4)))),
-                      margin: EdgeInsets.only(left: sm.w(4), right: sm.w(4)),
-                      onPressed: () {},
-                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                      child: Container(
-                        width: sm.w(25),
-                        child: Text(
-                          "Follow",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400, color: myRed),
-                        ),
-                      ),
-                    )
+                    FollowBtn()
                   ],
                 ),
               ),

@@ -45,15 +45,21 @@ class _myCarouselState extends State<myCarousel> {
                 ),
                 items: carouselModel.data
                     .map(
-                      (item) => Container(
-                        margin: EdgeInsets.all(5.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            item.photo,
-                            height: sm.h(10),
-                            fit: BoxFit.cover,
-                            width: sm.h(90),
+                      (item) => InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/businessProfile',
+                              arguments: item.businessId);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(5.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              item.photo,
+                              height: sm.h(10),
+                              fit: BoxFit.cover,
+                              width: sm.h(90),
+                            ),
                           ),
                         ),
                       ),

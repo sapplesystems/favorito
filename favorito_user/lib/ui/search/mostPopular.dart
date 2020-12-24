@@ -42,18 +42,25 @@ class _mostPopularState extends State<MostPopular> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/businessProfile',
+                                arguments: dataList[index].businessId);
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            elevation: 10,
+                            child: ClipRRect(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12))),
-                          elevation: 10,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            child: Image.network(
-                              dataList[index].photo,
-                              height: sm.h(16),
-                              fit: BoxFit.cover,
-                              width: sm.w(34),
+                                  BorderRadius.all(Radius.circular(12)),
+                              child: Image.network(
+                                dataList[index].photo,
+                                height: sm.h(16),
+                                fit: BoxFit.cover,
+                                width: sm.w(34),
+                              ),
                             ),
                           ),
                         ),
@@ -66,7 +73,9 @@ class _mostPopularState extends State<MostPopular> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: ServicesOfBusiness(
-                              data: dataList[index].subCategory),
+                            data: dataList[index].subCategory,
+                            sm: sm,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),

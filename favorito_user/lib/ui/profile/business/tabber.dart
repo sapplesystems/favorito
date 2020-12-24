@@ -2,6 +2,7 @@ import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/ui/profile/business/tabs/CatlogTab.dart';
 import 'package:favorito_user/ui/profile/business/tabs/JobTab.dart';
 import 'package:favorito_user/ui/profile/business/tabs/OverviewTab.dart';
+import 'package:favorito_user/ui/profile/business/tabs/ReviewTab.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -15,7 +16,11 @@ class Tabber extends StatefulWidget {
 
 class profilePageState extends State<Tabber>
     with SingleTickerProviderStateMixin {
-  List<String> tabs = ['Overview', 'Catlog', 'Review', 'Job  '];
+  List<String> tabs = [
+    'Overview', 'Catlog',
+    // 'Review',
+    'Job  '
+  ];
   List<Widget> pages = [];
 
   TabController _tabController;
@@ -27,7 +32,7 @@ class profilePageState extends State<Tabber>
     pages = [
       OverviewTab(data: widget.data),
       CatlogTab(data: widget.data),
-      OverviewTab(),
+      // ReviewTab(data: widget.data),
       JobTab(data: widget.data)
     ];
   }

@@ -27,3 +27,5 @@ String appoinmentSettingtxt = "Appoinment Setting";
 String donetxt = "Done";
 String loading = 'Loading...';
 String bookingSetting = "Booking Setting";
+String waitingList = "Waiting List";
+String currentWaitlistAt = 'Current waitlist at';

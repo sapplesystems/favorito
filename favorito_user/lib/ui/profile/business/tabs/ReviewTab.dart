@@ -1,7 +1,10 @@
-import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class ReviewTab extends StatefulWidget {
+  BusinessProfileData data;
+  ReviewTab({this.data});
+
   @override
   _ReviewTabState createState() => _ReviewTabState();
 }

@@ -1,6 +1,8 @@
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import '../../../utils/MyColors.dart';
@@ -107,7 +109,7 @@ class _ProfileState extends State<_Profile> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BusinessProfile()));
+                                builder: (context) => ProfileDetail()));
                       },
                       child: Container(
                           width: sm.w(25),
@@ -182,7 +184,18 @@ class _ProfileState extends State<_Profile> {
 
   Widget menuItems(SizeManager sm, int identifier) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        print('das${widget.menuTitleList[identifier]}');
+        switch (widget.menuTitleList[identifier]) {
+          case 'Logout':
+            {
+              Prefs().clear();
+              Navigator.pop(context);
+              Navigator.of(context).pushNamed('/login');
+            }
+            break;
+        }
+      },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sm.w(5), vertical: sm.h(1)),
         child: Row(

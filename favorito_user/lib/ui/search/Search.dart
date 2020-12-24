@@ -1,7 +1,5 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
-import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/search/TopRated.dart';
@@ -50,7 +48,7 @@ class _SearchState extends State<Search> {
           trendingNearby(),
           header(sm, "Hot & New Business"),
           Container(
-            height: sm.h(26),
+            height: sm.h(28),
             child: Padding(
               padding: EdgeInsets.only(bottom: sm.h(2)),
               child: HotAndNewBusiness(),

@@ -4,7 +4,6 @@ import 'package:Favorito/model/OrderDetail.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:icon_text_button/icon_text_button.dart';
@@ -180,11 +179,11 @@ class _Orders extends State<Orders> {
                                                     fontWeight:
                                                         FontWeight.w400),
                                               ),
-                                              for (var item
-                                                  in inputOrdersList[index]
-                                                      .detail)
-                                                Text(
-                                                  "${item.quantity} X ${item.categoryName},",
+                                              Expanded(
+                                                child: Text(
+                                                  buildDatailInRow(
+                                                      inputOrdersList[index]
+                                                          .detail),
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -192,6 +191,7 @@ class _Orders extends State<Orders> {
                                                   // maxLines: 2,
                                                   // minFontSize: 6,
                                                 ),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -251,6 +251,12 @@ class _Orders extends State<Orders> {
                                 ]));
                       }))
             ]));
+  }
+
+  String buildDatailInRow(var v) {
+    String txt = '';
+    for (var item in v) txt = txt + "${item.quantity} X ${item.categoryName}";
+    return txt;
   }
 
   void callPageData() {

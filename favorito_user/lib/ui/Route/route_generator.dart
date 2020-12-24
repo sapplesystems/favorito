@@ -3,6 +3,8 @@ import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/Signup.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
+import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -31,14 +33,17 @@ class RouteGenerator {
 
       case '/businessProfile':
         return MaterialPageRoute(
-            builder: (_) => BusinessProfile(businessId: args)
-            // builder: (_) => Tabber(),
-            );
+            builder: (_) => BusinessProfile(businessId: args));
 
       case '/following':
         return MaterialPageRoute(builder: (_) => Following());
 
-        return _errorRoute();
+      case '/waitlist':
+        return MaterialPageRoute(builder: (_) => Waitlist());
+
+      case '/joinWaitList':
+        return MaterialPageRoute(builder: (_) => JoinWaitList());
+
       default:
         return _errorRoute();
     }
@@ -51,7 +56,7 @@ class RouteGenerator {
           title: Text('Error'),
         ),
         body: Center(
-          child: Text('ERROR'),
+          child: Text('Something Went Wrong'),
         ),
       );
     });

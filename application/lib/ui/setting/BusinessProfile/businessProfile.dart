@@ -47,7 +47,6 @@ class _BusinessProfileState extends State<BusinessProfile>
   List<CityModel> _cityModel = [];
   List<String> _stateList = ["Please Select ..."];
   List<StateList> _stateModel = [];
-  bool _autoValidateForm = false;
   bool byAppointment = false;
   bool onWhatsapp = false;
   Position _position;
@@ -178,7 +177,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                   child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
-                        autovalidate: _autoValidateForm,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
@@ -576,12 +575,7 @@ class _BusinessProfileState extends State<BusinessProfile>
               margin: EdgeInsets.only(bottom: 12.0),
               child: roundedButton(
                   clicker: () {
-                    print(_controller);
-                    if (_formKey.currentState.validate()) {
-                      _autoValidateForm = false;
-                      _prepareWebService();
-                    } else
-                      _autoValidateForm = true;
+                    if (_formKey.currentState.validate()) _prepareWebService();
                   },
                   clr: Colors.red,
                   title: donetxt),

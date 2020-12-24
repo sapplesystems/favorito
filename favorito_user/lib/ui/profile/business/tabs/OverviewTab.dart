@@ -74,7 +74,7 @@ class _OverviewState extends State<OverviewTab> {
             return Padding(
               padding: EdgeInsets.only(
                   top: sm.h(6), bottom: sm.h(2), left: sm.w(3), right: sm.w(3)),
-              child: Column(children: [
+              child: ListView(children: [
                 Text(shortDisc,
                     style:
                         TextStyle(fontSize: 15, fontFamily: 'Gilroy-Regular')),

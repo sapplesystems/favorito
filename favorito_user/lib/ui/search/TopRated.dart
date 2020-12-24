@@ -40,18 +40,24 @@ class _TopRatedState extends State<TopRated> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: br,
-                          ),
-                          elevation: 10,
-                          child: ClipRRect(
-                            borderRadius: br,
-                            child: Image.network(
-                              data[index].photo,
-                              height: widget.sm.h(20),
-                              fit: BoxFit.cover,
-                              width: widget.sm.w(28),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/businessProfile',
+                                arguments: data[index].businessId);
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: br,
+                            ),
+                            elevation: 10,
+                            child: ClipRRect(
+                              borderRadius: br,
+                              child: Image.network(
+                                data[index].photo,
+                                height: widget.sm.h(20),
+                                fit: BoxFit.cover,
+                                width: widget.sm.w(28),
+                              ),
                             ),
                           ),
                         ),
