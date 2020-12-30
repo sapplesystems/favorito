@@ -12,6 +12,7 @@ class service {
 
   static final baseUserBusiness = baseUser + 'business';
   static final baseUserProfile = baseUser + 'profile/';
+  static final baseUserWaitlist = baseUser + 'waitlist/';
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
 
 //function
@@ -33,4 +34,10 @@ class service {
       baseUserProfile + 'business-catalog-list';
 
   static final joblist = base + 'job/list';
+
+  //waitlist
+  static final baseUserWaitlistVerbose = baseUserWaitlist + 'waitlist-verbose';
+  static final baseUserWaitlistSet = baseUserWaitlist + 'Set-waitlist';
+  static final baseUserWaitlistGet = baseUserWaitlist + 'Get-waitlist';
+  static final baseUserWaitlistCancel = baseUserWaitlist + 'cancel-waitlist';
 }

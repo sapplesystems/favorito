@@ -1,6 +1,7 @@
 import 'package:favorito_user/component/FollowBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
+import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/business/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -355,7 +356,11 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     break;
                   case 3:
                     {
-                      Navigator.of(context).pushNamed('/waitlist');
+                      WaitListDataModel wdm = WaitListDataModel();
+                      wdm.businessId = data.data[0].businessId;
+                      wdm.contact = data.data[0].phone;
+                      Navigator.of(context)
+                          .pushNamed('/waitlist', arguments: wdm);
                     }
                 }
               },
@@ -387,12 +392,5 @@ class _BusinessProfileState extends State<BusinessProfile> {
         ],
       ),
     );
-  }
-
-  String am_pm_from24Hours(String time) {
-    int hh = int.parse(time.substring(0, 2));
-    String turn = 12 > hh ? 'pm' : 'am';
-    print("HH:${hh.toString()}${turn.toLowerCase()}");
-    return "$hh $turn";
   }
 }

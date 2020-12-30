@@ -1,4 +1,7 @@
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
+import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
+import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
@@ -7,38 +10,51 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Waitlist extends StatefulWidget {
+  WaitListDataModel data;
+  Waitlist({this.data});
   @override
   _WaitlistState createState() => _WaitlistState();
 }
 
 class _WaitlistState extends State<Waitlist> {
   SizeManager sm;
+  WaitListBaseModel data = WaitListBaseModel();
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return SafeArea(
       child: Scaffold(
           backgroundColor: myBackGround,
-          body: Padding(
-            padding: EdgeInsets.all(sm.w(6)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WaitListHeader(title: waitingList),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: sm.w(8), horizontal: sm.w(2.5)),
-                  child: titlePart(),
-                ),
-                bodyPart(),
-                footer()
-              ],
-            ),
+          body: FutureBuilder<WaitListBaseModel>(
+            future: APIManager.baseUserWaitlistVerbose(
+                {'business_id': widget.data.businessId}),
+            builder: (BuildContext context,
+                AsyncSnapshot<WaitListBaseModel> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(child: Text(loading));
+              else {
+                if (data != snapshot.data) data = snapshot.data;
+                return Padding(
+                  padding: EdgeInsets.all(sm.w(6)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WaitListHeader(title: waitingList),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: sm.w(8), horizontal: sm.w(2.5)),
+                        child: titlePart(data.data[0].businessName),
+                      ),
+                      bodyPart(),
+                      footer()
+                    ],
+                  ),
+                );
+              }
+            },
           )),
     );
   }
-  //  padding: EdgeInsets.symmetric(
-  //                       vertical: sm.w(6), horizontal: sm.w(2.5)),
 
   Widget bodyPart() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,7 +81,7 @@ class _WaitlistState extends State<Waitlist> {
                       size: 14,
                     ),
                     Text(
-                      ' 6 pm',
+                      data.data[0].availableTimeSlots,
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Gilroy-medium',
@@ -180,7 +196,7 @@ class _WaitlistState extends State<Waitlist> {
           ),
         ],
       );
-  titlePart() {
+  titlePart(String name) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -194,7 +210,7 @@ class _WaitlistState extends State<Waitlist> {
               style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
             ),
             Text(
-              'Avadh Restro',
+              name,
               style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Bold'),
             ),
           ],
