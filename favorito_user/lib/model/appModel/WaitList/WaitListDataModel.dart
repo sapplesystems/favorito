@@ -3,7 +3,6 @@ class WaitListDataModel {
   String businessName;
   String availableTimeSlots;
   String minimumWaitTime;
-//
   int waitlistId;
   String createdAt;
   int userId;
@@ -12,6 +11,7 @@ class WaitListDataModel {
   int noOfPerson;
   String businessId;
   String contact;
+  Function fun1;
   WaitListDataModel(
       {this.partiesBeforeYou,
       this.businessName,
@@ -24,7 +24,8 @@ class WaitListDataModel {
       this.bookedSlot,
       this.noOfPerson,
       this.businessId,
-      this.contact});
+      this.contact,
+      this.fun1});
 
   WaitListDataModel.fromJson(Map<String, dynamic> json) {
     partiesBeforeYou = json['parties_before_you'];

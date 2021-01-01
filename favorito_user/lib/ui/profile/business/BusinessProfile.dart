@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../utils/Extentions.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../utils/Extentions.dart';
 
 class BusinessProfile extends StatefulWidget {
   String businessId;
@@ -162,11 +163,9 @@ class _BusinessProfileState extends State<BusinessProfile> {
                       Padding(
                         padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                         child: Text(
-                            am_pm_from24Hours(data?.data[0]?.startHours) +
-                                    " - " +
-                                    am_pm_from24Hours(
-                                        data?.data[0]?.endHours) ??
-                                "",
+                            data?.data[0]?.startHours?.convert24to12() +
+                                " - " +
+                                data?.data[0]?.endHours?.convert24to12(),
                             style: TextStyle(
                                 color: myGrey,
                                 fontSize: 16,

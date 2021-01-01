@@ -7,7 +7,9 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../utils/Extentions.dart';
 
 class Waitlist extends StatefulWidget {
   WaitListDataModel data;
@@ -18,22 +20,43 @@ class Waitlist extends StatefulWidget {
 
 class _WaitlistState extends State<Waitlist> {
   SizeManager sm;
-  WaitListBaseModel data = WaitListBaseModel();
+
+  ProgressDialog pr;
+  WaitListDataModel data = WaitListDataModel();
+  var fut;
+  @override
+  void initState() {
+    fut = APIManager.baseUserWaitlistVerbose(
+        {'business_id': widget.data.businessId});
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((val) => {});
+  }
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(message: 'Fetching Data, please wait');
+    getWaitList();
     return SafeArea(
       child: Scaffold(
           backgroundColor: myBackGround,
           body: FutureBuilder<WaitListBaseModel>(
-            future: APIManager.baseUserWaitlistVerbose(
-                {'business_id': widget.data.businessId}),
+            future: fut,
             builder: (BuildContext context,
                 AsyncSnapshot<WaitListBaseModel> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
                 return Center(child: Text(loading));
               else {
-                if (data != snapshot.data) data = snapshot.data;
+                try {
+                  if (snapshot.data.data.isEmpty)
+                    return Center(child: Text(snapshot.data.message));
+                } catch (e) {
+                  print('Error 1:${e.toString()}');
+                }
+                if (data != snapshot.data?.data[0])
+                  data = snapshot.data.data[0];
+
                 return Padding(
                   padding: EdgeInsets.all(sm.w(6)),
                   child: Column(
@@ -43,7 +66,7 @@ class _WaitlistState extends State<Waitlist> {
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: sm.w(8), horizontal: sm.w(2.5)),
-                        child: titlePart(data.data[0].businessName),
+                        child: titlePart(data?.businessName ?? ''),
                       ),
                       bodyPart(),
                       footer()
@@ -81,7 +104,7 @@ class _WaitlistState extends State<Waitlist> {
                       size: 14,
                     ),
                     Text(
-                      data.data[0].availableTimeSlots,
+                      data?.availableTimeSlots?.convert24to12(),
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Gilroy-medium',
@@ -106,7 +129,7 @@ class _WaitlistState extends State<Waitlist> {
                       fit: BoxFit.fill,
                     ),
                     Text(
-                      ' 6 ',
+                      '${data.partiesBeforeYou ?? 0}',
                       style: TextStyle(
                           fontSize: 18,
                           fontFamily: 'Gilroy-medium',
@@ -132,7 +155,7 @@ class _WaitlistState extends State<Waitlist> {
                     direction: Axis.vertical,
                     children: [
                       Text(
-                        ' 20',
+                        '\t${data?.availableTimeSlots.split(':')[0]}',
                         style: TextStyle(
                           fontSize: 50,
                           fontFamily: 'Gilroy-Reguler',
@@ -157,7 +180,7 @@ class _WaitlistState extends State<Waitlist> {
             width: sm.w(28),
             child: ListView(
               children: [
-                for (int i = 0; i < 14; i++)
+                for (int i = 0; i < data?.partiesBeforeYou; i++)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 6),
                     child: Row(
@@ -182,7 +205,9 @@ class _WaitlistState extends State<Waitlist> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 22),
                             child: SvgPicture.asset(
-                              'assets/icon/men.svg',
+                              data.userId != null
+                                  ? 'assets/icon/menWhite.svg'
+                                  : 'assets/icon/menBlack.svg',
                               height: sm.h(6),
                               fit: BoxFit.fill,
                             ),
@@ -232,7 +257,9 @@ class _WaitlistState extends State<Waitlist> {
           ),
           child: InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed('/joinWaitList');
+              widget.data.fun1 = getWaitList;
+              Navigator.of(context)
+                  .pushNamed('/joinWaitList', arguments: widget.data);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -246,18 +273,15 @@ class _WaitlistState extends State<Waitlist> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
+                  padding: EdgeInsets.only(
                       left: 12.0, right: 30, bottom: 16, top: 16),
                   child: Text(
-                    'Join waitlist',
+                    data?.userId ?? 0 > 0 ? waitingCancel : waitingJoin,
                     style: TextStyle(
-                      color: Color(0xffdd2626),
-                      fontSize: 18,
-                      letterSpacing: 0.36,
-                      // fontSize: 22,
-                      fontFamily: 'Gilroy-Light',
-                      // color: myRed
-                    ),
+                        color: Color(0xffdd2626),
+                        fontSize: 18,
+                        letterSpacing: 0.36,
+                        fontFamily: 'Gilroy-Light'),
                   ),
                 )
               ],
@@ -266,7 +290,7 @@ class _WaitlistState extends State<Waitlist> {
         ),
         InkWell(
           onTap: () {
-            launch("tel://${999999999}");
+            launch("tel://${widget.data.contact}");
           },
           child: Card(
               color: myBackGround,
@@ -284,5 +308,20 @@ class _WaitlistState extends State<Waitlist> {
         ),
       ],
     );
+  }
+
+  getWaitList() async {
+    // if (!pr?.isShowing()) pr?.show();
+    await APIManager.baseUserWaitlistGet(
+        {'business_id': widget.data.businessId}).then((value) {
+      // if (pr?.isShowing()) pr?.hide();
+      data.createdAt = value.data[0].createdAt;
+      data.waitlistId = value.data[0].waitlistId;
+      data.userId = value.data[0].userId;
+      data.waitlistStatus = value.data[0].waitlistStatus;
+      data.noOfPerson = value.data[0].noOfPerson;
+      data.partiesBeforeYou = value.data[0].partiesBeforeYou - 1;
+      setState(() => data.businessId = widget.data.businessId);
+    });
   }
 }

@@ -256,47 +256,40 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserWaitlistVerbose : ${service.joblist}");
+    print(
+        "service.baseUserWaitlistVerbose : ${service.baseUserWaitlistVerbose}");
 
     response = await dio.post(service.baseUserWaitlistVerbose,
         data: _map, options: opt);
     print("service.baseUserWaitlistVerbose : ${response.toString}");
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
-  // static Future<JobListModel> joblist(Map _map) async {
-  //   String token = await Prefs.token;
-  //   print('token : ${token.toString()}');
-  //   opt = Options(
-  //       contentType: Headers.formUrlEncodedContentType,
-  //       headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-  //   print("service.joblist : ${service.joblist}");
 
-  //   response = await dio.post(service.joblist, data: _map, options: opt);
-  //   print("service.joblist : ${response.toString}");
-  //   return JobListModel.fromJson(convert.jsonDecode(response.toString()));
-  // }
-  // static Future<JobListModel> joblist(Map _map) async {
-  //   String token = await Prefs.token;
-  //   print('token : ${token.toString()}');
-  //   opt = Options(
-  //       contentType: Headers.formUrlEncodedContentType,
-  //       headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-  //   print("service.joblist : ${service.joblist}");
+  static Future<WaitListBaseModel> baseUserWaitlistSet(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserWaitlistSet : ${service.baseUserWaitlistSet}");
 
-  //   response = await dio.post(service.joblist, data: _map, options: opt);
-  //   print("service.joblist : ${response.toString}");
-  //   return JobListModel.fromJson(convert.jsonDecode(response.toString()));
-  // }
-  // static Future<JobListModel> joblist(Map _map) async {
-  //   String token = await Prefs.token;
-  //   print('token : ${token.toString()}');
-  //   opt = Options(
-  //       contentType: Headers.formUrlEncodedContentType,
-  //       headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-  //   print("service.joblist : ${service.joblist}");
+    response =
+        await dio.post(service.baseUserWaitlistSet, data: _map, options: opt);
+    print("service.baseUserWaitlistSet : ${response.toString}");
+    return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
+  }
 
-  //   response = await dio.post(service.joblist, data: _map, options: opt);
-  //   print("service.joblist : ${response.toString}");
-  //   return JobListModel.fromJson(convert.jsonDecode(response.toString()));
-  // }
+  static Future<WaitListBaseModel> baseUserWaitlistGet(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserWaitlistGet : ${service.baseUserWaitlistGet}");
+
+    response =
+        await dio.post(service.baseUserWaitlistGet, data: _map, options: opt);
+    print("service.baseUserWaitlistGet : ${response.toString}");
+    return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
+  }
 }

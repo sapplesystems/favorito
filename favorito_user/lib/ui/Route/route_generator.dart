@@ -42,7 +42,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Waitlist(data: args));
 
       case '/joinWaitList':
-        return MaterialPageRoute(builder: (_) => JoinWaitList());
+        return MaterialPageRoute(builder: (_) => JoinWaitList(data: args));
 
       default:
         return _errorRoute();

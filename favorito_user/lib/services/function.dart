@@ -37,7 +37,7 @@ class service {
 
   //waitlist
   static final baseUserWaitlistVerbose = baseUserWaitlist + 'waitlist-verbose';
-  static final baseUserWaitlistSet = baseUserWaitlist + 'Set-waitlist';
-  static final baseUserWaitlistGet = baseUserWaitlist + 'Get-waitlist';
+  static final baseUserWaitlistSet = baseUserWaitlist + 'set-waitlist';
+  static final baseUserWaitlistGet = baseUserWaitlist + 'get-waitlist';
   static final baseUserWaitlistCancel = baseUserWaitlist + 'cancel-waitlist';
 }

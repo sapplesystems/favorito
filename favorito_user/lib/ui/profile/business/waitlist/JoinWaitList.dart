@@ -1,14 +1,18 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/route_manager.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class JoinWaitList extends StatefulWidget {
-  // JoinWaitList({this.sm});
+  WaitListDataModel data;
+  JoinWaitList({this.data});
   @override
   _JoinWaitListState createState() => _JoinWaitListState();
 }
@@ -17,18 +21,21 @@ class _JoinWaitListState extends State<JoinWaitList> {
   List<TextEditingController> controller = [];
   SizeManager sm;
 
+  ProgressDialog pr;
   @override
   void initState() {
     super.initState();
     for (int i = 0; i < 3; i++) {
       controller.add(TextEditingController());
     }
-    controller[0].text = '0';
+    controller[0].text = '1';
   }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(message: 'Fetching Data, please wait');
     return SafeArea(
         child: Scaffold(
       backgroundColor: Color(0xfff9faff),
@@ -135,7 +142,20 @@ class _JoinWaitListState extends State<JoinWaitList> {
             ),
             InkWell(
               onTap: () async {
-                // await APIManager.
+                if (!pr.isShowing()) pr.show();
+                Map _map = {
+                  'no_of_person': controller[0].text,
+                  'name': controller[1].text,
+                  'special_notes': controller[2].text,
+                  'business_id': widget.data.businessId
+                };
+                await APIManager.baseUserWaitlistSet(_map).then((value) async {
+                  if (pr.isShowing()) pr.hide();
+                  if (value.status == 'success') {
+                    await widget.data.fun1();
+                    Navigator.pop(context);
+                  }
+                });
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: sm.w(24)),
