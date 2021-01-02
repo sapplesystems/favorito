@@ -22,11 +22,11 @@ exports.login = function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             } else {
                 if (result.length === 0) {
-                    return res.status(200).json({ status: 'Failed', message: 'Incorrect username or password' });
+                    return res.status(200).json({ status: 'Fail', message: 'Incorrect username or password' });
                 }
                 bcrypt.compare(req.body.password, result[0].password, function(err, enc_result) {
                     if (err) {
-                        return res.status(200).json({ status: 'Failed', message: 'Password not matched', data: err });
+                        return res.status(200).json({ status: 'Fail', message: 'Password not matched', data: err });
                     }
                     if (enc_result == true) {
                         var token = jwt.sign({

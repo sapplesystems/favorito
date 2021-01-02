@@ -8,7 +8,7 @@ import 'package:favorito_user/ui/search/mostPopular.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OverviewTab extends StatefulWidget {
   BusinessProfileData data;
@@ -24,7 +24,7 @@ class _OverviewState extends State<OverviewTab> {
   ];
   List<String> _attribute = [];
   SizeManager sm;
-  // CameraPosition _initPosition;
+  CameraPosition _initPosition;
   String shortDisc =
       'Mr.Cafe, first Midnight Cafe in surat offering wide varieties of food and beverages, If you are planning for Private Party Mr Cafe is the best place.';
 
@@ -32,7 +32,7 @@ class _OverviewState extends State<OverviewTab> {
       'It\'s a nice VEG only restaurant. Good food, lovely staff and decent prices for the quality and quantity. A must visit when you are at Surat.';
   var fut;
   businessOverViewModel overviewData = businessOverViewModel();
-  // Set<Marker> markers = {};
+  Set<Marker> markers = {};
   @override
   void initState() {
     super.initState();
@@ -67,9 +67,9 @@ class _OverviewState extends State<OverviewTab> {
                   overviewData?.data[0]?.address3
             ];
             List loc = overviewData?.data[0].location.split(',');
-            // _initPosition = CameraPosition(
-            //     target: LatLng(double.parse(loc[0]), double.parse(loc[1])),
-            //     zoom: 12);
+            _initPosition = CameraPosition(
+                target: LatLng(double.parse(loc[0]), double.parse(loc[1])),
+                zoom: 12);
             setDestination(loc);
             return Padding(
               padding: EdgeInsets.only(
@@ -115,14 +115,12 @@ class _OverviewState extends State<OverviewTab> {
                   ),
                 Container(
                   height: sm.h(40),
-                  child:
-                      // loc != null
-                      //     ? MyGoogleMap(
-                      //         // controller: _GMapcontroller,
-                      //         initPosition: _initPosition,
-                      //         marker: markers)
-                      //     :
-                      Container(),
+                  child: loc != null
+                      ? MyGoogleMap(
+                          // controller: _GMapcontroller,
+                          initPosition: _initPosition,
+                          marker: markers)
+                      : Container(),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

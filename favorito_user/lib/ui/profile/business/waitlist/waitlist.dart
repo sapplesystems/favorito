@@ -20,7 +20,7 @@ class Waitlist extends StatefulWidget {
 
 class _WaitlistState extends State<Waitlist> {
   SizeManager sm;
-
+  String btnTxt = waitingJoin;
   ProgressDialog pr;
   WaitListDataModel data = WaitListDataModel();
   var fut;
@@ -29,7 +29,9 @@ class _WaitlistState extends State<Waitlist> {
     fut = APIManager.baseUserWaitlistVerbose(
         {'business_id': widget.data.businessId});
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((val) => {});
+    WidgetsBinding.instance.addPostFrameCallback((val) {
+      getWaitList(false);
+    });
   }
 
   @override
@@ -37,7 +39,7 @@ class _WaitlistState extends State<Waitlist> {
     sm = SizeManager(context);
     pr = ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(message: 'Fetching Data, please wait');
-    getWaitList();
+
     return SafeArea(
       child: Scaffold(
           backgroundColor: myBackGround,
@@ -50,12 +52,17 @@ class _WaitlistState extends State<Waitlist> {
               else {
                 try {
                   if (snapshot.data.data.isEmpty)
-                    return Center(child: Text(snapshot.data.message));
+                    return Center(child: Text(snapshot.data.message ?? ''));
                 } catch (e) {
                   print('Error 1:${e.toString()}');
                 }
-                if (data != snapshot.data?.data[0])
-                  data = snapshot.data.data[0];
+                var v = snapshot.data?.data[0];
+                if (data != v) {
+                  data.partiesBeforeYou = v.partiesBeforeYou;
+                  data.businessName = v.businessName;
+                  data.availableTimeSlots = v.availableTimeSlots;
+                  data.minimumWaitTime = v.minimumWaitTime;
+                }
 
                 return Padding(
                   padding: EdgeInsets.all(sm.w(6)),
@@ -104,7 +111,7 @@ class _WaitlistState extends State<Waitlist> {
                       size: 14,
                     ),
                     Text(
-                      data?.availableTimeSlots?.convert24to12(),
+                      data?.availableTimeSlots?.convert24to12() ?? '',
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Gilroy-medium',
@@ -129,7 +136,7 @@ class _WaitlistState extends State<Waitlist> {
                       fit: BoxFit.fill,
                     ),
                     Text(
-                      '${data.partiesBeforeYou ?? 0}',
+                      '${data.partiesBeforeYou ?? 0}' ?? '',
                       style: TextStyle(
                           fontSize: 18,
                           fontFamily: 'Gilroy-medium',
@@ -155,7 +162,7 @@ class _WaitlistState extends State<Waitlist> {
                     direction: Axis.vertical,
                     children: [
                       Text(
-                        '\t${data?.availableTimeSlots.split(':')[0]}',
+                        '\t${data?.minimumWaitTime?.split(':')[1]}' ?? '',
                         style: TextStyle(
                           fontSize: 50,
                           fontFamily: 'Gilroy-Reguler',
@@ -187,7 +194,7 @@ class _WaitlistState extends State<Waitlist> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          (i + 1).toString(),
+                          (i + 1).toString() ?? '',
                           style: TextStyle(
                             fontSize: 20,
                             color: myGrey,
@@ -231,11 +238,11 @@ class _WaitlistState extends State<Waitlist> {
               height: sm.h(.4),
             ),
             Text(
-              currentWaitlistAt,
+              currentWaitlistAt ?? '',
               style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
             ),
             Text(
-              name,
+              name ?? '',
               style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Bold'),
             ),
           ],
@@ -257,9 +264,18 @@ class _WaitlistState extends State<Waitlist> {
           ),
           child: InkWell(
             onTap: () {
-              widget.data.fun1 = getWaitList;
-              Navigator.of(context)
-                  .pushNamed('/joinWaitList', arguments: widget.data);
+              if (btnTxt == waitingJoin) {
+                widget.data.fun1 = getWaitList;
+                Navigator.of(context)
+                    .pushNamed('/joinWaitList', arguments: widget.data);
+              } else {
+                pr.show();
+                APIManager.baseUserWaitlistCancel(
+                    {'waitlist_id': data.waitlistId}).then((value) {
+                  pr.hide();
+                  if (value.status == 'success') Navigator.pop(context);
+                });
+              }
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -276,7 +292,7 @@ class _WaitlistState extends State<Waitlist> {
                   padding: EdgeInsets.only(
                       left: 12.0, right: 30, bottom: 16, top: 16),
                   child: Text(
-                    data?.userId ?? 0 > 0 ? waitingCancel : waitingJoin,
+                    btnTxt,
                     style: TextStyle(
                         color: Color(0xffdd2626),
                         fontSize: 18,
@@ -310,18 +326,25 @@ class _WaitlistState extends State<Waitlist> {
     );
   }
 
-  getWaitList() async {
-    // if (!pr?.isShowing()) pr?.show();
+  getWaitList(bool val) async {
+    if (val) pr?.show();
     await APIManager.baseUserWaitlistGet(
         {'business_id': widget.data.businessId}).then((value) {
-      // if (pr?.isShowing()) pr?.hide();
-      data.createdAt = value.data[0].createdAt;
-      data.waitlistId = value.data[0].waitlistId;
-      data.userId = value.data[0].userId;
-      data.waitlistStatus = value.data[0].waitlistStatus;
-      data.noOfPerson = value.data[0].noOfPerson;
-      data.partiesBeforeYou = value.data[0].partiesBeforeYou - 1;
-      setState(() => data.businessId = widget.data.businessId);
+      if (val) pr?.hide();
+      try {
+        data.createdAt = value.data[0].createdAt;
+        data.waitlistId = value.data[0].waitlistId;
+        data.userId = value.data[0].userId;
+        data.waitlistStatus = value.data[0].waitlistStatus;
+        data.noOfPerson = value.data[0].noOfPerson;
+        data.partiesBeforeYou = value.data[0].partiesBeforeYou;
+        data.businessId = widget.data.businessId;
+        btnTxt = data.waitlistId != null ? waitingCancel : waitingJoin;
+      } catch (e) {
+        print('Error: $e');
+      } finally {
+        setState(() {});
+      }
     });
   }
 }

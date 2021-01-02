@@ -292,4 +292,18 @@ class APIManager {
     print("service.baseUserWaitlistGet : ${response.toString}");
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
+
+  static Future<WaitListBaseModel> baseUserWaitlistCancel(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserWaitlistCancel : ${service.baseUserWaitlistCancel}");
+
+    response = await dio.post(service.baseUserWaitlistCancel,
+        data: _map, options: opt);
+    print("service.baseUserWaitlistCancel : ${response.toString}");
+    return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
+  }
 }

@@ -1,5 +1,6 @@
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
+
 exports.businessCarouselList = async function(req, res, next) {
     await exports.getCaruoselData(req, res)
 }
@@ -158,107 +159,176 @@ exports.userGetBadges = function(req, res, next) {
 //  set favorite , friend req , friend, block ,follow all in same api 
 // send relation ship type and id 
 // also handled could not send friend request to the blocked person and vice versa
-exports.setRelation = async(req, res, next) => {
-    if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
-        var business_id = req.userdata.business_id;
-        source_id = business_id;
-        if (req.body.target_id != null && req.body.target_id != undefined && req.body.target_id != '') {
-            var target_id = req.body.target_id;
-        } else {
-            return res.status(500).json({ status: 'error', message: 'user_id is missing' });
-        }
-    } else if (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '') {
-        var target_id = req.body.business_id;
-        if (req.userdata.id != null && req.userdata.id != undefined && req.userdata.id != '') {
-            var source_id = req.userdata.id;
-        } else {
-            return res.status(500).json({ status: 'error', message: 'user_id is missing' });
-        }
-    } else {
-        return res.status(500).json({ status: 'error', message: 'business_id is missing' });
-    }
-    if (req.body.relation_type != null && req.body.relation_type != undefined && req.body.relation_type != '') {
-        relation_type = req.body.relation_type
-    } else {
-        return res.status(500).json({ status: 'error', message: 'relation_type is missing' });
-    }
-
-    try {
-        var data_to_insert = { source_id, target_id, relation_type }
-        var sql_count_universal = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = ${source_id} AND target_id = ${target_id}`
-        var sql_insert = `INSERT INTO user_business_relation SET ? `
-        result_count_universal = await exports.run_query(sql_count_universal)
-        if (result_count_universal[0].count == 0 && relation_type == 3 && relation_type == 4) {
-            result_insert = await exports.run_query(sql_insert, data_to_insert)
-            return res.status(200).send({ status: 'success', message: 'Successfull' })
-        } else {
-            var sql_count = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = ${source_id} AND target_id = ${target_id} AND relation_type =${relation_type}`
-            result_count = await exports.run_query(sql_count)
-            if (relation_type == 5) {
-                var sql_count_check_relation = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = ${source_id} AND target_id = ${target_id} AND (relation_type = 1 OR relation_type = 2 OR relation_type = 5)`
-                result_count_check_relation = await exports.run_query(sql_count_check_relation)
-                    // res.send(result_count_check_relation)
-                if (result_count_check_relation[0].count == 0) {
-                    var sql_insert_relation = `INSERT INTO user_business_relation SET ? `
-                    sql_insert_relation_result = await exports.run_query(sql_insert_relation, data_to_insert)
-                    if (sql_insert_relation_result.affectedRows > 0) {
-                        return res.status(200).send({ status: 'success', message: 'Relation is inserted' })
-                    }
+exports.userBusinessRelation = async(req, res, next) => {
+    switch (req.body.api_type) {
+        case 'set':
+            if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
+                var business_id = req.userdata.business_id;
+                source_id = business_id;
+                if (req.body.target_id != null && req.body.target_id != undefined && req.body.target_id != '') {
+                    var target_id = req.body.target_id;
                 } else {
-                    var sql_insert = `UPDATE user_business_relation SET ? WHERE id=${result_count_check_relation[0].id}`
-                    var data_to_insert = { relation_type }
-                    result_insert = await exports.run_query(sql_insert, data_to_insert)
-                    return res.status(200).send({ status: 'success', message: 'Relation is updated' })
+                    return res.status(500).json({ status: 'error', message: 'user_id is missing' });
                 }
-            } else if (relation_type == 2 || relation_type == 1) {
-                // accepting the friend req and making friend and inserting the new entry for friend vice versa
-                // check is user blocked ?
-                var sql_check_block = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = ${target_id} AND target_id = ${source_id} AND relation_type = 5`
-                sql_check_block_result = await exports.run_query(sql_check_block)
-                if (sql_check_block_result[0].count > 0) {
-                    return res.status(200).send({ status: 'success', message: 'Target is blocked' })
-                }
-                var sql_count_check_relation = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = ${source_id} AND target_id = ${target_id} AND (relation_type = 1 OR relation_type = 2 OR relation_type = 5)`
-                result_count_check_relation = await exports.run_query(sql_count_check_relation)
-                if (result_count_check_relation[0].count == 0) {
-                    var sql_insert_relation = `INSERT INTO user_business_relation SET ? `
-                    sql_insert_relation_result = await exports.run_query(sql_insert_relation, data_to_insert)
-                    if (sql_insert_relation_result.affectedRows > 0) {
-                        return res.status(200).send({ status: 'success', message: 'Relation is inserted' })
-                    }
+            } else if (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '') {
+                var target_id = req.body.business_id;
+                if (req.userdata.id != null && req.userdata.id != undefined && req.userdata.id != '') {
+                    var source_id = req.userdata.id;
                 } else {
-                    var sql_insert = `UPDATE user_business_relation SET ? WHERE id=${result_count_check_relation[0].id}`
-                    var data_to_insert = { relation_type }
-                    result_insert = await exports.run_query(sql_insert, data_to_insert)
-                    return res.status(200).send({ status: 'success', message: 'Relation is updated' })
+                    return res.status(500).json({ status: 'error', message: 'user_id is missing' });
                 }
-            } else if ((result_count[0].relation_type == 5) && (relation_type == 1 || relation_type == 2)) {
-                var sql_check_block = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = ${target_id} AND target_id = ${source_id} AND relation_type = 5`
-                sql_check_block_result = await exports.run_query(sql_check_block)
-                if (sql_check_block_result[0].count > 0) {
-                    return res.status(200).send({ status: 'success', message: 'Target is blocked' })
-                }
-                data_to_insert_temp_accept = { relation_type }
-                data_to_insert_temp_friend = { target_id: source_id, source_id: target_id, relation_type }
-                var sql_insert = `UPDATE user_business_relation SET ? WHERE id=${result_count[0].id}`
-                result_insert1 = await exports.run_query(sql_insert, data_to_insert_temp_accept)
-                result_insert2 = await exports.run_query(sql_insert, data_to_insert_temp_friend)
-                return res.status(200).send({ status: 'success', message: 'Successfull' })
-            } else if (result_count[0].count == 0) {
-                let data_to_insert = { source_id, target_id, relation_type }
-                let sql_insert = `INSERT INTO user_business_relation SET ? `
-                result_insert = await exports.run_query(sql_insert, data_to_insert)
-                return res.status(200).send({ status: 'success', message: 'Data inserted' })
             } else {
-                return res.status(200).send({ status: 'success', message: 'Successfull' })
+                return res.status(500).json({ status: 'error', message: 'business_id is missing' });
             }
-        }
-    } catch (error) {
-        return res.status(500).send({ status: 'failed', message: 'Could not insert data', error })
+            if (req.body.relation_type != null && req.body.relation_type != undefined && req.body.relation_type != '') {
+                relation_type = req.body.relation_type
+            } else {
+                return res.status(500).json({ status: 'error', message: 'relation_type is missing' });
+            }
+            try {
+                var data_to_insert = { source_id, target_id, relation_type }
+                var sql_count_universal = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = '${source_id}' AND target_id = '${target_id}'`
+                var sql_insert = `INSERT INTO user_business_relation SET ? `
+                result_count_universal = await exports.run_query(sql_count_universal)
+                if (result_count_universal[0].count == 0 && relation_type == 3 && relation_type == 4) {
+                    result_insert = await exports.run_query(sql_insert, data_to_insert)
+                    return res.status(200).send({ status: 'success', message: 'Successfull' })
+                } else {
+                    var sql_count = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = '${source_id}' AND target_id = '${target_id}' AND relation_type ='${relation_type}'`
+                    result_count = await exports.run_query(sql_count)
+                    if (relation_type == 5) {
+                        var sql_count_check_relation = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = '${source_id}' AND target_id = '${target_id}' AND (relation_type = 1 OR relation_type = 2 OR relation_type = 5)`
+                        result_count_check_relation = await exports.run_query(sql_count_check_relation)
+                            // res.send(result_count_check_relation)
+                        if (result_count_check_relation[0].count == 0) {
+                            var sql_insert_relation = `INSERT INTO user_business_relation SET ? `
+                            sql_insert_relation_result = await exports.run_query(sql_insert_relation, data_to_insert)
+                            if (sql_insert_relation_result.affectedRows > 0) {
+                                return res.status(200).send({ status: 'success', message: 'Relation is inserted' })
+                            }
+                        } else {
+                            var sql_insert = `UPDATE user_business_relation SET ? WHERE id='${result_count_check_relation[0].id}'`
+                            var data_to_insert = { relation_type }
+                            result_insert = await exports.run_query(sql_insert, data_to_insert)
+                            return res.status(200).send({ status: 'success', message: 'Relation is updated.' })
+                        }
+                    } else if (relation_type == 2 || relation_type == 1) {
+                        // accepting the friend req and making friend and inserting the new entry for friend vice versa
+                        // check is user blocked ?
+                        var sql_check_block = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = '${target_id}' AND target_id = '${source_id}' AND relation_type = 5`
+                        sql_check_block_result = await exports.run_query(sql_check_block)
+                        if (sql_check_block_result[0].count > 0) {
+                            return res.status(200).send({ status: 'success', message: 'Target is blocked' })
+                        }
+                        var sql_count_check_relation = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = '${source_id}' AND target_id = '${target_id}' AND (relation_type = 1 OR relation_type = 2 OR relation_type = 5)`
+                        result_count_check_relation = await exports.run_query(sql_count_check_relation)
+                        if (result_count_check_relation[0].count == 0) {
+                            var sql_insert_relation = `INSERT INTO user_business_relation SET ? `
+                            sql_insert_relation_result = await exports.run_query(sql_insert_relation, data_to_insert)
+                            if (sql_insert_relation_result.affectedRows > 0) {
+                                return res.status(200).send({ status: 'success', message: 'Relation is inserted' })
+                            }
+                        } else {
+                            var sql_insert = `UPDATE user_business_relation SET ? WHERE id='${result_count_check_relation[0].id}'`
+                            var data_to_insert = { relation_type }
+                            result_insert = await exports.run_query(sql_insert, data_to_insert)
+                            return res.status(200).send({ status: 'success', message: 'Relation is updated.' })
+                        }
+                    } else if ((result_count[0].relation_type == 5) && (relation_type == 1 || relation_type == 2)) {
+                        var sql_check_block = `SELECT COUNT(*) as count, id, relation_type FROM user_business_relation WHERE source_id = '${target_id}' AND target_id = '${source_id}' AND relation_type = 5`
+                        sql_check_block_result = await exports.run_query(sql_check_block)
+                        if (sql_check_block_result[0].count > 0) {
+                            return res.status(200).send({ status: 'success', message: 'Target is blocked' })
+                        }
+                        data_to_insert_temp_accept = { relation_type }
+                        data_to_insert_temp_friend = { target_id: source_id, source_id: target_id, relation_type }
+                        var sql_insert = `UPDATE user_business_relation SET ? WHERE id='${result_count[0].id}'`
+                        result_insert1 = await exports.run_query(sql_insert, data_to_insert_temp_accept)
+                        result_insert2 = await exports.run_query(sql_insert, data_to_insert_temp_friend)
+                        return res.status(200).send({ status: 'success', message: 'Successfull' })
+                    } else if (result_count[0].count == 0) {
+                        let data_to_insert = { source_id, target_id, relation_type }
+                        let sql_insert = `INSERT INTO user_business_relation SET ? `
+                        result_insert = await exports.run_query(sql_insert, data_to_insert)
+                        return res.status(200).send({ status: 'success', message: 'Data inserted' })
+                    } else {
+                        return res.status(200).send({ status: 'success', message: 'Successfull' })
+                    }
+                }
+            } catch (error) {
+                return res.status(500).send({ status: 'failed', message: 'Could not insert data', error })
+            }
+            break;
+        case 'get':
+
+            if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
+                var business_id = req.userdata.business_id;
+                source_id = business_id;
+                if (req.body.target_id != null && req.body.target_id != undefined && req.body.target_id != '') {
+                    var target_id = req.body.target_id;
+                } else {
+                    return res.status(500).json({ status: 'error', message: 'user_id is missing' });
+                }
+            } else if (req.body.business_id != null && req.body.business_id != undefined && req.body.business_id != '') {
+                var target_id = req.body.business_id;
+                if (req.userdata.id != null && req.userdata.id != undefined && req.userdata.id != '') {
+                    var source_id = req.userdata.id;
+                } else {
+                    return res.status(500).json({ status: 'error', message: 'user_id is missing' });
+                }
+            } else {
+                return res.status(500).json({ status: 'error', message: 'business_id is missing' });
+            }
+            if (req.body.relation_type != null && req.body.relation_type != undefined && req.body.relation_type != '') {
+                relation_type = req.body.relation_type
+            } else {
+                return res.status(500).json({ status: 'error', message: 'relation_type is missing' });
+            }
+
+            sql_get_relation = `SELECT * FROM user_business_relation WHERE source_id ='${source_id}' AND target_id = '${target_id}' AND relation_type = '${relation_type}'`
+            console.log(sql_get_relation)
+            try {
+                result_get_relation = await exports.run_query(sql_get_relation)
+                data = []
+
+                if (result_get_relation != '') {
+                    final_data = {}
+                    final_data.is_relation = 1
+                    final_data.relation_id = result_get_relation[0].id
+                } else {
+                    final_data.is_relation = 0
+                }
+                data.push(final_data)
+                return res.status(200).send({ status: 'success', message: 'success', data: data })
+            } catch (error) {
+                return res.status(400).send({ status: 'failed', message: 'error' })
+            }
+            break;
+        case 'end':
+            // ending the relation like unblock , unfriend, unfollow, unfavorite
+            if (req.body.relation_id != null || req.body.relation_id != undefined || req.body.relation_id != '') {
+                try {
+                    var sql_delete = `DELETE FROM user_business_relation WHERE id = '${req.body.relation_id}'`
+                    result_insert = await exports.run_query(sql_delete)
+                    if (result_insert.affectedRows > 0) {
+                        return res.status(200).send({ status: 'success', message: 'relation is updated' })
+                    } else {
+                        return res.status(200).send({ status: 'success', message: 'relation is updated' })
+                    }
+                } catch (error) {
+                    return res.status(400).send({ status: 'failed', message: 'Something went wrong' })
+                }
+            } else {
+                return res.status(400).send({ status: 'failed', message: 'relation_type is missing' })
+            }
+
+            break
+        default:
+            return res.status(500).send({ status: 'failed', message: 'api_type is missing it should be either get or set' })
+            break;
     }
 }
 
-// ending the relation like unblock , unfriend, unfollow, unfavorite
 exports.endRelation = async(req, res, next) => {
     if (req.body.relation_id != null || req.body.relation_id != undefined || req.body.relation_id != '') {
         try {

@@ -1,13 +1,10 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/route_manager.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class JoinWaitList extends StatefulWidget {
@@ -152,7 +149,7 @@ class _JoinWaitListState extends State<JoinWaitList> {
                 await APIManager.baseUserWaitlistSet(_map).then((value) async {
                   if (pr.isShowing()) pr.hide();
                   if (value.status == 'success') {
-                    await widget.data.fun1();
+                    await widget.data.fun1(true);
                     Navigator.pop(context);
                   }
                 });

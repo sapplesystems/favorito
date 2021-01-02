@@ -47,11 +47,6 @@ router.post('/create', upload.array('photo[]', 1000), CheckAuth, MenuController.
 router.post('/edit', upload.array('photo[]', 1000), CheckAuth, MenuController.editMenuItem);
 
 /**
- * DELETE MENU ITEM
- */
-router.post('/delete-menu-item', CheckAuth, MenuController.deleteMenuItem);
-
-/**
  * ADD MENU ITEM PHOTOS
  */
 router.post('/add-photos', upload.array('photo[]', 1000), CheckAuth, MenuController.addMenuPhotos);

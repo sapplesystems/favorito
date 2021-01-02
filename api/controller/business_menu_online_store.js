@@ -5,7 +5,7 @@ var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 /**
  * GET STATIC VARIABLE
  */
-exports.dd_verbose = async function(req, res, next) {
+exports.dd_verbose = async function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = {
@@ -21,7 +21,7 @@ exports.dd_verbose = async function(req, res, next) {
 /**
  * GET MENU CATEGORY LIST
  */
-exports.getMenuCategoryList = async function(req, res, next) {
+exports.getMenuCategoryList = async function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var category = await exports.getMenuCategories(business_id, req)
@@ -35,9 +35,9 @@ exports.getMenuCategoryList = async function(req, res, next) {
 /**
  * GET MENU CATEGORY
  */
-exports.getMenuCategories = function(business_id, req) {
+exports.getMenuCategories = function (business_id, req) {
     try {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var COND = "business_id='" + business_id + "' AND menu_type_id='" + menu_type_id + "' AND is_activated='1' AND deleted_at IS NULL";
             if (req.body.category_id != '' && req.body.category_id != 'undefined' && req.body.category_id != null) {
                 COND += " AND id='" + req.body.category_id + "'";
@@ -46,7 +46,7 @@ exports.getMenuCategories = function(business_id, req) {
             var sql = "SELECT id, category_name, details, slot_start_time, slot_end_time, available_on, out_of_stock \n\
             FROM business_menu_category \n\
             WHERE " + COND;
-            db.query(sql, function(e, cat) {
+            db.query(sql, function (e, cat) {
                 var data = (cat.length > 1) ? cat : cat[0];
                 return resolve(data);
             });
@@ -61,13 +61,13 @@ exports.getMenuCategories = function(business_id, req) {
 /**
  * LIST ALL MENU
  */
-exports.listAllMenu = async function(req, res, next) {
+exports.listAllMenu = async function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id, category_name FROM business_menu_category \n\
-                    WHERE business_id='" + business_id + "' AND menu_type_id='" + menu_type_id + "' \n\
+                    WHERE business_id='"+ business_id + "' AND menu_type_id='" + menu_type_id + "' \n\
                     AND parent_id='0' AND is_activated='1' AND deleted_at IS NULL";
-        db.query(sql, async function(err, result) {
+        db.query(sql, async function (err, result) {
             var data = [];
             var result_length = result.length;
             for (var i = 0; i < result_length; i++) {
@@ -91,15 +91,15 @@ exports.listAllMenu = async function(req, res, next) {
 /**
  * GET CATEGORY MENUS
  */
-exports.getCategoryMenusItems = async function(business_id, category_id) {
+exports.getCategoryMenusItems = async function (business_id, category_id) {
     try {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var sql = "SELECT id, title, price, description, quantity, `type`, max_qty_per_order, \n\
                         (SELECT GROUP_CONCAT(id) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photo_id, \n\
-                        (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos \n\
+                        (SELECT GROUP_CONCAT(CONCAT('"+ img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos \n\
                         FROM business_menu_item \n\
                         WHERE business_id='" + business_id + "' AND menu_category_id='" + category_id + "'";
-            db.query(sql, async function(e, items) {
+            db.query(sql, async function (e, items) {
                 var items_length = items.length;
                 for (var i = 0; i < items_length; i++) {
                     items[i].photo_id = (items[i].photo_id).split(',');
@@ -117,7 +117,7 @@ exports.getCategoryMenusItems = async function(business_id, category_id) {
 /**
  * CREATE NEW MENU ITEM
  */
-exports.createMenuItem = async function(req, res, next) {
+exports.createMenuItem = async function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -147,7 +147,7 @@ exports.createMenuItem = async function(req, res, next) {
 
         var sql = "INSERT INTO business_menu_item set ?";
 
-        db.query(sql, postval, async function(err, result) {
+        db.query(sql, postval, async function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -164,7 +164,7 @@ exports.createMenuItem = async function(req, res, next) {
 /**
  * EDIT MENU ITEM
  */
-exports.editMenuItem = async function(req, res, next) {
+exports.editMenuItem = async function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.menu_item_id == '' || req.body.menu_item_id == 'undefined' || req.body.menu_item_id == null) {
@@ -194,7 +194,7 @@ exports.editMenuItem = async function(req, res, next) {
         }
 
         var sql = "update business_menu_item set " + update_columns + " where id='" + item_id + "'";
-        db.query(sql, async function(err, result) {
+        db.query(sql, async function (err, result) {
             console.log(sql);
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' + err });
@@ -212,7 +212,7 @@ exports.editMenuItem = async function(req, res, next) {
 /**
  * ADD MENU ITEM PHOTOS
  */
-exports.addMenuPhotos = async function(req, res, next) {
+exports.addMenuPhotos = async function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -232,16 +232,16 @@ exports.addMenuPhotos = async function(req, res, next) {
 /**
  * ADD BUSINESS MENU PHOTOS
  */
-exports.addPhotos = function(business_id, menu_id, req) {
+exports.addPhotos = function (business_id, menu_id, req) {
     try {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
             if (req.files && req.files.length) {
                 var file_count = req.files.length;
                 for (var i = 0; i < file_count; i++) {
                     var filename = req.files[i].filename;
                     var sql = "INSERT INTO `business_menu_photo`(business_id, business_menu_item_id, photo) \n\
-                            VALUES ('" + business_id + "','" + menu_id + "','" + filename + "')";
+                            VALUES ('"+ business_id + "','" + menu_id + "','" + filename + "')";
                     db.query(sql);
                 }
                 resolve(true);
@@ -256,7 +256,7 @@ exports.addPhotos = function(business_id, menu_id, req) {
 /**
  * ADD BUSINESS MENU CATEGORY
  */
-exports.addCategory = function(req, res, next) {
+exports.addCategory = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.category_name == '' || req.body.category_name == 'undefined' || req.body.category_name == null) {
@@ -285,9 +285,9 @@ exports.addCategory = function(req, res, next) {
 
         var sql = "INSERT INTO business_menu_category set ?";
 
-        db.query(sql, postval, async function(err, result) {
+        db.query(sql, postval, async function (err, result) {
             if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong....' });
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
             return res.status(200).json({ status: 'success', message: 'Category saved successfully.' });
         });
@@ -300,7 +300,7 @@ exports.addCategory = function(req, res, next) {
 /**
  * EDIT BUSINESS MENU CATEGORY
  */
-exports.editCategory = function(req, res, next) {
+exports.editCategory = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         if (req.body.category_id == '' || req.body.category_id == 'undefined' || req.body.category_id == null) {
@@ -332,7 +332,7 @@ exports.editCategory = function(req, res, next) {
 
         var sql = "update business_menu_category set " + update_columns + " where id='" + id + "'";
 
-        db.query(sql, function(err, result) {
+        db.query(sql, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -347,14 +347,14 @@ exports.editCategory = function(req, res, next) {
 /**
  * GET BUSINESS MENU SETTING
  */
-exports.getSetting = function(req, res, next) {
+exports.getSetting = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var sql = "SELECT  accepting_order, store_pickup_start_time, store_pickup_end_time, \n\
                         delivery_start_time, delivery_end_time, delivery_minium_bill, delivery_packaging_charge \n\
-                    FROM business_menu_online_store_setting WHERE business_id='" + business_id + "'";
+                    FROM business_menu_online_store_setting WHERE business_id='"+ business_id + "'";
 
-        db.query(sql, function(err, result) {
+        db.query(sql, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -369,7 +369,7 @@ exports.getSetting = function(req, res, next) {
 /**
  * UPDATE BUSINESS MENU SETTING
  */
-exports.updateMenuSetting = function(req, res, next) {
+exports.updateMenuSetting = function (req, res, next) {
     try {
         var business_id = req.userdata.business_id;
 
@@ -399,7 +399,7 @@ exports.updateMenuSetting = function(req, res, next) {
 
         var sql = "update business_menu_online_store_setting set " + update_columns + " where business_id='" + business_id + "'";
 
-        db.query(sql, function(err, result) {
+        db.query(sql, function (err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }

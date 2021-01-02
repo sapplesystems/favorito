@@ -10,4 +10,5 @@ router.post('/search-by-name', CheckAuth, UserBusinessController.searchByName);
 
 router.post('/get-business-hours', CheckAuth, UserProfilBusinessOverview.getAllHoursBusiness);
 
+
 module.exports = router;

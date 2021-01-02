@@ -5,9 +5,8 @@ var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 exports.getDashboardDetail = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified \n\
-        FROM `business_master` \n\
-        WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
+        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` \n\
+                    WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
         db.query(sql, function(err, result_set, fields) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
@@ -238,6 +237,7 @@ exports.mostPopular = async function(req, res, next) {
         return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
 exports.sponsored = async function(req, res, next) {
     try {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";

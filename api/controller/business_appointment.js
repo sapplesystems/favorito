@@ -729,7 +729,14 @@ exports.getAppointmentSlots = async function(business_id, date, starttime, endti
             var enddate_time = date + ' ' + endtime;
             var parsestart = Date.parse(startdate_time);
             var parseend = Date.parse(enddate_time);
+            var parsestart = Date.parse(startdate_time);
+            console.log('startdate_time - ' + startdate_time);
+            console.log('enddate_time - ' + enddate_time);
+            console.log('parsestart - ' + parsestart);
+            console.log('parseend - ' + parseend);
             while (parsestart <= parseend) {
+                console.log('parsestart - ' + parsestart);
+                console.log('parseend - ' + parseend);
                 var timestart = startdate_time;
                 startdate_time = newstarttime(startdate_time, interval);
                 var timeend = startdate_time;

@@ -230,7 +230,7 @@ exports.getBookTable = async function(req, res, next) {
         return res.status(400).json({ status: 'failed', message: 'user_id is missing' });
     }
 
-    var sql = "SELECT b_b.id,b_b.user_id, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, AVG(b_r.rating) as avg_rating,b_m.business_phone, b_b.business_id,b_b.user_id,b_b.no_of_person,b_b.created_datetime \n\
+    var sql = "SELECT b_b.id,b_b.user_id, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, '500' as price, b_m.business_name, AVG(b_r.rating) as avg_rating,b_m.business_phone, b_b.business_id,b_b.user_id,b_b.no_of_person,b_b.created_datetime \n\
     FROM business_booking AS b_b \n\
     JOIN business_master AS b_m \n\
     JOIN business_ratings AS b_r \n\

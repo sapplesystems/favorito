@@ -7,6 +7,7 @@ var UserProfileController = require('../../controller/user/user_profile_controll
 var UserProfileBusinessDetailController = require('../../controller/user/user_profile_business_detail_controller');
 var UserProfilBusinessOverview = require('../../controller/user/user_profile_business_detail_controller');
 
+
 var multer = require('multer');
 var storage_user_profile = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -34,12 +35,11 @@ router.post('/user-all-photo', CheckAuth, UserProfileController.userAllPhoto);
 router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 
 // Relation apis
-router.post('/set-relation', CheckAuth, UserProfileController.setRelation);
+router.post('/user-business-relation', CheckAuth, UserProfileController.userBusinessRelation);
 // end relation by relation_id
 router.post('/end-relation', CheckAuth, UserProfileController.endRelation);
 // get all relation by the relation_type
 router.post('/get-all-relation', CheckAuth, UserProfileController.getAllRelation);
-
 
 
 
