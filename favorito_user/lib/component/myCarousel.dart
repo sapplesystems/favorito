@@ -6,6 +6,8 @@ import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class myCarousel extends StatefulWidget {
+  String id;
+  myCarousel([this.id]);
   @override
   _myCarouselState createState() => _myCarouselState();
 }
@@ -18,14 +20,14 @@ class _myCarouselState extends State<myCarousel> {
   @override
   void initState() {
     super.initState();
-    fut = APIManager.carousel(context);
+    fut = APIManager.carousel(context, {});
   }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return FutureBuilder<CarouselModel>(
-      future: APIManager.carousel(context),
+      future: APIManager.carousel(context, {'business_id': widget.id}),
       builder: (BuildContext context, AsyncSnapshot<CarouselModel> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: Text(loading));

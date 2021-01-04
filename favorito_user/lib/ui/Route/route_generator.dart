@@ -8,6 +8,7 @@ import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/ui/profile/user/profile.dart';
+import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class RouteGenerator {
@@ -44,6 +45,9 @@ class RouteGenerator {
 
       // case '/Booking':
       //   return MaterialPageRoute(builder: (_) => BookTable());
+
+      case '/searchResult':
+        return MaterialPageRoute(builder: (_) => SearchResult(args: args));
 
       case '/joinWaitList':
         return MaterialPageRoute(builder: (_) => JoinWaitList(data: args));

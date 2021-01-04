@@ -7,7 +7,6 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
 import 'package:favorito_user/ui/home/usernameAddress.dart';
-import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -89,18 +88,19 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
             child: EditTextComponent(
               ctrl: _mySearchEditTextController,
-              title: "Search",
+              hint: "Search",
               security: false,
               valid: true,
+              keyboardSet: TextInputType.text,
               prefixIcon: 'search',
+              keyBoardAction: TextInputAction.search,
+              atSubmit: (_val) {
+                Navigator.of(context)
+                    .pushNamed('/searchResult', arguments: _val);
+              },
               prefClick: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        SearchResult(_mySearchEditTextController.text),
-                  ),
-                );
+                Navigator.of(context).pushNamed('/searchResult',
+                    arguments: _mySearchEditTextController.text);
               },
             ),
           ),

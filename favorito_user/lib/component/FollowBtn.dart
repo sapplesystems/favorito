@@ -13,8 +13,6 @@ class FollowBtn extends StatefulWidget {
 }
 
 class _FollowBtnState extends State<FollowBtn> {
-  var fut;
-
   Relation relation = Relation();
 
   String btnTxt;
@@ -45,12 +43,12 @@ class _FollowBtnState extends State<FollowBtn> {
                     shape: NeumorphicShape.convex,
                     depth: 4,
                     lightSource: LightSource.topLeft,
-                    color: relation.isRelation == 1 ? myBlueBase : Colors.white,
+                    color: relation.isRelation == 1 ? myRed : Colors.white,
                     boxShape: NeumorphicBoxShape.roundRect(
                       BorderRadius.all(Radius.circular(8)),
                     ),
                     border: NeumorphicBorder(
-                      color: myBlueBase,
+                      color: myRed,
                       width: 0.8,
                     )),
                 onPressed: () async {
@@ -70,9 +68,7 @@ class _FollowBtnState extends State<FollowBtn> {
                     btnTxt,
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        color: relation.isRelation == 1
-                            ? Colors.white
-                            : myBlueBase),
+                        color: relation.isRelation == 1 ? Colors.white : myRed),
                   ),
                 ),
               );

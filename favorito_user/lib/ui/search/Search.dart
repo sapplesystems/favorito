@@ -39,8 +39,8 @@ class _SearchState extends State<Search> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            SearchResult(_mySearchEditTextController.text)));
+                        builder: (context) => SearchResult(
+                            args: _mySearchEditTextController.text)));
               },
             ),
           ),

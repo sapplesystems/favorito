@@ -78,7 +78,7 @@ class _OverviewState extends State<OverviewTab> {
                 Text(shortDisc,
                     style:
                         TextStyle(fontSize: 15, fontFamily: 'Gilroy-Regular')),
-                myCarousel(),
+                myCarousel(overviewData?.data[0].businessId),
                 Text(
                   longDisc,
                   style: TextStyle(fontSize: 15, fontFamily: 'Gilroy-Regular'),

@@ -50,7 +50,7 @@ class APIManager {
     return loginModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<CarouselModel> carousel(context) async {
+  static Future<CarouselModel> carousel(context, [map]) async {
     String token = await Prefs.token;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -58,7 +58,8 @@ class APIManager {
 
     print("businessCarousel URL:${service.businessCarousel}");
     try {
-      response = await dio.post(service.businessCarousel, options: opt);
+      response =
+          await dio.post(service.businessCarousel, data: map, options: opt);
     } catch (e) {
       BotToast.showText(text: e.toString());
     }
