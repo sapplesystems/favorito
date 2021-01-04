@@ -1,4 +1,5 @@
 import 'package:favorito_user/component/Following.dart';
+import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/Signup.dart';
@@ -40,6 +41,9 @@ class RouteGenerator {
 
       case '/waitlist':
         return MaterialPageRoute(builder: (_) => Waitlist(data: args));
+
+      // case '/Booking':
+      //   return MaterialPageRoute(builder: (_) => BookTable());
 
       case '/joinWaitList':
         return MaterialPageRoute(builder: (_) => JoinWaitList(data: args));

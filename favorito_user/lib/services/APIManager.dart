@@ -311,7 +311,7 @@ class APIManager {
   //relation
   static Future<RelationBase> businessRelationGet(Map _map) async {
     String token = await Prefs.token;
-    print('token : ${token.toString()}');
+    print('_map : ${_map.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});

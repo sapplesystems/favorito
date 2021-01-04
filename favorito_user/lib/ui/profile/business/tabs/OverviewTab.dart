@@ -117,9 +117,7 @@ class _OverviewState extends State<OverviewTab> {
                   height: sm.h(40),
                   child: loc != null
                       ? MyGoogleMap(
-                          // controller: _GMapcontroller,
-                          initPosition: _initPosition,
-                          marker: markers)
+                          initPosition: _initPosition, marker: markers)
                       : Container(),
                 ),
                 Row(

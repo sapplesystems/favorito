@@ -10,3 +10,4 @@ Color myGreyLight = Color(0xffD7D7D7);
 Color myRedLight = Color(0x56dd2525);
 Color myAppBarBackground = Color(0xffffffff);
 Color myOrangeBase = Color(0xffffa932);
+Color myBlueBase = Color(0xff1c77ff);

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/CirculerProgress.dart';
 import 'package:favorito_user/component/Minut20.dart';
 import 'package:favorito_user/config/SizeManager.dart';
@@ -46,9 +45,8 @@ class _WaitlistState extends State<Waitlist> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     t.cancel();
+    super.dispose();
   }
 
   @override
@@ -328,7 +326,6 @@ class _WaitlistState extends State<Waitlist> {
             per = 0.0;
           setState(() {});
         } catch (e) {
-          // BotToast.showText(text: e.toString());
           print('Error:${e.toString()}');
           per = 0.0;
         }
