@@ -16,8 +16,8 @@ class service {
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
 
 //function
-  static final register = baseUser + 'register'; //check
-  static final login = baseUser2 + 'login'; //check
+  static final register = baseUser2 + 'register';
+  static final login = baseUser2 + 'login';
   static final businessCarousel = baseUserProfile + 'business-carousel';
   static final getAddress = base + 'user-address/get-address';
   static final getUserImage = base + 'user-profile/user-profile-photo';

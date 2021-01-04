@@ -64,7 +64,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    top: sm.h(9),
+                                    top: sm.h(12),
                                     bottom: sm.h(2),
                                   ),
                                   child: Center(
@@ -100,7 +100,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                                         children: [
                                           Center(
                                             child: Text(
-                                              '80',
+                                              '${data?.data[0]?.totalReviews ?? 0}',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 22,
@@ -254,7 +254,9 @@ class _BusinessProfileState extends State<BusinessProfile> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('4.5',
+                  Text(
+                      double.parse('${data?.data[0].avgRating ?? 0}')
+                          .toString(),
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
@@ -320,7 +322,8 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     break;
                   case 'Booking':
                     {
-                      Navigator.of(context).pushNamed('/waitlist');
+                      Navigator.of(context).pushNamed('/booking',
+                          arguments: data.data[0].businessId);
                     }
                     break;
                   case 'Appointment':

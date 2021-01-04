@@ -16,8 +16,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class SearchResult extends StatelessWidget {
-  String args;
-  SearchResult({this.args});
+  String searchedText;
+
+  SearchResult(this.searchedText);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class SearchResult extends StatelessWidget {
       themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
-          child: _SearchResult(args),
+          child: _SearchResult(searchedText),
         ),
       ),
     );
@@ -89,9 +90,10 @@ class _SearchResultState extends State<_SearchResult> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: myBackGround,
-        body: Column(
+      child: Container(
+        height: sm.h(100),
+        decoration: BoxDecoration(color: myBackGround),
+        child: Column(
           children: [
             Container(
               height: sm.h(8),
@@ -107,8 +109,9 @@ class _SearchResultState extends State<_SearchResult> {
                         security: false,
                         valid: true,
                         prefixIcon: 'search',
-                        prefClick: () =>
-                            search(_mySearchEditTextController.text),
+                        prefClick: () {
+                          search(_mySearchEditTextController.text);
+                        },
                       ),
                     ),
                   ),
@@ -158,7 +161,7 @@ class _SearchResultState extends State<_SearchResult> {
               ),
             ),
             Container(
-              height: selectedFilters.length > 0 ? sm.h(78) : sm.h(85),
+              height: selectedFilters.length > 0 ? sm.h(80) : sm.h(88),
               child: ListView(
                 shrinkWrap: true,
                 children: [
@@ -277,7 +280,7 @@ class _SearchResultState extends State<_SearchResult> {
                       : Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BookTable(0, null)));
+                              builder: (context) => BookTable(id: '0')));
                 },
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Center(

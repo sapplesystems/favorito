@@ -38,20 +38,22 @@ class _FollowBtnState extends State<FollowBtn> {
             else {
               relation = snapshot.data.data[0];
               btnTxt = relation.isRelation == 1 ? 'Following' : 'Follow';
-              return NeumorphicButton(
-                style: NeumorphicStyle(
-                    shape: NeumorphicShape.convex,
-                    depth: 4,
-                    lightSource: LightSource.topLeft,
-                    color: relation.isRelation == 1 ? myRed : Colors.white,
-                    boxShape: NeumorphicBoxShape.roundRect(
-                      BorderRadius.all(Radius.circular(8)),
-                    ),
-                    border: NeumorphicBorder(
-                      color: myRed,
-                      width: 0.8,
-                    )),
-                onPressed: () async {
+              return InkWell(
+                // style: NeumorphicStyle(
+                //     shape: NeumorphicShape.convex,
+                //     depth: 4,
+                //     lightSource: LightSource.topLeft,
+                //     color:
+                //         // relation.isRelation == 1 ? myRed :
+                //         Colors.white,
+                //     boxShape: NeumorphicBoxShape.roundRect(
+                //       BorderRadius.all(Radius.circular(8)),
+                //     ),
+                //     border: NeumorphicBorder(
+                //       color: myBlueBase,
+                //       width: 0.8,
+                //     )),
+                onTap: () async {
                   if (btnTxt == 'Follow') {
                     //  set
                     changeRelation('set');
@@ -61,14 +63,24 @@ class _FollowBtnState extends State<FollowBtn> {
                   }
                   print("btnTxt${btnTxt}");
                 },
-                padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                 child: Container(
+                  // padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: myBlueBase,
+                      width: 1,
+                    ),
+                    color: Colors.white,
+                  ),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
                   child: Text(
                     btnTxt,
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        color: relation.isRelation == 1 ? Colors.white : myRed),
+                        color:
+                            // relation.isRelation == 1 ? Colors.white :
+                            myBlueBase),
                   ),
                 ),
               );

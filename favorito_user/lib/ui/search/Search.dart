@@ -39,8 +39,8 @@ class _SearchState extends State<Search> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SearchResult(
-                            args: _mySearchEditTextController.text)));
+                        builder: (context) =>
+                            SearchResult(_mySearchEditTextController.text)));
               },
             ),
           ),
@@ -48,7 +48,7 @@ class _SearchState extends State<Search> {
           trendingNearby(),
           header(sm, "Hot & New Business"),
           Container(
-            height: sm.h(28),
+            // height: sm.h(28),
             child: Padding(
               padding: EdgeInsets.only(bottom: sm.h(2)),
               child: HotAndNewBusiness(),

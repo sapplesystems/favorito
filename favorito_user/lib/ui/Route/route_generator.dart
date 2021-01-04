@@ -43,11 +43,11 @@ class RouteGenerator {
       case '/waitlist':
         return MaterialPageRoute(builder: (_) => Waitlist(data: args));
 
-      // case '/Booking':
-      //   return MaterialPageRoute(builder: (_) => BookTable());
+      case '/booking':
+        return MaterialPageRoute(builder: (_) => BookTable(id: args));
 
       case '/searchResult':
-        return MaterialPageRoute(builder: (_) => SearchResult(args: args));
+        return MaterialPageRoute(builder: (_) => SearchResult(args));
 
       case '/joinWaitList':
         return MaterialPageRoute(builder: (_) => JoinWaitList(data: args));

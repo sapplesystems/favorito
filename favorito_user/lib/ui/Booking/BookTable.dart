@@ -10,9 +10,9 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 
 class BookTable extends StatelessWidget {
-  int identifier;
+  String id;
   BookingOrAppointmentListModel data;
-  BookTable(this.identifier, this.data);
+  BookTable({this.id});
   @override
   Widget build(BuildContext context) {
     return NeumorphicTheme(
@@ -25,7 +25,7 @@ class BookTable extends StatelessWidget {
       themeMode: ThemeMode.system,
       child: Material(
         child: NeumorphicBackground(
-          child: _BookTable(identifier, data),
+          child: _BookTable(id: id),
         ),
       ),
     );
@@ -33,9 +33,9 @@ class BookTable extends StatelessWidget {
 }
 
 class _BookTable extends StatefulWidget {
-  int identifier;
+  String id;
   BookingOrAppointmentListModel data;
-  _BookTable(this.identifier, this.data);
+  _BookTable({this.id});
   _BookTableState createState() => _BookTableState();
 }
 
@@ -63,17 +63,11 @@ class _BookTableState extends State<_BookTable> {
 
     SlotListModel slot1 = SlotListModel("12:00", false);
     SlotListModel slot2 = SlotListModel("13:00", false);
-    SlotListModel slot3 = SlotListModel("13:30", false);
-    SlotListModel slot4 = SlotListModel("14:30", false);
-    SlotListModel slot5 = SlotListModel("15:00", false);
 
     slotList.add(slot1);
     slotList.add(slot2);
-    slotList.add(slot3);
-    slotList.add(slot4);
-    slotList.add(slot5);
 
-    if (widget.identifier == 0) {
+    if (widget.id == 0) {
       _noOfPeopleEditTextController.text = "";
       _selectedDateText = DateFormat('dd/MM/yyyy').format(_initialDate);
       _selectedOccasion = "";
