@@ -3,7 +3,8 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class WaitListHeader extends StatefulWidget {
   String title;
-  WaitListHeader({this.title});
+  Function function;
+  WaitListHeader({this.title, this.function});
   @override
   _WaitListHeaderState createState() => _WaitListHeaderState();
 }
@@ -24,11 +25,21 @@ class _WaitListHeaderState extends State<WaitListHeader> {
             color: Colors.black,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(top: sm.h(0.4)),
-          child: Text(widget.title,
-              style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Bold')),
-        )
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(top: sm.h(0.4)),
+            child: Text(widget.title,
+                style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Bold')),
+          ),
+        ),
+        InkWell(
+          onTap: () => widget.function(),
+          child: Icon(
+            Icons.cached,
+            size: sm.w(8),
+            color: Colors.black,
+          ),
+        ),
       ],
     );
   }

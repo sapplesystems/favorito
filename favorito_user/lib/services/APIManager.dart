@@ -5,6 +5,7 @@ import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
+import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
@@ -305,5 +306,20 @@ class APIManager {
         data: _map, options: opt);
     print("service.baseUserWaitlistCancel : ${response.toString}");
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //relation
+  static Future<RelationBase> businessRelationGet(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.businessRelationGet : ${service.businessRelationGet}");
+
+    response =
+        await dio.post(service.businessRelationGet, data: _map, options: opt);
+    print("service.businessRelationGet : ${response.toString}");
+    return RelationBase.fromJson(convert.jsonDecode(response.toString()));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:favorito_user/component/FollowBtn.dart';
+import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
@@ -16,7 +17,6 @@ import '../../../utils/Extentions.dart';
 class BusinessProfile extends StatefulWidget {
   String businessId;
   BusinessProfile({this.businessId});
-  List<String> relations = [];
   List<String> attribute = [];
   List<String> service = [];
   @override
@@ -46,10 +46,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(child: Text(loading));
             else {
-              widget.relations.clear();
               if (data != snapshot.data) data = snapshot.data;
-              for (var _v in data.data[0].relation)
-                widget.relations.add(_v.relation);
               widget.attribute.clear();
               for (var _v in data.data[0].attributes)
                 widget.attribute.add(_v.attributeName);
@@ -273,45 +270,13 @@ class _BusinessProfileState extends State<BusinessProfile> {
         ],
       );
 
-  // Widget midLavel(BusinessProfileData _data) {
-  //   return Padding(
-  //     padding: EdgeInsets.only(top: sm.h(9), left: sm.w(4)),
-  //     child:Text(_data.businessName,
-  //             style: TextStyle(fontSize: 28, fontFamily: 'Gilroy-Bold')),
-  //             );
-  //         // Row(
-  //         //   mainAxisAlignment: MainAxisAlignment.center,
-  //         //   children: [
-
-  //     //     Padding(
-  //     //       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-  //     //       child: Icon(
-  //     //         FontAwesomeIcons.solidCheckCircle,
-  //     //         color: Color(0xff2196f3),
-  //     //       ),
-  //     //     )
-  //     //   ],
-  //     // ),
-
-  // }
-
   followingAndFavorite() {
-    print("Relaton size :${widget.relations.length}");
-    bool fav = widget.relations.contains('follow');
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(width: sm.w(8)),
-        FollowBtn(),
-        Padding(
-          padding: EdgeInsets.only(left: sm.w(4)),
-          child: Icon(
-            widget.relations.contains('favorite')
-                ? Icons.favorite
-                : Icons.favorite_border,
-            color: Color(0xffdd2626),
-          ),
-        )
+        FollowBtn(id: data.data[0].businessId),
+        FavoriteBtn(id: data.data[0].businessId),
       ],
     );
   }

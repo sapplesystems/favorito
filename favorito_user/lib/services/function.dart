@@ -40,4 +40,8 @@ class service {
   static final baseUserWaitlistSet = baseUserWaitlist + 'set-waitlist';
   static final baseUserWaitlistGet = baseUserWaitlist + 'get-waitlist';
   static final baseUserWaitlistCancel = baseUserWaitlist + 'cancel-waitlist';
+
+  //relation
+
+  static final businessRelationGet = baseUserProfile + 'user-business-relation';
 }

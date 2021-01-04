@@ -30,4 +30,5 @@ String bookingSetting = 'Booking Setting';
 String waitingList = 'Waiting List';
 String waitingJoin = 'Join waitlist';
 String waitingCancel = 'Cancel waitlist';
+String waitingCanceled = 'Canceled';
 String currentWaitlistAt = 'Current waitlist at';

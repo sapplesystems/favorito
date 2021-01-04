@@ -5,6 +5,7 @@ class WaitListDataModel {
   String minimumWaitTime;
   int waitlistId;
   String createdAt;
+  String updatedAt;
   int userId;
   String waitlistStatus;
   String bookedSlot;
@@ -19,6 +20,7 @@ class WaitListDataModel {
       this.minimumWaitTime,
       this.waitlistId,
       this.createdAt,
+      this.updatedAt,
       this.userId,
       this.waitlistStatus,
       this.bookedSlot,
@@ -34,6 +36,7 @@ class WaitListDataModel {
     minimumWaitTime = json['minimum_wait_time'];
     waitlistId = json['waitlist_id'];
     createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
     userId = json['user_id'];
     waitlistStatus = json['waitlist_status'];
     bookedSlot = json['booked_slot'];
@@ -50,6 +53,7 @@ class WaitListDataModel {
     data['minimum_wait_time'] = this.minimumWaitTime;
     data['waitlist_id'] = this.waitlistId;
     data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     data['user_id'] = this.userId;
     data['waitlist_status'] = this.waitlistStatus;
     data['booked_slot'] = this.bookedSlot;

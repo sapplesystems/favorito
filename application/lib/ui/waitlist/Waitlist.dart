@@ -144,7 +144,7 @@ class Waitlists extends State<Waitlist> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: AutoSizeText(
-                                                va.specialNotes,
+                                                va?.specialNotes ?? '',
                                                 style: TextStyle(color: myGrey),
                                                 maxLines: 1,
                                                 minFontSize: 16,
@@ -255,16 +255,13 @@ class Waitlists extends State<Waitlist> {
             index: index));
   }
 
-  _callPhone(String phone) async {
-    if (await canLaunch(phone)) {
-      await launch(phone);
-    } else {
-      throw 'Could not Call Phone';
-    }
-  }
+  _callPhone(String phone) async => await canLaunch(phone)
+      ? await launch(phone)
+      : throw 'Could not Call Phone';
 
   UpdateWaitList(String str, int id) async {
-    await WebService.funWaitlistUpdateStatus({"id": id, "status": str},context)
+    await WebService.funWaitlistUpdateStatus(
+            {"waitlist_id": id, "status": str}, context)
         .then((value) {
       print(value.message);
       if (value.status == "success") {
@@ -287,7 +284,7 @@ class Waitlists extends State<Waitlist> {
   }
 
   waitListDelete(int id, int index) {
-    WebService.funWaitlistDelete({"waitlist_id": id},context).then((value) {
+    WebService.funWaitlistDelete({"waitlist_id": id}, context).then((value) {
       setState(() => waitlistData.data.removeAt(index));
     });
   }

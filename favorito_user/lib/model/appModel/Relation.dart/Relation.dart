@@ -10,9 +10,9 @@ class Relation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['is_relation'] = this.isRelation;
-    data['relation_id'] = this.relationId;
-    return data;
+    final Map<String, dynamic> Relation = new Map<String, dynamic>();
+    Relation['is_relation'] = this.isRelation;
+    Relation['relation_id'] = this.relationId;
+    return Relation;
   }
 }

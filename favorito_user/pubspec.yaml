@@ -37,6 +37,7 @@ dependencies:
   google_maps_flutter:
   transparent_image:
   url_launcher:
+  percent_indicator:
   flutter:
     sdk: flutter
 

@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/component/CirculerProgress.dart';
+import 'package:favorito_user/component/Minut20.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
@@ -23,7 +28,10 @@ class _WaitlistState extends State<Waitlist> {
   String btnTxt = waitingJoin;
   ProgressDialog pr;
   WaitListDataModel data = WaitListDataModel();
+  bool waiting = false;
   var fut;
+  Timer t;
+  double per = 0;
   @override
   void initState() {
     fut = APIManager.baseUserWaitlistVerbose(
@@ -32,6 +40,15 @@ class _WaitlistState extends State<Waitlist> {
     WidgetsBinding.instance.addPostFrameCallback((val) {
       getWaitList(false);
     });
+    // t = Timer(Duration(seconds: 10), getWaitList(false));
+    abc();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    t.cancel();
   }
 
   @override
@@ -57,19 +74,22 @@ class _WaitlistState extends State<Waitlist> {
                   print('Error 1:${e.toString()}');
                 }
                 var v = snapshot.data?.data[0];
-                if (data != v) {
-                  data.partiesBeforeYou = v.partiesBeforeYou;
-                  data.businessName = v.businessName;
-                  data.availableTimeSlots = v.availableTimeSlots;
-                  data.minimumWaitTime = v.minimumWaitTime;
-                }
+                // if (data != v && !waiting) {
+                data?.partiesBeforeYou = v.partiesBeforeYou;
+                data?.businessName = v.businessName;
+                data?.availableTimeSlots = v.availableTimeSlots;
+                data?.minimumWaitTime = v.minimumWaitTime ?? '00:00:00';
+                // }
 
                 return Padding(
                   padding: EdgeInsets.all(sm.w(6)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WaitListHeader(title: waitingList),
+                      WaitListHeader(
+                        title: waitingList,
+                        function: () => getWaitList(true),
+                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: sm.w(8), horizontal: sm.w(2.5)),
@@ -95,90 +115,21 @@ class _WaitlistState extends State<Waitlist> {
             padding: EdgeInsets.only(left: sm.w(2)),
             child: ListView(
               children: [
-                Text(
-                  'Availeble slot',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: myGrey,
-                      fontFamily: 'Gilroy-Reguler'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.alarm,
-                      color: myGreyLight,
-                      size: 14,
-                    ),
-                    Text(
-                      data?.availableTimeSlots?.convert24to12() ?? '',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Gilroy-medium',
-                          fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(
-                      width: sm.w(14),
-                    )
-                  ],
-                ),
+                beforeU(
+                    'Availeble slot',
+                    'wclock',
+                    data?.availableTimeSlots?.convert24to12() ??
+                        data.bookedSlot),
                 SizedBox(height: sm.h(6)),
-                Text(
-                  'Parties Before you',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
-                ),
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icon/admin.svg',
-                      height: sm.h(2),
-                      width: sm.w(2),
-                      fit: BoxFit.fill,
-                    ),
-                    Text(
-                      '${data.partiesBeforeYou ?? 0}' ?? '',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'Gilroy-medium',
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
+                Visibility(
+                    visible: waiting,
+                    child: beforeU(
+                        '# in Parties', 'admin', data?.noOfPerson.toString())),
+                Visibility(visible: waiting, child: SizedBox(height: sm.h(6))),
+                beforeU('Parties Before you', 'admin',
+                    data?.partiesBeforeYou.toString()),
                 SizedBox(height: sm.h(6)),
-                Text(
-                  'Waiting time',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
-                ),
-                Row(children: [
-                  SvgPicture.asset(
-                    'assets/icon/clock.svg',
-                    height: sm.h(7),
-                    width: sm.w(4),
-                    fit: BoxFit.fill,
-                  ),
-                  Wrap(
-                    spacing: -10,
-                    runSpacing: 20,
-                    direction: Axis.vertical,
-                    children: [
-                      Text(
-                        '\t${data?.minimumWaitTime?.split(':')[1]}' ?? '',
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontFamily: 'Gilroy-Reguler',
-                        ),
-                      ),
-                      Text(
-                        '\t\tMinutes',
-                        style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 1,
-                          fontFamily: 'Gilroy-Bold',
-                        ),
-                      ),
-                    ],
-                  )
-                ]),
+                waitingTime(),
               ],
             ),
           ),
@@ -187,22 +138,48 @@ class _WaitlistState extends State<Waitlist> {
             width: sm.w(28),
             child: ListView(
               children: [
-                for (int i = 0; i < data?.partiesBeforeYou; i++)
+                for (int i = 0;
+                    i <
+                        (!waiting
+                            ? data?.partiesBeforeYou ?? 0
+                            : (data?.partiesBeforeYou + 1));
+                    i++)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 6),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          (i + 1).toString() ?? '',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: myGrey,
-                            fontFamily: 'Gilroy-Bold',
+                        Container(
+                          height: sm.h(2.4),
+                          width: sm.w(8),
+                          padding: EdgeInsets.only(
+                            left: sm.w(1.2),
+                          ),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                            fit: BoxFit.fitWidth,
+                            image: AssetImage((data.userId != null &&
+                                    i == data?.partiesBeforeYou)
+                                ? "assets/icon/arrowRed.png"
+                                : ''),
+                          )),
+                          child: Text(
+                            (i + 1).toString() ?? '',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: (data.userId != null &&
+                                      i == data?.partiesBeforeYou)
+                                  ? Colors.white
+                                  : myGrey,
+                              fontFamily: 'Gilroy-Bold',
+                            ),
                           ),
                         ),
                         Card(
-                          color: myBackGround2,
+                          color: (data.userId != null &&
+                                  i == data?.partiesBeforeYou)
+                              ? myRed
+                              : myBackGround2,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius:
@@ -212,7 +189,8 @@ class _WaitlistState extends State<Waitlist> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 22),
                             child: SvgPicture.asset(
-                              data.userId != null
+                              (data.userId != null &&
+                                      i == data?.partiesBeforeYou)
                                   ? 'assets/icon/menWhite.svg'
                                   : 'assets/icon/menBlack.svg',
                               height: sm.h(6),
@@ -228,15 +206,14 @@ class _WaitlistState extends State<Waitlist> {
           ),
         ],
       );
+
   titlePart(String name) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           children: [
-            SizedBox(
-              height: sm.h(.4),
-            ),
+            SizedBox(height: sm.h(.4)),
             Text(
               currentWaitlistAt ?? '',
               style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
@@ -265,17 +242,17 @@ class _WaitlistState extends State<Waitlist> {
           child: InkWell(
             onTap: () {
               if (btnTxt == waitingJoin) {
-                widget.data.fun1 = getWaitList;
+                widget?.data?.fun1 = getWaitList;
                 Navigator.of(context)
                     .pushNamed('/joinWaitList', arguments: widget.data);
-              } else {
+              } else if (btnTxt == waitingCancel) {
                 pr.show();
                 APIManager.baseUserWaitlistCancel(
                     {'waitlist_id': data.waitlistId}).then((value) {
                   pr.hide();
                   if (value.status == 'success') Navigator.pop(context);
                 });
-              }
+              } else if (btnTxt == waitingCancel) {}
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -332,19 +309,106 @@ class _WaitlistState extends State<Waitlist> {
         {'business_id': widget.data.businessId}).then((value) {
       if (val) pr?.hide();
       try {
-        data.createdAt = value.data[0].createdAt;
-        data.waitlistId = value.data[0].waitlistId;
-        data.userId = value.data[0].userId;
-        data.waitlistStatus = value.data[0].waitlistStatus;
-        data.noOfPerson = value.data[0].noOfPerson;
-        data.partiesBeforeYou = value.data[0].partiesBeforeYou;
-        data.businessId = widget.data.businessId;
-        btnTxt = data.waitlistId != null ? waitingCancel : waitingJoin;
+        data?.createdAt = value.data[0].createdAt;
+        waiting = true;
+        data?.waitlistId = value.data[0].waitlistId;
+        data?.userId = value.data[0].userId;
+        data.updatedAt = value.data[0].updatedAt;
+        data?.waitlistStatus = value.data[0].waitlistStatus;
+        data?.noOfPerson = value.data[0].noOfPerson;
+        data?.partiesBeforeYou = value.data[0].partiesBeforeYou;
+        DateTime now = new DateTime.now();
+        try {
+          var difference =
+              now.difference((DateTime.parse(data.updatedAt))).inMinutes;
+          var _min = int.parse(data?.minimumWaitTime?.split(':')[1]);
+          if (_min > difference)
+            per = ((((_min - difference) * 100) / _min) / 100);
+          else
+            per = 0.0;
+          setState(() {});
+        } catch (e) {
+          // BotToast.showText(text: e.toString());
+          print('Error:${e.toString()}');
+          per = 0.0;
+        }
+        btnTxt = data?.waitlistStatus == 'rejected'
+            ? waitingCanceled
+            : (data?.waitlistStatus == 'pending')
+                ? waitingCancel
+                : (data?.waitlistStatus == 'accepted')
+                    ? 'waiting'
+                    : waitingJoin;
+        // waitingCancel :
       } catch (e) {
         print('Error: $e');
+        waiting = false;
       } finally {
         setState(() {});
       }
+    });
+  }
+
+  Widget beforeU(String _title, String _icon, String _val) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              _title,
+              style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            SvgPicture.asset(
+              'assets/icon/$_icon.svg',
+              height: sm.h(2),
+              width: sm.w(2),
+              fit: BoxFit.fill,
+            ),
+            Text(
+              ' $_val',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Gilroy-medium',
+                  fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  waitingTime() {
+    print("data.waitlistStatus:${data.waitlistStatus}");
+    var _wait = data?.minimumWaitTime ?? "00:33";
+
+    return Column(
+      children: [
+        Text(
+          'Waiting time',
+          style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
+        ),
+        (waiting && data.waitlistStatus == 'accepted')
+            ? CirculerProgress(minutTxt: '\t${_wait.split(':')[1]}', per: per)
+            : Row(children: [
+                SvgPicture.asset(
+                  'assets/icon/clock.svg',
+                  height: sm.h(7),
+                  width: sm.w(4),
+                  fit: BoxFit.fill,
+                ),
+                minut20(myMinut: '\t${_wait.split(':')[1]}')
+              ]),
+      ],
+    );
+  }
+
+  void abc() {
+    t = Timer.periodic(new Duration(seconds: 10), (timer) {
+      getWaitList(false);
     });
   }
 }
