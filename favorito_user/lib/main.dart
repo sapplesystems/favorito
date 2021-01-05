@@ -1,7 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
-import 'package:favorito_user/ui/Signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';

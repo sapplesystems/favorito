@@ -12,11 +12,12 @@ class service {
 
   static final baseUserBusiness = baseUser + 'business';
   static final baseUserProfile = baseUser + 'profile/';
+  static final baseUserWaitlist = baseUser + 'waitlist/';
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
 
 //function
-  static final register = baseUser + 'register'; //check
-  static final login = baseUser2 + 'login'; //check
+  static final register = baseUser2 + 'register';
+  static final login = baseUser2 + 'login';
   static final businessCarousel = baseUserProfile + 'business-carousel';
   static final getAddress = base + 'user-address/get-address';
   static final getUserImage = base + 'user-profile/user-profile-photo';
@@ -26,4 +27,21 @@ class service {
   static final topRatedBusiness = baseBusinessDashboard + 'get-top-rated';
 
   static final mostPopulerBusiness = baseBusinessDashboard + 'get-most-popular';
+
+  static final baseUserProfileOverview = baseUserProfile + 'business-overview';
+  static final baseUserProfileDetail = baseUserProfile + 'business-detail';
+  static final baseUserProfileBusinessCatalogList =
+      baseUserProfile + 'business-catalog-list';
+
+  static final joblist = base + 'job/list';
+
+  //waitlist
+  static final baseUserWaitlistVerbose = baseUserWaitlist + 'waitlist-verbose';
+  static final baseUserWaitlistSet = baseUserWaitlist + 'set-waitlist';
+  static final baseUserWaitlistGet = baseUserWaitlist + 'get-waitlist';
+  static final baseUserWaitlistCancel = baseUserWaitlist + 'cancel-waitlist';
+
+  //relation
+
+  static final businessRelationGet = baseUserProfile + 'user-business-relation';
 }

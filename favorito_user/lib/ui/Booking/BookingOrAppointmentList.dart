@@ -422,6 +422,6 @@ class _BookingOrAppointmentListState extends State<_BookingOrAppointmentList> {
   }
 
   Widget _popupBodyBooking(SizeManager sm, BookingOrAppointmentListModel data) {
-    return BookTable(1, data);
+    return BookTable(id: '1');
   }
 }

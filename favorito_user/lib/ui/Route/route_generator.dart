@@ -1,6 +1,14 @@
+import 'package:favorito_user/component/Following.dart';
+import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/Signup.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
+import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
+import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
+import 'package:favorito_user/ui/profile/user/profile.dart';
+import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class RouteGenerator {
@@ -19,7 +27,31 @@ class RouteGenerator {
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
 
-        return _errorRoute();
+      case '/profile':
+        return MaterialPageRoute(builder: (_) => Profile());
+
+      case '/profileDetail':
+        return MaterialPageRoute(builder: (_) => ProfileDetail());
+
+      case '/businessProfile':
+        return MaterialPageRoute(
+            builder: (_) => BusinessProfile(businessId: args));
+
+      case '/following':
+        return MaterialPageRoute(builder: (_) => Following());
+
+      case '/waitlist':
+        return MaterialPageRoute(builder: (_) => Waitlist(data: args));
+
+      case '/booking':
+        return MaterialPageRoute(builder: (_) => BookTable(id: args));
+
+      case '/searchResult':
+        return MaterialPageRoute(builder: (_) => SearchResult(args));
+
+      case '/joinWaitList':
+        return MaterialPageRoute(builder: (_) => JoinWaitList(data: args));
+
       default:
         return _errorRoute();
     }
@@ -32,7 +64,7 @@ class RouteGenerator {
           title: Text('Error'),
         ),
         body: Center(
-          child: Text('ERROR'),
+          child: Text('Something Went Wrong'),
         ),
       );
     });

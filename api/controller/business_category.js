@@ -23,6 +23,22 @@ exports.add_business_category = function(req, res, next) {
 };
 
 /*SELECT ALL BUSINESS CATEGORY*/
+// exports.all_business_category = function(req, res, next) {
+//     try {
+//         if (req.body.business_type_id == '' || req.body.business_type_id == 'undefined' || req.body.business_type_id == null) {
+//             return res.status(403).json({ status: 'error', message: 'Business type id required' });
+//         }
+//         var sql = "SELECT id, `category_name` FROM business_categories WHERE business_type_id='" + req.body.type_id + "' and parent_id='0' and is_activated='1' and deleted_at IS NULL";
+//         db.query(sql, function(err, result) {
+//             if (err) {
+//                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+//             }
+//             return res.status(200).json({ status: 'success', message: 'success', data: result });
+//         });
+//     } catch (e) {
+//         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+//     }
+// };
 exports.all_business_category = function(req, res, next) {
     try {
         if (req.body.business_type_id == '' || req.body.business_type_id == 'undefined' || req.body.business_type_id == null) {

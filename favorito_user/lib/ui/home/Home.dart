@@ -1,5 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
+import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
@@ -7,7 +7,6 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
 import 'package:favorito_user/ui/home/usernameAddress.dart';
-import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -30,7 +29,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String _selectedAddress = "selected Address";
-  final List<String> imgList = [];
+
   var _mySearchEditTextController = TextEditingController();
   AddressListModel addressData;
   ProfileImageModel profileImage;
@@ -41,6 +40,11 @@ class _HomeState extends State<Home> {
     super.initState();
     getUserImage();
     getAddress();
+    try {
+      pr?.isShowing() ?? false ? pr?.hide() : "";
+    } catch (e) {
+      print('Error: ${e.toString()}');
+    }
   }
 
   @override
@@ -74,60 +78,29 @@ class _HomeState extends State<Home> {
                         height: sm.h(3),
                         fit: BoxFit.fill,
                       ),
-                      onPressed: () {
-                        getAddress();
-                        getCarousel();
-                      }),
+                      onPressed: () => getAddress()),
                 )
               ],
             ),
           ),
-          Container(
-            height: sm.h(30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CarouselSlider(
-                    options: CarouselOptions(
-                      autoPlay: false,
-                      aspectRatio: 2.0,
-                      enlargeCenterPage: true,
-                    ),
-                    items: imgList
-                        .map(
-                          (item) => Container(
-                            margin: EdgeInsets.all(5.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                item,
-                                height: sm.h(10),
-                                fit: BoxFit.cover,
-                                width: sm.h(90),
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList()),
-              ],
-            ),
-          ),
+          Container(height: sm.h(30), child: myCarousel()),
           Padding(
             padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
             child: EditTextComponent(
               ctrl: _mySearchEditTextController,
-              title: "Search",
+              hint: "Search",
               security: false,
               valid: true,
+              keyboardSet: TextInputType.text,
               prefixIcon: 'search',
+              keyBoardAction: TextInputAction.search,
+              atSubmit: (_val) {
+                Navigator.of(context)
+                    .pushNamed('/searchResult', arguments: _val);
+              },
               prefClick: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        SearchResult(_mySearchEditTextController.text),
-                  ),
-                );
+                Navigator.of(context).pushNamed('/searchResult',
+                    arguments: _mySearchEditTextController.text);
               },
             ),
           ),
@@ -167,11 +140,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           header(sm, "Hot & New Business"),
-          Container(
-            padding: EdgeInsets.only(bottom: sm.h(2)),
-            height: sm.h(26),
-            child: HotAndNewBusiness(),
-          ),
+          HotAndNewBusiness(),
         ],
       ),
     );
@@ -208,18 +177,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void getCarousel() async {
-    pr?.show();
-    await APIManager.carousel(context).then((value) {
-      pr?.hide();
-      if (value.status == 'success') {
-        if (value.data.length > 0) imgList.clear();
-        for (var _va in value.data) imgList.add(_va.photo);
-        setState(() {});
-      }
-    });
-  }
-
   void getAddress() async {
     pr?.show();
     await APIManager.getAddress(context).then((value) {
@@ -242,8 +199,6 @@ class _HomeState extends State<Home> {
       pr?.hide();
       if (value.status == 'success') {
         profileImage = value;
-
-        getCarousel();
       }
     });
   }

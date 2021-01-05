@@ -12,12 +12,14 @@ class EditTextComponent extends StatefulWidget {
   bool valid;
   bool isEnabled;
   TextInputType keyboardSet;
+  TextInputAction keyBoardAction;
   TextEditingController ctrl;
-  Function myOnChanged;
   RegExp myregex;
-  Function prefClick;
   String prefixIcon;
   FilteringTextInputFormatter formate;
+  Function prefClick;
+  Function myOnChanged;
+  Function atSubmit;
   EditTextComponent(
       {this.title,
       this.security,
@@ -26,13 +28,15 @@ class EditTextComponent extends StatefulWidget {
       this.formate,
       this.maxlen,
       this.keyboardSet,
+      this.keyBoardAction,
       this.myregex,
       this.valid,
       this.isEnabled,
       this.maxLines,
       this.myOnChanged,
       this.prefClick,
-      this.prefixIcon});
+      this.prefixIcon,
+      this.atSubmit});
   @override
   _EditTextComponentState createState() => _EditTextComponentState();
 }
@@ -91,7 +95,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
                                       },
                                     )
                                   : null,
-          labelText: widget.title ?? "Write here",
+          labelText: widget.title ?? '',
           counterText: "",
           hintText: widget.hint,
           contentPadding: EdgeInsets.only(left: 16.0),
@@ -101,12 +105,14 @@ class _EditTextComponentState extends State<EditTextComponent> {
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,
+        textInputAction: widget.keyBoardAction,
         style: TextStyle(
           fontFamily: "Poppins",
         ),
         maxLines: widget.maxLines ?? 1,
         onChanged: widget.myOnChanged,
         enabled: widget.isEnabled,
+        onFieldSubmitted: widget.atSubmit,
       ),
     );
   }

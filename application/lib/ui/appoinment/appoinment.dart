@@ -207,91 +207,92 @@ class _Appoinment extends State<Appoinment> {
                                   BotToast.showText(text: "UnderProcess");
                                 },
                                 child: Card(
-                                    elevation: 2,
-                                    shape: rrb,
-                                    borderOnForeground: true,
-                                    child: InkWell(
-                                      onTap: () {
-                                        // showPopup(context, _popupBody(va));
-                                      },
-                                      child: Column(
-                                        children: [
-                                          ListTile(
-                                            title: Text(
-                                              "${va.createdDate} | ${blm.slots[selectedSlot].slotStart} - ${blm.slots[selectedSlot].slotEnd}",
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.grey),
+                                  elevation: 2,
+                                  shape: rrb,
+                                  borderOnForeground: true,
+                                  child: InkWell(
+                                    onTap: () {
+                                      // showPopup(context, _popupBody(va));
+                                    },
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          title: Text(
+                                            "${va.createdDate} | ${blm.slots[selectedSlot].slotStart} - ${blm.slots[selectedSlot].slotEnd}",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.grey),
+                                          ),
+                                          trailing: InkWell(
+                                            onTap: () {
+                                              var _data = blm
+                                                  .slots[selectedSlot]
+                                                  .slotData[_index];
+                                              var _i = _index;
+                                              Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ManualAppoinment(
+                                                                  data: va,
+                                                                  start: blm
+                                                                      .slots[
+                                                                          selectedSlot]
+                                                                      .slotStart,
+                                                                  end: blm
+                                                                      .slots[
+                                                                          selectedSlot]
+                                                                      .slotEnd)))
+                                                  .whenComplete(
+                                                      () => getPageData());
+                                            },
+                                            child: Icon(
+                                              Icons.edit,
+                                              color: myRed,
+                                              size: 20,
                                             ),
-                                            trailing: InkWell(
-                                              onTap: () {
-                                                var _data = blm
-                                                    .slots[selectedSlot]
-                                                    .slotData[_index];
-                                                var _i = _index;
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ManualAppoinment(
-                                                                data: va,
-                                                                start: blm
-                                                                    .slots[
-                                                                        selectedSlot]
-                                                                    .slotStart,
-                                                                end: blm
-                                                                    .slots[
-                                                                        selectedSlot]
-                                                                    .slotEnd))).whenComplete(
-                                                    () => getPageData());
-                                              },
+                                          ),
+                                        ),
+                                        ListTile(
+                                          title: Text(
+                                            va.name,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black),
+                                          ),
+                                          subtitle: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12),
+                                            child: AutoSizeText(
+                                              va.specialNotes,
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                              minFontSize: 12,
+                                              maxFontSize: 14,
+                                            ),
+                                          ),
+                                          trailing: InkWell(
+                                            onTap: () =>
+                                                launch("tel://${va.contact}"),
+                                            child: Container(
+                                              decoration: bd1Red,
+                                              padding: EdgeInsets.all(6),
+                                              margin:
+                                                  EdgeInsets.only(right: 10),
                                               child: Icon(
-                                                Icons.edit,
-                                                color: myRed,
-                                                size: 20,
+                                                Icons.call,
+                                                color: Colors.white,
+                                                size: 26,
                                               ),
                                             ),
                                           ),
-                                          ListTile(
-                                            title: Text(
-                                              va.name,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                            subtitle: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 12),
-                                              child: AutoSizeText(
-                                                va.specialNotes,
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                                minFontSize: 12,
-                                                maxFontSize: 14,
-                                              ),
-                                            ),
-                                            trailing: InkWell(
-                                              onTap: () =>
-                                                  launch("tel://${va.contact}"),
-                                              child: Container(
-                                                decoration: bd1Red,
-                                                padding: EdgeInsets.all(6),
-                                                margin:
-                                                    EdgeInsets.only(right: 10),
-                                                child: Icon(
-                                                  Icons.call,
-                                                  color: Colors.white,
-                                                  size: 26,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               );
                             }),
                       ),

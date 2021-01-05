@@ -262,9 +262,11 @@ class WebService {
 
   static Future<loginModel> funGetLogin(Map _map, BuildContext context) async {
     loginModel _data = loginModel();
-    response = await dio
-        .post(serviceFunction.funLogin, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    print('Login Request : ${_data.toString()}');
+    response =
+            await dio.post(serviceFunction.funLogin, data: _map, options: opt)
+        // .catchError((onError) => onErrorCall(onError, context))
+        ;
     _data = loginModel.fromJson(convert.json.decode(response.toString()));
     Prefs.setToken(_data.token.toString().trim());
     return _data.status == "success" ? _data : _data;
@@ -738,6 +740,9 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BusinessProfileModel _returnData = BusinessProfileModel();
+    print(
+        "BusinessProfile request url: ${serviceFunction.funGetBusinessProfileData}");
+    print("token: $token");
     response = await dio
         .post(serviceFunction.funGetBusinessProfileData,
             data: null, options: _opt)

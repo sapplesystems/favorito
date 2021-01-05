@@ -1,6 +1,5 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
@@ -16,7 +15,7 @@ class TopRated extends StatefulWidget {
 }
 
 class _TopRatedState extends State<TopRated> {
-  List<TrendingBusinessData> data;
+  List<BusinessProfileData> data;
   var br = BorderRadius.all(Radius.circular(12));
   @override
   Widget build(BuildContext context) {
@@ -41,18 +40,24 @@ class _TopRatedState extends State<TopRated> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: br,
-                          ),
-                          elevation: 10,
-                          child: ClipRRect(
-                            borderRadius: br,
-                            child: Image.network(
-                              data[index].photo,
-                              height: widget.sm.h(20),
-                              fit: BoxFit.cover,
-                              width: widget.sm.w(28),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/businessProfile',
+                                arguments: data[index].businessId);
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: br,
+                            ),
+                            elevation: 10,
+                            child: ClipRRect(
+                              borderRadius: br,
+                              child: Image.network(
+                                data[index].photo,
+                                height: widget.sm.h(20),
+                                fit: BoxFit.cover,
+                                width: widget.sm.w(28),
+                              ),
                             ),
                           ),
                         ),

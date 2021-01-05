@@ -39,6 +39,46 @@ exports.all_business_reviewlist = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+// exports.all_business_reviewlist = function(req, res, next) {
+//     try {
+//         var business_id = req.userdata.business_id;
+//         if (req.body.page_size == null || req.body.page_size == undefined || req.body.page_size == '' || req.body.page_size == 0 || req.body.page_size == 1) {
+//             var data_from = 0;
+//         } else {
+//             var num = parseInt(req.body.page_size.trim());
+//             var data_from = (num - 1) * 8;
+//         }
+
+//         if (req.body.review_id != '' && req.body.review_id != undefined && req.body.review_id != null) {
+//             var sql = "SELECT b_r.id, u.full_name,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
+//             DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
+//             FROM business_reviews as b_r\n\
+//             JOIN users as u ON u.id = b_r.user_id  \n\
+//             JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
+//             WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 AND b_r.id = '" + req.body.review_id + "'  ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
+//         } else {
+//             var sql = "SELECT b_r.id, u.full_name,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
+//             DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
+//             FROM business_reviews as b_r\n\
+//             JOIN users as u ON u.id = b_r.user_id  \n\
+//             JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
+//             WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
+//         }
+//         db.query(sql, function(err, result) {
+//             if (err) {
+//                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
+//             }
+//             if (result.length > 0) {
+//                 return res.status(200).json({ status: 'success', message: 'success', data: result });
+//             } else {
+//                 return res.status(200).json({ status: 'success', message: 'NO Data Found', data: [] });
+//             }
+//         });
+//     } catch (e) {
+//         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+//     }
+// };
+
 exports.get_review_with_replies = function(req, res, next) {
     try {
         var user_id = null;
@@ -196,6 +236,7 @@ exports.run_query = (sql, param = false) => {
         return new Promise((resolve, reject) => {
             db.query(sql, param, (error, result) => {
                 if (error) {
+                    console.log(error)
                     reject(error);
                 } else {
                     resolve(result);

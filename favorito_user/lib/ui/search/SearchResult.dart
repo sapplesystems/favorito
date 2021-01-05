@@ -280,7 +280,7 @@ class _SearchResultState extends State<_SearchResult> {
                       : Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BookTable(0, null)));
+                              builder: (context) => BookTable(id: '0')));
                 },
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Center(

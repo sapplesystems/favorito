@@ -1,5 +1,5 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
@@ -13,11 +13,10 @@ class MostPopular extends StatefulWidget {
 }
 
 class _mostPopularState extends State<MostPopular> {
-  List<TrendingBusinessData> dataList;
+  List<BusinessProfileData> dataList;
   SizeManager sm;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -43,18 +42,25 @@ class _mostPopularState extends State<MostPopular> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/businessProfile',
+                                arguments: dataList[index].businessId);
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            elevation: 10,
+                            child: ClipRRect(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12))),
-                          elevation: 10,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            child: Image.network(
-                              dataList[index].photo,
-                              height: sm.h(16),
-                              fit: BoxFit.cover,
-                              width: sm.w(34),
+                                  BorderRadius.all(Radius.circular(12)),
+                              child: Image.network(
+                                dataList[index].photo,
+                                height: sm.h(16),
+                                fit: BoxFit.cover,
+                                width: sm.w(34),
+                              ),
                             ),
                           ),
                         ),
@@ -67,7 +73,9 @@ class _mostPopularState extends State<MostPopular> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: ServicesOfBusiness(
-                              data: dataList[index].subCategory),
+                            data: dataList[index].subCategory,
+                            sm: sm,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),

@@ -41,7 +41,7 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
-    decideit();
+    // decideit();
     SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Container(

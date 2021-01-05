@@ -1,9 +1,9 @@
-import 'package:favorito_user/model/appModel/search/TrendingBusinessData.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 
 class TrendingBusinessModel {
   String status;
   String message;
-  List<TrendingBusinessData> data;
+  List<BusinessProfileData> data;
 
   TrendingBusinessModel({this.status, this.message, this.data});
 
@@ -11,9 +11,9 @@ class TrendingBusinessModel {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<TrendingBusinessData>();
+      data = new List<BusinessProfileData>();
       json['data'].forEach((v) {
-        data.add(new TrendingBusinessData.fromJson(v));
+        data.add(new BusinessProfileData.fromJson(v));
       });
     }
   }

@@ -11,13 +11,13 @@ const mkdirp = require('mkdirp');
 /*to upload the media use multer: start here*/
 var multer = require('multer');
 var storage_business_profile = multer.diskStorage({
-    destination: function(req, file, cb) {
-        mkdirp.sync('./public/uploads/');
-        cb(null, './public/uploads/');
-    },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
+  destination: function (req, file, cb) {
+    mkdirp.sync('./public/uploads/');
+    cb(null, './public/uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
 var upload_business_profile = multer({ storage: storage_business_profile });
 /*to upload the media use multer: end here*/

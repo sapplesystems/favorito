@@ -44,4 +44,11 @@ extension StringExtension on String {
     }
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }
+
+  String convert24to12() {
+    int hh = int.parse(this.substring(0, 2));
+    String turn = 12 > hh ? 'am' : 'pm';
+    print("HH:${hh.toString()}${turn.toLowerCase()}");
+    return "${hh > 12 ? hh - 12 : hh} $turn";
+  }
 }

@@ -2,7 +2,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Signup.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
