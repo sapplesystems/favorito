@@ -166,24 +166,27 @@ exports.get_setting = function(req, res, next) {
 exports.updateWaitlistStatus = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
-            return res.status(403).json({ status: 'error', message: 'Waitlist Id Not Found.' });
+        if (req.body.waitlist_id == '' || req.body.waitlist_id == 'undefined' || req.body.waitlist_id == null) {
+            return res.status(403).json({ status: 'error', message: 'waitlist_id Not Found.' });
         } else if (req.body.status == '' || req.body.status == 'undefined' || req.body.status == null) {
             return res.status(403).json({ status: 'error', message: 'Waitlist Status Not Found' });
         }
-        var waitlist_id = req.body.id;
 
         var update_columns = " updated_at=now() ";
 
         if (req.body.status != '' && req.body.status != 'undefined' && req.body.status != null) {
             if (req.body.status == 'accepted' || req.body.status == 'rejected' || req.body.status == 'pending') {
                 update_columns += ", waitlist_status='" + req.body.status + "' ";
-                var sql = "UPDATE business_waitlist SET " + update_columns + " WHERE id='" + waitlist_id + "' AND business_id='" + business_id + "'";
+                var sql = "UPDATE business_waitlist SET " + update_columns + " WHERE id='" + req.body.waitlist_id + "'";
                 db.query(sql, function(err, result) {
                     if (err) {
                         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                     }
-                    return res.status(200).json({ status: 'success', message: 'Waitlist updated successfully.' });
+                    if (result.affectedRows > 0) {
+                        return res.status(200).json({ status: 'success', message: 'Waitlist updated successfully.' });
+                    } else {
+                        return res.status(200).json({ status: 'success', message: 'Waitlist has not been updated' });
+                    }
                 });
             } else {
                 return res.status(200).json({ status: 'error', message: 'Please Send Correct Status' });

@@ -6,7 +6,11 @@ var UserBookingController = require('../../controller/user/user_booking_controll
 
 // route for get booking for user from user_id
 // requre user_id
+
 router.post('/get-booking-appointment', CheckAuth, UserBookingController.getBookingAppointment);
+
+//get business booking verbose api
+router.post('/get-booking-verbose', CheckAuth, UserBookingController.getBookingVerbose);
 
 // setting the booking order for the user booking
 router.post('/set-booking-appointment', CheckAuth, UserBookingController.setBookingAppointment)

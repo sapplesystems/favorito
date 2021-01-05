@@ -34,11 +34,13 @@ router.post('/user-all-photo', CheckAuth, UserProfileController.userAllPhoto);
 router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 
 // Relation apis
-router.post('/set-relation', CheckAuth, UserProfileController.setRelation);
+router.post('/user-business-relation', CheckAuth, UserProfileController.userBusinessRelation);
 // end relation by relation_id
 router.post('/end-relation', CheckAuth, UserProfileController.endRelation);
 // get all relation by the relation_type
 router.post('/get-all-relation', CheckAuth, UserProfileController.getAllRelation);
+
+router.post('/get-distance', CheckAuth, UserProfilBusinessOverview.getDistance);
 
 
 

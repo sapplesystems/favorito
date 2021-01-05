@@ -60,6 +60,10 @@ exports.searchByName = async function(req, res, next) {
         var day = weekday[d.getDay()].substring(0, 3);
         if (req.body.keyword == null || req.body.keyword == undefined || req.body.keyword == '') {
             var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
+
+            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r   ON b_m.business_id = b_r.business_id  WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
+
+
         } else {
             var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
         }
@@ -84,6 +88,18 @@ exports.searchByName = async function(req, res, next) {
                 final_data.push(data)
                 callback();
             });
+
+            // WORK IN PROGRESS START
+            // db.query(`SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attributes_master as b_a_m ON b_a_m.id = b_a.attributes_id WHERE b_a.business_id= '${data.business_id}'`, function(error, results2, filelds) {
+            //     if (error) {
+            //         return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
+            //     }
+            //     data.attributes = results2
+            //     final_data.push(data)
+            //     callback();
+            // });
+            // WORK IN PROGRESS END
+
         }, function(err, results) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
@@ -92,7 +108,9 @@ exports.searchByName = async function(req, res, next) {
             // adding the attribute to the business
 
             // sql = "SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attribute "
-
+            if (final_data == '') {
+                return res.status(200).send({ status: 'success', message: 'Could not find such business', data: [] });
+            }
             return res.status(200).send({ status: 'success', message: 'success', data: final_data });
         });
     } catch (error) {
