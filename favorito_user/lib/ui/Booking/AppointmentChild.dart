@@ -1,7 +1,7 @@
 import 'package:favorito_user/component/PopupContent.dart';
 import 'package:favorito_user/component/PopupLayout.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointmentListModel.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/ui/Booking/NewAppointment.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 

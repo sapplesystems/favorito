@@ -9,6 +9,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import '../../utils/MyColors.dart';
+import '../../utils/Extentions.dart';
 
 class BookingOrAppointmentList extends StatefulWidget {
   String buId;
@@ -24,7 +25,7 @@ class _BookingOrAppointmentListState extends State<BookingOrAppointmentList> {
   List<BookingOrAppointmentListModel> inputDataList = [];
   String selectedTab = 'New';
   SizeManager sm;
-  bool isAppointment;
+  bool isAppointment = false;
   @override
   void initState() {
     super.initState();
@@ -33,45 +34,44 @@ class _BookingOrAppointmentListState extends State<BookingOrAppointmentList> {
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: myBackGround,
-            body: Padding(
-              padding: EdgeInsets.all(sm.w(4)),
-              child: Column(
-                children: [
-                  WaitListHeader(title: "Bookings/Appointments"),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: sm.h(2)),
-                    width: sm.w(45),
-                    child: Card(
-                      elevation: 8,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () => {setState(() => selectedTab = 'New')},
-                            child: NewHistory('New'),
-                          ),
-                          InkWell(
-                            onTap: () =>
-                                {setState(() => selectedTab = 'History')},
-                            child: NewHistory('History'),
-                          ),
-                        ],
+    return Scaffold(
+        backgroundColor: myBackGround,
+        body: Padding(
+          padding: EdgeInsets.only(top: sm.w(1), left: sm.w(3), right: sm.w(3)),
+          child: Column(
+            children: [
+              WaitListHeader(title: "Bookings/Appointments"),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: sm.h(2)),
+                width: sm.w(45),
+                child: Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () => {setState(() => selectedTab = 'New')},
+                        child: NewHistory('New'),
                       ),
-                    ),
+                      InkWell(
+                        onTap: () => {setState(() => selectedTab = 'History')},
+                        child: NewHistory('History'),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: isAppointment ? AppointmentChild() : BookingChild(),
-                  )
-                ],
+                ),
               ),
-            )));
+              Container(
+                height: sm.h(78.6),
+                child: isAppointment
+                    ? AppointmentChild()
+                    : BookingChild(id: widget.buId),
+              )
+            ],
+          ),
+        )).safe();
   }
 
   showPopup(BuildContext context, Widget widget, String title,

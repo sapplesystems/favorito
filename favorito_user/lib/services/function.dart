@@ -8,11 +8,12 @@ class service {
   static final baseUser2 = base + 'user/';
   static final baseBusiness2 = base + 'business/';
 
-  //businessUser
+  //User+switch
 
   static final baseUserBusiness = baseUser + 'business';
   static final baseUserProfile = baseUser + 'profile/';
   static final baseUserWaitlist = baseUser + 'waitlist/';
+  static final baseUserBooking = baseUser + 'booking/';
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
 
 //function
@@ -42,6 +43,8 @@ class service {
   static final baseUserWaitlistCancel = baseUserWaitlist + 'cancel-waitlist';
 
   //relation
-
   static final businessRelationGet = baseUserProfile + 'user-business-relation';
+
+  //booking
+  static final baseUserBookingList = baseUserBooking + 'get-book-table';
 }

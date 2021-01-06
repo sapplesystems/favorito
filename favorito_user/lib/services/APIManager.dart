@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
@@ -25,7 +26,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class APIManager {
   static Response response;
-  static Dio dio = new Dio();
+  static Dio dio = Dio();
   service fn = service();
   static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
 
@@ -323,5 +324,22 @@ class APIManager {
         await dio.post(service.businessRelationGet, data: _map, options: opt);
     print("service.businessRelationGet : ${response.toString}");
     return RelationBase.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //booking
+  static Future<BookingOrAppointmentListModel> baseUserBookingList(
+      Map _map) async {
+    String token = await Prefs.token;
+    print('_map : ${_map.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserBookingList : ${service.baseUserBookingList}");
+
+    response =
+        await dio.post(service.baseUserBookingList, data: _map, options: opt);
+    print("service.baseUserBookingList : ${response.toString}");
+    return BookingOrAppointmentListModel.fromJson(
+        convert.jsonDecode(response.toString()));
   }
 }
