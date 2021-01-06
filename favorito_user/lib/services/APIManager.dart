@@ -39,13 +39,14 @@ class APIManager {
   }
 
   static Future<loginModel> login(Map _map) async {
-    print("responseData1:${_map.toString()}");
+    print("RequestData1:${_map.toString()}");
+    print("Login Request Url:${service.login}");
     try {
       response = await dio.post(service.login, data: _map, options: opt);
     } catch (e) {
       BotToast.showText(text: e.toString());
     }
-    print("Request URL:${service.register}");
+    print("Login Request Url:${service.login}");
     print("responseData1:${response.toString()}");
     return loginModel.fromJson(convert.json.decode(response.toString()));
   }

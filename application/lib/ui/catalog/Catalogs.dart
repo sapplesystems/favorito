@@ -18,7 +18,6 @@ class _CatalogState extends State<Catalogs> {
 
   @override
   void initState() {
-    getPageData();
     super.initState();
   }
 
@@ -41,6 +40,7 @@ class _CatalogState extends State<Catalogs> {
             "Catalogs",
             style: TextStyle(color: Colors.black),
           ),
+          centerTitle: true,
           actions: [
             IconButton(
               icon: Icon(Icons.add, color: Colors.black),
@@ -49,142 +49,114 @@ class _CatalogState extends State<Catalogs> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => NewCatlog(null)))
-                    .whenComplete(() => getPageData());
+                    .whenComplete(() {
+                  setState(() {});
+                });
               },
             )
           ],
         ),
-        body: FutureBuilder<CatlogListModel>(
-          future: WebService.funGetCatalogs(context),
-          builder:
-              (BuildContext context, AsyncSnapshot<CatlogListModel> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: Text('Please wait its loading...'));
-            else {
-              if (snapshot.hasError)
-                return Center(child: Text('Error: ${snapshot.error}'));
-              else {
-                _catalogListdata = snapshot.data;
-                return Container(
-                  decoration: BoxDecoration(
-                    color: myBackGround,
-                  ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: sm.scaledHeight(75),
-                          margin: EdgeInsets.only(
-                              left: 16.0, right: 16.0, bottom: 32.0),
-                          child: ListView.builder(
-                              itemCount: _catalogListdata == null
-                                  ? 0
-                                  : _catalogListdata.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => NewCatlog(
-                                                  _catalogListdata
-                                                      .data[index])))
-                                      .whenComplete(() => getPageData()),
-                                  child: Card(
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0))),
-                                    child: Container(
-                                        height: sm.scaledHeight(10),
-                                        width: sm.scaledWidth(80),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border:
-                                                Border.all(color: Colors.white),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20.0))),
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 2.0),
-                                        child: Center(
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                  child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 16.0),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  child:
-                                                      FadeInImage.memoryNetwork(
-                                                    placeholder:
-                                                        kTransparentImage,
-                                                    image: _catalogListdata
-                                                                .data[index]
-                                                                .photos ==
-                                                            null
-                                                        ? "https://source.unsplash.com/random/400*400"
-                                                        : _catalogListdata
-                                                            .data[index].photos
-                                                            .split(",")[0],
-                                                    width: sm.scaledWidth(20),
-                                                  ),
-                                                ),
-                                              )),
-                                              Expanded(
-                                                  flex: 3,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 4.0),
-                                                    child: Text(
-                                                      _catalogListdata
-                                                              .data[index]
-                                                              .catalogTitle ??
-                                                          "",
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                flex: 1,
-                                                child: SvgPicture.asset(
-                                                    'assets/icon/moveToNext.svg'),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                  ),
-                                );
-                              }),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            width: sm.scaledWidth(50),
-                            child: roundedButton(
-                              clicker: () {
-                                Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                NewCatlog(null)))
-                                    .whenComplete(() => getPageData());
-                              },
-                              clr: Colors.red,
-                              title: "Create New",
-                            ),
-                          ),
-                        ),
-                      ]),
-                );
-              }
-            }
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await WebService.funGetCatalogs(context)
+                .then((value) => setState(() => _catalogListdata = value));
           },
+          child: FutureBuilder<CatlogListModel>(
+            future: WebService.funGetCatalogs(context),
+            builder: (BuildContext context,
+                AsyncSnapshot<CatlogListModel> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(child: Text('Please wait its loading...'));
+              else {
+                if (snapshot.hasError)
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                else {
+                  _catalogListdata = snapshot.data;
+                  return Container(
+                    // height: sm.scaledHeight(90),
+                    margin:
+                        EdgeInsets.only(left: 16.0, right: 16.0, bottom: 2.0),
+                    child: ListView.builder(
+                        itemCount: _catalogListdata == null
+                            ? 0
+                            : _catalogListdata.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NewCatlog(
+                                            _catalogListdata.data[index])))
+                                .whenComplete(() {
+                              setState(() {});
+                            }),
+                            child: Card(
+                              // elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0))),
+                              child: Container(
+                                  height: sm.scaledHeight(10),
+                                  width: sm.scaledWidth(80),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0))),
+                                  margin: EdgeInsets.symmetric(vertical: 2.0),
+                                  child: Center(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 60,
+                                          width: 60,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 8),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    _catalogListdata.data[index]
+                                                            .photos =
+                                                        _catalogListdata
+                                                                .data[index]
+                                                                .photos
+                                                                .split(
+                                                                    ",")[0] ??
+                                                            ''),
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        Expanded(
+                                            flex: 3,
+                                            child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 4.0),
+                                              child: Text(
+                                                _catalogListdata.data[index]
+                                                        .catalogTitle ??
+                                                    "",
+                                              ),
+                                            )),
+                                        Expanded(
+                                          flex: 1,
+                                          child: SvgPicture.asset(
+                                              'assets/icon/moveToNext.svg'),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ),
+                          );
+                        }),
+                  );
+                }
+              }
+            },
+          ),
         ));
-  }
-
-  void getPageData() {
-    WebService.funGetCatalogs(context)
-        .then((value) => setState(() => _catalogListdata = value));
   }
 }

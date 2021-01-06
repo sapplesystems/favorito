@@ -9,36 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter/services.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
-class Login extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicTheme(
-      theme: NeumorphicThemeData(
-          defaultTextColor: myRed,
-          accentColor: Colors.grey,
-          variantColor: Colors.black38,
-          depth: 8,
-          intensity: 0.65),
-      themeMode: ThemeMode.system,
-      child: Material(
-        child: NeumorphicBackground(
-          child: _Login(),
-        ),
-      ),
-    );
-  }
-}
-
-class _Login extends StatefulWidget {
+class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<_Login> {
+class _LoginState extends State<Login> {
   List controller = [for (int i = 0; i < 2; i++) TextEditingController()];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<String> title = ['Email', 'Password'];
   List<String> prefix = ['mail', 'password'];
+  ProgressDialog pr;
   @override
   void initState() {
     super.initState();
@@ -49,28 +31,32 @@ class _LoginState extends State<_Login> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    return Container(
-      height: sm.h(100),
-      width: sm.w(100),
-      padding: EdgeInsets.symmetric(horizontal: sm.w(10), vertical: sm.h(5)),
-      decoration: BoxDecoration(color: myBackGround),
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          SvgPicture.asset(
-            'assets/icon/login_image.svg',
-            height: sm.h(30),
-            fit: BoxFit.fill,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: sm.h(2)),
-            child: Text(
-              "Welcome Back.",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+    pr = ProgressDialog(context);
+
+    pr.style(message: 'Fetching Data, please wait');
+
+    return Scaffold(
+      backgroundColor: Color(0xffedf0f5),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: sm.w(10), vertical: sm.h(5)),
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            SvgPicture.asset(
+              'assets/icon/login_image.svg',
+              height: sm.h(30),
+              fit: BoxFit.fill,
             ),
-          ),
-          Container(
-            child: Builder(
+            SizedBox(height: sm.h(2)),
+            Text(
+              "Welcome Back.",
+              style: TextStyle(
+                  fontFamily: 'GolRoy-Regular',
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.4,
+                  fontSize: 28),
+            ),
+            Builder(
               builder: (context) => Form(
                 key: _formKey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -80,7 +66,7 @@ class _LoginState extends State<_Login> {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: EditTextComponent(
                         ctrl: controller[i],
-                        title: title[i],
+                        hint: title[i],
                         security: i == 1 ? true : false,
                         valid: true,
                         maxLines: 1,
@@ -96,69 +82,75 @@ class _LoginState extends State<_Login> {
                 ]),
               ),
             ),
-          ),
-          Center(
-            child: Padding(
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: sm.h(6)),
+                child: Text(
+                  "Dont have account yet?",
+                  style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: sm.h(1)),
+                child: InkWell(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Signup())),
+                  child: Text(
+                    "Sign Up",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: myRed),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
               padding: EdgeInsets.only(top: sm.h(6)),
-              child: Text(
-                "Dont have account yet?",
-                style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
-              ),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: sm.h(1)),
-              child: InkWell(
-                onTap: () => Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Signup())),
-                child: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18, color: myRed),
+              child: NeumorphicButton(
+                style: NeumorphicStyle(
+                    // shape: NeumorphicShape.concave,
+                    depth: 11,
+                    intensity: 40,
+                    surfaceIntensity: -.4,
+                    // lightSource: LightSource.topLeft,
+                    color: Color(0xffedf0f5),
+                    boxShape: NeumorphicBoxShape.roundRect(
+                        BorderRadius.all(Radius.circular(24.0)))),
+                margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    pr?.show();
+                    Map _map = {
+                      "username": controller[0].text,
+                      "password": controller[1].text
+                    };
+                    APIManager.login(_map).then((value) {
+                      pr?.hide();
+                      if (value.status == "success") {
+                        Prefs.setPOSTEL(
+                            int.parse(value.data.postel ?? "201306"));
+                        Prefs.setToken(value.token);
+                        print("token : ${value.token}");
+                        Navigator.pop(context);
+                        Navigator.of(context).pushNamed('/navbar');
+                      }
+                    });
+                  }
+                },
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Center(
+                  child: Text(
+                    "Login",
+                    style: TextStyle(fontWeight: FontWeight.w400, color: myRed),
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: sm.h(6)),
-            child: NeumorphicButton(
-              style: NeumorphicStyle(
-                  shape: NeumorphicShape.convex,
-                  depth: 4,
-                  lightSource: LightSource.topLeft,
-                  color: myButtonBackground,
-                  boxShape: NeumorphicBoxShape.roundRect(
-                      BorderRadius.all(Radius.circular(24.0)))),
-              margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  Map _map = {
-                    "username": controller[0].text,
-                    "password": controller[1].text
-                  };
-                  APIManager.login(_map).then((value) {
-                    if (value.status == "success") {
-                      Prefs.setPOSTEL(int.parse(value.data.postel ?? "201306"));
-                      Prefs.setToken(value.token);
-                      print("token : ${value.token}");
-                      BotToast.showText(text: value.message);
-                      Navigator.pop(context);
-                      Navigator.of(context).pushNamed('/navbar');
-                    }
-                  });
-                }
-              },
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Center(
-                child: Text(
-                  "Login",
-                  style: TextStyle(fontWeight: FontWeight.w400, color: myRed),
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

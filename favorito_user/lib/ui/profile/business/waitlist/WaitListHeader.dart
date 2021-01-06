@@ -29,7 +29,7 @@ class _WaitListHeaderState extends State<WaitListHeader> {
           child: Padding(
             padding: EdgeInsets.only(top: sm.h(0.4)),
             child: Text(widget.title,
-                style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Bold')),
+                style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Reguler')),
           ),
         ),
         InkWell(

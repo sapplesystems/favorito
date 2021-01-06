@@ -272,15 +272,15 @@ class _SearchResultState extends State<_SearchResult> {
                         BorderRadius.all(Radius.circular(24.0)))),
                 margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                 onPressed: () {
-                  identifier == 1
-                      ? Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NewAppointment(0, null)))
-                      : Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BookTable(id: '0')));
+                  // identifier == 1
+                  //     ? Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => NewAppointment(0, null)))
+                  // : Navigator.push(
+                  //     context,
+                  // MaterialPageRoute(
+                  //     builder: (context) => BookTable(businessid: '0')));
                 },
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Center(
