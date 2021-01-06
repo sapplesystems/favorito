@@ -1,6 +1,6 @@
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
-
+var distance = require('google-distance-matrix');
 exports.businessDetail = async function(req, res, next) {
     await exports.getBusinessDetail(req, res)
 }
@@ -81,7 +81,12 @@ exports.getBusinessOverview = async function(req, res) {
         // location, by_appointment_only, working_hours, website,short_description,business_status \n\
         // FROM business_master WHERE business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
 
+        var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code, IFNULL(b_m.location,'0,0') as location,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_m.website, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, b_m.address1 as address1,b_m.address2 as address2,b_m.address3 as address3,b_m.short_description as short_description,b_i.payment_method as payment_method, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations as b_i LEFT JOIN business_ratings  AS b_r ON b_m.business_id = b_r.business_id AND  b_i.business_id = b_m.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
 
+        sql_business_hours = `SELECT start_hours, end_hours FROM business_hours WHERE business_id ='${business_id}' AND day = '${get_day_name()}'`
+
+<<<<<<< HEAD
+=======
         var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code, IFNULL(b_m.location,'0,0') as location,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_m.website, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, b_m.address1 as address1,b_m.address2 as address2,b_m.address3 as address3,b_m.short_description as short_description,b_i.payment_method as payment_method, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations as b_i LEFT JOIN business_ratings  AS b_r ON b_m.business_id = b_r.business_id AND  b_i.business_id = b_m.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
 
 
@@ -89,6 +94,7 @@ exports.getBusinessOverview = async function(req, res) {
 
         sql_business_hours = `SELECT start_hours, end_hours FROM business_hours WHERE business_id ='${business_id}' AND day = '${get_day_name()}'`
 
+>>>>>>> a987c6b2aff3923a7c0ff4d561edd18bffd44cfb
         result_business_hours = await exports.run_query(sql_business_hours)
             // return res.send(result_business_hours[0])
 
@@ -190,6 +196,47 @@ exports.getAllHoursBusiness = async function(req, res, next) {
     } catch (error) {
         return res.status(400).json({ status: 'error', message: 'Something went wrong', error });
     }
+}
+
+exports.getDistance = async(req, res, next) => {
+    // var origins = ['San Francisco CA', '40.7421,-73.9914'];
+    // var destinations = ['New York NY', 'Montreal', '41.8337329,-87.7321554', 'Honolulu'];
+    if (req.body.target_address && req.body.source_address) {
+        source = req.body.source_address
+        target = req.body.target_address
+    } else {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
+    }
+
+    var origins = [source];
+    var destinations = [target];
+
+    distance.key('AIzaSyBhxep9O8VQz-JHmJW2XSzgjTRemLv91sI');
+    distance.units('metric');
+
+    distance.matrix(origins, destinations, function(err, distances) {
+        if (err) {
+            return console.log(err);
+        }
+        if (!distances) {
+            return console.log('no distances');
+        }
+        res.send(distances)
+        if (distances.status == 'OK') {
+            for (var i = 0; i < origins.length; i++) {
+                for (var j = 0; j < destinations.length; j++) {
+                    var origin = distances.origin_addresses[i];
+                    var destination = distances.destination_addresses[j];
+                    if (distances.rows[0].elements[j].status == 'OK') {
+                        var distance = distances.rows[i].elements[j].distance.text;
+                        console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
+                    } else {
+                        console.log(destination + ' is not reachable by land from ' + origin);
+                    }
+                }
+            }
+        }
+    });
 }
 
 exports.run_query = (sql, param = false) => {
