@@ -3,7 +3,7 @@ import 'package:favorito_user/component/DatePicker.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointmentListModel.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -80,12 +80,12 @@ class _NewAppointmentState extends State<_NewAppointment> {
       _selectedService = "";
       _selectedServicePerson = "";
     } else {
-      _myNotesEditTextController.text = widget.data.notes;
-      _selectedDateText = widget.data.date;
-      _selectedService = widget.data.serviceName;
-      _selectedServicePerson = widget.data.servicePersonName;
+      _myNotesEditTextController.text = "widget.data.notes";
+      _selectedDateText = "widget.data.date";
+      _selectedService = "widget.data.serviceName";
+      _selectedServicePerson = "widget.data.servicePersonName";
       for (var temp in slotList) {
-        if (temp.slot == widget.data.slot) {
+        if (temp.slot == "widget.data.slot") {
           temp.selected = true;
           break;
         }
@@ -133,7 +133,7 @@ class _NewAppointmentState extends State<_NewAppointment> {
                       child: Text(
                         widget.identifier == 0
                             ? "Avadh Group"
-                            : widget.data.businessName,
+                            : "widget.data.businessName",
                         style: TextStyle(
                             fontSize: 18, decoration: TextDecoration.underline),
                       ),

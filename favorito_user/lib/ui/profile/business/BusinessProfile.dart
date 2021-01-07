@@ -4,7 +4,6 @@ import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/profile/business/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
@@ -311,7 +310,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
             InkWell(
               onTap: () {
                 String _v = service[i];
-                print(' service[$i]:${service[i]}');
+
                 switch (_v) {
                   case 'Call Now':
                     launch("tel://${data.data[0].phone}");
@@ -321,12 +320,14 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     {}
                     break;
                   case 'Booking':
-                    {
-                      Navigator.of(context).pushNamed('/booking',
-                          arguments: data.data[0].businessId);
-                    }
+                    Navigator.of(context).pushNamed('/bookingOrAppointmentList',
+                        arguments: data.data[0].businessId);
                     break;
                   case 'Appointment':
+                    Navigator.of(context).pushNamed('/bookingOrAppointmentList',
+                        arguments: data.data[0].businessId);
+                    break;
+                  case 'Waitlist':
                     {
                       WaitListDataModel wdm = WaitListDataModel();
                       wdm.businessId = data.data[0].businessId;

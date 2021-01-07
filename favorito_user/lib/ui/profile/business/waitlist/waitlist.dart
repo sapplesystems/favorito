@@ -307,36 +307,37 @@ class _WaitlistState extends State<Waitlist> {
         {'business_id': widget.data.businessId}).then((value) {
       if (val) pr?.hide();
       try {
-        data?.createdAt = value.data[0].createdAt;
-        waiting = true;
-        data?.waitlistId = value.data[0].waitlistId;
-        data?.userId = value.data[0].userId;
-        data.updatedAt = value.data[0].updatedAt;
-        data?.waitlistStatus = value.data[0].waitlistStatus;
-        data?.noOfPerson = value.data[0].noOfPerson;
-        data?.partiesBeforeYou = value.data[0].partiesBeforeYou;
-        DateTime now = new DateTime.now();
-        try {
-          var difference =
-              now.difference((DateTime.parse(data.updatedAt))).inMinutes;
-          var _min = int.parse(data?.minimumWaitTime?.split(':')[1]);
-          if (_min > difference)
-            per = ((((_min - difference) * 100) / _min) / 100);
-          else
+        if (!value.data.isEmpty) {
+          data?.createdAt = value.data[0].createdAt;
+          waiting = true;
+          data?.waitlistId = value.data[0].waitlistId;
+          data?.userId = value.data[0].userId;
+          data.updatedAt = value.data[0].updatedAt;
+          data?.waitlistStatus = value.data[0].waitlistStatus;
+          data?.noOfPerson = value.data[0].noOfPerson;
+          data?.partiesBeforeYou = value.data[0].partiesBeforeYou;
+          DateTime now = new DateTime.now();
+          try {
+            var difference =
+                now.difference((DateTime.parse(data.updatedAt))).inMinutes;
+            var _min = int.parse(data?.minimumWaitTime?.split(':')[1]);
+            if (_min > difference)
+              per = ((((_min - difference) * 100) / _min) / 100);
+            else
+              per = 0.0;
+            setState(() {});
+          } catch (e) {
+            print('Error:${e.toString()}');
             per = 0.0;
-          setState(() {});
-        } catch (e) {
-          print('Error:${e.toString()}');
-          per = 0.0;
+          }
+          btnTxt = data?.waitlistStatus == 'rejected'
+              ? waitingCanceled
+              : (data?.waitlistStatus == 'pending')
+                  ? waitingCancel
+                  : (data?.waitlistStatus == 'accepted')
+                      ? 'waiting'
+                      : waitingJoin;
         }
-        btnTxt = data?.waitlistStatus == 'rejected'
-            ? waitingCanceled
-            : (data?.waitlistStatus == 'pending')
-                ? waitingCancel
-                : (data?.waitlistStatus == 'accepted')
-                    ? 'waiting'
-                    : waitingJoin;
-        // waitingCancel :
       } catch (e) {
         print('Error: $e');
         waiting = false;

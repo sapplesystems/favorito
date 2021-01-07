@@ -234,8 +234,8 @@ class _signup_aState extends State<signup_a> {
     );
   }
 
-  void getCategory() {
-    WebService.funGetCatList({"type_id": type_id}, context).then((value) {
+  void getCategory() async {
+    await WebService.funGetCatList({"type_id": type_id}, context).then((value) {
       cat.clear();
       catdata.clear();
       catdata.addAll(value.data);

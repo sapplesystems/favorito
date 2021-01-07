@@ -20,7 +20,7 @@ class _card2State extends State<card2> {
       onTap: widget.function,
       child: Card(
         shape: rrb,
-        elevation: 4,
+        elevation: 2,
         child: Container(
           padding: EdgeInsets.all(sm.scaledHeight(2.6)),
           child: Column(

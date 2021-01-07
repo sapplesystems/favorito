@@ -40,11 +40,6 @@ class _HomeState extends State<Home> {
     super.initState();
     getUserImage();
     getAddress();
-    try {
-      pr?.isShowing() ?? false ? pr?.hide() : "";
-    } catch (e) {
-      print('Error: ${e.toString()}');
-    }
   }
 
   @override
@@ -78,7 +73,7 @@ class _HomeState extends State<Home> {
                         height: sm.h(3),
                         fit: BoxFit.fill,
                       ),
-                      onPressed: () => getAddress()),
+                      onPressed: () {}),
                 )
               ],
             ),
@@ -185,8 +180,9 @@ class _HomeState extends State<Home> {
         addressData = value;
         for (Addresses temp in addressData.data.addresses) {
           if (temp.defaultAddress == 1) {
-            _selectedAddress = temp.address;
-            break;
+            setState(() {
+              _selectedAddress = temp.address;
+            });
           }
         }
       }

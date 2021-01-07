@@ -15,7 +15,7 @@ class card3 extends StatelessWidget {
         width: sm.scaledWidth(42),
         child: Card(
           shape: rrb,
-          elevation: 4,
+          elevation: 2,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(

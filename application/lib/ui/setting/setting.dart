@@ -9,15 +9,18 @@ import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
 import 'package:Favorito/ui/highlights/highlights.dart';
 import 'package:Favorito/ui/jobs/JobList.dart';
+import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/offer/Offers.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class setting extends StatefulWidget {
   @override
@@ -94,9 +97,7 @@ class _settingState extends State<setting> {
                   padding: const EdgeInsets.only(right: 12.0),
                   child: CircleAvatar(
                     radius: sm.scaledWidth(8),
-                    backgroundImage: NetworkImage(photoUrl != null
-                        ? photoUrl
-                        : "https://source.unsplash.com/random/600*600"),
+                    backgroundImage: NetworkImage(photoUrl = photoUrl ?? ''),
                   ),
                 ),
                 title: Text(
@@ -223,6 +224,22 @@ class _settingState extends State<setting> {
                       "Help",
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Prefs().clear();
+                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Login()));
+                    },
+                    child: ListTile(
+                      leading: Icon(FontAwesomeIcons.signOutAlt),
+                      title: Text(
+                        "Logout",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 ],
