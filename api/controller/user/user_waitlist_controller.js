@@ -1,11 +1,7 @@
 var db = require('../../config/db');
 var moment = require('moment');
 const { end } = require('../../config/db');
-<<<<<<< HEAD
 const { now } = require('moment');
-=======
-
->>>>>>> a987c6b2aff3923a7c0ff4d561edd18bffd44cfb
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 
 
@@ -58,7 +54,6 @@ exports.get_waitlist = async function(req, res, next) {
     }
 };
 
-<<<<<<< HEAD
 exports.get_waitlist = async function(req, res, next) {
     if (req.body.business_id == '' || req.body.business_id == null || req.body.business_id == undefined) {
         return res.status(400).json({ status: 'error', message: 'business_id is required.' });
@@ -216,59 +211,6 @@ exports.business_waitlist_verbose = async function(req, res, next) {
                     break
                 }
             }
-=======
-exports.business_waitlist_verbose = async function(req, res, next) {
-    try {
-        var business_id = req.body.business_id;
-        current_time = moment(new Date(), 'HHmmss').format('YYYY-MM-DD HH:MM:SS')
-        sql_get_slot_setting = `SELECT start_time,end_time , slot_length,booking_per_slot,minium_wait_time FROM business_waitlist_setting \n\
-            WHERE business_id = '${business_id}' \n\
-            AND NOW() > start_time AND NOW() < end_time`
-        result_get_slot_setting = await exports.run_query(sql_get_slot_setting)
-        if (result_get_slot_setting == '') {
-            return res.status(200).send({ status: 'success', message: 'Waitlist is not available', data: [] });
-        }
-        sql_business_name = `SELECT business_name FROM business_master WHERE business_id = '${business_id}'`
-        result_business_name = await exports.run_query(sql_business_name)
-
-        business_name = result_business_name[0].business_name
-            // creating slots in array
-        array_slots = []
-        start_time = result_get_slot_setting[0].start_time
-        end_time = result_get_slot_setting[0].end_time
-        available_time = current_time
-        available_time = available_time.substring(0, 14) + '00' + available_time.substring(16);
-        available_time_current_hour = parseInt(available_time.substring(11, 13))
-
-        // making the slot after the current time
-        for (i = parseInt(start_time.substring(0, 2)); i < parseInt(end_time.substring(0, 2)); i = i + result_get_slot_setting[0].slot_length) {
-            available_time_slots = available_time.substring(0, 11) + i + available_time.substring(13);
-            if (available_time_current_hour <= i) {
-                array_slots.push(available_time_slots)
-            }
-        }
-        // check business is available or not at this time
-        if (result_get_slot_setting.length > 0) {
-            for (i = 0; i < array_slots.length - 1; i++) {
-                time_1 = array_slots[i]
-                time_2 = array_slots[i + 1]
-                sql_count_total_waitlist = `SELECT COUNT(business_id) as count FROM business_waitlist \n\
-                WHERE business_id = '${business_id}' \n\
-                AND deleted_at IS NULL \n\
-                AND created_at > '${time_1}'
-                AND created_at < '${time_2}'`
-                result_count_total_waitlist = await exports.run_query(sql_count_total_waitlist)
-                if (result_count_total_waitlist[0].count < result_get_slot_setting[0].booking_per_slot) {
-                    parties_before = result_count_total_waitlist[0].count
-                    vacant_time_slot = time_1.substring(11, 16)
-                    vacant_time_slot_check = vacant_time_slot.split(':')
-                    if (vacant_time_slot_check[0].length == 1) {
-                        vacant_time_slot = "0" + vacant_time_slot.substring(0, vacant_time_slot.length - 1)
-                    }
-                    break
-                }
-            }
->>>>>>> a987c6b2aff3923a7c0ff4d561edd18bffd44cfb
             data = []
             data_object = {}
             data_object.parties_before_you = parties_before
@@ -279,10 +221,6 @@ exports.business_waitlist_verbose = async function(req, res, next) {
             return res.status(200).json({ status: 'success', message: 'success', data: data });
         } else {
             return res.status(200).send({ status: 'success', message: 'Business is not available at this time', data: [] });
-<<<<<<< HEAD
-=======
-
->>>>>>> a987c6b2aff3923a7c0ff4d561edd18bffd44cfb
         }
     } catch (error) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
@@ -331,19 +269,11 @@ exports.set_waitlist = async function(req, res, next) {
     }
 
     if (req.body.slot != '' && req.body.slot != null && req.body.slot != undefined) {
-<<<<<<< HEAD
         slot_time = moment(new Date(), 'HHmmss').format('YYYY-MM-DD HH:mm:ss')
         time_slot_final = slot_time.substring(0, 11) + parseInt(req.body.slot) + slot_time.substring(13);
         data_to_insert.created_at = time_slot_final
     }
     // return res.send(data_to_insert)
-=======
-        slot_time = moment(new Date(), 'HHmmss').format('YYYY-MM-DD HH:MM:SS')
-        time_slot_final = slot_time.substring(0, 11) + parseInt(req.body.slot) + slot_time.substring(13);
-        data_to_insert.created_at = time_slot_final
-    }
-
->>>>>>> a987c6b2aff3923a7c0ff4d561edd18bffd44cfb
     if (req.body.name != '' && req.body.name != null && req.body.name != undefined) {
         data_to_insert.name = req.body.name
     } else {

@@ -85,16 +85,6 @@ exports.getBusinessOverview = async function(req, res) {
 
         sql_business_hours = `SELECT start_hours, end_hours FROM business_hours WHERE business_id ='${business_id}' AND day = '${get_day_name()}'`
 
-<<<<<<< HEAD
-=======
-        var sql = "SELECT b_m.id, b_m.business_id, b_m.postal_code postal_code, IFNULL(b_m.location,'0,0') as location,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_m.website, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, b_m.address1 as address1,b_m.address2 as address2,b_m.address3 as address3,b_m.short_description as short_description,b_i.payment_method as payment_method, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations as b_i LEFT JOIN business_ratings  AS b_r ON b_m.business_id = b_r.business_id AND  b_i.business_id = b_m.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
-
-
-
-
-        sql_business_hours = `SELECT start_hours, end_hours FROM business_hours WHERE business_id ='${business_id}' AND day = '${get_day_name()}'`
-
->>>>>>> a987c6b2aff3923a7c0ff4d561edd18bffd44cfb
         result_business_hours = await exports.run_query(sql_business_hours)
             // return res.send(result_business_hours[0])
 
