@@ -325,7 +325,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                   case 'Booking':
                     {
                       badm.businessId = data.data[0].businessId;
-                      badm.isBooking = true;
+                      badm.isBooking = 0;
                       Navigator.of(context).pushNamed(
                           '/bookingOrAppointmentList',
                           arguments: badm);
@@ -334,7 +334,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                   case 'Appointment':
                     {
                       badm.businessId = data.data[0].businessId;
-                      badm.isBooking = false;
+                      badm.isBooking = 1;
                       Navigator.of(context).pushNamed(
                           '/bookingOrAppointmentList',
                           arguments: badm);
