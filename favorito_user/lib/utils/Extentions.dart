@@ -42,7 +42,12 @@ extension StringExtension on String {
     if (this.isEmpty) {
       return this;
     }
-    return "${this[0].toUpperCase()}${this.substring(1)}";
+    var txt = '';
+    var rawTxt = this.split(' ');
+    for (int i = 0; i < rawTxt.length; i++) {
+      txt = txt + ' ' + (rawTxt[i])[0].toUpperCase() + (rawTxt[i]).substring(1);
+    }
+    return txt.trim();
   }
 
   String convert24to12() {

@@ -15,6 +15,7 @@ class BookingOrAppointmentDataModel {
   int walkIn;
   String specialNotes;
   String createdDatetime;
+  bool isBooking;
 
   BookingOrAppointmentDataModel(
       {this.id,
@@ -32,7 +33,8 @@ class BookingOrAppointmentDataModel {
       this.slotLength,
       this.walkIn,
       this.specialNotes,
-      this.createdDatetime});
+      this.createdDatetime,
+      this.isBooking});
 
   BookingOrAppointmentDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

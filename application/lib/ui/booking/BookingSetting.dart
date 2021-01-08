@@ -18,7 +18,7 @@ class BookingSetting extends StatefulWidget {
 
 class _BookingSettingState extends State<BookingSetting> {
   List<String> titleList = [""];
-  List<String> slot = ["15", "20", "25", "30", "35", "40", "45", "50"];
+  List<String> slot = ["1", "2", "3", "4", "5", "6", "7", "8"];
   List<String> title = [
     "Advance Booking(Days)",
     "Advance Booking(Hours)",
@@ -83,7 +83,8 @@ class _BookingSettingState extends State<BookingSetting> {
                               DropdownSearch<String>(
                                   validator: (v) =>
                                       v == '' ? "required field" : null,
-                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  autoValidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
                                   selectedItem: controller[2].text,
                                   items: slot,
@@ -180,7 +181,7 @@ class _BookingSettingState extends State<BookingSetting> {
       "announcement": controller[5].text
     };
     print("controller[2].text:${controller[2].text}");
-    await WebService.funBookingSaveSetting(_map,context).then((value) {
+    await WebService.funBookingSaveSetting(_map, context).then((value) {
       if (value.status == "success") BotToast.showText(text: value.message);
     });
   }

@@ -1,6 +1,7 @@
 import 'package:favorito_user/component/FollowBtn.dart';
 import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
@@ -284,6 +285,8 @@ class _BusinessProfileState extends State<BusinessProfile> {
   }
 
   ServicCart() {
+    BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
+
     List<String> service = [
       'Call Now',
       'Chat',
@@ -320,12 +323,22 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     {}
                     break;
                   case 'Booking':
-                    Navigator.of(context).pushNamed('/bookingOrAppointmentList',
-                        arguments: data.data[0].businessId);
+                    {
+                      badm.businessId = data.data[0].businessId;
+                      badm.isBooking = true;
+                      Navigator.of(context).pushNamed(
+                          '/bookingOrAppointmentList',
+                          arguments: badm);
+                    }
                     break;
                   case 'Appointment':
-                    Navigator.of(context).pushNamed('/bookingOrAppointmentList',
-                        arguments: data.data[0].businessId);
+                    {
+                      badm.businessId = data.data[0].businessId;
+                      badm.isBooking = false;
+                      Navigator.of(context).pushNamed(
+                          '/bookingOrAppointmentList',
+                          arguments: badm);
+                    }
                     break;
                   case 'Waitlist':
                     {
