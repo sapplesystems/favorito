@@ -8,8 +8,18 @@ exports.getDashboardDetail = async function(req, res, next) {
         var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` \n\
                     WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
 
-        var sql_number_order = `SELECT COUNT(id) as count FROM business_orders WHERE business_id = '${business_id}'`
-        var result_number_order = await exports.run_query(sql_number_order)
+        try {
+            var sql_number_order = `SELECT COUNT(id) as count FROM business_orders WHERE business_id = '${business_id}'`
+            var result_number_order = await exports.run_query(sql_number_order)
+            var sql_number_catalogs = `SELECT COUNT(id) as count FROM business_catalogs WHERE business_id = '${business_id}'`
+            var result_number_catalogs = await exports.run_query(sql_number_catalogs)
+            var sql_avg_rating = `SELECT AVG(rating) as avg_rating FROM business_ratings WHERE business_id = '${business_id}'`
+            var result_avg_rating = await exports.run_query(sql_avg_rating)
+            var sql_number_checkin = `SELECT COUNT(id) as count FROM business_check_in WHERE business_id = '${business_id}'`
+            var result_number_checkin = await exports.run_query(sql_number_checkin)
+        } catch (error) {
+            return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
+        }
         db.query(sql, function(err, result_set, fields) {
             if (err) {
                 return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
@@ -28,13 +38,12 @@ exports.getDashboardDetail = async function(req, res, next) {
                 is_phone_verified: row.is_phone_verified,
                 is_email_verified: row.is_email_verified,
                 is_verified: row.is_verified,
-                check_ins: 960,
-                ratings: 4.5,
-                catalogoues: 81,
-                orders: 742,
+                check_ins: result_number_checkin[0].count,
+                ratings: result_avg_rating[0].avg_rating,
+                catalogoues: result_number_catalogs[0].count,
+                orders: result_number_order[0].count,
                 free_credit: 50,
                 paid_credit: 500,
-
             };
             return res.status(200).json({ status: 'success', message: 'success', data: data });
         });

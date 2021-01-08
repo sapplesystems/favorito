@@ -42,6 +42,7 @@ var userAppointmentRoute = require('./routes/user/user_appointment_route');
 var userOrderRoute = require('./routes/user/user_order_route');
 var userBusinessRoute = require('./routes/user/user_business_route');
 var userAddressRoute = require('./routes/user/user_address_route');
+var userCheckinRoute = require('./routes/user/user_checkin_route');
 
 /*** USER ROUTES DETAIL END *****/
 
@@ -92,6 +93,7 @@ app.use('/api/user', BusinessUser);
 app.use('/api/user-waitlist', userWaitlistRoute);
 app.use('/api/user-booking', userBookingRoute);
 app.use('/api/user-appointment', userAppointmentRoute);
+app.use('/api/user-checkin', userCheckinRoute);
 
 /**
  * USER ROUTES FOR PROFILE 

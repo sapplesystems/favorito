@@ -730,13 +730,7 @@ exports.getAppointmentSlots = async function(business_id, date, starttime, endti
             var parsestart = Date.parse(startdate_time);
             var parseend = Date.parse(enddate_time);
             var parsestart = Date.parse(startdate_time);
-            console.log('startdate_time - ' + startdate_time);
-            console.log('enddate_time - ' + enddate_time);
-            console.log('parsestart - ' + parsestart);
-            console.log('parseend - ' + parseend);
             while (parsestart <= parseend) {
-                console.log('parsestart - ' + parsestart);
-                console.log('parseend - ' + parseend);
                 var timestart = startdate_time;
                 startdate_time = newstarttime(startdate_time, interval);
                 var timeend = startdate_time;
@@ -812,7 +806,9 @@ function addMinutes(time, minutes) {
 }
 
 function newstarttime(datetime, minutes) {
-    var date = new Date(new Date(datetime).getTime() + minutes * 60000);
+    // var date = new Date(new Date(datetime).getTime() + minutes * 60000);
+    // change the minute wise slot into the hour wise
+    var date = new Date(new Date(datetime).getTime() + minutes * 3600 * 1000);
     var tempTime = ((date.getFullYear().toString().length == 1) ? '0' + date.getFullYear() : date.getFullYear()) + '-' + (((date.getMonth() + 1).toString().length == 1) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-' + ((date.getDate().toString().length == 1) ? '0' + date.getDate() : date.getDate()) + ' ' + ((date.getHours().toString().length == 1) ? '0' + date.getHours() : date.getHours()) + ':' +
         ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
         ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());

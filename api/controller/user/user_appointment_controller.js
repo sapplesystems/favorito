@@ -271,6 +271,9 @@ exports.getBookingAppointment = async function(req, res, next) {
     }
     result = await exports.run_query(sql);
     try {
+        if (result == '') {
+            return res.status(200).send({ status: 'success', message: 'Data not found', data: result })
+        }
         return res.status(200).send({ status: 'success', message: 'Success', data: result })
     } catch (error) {
         return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
