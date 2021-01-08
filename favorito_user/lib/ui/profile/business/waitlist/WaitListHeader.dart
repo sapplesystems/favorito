@@ -32,14 +32,14 @@ class _WaitListHeaderState extends State<WaitListHeader> {
                 style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Reguler')),
           ),
         ),
-        InkWell(
-          onTap: () => widget.function(),
-          child: Icon(
-            Icons.cached,
-            size: sm.w(8),
-            color: Colors.black,
-          ),
-        ),
+        // InkWell(
+        //   onTap: () => widget.function(),
+        //   child: Icon(
+        //     Icons.cached,
+        //     size: sm.w(8),
+        //     color: Colors.black,
+        //   ),
+        // ),
       ],
     );
   }

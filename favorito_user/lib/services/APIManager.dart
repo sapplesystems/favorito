@@ -328,9 +328,9 @@ class APIManager {
 
   //booking
   static Future<BookingOrAppointmentListModel> baseUserBookingList(
-      Map _map) async {
+      [Map _map]) async {
     String token = await Prefs.token;
-    print('_map : ${_map.toString()}');
+    print('Resuest data : ${_map.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -339,6 +339,24 @@ class APIManager {
     response =
         await dio.post(service.baseUserBookingList, data: _map, options: opt);
     print("service.baseUserBookingList : ${response.toString}");
+    return BookingOrAppointmentListModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+  //appoinment
+  static Future<BookingOrAppointmentListModel> baseUserAppointmentList(
+      [Map _map]) async {
+    String token = await Prefs.token;
+    print('Resuest data : ${_map.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print(
+        "service.baseUserAppointmentList : ${service.baseUserAppointmentList}");
+
+    response = await dio.post(service.baseUserAppointmentList,
+        data: _map, options: opt);
+    print("service.baseUserAppointmentList : ${response.toString}");
     return BookingOrAppointmentListModel.fromJson(
         convert.jsonDecode(response.toString()));
   }

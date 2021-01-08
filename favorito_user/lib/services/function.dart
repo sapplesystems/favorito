@@ -14,6 +14,7 @@ class service {
   static final baseUserProfile = baseUser + 'profile/';
   static final baseUserWaitlist = baseUser + 'waitlist/';
   static final baseUserBooking = baseUser + 'booking/';
+  static final baseUserAppointment = baseUser + 'appointment/';
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
 
 //function
@@ -47,4 +48,8 @@ class service {
 
   //booking
   static final baseUserBookingList = baseUserBooking + 'get-book-table';
+
+  //appoinment
+  static final baseUserAppointmentList =
+      baseUserAppointment + 'get-booking-appointment';
 }

@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/DatePicker.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -9,39 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 
-class NewAppointment extends StatelessWidget {
+class NewAppointment extends StatefulWidget {
   int identifier;
-  BookingOrAppointmentListModel data;
+  List<BookingOrAppointmentListModel> data;
+
   NewAppointment(this.identifier, this.data);
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicTheme(
-      theme: NeumorphicThemeData(
-          defaultTextColor: myRed,
-          accentColor: Colors.grey,
-          variantColor: Colors.black38,
-          depth: 8,
-          intensity: 0.65),
-      themeMode: ThemeMode.system,
-      child: Material(
-        child: NeumorphicBackground(
-          child: _NewAppointment(identifier, data),
-        ),
-      ),
-    );
-  }
-}
-
-class _NewAppointment extends StatefulWidget {
-  int identifier;
-  BookingOrAppointmentListModel data;
-
-  _NewAppointment(this.identifier, this.data);
 
   _NewAppointmentState createState() => _NewAppointmentState();
 }
 
-class _NewAppointmentState extends State<_NewAppointment> {
+class _NewAppointmentState extends State<NewAppointment> {
   bool _autoValidateForm = false;
   var _myNotesEditTextController = TextEditingController();
 

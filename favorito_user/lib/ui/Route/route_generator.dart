@@ -1,5 +1,4 @@
 import 'package:favorito_user/component/Following.dart';
-import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/Login.dart';
@@ -46,7 +45,7 @@ class RouteGenerator {
 
       case '/bookingOrAppointmentList':
         return MaterialPageRoute(
-            builder: (_) => BookingOrAppointmentList(buId: args));
+            builder: (_) => BookingOrAppointmentParent(data: args));
 
       case '/searchResult':
         return MaterialPageRoute(builder: (_) => SearchResult(args));

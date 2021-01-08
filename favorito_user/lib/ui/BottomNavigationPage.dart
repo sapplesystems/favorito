@@ -19,7 +19,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   static List<Widget> _widgetOptions = <Widget>[
     Home(),
     Search(),
-    BookingOrAppointmentList(),
+    BookingOrAppointmentParent(),
     Chat(),
     Profile()
   ];
