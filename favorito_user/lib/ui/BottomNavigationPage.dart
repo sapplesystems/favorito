@@ -1,4 +1,5 @@
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/home/Home.dart';
 import 'package:favorito_user/ui/profile/user/profile.dart';
@@ -16,16 +17,22 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
-    Home(),
-    Search(),
-    BookingOrAppointmentParent(data: null),
-    Chat(),
-    Profile()
-  ];
+  BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
+
+  static List _widgetOptions = [];
 
   @override
   void initState() {
+    badm.businessId = null;
+    badm.isBooking = 2;
+
+    _widgetOptions = <Widget>[
+      Home(),
+      Search(),
+      BookingOrAppointmentParent(data: badm),
+      Chat(),
+      Profile()
+    ];
     decideit();
     super.initState();
   }

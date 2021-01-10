@@ -106,7 +106,7 @@ class _BookAppChildState extends State<BookAppChild> {
                     ),
                   ),
                   Container(
-                    height: sm.h(78),
+                    height: sm.h(71),
                     child: data.length == 0
                         ? Center(child: Text(snapshot.data.message))
                         : ListView.builder(
@@ -183,8 +183,9 @@ class _BookAppChildState extends State<BookAppChild> {
                                                           top: 2.0),
                                                   child: Visibility(
                                                     visible: data[index]
-                                                        .specialNotes
-                                                        .isNotEmpty,
+                                                            ?.specialNotes
+                                                            ?.isNotEmpty ??
+                                                        false,
                                                     child: Text(
                                                       "${data[index].specialNotes}",
                                                       style: TextStyle(
@@ -200,8 +201,9 @@ class _BookAppChildState extends State<BookAppChild> {
                                                           top: 2.0),
                                                   child: Visibility(
                                                     visible: data[index]
-                                                        .review
-                                                        .isNotEmpty,
+                                                            ?.review
+                                                            ?.isNotEmpty ??
+                                                        false,
                                                     child: Text(
                                                       "Review : ${data[index].review}",
                                                       style: TextStyle(

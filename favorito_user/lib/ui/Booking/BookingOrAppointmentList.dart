@@ -37,11 +37,15 @@ class _BookingOrAppointmentListState extends State<BookingOrAppointmentParent> {
           child: Column(
             children: [
               WaitListHeader(
-                  title: widget.data.isBooking == 0
-                      ? 'Bookings'
-                      : widget.data.isBooking == 1
-                          ? "Appointments"
-                          : "Bookings & Appointments"),
+                title: widget.data.isBooking == 0
+                    ? 'Bookings'
+                    : widget.data.isBooking == 1
+                        ? "Appointments"
+                        : "Bookings & Appointments",
+                preFunction: () {
+                  if (widget.data.isBooking != 2) Navigator.pop(context);
+                },
+              ),
               Container(child: BookAppChild(data: widget.data))
             ],
           ),

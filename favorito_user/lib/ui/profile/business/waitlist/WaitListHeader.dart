@@ -3,8 +3,9 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class WaitListHeader extends StatefulWidget {
   String title;
-  Function function;
-  WaitListHeader({this.title, this.function});
+  Function preFunction;
+  Function postfunction;
+  WaitListHeader({this.title, this.preFunction, this.postfunction});
   @override
   _WaitListHeaderState createState() => _WaitListHeaderState();
 }
@@ -18,7 +19,7 @@ class _WaitListHeaderState extends State<WaitListHeader> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         InkWell(
-          onTap: () => Navigator.pop(context),
+          onTap: () => widget.preFunction(),
           child: Icon(
             Icons.navigate_before,
             size: sm.w(12),
@@ -33,7 +34,7 @@ class _WaitListHeaderState extends State<WaitListHeader> {
           ),
         ),
         // InkWell(
-        //   onTap: () => widget.function(),
+        //   onTap: () => widget.postfunction(),
         //   child: Icon(
         //     Icons.cached,
         //     size: sm.w(8),
