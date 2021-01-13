@@ -56,9 +56,9 @@ exports.getBookingVerbose = async(req, res, next) => {
             return res.status(200).send({ status: 'success', message: 'Slot length in business booking setting should be less than 24 hour' });
         }
         available_dates = []
-        for (let j = 1; j < result_booking_setting[0].advance_booking_end_days; j++) {
+        for (let j = 0; j < result_booking_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
-            available_dates.push([moment(date).format('YYYY-MM-DD'), getDayNameByDate(moment(date).format('YYYY-MM-DD'))])
+            available_dates.push({ date: moment(date).format('YYYY-MM-DD'), day: getDayNameByDate(moment(date).format('YYYY-MM-DD')) })
         }
 
         today_date = moment().format('YYYY-MM-DD')

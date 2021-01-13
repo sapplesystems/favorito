@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 var jwt = require('jsonwebtoken');
 var uniqid = require('uniqid');
 
-exports.register = function(req, res, next) {
+exports.register = async function(req, res, next) {
     try {
         if (req.body.full_name == '' || req.body.full_name == 'undefined' || req.body.full_name == null) {
             return res.status(403).json({ status: 'error', message: 'Name is required' });
@@ -16,6 +16,25 @@ exports.register = function(req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Postal code is required' });
         } else if (req.body.password == '' || req.body.password == null) {
             return res.status(403).json({ status: 'error', message: 'Password is required' });
+        } else if (req.body.profile_id == '' || req.body.profile_id == null) {
+            return res.status(403).json({ status: 'error', message: 'profile_id is required' });
+        }
+        if (req.body.short_description != '' && req.body.short_description != null) {
+            short_description = req.body.short_description
+        } else {
+            short_description = ''
+        }
+
+        if (req.body.profile_id) {
+            try {
+                sql_check_profile_exist = `SELECT COUNT(id) as count FROM users WHERE profile_id = '${req.body.profile_id}'`
+                result_check_profile_exist = await exports.run_query(sql_check_profile_exist)
+                if (result_check_profile_exist[0].count > 0) {
+                    return res.status(200).json({ status: 'success', message: 'This is profile id is already exist' });
+                }
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+            }
         }
 
         var user_id = uniqid();
@@ -25,10 +44,11 @@ exports.register = function(req, res, next) {
         var phone = req.body.phone;
         var postal = req.body.postal_code;
         var password = req.body.password;
-        var reach_whatsapp = 0;
         var term_service = 0;
         if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {
-            reach_whatsapp = 1;
+            reach_whatsapp = req.body.reach_whatsapp;
+        } else {
+            reach_whatsapp = 0;
         }
         if (req.body.term_service != '' && req.body.term_service != null) {
             term_service = 1;
@@ -61,6 +81,9 @@ exports.register = function(req, res, next) {
                             phone: phone,
                             postal: postal,
                             password: hash,
+                            short_description: short_description,
+                            reach_whatsapp: reach_whatsapp,
+                            profile_id: req.body.profile_id,
                             org_password: password
                         };
 
@@ -93,6 +116,20 @@ exports.register = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.isProfileExist = async(req, res, next) => {
+    if (req.body.profile_id) {
+        sql_check = `SELECT COUNT(id) AS count FROM users WHERE profile_id = '${req.body.profile_id}'`
+        result_sql_check = await exports.run_query(sql_check)
+        if (result_sql_check[0].count > 0) {
+            return res.status(200).json({ status: 'success', message: 'This profile id is already exist, please use another one' });
+        } else {
+            return res.status(200).json({ status: 'success', message: 'Available' });
+        }
+    } else {
+        return res.status(403).json({ status: 'error', message: 'Profile id is missing' });
+    }
+}
 
 // async..await is not allowed in global scope, must use a wrapper
 async function mail(p1, insertId, p3, email) {
@@ -154,4 +191,31 @@ async function mail(p1, insertId, p3, email) {
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...*/
+}
+
+
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
 }

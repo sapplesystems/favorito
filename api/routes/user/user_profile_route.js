@@ -43,7 +43,7 @@ router.post('/get-all-relation', CheckAuth, UserProfileController.getAllRelation
 router.post('/get-distance', CheckAuth, UserProfilBusinessOverview.getDistance);
 
 
-
-
+// This is use for the set and the get of the user detial 
+router.post('/user-detail', CheckAuth, UserProfileController.userDetail);
 
 module.exports = router;
