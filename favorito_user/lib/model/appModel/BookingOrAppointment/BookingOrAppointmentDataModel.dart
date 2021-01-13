@@ -15,7 +15,7 @@ class BookingOrAppointmentDataModel {
   int walkIn;
   String specialNotes;
   String createdDatetime;
-  bool isBooking;
+  int isBooking;
 
   BookingOrAppointmentDataModel(
       {this.id,
