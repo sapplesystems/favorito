@@ -101,7 +101,7 @@ exports.trendingNearby = async function(req, res, next) {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
         // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m  JOIN business_ratings AS b_r JOIN business_hours as b_h   ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`SELECT start_hours, end_hours FROM business_hours WHERE business_id = '${data.business_id}' AND day = '${day}'`, function(error, results2, filelds) {
                 if (error) {
@@ -154,7 +154,7 @@ exports.newBusiness = async function(req, res, next) {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -180,7 +180,7 @@ exports.topRated = async function(req, res, next) {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -208,7 +208,7 @@ exports.getBusinessByAppointment = async function(req, res, next) {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -237,7 +237,7 @@ exports.getBusinessByFreelancer = async function(req, res, next) {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -264,7 +264,7 @@ exports.getBusinessByBookTable = async(req, res, next) => {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo,b_m.business_type_id, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.by_appointment_only = 0 AND b_m.business_type_id = 1 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -291,7 +291,7 @@ exports.mostPopular = async function(req, res, next) {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -317,7 +317,7 @@ exports.sponsored = async function(req, res, next) {
         var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -354,7 +354,7 @@ exports.getBusinessByJob = async function(req, res, next) {
         var sql = `SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id`;
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -390,7 +390,7 @@ exports.getBusinessByFood = async(req, res, next) => {
         var sql = `SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5`;
 
         result_master = await exports.run_query(sql)
-        final_data = []
+        var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                 if (error) {
@@ -426,7 +426,7 @@ exports.getBusinessByDoctor = async(req, res, next) => {
             var sql = `SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5`;
 
             result_master = await exports.run_query(sql)
-            final_data = []
+            var final_data = []
             async.eachSeries(result_master, function(data, callback) {
                 db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
                     if (error) {

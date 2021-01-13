@@ -1,6 +1,7 @@
 const e = require('express');
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
+
 exports.businessCarouselList = async function(req, res, next) {
     await exports.getCaruoselData(req, res)
 }
@@ -47,11 +48,17 @@ exports.getUserReview = async function(req, res, next) {
 
 
 exports.userProfilePhoto = async function(req, res, next) {
+    if (req.userdata.id) {
+        user_id = req.userdata.id
+    }
     try {
-        var sql = "SELECT concat('" + img_path + "',photo) as photo  FROM users WHERE id = '" + req.body.user_id + "' AND deleted_at IS NULL"
+        var sql = "SELECT concat('" + img_path + "',photo) as photo  FROM users WHERE id = '" + user_id + "' AND deleted_at IS NULL"
         db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
+            }
+            if (result && result[0] && result[0].photo) {
+                result[0].photo = result[0].photo.trim()
             }
             return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
         })
@@ -76,8 +83,10 @@ exports.setUserProfilePhoto = async function(req, res, next) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
                 }
                 user_profile_pic_link = img_path + req.file.filename
-                return res.status(200).send({ status: 'success', message: 'respone successfull', data: user_profile_pic_link })
+                return res.status(200).send({ status: 'success', message: 'respone successfull', data: [user_profile_pic_link] })
             })
+        } else {
+            res.status(400).json({ status: 'failed', message: 'Profile picture is missing' })
         }
     } catch (error) {
         res.status(500).json({ status: 'error', message: 'Something went wrong.' })
@@ -118,20 +127,6 @@ exports.userAllPhoto = async function(req, res, next) {
 //     return res.status(200).send({ status: 'success', message: 'respone successfull', data: query_result })
 // }
 
-exports.userProfilePhoto = async function(req, res, next) {
-    try {
-        var sql = "SELECT concat('" + img_path + "',photo) as photo  FROM users WHERE id = '" + req.body.user_id + "' AND deleted_at IS NULL"
-        db.query(sql, function(err, result) {
-            if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
-            }
-            return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
-        })
-    } catch (error) {
-        res.status(500).json({ status: 'error', message: 'Something went wrong.' })
-    }
-}
-
 exports.userGetBadges = function(req, res, next) {
     try {
         // return res.send(req.body.user_id)
@@ -149,10 +144,6 @@ exports.userGetBadges = function(req, res, next) {
         res.status(500).json({ status: 'error', message: 'Something went wrong.' })
     }
 }
-
-
-
-
 
 // Favorite function
 
@@ -363,6 +354,61 @@ exports.getAllRelation = async(req, res, next) => {
     } catch (error) {
         return res.status(500).send({ status: 'failed', message: 'Something went wrong', error })
     }
+}
+
+// Set or get the user detail
+exports.userDetail = async(req, res, next) => {
+    if (req.body.api_type) {
+        if (req.userdata.id) {
+            user_id = req.userdata.id
+        } else if (req.body.user_id) {
+            user_id = req.body.id
+        } else {
+            return res.status(400).send({ status: 'failed', message: 'api_type is missing' })
+        }
+        switch (req.body.api_type) {
+            case 'get':
+                // get address
+                sql_get_detail = `SELECT full_name, email,phone, postal, profile_id, reach_whatsapp, short_description FROM users WHERE id = '${user_id}'`
+                result_sql_get_detail = await exports.run_query(sql_get_detail)
+                sql_get_address = `SELECT id as address_id,city,state,pincode,country,landmark,address,default_address FROM user_address WHERE user_id = '${user_id}'`
+                result_sql_get_address = await exports.run_query(sql_get_address)
+                final_data = { detail: result_sql_get_detail[0], address: result_sql_get_address }
+                return res.status(200).send({ status: 'success', message: 'success', data: final_data })
+                break;
+            case 'set':
+                data_to_insert = {}
+                if (req.body.full_name != '' || req.body.full_name != 'undefined' || req.body.full_name != null) {
+                    data_to_insert.full_name = req.body.full_name
+                }
+                if (req.body.postal_code != '' || req.body.postal_code != 'undefined' || req.body.postal_code != null) {
+                    data_to_insert.postal = req.body.postal_code
+                }
+                if (req.body.short_description != '' && req.body.short_description != null) {
+                    data_to_insert.short_description = req.body.short_description
+                }
+                if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {
+                    data_to_insert.reach_whatsapp = req.body.reach_whatsapp
+                }
+                try {
+                    sql_update = `UPDATE users SET updated_at = NOW(), ? WHERE id = '${user_id}'`
+                    result_update = await exports.run_query(sql_update, data_to_insert)
+                    if (result_update.affectedRows) {
+                        return res.status(200).send({ status: 'success', message: 'Profile is upated' })
+                    }
+                } catch (error) {
+                    return res.status(400).send({ status: 'failed', message: 'Something went wrong', error })
+                }
+                break;
+
+            default:
+                return res.status(400).send({ status: 'failed', message: 'Something went wrong' })
+                break;
+        }
+    } else {
+        return res.status(400).send({ status: 'failed', message: 'api_type is missing' })
+    }
+
 }
 
 exports.run_query = (sql, param = false) => {

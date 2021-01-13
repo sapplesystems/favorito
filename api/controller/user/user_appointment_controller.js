@@ -22,9 +22,9 @@ exports.getVerboseAppointment = async(req, res, next) => {
         }
 
         available_dates = []
-        for (let j = 1; j < result_appointment_setting[0].advance_booking_end_days; j++) {
+        for (let j = 0; j < result_appointment_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
-            available_dates.push([moment(date).format('YYYY-MM-DD'), getDayNameByDate(moment(date).format('YYYY-MM-DD'))])
+            available_dates.push({ date: moment(date).format('YYYY-MM-DD'), day: getDayNameByDate(moment(date).format('YYYY-MM-DD')) })
         }
         today_date = moment().format('YYYY-MM-DD')
 
@@ -72,7 +72,7 @@ exports.getVerboseAppointment = async(req, res, next) => {
         })
 
         available_slots = await slot_with_detail
-        return res.status(200).json({ status: 'success', message: 'success', data: { business_name: result_business_name[0].business_name, all_services: result_get_all_service, available_dates, date: date, slots: available_slots } });
+        return res.status(200).json({ status: 'success', message: 'success', data: { business_name: result_business_name[0].business_name, available_dates, date: date, slots: available_slots, all_services: result_get_all_service } });
     } catch (error) {
         return res.status(400).json({ status: 'failed', message: 'Something went wrong', error });
     }
