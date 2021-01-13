@@ -91,7 +91,7 @@ class WebService {
     return _data;
   }
 
-  static Future<dashData> funGetDashBoard(BuildContext context) async {
+  static Future<DashData> funGetDashBoard(BuildContext context) async {
     // pr = ProgressDialog(context);
     String token = await Prefs.token;
     opt = Options(

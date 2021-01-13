@@ -6,6 +6,9 @@ import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
+import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
+import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
+import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
@@ -123,6 +126,114 @@ class APIManager {
         convert.json.decode(response.toString()));
   }
 
+  static Future<SearchBusinessListModel> foodBusiness(
+      context, String searchString) async {
+    String token = await Prefs.token;
+    String url = service.foodBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"keyword": searchString};
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+  static Future<SearchBusinessListModel> bookTableBusiness(
+      context, String searchString) async {
+    String token = await Prefs.token;
+    String url = service.bookTableBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"keyword": searchString};
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+  static Future<SearchBusinessListModel> doctorBusiness(
+      context, String searchString) async {
+    String token = await Prefs.token;
+    String url = service.doctorBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"keyword": searchString};
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+  static Future<SearchBusinessListModel> jobBusiness(
+      context, String searchString) async {
+    String token = await Prefs.token;
+    String url = service.jobBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"keyword": searchString};
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+  static Future<SearchBusinessListModel> freelanceBusiness(
+      context, String searchString) async {
+    String token = await Prefs.token;
+    String url = service.freelanceBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"keyword": searchString};
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+  static Future<SearchBusinessListModel> appointmentBusiness(
+      context, String searchString) async {
+    String token = await Prefs.token;
+    String url = service.appointmentBusiness;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Map<String, dynamic> _map = {"keyword": searchString};
+    response = await dio
+        .post(url, data: _map, options: opt)
+        .catchError((onError) => onErrorCall(onError, context));
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
 //this is used for get small list of hot and new businesses
   static Future<NewBusinessModel> hotAndNewBusiness(context) async {
     String token = await Prefs.token;
@@ -206,6 +317,19 @@ class APIManager {
     print("service.mostPopulerBusiness : ${response.toString}");
     return businessOverViewModel
         .fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//userdetail
+  static Future<ProfileModel> userdetail(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    response = await dio.post(service.userdetail, data: _map, options: opt);
+    print("service.mostPopulerBusiness : ${response.toString}");
+    return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
   static Future<businessProfileModel> baseUserProfileDetail(Map _map) async {
@@ -359,5 +483,28 @@ class APIManager {
     print("service.baseUserAppointmentList : ${response.toString}");
     return BookingOrAppointmentListModel.fromJson(
         convert.jsonDecode(response.toString()));
+  }
+
+  //Menu
+  static Future<MenuTabModel> menuTabGet(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.menuTabGet : ${service.menuTabGet}");
+    response = await dio.post(service.menuTabGet, data: _map, options: opt);
+    print("service.menuTabGet : ${response.toString}");
+    return MenuTabModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//Menu item
+  static Future<MenuItemBaseModel> menuTabItemGet(Map _map) async {
+    String token = await Prefs.token;
+    print("menuItemRequest : ${_map.toString()}");
+    opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.menuTabItemGet : ${service.menuTabItemGet}");
+    response = await dio.post(service.menuTabItemGet, data: _map, options: opt);
+    print("service.menuTabItemGet : ${response.toString}");
+    return MenuItemBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 }

@@ -81,7 +81,7 @@ class TrendingCard extends StatelessWidget {
                 bottomRight: Radius.circular(12),
               ),
               child: Image.network(
-                "https://source.unsplash.com/random/600*400",
+                data.photo ?? "",
                 height: sm.h(26),
                 fit: BoxFit.cover,
                 width: sm.w(38),

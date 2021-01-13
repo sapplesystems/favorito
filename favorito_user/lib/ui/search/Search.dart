@@ -1,6 +1,7 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
+import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/search/TopRated.dart';
 import 'package:favorito_user/ui/search/TrendingNearby.dart';
@@ -36,11 +37,9 @@ class _SearchState extends State<Search> {
               valid: true,
               prefixIcon: 'search',
               prefClick: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SearchResult(_mySearchEditTextController.text)));
+                Navigator.of(context).pushNamed('/searchResult',
+                    arguments:
+                        SearchReqData(text: _mySearchEditTextController.text));
               },
             ),
           ),

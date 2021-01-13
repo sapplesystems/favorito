@@ -1,5 +1,4 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
@@ -7,27 +6,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import '../../../utils/MyColors.dart';
 
-class Profile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicTheme(
-      theme: NeumorphicThemeData(
-          defaultTextColor: myRed,
-          accentColor: Colors.grey,
-          variantColor: Colors.black38,
-          depth: 8,
-          intensity: 0.65),
-      themeMode: ThemeMode.system,
-      child: Material(
-        child: NeumorphicBackground(
-          child: _Profile(),
-        ),
-      ),
-    );
-  }
-}
-
-class _Profile extends StatefulWidget {
+class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
   List<String> menuTitleList = [
     "Edit profile",
@@ -78,7 +57,7 @@ class _Profile extends StatefulWidget {
   ];
 }
 
-class _ProfileState extends State<_Profile> {
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
@@ -192,6 +171,11 @@ class _ProfileState extends State<_Profile> {
               Prefs().clear();
               Navigator.pop(context);
               Navigator.of(context).pushNamed('/login');
+            }
+            break;
+          case 'Edit profile':
+            {
+              Navigator.of(context).pushNamed('/personalInfo');
             }
             break;
         }

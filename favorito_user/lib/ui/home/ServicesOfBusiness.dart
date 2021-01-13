@@ -1,9 +1,9 @@
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/Business/SubCategory.dart';
+import 'package:favorito_user/model/appModel/Business/Category.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class ServicesOfBusiness extends StatefulWidget {
-  List<SubCategory> data;
+  List<Category> data;
   ServicesOfBusiness({Key key, @required this.sm, this.data}) : super(key: key);
 
   final SizeManager sm;

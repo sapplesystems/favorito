@@ -1,6 +1,7 @@
 import 'package:favorito_user/component/MapView.dart';
 import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/Business/AttributesModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/services/APIManager.dart';
@@ -38,6 +39,9 @@ class _OverviewState extends State<OverviewTab> {
     super.initState();
     fut = APIManager.baseUserProfileOverview(
         {"business_id": widget.data.businessId});
+    Attributes a = Attributes();
+    a.attributeName = 'Online Menu';
+    // widget.data.attributes.add(a);
     for (int i = 0; i < widget.data.attributes.length; i++) {
       _attribute.add(widget.data.attributes[i].attributeName);
     }
