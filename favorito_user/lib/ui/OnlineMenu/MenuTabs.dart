@@ -2,34 +2,49 @@ import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Business/Category.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
-// import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class MenuTabs extends StatefulWidget {
   List<Category> data;
-  var onlyVeg;
+  String onlyVeg;
   String id;
-  MenuTabs({this.data, this.onlyVeg, this.id});
+  Function selectedCat;
+  String txt;
+  MenuTabs({
+    this.data,
+    this.onlyVeg,
+    this.id,
+    this.selectedCat,
+    this.txt,
+  });
 
   @override
-  profilePageState createState() => profilePageState();
+  _MenuTabsState createState() => _MenuTabsState();
 }
 
-class profilePageState extends State<MenuTabs>
+class _MenuTabsState extends State<MenuTabs>
     with SingleTickerProviderStateMixin {
   SizeManager sm;
   List<Category> tabs = [];
   Widget pages;
-  CatItemReq catItemReq = CatItemReq();
+  CatItem catItem = CatItem();
   var selected = 0;
+  Category allCat = Category();
 
   @override
   void initState() {
+    allCat.id = 0;
+    allCat.categoryName = 'All';
+    tabs.add(allCat);
     tabs.addAll(widget.data);
     super.initState();
-    catItemReq.id = widget.id;
-    catItemReq.cat = tabs[0].id;
-    pages = MenuPages(catItemReq: catItemReq, isVeg: widget.onlyVeg);
+    catItem.id = widget.id;
+    catItem.cat = tabs[0].id.toString();
+    pages = MenuPage(catItem: catItem);
+
+    catItem.txt = widget.txt;
+    catItem.isVeg = widget.onlyVeg;
+    tabselection(catItem);
   }
 
   @override
@@ -47,13 +62,9 @@ class profilePageState extends State<MenuTabs>
                 return MaterialButton(
                   shape: selected == index ? UnderlineInputBorder() : null,
                   onPressed: () {
-                    selected = index;
-                    catItemReq.cat = tabs[index].id;
-
-                    setState(() {
-                      pages = MenuPages(
-                          catItemReq: catItemReq, isVeg: widget.onlyVeg);
-                    });
+                    catItem.cat = tabs[index].id.toString();
+                    catItem.index = index.toString();
+                    tabselection(catItem);
                   },
                   child: Text(tabs[index].categoryName ?? 'null',
                       style: Theme.of(context).primaryTextTheme.bodyText1
@@ -66,5 +77,13 @@ class profilePageState extends State<MenuTabs>
         Container(height: sm.h(60), child: pages)
       ],
     );
+  }
+
+  tabselection(CatItem catItem) {
+    widget.selectedCat(catItem);
+    print("called");
+    setState(() {
+      pages = MenuPage(catItem: catItem);
+    });
   }
 }

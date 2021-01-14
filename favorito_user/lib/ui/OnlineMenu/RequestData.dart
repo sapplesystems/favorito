@@ -1,7 +1,9 @@
-class CatItemReq {
+class CatItem {
   String id;
-  int cat;
+  String cat;
   String txt;
   List filter;
-  CatItemReq({this.id, this.cat, this.filter, this.txt});
+  String index;
+  String isVeg;
+  CatItem({this.id, this.cat, this.filter, this.txt, this.index, this.isVeg});
 }

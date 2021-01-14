@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuTabs.dart';
+import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:favorito_user/utils/MyString.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class MenuHome extends StatefulWidget {
   WaitListDataModel data;
@@ -20,6 +25,13 @@ class _MenuHomeState extends State<MenuHome> {
   SizeManager sm;
   bool isVegOnly = false;
   var fut;
+  CatItem catItem = CatItem();
+  String txt = '';
+  List<MenuItemModel> menuItemBaseModel = [];
+  ProgressDialog pr;
+  MenuTabs k = MenuTabs();
+  ControllerCallback controller;
+  // var child = MenuTabsState();
   @override
   void initState() {
     super.initState();
@@ -29,6 +41,8 @@ class _MenuHomeState extends State<MenuHome> {
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(message: 'Fetching Data, please wait');
     return SafeArea(
       child: Scaffold(
         backgroundColor: myBackGround,
@@ -48,53 +62,52 @@ class _MenuHomeState extends State<MenuHome> {
             child: Row(children: [
               Flexible(
                 child: EditTextComponent(
-                  ctrl: _mySearchEditTextController,
-                  hint: "Search for ...",
-                  security: false,
-                  valid: true,
-                  keyboardSet: TextInputType.text,
-                  prefixIcon: 'search',
-                  keyBoardAction: TextInputAction.search,
-                  atSubmit: (_val) {
-                    // Navigator.of(context).pushNamed('/searchResult',
-                    //     arguments: SearchReqData(text: _val));
-                  },
-                  prefClick: () {
-                    // Navigator.of(context).pushNamed('/searchResult',
-                    //     arguments: SearchReqData(
-                    //         text: _mySearchEditTextController.text));
-                  },
-                ),
+                    ctrl: _mySearchEditTextController,
+                    hint: "Search for ...",
+                    security: false,
+                    valid: true,
+                    keyboardSet: TextInputType.text,
+                    prefixIcon: 'search',
+                    keyBoardAction: TextInputAction.search,
+                    atSubmit: (_val) {
+                      setState(() {
+                        txt = _val;
+                        catItem.txt = _val;
+                      });
+                      // child.tabselection(catItem);
+                    },
+                    prefClick: () {
+                      setState(() {
+                        txt = _mySearchEditTextController.text;
+                        catItem.txt = txt;
+                      });
+                    }),
               ),
-              Column(
-                children: [
-                  Text(
-                    'Only Veg',
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontFamily: 'Gilroy-Medium',
-                        color: myGrey),
+              Column(children: [
+                Text(
+                  'Only Veg',
+                  style: TextStyle(
+                      fontSize: 10, fontFamily: 'Gilroy-Medium', color: myGrey),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: sm.w(2), right: sm.w(1), top: sm.h(1)),
+                  child: NeumorphicSwitch(
+                    value: isVegOnly,
+                    height: sm.h(3.5),
+                    style: NeumorphicSwitchStyle(
+                        activeThumbColor: Colors.green,
+                        activeTrackColor: Colors.green[100],
+                        inactiveTrackColor: Color(0xfff4f6fc),
+                        inactiveThumbColor: myBackGround),
+                    onChanged: (val) {
+                      setState(() {
+                        isVegOnly = val;
+                      });
+                    },
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.w(2), right: sm.w(1), top: sm.h(1)),
-                    child: NeumorphicSwitch(
-                      value: isVegOnly,
-                      height: sm.h(3.5),
-                      style: NeumorphicSwitchStyle(
-                          activeThumbColor: Colors.green,
-                          activeTrackColor: Colors.green[100],
-                          inactiveTrackColor: Color(0xfff4f6fc),
-                          inactiveThumbColor: myBackGround),
-                      onChanged: (val) {
-                        setState(() {
-                          isVegOnly = val;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              )
+                ),
+              ])
             ]),
           ),
           FutureBuilder<MenuTabModel>(
@@ -111,8 +124,12 @@ class _MenuHomeState extends State<MenuHome> {
                   height: 500,
                   child: MenuTabs(
                     data: snapshot.data.data,
-                    onlyVeg: isVegOnly ? 1 : 0,
+                    onlyVeg: "${isVegOnly ? 1 : 0}",
                     id: widget.data.businessId,
+                    txt: txt,
+                    selectedCat: (val) {
+                      catItem = val;
+                    },
                   ),
                 );
               }

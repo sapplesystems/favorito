@@ -71,4 +71,6 @@ class service {
   static final menuTabGet = UserBusinessMenu + 'get-category';
   static final menuTabItemGet =
       UserBusinessMenu + 'get-category-item'; //this is based on previous
+  // static final searchItemCategory =
+  //     UserBusinessMenu + 'search-item-category'; //this is based on previous
 }

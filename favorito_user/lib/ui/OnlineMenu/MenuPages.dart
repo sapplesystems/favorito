@@ -7,15 +7,14 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import 'package:favorito_user/utils/MyString.dart';
 
-class MenuPages extends StatefulWidget {
-  CatItemReq catItemReq;
-  var isVeg;
-  MenuPages({this.catItemReq, this.isVeg});
+class MenuPage extends StatefulWidget {
+  CatItem catItem;
+  MenuPage({this.catItem});
   @override
   _MenuPagesState createState() => _MenuPagesState();
 }
 
-class _MenuPagesState extends State<MenuPages> {
+class _MenuPagesState extends State<MenuPage> {
   SizeManager sm;
 
   @override
@@ -29,9 +28,10 @@ class _MenuPagesState extends State<MenuPages> {
 
     return FutureBuilder<MenuItemBaseModel>(
         future: APIManager.menuTabItemGet({
-          "business_id": widget.catItemReq.id.toString(),
-          "category_id": widget.catItemReq.cat.toString(),
-          "filter": {"only_veg": widget.isVeg.toString()}
+          "business_id": widget.catItem.id,
+          "category_id": widget.catItem.cat.toString(),
+          "keyword": widget.catItem.txt,
+          "filter": {"only_veg": widget.catItem.isVeg.toString()}
         }),
         builder:
             (BuildContext context, AsyncSnapshot<MenuItemBaseModel> snapshot) {
@@ -40,12 +40,9 @@ class _MenuPagesState extends State<MenuPages> {
           else if (snapshot.hasError)
             return Center(child: Text(wentWrong));
           else {
-            for (int a = 0; a < snapshot.data.data.length; a++) {
-              print("ResponseIs:${snapshot.data.data[a].type}");
-            }
             return snapshot?.data?.data?.length == 0
                 ? Center(
-                    child: Text(foodNotAvailable),
+                    child: Text(dataNotAvailable),
                   )
                 : ListView.builder(
                     itemCount: snapshot.data.data.length,

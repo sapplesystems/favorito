@@ -6,6 +6,7 @@ class MenuItemModel {
   String type;
   var photoId;
   var photos;
+  var businessId;
 
   MenuItemModel(
       {this.id,
@@ -14,7 +15,8 @@ class MenuItemModel {
       this.description,
       this.type,
       this.photoId,
-      this.photos});
+      this.photos,
+      this.businessId});
 
   MenuItemModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -24,6 +26,7 @@ class MenuItemModel {
     type = json['type'];
     photoId = json['photo_id'] ?? '';
     photos = json['photos'] ?? [];
+    businessId = json['business_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class MenuItemModel {
     data['type'] = this.type;
     data['photo_id'] = this.photoId;
     data['photos'] = this.photos;
+    data['business_id'] = this.businessId;
     return data;
   }
 }
