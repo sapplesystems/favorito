@@ -30,7 +30,7 @@ router.post('/set-user-profile-photo', upload_profile_photo.single('photo'), Che
 // router.post('/set-user-profile-photo', CheckAuth, UserProfileController.setUserProfilePhoto);
 
 router.post('/user-all-photo', CheckAuth, UserProfileController.userAllPhoto);
-// router.post('/user-favourite-business', CheckAuth, UserProfileController.userFavouriteBusiness);
+router.post('/user-favourite-business', CheckAuth, UserProfileController.userFavouriteBusiness);
 router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 
 // Relation apis
@@ -45,5 +45,17 @@ router.post('/get-distance', CheckAuth, UserProfilBusinessOverview.getDistance);
 
 // This is use for the set and the get of the user detial 
 router.post('/user-detail', CheckAuth, UserProfileController.userDetail);
+
+// terms and condition for the user link
+router.get('/user-terms-condition', (req, res) => {
+    res.render('terms_condition_user.hbs')
+});
+
+// privacy policy for the user link
+router.get('/user-privacy', (req, res) => {
+    res.render('privacy_policy_user.hbs')
+});
+
+
 
 module.exports = router;

@@ -75,4 +75,12 @@ router.post('/profile-photo', CheckAuth, UserController.getProfilePhoto);
 
 router.post('/get-registered-email-phone', CheckAuth, UserController.getRegisteredEmailMobile);
 
+router.get('/business-terms-condition', (req, res) => {
+    res.render('terms_condition_business.hbs')
+});
+
+router.get('/business-privacy-policy', (req, res) => {
+    res.render('privacy_policy_business.hbs')
+});
+
 module.exports = router;
