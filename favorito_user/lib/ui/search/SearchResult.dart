@@ -9,63 +9,79 @@ import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/NewAppointment.dart';
+import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-class SearchResult extends StatelessWidget {
-  String searchedText;
+class SearchResult extends StatefulWidget {
+  SearchReqData data;
 
-  SearchResult(this.searchedText);
-
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicTheme(
-      theme: NeumorphicThemeData(
-          defaultTextColor: myRed,
-          accentColor: Colors.grey,
-          variantColor: Colors.black38,
-          depth: 8,
-          intensity: 0.65),
-      themeMode: ThemeMode.system,
-      child: Material(
-        child: NeumorphicBackground(
-          child: _SearchResult(searchedText),
-        ),
-      ),
-    );
-  }
-}
-
-class _SearchResult extends StatefulWidget {
-  String searchedText;
-
-  _SearchResult(this.searchedText);
+  SearchResult({this.data});
 
   _SearchResultState createState() => _SearchResultState();
 }
 
-class _SearchResultState extends State<_SearchResult> {
+class _SearchResultState extends State<SearchResult> {
   var _mySearchEditTextController = TextEditingController();
   List<String> selectedFilters = [];
   List<ServiceFilterList> allFilters = List<ServiceFilterList>();
   SearchBusinessListModel searchResult;
-
+  var servicesIs;
   @override
   void initState() {
     ServiceFilterList filter1 = ServiceFilterList("Restro", false);
     ServiceFilterList filter2 = ServiceFilterList("Cafe", false);
     allFilters.add(filter1);
     allFilters.add(filter2);
+    _mySearchEditTextController.text = widget.data.text;
     // selectedFilters.add("Restro");
     // selectedFilters.add("Cafe");
 
     //_mySearchEditTextController.text = widget.searchedText;
+    var txt = widget.data.category;
 
+    print("selecred : $txt");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      search(widget.searchedText);
+      switch (txt) {
+        case ('Food'):
+          {
+            servicesIs = APIManager.foodBusiness(context, txt ?? '');
+            break;
+          }
+        case ('Book A Table'):
+          {
+            servicesIs = APIManager.bookTableBusiness(context, txt ?? '');
+            break;
+          }
+        case ('Book An\nAppoinent'):
+          {
+            servicesIs = APIManager.appointmentBusiness(context, txt ?? '');
+            break;
+          }
+        case ('Doctor'):
+          {
+            servicesIs = APIManager.doctorBusiness(context, txt ?? '');
+            break;
+          }
+        case ('Jobs'):
+          {
+            servicesIs = APIManager.jobBusiness(context, txt ?? '');
+            break;
+          }
+        case ('Freelancers'):
+          {
+            servicesIs = APIManager.freelanceBusiness(context, txt ?? '');
+            break;
+          }
+        default:
+          {
+            servicesIs = APIManager.search(context, txt);
+          }
+      }
+      search(widget.data.text);
     });
 
     super.initState();
@@ -76,7 +92,8 @@ class _SearchResultState extends State<_SearchResult> {
         ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(message: 'Fetching Data, please wait');
     pr.show();
-    await APIManager.search(context, searchString).then((value) {
+
+    await servicesIs.then((value) {
       if (value.status == "success") {
         pr.hide();
         setState(() {
@@ -90,10 +107,9 @@ class _SearchResultState extends State<_SearchResult> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return SafeArea(
-      child: Container(
-        height: sm.h(100),
-        decoration: BoxDecoration(color: myBackGround),
-        child: Column(
+      child: Scaffold(
+        backgroundColor: myBackGround,
+        body: Column(
           children: [
             Container(
               height: sm.h(8),
@@ -105,7 +121,8 @@ class _SearchResultState extends State<_SearchResult> {
                           left: sm.w(5), right: sm.w(5), top: sm.h(1)),
                       child: EditTextComponent(
                         ctrl: _mySearchEditTextController,
-                        title: "Search",
+                        // title: "Search",
+                        hint: 'Search',
                         security: false,
                         valid: true,
                         prefixIcon: 'search',
@@ -161,7 +178,7 @@ class _SearchResultState extends State<_SearchResult> {
               ),
             ),
             Container(
-              height: selectedFilters.length > 0 ? sm.h(80) : sm.h(88),
+              height: selectedFilters.length > 0 ? sm.h(80) : sm.h(85),
               child: ListView(
                 shrinkWrap: true,
                 children: [
@@ -226,7 +243,9 @@ class _SearchResultState extends State<_SearchResult> {
                         padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
                         child: Row(
                           children: [
-                            for (var i = 0; i < 5; i++)
+                            for (var i = 0;
+                                i < int.parse(result.avgRating);
+                                i++)
                               Icon(
                                 Icons.star,
                                 size: sm.h(1.5),
@@ -236,13 +255,13 @@ class _SearchResultState extends State<_SearchResult> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                        child: Text("1.2 km | Varaccha",
+                        child: Text("1.2 km | ${result.townCity}",
                             style: TextStyle(
                                 fontSize: 12, fontWeight: FontWeight.w300)),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                        child: Text("Open Now",
+                        child: Text(result.businessStatus,
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w300,

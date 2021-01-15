@@ -286,18 +286,22 @@ class _BusinessProfileState extends State<BusinessProfile> {
 
   ServicCart() {
     BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
-
     List<String> service = [
       'Call Now',
       'Chat',
-      (widget.attribute.contains('Booking')
-          ? 'Booking'
-          : (widget.attribute.contains('Appointment'))
-              ? 'Appointment'
-              : null),
-      (widget.attribute.contains('Waitlist') ? 'Waitlist' : null),
+      // (widget.attribute.contains('Booking')
+      //     ? 'Booking'
+      //     : (widget.attribute.contains('Appointment'))
+      //         ? 'Appointment'
+      //         : null),
+      // (widget.attribute.contains('Waitlist') ? 'Waitlist' : null),
     ];
+    service.addAll(widget.attribute);
     List<IconData> serviceIcons = [
+      Icons.call_outlined,
+      FontAwesomeIcons.comment,
+      Icons.calendar_today,
+      Icons.alarm,
       Icons.call_outlined,
       FontAwesomeIcons.comment,
       Icons.calendar_today,
@@ -347,6 +351,16 @@ class _BusinessProfileState extends State<BusinessProfile> {
                       wdm.contact = data.data[0].phone;
                       Navigator.of(context)
                           .pushNamed('/waitlist', arguments: wdm);
+                    }
+                    break;
+                  case 'Online Menu':
+                    {
+                      WaitListDataModel wdm = WaitListDataModel();
+                      wdm.businessId = data.data[0].businessId;
+                      wdm.businessName = data.data[0].businessName;
+
+                      Navigator.of(context)
+                          .pushNamed('/menuHome', arguments: wdm);
                     }
                 }
               },

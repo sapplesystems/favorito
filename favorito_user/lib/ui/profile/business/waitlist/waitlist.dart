@@ -86,7 +86,10 @@ class _WaitlistState extends State<Waitlist> {
                     children: [
                       WaitListHeader(
                         title: waitingList,
-                        function: () => getWaitList(true),
+                        preFunction: () {
+                          getWaitList(true);
+                          Navigator.pop(context);
+                        },
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(

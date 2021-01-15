@@ -6,27 +6,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class ProfileDetail extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return NeumorphicTheme(
-      theme: NeumorphicThemeData(
-          defaultTextColor: myRed,
-          accentColor: Colors.grey,
-          variantColor: Colors.black38,
-          depth: 8,
-          intensity: 0.65),
-      themeMode: ThemeMode.system,
-      child: Material(
-        child: NeumorphicBackground(
-          child: _ProfileDetail(),
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileDetail extends StatefulWidget {
+class ProfileDetail extends StatefulWidget {
   _ProfileDetailState createState() => _ProfileDetailState();
   Color selectedTab = Colors.black;
   Color deselectedTab = myGrey;
@@ -35,7 +15,7 @@ class _ProfileDetail extends StatefulWidget {
   bool favouritesSelected = false;
 }
 
-class _ProfileDetailState extends State<_ProfileDetail> {
+class _ProfileDetailState extends State<ProfileDetail> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);

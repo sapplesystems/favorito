@@ -94,7 +94,14 @@ class _EditTextComponentState extends State<EditTextComponent> {
                                         widget.prefClick();
                                       },
                                     )
-                                  : null,
+                                  : widget.prefixIcon == 'address'
+                                      ? InkWell(
+                                          child: Icon(Icons.home_outlined),
+                                          onTap: () {
+                                            widget.prefClick();
+                                          },
+                                        )
+                                      : null,
           labelText: widget.title ?? '',
           counterText: "",
           hintText: widget.hint,

@@ -1,28 +1,27 @@
 class dashModel {
   String status;
   String message;
-  dashData data;
+  DashData data;
 
   dashModel({this.status, this.message, this.data});
 
   dashModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new dashData.fromJson(json['data']) : null;
+    data = json['data'] != null ? new DashData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data.toJson();
-    }
+    if (this.data != null) data['data'] = this.data.toJson();
+
     return data;
   }
 }
 
-class dashData {
+class DashData {
   int id;
   String businessId;
   String businessName;
@@ -34,13 +33,13 @@ class dashData {
   int isEmailVerified;
   int isVerified;
   int checkIns;
-  double ratings;
+  var ratings;
   int catalogoues;
   int orders;
   int freeCredit;
   int paidCredit;
 
-  dashData(
+  DashData(
       {this.id,
       this.businessId,
       this.businessName,
@@ -58,7 +57,7 @@ class dashData {
       this.freeCredit,
       this.paidCredit});
 
-  dashData.fromJson(Map<String, dynamic> json) {
+  DashData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     businessId = json['business_id'];
     businessName = json['business_name'];

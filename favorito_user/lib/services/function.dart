@@ -10,7 +10,7 @@ class service {
 
   //User+switch
 
-  static final baseUserBusiness = baseUser + 'business';
+  static final baseUserBusiness = baseUser + 'business-';
   static final baseUserProfile = baseUser + 'profile/';
   static final baseUserWaitlist = baseUser + 'waitlist/';
   static final baseUserBooking = baseUser + 'booking/';
@@ -28,7 +28,18 @@ class service {
   static final trendingBusiness = baseBusinessDashboard + 'get-trending-nearby';
   static final topRatedBusiness = baseBusinessDashboard + 'get-top-rated';
 
+  static final UserBusinessMenu = baseUserBusiness + 'menu/';
   static final mostPopulerBusiness = baseBusinessDashboard + 'get-most-popular';
+  static final foodBusiness = baseBusinessDashboard + 'get-business-by-food';
+  static final jobBusiness = baseBusinessDashboard + 'get-business-by-job';
+  static final appointmentBusiness =
+      baseBusinessDashboard + 'get-business-by-appintment';
+  static final freelanceBusiness =
+      baseBusinessDashboard + 'get-business-by-freelancer';
+  static final doctorBusiness =
+      baseBusinessDashboard + 'get-business-by-doctor';
+  static final bookTableBusiness =
+      baseBusinessDashboard + 'get-business-by-book-table';
 
   static final baseUserProfileOverview = baseUserProfile + 'business-overview';
   static final baseUserProfileDetail = baseUserProfile + 'business-detail';
@@ -46,10 +57,18 @@ class service {
   //relation
   static final businessRelationGet = baseUserProfile + 'user-business-relation';
 
+  //userDetail
+  static final userdetail = baseUserProfile + 'user-detail';
+
   //booking
   static final baseUserBookingList = baseUserBooking + 'get-book-table';
 
   //appoinment
   static final baseUserAppointmentList =
       baseUserAppointment + 'get-booking-appointment';
+
+  //appoinment
+  static final menuTabGet = UserBusinessMenu + 'get-category';
+  static final menuTabItemGet =
+      UserBusinessMenu + 'get-category-item'; //this is based on previous
 }

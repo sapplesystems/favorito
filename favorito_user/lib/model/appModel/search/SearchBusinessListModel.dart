@@ -32,6 +32,8 @@ class SearchResultModel {
   String businessId;
   int businessTypeId;
   int businessCategoryId;
+  String avgRating;
+  String distance;
   String businessName;
   String postalCode;
   String businessPhone;
@@ -71,6 +73,8 @@ class SearchResultModel {
       this.businessId,
       this.businessTypeId,
       this.businessCategoryId,
+      this.avgRating,
+      this.distance,
       this.businessName,
       this.postalCode,
       this.businessPhone,
@@ -109,7 +113,9 @@ class SearchResultModel {
     id = json['id'];
     businessId = json['business_id'];
     businessTypeId = json['business_type_id'];
+    avgRating = json['avg_rating'].toString();
     businessCategoryId = json['business_category_id'];
+    distance = json['distance'].toString();
     businessName = json['business_name'];
     postalCode = json['postal_code'];
     businessPhone = json['business_phone'];
@@ -151,6 +157,8 @@ class SearchResultModel {
     data['business_id'] = this.businessId;
     data['business_type_id'] = this.businessTypeId;
     data['business_category_id'] = this.businessCategoryId;
+    data['avg_rating'] = this.avgRating;
+    data['distance'] = this.distance;
     data['business_name'] = this.businessName;
     data['postal_code'] = this.postalCode;
     data['business_phone'] = this.businessPhone;

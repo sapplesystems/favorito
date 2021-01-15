@@ -4,6 +4,7 @@ import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -77,36 +78,55 @@ class _BookAppChildState extends State<BookAppChild> {
               },
               child: Column(
                 children: [
-                  Container(
-                    height: sm.h(10),
-                    padding: EdgeInsets.symmetric(vertical: sm.h(2)),
-                    width: sm.w(45),
-                    child: Card(
-                      elevation: 8,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(12.0))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () => setState(() {
-                              widget.selectedTab = 'New';
-                            }),
-                            child: NewHistory('New'),
-                          ),
-                          InkWell(
-                            onTap: () => setState(() {
-                              widget.selectedTab = 'History';
-                            }),
-                            child: NewHistory('History'),
-                          ),
-                        ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.add_circle,
+                        size: 30,
+                        color: Colors.transparent,
                       ),
-                    ),
+                      Container(
+                        height: sm.h(10),
+                        padding: EdgeInsets.symmetric(vertical: sm.h(2)),
+                        width: sm.w(45),
+                        child: Card(
+                          elevation: 8,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12.0))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () => setState(() {
+                                  widget.selectedTab = 'New';
+                                }),
+                                child: NewHistory('New'),
+                              ),
+                              InkWell(
+                                onTap: () => setState(() {
+                                  widget.selectedTab = 'History';
+                                }),
+                                child: NewHistory('History'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () =>
+                            Navigator.of(context).pushNamed('/bookTable'),
+                        child: Icon(
+                          Icons.add_circle,
+                          size: 30,
+                          color: myRed,
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
-                    height: sm.h(78),
+                    height: sm.h(71),
                     child: data.length == 0
                         ? Center(child: Text(snapshot.data.message))
                         : ListView.builder(
@@ -183,8 +203,9 @@ class _BookAppChildState extends State<BookAppChild> {
                                                           top: 2.0),
                                                   child: Visibility(
                                                     visible: data[index]
-                                                        .specialNotes
-                                                        .isNotEmpty,
+                                                            ?.specialNotes
+                                                            ?.isNotEmpty ??
+                                                        false,
                                                     child: Text(
                                                       "${data[index].specialNotes}",
                                                       style: TextStyle(
@@ -200,8 +221,9 @@ class _BookAppChildState extends State<BookAppChild> {
                                                           top: 2.0),
                                                   child: Visibility(
                                                     visible: data[index]
-                                                        .review
-                                                        .isNotEmpty,
+                                                            ?.review
+                                                            ?.isNotEmpty ??
+                                                        false,
                                                     child: Text(
                                                       "Review : ${data[index].review}",
                                                       style: TextStyle(

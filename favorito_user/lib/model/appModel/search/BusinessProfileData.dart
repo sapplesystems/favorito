@@ -1,6 +1,6 @@
 import 'package:favorito_user/model/appModel/Business/AttributesModel.dart';
 import 'package:favorito_user/model/appModel/Business/RelationModel.dart';
-import 'package:favorito_user/model/appModel/Business/SubCategory.dart';
+import 'package:favorito_user/model/appModel/Business/Category.dart';
 
 class BusinessProfileData {
   int id;
@@ -31,7 +31,7 @@ class BusinessProfileData {
   String paymentMethod;
   List<Attributes> attributes;
   List<Relation> relation;
-  List<SubCategory> subCategory;
+  List<Category> subCategory;
 
   BusinessProfileData(
       {this.id,
@@ -104,9 +104,9 @@ class BusinessProfileData {
       });
     }
     if (json['sub_category'] != null) {
-      subCategory = new List<SubCategory>();
+      subCategory = new List<Category>();
       json['sub_category'].forEach((v) {
-        subCategory.add(new SubCategory.fromJson(v));
+        subCategory.add(new Category.fromJson(v));
       });
     }
   }

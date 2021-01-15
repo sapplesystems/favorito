@@ -7,6 +7,7 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
 import 'package:favorito_user/ui/home/usernameAddress.dart';
+import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -90,12 +91,13 @@ class _HomeState extends State<Home> {
               prefixIcon: 'search',
               keyBoardAction: TextInputAction.search,
               atSubmit: (_val) {
-                Navigator.of(context)
-                    .pushNamed('/searchResult', arguments: _val);
+                Navigator.of(context).pushNamed('/searchResult',
+                    arguments: SearchReqData(text: _val));
               },
               prefClick: () {
                 Navigator.of(context).pushNamed('/searchResult',
-                    arguments: _mySearchEditTextController.text);
+                    arguments:
+                        SearchReqData(text: _mySearchEditTextController.text));
               },
             ),
           ),
@@ -107,30 +109,39 @@ class _HomeState extends State<Home> {
               alignment: WrapAlignment.center,
               children: [
                 for (var i = 0; i < widget.imagName.length; i++)
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Neumorphic(
-                        style: NeumorphicStyle(
-                            shape: NeumorphicShape.convex,
-                            depth: 8,
-                            lightSource: LightSource.topLeft,
-                            color: myButtonBackground,
-                            boxShape: NeumorphicBoxShape.roundRect(
-                              BorderRadius.all(Radius.circular(12.0)),
-                            )),
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(sm.h(3.5)),
-                          child: SvgPicture.asset(
-                            'assets/icon/${widget.image[i]}.svg',
-                            height: sm.h(3.5),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/searchResult',
+                          arguments:
+                              SearchReqData(category: widget.imagName[i]));
+                    },
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Neumorphic(
+                              style: NeumorphicStyle(
+                                  shape: NeumorphicShape.convex,
+                                  depth: 8,
+                                  lightSource: LightSource.topLeft,
+                                  color: myButtonBackground,
+                                  boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                  )),
+                              child: Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.all(sm.h(3.5)),
+                                child: SvgPicture.asset(
+                                  'assets/icon/${widget.image[i]}.svg',
+                                  height: sm.h(3.5),
+                                ),
+                              )),
+                          Padding(
+                            padding: EdgeInsets.only(top: sm.h(2.5)),
+                            child: Text(widget.imagName[i].toString(),
+                                textAlign: TextAlign.center),
                           ),
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(top: sm.h(2.5)),
-                      child: Text(widget.imagName[i].toString(),
-                          textAlign: TextAlign.center),
-                    ),
-                  ]),
+                        ]),
+                  ),
               ],
             ),
           ),
