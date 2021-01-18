@@ -12,4 +12,6 @@ router.post('/get-category-item', CheckAuth, UserBusinessMenuController.getItemO
 // search item category by 
 router.post('/search-item-category', CheckAuth, UserBusinessMenuController.searchItemCategory);
 
+router.post('/get-menu-setting', CheckAuth, UserBusinessMenuController.businessMenuSetting);
+
 module.exports = router;

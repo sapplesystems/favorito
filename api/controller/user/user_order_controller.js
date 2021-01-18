@@ -2,7 +2,6 @@ var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 var uniqid = require('uniqid');
 
-
 exports.getOrderList = async function(req, res, next) {
     if (req.body.user_id != null || req.body.user_id != undefined || req.body.user_id != '') {
         user_id = req.body.user_id
@@ -95,6 +94,38 @@ exports.createOrder = async function(req, res, next) {
         var total_tax = 0;
         var total_amount = 0;
 
+        // for (var i = 0; i < category_length; i++) {
+        //     var category_id = category[i].category_id;
+        //     var category_items = category[i].category_item;
+        //     var category_item_length = category_items.length;
+        //     for (var j = 0; j < category_item_length; j++) {
+        //         var item_id = category_items[j].item_id;
+        //         var qty = Number(category_items[j].qty);
+        //         var price = Number(category_items[j].price);
+        //         var tax = Number(category_items[j].tax) * qty;
+        //         var amount = (price * qty) + tax;
+
+        //         total_price = (total_price + price);
+        //         total_tax = (total_tax + tax);
+        //         total_amount = (total_amount + amount);
+
+        //         var order_detail = {
+        //             business_id: req.body.business_id,
+        //             order_id: order_id,
+        //             category_id: category_id,
+        //             item_id: item_id,
+        //             quantity: qty,
+        //             price: price,
+        //             tax: tax,
+        //             amount: amount,
+        //             user_id: user_id
+        //         };
+
+        //         var sql = "INSERT INTO business_order_detail set ?";
+        //         db.query(sql, order_detail)
+        //     }
+        // }
+
         for (var i = 0; i < category_length; i++) {
             var category_id = category[i].category_id;
             var category_items = category[i].category_item;
@@ -103,6 +134,7 @@ exports.createOrder = async function(req, res, next) {
                 var item_id = category_items[j].item_id;
                 var qty = Number(category_items[j].qty);
                 var price = Number(category_items[j].price);
+                // var tax_percent = Number(category_items[j].tax)
                 var tax = Number(category_items[j].tax) * qty;
                 var amount = (price * qty) + tax;
 

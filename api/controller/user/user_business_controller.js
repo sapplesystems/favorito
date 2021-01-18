@@ -44,7 +44,6 @@ var async = require('async');
 //     }
 // }
 
-
 exports.searchByName = async function(req, res, next) {
     try {
         var d = new Date();
@@ -59,15 +58,34 @@ exports.searchByName = async function(req, res, next) {
 
         var day = weekday[d.getDay()].substring(0, 3);
         if (req.body.keyword == null || req.body.keyword == undefined || req.body.keyword == '') {
-            var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
+            var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
+            LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id\n\
+            LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
+            WHERE b_m.is_activated='1'\n\
+            AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY b_m.created_at desc LIMIT 5";
 
-            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m  JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id  WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
+            // considering the day 
+            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
+            // LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id\n\
+            // LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
+            // WHERE b_m.is_activated='1'\n\
+            // AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id";
+
         } else {
-            var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_hours as b_h  JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 5";
+            var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
+            LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
+            LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
+            WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY b_m.created_at desc";
+
+            // consider the day
+            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
+            // LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
+            // LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
+            // WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id";
         }
 
         result_master = await exports.run_query(sql)
-        return res.send(result_master)
+            // return res.send(result_master)
         final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {

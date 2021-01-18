@@ -73,7 +73,7 @@ exports.getMenuCategories = function(business_id, req) {
                 COND += " AND id='" + req.body.category_id + "'";
             }
 
-            var sql = "SELECT id, category_name, details, slot_start_time, slot_end_time, available_on, out_of_stock \n\
+            var sql = "SELECT id, category_name, details,tax, slot_start_time, slot_end_time, available_on, out_of_stock \n\
             FROM business_menu_category \n\
             WHERE " + COND;
             db.query(sql, function(e, cat) {
@@ -390,6 +390,8 @@ exports.addCategory = function(req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Slot end time not found.' });
         } else if (req.body.available_on == '' || req.body.available_on == 'undefined' || req.body.available_on == null) {
             return res.status(403).json({ status: 'error', message: 'Available days not found.' });
+        } else if (req.body.tax == '' || req.body.tax == 'undefined' || req.body.tax == null) {
+            return res.status(403).json({ status: 'error', message: 'Tax not found.' });
         }
 
         var available_on = req.body.available_on;
@@ -397,6 +399,7 @@ exports.addCategory = function(req, res, next) {
         var postval = {
             business_id: business_id,
             menu_type_id: menu_type_id,
+            tax: req.body.tax,
             category_name: req.body.category_name,
             details: req.body.details,
             slot_start_time: req.body.slot_start_time,
