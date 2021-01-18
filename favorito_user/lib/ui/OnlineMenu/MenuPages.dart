@@ -28,10 +28,10 @@ class _MenuPagesState extends State<MenuPage> {
 
     return FutureBuilder<MenuItemBaseModel>(
         future: APIManager.menuTabItemGet({
-          "business_id": widget.catItem.id,
+          "business_id": widget.catItem.buId,
           "category_id": widget.catItem.cat.toString(),
           "keyword": widget.catItem.txt,
-          "filter": {"only_veg": widget.catItem.isVeg.toString()}
+          "filter": {"only_veg": "${widget.catItem.isVeg ? 1 : 0}"}
         }),
         builder:
             (BuildContext context, AsyncSnapshot<MenuItemBaseModel> snapshot) {

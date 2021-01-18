@@ -24,7 +24,7 @@ class MenuItemModel {
     price = json['price'];
     description = json['description'];
     type = json['type'];
-    photoId = json['photo_id'] ?? '';
+    photoId = json['photo_id'] ?? [];
     photos = json['photos'] ?? [];
     businessId = json['business_id'];
   }

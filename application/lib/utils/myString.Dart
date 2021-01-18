@@ -29,3 +29,5 @@ String appoinmentSettingtxt = "Appoinment Setting";
 String donetxt = "Done";
 
 String bookingSetting = "Booking Setting";
+String loading = "Loading...";
+String wentWrong = "Something went wrong..";

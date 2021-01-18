@@ -1,12 +1,17 @@
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import 'package:Favorito/model/menu/MenuDisplayListModel.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/item/MenuItem.dart';
 import 'package:Favorito/ui/item/NewItem.dart';
+import 'package:Favorito/ui/menu/CategoryPage.dart';
 import 'package:Favorito/ui/menu/MenuSetting.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import '../../utils/myString.dart';
 
 class Menu extends StatefulWidget {
   @override
@@ -15,70 +20,25 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   final _mySearchEditController = TextEditingController();
-
+  SizeManager sm;
   Map _dataMap = Map();
+  var fut;
+  ProgressDialog pr;
 
   @override
   void initState() {
-    initializeValues();
     super.initState();
-  }
-
-  void initializeValues() {
-    List<MenuDisplayListModel> punjabiList = [];
-    MenuDisplayListModel model1 = MenuDisplayListModel();
-    model1.id = 1;
-    model1.name = "Masala Chana";
-    model1.price = "Rs. 180";
-    model1.isActive = true;
-    model1.foodType = "Veg";
-    MenuDisplayListModel model2 = MenuDisplayListModel();
-    model2.id = 2;
-    model2.name = "Masala Chana";
-    model2.price = "Rs. 180";
-    model2.isActive = true;
-    model2.foodType = "Veg";
-    MenuDisplayListModel model3 = MenuDisplayListModel();
-    model3.id = 3;
-    model3.name = "Masala Chana";
-    model3.price = "Rs. 180";
-    model3.isActive = true;
-    model3.foodType = "Veg";
-    punjabiList.add(model1);
-    punjabiList.add(model2);
-    punjabiList.add(model3);
-
-    List<MenuDisplayListModel> chineseList = [];
-    MenuDisplayListModel model4 = MenuDisplayListModel();
-    model4.id = 4;
-    model4.name = "Masala Chana";
-    model4.price = "Rs. 180";
-    model4.isActive = true;
-    model4.foodType = "NonVeg";
-    MenuDisplayListModel model5 = MenuDisplayListModel();
-    model5.id = 5;
-    model5.name = "Masala Chana";
-    model5.price = "Rs. 180";
-    model5.isActive = true;
-    model5.foodType = "Veg";
-    MenuDisplayListModel model6 = MenuDisplayListModel();
-    model6.id = 6;
-    model6.name = "Masala Chana";
-    model6.price = "Rs. 180";
-    model6.isActive = true;
-    model6.foodType = "Veg";
-    chineseList.add(model4);
-    chineseList.add(model5);
-    chineseList.add(model6);
-
-    _dataMap["Punjabi"] = punjabiList;
-    _dataMap["Chinese"] = chineseList;
+    fut = WebService.funMenuList();
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeManager sm = SizeManager(context);
+    sm = SizeManager(context);
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(message: 'Fetching Data, please wait');
     return Scaffold(
+      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: myBackGround,
         elevation: 0,
@@ -91,11 +51,17 @@ class _MenuState extends State<Menu> {
         ),
         title: Text(
           "Menu",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.black,
+              letterSpacing: 1.75,
+              fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add_circle_outline),
+            icon: Icon(
+              Icons.add_circle_outline,
+              size: 24,
+            ),
             onPressed: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => NewItem()));
@@ -103,53 +69,78 @@ class _MenuState extends State<Menu> {
           ),
           IconButton(
               icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
-                  height: 20),
+                  height: 24),
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => MenuSetting())))
         ],
       ),
-      body: Container(
-        height: sm.scaledHeight(100),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextFormField(
-                controller: _mySearchEditController,
-                decoration: InputDecoration(
-                  labelText: "Search Branch",
-                  suffixIcon:
-                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
+      body: FutureBuilder<MenuBaseModel>(
+        future: fut,
+        builder: (BuildContext context, AsyncSnapshot<MenuBaseModel> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Center(child: Text(loading));
+          else if (snapshot.hasError)
+            return Center(child: Text("Something went wrong.."));
+          else {
+            for (var key in snapshot.data.data)
+              _dataMap[key.categoryName + '|' + key.categoryId.toString()] =
+                  key.items;
+
+            return ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                      controller: _mySearchEditController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "Search ",
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                          ))),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  Column(children: [
-                    for (var key in _dataMap.keys) _header(key, _dataMap[key]),
-                  ]),
-                ],
-              ),
-            ),
-          ],
-        ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Column(children: [
+                        for (var key in _dataMap.keys)
+                          _header(key, _dataMap[key]),
+                      ]),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
 
-  Widget _header(String title, List<MenuDisplayListModel> childList) {
-    return Column(
-      children: [
+  Widget _header(String title, List<Items> childList) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(title,
+          Text(title.split('|')[0],
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               )),
           InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CategoryPage(
+                            title: title.split('|')[0],
+                            id: title.split('|')[1],
+                            isActivate: true,
+                          )));
+            },
             child: Text(
               "Edit",
               style: TextStyle(color: Colors.red),
@@ -162,26 +153,36 @@ class _MenuState extends State<Menu> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MenuItem(child.id, child.name)));
+                      builder: (context) => MenuItem(child.id, child.title)));
             },
-            title: Text(child.name),
-            subtitle: Text(child.price),
-            leading: child.foodType == "Veg"
+            title: Text(child.title),
+            subtitle: Text(child.price.toString()),
+            leading: child.type == "Veg"
                 ? SvgPicture.asset('assets/icon/foodTypeVeg.svg', height: 20)
                 : SvgPicture.asset('assets/icon/foodTypeNonVeg.svg',
                     height: 20),
             trailing: Switch(
-              value: child.isActive,
-              onChanged: (value) {
-                setState(() {
-                  child.isActive = value;
+              value: child.isActivated,
+              onChanged: (value) async {
+                pr.show();
+
+                await WebService.funMenuStatusChange({
+                  "is_activated": child.isActivated ? 0 : 1,
+                  "item_id": child.id
+                }).then((value) {
+                  if (value.status == 'success') {
+                    setState(() {
+                      child.isActivated = !child.isActivated;
+                    });
+                  }
+                  pr.hide();
                 });
               },
               activeTrackColor: Colors.grey,
               activeColor: Colors.red,
             ),
           )
-      ],
+      ]),
     );
   }
 }

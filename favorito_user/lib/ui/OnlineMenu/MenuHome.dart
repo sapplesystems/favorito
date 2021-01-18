@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/Business/Category.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/OnlineMenu/MenuTabs.dart';
+import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -23,19 +24,27 @@ class MenuHome extends StatefulWidget {
 class _MenuHomeState extends State<MenuHome> {
   var _mySearchEditTextController = TextEditingController();
   SizeManager sm;
-  bool isVegOnly = false;
   var fut;
-  CatItem catItem = CatItem();
+  Widget pages;
+  CatItem catItems = CatItem();
   String txt = '';
   List<MenuItemModel> menuItemBaseModel = [];
   ProgressDialog pr;
-  MenuTabs k = MenuTabs();
   ControllerCallback controller;
-  // var child = MenuTabsState();
+  List<Category> cat = [];
+
   @override
   void initState() {
     super.initState();
+    print("widget.data.businessId:${widget.data.businessId}");
     fut = APIManager.menuTabGet({'business_id': widget.data.businessId});
+    catItems.buId = widget.data.businessId;
+    catItems.isVeg = catItems.isVeg ?? false;
+    catItems.index = catItems.index ?? 0;
+    Category ca = Category();
+    ca.id = 0;
+    ca.categoryName = 'All';
+    cat.add(ca);
   }
 
   @override
@@ -63,7 +72,7 @@ class _MenuHomeState extends State<MenuHome> {
               Flexible(
                 child: EditTextComponent(
                     ctrl: _mySearchEditTextController,
-                    hint: "Search for ...",
+                    hint: "Search for ... ",
                     security: false,
                     valid: true,
                     keyboardSet: TextInputType.text,
@@ -72,14 +81,13 @@ class _MenuHomeState extends State<MenuHome> {
                     atSubmit: (_val) {
                       setState(() {
                         txt = _val;
-                        catItem.txt = _val;
+                        catItems.txt = _val;
                       });
-                      // child.tabselection(catItem);
                     },
                     prefClick: () {
                       setState(() {
                         txt = _mySearchEditTextController.text;
-                        catItem.txt = txt;
+                        catItems.txt = txt;
                       });
                     }),
               ),
@@ -93,7 +101,7 @@ class _MenuHomeState extends State<MenuHome> {
                   padding: EdgeInsets.only(
                       left: sm.w(2), right: sm.w(1), top: sm.h(1)),
                   child: NeumorphicSwitch(
-                    value: isVegOnly,
+                    value: catItems.isVeg ?? false,
                     height: sm.h(3.5),
                     style: NeumorphicSwitchStyle(
                         activeThumbColor: Colors.green,
@@ -102,7 +110,7 @@ class _MenuHomeState extends State<MenuHome> {
                         inactiveThumbColor: myBackGround),
                     onChanged: (val) {
                       setState(() {
-                        isVegOnly = val;
+                        catItems.isVeg = val;
                       });
                     },
                   ),
@@ -119,17 +127,40 @@ class _MenuHomeState extends State<MenuHome> {
               else if (snapshot.hasError) {
                 return Center(child: Text(wentWrong));
               } else {
-                print("snapshot.data.data:${widget.data}");
+                // if (cat.length == 1)
+                print("snapshot.data.data${snapshot.data.data.length}");
+                cat.addAll(snapshot.data.data);
                 return Container(
                   height: 500,
-                  child: MenuTabs(
-                    data: snapshot.data.data,
-                    onlyVeg: "${isVegOnly ? 1 : 0}",
-                    id: widget.data.businessId,
-                    txt: txt,
-                    selectedCat: (val) {
-                      catItem = val;
-                    },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: sm.h(6),
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: cat.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return MaterialButton(
+                                shape: catItems.index == index
+                                    ? UnderlineInputBorder()
+                                    : null,
+                                onPressed: () {
+                                  categorySelector(index);
+                                  setState(() {});
+                                },
+                                child: Text(cat[index].categoryName ?? 'null',
+                                    style: Theme.of(context)
+                                        .primaryTextTheme
+                                        .bodyText1
+                                    // TextStyle(fontSize: 20)
+                                    ),
+                              );
+                            }),
+                      ),
+                      Divider(),
+                      Container(height: sm.h(60), child: pages)
+                    ],
                   ),
                 );
               }
@@ -138,5 +169,11 @@ class _MenuHomeState extends State<MenuHome> {
         ]),
       ),
     );
+  }
+
+  void categorySelector(int index) {
+    catItems.index = index;
+    catItems.cat = cat[index].id.toString();
+    pages = MenuPage(catItem: catItems);
   }
 }
