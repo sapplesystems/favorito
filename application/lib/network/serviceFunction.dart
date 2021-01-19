@@ -113,4 +113,9 @@ class serviceFunction {
 
   //Category
   static String funCategoryList = funCategory + 'list';
+  //menu
+  static String funMenuList = funMenu + 'list';
+  static String funMenuStatusChange = funMenu + 'change-menu-status';
+  static String funMenuCatList = funMenu + 'category-list';
+  static String funMenuCatEdit = funMenu + 'edit-category';
 }

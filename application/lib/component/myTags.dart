@@ -17,7 +17,8 @@ class MyTags extends StatefulWidget {
       this.border,
       this.hint,
       this.selectedList,
-      this.directionVeticle,this.refresh});
+      this.directionVeticle,
+      this.refresh});
   @override
   _MyTagsState createState() => _MyTagsState();
 }
@@ -76,5 +77,4 @@ class _MyTagsState extends State<MyTags> {
               ]))
     ]);
   }
-  
 }

@@ -501,10 +501,23 @@ class APIManager {
   static Future<MenuItemBaseModel> menuTabItemGet(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
+
     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print("service.menuTabItemGet : ${service.menuTabItemGet}");
     response = await dio.post(service.menuTabItemGet, data: _map, options: opt);
     print("service.menuTabItemGet : ${response.toString}");
     return MenuItemBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
+
+// //Menu item search
+//   static Future<MenuItemBaseModel> searchItemCategory(Map _map) async {
+//     String token = await Prefs.token;
+//     print("menuItemRequest : ${_map.toString()}");
+//     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+//     print("service.searchItemCategory : ${service.searchItemCategory}");
+//     response =
+//         await dio.post(service.searchItemCategory, data: _map, options: opt);
+//     print("service.searchItemCategory : ${response.toString}");
+//     return MenuItemBaseModel.fromJson(convert.jsonDecode(response.toString()));
+//   }
 }
