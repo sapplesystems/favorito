@@ -10,9 +10,7 @@ exports.dd_verbose = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
         var data = {
-            category: await exports.getMenuCategories(business_id, req),
-            type: ['Veg', 'Nonveg'],
-            available_on: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            category: await exports.getSubCategory(req, res),
         };
         return res.status(200).json({ status: 'success', message: 'success', data: data });
     } catch (e) {
@@ -20,14 +18,42 @@ exports.dd_verbose = async function(req, res, next) {
     }
 };
 
+// get sub categories from the business id from the table business_menu_category
+exports.getSubCategory = (req, res) => {
+    return new Promise(async(resolve, reject) => {
+        var business_id = req.userdata.business_id;
+
+        // sql_categories = ` SELECT b_s_c.id as category_id, b_c.category_name as category_name \n\
+        //  FROM business_sub_category as b_s_c \n\
+        //  LEFT JOIN business_categories as b_c \n\
+        //  ON b_s_c.sub_category_id = b_c.id \n\
+        //  WHERE b_s_c.business_id = '${business_id}'`
+
+        sql_categories = ` SELECT b_m_c.id as id, b_m_c.category_id as category_id, b_c.category_name as category_name \n\
+         FROM business_menu_category as b_m_c \n\
+         LEFT JOIN business_categories as b_c \n\
+         ON b_m_c.category_id = b_c.id \n\
+         WHERE b_m_c.business_id = '${business_id}'`
+
+        result_categories = await exports.run_query(sql_categories)
+        resolve(result_categories)
+    })
+}
+
 /**
  * GET MENU CATEGORY LIST
  */
 exports.getMenuCategoryList = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var category = await exports.getMenuCategories(business_id, req)
-        return res.status(200).json({ status: 'success', message: 'success', data: category });
+        var category = await exports.getMenuCategories(business_id, req, res)
+        if (category == null) {
+            return res.status(200).json({ status: 'success', message: 'success', data: [] });
+        } else if (category.length > 0) {
+            return res.status(200).json({ status: 'success', message: 'success', data: category });
+        } else {
+            return res.status(200).json({ status: 'success', message: 'success', data: [category] });
+        }
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
@@ -45,9 +71,10 @@ exports.getMenuCategoryListByPagination = async function(req, res, next) {
             var data_from = num;
         }
         var business_id = req.userdata.business_id;
-        var COND = "business_id='" + business_id + "' AND menu_type_id='" + menu_type_id + "' AND is_activated='1' AND deleted_at IS NULL";
-        var sql = "SELECT id, category_name, details, slot_start_time, slot_end_time, available_on, out_of_stock \n\
-            FROM business_menu_category \n\
+        var COND = "b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
+        var sql = "SELECT b_m_c.id,b_c.id as category_id, b_c.category_name, b_m_c.details, b_m_c.slot_start_time, b_m_c.slot_end_time, b_m_c.available_on, b_m_c.out_of_stock \n\
+            FROM business_menu_category as b_m_c\n\
+            LEFT JOIN business_categories as b_c ON b_c.id = b_m_c.category_id \n\
             WHERE " + COND + " LIMIT 20 OFFSET " + data_from;
         db.query(sql, function(e, cat) {
             if (e) {
@@ -65,16 +92,17 @@ exports.getMenuCategoryListByPagination = async function(req, res, next) {
 /**
  * GET MENU CATEGORY
  */
-exports.getMenuCategories = function(business_id, req) {
+exports.getMenuCategories = function(business_id, req, res = false) {
     try {
-        return new Promise(function(resolve, reject) {
-            var COND = "business_id='" + business_id + "' AND menu_type_id='" + menu_type_id + "' AND is_activated='1' AND deleted_at IS NULL";
+        return new Promise(async function(resolve, reject) {
+            var COND = "b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
             if (req.body.category_id != '' && req.body.category_id != 'undefined' && req.body.category_id != null) {
-                COND += " AND id='" + req.body.category_id + "'";
+                COND += " AND b_m_c.id='" + req.body.category_id + "'";
             }
 
-            var sql = "SELECT id, category_name, details,tax, slot_start_time, slot_end_time, available_on, out_of_stock \n\
-            FROM business_menu_category \n\
+            var sql = "SELECT b_m_c.id as category_id, b_c.category_name, b_m_c.details,tax, b_m_c.slot_start_time, b_m_c.slot_end_time, b_m_c.available_on, b_m_c.out_of_stock \n\
+            FROM business_menu_category AS b_m_c \n\
+            LEFT JOIN business_categories AS b_c ON b_c.id = b_m_c.category_id \n\
             WHERE " + COND;
             db.query(sql, function(e, cat) {
                 var data = (cat.length > 1) ? cat : cat[0];
@@ -94,9 +122,11 @@ exports.getMenuCategories = function(business_id, req) {
 exports.listAllMenu = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT id, category_name FROM business_menu_category \n\
-                    WHERE business_id='" + business_id + "' AND menu_type_id='" + menu_type_id + "' \n\
-                    AND parent_id='0' AND is_activated='1' AND deleted_at IS NULL";
+        var sql = "SELECT b_m_c.id, b_c.category_name as category_name\n\
+            FROM business_menu_category AS b_m_c\n\
+            LEFT JOIN business_categories AS b_c ON b_m_c.category_id = b_c.id\n\
+            WHERE b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' \n\
+            AND b_m_c.parent_id='0' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
         db.query(sql, async function(err, result) {
             var data = [];
             var result_length = result.length;
@@ -271,7 +301,6 @@ exports.createMenuItem = async function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
             var menu_id = result.insertId;
-            console.log("asdffasd");
             await exports.addPhotos(business_id, menu_id, req, res);
             return res.status(200).json({ status: 'success', message: 'Menu item created successfully.' });
         });
@@ -380,8 +409,8 @@ exports.addPhotos = function(business_id, menu_id, req, res = false) {
 exports.addCategory = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        if (req.body.category_name == '' || req.body.category_name == 'undefined' || req.body.category_name == null) {
-            return res.status(403).json({ status: 'error', message: 'Category name not found.' });
+        if (req.body.category_id == '' || req.body.category_id == 'undefined' || req.body.category_id == null) {
+            return res.status(403).json({ status: 'error', message: 'Category id not found.' });
         } else if (req.body.details == '' || req.body.details == 'undefined' || req.body.details == null) {
             return res.status(403).json({ status: 'error', message: 'Category detail not found.' });
         } else if (req.body.slot_start_time == '' || req.body.slot_start_time == 'undefined' || req.body.slot_start_time == null) {
@@ -400,7 +429,7 @@ exports.addCategory = function(req, res, next) {
             business_id: business_id,
             menu_type_id: menu_type_id,
             tax: req.body.tax,
-            category_name: req.body.category_name,
+            category_id: req.body.category_id,
             details: req.body.details,
             slot_start_time: req.body.slot_start_time,
             slot_end_time: req.body.slot_end_time,
@@ -424,18 +453,18 @@ exports.addCategory = function(req, res, next) {
 /**
  * EDIT BUSINESS MENU CATEGORY
  */
-exports.editCategory = function(req, res, next) {
+exports.editCategory = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        if (req.body.category_id == '' || req.body.category_id == 'undefined' || req.body.category_id == null) {
-            return res.status(403).json({ status: 'error', message: 'Category id not found.' });
+        if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
+            return res.status(403).json({ status: 'error', message: 'id not found.' });
         }
 
-        var id = req.body.category_id;
+        var id = req.body.id;
         var update_columns = " updated_at=now() ";
 
-        if (req.body.category_name != '' && req.body.category_name != 'undefined' && req.body.category_name != null) {
-            update_columns += ", category_name='" + req.body.category_name + "' ";
+        if (req.body.category_id != '' && req.body.category_id != 'undefined' && req.body.category_id != null) {
+            update_columns += ", category_id='" + req.body.category_id + "' ";
         }
         if (req.body.details != '' && req.body.details != 'undefined' && req.body.details != null) {
             update_columns += ", details='" + req.body.details + "' ";
@@ -452,6 +481,22 @@ exports.editCategory = function(req, res, next) {
         }
         if (req.body.out_of_stock != '' && req.body.out_of_stock != 'undefined' && req.body.out_of_stock != null) {
             update_columns += ", out_of_stock='" + req.body.out_of_stock + "' ";
+        }
+        if (req.body.available_on == 'null') {
+            var available_on = '';
+            update_columns += ", available_on='" + available_on + "' ";
+        }
+
+        if (req.body.out_of_stock == 0) {
+            sql_item_off = `UPDATE business_menu_item\n\ 
+            SET is_activated = 0 , updated_at = NOW() \n\
+            WHERE business_id = '${business_id}' AND menu_category_id = '${req.body.id}'`
+
+            try {
+                result_item_off = await exports.run_query(sql_item_off)
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+            }
         }
 
         var sql = "update business_menu_category set " + update_columns + " where id='" + id + "'";
@@ -474,7 +519,7 @@ exports.editCategory = function(req, res, next) {
 exports.getSetting = function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT accepting_order, take_away_start_time, take_away_end_time, take_away_minimum_bill, take_away_packaging_charge, \n\
+        var sql = "SELECT accepting_order, take_away, dine_in,delivery, take_away_start_time, take_away_end_time, take_away_minimum_bill, take_away_packaging_charge, \n\
                     dine_in_start_time, dine_in_end_time, delivery_start_time, delivery_end_time, delivery_minium_bill, delivery_packaging_charge \n\
                     FROM business_menu_setting WHERE business_id='" + business_id + "'";
 
@@ -544,6 +589,17 @@ exports.updateMenuSetting = function(req, res, next) {
         }
         if (req.body.delivery_packaging_charge != '' && req.body.delivery_packaging_charge != 'undefined' && req.body.delivery_packaging_charge != null) {
             update_columns += ", delivery_packaging_charge='" + req.body.delivery_packaging_charge + "' ";
+        }
+
+
+        if (req.body.take_away != '' && req.body.take_away != 'undefined' && req.body.take_away != null) {
+            update_columns += ", take_away='" + req.body.take_away + "' ";
+        }
+        if (req.body.delivery != '' && req.body.delivery != 'undefined' && req.body.delivery != null) {
+            update_columns += ", delivery='" + req.body.delivery + "' ";
+        }
+        if (req.body.dine_in != '' && req.body.dine_in != 'undefined' && req.body.dine_in != null) {
+            update_columns += ", dine_in='" + req.body.dine_in + "' ";
         }
 
         var sql = "update business_menu_setting set " + update_columns + " where business_id='" + business_id + "'";
