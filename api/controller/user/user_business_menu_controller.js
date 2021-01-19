@@ -14,10 +14,11 @@ exports.getMenuCategories = async function(req, res, next) {
         }
         var day_name = moment().format('dddd').substring(0, 3);
         current_time = moment().format('H:mm:ss')
-        var COND = `business_id='${business_id}' AND menu_type_id='${menu_type_id}' AND is_activated='1' AND available_on LIKE '%${day_name}%' AND deleted_at IS NULL AND slot_start_time < '${current_time}' AND slot_end_time >'${current_time}'`
+        var COND = `b_m_c.business_id='${business_id}' AND b_m_c.menu_type_id='${menu_type_id}' AND b_m_c.is_activated='1' AND b_m_c.available_on LIKE '%${day_name}%' AND b_m_c.deleted_at IS NULL AND b_m_c.slot_start_time < '${current_time}' AND b_m_c.slot_end_time >'${current_time}'`
 
-        var sql_menu_category = "SELECT id, category_name,out_of_stock \n\
-        FROM business_menu_category \n\
+        var sql_menu_category = "SELECT b_m_c.id, b_c.category_name,b_m_c.out_of_stock \n\
+        FROM business_menu_category as b_m_c\n\
+        LEFT JOIN business_categories as b_c ON b_c.id = b_m_c.category_id\n\
         WHERE " + COND
         result_menu_category = await exports.run_query(sql_menu_category)
         if (result_menu_category == '') {

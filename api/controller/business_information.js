@@ -16,9 +16,15 @@ exports.getBusinessInformation = async function(req, res, next) {
         dd_verbose.tag_list = await exports.getTagList();
         dd_verbose.attribute_list = await exports.geAttributeList();
 
+        // var sql = "SELECT business_informations.id AS business_information_id, business_id, business_categories.id AS category_id, business_categories.category_name, \n\
+        // sub_categories as sub_categories_id, (SELECT GROUP_CONCAT(category_name) FROM business_categories \n\
+        // WHERE FIND_IN_SET(id, business_informations.sub_categories) AND deleted_at IS NULL) AS sub_categories_name, \n\
+        // tags, price_range, payment_method, attributes \n\
+        // FROM business_informations INNER JOIN business_categories \n\
+        // ON business_informations.categories = business_categories.id \n\
+        // WHERE business_id='" + business_id + "' AND business_informations.deleted_at IS NULL \n\
+        // AND business_categories.deleted_at IS NULL";
         var sql = "SELECT business_informations.id AS business_information_id, business_id, business_categories.id AS category_id, business_categories.category_name, \n\
-        sub_categories as sub_categories_id, (SELECT GROUP_CONCAT(category_name) FROM business_categories \n\
-        WHERE FIND_IN_SET(id, business_informations.sub_categories) AND deleted_at IS NULL) AS sub_categories_name, \n\
         tags, price_range, payment_method, attributes \n\
         FROM business_informations INNER JOIN business_categories \n\
         ON business_informations.categories = business_categories.id \n\
@@ -33,6 +39,7 @@ exports.getBusinessInformation = async function(req, res, next) {
                 var sub_categories_id = rows[0].sub_categories_id;
                 var tags = rows[0].tags;
                 var attributes = rows[0].attributes;
+                // return res.send(await exports.getSubCategories(business_id))
                 rows[0].sub_categories = await exports.getSubCategories(business_id);
                 rows[0].tags = await exports.getTags(business_id);
                 rows[0].attributes = await exports.getAttributes(business_id);
@@ -61,16 +68,23 @@ exports.getBusinessInformationUpdate = async function(req, res, next) {
 
         if (req.body.sub_categories != '' && req.body.sub_categories != 'undefined' && req.body.sub_categories != null) {
             all_sub_categories = []
+            all_sub_categories_menu = []
             sub_categories = req.body.sub_categories
+            var sql_get_business_type = `SELECT business_type_id FROM business_master WHERE business_id = '${business_id}'`
+            var result_get_business_type = await exports.run_query(sql_get_business_type)
             sub_categories.forEach(element => {
                 all_sub_categories.push([business_id, element])
+                all_sub_categories_menu.push([business_id, result_get_business_type[0].business_type_id, element])
             });
+
             try {
                 // This will work on update also
                 var sql_sub_delete = `DELETE FROM business_sub_category WHERE business_id = '${business_id}'`
                 await exports.run_query(sql_sub_delete)
                 var sql_sub_category = 'INSERT INTO business_sub_category (business_id,sub_category_id) VALUES ?'
+                var sql_sub_category_menu = ' INSERT INTO business_menu_category (business_id,menu_type_id,category_id) VALUES ?'
                 await exports.run_query(sql_sub_category, [all_sub_categories])
+                await exports.run_query(sql_sub_category_menu, [all_sub_categories_menu])
             } catch (error) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
             }
@@ -211,7 +225,7 @@ exports.geAttributeList = function(req, res, next) {
 exports.getSubCategories = function(business_id) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = `SELECT b_c.id as id, b_c.category_name as sub_category_name FROM business_sub_category as b_s_c JOIN business_categories as b_c WHERE b_s_c.sub_category_id = b_c.id AND b_s_c.business_id = '${business_id}'`
+            var sql = `SELECT b_c.id as category_id, b_c.category_name as sub_category_name FROM business_sub_category as b_s_c JOIN business_categories as b_c WHERE b_s_c.sub_category_id = b_c.id AND b_s_c.business_id = '${business_id}'`
             db.query(sql, function(err, result) {
                 resolve(result);
             });
