@@ -4,6 +4,7 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/model/AttributeList.dart';
 import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
+import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
@@ -59,6 +60,7 @@ class _businessInfoState extends State<businessInfo> {
   List<int> selectAttributeId = [];
   List<String> selectAttributeName = [];
   //selected attribute id
+  SubCategoryModel subCategoryModel = SubCategoryModel();
 
   List<PhotoData> photoData = [];
   File _image;
@@ -335,18 +337,21 @@ class _businessInfoState extends State<businessInfo> {
 
     await WebService.getSubCat({"category_id": catid}, context).then((value) {
       if (value.message == "success") {
-        totalSubCategories = value.data;
-        for (int i = 0; i < totalSubCategories.length; i++)
-          totalSubCategoriesName.add(totalSubCategories[i].categoryName);
+        subCategoryModel = value;
+        totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
+        for (var v in selectedSubCategories)
+          totalSubCategoriesName.remove(v.categoryName);
       }
     });
   }
 
   void funSublim() {
-    for (int i = 0; i < totalSubCategories.length; i++)
-      if (selectedSubCategoriesName
-          .contains(totalSubCategories[i].categoryName))
-        selectedSubCategoriesId.add(totalSubCategories[i].id);
+    selectedSubCategoriesId.addAll(
+        subCategoryModel.getAllSubCategoryId(selectedSubCategoriesName));
+    // for (int i = 0; i < totalSubCategories.length; i++)
+    //   if (selectedSubCategoriesName
+    //       .contains(totalSubCategories[i].categoryName))
+    //     selectedSubCategoriesId.add(totalSubCategories[i].id);
 
     for (int i = 0; i < totalTag.length; i++)
       if (selectedTagName.contains(totalTag[i].tagName))

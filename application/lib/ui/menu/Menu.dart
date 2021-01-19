@@ -88,6 +88,7 @@ class _MenuState extends State<Menu> {
                   key.items;
 
             return ListView(
+              physics: new NeverScrollableScrollPhysics(),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -102,11 +103,11 @@ class _MenuState extends State<Menu> {
                           ))),
                 ),
                 Container(
-                  height: sm.scaledHeight(90),
+                  height: sm.scaledHeight(80),
                   padding: const EdgeInsets.only(
                       left: 16.0, right: 16, bottom: 16, top: 0),
                   child: ListView(
-                    shrinkWrap: true,
+                    // shrinkWrap: true,
                     children: <Widget>[
                       Column(children: [
                         for (var key in _dataMap.keys)
