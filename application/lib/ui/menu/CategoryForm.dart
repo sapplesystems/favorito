@@ -2,18 +2,18 @@ import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/model/menu/MenuListModel.dart';
+import 'package:Favorito/model/menu/Category.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/menu/CallSwitcher.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:Favorito/model/menu/MenuBaseModel.dart';
 
 // funMenuCatList
 class CategoryForm extends StatefulWidget {
   String id;
-
-  Data data;
+  Category data;
   CategoryForm({this.id, this.data});
   @override
   _CategoryFormState createState() => _CategoryFormState();
@@ -27,11 +27,12 @@ class _CategoryFormState extends State<CategoryForm> {
   MaterialLocalizations localizations;
   SizeManager sm;
   ProgressDialog pr;
-  Data da = Data();
+  Category da = Category();
 
   @override
   void initState() {
     print("category_id: ${widget.id}");
+    print("category_id: ${widget.data}");
     super.initState();
     for (int i = 0; i < 4; i++) controller.add(TextEditingController());
     da = widget?.data;
@@ -88,7 +89,7 @@ class _CategoryFormState extends State<CategoryForm> {
                       'Out of stock',
                       style: TextStyle(color: myGrey),
                     ),
-                    CallSwitcher(id: da?.id.toString()),
+                    CallSwitcher(id: da?.categoryId.toString()),
                   ],
                 ),
               ],

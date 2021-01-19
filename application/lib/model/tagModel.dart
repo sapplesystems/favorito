@@ -1,14 +1,14 @@
 import 'package:Favorito/model/TagList.dart';
-import 'package:Favorito/model/businessInfoModel.dart';
+import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
 
-class tagModel {
+class TagModel {
   String status;
   String message;
   List<TagList> data;
 
-  tagModel({this.status, this.message, this.data});
+  TagModel({this.status, this.message, this.data});
 
-  tagModel.fromJson(Map<String, dynamic> json) {
+  TagModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {

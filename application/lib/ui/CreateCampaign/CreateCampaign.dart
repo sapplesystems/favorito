@@ -15,7 +15,7 @@ import '../../model/adSpentModel.dart';
 
 class CreateCampaign extends StatefulWidget {
   bool campStat;
-  
+
   Data data;
   CreateCampaign(campStat, data) {
     this.campStat = campStat;
@@ -28,7 +28,6 @@ class CreateCampaign extends StatefulWidget {
 class _CreateCampaignState extends State<CreateCampaign> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<TextEditingController> ctrl = List();
-  
 
   List<String> _totalCpc = [];
   var _selecteCpc;
@@ -121,7 +120,8 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                     }
                                     return va;
                                   },
-                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  autoValidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
                                   selectedItem: _selecteCpc,
                                   items: _totalCpc,
@@ -252,7 +252,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
     if (_formKey.currentState.validate()) {
       _autovalidate = false;
       print("_map:${_map.toString()}");
-      WebService.createCampain(_map, widget.campStat,context).then((value) {
+      WebService.createCampain(_map, widget.campStat, context).then((value) {
         if (value.status == "success") {
           BotToast.showText(text: value.message);
           Navigator.pop(context);

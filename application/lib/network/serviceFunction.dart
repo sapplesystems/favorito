@@ -118,4 +118,8 @@ class serviceFunction {
   static String funMenuStatusChange = funMenu + 'change-menu-status';
   static String funMenuCatList = funMenu + 'category-list';
   static String funMenuCatEdit = funMenu + 'edit-category';
+  static String funMenuVerbose = funMenu + 'dd-verbose';
+  static String funMenuCreate = funMenu + 'create';
+  static String funMenuSetting = funMenu + 'setting';
+  static String funMenuSettingUpdate = funMenu + 'setting-update';
 }

@@ -13,7 +13,7 @@ import 'package:Favorito/model/booking/bookingListModel.dart';
 import 'package:Favorito/model/booking/bookingSettingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
-import 'package:Favorito/model/businessInfoModel.dart';
+import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
@@ -34,7 +34,8 @@ import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
 import 'package:Favorito/model/dashModel.dart';
 import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/model/menu/MenuBaseModel.dart';
-import 'package:Favorito/model/menu/MenuListModel.dart';
+import 'package:Favorito/model/menu/MenuSettingModel.dart';
+import 'package:Favorito/model/menu/MenuVerbose.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
@@ -50,13 +51,14 @@ import 'package:Favorito/model/registerModel.dart';
 import 'package:Favorito/model/review/ReviewListModel.dart';
 import 'package:Favorito/model/review/ReviewModel.dart';
 import 'package:Favorito/model/review/ReviewintroModel.dart';
-import 'package:Favorito/model/tagModel.dart';
+import 'package:Favorito/model/TagModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:progress_dialog/progress_dialog.dart';
@@ -856,24 +858,17 @@ class WebService {
   }
 
   //*********************************************** Business information data  **********************/
-  static Future<businessInfoModel> getBusinessInfoData(
+  static Future<BusinessInfoModel> getBusinessInfoData(
       BuildContext context) async {
     String token = await Prefs.token;
     String url = serviceFunction.funUserInformation;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    businessInfoModel _returnData = businessInfoModel();
     response = await dio.post(url, options: opt);
-    if (response.statusCode == HttpStatus.ok) {
-      print("Request URL:$url");
-      print("Response is :${response.toString()}");
-      _returnData =
-          businessInfoModel.fromJson(convert.json.decode(response.toString()));
-    } else {
-      print("responseData4:${response.statusCode}");
-    }
-    return _returnData;
+    if (response.statusCode == HttpStatus.ok) print("Request URL:$url");
+    print("Response is :${response.toString()}");
+    return BusinessInfoModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<businessInfoImage> profileInfoImageUpdate(
@@ -1022,7 +1017,7 @@ class WebService {
     }
   }
 
-  static Future<tagModel> getTagList(BuildContext context) async {
+  static Future<TagModel> getTagList(BuildContext context) async {
     String token = await Prefs.token;
     String url = serviceFunction.funTagList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1033,7 +1028,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return tagModel.fromJson(convert.json.decode(response.toString()));
+      return TagModel.fromJson(convert.json.decode(response.toString()));
     }
   }
 
@@ -1587,7 +1582,7 @@ class WebService {
     }
   }
 
-  static Future<MenuListModel> funMenuCatList(Map _map) async {
+  static Future<MenuBaseModel> funMenuCatList(Map _map) async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuCatList;
@@ -1598,7 +1593,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return MenuListModel.fromJson(convert.json.decode(response.toString()));
+      return MenuBaseModel.fromJson(convert.json.decode(response.toString()));
     }
   }
 
@@ -1606,6 +1601,71 @@ class WebService {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuCatEdit;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<MenuVerbose> funMenuVerbose() async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funMenuVerbose;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return MenuVerbose.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> funMenuCreate(FormData _map, context) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+
+    response = await dio
+        .post(serviceFunction.funMenuCreate, data: _map, options: _opt)
+        .catchError((onError) => onErrorCall(onError, context))
+        .catchError((onError) => onErrorCall(onError, context));
+    print("profileImageUpdate:${response.toString()}");
+
+    if (response.statusCode == HttpStatus.ok)
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+  }
+
+  static Future<MenuSettingModel> funMenuSetting() async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funMenuSetting;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return MenuSettingModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> funMenuSettingUpdate(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funMenuSettingUpdate;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});

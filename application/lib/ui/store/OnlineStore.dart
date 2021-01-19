@@ -1,8 +1,8 @@
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/store/OnlineStoreDisplayListModel.dart';
-import 'package:Favorito/ui/item/NewItem.dart';
-import 'package:Favorito/ui/item/OnlineStoreItem.dart';
 import 'package:Favorito/ui/menu/MenuSetting.dart';
+import 'package:Favorito/ui/menu/item/NewMenuItem.dart';
+import 'package:Favorito/ui/menu/item/OnlineStoreItem.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,8 +91,8 @@ class _OnlineStoreState extends State<OnlineStore> {
           IconButton(
             icon: Icon(Icons.add_circle_outline),
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => NewItem()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NewMenuItem()));
             },
           ),
           IconButton(

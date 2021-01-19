@@ -1,3 +1,4 @@
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:outline_gradient_button/outline_gradient_button.dart';
@@ -50,7 +51,7 @@ class _TimePicker extends State<TimePicker> {
                 width: sm.scaledHeight(40),
                 child: OutlineGradientButton(
                   child: Center(child: Text(widget.selectedTimeText)),
-                  gradient: LinearGradient(colors: [Colors.red, Colors.red]),
+                  gradient: LinearGradient(colors: [myGrey, myGrey]),
                   strokeWidth: 1,
                   padding: EdgeInsets.symmetric(vertical: 12),
                   radius: Radius.circular(8),
