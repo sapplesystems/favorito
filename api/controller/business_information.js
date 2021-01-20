@@ -81,10 +81,25 @@ exports.getBusinessInformationUpdate = async function(req, res, next) {
                 // This will work on update also
                 var sql_sub_delete = `DELETE FROM business_sub_category WHERE business_id = '${business_id}'`
                 await exports.run_query(sql_sub_delete)
+
+
                 var sql_sub_category = 'INSERT INTO business_sub_category (business_id,sub_category_id) VALUES ?'
-                var sql_sub_category_menu = ' INSERT INTO business_menu_category (business_id,menu_type_id,category_id) VALUES ?'
                 await exports.run_query(sql_sub_category, [all_sub_categories])
-                await exports.run_query(sql_sub_category_menu, [all_sub_categories_menu])
+
+                // check exist or not
+                // checking the business_sub_category and inserting the data
+
+                for (let i = 0; i < all_sub_categories_menu.length; i++) {
+                    const element = all_sub_categories_menu[i];
+                    sql_check_menu = ` SELECT COUNT(id) as count \n\
+                    FROM business_menu_category \n\
+                    WHERE business_id = '${business_id}' AND category_id = '${element[2]}'`
+                    result_check_menu = await exports.run_query(sql_check_menu)
+                    if (result_check_menu[0].count < 1) {
+                        var sql_sub_category_menu = `INSERT INTO business_menu_category (business_id,menu_type_id,category_id) VALUES ('${business_id}','${element[1]}','${element[2]}')`
+                        await exports.run_query(sql_sub_category_menu)
+                    }
+                }
             } catch (error) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
             }

@@ -91,4 +91,12 @@ router.post('/menu-item-detail', CheckAuth, MenuController.getMenuItems);
  */
 router.post('/setting-update', CheckAuth, MenuController.updateMenuSetting);
 
+/**
+ * DELETE MENU ITEM  PHOTO
+ */
+router.post('/menu-item-photo-delete', CheckAuth, MenuController.deleteMenuPhoto);
+
+// delete the menu
+router.post('/delete-menu-item', CheckAuth, MenuController.deleteMenu);
+
 module.exports = router;
