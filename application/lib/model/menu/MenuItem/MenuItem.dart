@@ -1,20 +1,19 @@
-import 'package:Favorito/model/TagList.dart';
-import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
+import 'package:Favorito/model/menu/MenuItem/ItemData.dart';
 
-class TagModel {
+class MenuItemModel {
   String status;
   String message;
-  List<TagList> data;
+  List<ItemData> data;
 
-  TagModel({this.status, this.message, this.data});
+  MenuItemModel({this.status, this.message, this.data});
 
-  TagModel.fromJson(Map<String, dynamic> json) {
+  MenuItemModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<TagList>();
+      data = new List<ItemData>();
       json['data'].forEach((v) {
-        data.add(new TagList.fromJson(v));
+        data.add(new ItemData.fromJson(v));
       });
     }
   }

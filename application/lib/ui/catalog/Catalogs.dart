@@ -4,9 +4,7 @@ import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/utils/myColors.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class Catalogs extends StatefulWidget {
   @override

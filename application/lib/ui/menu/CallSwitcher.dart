@@ -1,10 +1,8 @@
-import 'package:Favorito/model/menu/MenuListModel.dart';
+import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:flutter/material.dart';
-import '../../utils/myString.dart';
 
 class CallSwitcher extends StatefulWidget {
-  // bool val;
   String id;
   CallSwitcher({this.id});
   @override
@@ -14,14 +12,17 @@ class CallSwitcher extends StatefulWidget {
 class _CallSwitcherState extends State<CallSwitcher> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<MenuListModel>(
+    return FutureBuilder<MenuBaseModel>(
         future: WebService.funMenuCatList({"category_id": widget.id}),
-        builder: (BuildContext context, AsyncSnapshot<MenuListModel> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<MenuBaseModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(
-                child: Icon(
-              Icons.cached,
-            ));
+            return Container(
+              height: 10,
+              child: Center(
+                  child: Icon(
+                Icons.cached,
+              )),
+            );
           else if (snapshot.hasError)
             return Center(child: null);
           else {

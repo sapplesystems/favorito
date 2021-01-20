@@ -1,16 +1,16 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/model/AttributeList.dart';
 import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
+import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagList.dart';
-import 'package:Favorito/model/businessInfoModel.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'dart:io';
 import 'dart:async';
@@ -22,9 +22,9 @@ class businessInfo extends StatefulWidget {
 }
 
 class _businessInfoState extends State<businessInfo> {
-  List<bool> checked = [false, false, false];
+  List<bool> checked = [];
+
   List<bool> radioChecked = [];
-  bool _autoValidateForm = false;
   var loadedImageList = [];
   final _keyCategory = GlobalKey<DropdownSearchState<String>>();
   List<TextEditingController> controller = [];
@@ -60,6 +60,7 @@ class _businessInfoState extends State<businessInfo> {
   List<int> selectAttributeId = [];
   List<String> selectAttributeName = [];
   //selected attribute id
+  SubCategoryModel subCategoryModel = SubCategoryModel();
 
   List<PhotoData> photoData = [];
   File _image;
@@ -83,13 +84,6 @@ class _businessInfoState extends State<businessInfo> {
       backgroundColor: Color(0xfffff4f4),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: null,
-        actions: [
-          IconButton(
-            icon: SvgPicture.asset('assets/icon/save.svg'),
-            onPressed: () {},
-          )
-        ],
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
@@ -150,7 +144,7 @@ class _businessInfoState extends State<businessInfo> {
                     key: _keyCategory,
                     showSelectedItem: true,
                     selectedItem: controller[0].text,
-                    // enabled: false,
+                    enabled: false,
                     // items: catLst != null ? catLst.values.toList() : null,
                     label: "Category",
                     hint: "Please Select Category",
@@ -267,14 +261,6 @@ class _businessInfoState extends State<businessInfo> {
                         ]),
                       ),
                     ),
-                  // Padding(
-                  //     padding: EdgeInsets.symmetric(vertical: 6),
-                  //     child: txtfieldprefix(
-                  //         title: "Attributes",
-                  //         valid: true,
-                  //         ctrl: controller[2],
-                  //         prefixIco: Icons.search,
-                  //         security: false)),
                   MyTags(
                     sourceList: totalAttributeName,
                     selectedList: selectAttributeName,
@@ -325,6 +311,9 @@ class _businessInfoState extends State<businessInfo> {
           radioChecked.add(false);
 
         totalpay.addAll(_vaddV.staticPaymentMethod);
+        checked.clear();
+        for (var v in totalpay) checked.add(false);
+
         selectPay.addAll(_va.paymentMethod);
         totalTag.addAll(_vaddV.tagList);
         for (int i = 0; i < totalTag.length; i++)
@@ -348,18 +337,17 @@ class _businessInfoState extends State<businessInfo> {
 
     await WebService.getSubCat({"category_id": catid}, context).then((value) {
       if (value.message == "success") {
-        totalSubCategories = value.data;
-        for (int i = 0; i < totalSubCategories.length; i++)
-          totalSubCategoriesName.add(totalSubCategories[i].categoryName);
+        subCategoryModel = value;
+        totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
+        for (var v in selectedSubCategories)
+          totalSubCategoriesName.remove(v.categoryName);
       }
     });
   }
 
   void funSublim() {
-    for (int i = 0; i < totalSubCategories.length; i++)
-      if (selectedSubCategoriesName
-          .contains(totalSubCategories[i].categoryName))
-        selectedSubCategoriesId.add(totalSubCategories[i].id);
+    selectedSubCategoriesId.addAll(
+        subCategoryModel.getAllSubCategoryId(selectedSubCategoriesName));
 
     for (int i = 0; i < totalTag.length; i++)
       if (selectedTagName.contains(totalTag[i].tagName))

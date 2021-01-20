@@ -1,11 +1,11 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/catalog/Catalog.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -111,8 +111,10 @@ class _NewCatlogState extends State<NewCatlog> {
                           print(file.extension);
                           print(file.path);
 
-                          WebService.catlogImageUpdate(result.files,
-                                  widget.ct != null ? widget.ct.id : null,context)
+                          WebService.catlogImageUpdate(
+                                  result.files,
+                                  widget.ct != null ? widget.ct.id : null,
+                                  context)
                               .then((value) {
                             if (value.status == "success") {
                               imgUrls.clear();
@@ -210,7 +212,7 @@ class _NewCatlogState extends State<NewCatlog> {
       "product_id": controller[4].text
     };
     setState(() => submitBtnTxt = "Please Wait..");
-    await WebService.catlogEdit(_map,context).then((value) {
+    await WebService.catlogEdit(_map, context).then((value) {
       if (value.status == "success") {
         // for (var va in controller) va.text = "";
         BotToast.showText(text: value.message);

@@ -27,4 +27,26 @@ class SubCategoryModel {
     }
     return data;
   }
+
+  List<String> getAllSubCategory() {
+    List<String> list = [];
+    for (var v in this.data) {
+      list.add(v.categoryName);
+    }
+    return list;
+  }
+
+  int getSubCategoryId(String name) {
+    for (var v in this.data) {
+      if (name == v.categoryName) return v.id;
+    }
+  }
+
+  List<int> getAllSubCategoryId(List<String> selected) {
+    List<int> list = [];
+    for (var v in selected) {
+      list.add(getSubCategoryId(v));
+    }
+    return list;
+  }
 }

@@ -1,10 +1,11 @@
+import 'package:Favorito/model/menu/Category.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/menu/CallSwitcher.dart';
 import 'package:Favorito/ui/menu/CategoryForm.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:Favorito/model/menu/MenuListModel.dart';
+import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import '../../utils/myString.dart';
 
 class CategoryPage extends StatefulWidget {
@@ -19,7 +20,7 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   ProgressDialog pr;
-  Data data = Data();
+  Category data = Category();
 
   @override
   void initState() {
@@ -34,10 +35,10 @@ class _CategoryPageState extends State<CategoryPage> {
     return SafeArea(
         child: Scaffold(
             backgroundColor: myBackGround,
-            body: FutureBuilder<MenuListModel>(
+            body: FutureBuilder<MenuBaseModel>(
               future: WebService.funMenuCatList({"category_id": widget.id}),
               builder:
-                  (BuildContext context, AsyncSnapshot<MenuListModel> data) {
+                  (BuildContext context, AsyncSnapshot<MenuBaseModel> data) {
                 if (data.connectionState == ConnectionState.waiting)
                   return Center(child: Text(loading));
                 else if (data.hasError)
@@ -48,37 +49,43 @@ class _CategoryPageState extends State<CategoryPage> {
                     child: ListView(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.black,
-                                    size: 24,
+                            Expanded(
+                              flex: 5,
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.black,
+                                      size: 24,
+                                    ),
                                   ),
-                                ),
-                                Text(widget.title,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        letterSpacing: 1,
-                                        fontWeight: FontWeight.bold))
-                              ],
+                                  Text(widget.title ?? "",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Out of stock',
-                                  style: TextStyle(color: myGrey),
-                                ),
-                                CallSwitcher(
-                                    id: data?.data?.data[0].id.toString()),
-                              ],
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                children: [
+                                  CallSwitcher(id: widget.id.toString()),
+                                  Text(
+                                    'Out of stock',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 8),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -94,7 +101,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             ),
                             Flexible(
                               child: Text(
-                                data?.data?.data[0].details,
+                                data?.data?.data[0]?.details ?? "",
                                 style: TextStyle(fontSize: 16),
                               ),
                             )
@@ -112,7 +119,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             ),
                             Flexible(
                               child: Text(
-                                '${data?.data?.data[0].slotStartTime?.trim()?.substring(0, 5)} - ${data?.data?.data[0].slotEndTime?.trim()?.substring(0, 5)}',
+                                '${data?.data?.data[0]?.slotStartTime?.trim()?.substring(0, 5)} - ${data?.data?.data[0]?.slotEndTime?.trim()?.substring(0, 5)}',
                                 style: TextStyle(fontSize: 16),
                               ),
                             )
@@ -130,7 +137,7 @@ class _CategoryPageState extends State<CategoryPage> {
                             ),
                             Flexible(
                               child: Text(
-                                '${data?.data?.data[0].availableOn}',
+                                '${data?.data?.data[0]?.availableOn}',
                                 style: TextStyle(fontSize: 16),
                               ),
                             )

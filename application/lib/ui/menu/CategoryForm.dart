@@ -2,18 +2,18 @@ import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/model/menu/MenuListModel.dart';
+import 'package:Favorito/model/menu/Category.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/menu/CallSwitcher.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+// import 'package:Favorito/model/menu/MenuBaseModel.dart';
 
 // funMenuCatList
 class CategoryForm extends StatefulWidget {
   String id;
-
-  Data data;
+  Category data;
   CategoryForm({this.id, this.data});
   @override
   _CategoryFormState createState() => _CategoryFormState();
@@ -27,22 +27,24 @@ class _CategoryFormState extends State<CategoryForm> {
   MaterialLocalizations localizations;
   SizeManager sm;
   ProgressDialog pr;
-  Data da = Data();
+  Category da = Category();
 
   @override
   void initState() {
     print("category_id: ${widget.id}");
+    print("category_id: ${widget.data}");
     super.initState();
     for (int i = 0; i < 4; i++) controller.add(TextEditingController());
     da = widget?.data;
     if (da != null) {
       controller[0].text = da?.details ?? '';
       controller[1].text = da?.slotStartTime ?? '';
-      for (var _v in da?.availableOn?.split(',')) {
-        if (_v != null && _v != "") {
-          selectedDays.add(_v);
+      if (da?.availableOn != null)
+        for (var _v in da?.availableOn?.split(',')) {
+          if (_v != null && _v != "") {
+            selectedDays.add(_v);
+          }
         }
-      }
       for (var c in selectedDays) {
         daylist.remove(c ?? "");
       }
@@ -63,6 +65,7 @@ class _CategoryFormState extends State<CategoryForm> {
           padding: const EdgeInsets.all(10.0),
           child: ListView(children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
                   onTap: () => Navigator.pop(context),
@@ -71,24 +74,22 @@ class _CategoryFormState extends State<CategoryForm> {
                     color: Colors.black,
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    'Edit Category',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        letterSpacing: 1,
-                        fontWeight: FontWeight.bold),
-                  ),
+                Text(
+                  'Edit Category',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.bold),
                 ),
-                Row(
+                Column(
                   children: [
+                    CallSwitcher(id: widget.id),
                     Text(
                       'Out of stock',
-                      style: TextStyle(color: myGrey),
-                    ),
-                    CallSwitcher(id: da?.id.toString()),
+                      style: TextStyle(color: Colors.black, fontSize: 8),
+                    )
                   ],
                 ),
               ],
