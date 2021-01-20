@@ -49,36 +49,43 @@ class _CategoryPageState extends State<CategoryPage> {
                     child: ListView(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.black,
-                                    size: 24,
+                            Expanded(
+                              flex: 5,
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.black,
+                                      size: 24,
+                                    ),
                                   ),
-                                ),
-                                Text(widget.title ?? "",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        letterSpacing: 1,
-                                        fontWeight: FontWeight.bold))
-                              ],
+                                  Text(widget.title ?? "",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Out of stock',
-                                  style: TextStyle(color: myGrey),
-                                ),
-                                CallSwitcher(id: widget.id.toString()),
-                              ],
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                children: [
+                                  CallSwitcher(id: widget.id.toString()),
+                                  Text(
+                                    'Out of stock',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 8),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

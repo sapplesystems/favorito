@@ -348,10 +348,6 @@ class _businessInfoState extends State<businessInfo> {
   void funSublim() {
     selectedSubCategoriesId.addAll(
         subCategoryModel.getAllSubCategoryId(selectedSubCategoriesName));
-    // for (int i = 0; i < totalSubCategories.length; i++)
-    //   if (selectedSubCategoriesName
-    //       .contains(totalSubCategories[i].categoryName))
-    //     selectedSubCategoriesId.add(totalSubCategories[i].id);
 
     for (int i = 0; i < totalTag.length; i++)
       if (selectedTagName.contains(totalTag[i].tagName))

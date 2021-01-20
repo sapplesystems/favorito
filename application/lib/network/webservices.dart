@@ -34,6 +34,7 @@ import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
 import 'package:Favorito/model/dashModel.dart';
 import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/model/menu/MenuBaseModel.dart';
+import 'package:Favorito/model/menu/MenuItem/MenuItem.dart';
 import 'package:Favorito/model/menu/MenuSettingModel.dart';
 import 'package:Favorito/model/menu/MenuVerbose.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
@@ -1628,16 +1629,18 @@ class WebService {
     }
   }
 
-  static Future<BaseResponseModel> funMenuCreate(FormData _map, context) async {
+  static Future<BaseResponseModel> funMenuCreate(
+      FormData _map, context, bool edit) async {
     String token = await Prefs.token;
+    String url =
+        edit ? serviceFunction.funMenuEdit : serviceFunction.funMenuCreate;
     Options _opt =
         Options(contentType: Headers.formUrlEncodedContentType, headers: {
       HttpHeaders.authorizationHeader: "Bearer $token",
     });
-
+    print("funMenuCreate:${url}");
     response = await dio
-        .post(serviceFunction.funMenuCreate, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
+        .post(url, data: _map, options: _opt)
         .catchError((onError) => onErrorCall(onError, context));
     print("profileImageUpdate:${response.toString()}");
 
@@ -1666,6 +1669,37 @@ class WebService {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuSettingUpdate;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<MenuItemModel> funMenuItemDetail(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funMenuItemDetail;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return MenuItemModel.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> funMenuItemDelete(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funMenuItemDelete;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});

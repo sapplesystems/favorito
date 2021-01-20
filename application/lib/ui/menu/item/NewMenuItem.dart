@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:Favorito/model/menu/MenuItem/ItemData.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -14,8 +15,11 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import '../../../utils/myString.dart';
+import '../../../utils/Extentions.dart';
 
 class NewMenuItem extends StatefulWidget {
+  ItemData model;
+  NewMenuItem({this.model});
   @override
   _NewMenuItemState createState() => _NewMenuItemState();
 }
@@ -37,12 +41,27 @@ class _NewMenuItemState extends State<NewMenuItem> {
   var fut;
   bool _isFoodItem = true;
   List imgFiles = [];
+  List imgs = [];
   FilePickerResult result;
 
   void initState() {
+    assigner();
     super.initState();
     fut = WebService.funMenuVerbose();
     _typeList = ["Veg", "Non-veg"];
+  }
+
+  assigner() {
+    if (widget.model != null) {
+      _myTitleEditTextController.text = widget.model.title.capitalize();
+      _myPriceEditTextController.text = widget.model.price.capitalize();
+      _myDescriptionEditTextController.text =
+          widget.model.description.capitalize();
+      _myQuantityEditTextController.text = widget.model.quantity.capitalize();
+      _selectedType = widget.model.type;
+      _myMaxQuantityEditTextController.text = widget.model.maxQtyPerOrder;
+      if (widget.model.photo != null) imgs.addAll(widget.model.photo);
+    }
   }
 
   @override
@@ -126,12 +145,27 @@ class _NewMenuItemState extends State<NewMenuItem> {
                                   elevation: 5,
                                   margin: EdgeInsets.all(10)),
                             )),
-                        for (int i = 0; i < imgFiles.length; i++)
+                        for (var _v in imgFiles)
                           Card(
                             semanticContainer: true,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: Image.file(
-                              imgFiles[i],
+                              _v,
+                              width: sm.scaledHeight(10),
+                              fit: BoxFit.fill,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            elevation: 5,
+                            margin: EdgeInsets.all(10),
+                          ),
+                        for (int i = 0; i < imgs.length; i++)
+                          Card(
+                            semanticContainer: true,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            child: Image.network(
+                              imgs[i].url,
                               width: sm.scaledHeight(10),
                               fit: BoxFit.fill,
                             ),
@@ -277,19 +311,24 @@ class _NewMenuItemState extends State<NewMenuItem> {
                           clicker: () async {
                             List<MultipartFile> formData = [];
                             formData.clear();
-
-                            for (int i = 0; i < result.files.length; i++) {
-                              var v;
-                              String fileName =
-                                  result.files[i].path.split('/').last;
-                              v = await MultipartFile.fromFile(
-                                  result.files[i].path,
-                                  filename: fileName);
-                              formData.add(v);
+                            try {
+                              for (int i = 0; i < result.files.length; i++) {
+                                var v;
+                                String fileName =
+                                    result.files[i].path.split('/').last;
+                                v = await MultipartFile.fromFile(
+                                    result.files[i].path,
+                                    filename: fileName);
+                                formData.add(v);
+                              }
+                            } catch (e) {
+                              print("Error:${e.toString()}");
                             }
+
                             if (key.currentState.validate()) {
                               pr?.show();
                               var _map = FormData.fromMap({
+                                "menu_item_id": widget?.model?.id ?? "",
                                 "title": _myTitleEditTextController.text,
                                 "category_id": snapshot.data.data
                                     .getIdByName(_selectedCategory),
@@ -300,10 +339,11 @@ class _NewMenuItemState extends State<NewMenuItem> {
                                 "type": _selectedType,
                                 "max_qty_per_order":
                                     _myMaxQuantityEditTextController.text,
-                                "photo": formData
+                                if (formData.isNotEmpty) "photo": formData
                               });
                               print("_map:${_map.toString()}");
-                              WebService.funMenuCreate(_map, context)
+                              WebService.funMenuCreate(
+                                      _map, context, widget?.model?.id != null)
                                   .then((value) {
                                 pr?.hide();
                                 if (value.status == 'success') {

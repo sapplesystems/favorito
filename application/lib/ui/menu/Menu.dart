@@ -22,13 +22,12 @@ class _MenuState extends State<Menu> {
   final _mySearchEditController = TextEditingController();
   SizeManager sm;
   Map _dataMap = Map();
-  var fut;
+
   ProgressDialog pr;
 
   @override
   void initState() {
     super.initState();
-    fut = WebService.funMenuList();
   }
 
   @override
@@ -76,7 +75,7 @@ class _MenuState extends State<Menu> {
         ],
       ),
       body: FutureBuilder<MenuBaseModel>(
-        future: fut,
+        future: WebService.funMenuList(),
         builder: (BuildContext context, AsyncSnapshot<MenuBaseModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: Text(loading));
@@ -86,37 +85,42 @@ class _MenuState extends State<Menu> {
             for (var key in snapshot.data.data)
               _dataMap[key.categoryName + '|' + key.categoryId.toString()] =
                   key.items;
-
-            return ListView(
-              physics: new NeverScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                      controller: _mySearchEditController,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: "Search ",
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ))),
-                ),
-                Container(
-                  height: sm.scaledHeight(80),
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 16, bottom: 16, top: 0),
-                  child: ListView(
-                    // shrinkWrap: true,
-                    children: <Widget>[
-                      Column(children: [
-                        for (var key in _dataMap.keys)
-                          _header(key, _dataMap[key]),
-                      ]),
-                    ],
-                  ),
-                ),
-              ],
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {});
+              },
+              child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                          controller: _mySearchEditController,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: "Search ",
+                              enabled: false,
+                              suffixIcon: Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              ))),
+                    ),
+                    Container(
+                      height: sm.scaledHeight(80),
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16, bottom: 16, top: 0),
+                      child: ListView(
+                        // shrinkWrap: true,
+                        children: <Widget>[
+                          Column(children: [
+                            Divider(),
+                            for (var key in _dataMap.keys)
+                              _header(key, _dataMap[key]),
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ]),
             );
           }
         },
@@ -143,7 +147,7 @@ class _MenuState extends State<Menu> {
                             title: title.split('|')[0],
                             id: title.split('|')[1],
                             isActivate: true,
-                          )));
+                          ))).whenComplete(() => setState(() {}));
             },
             child: Text(
               "Edit",
@@ -154,10 +158,8 @@ class _MenuState extends State<Menu> {
         for (var child in childList)
           ListTile(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MenuItem(child.id, child.title)));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MenuItem(child.id)));
             },
             title: Text(child.title),
             subtitle: Text(child.price.toString()),

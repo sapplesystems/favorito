@@ -18,10 +18,10 @@ class MenuSetting extends StatefulWidget {
 
 class _MenuSettingState extends State<MenuSetting> {
   ProgressDialog pr;
-  bool _isAcceptingOrdersSwitch = true;
-  bool _isTakeAwaySwitch = true;
-  bool _isDineInSwicth = true;
-  bool _isDeliverySwitch = true;
+  // bool _isAcceptingOrdersSwitch = true;
+  // bool _isTakeAwaySwitch = true;
+  // bool _isDineInSwicth = true;
+  // bool _isDeliverySwitch = true;
 
   TimeOfDay _intitialTime = TimeOfDay.now();
 
@@ -91,9 +91,6 @@ class _MenuSettingState extends State<MenuSetting> {
               return Center(child: Text("Something went wrong..."));
             else {
               var v = snapshot.data.data;
-              _isAcceptingOrdersSwitch = (v.acceptingOrder == 1);
-              //takeAway
-              _isTakeAwaySwitch = (v.takeAway == 1); //need to change
               _selectedTakeAwayStartTimeText =
                   v.takeAwayStartTime.trim().substring(0, 5);
               _selectedTakeAwayEndTimeText =
@@ -103,13 +100,11 @@ class _MenuSettingState extends State<MenuSetting> {
               _myTakeAwayPackagingEditController.text =
                   v.takeAwayPackagingCharge.toString();
               //dining
-              _isDineInSwicth = (v.dineIn == 1); //need to change
               _selectedDineInStartTimeText =
                   v.dineInStartTime.trim().substring(0, 5);
               _selectedDineInEndTimeText =
                   v.dineInEndTime.trim().substring(0, 5);
               //delevery
-              _isDeliverySwitch = (v.delivery == 1); //need to change
               _selectedDeliveryStartTimeText =
                   v.deliveryStartTime.trim().substring(0, 5);
               _selectedDeliveryEndTimeText =
@@ -133,7 +128,7 @@ class _MenuSettingState extends State<MenuSetting> {
                           ),
                         ),
                         CustomSwitch(
-                          value: _isAcceptingOrdersSwitch,
+                          value: v.acceptingOrder == 1,
                           activeColor: Color(0xff1dd100),
                           inactiveColor: Colors.red,
                           activeText: "Online",
@@ -142,7 +137,7 @@ class _MenuSettingState extends State<MenuSetting> {
                           inactiveTextColor: Colors.white,
                           onChanged: (value) {
                             setState(() {
-                              _isAcceptingOrdersSwitch = value;
+                              v.acceptingOrder = value ? 1 : 0;
                             });
                           },
                         ),
@@ -161,16 +156,11 @@ class _MenuSettingState extends State<MenuSetting> {
                             ),
                           ),
                           Switch(
-                            value: _isTakeAwaySwitch,
+                            value: v.takeAway == 1,
                             onChanged: (value) {
-                              print("_isTakeAwaySwitch:${_isTakeAwaySwitch}");
-                              print("value:${value}");
                               setState(() {
                                 v.takeAway = value ? 1 : 0;
                               });
-
-                              print("_isTakeAwaySwitch:${_isTakeAwaySwitch}");
-                              print("value:${value}");
                             },
                             activeTrackColor: Colors.grey,
                             activeColor: Colors.red,
@@ -251,10 +241,10 @@ class _MenuSettingState extends State<MenuSetting> {
                             ),
                           ),
                           Switch(
-                            value: _isDineInSwicth,
+                            value: v.dineIn == 1,
                             onChanged: (value) {
                               setState(() {
-                                _isDineInSwicth = value;
+                                v.dineIn = value ? 1 : 0;
                               });
                             },
                             activeTrackColor: Colors.grey,
@@ -311,10 +301,10 @@ class _MenuSettingState extends State<MenuSetting> {
                             ),
                           ),
                           Switch(
-                            value: _isDeliverySwitch,
+                            value: v.delivery == 1,
                             onChanged: (value) {
                               setState(() {
-                                _isDeliverySwitch = value;
+                                v.delivery = value ? 1 : 0;
                               });
                             },
                             activeTrackColor: Colors.grey,
@@ -387,8 +377,8 @@ class _MenuSettingState extends State<MenuSetting> {
                         clicker: () async {
                           pr.show();
                           Map _map = {
-                            "accepting_order": _isAcceptingOrdersSwitch ? 0 : 1,
-                            "take_away": _isTakeAwaySwitch ? 0 : 1,
+                            "accepting_order": v.acceptingOrder,
+                            "take_away": v.takeAway,
                             "take_away_start_time":
                                 _selectedTakeAwayStartTimeText,
                             "take_away_end_time": _selectedTakeAwayEndTimeText,
@@ -396,10 +386,10 @@ class _MenuSettingState extends State<MenuSetting> {
                                 _myTakeAwayMinimumAmountEditController.text,
                             "take_away_packaging_charge":
                                 _myTakeAwayPackagingEditController.text,
-                            "dine_in": _isDineInSwicth ? 0 : 1,
+                            "dine_in": v.dineIn,
                             "dine_in_start_time": _selectedDineInStartTimeText,
                             "dine_in_end_time": _selectedDineInEndTimeText,
-                            "delevery": _isDeliverySwitch ? 0 : 1,
+                            "delivery": v.delivery,
                             "delivery_start_time":
                                 _selectedDeliveryStartTimeText,
                             "delivery_end_time": _selectedDeliveryEndTimeText,
@@ -408,7 +398,7 @@ class _MenuSettingState extends State<MenuSetting> {
                             "delivery_packaging_charge":
                                 _myDeliveryPackagingEditController.text
                           };
-
+                          print("_map:${_map.toString()}");
                           await WebService.funMenuSettingUpdate(_map)
                               .then((value) {
                             pr.hide();
