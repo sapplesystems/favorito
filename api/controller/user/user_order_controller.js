@@ -1,6 +1,10 @@
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 var uniqid = require('uniqid');
+var moment = require('moment')
+const DELIVERY = 1
+const DINE_IN = 2
+const TAKE_AWAY = 3
 
 exports.getOrderList = async function(req, res, next) {
     if (req.body.user_id != null || req.body.user_id != undefined || req.body.user_id != '') {
@@ -57,11 +61,92 @@ exports.getOrderDetail = async function(req, res, next) {
 
 }
 
+// Validation order 
+orderValidation = (req, res) => {
+    return new Promise(async(resolve, reject) => {
+        if (!req.body.business_id) {
+            return res.status(403).json({ status: 'error', message: 'business_id is missing' });
+        } else {
+            business_id = req.body.business_id
+        }
+        if (!req.body.order_type) {
+            return res.status(403).json({ status: 'error', message: 'order_type is missing' });
+        } else {
+            order_type = req.body.order_type
+        }
+
+        sql_get_setting = `SELECT * from business_menu_setting where business_id = '${business_id}'`
+        result_get_setting = await exports.run_query(sql_get_setting)
+
+        // resolve({ order_type, DELIVERY })
+        switch (parseInt(order_type)) {
+            case DELIVERY:
+                console.log('delivery')
+                delivery = result_get_setting[0].delivery
+                if (delivery == 0) {
+                    resolve(false)
+                }
+                delivery_start_time = moment(result_get_setting[0].delivery_start_time, 'H:mm:ss')
+                delivery_end_time = moment(result_get_setting[0].delivery_end_time, 'H:mm:ss')
+                current_time = moment(moment(), 'H:mm:ss')
+                if (delivery_start_time.isBefore(current_time) && current_time.isBefore(delivery_end_time)) {
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+                break;
+            case DINE_IN:
+                console.log('DINE_IN')
+
+                dine_in = result_get_setting[0].dine_in
+                if (dine_in == 0) {
+                    resolve(false)
+                }
+                dine_in_start_time = moment(result_get_setting[0].dine_in_start_time, 'H:mm:ss')
+                dine_in_end_time = moment(result_get_setting[0].dine_in_end_time, 'H:mm:ss')
+                current_time = moment(moment(), 'H:mm:ss')
+                if (dine_in_start_time.isBefore(current_time) && current_time.isBefore(dine_in_end_time)) {
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+                break;
+            case TAKE_AWAY:
+                console.log('TAKE_AWAY')
+                take_away = result_get_setting[0].take_away
+                if (take_away == 0) {
+                    resolve(false)
+                }
+                take_away_start_time = moment(result_get_setting[0].take_away_start_time, 'H:mm:ss')
+                take_away_end_time = moment(result_get_setting[0].take_away_end_time, 'H:mm:ss')
+                current_time = moment(moment(), 'H:mm:ss')
+                if (take_away_start_time.isBefore(current_time) && current_time.isBefore(take_away_end_time)) {
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+                break;
+
+            default:
+                resolve('invalid_order')
+                break;
+        }
+    })
+
+}
+
 /**
  * CREATE NEW ORDER
  */
 exports.createOrder = async function(req, res, next) {
     try {
+        is_order_valid = await orderValidation(req, res)
+        if (is_order_valid == 'invalid_order') {
+            return res.status(403).json({ status: 'error', message: 'Invalid order_type' });
+        }
+        if (!is_order_valid) {
+            return res.status(200).json({ status: 'success', message: 'Not accepting the order at this time' });
+        }
         var user_id = req.userdata.id;
         var category;
         var item;
@@ -126,6 +211,12 @@ exports.createOrder = async function(req, res, next) {
         //     }
         // }
 
+        // getting order type name from the table order_type_master
+
+        sql_order_type = `select order_type from order_type_master where id = '${req.body.order_type}'`
+        result_order_type = (await exports.run_query(sql_order_type))[0].order_type
+
+        // making data for the order creation
         for (var i = 0; i < category_length; i++) {
             var category_id = category[i].category_id;
             var category_items = category[i].category_item;
@@ -165,7 +256,7 @@ exports.createOrder = async function(req, res, next) {
             name: user_name,
             mobile: user_mobile,
             notes: req.body.notes,
-            order_type: req.body.order_type,
+            order_type: result_order_type,
             total_amount: total_amount,
             payment_type: req.body.payment_type,
             user_id: user_id

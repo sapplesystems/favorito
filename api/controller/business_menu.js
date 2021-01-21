@@ -2,6 +2,8 @@ const { FailedDependency } = require('http-errors');
 var db = require('../config/db');
 var menu_type_id = 1; // BY Default for business is 1 and for freelancer is 2
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
+var fs = require('fs');
+const { log } = require('console');
 
 /**
  * GET STATIC VARIABLE
@@ -114,6 +116,36 @@ exports.getMenuCategories = function(business_id, req, res = false) {
     }
 };
 
+// get menu item detail by menu_item_id
+exports.getMenuItems = async function(req, res, next) {
+    if (req.body.menu_item_id == null || req.body.menu_item_id == '' || req.body.menu_item_id == undefined) {
+        return res.status(400).send({ status: "Failed", message: "Wrong input" })
+    } else {
+        menu_type_id1 = req.body.menu_item_id
+    }
+    try {
+        sql = "SELECT (SELECT GROUP_CONCAT(id,'#',photo) FROM business_menu_photo WHERE business_menu_item_id = " + menu_type_id1 + " ) as photo, id,business_id,title,menu_category_id,price,description,quantity,type,is_activated,max_qty_per_order FROM business_menu_item WHERE id = '" + menu_type_id1 + "' AND deleted_at IS NULL"
+        db.query(sql, function(err, result) {
+            if (err) {
+                return res.status(500).send({ status: "failed", messsage: err })
+            } else {
+                all_photo_detail = []
+                if (result[0] && result[0].photo) {
+                    var photos_ids = result[0].photo.split(',')
+                    for (let i = 0; i < photos_ids.length; i++) {
+                        all_photo_detail.push({ photo_id: photos_ids[i].split('#')[0], url: `${img_path}${photos_ids[i].split('#')[1]}` });
+                    }
+                    result[0].photo = all_photo_detail
+                } else {
+                    return res.status(200).send({ status: "success", message: "Item is not found", data: result })
+                }
+                return res.status(200).send({ status: "success", message: "seccess", data: result })
+            }
+        })
+    } catch (error) {
+        return res.status(500).send({ status: "failed", messsage: error })
+    }
+}
 
 
 /**
@@ -127,8 +159,23 @@ exports.listAllMenu = async function(req, res, next) {
             LEFT JOIN business_categories AS b_c ON b_m_c.category_id = b_c.id\n\
             WHERE b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' \n\
             AND b_m_c.parent_id='0' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
+
+        sql_attributes = `SELECT GROUP_CONCAT(attributes_id) as attributes from business_attributes where business_id  = '${business_id}'`;
+        result_attributes = await exports.run_query(sql_attributes)
+        attributes = result_attributes[0].attributes.split(',')
+        business_online_store_or_menu = 0;
+        for (let i = 0; i < attributes.length; i++) {
+            if (attributes[i] == '4') {
+                business_online_store_or_menu = 4
+            }
+            if (attributes[i] == '3') {
+                business_online_store_or_menu = 3
+            }
+        }
+
+        var data = [];
+        data.push({ business_type: business_online_store_or_menu })
         db.query(sql, async function(err, result) {
-            var data = [];
             var result_length = result.length;
             for (var i = 0; i < result_length; i++) {
                 var category_id = result[i].id;
@@ -242,7 +289,7 @@ exports.getCategoryMenusItems = async function(business_id, category_id) {
                         (SELECT GROUP_CONCAT(id) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photo_id, \n\
                         (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos \n\
                         FROM business_menu_item \n\
-                        WHERE business_id='" + business_id + "' AND menu_category_id='" + category_id + "'";
+                        WHERE business_id='" + business_id + "' AND menu_category_id='" + category_id + "' AND deleted_at IS NULL";
             db.query(sql, async function(e, items) {
                 var items_length = items.length;
                 for (var i = 0; i < items_length; i++) {
@@ -301,7 +348,13 @@ exports.createMenuItem = async function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
             var menu_id = result.insertId;
-            await exports.addPhotos(business_id, menu_id, req, res);
+            try {
+                if (req.files != '') {
+                    await exports.addPhotos(business_id, menu_id, req, res);
+                }
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
             return res.status(200).json({ status: 'success', message: 'Menu item created successfully.' });
         });
     } catch (e) {
@@ -372,7 +425,9 @@ exports.addMenuPhotos = async function(req, res, next) {
         }
         var menu_id = req.body.menu_id;
 
-        await exports.addPhotos(business_id, menu_id, req);
+        if (req.files != '') {
+            await exports.addPhotos(business_id, menu_id, req);
+        }
         return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.' });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -591,7 +646,6 @@ exports.updateMenuSetting = function(req, res, next) {
             update_columns += ", delivery_packaging_charge='" + req.body.delivery_packaging_charge + "' ";
         }
 
-
         if (req.body.take_away != '' && req.body.take_away != 'undefined' && req.body.take_away != null) {
             update_columns += ", take_away='" + req.body.take_away + "' ";
         }
@@ -616,23 +670,57 @@ exports.updateMenuSetting = function(req, res, next) {
     }
 };
 
-// get menu item detail by menu_item_id
-exports.getMenuItems = async function(req, res, next) {
-    if (req.body.menu_item_id == null || req.body.menu_item_id == '' || req.body.menu_item_id == undefined) {
-        return res.status(400).send({ status: "Failed", message: "Wrong input" })
-    } else {
-        menu_type_id = req.body.menu_item_id
-    }
-    try {
-        sql = "SELECT (SELECT GROUP_CONCAT(photo,' ') FROM business_menu_photo WHERE business_menu_item_id = " + menu_type_id + " ) as photo, id,business_id,title,menu_category_id,price,description,quantity,type,is_activated,max_qty_per_order FROM business_menu_item WHERE id = '" + menu_type_id + "'"
-        await db.query(sql, function(err, result) {
-            if (err) {
-                return res.status(500).send({ status: "failed", messsage: err })
-            } else {
-                return res.status(200).send({ status: "success", message: "seccess", data: result })
+/**
+ * Delete menu item photo
+ */
+exports.deleteMenuPhoto = async function(req, res, next) {
+    if (req.body.photo_id) {
+        try {
+            var path_photo = ''
+            sql_get_name = `SELECT photo FROM business_menu_photo where id = '${req.body.photo_id}'`
+            result_get_name = await exports.run_query(sql_get_name)
+            if (result_get_name != '') {
+                path_photo = '././public/uploads/' + result_get_name[0].photo
             }
-        })
-    } catch (error) {
-        return res.status(500).send({ status: "failed", messsage: error })
+
+            if (fs.existsSync(path_photo)) {
+                fs.unlink(path_photo, (error) => {
+                    if (error) {
+                        return res.status(500).json({ status: 'error', message: 'Something went wrong while changing the profile image' });
+                    }
+                })
+            }
+
+            sql_delete_photo = `DELETE FROM business_menu_photo WHERE id = '${req.body.photo_id}'`
+            await exports.run_query(sql_delete_photo)
+            return res.status(200).json({ status: 'success', message: 'Deleted successfull' });
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong' });
+        }
+    } else {
+        return res.status(400).json({ status: 'error', message: 'photo_id is missing' });
     }
-}
+};
+
+
+exports.deleteMenu = async function(req, res, next) {
+    if (req.body.menu_item_id) {
+        var sql_delete_menu_item = `UPDATE business_menu_item \n\
+            SET deleted_at = NOW() \n\
+            WHERE id = '${req.body.menu_item_id}'`
+
+        var sql_delete_menu_item_photo = `DELETE FROM business_menu_photo \n\
+        WHERE business_menu_item_id = '${req.body.menu_item_id}'`
+
+        try {
+            await exports.run_query(sql_delete_menu_item)
+            await exports.run_query(sql_delete_menu_item_photo)
+            return res.status(200).json({ status: 'success', message: 'deleted successfull' });
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+        }
+    } else {
+        return res.status(400).json({ status: 'error', message: 'menu_item_id is missing' });
+    }
+};
