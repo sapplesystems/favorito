@@ -9,7 +9,6 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
-
 class highlights extends StatefulWidget {
   @override
   _highlightsState createState() => _highlightsState();
@@ -30,8 +29,6 @@ class _highlightsState extends State<highlights> {
     getPageData();
     super.initState();
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
-
-
   }
 
   @override
@@ -74,8 +71,8 @@ class _highlightsState extends State<highlights> {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2)),
                 Container(
-                  height: sm.scaledHeight(20),
-                  margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
+                  height: sm.h(20),
+                  margin: EdgeInsets.symmetric(vertical: sm.h(4)),
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
@@ -98,7 +95,8 @@ class _highlightsState extends State<highlights> {
                               print(file.size);
                               print(file.extension);
                               print(file.path);
-                              WebService.highlightImageUpdate(result.files,context)
+                              WebService.highlightImageUpdate(
+                                      result.files, context)
                                   .then((value) {
                                 if (value.status == "success") {
                                   for (int i = 0; i < value.data.length; i++) {
@@ -113,7 +111,7 @@ class _highlightsState extends State<highlights> {
                             }
                           },
                           child: Container(
-                            width: sm.scaledHeight(18),
+                            width: sm.h(18),
                             child: Card(
                                 semanticContainer: true,
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -130,7 +128,7 @@ class _highlightsState extends State<highlights> {
                           )),
                       for (int i = imgUrls.length - 1; i > 0; i--) //Network
                         Container(
-                          width: sm.scaledHeight(20),
+                          width: sm.h(20),
                           child: Card(
                               semanticContainer: true,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -151,7 +149,7 @@ class _highlightsState extends State<highlights> {
                     margin: EdgeInsets.symmetric(horizontal: 12),
                     child: Column(children: [
                       Padding(
-                        padding: EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(bottom: sm.h(1)),
                         child: txtfieldboundry(
                           valid: true,
                           title: "Title",
@@ -161,7 +159,7 @@ class _highlightsState extends State<highlights> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+                        padding: EdgeInsets.only(top: sm.h(1)),
                         child: txtfieldboundry(
                           valid: true,
                           title: "Discription",
@@ -174,8 +172,7 @@ class _highlightsState extends State<highlights> {
                     ])),
                 Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: sm.scaledWidth(16),
-                        vertical: sm.scaledHeight(2)),
+                        horizontal: sm.w(16), vertical: sm.h(2)),
                     child: roundedButton(
                         clicker: () {
                           if (_formKey.currentState.validate()) {
@@ -183,7 +180,8 @@ class _highlightsState extends State<highlights> {
                             WebService.setHighlightData({
                               "highlight_title": ctrlTitle.text,
                               "highlight_desc": ctrlDisc.text
-                            },context).then((value) {
+                            }, context)
+                                .then((value) {
                               if (value.status == "success")
                                 BotToast.showText(text: value.message);
                             });

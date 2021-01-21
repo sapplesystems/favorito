@@ -22,7 +22,7 @@ class _card2State extends State<card2> {
         shape: rrb,
         elevation: 2,
         child: Container(
-          padding: EdgeInsets.all(sm.scaledHeight(2.6)),
+          padding: EdgeInsets.all(sm.h(2.6)),
           child: Column(
             children: [
               Text(
@@ -35,7 +35,7 @@ class _card2State extends State<card2> {
                   letterSpacing: 0.60,
                 ),
               ),
-              SizedBox(height: sm.scaledHeight(2)),
+              SizedBox(height: sm.h(2)),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -52,11 +52,11 @@ class _card2State extends State<card2> {
                   SvgPicture.asset(
                     'assets/icon/star.svg',
                     alignment: Alignment.center,
-                    height: sm.scaledHeight(4),
+                    height: sm.h(4),
                   ),
                 ],
               ),
-              SizedBox(height: sm.scaledHeight(2)),
+              SizedBox(height: sm.h(2)),
               Text(
                 "100 Ratings",
                 style: TextStyle(

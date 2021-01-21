@@ -58,12 +58,12 @@ class _OnlineStoreItem extends State<OnlineStoreItem> {
         elevation: 0,
       ),
       body: Container(
-        height: sm.scaledHeight(95),
-        width: sm.scaledWidth(100),
+        height: sm.h(95),
+        width: sm.w(100),
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: ListView(shrinkWrap: true, children: [
           Container(
-            height: sm.scaledHeight(14),
+            height: sm.h(14),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
@@ -74,7 +74,7 @@ class _OnlineStoreItem extends State<OnlineStoreItem> {
                     child: Image.network(
                       'https://eatforum.org/content/uploads/2018/05/table_with_food_top_view_900x700.jpg',
                       fit: BoxFit.fill,
-                      width: sm.scaledHeight(10),
+                      width: sm.h(10),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -86,8 +86,7 @@ class _OnlineStoreItem extends State<OnlineStoreItem> {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: 8, vertical: sm.scaledHeight(2)),
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: sm.h(2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -105,7 +104,7 @@ class _OnlineStoreItem extends State<OnlineStoreItem> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+                  padding: EdgeInsets.only(top: sm.h(2)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -117,7 +116,7 @@ class _OnlineStoreItem extends State<OnlineStoreItem> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+                  padding: EdgeInsets.only(top: sm.h(2)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,18 +137,18 @@ class _OnlineStoreItem extends State<OnlineStoreItem> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: sm.scaledHeight(2)),
+                  padding: EdgeInsets.only(top: sm.h(2)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: null,
-                          iconSize: sm.scaledHeight(5)),
+                          iconSize: sm.h(5)),
                       IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: null,
-                        iconSize: sm.scaledHeight(5),
+                        iconSize: sm.h(5),
                       )
                     ],
                   ),

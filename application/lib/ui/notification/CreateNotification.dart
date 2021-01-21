@@ -55,7 +55,8 @@ class _CreateNotificationState extends State<CreateNotification> {
     super.initState();
     initializeDefaultValues();
     if (widget.id != null) {
-      WebService.funNotificationsDetail({"id": widget.id},context).then((value) {
+      WebService.funNotificationsDetail({"id": widget.id}, context)
+          .then((value) {
         setState(() {
           notificationOneModel = value;
           _contactHintText = value.data[0].contact;
@@ -266,7 +267,8 @@ class _CreateNotificationState extends State<CreateNotification> {
                                       _stateVisible = false;
                                       _cityVisible = true;
                                       _pincodeVisible = false;
-                                      WebService.funGetCities(context).then((value) {
+                                      WebService.funGetCities(context)
+                                          .then((value) {
                                         setState(() {
                                           _cityListModel = value;
                                         });
@@ -288,7 +290,8 @@ class _CreateNotificationState extends State<CreateNotification> {
                                 child: DropdownSearch<String>(
                                   validator: (v) =>
                                       v == '' ? "required field" : null,
-                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  autoValidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
                                   showSelectedItem: true,
                                   selectedItem: _selectedCountry,
@@ -305,7 +308,8 @@ class _CreateNotificationState extends State<CreateNotification> {
                                 child: DropdownSearch<StateModel>(
                                   validator: (v) =>
                                       v == null ? "required field" : null,
-                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  autoValidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   compareFn: (StateModel i, StateModel s) =>
                                       i.isEqual(s),
                                   mode: Mode.MENU,
@@ -334,7 +338,8 @@ class _CreateNotificationState extends State<CreateNotification> {
                                 child: DropdownSearch<CityModel>(
                                   validator: (v) =>
                                       v == null ? "required field" : null,
-                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  autoValidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
                                   showSelectedItem: true,
                                   compareFn: (CityModel i, CityModel s) =>
@@ -372,7 +377,8 @@ class _CreateNotificationState extends State<CreateNotification> {
                                     if (_myPincodeEditController.text.length ==
                                         6) {
                                       WebService.funValidPincode(
-                                              _myPincodeEditController.text,context)
+                                              _myPincodeEditController.text,
+                                              context)
                                           .then((value) {
                                         if (value.status == 'success') {
                                           BotToast.showText(
@@ -397,7 +403,8 @@ class _CreateNotificationState extends State<CreateNotification> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 selectedItem: _selectedQuantity,
                                 items: _quantityList,
@@ -421,7 +428,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                 child: Align(
                   alignment: Alignment.center,
                   child: Container(
-                    width: sm.scaledWidth(50),
+                    width: sm.w(50),
                     margin: EdgeInsets.only(bottom: 16.0),
                     child: roundedButton(
                       clicker: () {
@@ -449,7 +456,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                                 _myPincodeEditController.text;
                           }
                           requestData.selectedQuantity = _selectedQuantity;
-                          WebService.funCreateNotification(requestData,context)
+                          WebService.funCreateNotification(requestData, context)
                               .then((value) {
                             if (value.status == 'success') {
                               setState(() {

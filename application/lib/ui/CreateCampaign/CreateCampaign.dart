@@ -71,9 +71,9 @@ class _CreateCampaignState extends State<CreateCampaign> {
       ),
       body: Container(
         color: myBackGround,
-        padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
+        padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
         margin: EdgeInsets.only(
-          top: sm.scaledHeight(2),
+          top: sm.h(2),
         ),
         child: ListView(
           children: [
@@ -170,8 +170,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: sm.scaledWidth(16),
-                    vertical: sm.scaledHeight(4)),
+                    horizontal: sm.w(16), vertical: sm.h(4)),
                 child: roundedButton(
                     clicker: () => funSublim(),
                     clr: Colors.red,

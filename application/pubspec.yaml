@@ -90,6 +90,26 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Gilroy-Bold
+      fonts:
+        - asset: assets/fonts/Gilroy-Bold.ttf  
+    - family: Gilroy-ExtraBold
+      fonts:
+        - asset: assets/fonts/Gilroy-ExtraBold.otf
+    - family: Gilroy-Heavy
+      fonts:
+        - asset: assets/fonts/Gilroy-Heavy.ttf
+    - family: Gilroy-Light
+      fonts:
+        - asset: assets/fonts/Gilroy-Light.ttf
+    - family: Gilroy-Medium
+      fonts:
+        - asset: assets/fonts/Gilroy-Medium.ttf
+    - family: Gilroy-Regular
+      fonts:
+        - asset: assets/fonts/Gilroy-Regular.ttf
+            
   # fonts:
   #   - family: Schyler
   #     fonts:

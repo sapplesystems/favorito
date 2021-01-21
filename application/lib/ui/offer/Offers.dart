@@ -108,10 +108,7 @@ class _OfferState extends State<Offers> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                    left: sm.scaledWidth(20),
-                    right: sm.scaledWidth(20),
-                    top: 8.0,
-                    bottom: 16.0),
+                    left: sm.w(20), right: sm.w(20), top: 8.0, bottom: 16.0),
                 child: DropdownSearch<String>(
                   validator: (v) => v == '' ? "required field" : null,
                   mode: Mode.MENU,
@@ -151,7 +148,7 @@ class _OfferState extends State<Offers> {
               Text("New User Offers",
                   style: TextStyle(fontSize: 14, color: Colors.grey)),
               Container(
-                  height: sm.scaledHeight(34),
+                  height: sm.h(34),
                   child: ListView.builder(
                       itemCount: newUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {
@@ -236,7 +233,7 @@ class _OfferState extends State<Offers> {
                     style: TextStyle(fontSize: 14, color: Colors.grey)),
               ),
               Container(
-                  height: sm.scaledHeight(35),
+                  height: sm.h(35),
                   child: ListView.builder(
                       itemCount: currentUserOfferInputList.length,
                       itemBuilder: (BuildContext context, int index) {

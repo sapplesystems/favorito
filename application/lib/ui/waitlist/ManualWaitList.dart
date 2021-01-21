@@ -67,8 +67,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
                         child: Column(children: [
                           for (int i = 0; i < 4; i++)
                             Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                              padding: EdgeInsets.only(bottom: sm.h(1)),
                               child: txtfieldboundry(
                                 valid: true,
                                 title: title[i],
@@ -85,8 +84,8 @@ class _ManualWaitListState extends State<ManualWaitList> {
                         ])),
                   )),
           Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: sm.scaledWidth(16), vertical: sm.scaledHeight(2)),
+              padding:
+                  EdgeInsets.symmetric(horizontal: sm.w(16), vertical: sm.h(2)),
               child: roundedButton(
                   clicker: () {
                     if (_frmKey.currentState.validate()) funSublim();
@@ -105,7 +104,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
       "no_of_person": controller[2].text,
       "special_notes": controller[3].text
     };
-    WebService.funCreateWaitlist(_map,context).then((value) {
+    WebService.funCreateWaitlist(_map, context).then((value) {
       if (value.status == "success") {
         BotToast.showText(text: value.message);
         Navigator.pop(context);

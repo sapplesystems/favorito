@@ -80,15 +80,15 @@ class _BusinessClaimState extends State<BusinessClaim> {
             )
           : Container(
               color: myBackGround,
-              height: sm.scaledHeight(82),
-              padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
+              height: sm.h(82),
+              padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
               margin: EdgeInsets.only(
-                top: sm.scaledHeight(2),
+                top: sm.h(2),
               ),
               child: ListView(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: sm.scaledHeight(4)),
+                    padding: EdgeInsets.only(bottom: sm.h(4)),
                     child: Text(
                       "Business Claim",
                       textAlign: TextAlign.center,
@@ -337,8 +337,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: sm.scaledWidth(16),
-                          vertical: sm.scaledHeight(4)),
+                          horizontal: sm.w(16), vertical: sm.h(4)),
                       child: roundedButton(
                           clicker: () async {
                             pr.show();

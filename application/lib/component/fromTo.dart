@@ -12,8 +12,8 @@ class fromTo extends StatelessWidget {
     return Container(
         child: Container(
       margin: EdgeInsets.all(8),
-      width: sm.scaledWidth(24),
-      height: sm.scaledHeight(4),
+      width: sm.w(24),
+      height: sm.h(4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         border: Border.all(

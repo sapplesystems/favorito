@@ -97,7 +97,7 @@ class _Orders extends State<Orders> {
               ),
               Container(
                   padding: EdgeInsets.all(8.0),
-                  height: sm.scaledHeight(80),
+                  height: sm.h(80),
                   child: ListView.builder(
                       itemCount: inputOrdersList.length,
                       itemBuilder: (BuildContext context, int index) {

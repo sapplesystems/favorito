@@ -82,7 +82,7 @@ class _reviewState extends State<review> {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
-                    height: sm.scaledHeight(54),
+                    height: sm.h(54),
                     child: Card(
                         elevation: 4,
                         shape: rrb,

@@ -103,7 +103,7 @@ class _OnlineStoreState extends State<OnlineStore> {
         ],
       ),
       body: Container(
-        height: sm.scaledHeight(100),
+        height: sm.h(100),
         child: Column(
           children: [
             Padding(

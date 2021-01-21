@@ -104,14 +104,14 @@ class Waitlists extends State<Waitlist> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        width: sm.scaledWidth(10),
+                                        width: sm.w(10),
                                         child: Text(va.noOfPerson.toString(),
                                             style: TextStyle(
                                                 fontSize: 24,
                                                 fontWeight: FontWeight.w400)),
                                       ),
                                       SizedBox(
-                                        width: sm.scaledWidth(45),
+                                        width: sm.w(45),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -161,14 +161,14 @@ class Waitlists extends State<Waitlist> {
                                           Row(
                                             children: [
                                               IconButton(
-                                                iconSize: sm.scaledWidth(8),
+                                                iconSize: sm.w(8),
                                                 icon: Icon(Icons.call,
                                                     color: myRed),
                                                 onPressed: () => _callPhone(
                                                     'tel:${va.contact}'),
                                               ),
                                               IconButton(
-                                                iconSize: sm.scaledWidth(8),
+                                                iconSize: sm.w(8),
                                                 icon: Icon(
                                                     FontAwesomeIcons.trashAlt,
                                                     size: 16,
@@ -181,7 +181,7 @@ class Waitlists extends State<Waitlist> {
                                           Row(
                                             children: [
                                               IconButton(
-                                                  iconSize: sm.scaledWidth(8),
+                                                  iconSize: sm.w(8),
                                                   icon: Icon(Icons.check_circle,
                                                       color:
                                                           va.waitlistStatus ==
@@ -195,7 +195,7 @@ class Waitlists extends State<Waitlist> {
                                                           "accepted", va.id);
                                                   }),
                                               IconButton(
-                                                  iconSize: sm.scaledWidth(8),
+                                                  iconSize: sm.w(8),
                                                   icon: Icon(Icons.close,
                                                       color:
                                                           va.waitlistStatus ==
@@ -232,10 +232,10 @@ class Waitlists extends State<Waitlist> {
     Navigator.push(
       context,
       PopupLayout(
-        top: sm.scaledHeight(30),
-        left: sm.scaledWidth(10),
-        right: sm.scaledWidth(10),
-        bottom: sm.scaledHeight(30),
+        top: sm.h(30),
+        left: sm.w(10),
+        right: sm.w(10),
+        bottom: sm.h(30),
         child: PopupContent(
           content: Scaffold(
             resizeToAvoidBottomPadding: false,

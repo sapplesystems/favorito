@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: sm.scaledHeight(6)),
+            padding: EdgeInsets.only(top: sm.h(6)),
             child: Text(
               "Log in",
               textAlign: TextAlign.center,
@@ -60,7 +60,7 @@ class _LoginState extends State<Login> {
             child: Stack(
               children: [
                 Card(
-                  margin: EdgeInsets.only(top: sm.scaledHeight(10)),
+                  margin: EdgeInsets.only(top: sm.h(10)),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15.0)),
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: sm.scaledHeight(8)),
+                              padding: EdgeInsets.only(top: sm.h(8)),
                               child: txtfieldboundry(
                                 valid: true,
                                 title: "Email/Phone",
@@ -83,8 +83,8 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: sm.scaledHeight(4)),
+                                padding:
+                                    EdgeInsets.symmetric(vertical: sm.h(4)),
                                 child: txtfieldboundry(
                                   valid: true,
                                   maxLines: 1,
@@ -114,24 +114,23 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 Positioned(
-                    left: sm.scaledWidth(30),
-                    right: sm.scaledWidth(30),
+                    left: sm.w(30),
+                    right: sm.w(30),
                     child: SvgPicture.asset('assets/icon/maskgroup.svg',
-                        alignment: Alignment.center,
-                        height: sm.scaledHeight(20))),
+                        alignment: Alignment.center, height: sm.h(20))),
               ],
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(
-                  top: 16, left: sm.scaledWidth(16), right: sm.scaledWidth(16)),
+              padding:
+                  EdgeInsets.only(top: 16, left: sm.w(16), right: sm.w(16)),
               // padding: EdgeInsets.symmetric(
-              //     horizontal: sm.scaledWidth(16), vertical: sm.scaledWidth(12)),
+              //     horizontal: sm.w(16), vertical: sm.w(12)),
               child: roundedButton(
                   clicker: () => funClick(), clr: Colors.red, title: "Login")),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(6)),
+              padding: EdgeInsets.only(top: sm.h(6)),
               child: Text(
                 "Dont have account yet?",
                 style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
@@ -140,7 +139,7 @@ class _LoginState extends State<Login> {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: sm.scaledHeight(1)),
+              padding: EdgeInsets.only(top: sm.h(1)),
               child: InkWell(
                 onTap: () {
                   Navigator.push(context,
@@ -154,7 +153,7 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
-          SizedBox(height: sm.scaledWidth(10)),
+          SizedBox(height: sm.w(10)),
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Text(

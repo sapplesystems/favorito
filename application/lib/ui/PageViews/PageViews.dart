@@ -47,13 +47,12 @@ class _PageViewsState extends State<PageViews> {
           elevation: 10,
           shape: rrb28,
           child: Padding(
-            padding: EdgeInsets.only(top: sm.scaledWidth(4)),
+            padding: EdgeInsets.only(top: sm.w(4)),
             child: ListView(
               children: [
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: sm.scaledWidth(6)),
-                  padding: EdgeInsets.only(
-                      top: sm.scaledHeight(2), bottom: sm.scaledHeight(8)),
+                  margin: EdgeInsets.symmetric(horizontal: sm.w(6)),
+                  padding: EdgeInsets.only(top: sm.h(2), bottom: sm.h(8)),
                   child: GridView.count(
                     shrinkWrap: true,
                     physics: const ScrollPhysics(),
@@ -143,8 +142,7 @@ class _PageViewsState extends State<PageViews> {
                             fontSize: 16, fontWeight: FontWeight.w600)),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          vertical: sm.scaledHeight(2),
-                          horizontal: sm.scaledHeight(3)),
+                          vertical: sm.h(2), horizontal: sm.h(3)),
                       child: Text(branchList,
                           style: TextStyle(fontWeight: FontWeight.w400)),
                     )

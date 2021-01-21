@@ -20,7 +20,7 @@ class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
     return Column(
       children: [
         Container(
-          height: sm.scaledHeight(40),
+          height: sm.h(40),
           child: ListView.builder(
               shrinkWrap: true,
               itemCount: widget.inputList.length,
@@ -33,9 +33,7 @@ class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
                   child: Center(
                     child: ListTile(
                       leading: Image.network(widget.inputList[index].imageUrl,
-                          height: sm.scaledHeight(8),
-                          fit: BoxFit.fill,
-                          width: sm.scaledHeight(8)),
+                          height: sm.h(8), fit: BoxFit.fill, width: sm.h(8)),
                       title: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: Text(
@@ -73,7 +71,7 @@ class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            width: sm.scaledWidth(50),
+            width: sm.w(50),
             margin: EdgeInsets.only(bottom: 16.0, top: 16.0),
             child: roundedButton(
               clicker: () {

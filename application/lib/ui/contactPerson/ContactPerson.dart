@@ -115,7 +115,7 @@ class _ContactPersonState extends State<ContactPerson> {
               child: Stack(
                 children: [
                   Card(
-                    margin: EdgeInsets.only(top: sm.scaledHeight(10)),
+                    margin: EdgeInsets.only(top: sm.h(10)),
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15.0)),
@@ -128,9 +128,7 @@ class _ContactPersonState extends State<ContactPerson> {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
-                                  top: sm.scaledHeight(12),
-                                  left: 32.0,
-                                  right: 32.0),
+                                  top: sm.h(12), left: 32.0, right: 32.0),
                               child: Text(
                                 displayName,
                                 style: TextStyle(
@@ -140,9 +138,7 @@ class _ContactPersonState extends State<ContactPerson> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  top: sm.scaledHeight(2),
-                                  left: 8.0,
-                                  right: 8.0),
+                                  top: sm.h(2), left: 8.0, right: 8.0),
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -220,12 +216,11 @@ class _ContactPersonState extends State<ContactPerson> {
                               onTap: () {},
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    left: sm.scaledWidth(10),
-                                    right: sm.scaledWidth(10)),
+                                    left: sm.w(10), right: sm.w(10)),
                                 child: SvgPicture.asset(
                                     'assets/icon/changePassword.svg',
                                     alignment: Alignment.center,
-                                    height: sm.scaledHeight(20),
+                                    height: sm.h(20),
                                     fit: BoxFit.contain),
                               ),
                             ),
@@ -235,12 +230,11 @@ class _ContactPersonState extends State<ContactPerson> {
                     ),
                   ),
                   Positioned(
-                      top: sm.scaledWidth(5),
-                      left: sm.scaledWidth(30),
-                      right: sm.scaledWidth(30),
+                      top: sm.w(5),
+                      left: sm.w(30),
+                      right: sm.w(30),
                       child: SvgPicture.asset('assets/icon/contactPerson.svg',
-                          alignment: Alignment.center,
-                          height: sm.scaledHeight(20))),
+                          alignment: Alignment.center, height: sm.h(20))),
                 ],
               ),
             ),
@@ -375,7 +369,7 @@ class _ContactPersonState extends State<ContactPerson> {
             Align(
               alignment: Alignment.center,
               child: Container(
-                width: sm.scaledWidth(50),
+                width: sm.w(50),
                 margin: EdgeInsets.only(bottom: 16.0),
                 child: roundedButton(
                   clicker: () {
@@ -417,10 +411,10 @@ class _ContactPersonState extends State<ContactPerson> {
     Navigator.push(
       context,
       PopupLayout(
-        top: sm.scaledHeight(18),
-        left: sm.scaledWidth(5),
-        right: sm.scaledWidth(5),
-        bottom: sm.scaledHeight(18),
+        top: sm.h(18),
+        left: sm.w(5),
+        right: sm.w(5),
+        bottom: sm.h(18),
         child: PopupContent(
           content: Scaffold(
             appBar: AppBar(

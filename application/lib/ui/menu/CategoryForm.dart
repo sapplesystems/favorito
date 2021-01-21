@@ -146,7 +146,7 @@ class _CategoryFormState extends State<CategoryForm> {
                       title: " Selected Days "),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(14)),
+                  padding: EdgeInsets.symmetric(horizontal: sm.w(14)),
                   child: roundedButton(
                       clicker: () {
                         var avail = "";

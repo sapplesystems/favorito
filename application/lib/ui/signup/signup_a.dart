@@ -61,12 +61,12 @@ class _signup_aState extends State<signup_a> {
           ]),
       body: Container(
         color: myBackGround,
-        height: sm.scaledHeight(90),
+        height: sm.h(90),
         child: Stack(
           children: [
             Positioned(
-              left: sm.scaledWidth(30),
-              right: sm.scaledWidth(30),
+              left: sm.w(30),
+              right: sm.w(30),
               child: Text(
                 "Sign Up",
                 textAlign: TextAlign.center,
@@ -80,9 +80,9 @@ class _signup_aState extends State<signup_a> {
               ),
             ),
             Positioned(
-              bottom: sm.scaledWidth(4),
-              left: sm.scaledWidth(20),
-              right: sm.scaledWidth(20),
+              bottom: sm.w(4),
+              left: sm.w(20),
+              right: sm.w(20),
               child: roundedButton(
                   clicker: () {
                     if (ctrl[0].text == null || ctrl[0].text == "") {
@@ -110,16 +110,16 @@ class _signup_aState extends State<signup_a> {
                   title: "Next"),
             ),
             Positioned(
-              top: sm.scaledWidth(30),
-              left: sm.scaledWidth(10),
-              right: sm.scaledWidth(10),
+              top: sm.w(30),
+              left: sm.w(10),
+              right: sm.w(10),
               child: Container(
-                  height: sm.scaledWidth(100),
+                  height: sm.w(100),
                   decoration: bd1,
                   padding: EdgeInsets.only(
-                    top: sm.scaledHeight(8),
-                    left: sm.scaledWidth(2),
-                    right: sm.scaledWidth(2),
+                    top: sm.h(8),
+                    left: sm.w(2),
+                    right: sm.w(2),
                   ),
                   child: Builder(
                     builder: (context) => Form(
@@ -223,11 +223,11 @@ class _signup_aState extends State<signup_a> {
                   )),
             ),
             Positioned(
-                top: sm.scaledWidth(5),
-                left: sm.scaledWidth(30),
-                right: sm.scaledWidth(30),
+                top: sm.w(5),
+                left: sm.w(30),
+                right: sm.w(30),
                 child: SvgPicture.asset('assets/icon/maskgroup.svg',
-                    alignment: Alignment.center, height: sm.scaledHeight(20))),
+                    alignment: Alignment.center, height: sm.h(20))),
           ],
         ),
       ),

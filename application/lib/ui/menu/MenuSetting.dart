@@ -184,7 +184,7 @@ class _MenuSettingState extends State<MenuSetting> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           SizedBox(
-                            width: sm.scaledWidth(20),
+                            width: sm.w(20),
                             child: TimePicker(
                               selectedTimeText: _selectedTakeAwayStartTimeText,
                               selectedTime: _intitialTime,
@@ -194,7 +194,7 @@ class _MenuSettingState extends State<MenuSetting> {
                             ),
                           ),
                           SizedBox(
-                            width: sm.scaledWidth(20),
+                            width: sm.w(20),
                             child: TimePicker(
                               selectedTimeText: _selectedTakeAwayEndTimeText,
                               selectedTime: _intitialTime,
@@ -267,7 +267,7 @@ class _MenuSettingState extends State<MenuSetting> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
-                          width: sm.scaledWidth(20),
+                          width: sm.w(20),
                           child: TimePicker(
                             selectedTimeText: _selectedDineInStartTimeText,
                             selectedTime: _intitialTime,
@@ -277,7 +277,7 @@ class _MenuSettingState extends State<MenuSetting> {
                           ),
                         ),
                         SizedBox(
-                          width: sm.scaledWidth(20),
+                          width: sm.w(20),
                           child: TimePicker(
                             selectedTimeText: _selectedDineInEndTimeText,
                             selectedTime: _intitialTime,
@@ -327,7 +327,7 @@ class _MenuSettingState extends State<MenuSetting> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
-                          width: sm.scaledWidth(20),
+                          width: sm.w(20),
                           child: TimePicker(
                             selectedTimeText: _selectedDeliveryStartTimeText,
                             selectedTime: _intitialTime,
@@ -337,7 +337,7 @@ class _MenuSettingState extends State<MenuSetting> {
                           ),
                         ),
                         SizedBox(
-                          width: sm.scaledWidth(20),
+                          width: sm.w(20),
                           child: TimePicker(
                             selectedTimeText: _selectedDeliveryEndTimeText,
                             selectedTime: _intitialTime,
@@ -372,7 +372,7 @@ class _MenuSettingState extends State<MenuSetting> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: sm.scaledWidth(15), vertical: 16.0),
+                          horizontal: sm.w(15), vertical: 16.0),
                       child: roundedButton(
                         clicker: () async {
                           pr.show();

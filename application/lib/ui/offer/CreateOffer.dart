@@ -120,7 +120,8 @@ class _CreateOfferState extends State<CreateOffer> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 selectedItem: _selectedOfferState,
@@ -143,7 +144,8 @@ class _CreateOfferState extends State<CreateOffer> {
                               child: DropdownSearch<String>(
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
-                                autoValidateMode: AutovalidateMode.onUserInteraction,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 mode: Mode.MENU,
                                 showSelectedItem: true,
                                 selectedItem: _selectedOfferType,
@@ -168,7 +170,7 @@ class _CreateOfferState extends State<CreateOffer> {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  width: sm.scaledWidth(50),
+                  width: sm.w(50),
                   margin: EdgeInsets.only(bottom: 16.0),
                   child: roundedButton(
                     clicker: () {
@@ -180,7 +182,8 @@ class _CreateOfferState extends State<CreateOffer> {
                         requestData.selectedOfferState = _selectedOfferState;
                         requestData.selectedOfferType = _selectedOfferType;
                         if (widget.offerData == null) {
-                          WebService.funCreateOffer(requestData,context).then((value) {
+                          WebService.funCreateOffer(requestData, context)
+                              .then((value) {
                             if (value.status == 'success') {
                               setState(() {
                                 initializeDefaultValues();
@@ -192,7 +195,8 @@ class _CreateOfferState extends State<CreateOffer> {
                           });
                         } else {
                           requestData.id = widget.offerData.id.toString();
-                          WebService.funEditOffer(requestData,context).then((value) {
+                          WebService.funEditOffer(requestData, context)
+                              .then((value) {
                             if (value.status == 'success') {
                               setState(() {
                                 BotToast.showText(text: value.message);

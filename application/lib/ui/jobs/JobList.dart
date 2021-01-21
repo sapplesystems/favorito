@@ -59,7 +59,7 @@ class _JobListState extends State<JobList> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          height: sm.scaledHeight(75),
+                          height: sm.h(75),
                           margin: EdgeInsets.only(
                               left: 16.0, right: 16.0, bottom: 32.0),
                           child: ListView.builder(
@@ -83,8 +83,8 @@ class _JobListState extends State<JobList> {
                                           Radius.circular(20.0)),
                                     ),
                                     child: Container(
-                                        height: sm.scaledHeight(10),
-                                        width: sm.scaledWidth(80),
+                                        height: sm.h(10),
+                                        width: sm.w(80),
                                         decoration: BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
@@ -116,7 +116,7 @@ class _JobListState extends State<JobList> {
                         Align(
                           alignment: Alignment.center,
                           child: Container(
-                            width: sm.scaledWidth(50),
+                            width: sm.w(50),
                             child: roundedButton(
                               clicker: () {
                                 Navigator.push(

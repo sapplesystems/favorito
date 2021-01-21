@@ -30,7 +30,7 @@ class _checkinsState extends State<checkins> {
           child: AppBar(
             title: Padding(
               padding: EdgeInsets.only(
-                top: sm.scaledWidth(10),
+                top: sm.w(10),
               ),
               child: Text(
                 "Checkins",
@@ -65,9 +65,9 @@ class _checkinsState extends State<checkins> {
               else {
                 print("snapshot:${snapshot.data.toString()}");
                 return Container(
-                  height: sm.scaledHeight(100),
+                  height: sm.h(100),
                   color: myBackGround,
-                  padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
+                  padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
                   child: SingleChildScrollView(
                     child: Column(children: [
                       Row(
@@ -82,7 +82,7 @@ class _checkinsState extends State<checkins> {
                               "Review: ${snapshot.data.data[i].reviews}\nCreated At: ${snapshot.data.data[i].reviewAt} , ${dateFormat5.format(DateTime.parse(snapshot.data.data[i].reviewDate))}",
                               () {},
                               snapshot.data.data[i].rating?.toString()),
-                      Divider(height: sm.scaledHeight(4)),
+                      Divider(height: sm.h(4)),
                       Row(
                         children: [
                           Text("   All"),
@@ -144,7 +144,7 @@ class _checkinsState extends State<checkins> {
         SvgPicture.asset(
           ico,
           alignment: Alignment.center,
-          height: sm.scaledHeight(1.4),
+          height: sm.h(1.4),
         )
       ]),
     );

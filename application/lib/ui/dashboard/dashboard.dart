@@ -41,7 +41,7 @@ class _dashboardState extends State<dashboard> {
           child: AppBar(
             title: Padding(
               padding: EdgeInsets.only(
-                top: sm.scaledWidth(10),
+                top: sm.w(10),
               ),
               child: Text(
                 "DASHBOARD",
@@ -65,10 +65,10 @@ class _dashboardState extends State<dashboard> {
           onRefresh: () => calldashBoard(),
           backgroundColor: Colors.amber,
           child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
+              padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
               child: ListView(children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+                  padding: EdgeInsets.symmetric(vertical: sm.h(2)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -123,7 +123,7 @@ class _dashboardState extends State<dashboard> {
                               builder: (context) => BusinessClaim()));
                     }),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+                  padding: EdgeInsets.symmetric(vertical: sm.h(2)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -148,7 +148,7 @@ class _dashboardState extends State<dashboard> {
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+                    padding: EdgeInsets.symmetric(vertical: sm.h(2)),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -210,7 +210,7 @@ class _dashboardState extends State<dashboard> {
         SvgPicture.asset(
           ico,
           alignment: Alignment.center,
-          height: sm.scaledHeight(1.4),
+          height: sm.h(1.4),
         )
       ]),
     );

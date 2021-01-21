@@ -12,15 +12,14 @@ class card3 extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Container(
-        width: sm.scaledWidth(42),
+        width: sm.w(42),
         child: Card(
           shape: rrb,
           elevation: 2,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: sm.scaledHeight(2), left: sm.scaledWidth(2)),
+              padding: EdgeInsets.only(top: sm.h(2), left: sm.w(2)),
               child: Text(txt1,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
             ),
@@ -28,16 +27,14 @@ class card3 extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Padding(
                 padding: EdgeInsets.only(
-                    top: sm.scaledHeight(2),
-                    left: sm.scaledWidth(3),
-                    bottom: sm.scaledHeight(2)),
+                    top: sm.h(2), left: sm.w(3), bottom: sm.h(2)),
                 child: Text(title,
                     textAlign: TextAlign.start,
                     style:
                         TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
               ),
             ),
-            SizedBox(height: sm.scaledHeight(2))
+            SizedBox(height: sm.h(2))
           ]),
         ));
   }
