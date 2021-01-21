@@ -233,7 +233,7 @@ exports.businessMenuSetting = async(req, res) => {
         business_id = req.body.business_id
     }
 
-    sql_setting = `SELECT id,business_id, accepting_order ,\n\
+    sql_setting = `SELECT id,business_id, accepting_order ,take_away as take_away_c,delivery as delivery_c, dine_in as dine_in_c,\n\
     IF(take_away_start_time < NOW() AND  take_away_end_time > NOW(), '1','0') AS take_away, \n\
     take_away_minimum_bill, take_away_packaging_charge,\n\
     IF(dine_in_start_time < NOW() AND dine_in_end_time > NOW(), '1','0') AS dine_in,\n\
@@ -244,6 +244,7 @@ exports.businessMenuSetting = async(req, res) => {
 
     try {
         result_setting = await exports.run_query(sql_setting)
+            // return res.send(result_setting)
         final_data = []
 
         if (result_setting[0].accepting_order == 0) {
@@ -252,15 +253,15 @@ exports.businessMenuSetting = async(req, res) => {
             final_data.push({ accepting_order: 1 })
         }
 
-        if (result_setting[0].take_away == 1) {
+        if (result_setting[0].take_away == 1 && result_setting[0].take_away_c == 1) {
             final_data.push({ attribute: "take_away", minimum_bill: result_setting[0].take_away_minimum_bill, packaging_charge: result_setting[0].take_away_packaging_charge })
         }
 
-        if (result_setting[0].delivery == 1) {
+        if (result_setting[0].delivery == 1 && result_setting[0].delivery_c == 1) {
             final_data.push({ attribute: "delivery", minimum_bill: result_setting[0].delivery_minium_bill, packaging_charge: result_setting[0].delivery_packaging_charge })
         }
 
-        if (result_setting[0].dine_in == 1) {
+        if (result_setting[0].dine_in == 1 && result_setting[0].dine_in_c == 1) {
             final_data.push({ attribute: "dine_in" })
         }
         return res.status(200).json({ status: 'success', message: 'success', data: final_data });

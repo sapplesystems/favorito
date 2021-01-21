@@ -2,7 +2,8 @@ const { FailedDependency } = require('http-errors');
 var db = require('../config/db');
 var menu_type_id = 1; // BY Default for business is 1 and for freelancer is 2
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
-var fs = require('fs')
+var fs = require('fs');
+const { log } = require('console');
 
 /**
  * GET STATIC VARIABLE
@@ -158,8 +159,23 @@ exports.listAllMenu = async function(req, res, next) {
             LEFT JOIN business_categories AS b_c ON b_m_c.category_id = b_c.id\n\
             WHERE b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' \n\
             AND b_m_c.parent_id='0' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
+
+        sql_attributes = `SELECT GROUP_CONCAT(attributes_id) as attributes from business_attributes where business_id  = '${business_id}'`;
+        result_attributes = await exports.run_query(sql_attributes)
+        attributes = result_attributes[0].attributes.split(',')
+        business_online_store_or_menu = 0;
+        for (let i = 0; i < attributes.length; i++) {
+            if (attributes[i] == '4') {
+                business_online_store_or_menu = 4
+            }
+            if (attributes[i] == '3') {
+                business_online_store_or_menu = 3
+            }
+        }
+
+        var data = [];
+        data.push({ business_type: business_online_store_or_menu })
         db.query(sql, async function(err, result) {
-            var data = [];
             var result_length = result.length;
             for (var i = 0; i < result_length; i++) {
                 var category_id = result[i].id;
@@ -332,7 +348,13 @@ exports.createMenuItem = async function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
             var menu_id = result.insertId;
-            await exports.addPhotos(business_id, menu_id, req, res);
+            try {
+                if (req.files != '') {
+                    await exports.addPhotos(business_id, menu_id, req, res);
+                }
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
             return res.status(200).json({ status: 'success', message: 'Menu item created successfully.' });
         });
     } catch (e) {
@@ -403,7 +425,9 @@ exports.addMenuPhotos = async function(req, res, next) {
         }
         var menu_id = req.body.menu_id;
 
-        await exports.addPhotos(business_id, menu_id, req);
+        if (req.files != '') {
+            await exports.addPhotos(business_id, menu_id, req);
+        }
         return res.status(200).json({ status: 'success', message: 'Photo uploaded successfully.' });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
