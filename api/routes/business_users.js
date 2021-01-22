@@ -83,4 +83,6 @@ router.get('/business-privacy-policy', (req, res) => {
     res.render('privacy_policy_business.hbs')
 });
 
+// router.post('/get-room-id', CheckAuth, UserController.getRoomId);
+
 module.exports = router;

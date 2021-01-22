@@ -147,14 +147,13 @@ exports.getMenuItems = async function(req, res, next) {
     }
 }
 
-
 /**
  * LIST ALL MENU ALONG WITH THE SUB CATEGORY
  */
 exports.listAllMenu = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT b_m_c.id, b_c.category_name as category_name\n\
+        var sql = "SELECT b_m_c.id, b_c.category_name as category_name , b_m_c.out_of_stock as out_of_stock\n\
             FROM business_menu_category AS b_m_c\n\
             LEFT JOIN business_categories AS b_c ON b_m_c.category_id = b_c.id\n\
             WHERE b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' \n\
@@ -174,21 +173,22 @@ exports.listAllMenu = async function(req, res, next) {
         }
 
         var data = [];
-        data.push({ business_type: business_online_store_or_menu })
         db.query(sql, async function(err, result) {
             var result_length = result.length;
             for (var i = 0; i < result_length; i++) {
                 var category_id = result[i].id;
+                var out_of_stock = result[i].out_of_stock;
                 var category_name = result[i].category_name;
                 var items = await exports.getCategoryMenusItems(business_id, category_id);
                 data.push({
                     category_id: category_id,
+                    out_of_stock: out_of_stock,
                     category_name: category_name,
                     items: items
                 });
             }
 
-            return res.status(200).json({ status: 'success', message: 'sucsess', data: data });
+            return res.status(200).json({ status: 'success', message: 'sucsess', business_type: business_online_store_or_menu, data: data });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -199,31 +199,43 @@ exports.listAllMenu = async function(req, res, next) {
  * LIST ALL MENU ALONG WITH THE SUB CATEGORY
  */
 exports.changeMenuStatus = async function(req, res, next) {
-    var where = `WHERE `
     var business_id = req.userdata.business_id;
-    var where = `${where}business_id='${business_id}' `
+    if (!req.body.api_type) {
+        return res.status(400).send({ status: "error", message: "api_type is missing" })
+    } else {
+        api_type = req.body.api_type
+    }
 
-    if (req.body.is_activated == null || req.body.is_activated == undefined || req.body.is_activated == '') {
-        return res.status(500).send({ status: "failed", message: "is_activated is missing" })
-    } else {
-        var update = `is_activated=${req.body.is_activated} `
-    }
-    if (req.body.item_id == null || req.body.item_id == undefined || req.body.item_id == '') {
-        return res.status(500).send({ status: "failed", message: "item_id is missing" })
-    } else {
-        var where = `${where} AND id='${req.body.item_id}' `
-    }
-    var sql = `UPDATE business_menu_item SET updated_at=now(), ${update}${where}`
-    db.query(sql, async function(error, result) {
-        if (error) {
-            return res.status(500).send({ status: "failed", message: "Somethind went wrong", error })
-        } else if (result.affectedRows > 0) {
-            return res.status(200).send({ status: "success", message: "success" })
+    if (api_type == 'set') {
+        if (req.body.is_activated == null || req.body.is_activated == undefined || req.body.is_activated == '') {
+            return res.status(500).send({ status: "failed", message: "is_activated is missing" })
         } else {
-            return res.status(500).send({ status: "failed", message: "Somethind went wrong" })
-
+            var update = `is_activated=${req.body.is_activated} `
         }
-    })
+        if (req.body.item_id == null || req.body.item_id == undefined || req.body.item_id == '') {
+            return res.status(500).send({ status: "failed", message: "item_id is missing" })
+        } else {
+            var where = ` where id='${req.body.item_id}' `
+        }
+        var sql = `UPDATE business_menu_item SET updated_at=now(), ${update}${where}`
+        db.query(sql, async function(error, result) {
+            if (error) {
+                return res.status(500).send({ status: "failed", message: "Somethind went wrong", error })
+            } else if (result.affectedRows > 0) {
+                return res.status(200).send({ status: "success", message: "success" })
+            } else {
+                return res.status(500).send({ status: "failed", message: "Somethind went wrong" })
+            }
+        })
+    } else if (api_type == 'get') {
+        if (req.body.item_id == null || req.body.item_id == undefined || req.body.item_id == '') {
+            return res.status(500).send({ status: "failed", message: "item_id is missing" })
+        }
+        sql_get_status = `SELECT is_activated from business_menu_item where id = '${req.body.item_id}'`
+        result_get_status = await exports.run_query(sql_get_status)
+        return res.status(200).send({ status: "success", message: "success", data: result_get_status })
+    }
+
 }
 
 /**
@@ -542,7 +554,7 @@ exports.editCategory = async function(req, res, next) {
             update_columns += ", available_on='" + available_on + "' ";
         }
 
-        if (req.body.out_of_stock == 0) {
+        if (req.body.out_of_stock == 1) {
             sql_item_off = `UPDATE business_menu_item\n\ 
             SET is_activated = 0 , updated_at = NOW() \n\
             WHERE business_id = '${business_id}' AND menu_category_id = '${req.body.id}'`
@@ -588,7 +600,6 @@ exports.getSetting = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
-
 
 /**
  * UPDATE BUSINESS MENU SETTING
