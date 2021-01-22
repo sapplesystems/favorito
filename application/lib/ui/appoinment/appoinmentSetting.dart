@@ -95,7 +95,6 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     sm = SizeManager(context);
 
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
           elevation: 0,
@@ -131,87 +130,81 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             child: ListView(
               children: [
                 Card(
-                    elevation: 8,
-                    shape: rrb,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: sm.scaledHeight(4),
-                          horizontal: sm.scaledWidth(8)),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                  padding: EdgeInsets.symmetric(
+                      vertical: sm.h(4), horizontal: sm.w(8)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        plusMinus("Advance Booking(Day)", controller[0]),
+                        plusMinus("Advance Booking(Hours)", controller[1]),
+                        DropdownSearch<String>(
+                          validator: (v) => v == '' ? "required field" : null,
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
+                          mode: Mode.MENU,
+                          selectedItem: controller[2].text,
+                          items: slot,
+                          label: "Slot Length",
+                          hint: "Please Select Slot",
+                          showSearchBox: false,
+                          onChanged: (value) {
+                            setState(() {
+                              controller[2].text = value;
+                            });
+                          },
+                        ),
+                        plusMinus("Booking/Slot", controller[3]),
+                        plusMinus("Booking/Day", controller[4]),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: sm.h(2)),
+                          child: txtfieldboundry(
+                            valid: true,
+                            title: title[1],
+                            hint: "Enter ${title[0]}",
+                            controller: controller[5],
+                            maxLines: 4,
+                            security: false,
+                          ),
+                        ),
+                        Column(
                           children: [
-                            plusMinus("Advance Booking(Day)", controller[0]),
-                            plusMinus("Advance Booking(Hours)", controller[1]),
-                            DropdownSearch<String>(
-                              validator: (v) =>
-                                  v == '' ? "required field" : null,
-                              autoValidateMode: AutovalidateMode.onUserInteraction,
-                              mode: Mode.MENU,
-                              selectedItem: controller[2].text,
-                              items: slot,
-                              label: "Slot Length",
-                              hint: "Please Select Slot",
-                              showSearchBox: false,
-                              onChanged: (value) {
-                                setState(() {
-                                  controller[2].text = value;
-                                });
-                              },
-                            ),
-                            plusMinus("Booking/Slot", controller[3]),
-                            plusMinus("Booking/Day", controller[4]),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: sm.scaledHeight(2)),
-                              child: txtfieldboundry(
-                                valid: true,
-                                title: title[1],
-                                hint: "Enter ${title[0]}",
-                                controller: controller[5],
-                                maxLines: 4,
-                                security: false,
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                addNewLabel("Services", labelClicked),
-                                Divider(color: myGrey, height: 2),
-                                if (servicesList != null)
-                                  for (int i = 0; i < servicesList?.length; i++)
-                                    //
-                                    my_ServiceSwitch(
-                                      datalist: servicesList,
-                                      i: i,
-                                      function: changeit,
-                                      identity: "s",
-                                    ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                addNewLabel("Person", labelClicked),
-                                Divider(color: myGrey, height: 2),
-                                if (_personList != null)
-                                  for (int i = 0; i < _personList?.length; i++)
-                                    //
-                                    my_ServiceSwitch(
-                                      datalist: _personList,
-                                      i: i,
-                                      function: changeit,
-                                      identity: "p",
-                                    ),
-                              ],
-                            ),
+                            addNewLabel("Services", labelClicked),
                             Divider(color: myGrey, height: 2),
-                            if (_restrictionList != null)
-                              additionalFunctionRistrict(
-                                  "Restrictions", _restrictionList),
-                          ]),
-                    )),
+                            if (servicesList != null)
+                              for (int i = 0; i < servicesList?.length; i++)
+                                //
+                                my_ServiceSwitch(
+                                  datalist: servicesList,
+                                  i: i,
+                                  function: changeit,
+                                  identity: "s",
+                                ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            addNewLabel("Person", labelClicked),
+                            Divider(color: myGrey, height: 2),
+                            if (_personList != null)
+                              for (int i = 0; i < _personList?.length; i++)
+                                //
+                                my_ServiceSwitch(
+                                  datalist: _personList,
+                                  i: i,
+                                  function: changeit,
+                                  identity: "p",
+                                ),
+                          ],
+                        ),
+                        Divider(color: myGrey, height: 2),
+                        if (_restrictionList != null)
+                          additionalFunctionRistrict(
+                              "Restrictions", _restrictionList),
+                      ]),
+                )),
                 Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: sm.scaledWidth(16),
-                        vertical: sm.scaledHeight(2)),
+                        horizontal: sm.w(16), vertical: sm.h(2)),
                     child: roundedButton(
                         clicker: () {
                           if (controller[3].text.isNotEmpty) funSublim();
@@ -237,7 +230,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
       "announcement": controller[6].text,
     };
     pr?.show();
-    WebService.funAppoinmentSaveSetting(_map,context).then((value) {
+    WebService.funAppoinmentSaveSetting(_map, context).then((value) {
       pr?.hide();
       if (value.status == "success") BotToast.showText(text: value.message);
     });
@@ -246,8 +239,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
   Widget fromTo(String txt) {
     return Container(
       margin: EdgeInsets.all(8),
-      width: sm.scaledWidth(24),
-      height: sm.scaledHeight(4),
+      width: sm.w(24),
+      height: sm.h(4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
@@ -342,7 +335,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                           onTap: () {
                             pr?.show();
                             WebService.funAppoinmentDeleteRestriction(
-                                {"restriction_id": _va.id},context).then((value) {
+                                    {"restriction_id": _va.id}, context)
+                                .then((value) {
                               pr?.hide();
                               if (value.status == "success") {
                                 setState(() {
@@ -360,8 +354,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             ),
 
         Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: sm.scaledWidth(12), vertical: sm.scaledWidth(4)),
+          padding:
+              EdgeInsets.symmetric(horizontal: sm.w(12), vertical: sm.w(4)),
           child: Divider(color: myGrey, height: 2),
         ), //for person
         Row(
@@ -398,7 +392,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                           onTap: () {
                             pr?.show();
                             WebService.funAppoinmentDeleteRestriction(
-                                {"restriction_id": _va.id},context).then((value) {
+                                    {"restriction_id": _va.id}, context)
+                                .then((value) {
                               pr?.hide();
                               if (value.status == "success") {
                                 setState(() {
@@ -471,7 +466,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             if (controller[6].text != null && controller[6].text != "") {
               pr?.show();
               WebService.funAppoinmentSaveService(
-                  {"service_name": controller[6].text},context).then((value) {
+                      {"service_name": controller[6].text}, context)
+                  .then((value) {
                 pr?.hide();
                 if (value.status == "success") {
                   BotToast.showText(text: value.message);
@@ -539,7 +535,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
           };
           if (controller[7].text != null && controller[7].text != "") {
             pr?.show();
-            WebService.funAppoinmentSavePerson(_map,context).then((value) {
+            WebService.funAppoinmentSavePerson(_map, context).then((value) {
               pr?.hide();
               if (value.status == "success") {
                 getPerson();
@@ -811,10 +807,10 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     Navigator.push(
       context,
       PopupLayout(
-        top: sm.scaledHeight(top ?? 20),
-        left: sm.scaledWidth(left ?? 10),
-        right: sm.scaledWidth(right ?? 10),
-        bottom: sm.scaledHeight(bottom ?? 20),
+        top: sm.h(top ?? 20),
+        left: sm.w(left ?? 10),
+        right: sm.w(right ?? 10),
+        bottom: sm.h(bottom ?? 20),
         child: PopupContent(
           content: Scaffold(
             resizeToAvoidBottomPadding: false,
@@ -916,7 +912,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
   postRestriction(_map, isNew) async {
     pr?.show();
-    await WebService.funAppoinmentSaveRestriction(_map, isNew,context).then((_value) {
+    await WebService.funAppoinmentSaveRestriction(_map, isNew, context)
+        .then((_value) {
       pr?.hide();
       if (_value.status == "success") {
         BotToast.showText(text: _value.message);
@@ -945,7 +942,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
         "person_id": _personList[i].id,
         "is_active": _personList[i].isActive
       };
-      WebService.funAppoinmentServicePersonOnOff(_va, false,context).then((value) {
+      WebService.funAppoinmentServicePersonOnOff(_va, false, context)
+          .then((value) {
         pr?.hide();
         if (value.status == "success") {
           BotToast.showText(text: value.message);
@@ -963,7 +961,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
       };
       print("data:$_va");
       pr?.show();
-      WebService.funAppoinmentServicePersonOnOff(_va, true,context).then((value) {
+      WebService.funAppoinmentServicePersonOnOff(_va, true, context)
+          .then((value) {
         pr?.hide();
         if (value.status == "success") {
           BotToast.showText(text: value.message);

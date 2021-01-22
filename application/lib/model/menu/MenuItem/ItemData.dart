@@ -32,6 +32,8 @@ class ItemData {
       json['photo'].forEach((v) {
         photo.add(new Photo.fromJson(v));
       });
+    } else {
+      photo = [];
     }
     id = json['id'].toString();
     businessId = json['business_id'];
@@ -49,6 +51,8 @@ class ItemData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.photo != null) {
       data['photo'] = this.photo.map((v) => v.toJson()).toList();
+    } else {
+      data['photo'] = [];
     }
     data['id'] = this.id;
     data['business_id'] = this.businessId;

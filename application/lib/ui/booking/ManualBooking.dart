@@ -57,7 +57,7 @@ class _ManualBooking extends State<ManualBooking> {
       _myNotesEditController.text = va.specialNotes;
       _selectedDateText = va.createdDate;
       setState(() {
-        _selectedTimeText = va.createdTime??"00:00";
+        _selectedTimeText = va.createdTime ?? "00:00";
       });
     } else
       setState(() {
@@ -71,9 +71,7 @@ class _ManualBooking extends State<ManualBooking> {
     localizations = MaterialLocalizations.of(context);
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -85,10 +83,6 @@ class _ManualBooking extends State<ManualBooking> {
           Padding(
               padding: EdgeInsets.all(8),
               child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
                   child: Builder(
                       builder: (context) => Form(
                           key: _formKey,
@@ -103,7 +97,7 @@ class _ManualBooking extends State<ManualBooking> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         SizedBox(
-                                          width: sm.scaledWidth(40),
+                                          width: sm.w(40),
                                           child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
@@ -112,8 +106,7 @@ class _ManualBooking extends State<ManualBooking> {
                                                     child: InkWell(
                                                         onTap: () => showDate(),
                                                         child: SizedBox(
-                                                          width: sm
-                                                              .scaledWidth(40),
+                                                          width: sm.w(40),
                                                           child:
                                                               OutlineGradientButton(
                                                             child: Center(
@@ -138,13 +131,13 @@ class _ManualBooking extends State<ManualBooking> {
                                               ]),
                                         ),
                                         SizedBox(
-                                            width: sm.scaledWidth(40),
+                                            width: sm.w(40),
                                             child: InkWell(
                                                 onTap: () {
                                                   showTime();
                                                 },
                                                 child: SizedBox(
-                                                  width: sm.scaledHeight(40),
+                                                  width: sm.h(40),
                                                   child: OutlineGradientButton(
                                                     child: Center(
                                                         child: Text(
@@ -206,8 +199,7 @@ class _ManualBooking extends State<ManualBooking> {
                                 ),
                               ]))))),
           Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: sm.scaledWidth(15), vertical: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: sm.w(15), vertical: 16.0),
             child: roundedButton(
               clicker: () {
                 if (_formKey.currentState.validate()) {
@@ -231,7 +223,8 @@ class _ManualBooking extends State<ManualBooking> {
                   };
                   print("map:${_map.toString()}");
                   widget.data == null
-                      ? WebService.funCreateManualBooking(_map,context).then((value) {
+                      ? WebService.funCreateManualBooking(_map, context)
+                          .then((value) {
                           BotToast.showText(text: value.message);
                           initializeDefaultValues();
                         })

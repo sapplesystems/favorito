@@ -42,7 +42,7 @@ class _DatePicker extends State<DatePicker> {
           child: InkWell(
               onTap: () => _selectDate(context),
               child: SizedBox(
-                width: sm.scaledWidth(40),
+                width: sm.w(40),
                 child: OutlineGradientButton(
                   child: Center(child: Text(widget.selectedDateText)),
                   gradient: LinearGradient(colors: [Colors.red, Colors.red]),

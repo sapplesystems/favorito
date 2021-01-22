@@ -33,7 +33,7 @@ class _Tour_aState extends State<Tour_a> {
                   margin: EdgeInsets.only(top: 200),
                   alignment: Alignment.center,
                   child: SvgPicture.asset('assets/icon/login.svg',
-                      height: sm.scaledHeight(30), semanticsLabel: 'vector'),
+                      height: sm.h(30), semanticsLabel: 'vector'),
                 ),
                 // card1(),
                 Text(welcometxt,
@@ -126,7 +126,7 @@ class _Tour_aState extends State<Tour_a> {
                         MaterialPageRoute(builder: (context) => Login()));
                   },
                   child: Container(
-                    margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
+                    margin: EdgeInsets.symmetric(vertical: sm.h(4)),
                     child: roundedButton(
                       title: "LOGIN",
                       clr: myRed,

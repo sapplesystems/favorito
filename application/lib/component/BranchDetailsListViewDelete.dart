@@ -26,9 +26,7 @@ class _BranchDetailsListViewDelete extends State<BranchDetailsListViewDelete> {
               child: Center(
                 child: ListTile(
                     leading: Image.network(widget.inputList[index].imageUrl,
-                        height: sm.scaledHeight(8),
-                        fit: BoxFit.fill,
-                        width: sm.scaledWidth(8)),
+                        height: sm.h(8), fit: BoxFit.fill, width: sm.w(8)),
                     title: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Text(

@@ -23,8 +23,7 @@ class _reportCard2State extends State<reportCard2> {
               Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(
-                        left: sm.scaledWidth(5), top: sm.scaledWidth(5)),
+                    padding: EdgeInsets.only(left: sm.w(5), top: sm.w(5)),
                     child: Text(
                       "860",
                       style: TextStyle(
@@ -40,7 +39,7 @@ class _reportCard2State extends State<reportCard2> {
               Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: sm.scaledWidth(5)),
+                    padding: EdgeInsets.only(left: sm.w(5)),
                     child: Text(
                       "Check-in(s) ",
                       style: TextStyle(

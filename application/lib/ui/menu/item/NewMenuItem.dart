@@ -25,7 +25,6 @@ class NewMenuItem extends StatefulWidget {
 }
 
 class _NewMenuItemState extends State<NewMenuItem> {
-  bool _autoValidateForm = false;
   List<String> _typeList;
 
   ProgressDialog pr;
@@ -35,7 +34,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
   final _myQuantityEditTextController = TextEditingController();
   final _myMaxQuantityEditTextController = TextEditingController();
 
-  String _selectedCategory;
+  TextEditingController _selectedCategory = TextEditingController();
   String _selectedType;
   GlobalKey<FormState> key = GlobalKey();
   var fut;
@@ -43,16 +42,19 @@ class _NewMenuItemState extends State<NewMenuItem> {
   List imgFiles = [];
   List imgs = [];
   FilePickerResult result;
+  bool haveData = false;
 
   void initState() {
+    haveData = widget.model != null;
     assigner();
     super.initState();
+
     fut = WebService.funMenuVerbose();
     _typeList = ["Veg", "Non-veg"];
   }
 
   assigner() {
-    if (widget.model != null) {
+    if (haveData) {
       _myTitleEditTextController.text = widget.model.title.capitalize();
       _myPriceEditTextController.text = widget.model.price.capitalize();
       _myDescriptionEditTextController.text =
@@ -67,12 +69,10 @@ class _NewMenuItemState extends State<NewMenuItem> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-
     pr = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(message: 'Fetching Data, please wait');
+    pr.style(message: 'Please wait');
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text("New Item",
@@ -100,11 +100,16 @@ class _NewMenuItemState extends State<NewMenuItem> {
             else if (snapshot.hasError)
               return Center(child: Text("Somthing went wrong"));
             else {
+              double spaceBetween = 3.4;
+              if (haveData)
+                _selectedCategory.text =
+                    snapshot.data.data.getNameById(widget.model.menuCategoryId);
               return ListView(
                 children: [
                   Container(
-                    height: sm.scaledHeight(14),
-                    margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(2)),
+                    height: sm.h(14),
+                    margin: EdgeInsets.symmetric(
+                        vertical: sm.h(2), horizontal: sm.w(3.4)),
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
@@ -129,7 +134,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                               }
                             },
                             child: Container(
-                              width: sm.scaledHeight(14),
+                              width: sm.h(14),
                               child: Card(
                                   semanticContainer: true,
                                   clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -151,7 +156,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: Image.file(
                               _v,
-                              width: sm.scaledHeight(10),
+                              width: sm.h(10),
                               fit: BoxFit.fill,
                             ),
                             shape: RoundedRectangleBorder(
@@ -166,7 +171,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: Image.network(
                               imgs[i].url,
-                              width: sm.scaledHeight(10),
+                              width: sm.h(10),
                               fit: BoxFit.fill,
                             ),
                             shape: RoundedRectangleBorder(
@@ -181,15 +186,21 @@ class _NewMenuItemState extends State<NewMenuItem> {
                   Form(
                     key: key,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Container(
-                        decoration: bd1,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 40.0),
-                        margin: EdgeInsets.symmetric(horizontal: 12),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: sm.w(5),
+                          right: sm.w(5),
+                          top: sm.w(2),
+                          bottom: sm.w(5)),
+                      child: Card(
+                          child: Container(
+                        padding: EdgeInsets.only(
+                            top: sm.h(4), left: sm.w(4), right: sm.w(4)),
+                        // margin: EdgeInsets.symmetric(horizontal: 20),
                         child: Column(children: [
                           Padding(
                             padding:
-                                EdgeInsets.only(bottom: sm.scaledHeight(4)),
+                                EdgeInsets.only(bottom: sm.h(spaceBetween)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Title",
@@ -201,31 +212,32 @@ class _NewMenuItemState extends State<NewMenuItem> {
                           ),
                           Padding(
                             padding: EdgeInsets.only(
-                                bottom: sm.scaledHeight(4),
-                                left: sm.scaledWidth(2.6),
-                                right: sm.scaledWidth(2.6)),
+                                bottom: sm.h(spaceBetween),
+                                left: sm.w(2.6),
+                                right: sm.w(2.6)),
                             child: DropdownSearch<String>(
-                              validator: (v) =>
-                                  v == '' ? "required field" : null,
-                              autoValidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              mode: Mode.MENU,
-                              selectedItem: _selectedCategory,
-                              items: snapshot?.data?.data?.getCategoryName() ??
-                                  <String>[],
-                              label: "Category",
-                              hint: "Please Select Category",
-                              showSearchBox: false,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedCategory = value;
-                                });
-                              },
-                            ),
+                                showSelectedItem: false,
+                                validator: (v) =>
+                                    v == '' ? "required field" : null,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                mode: Mode.MENU,
+                                selectedItem: _selectedCategory.text,
+                                items:
+                                    snapshot?.data?.data?.getCategoryName() ??
+                                        <String>[],
+                                label: "Category",
+                                hint: "Please Select Category",
+                                showSearchBox: false,
+                                onChanged: (value) {
+                                  if (haveData)
+                                    widget.model.menuCategoryId =
+                                        "${snapshot.data.data.getIdByName(value)}";
+                                  if (!haveData) _selectedCategory.text = value;
+                                }),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(bottom: sm.scaledHeight(4)),
+                            padding: EdgeInsets.only(bottom: sm.h(2)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Price",
@@ -237,8 +249,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(bottom: sm.scaledHeight(4)),
+                            padding: EdgeInsets.only(bottom: sm.h(2)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Description",
@@ -250,7 +261,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                           ),
                           Padding(
                             padding:
-                                EdgeInsets.only(bottom: sm.scaledHeight(4)),
+                                EdgeInsets.only(bottom: sm.h(spaceBetween)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Quantity",
@@ -263,9 +274,9 @@ class _NewMenuItemState extends State<NewMenuItem> {
                           ),
                           Padding(
                             padding: EdgeInsets.only(
-                                bottom: sm.scaledHeight(4),
-                                left: sm.scaledWidth(2.6),
-                                right: sm.scaledWidth(2.6)),
+                                bottom: sm.h(spaceBetween),
+                                left: sm.w(2.6),
+                                right: sm.w(2.6)),
                             child: Visibility(
                               visible: _isFoodItem,
                               child: DropdownSearch<String>(
@@ -290,7 +301,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                           ),
                           Padding(
                             padding:
-                                EdgeInsets.only(bottom: sm.scaledHeight(4)),
+                                EdgeInsets.only(bottom: sm.h(spaceBetween)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Max. quantity per order",
@@ -301,37 +312,38 @@ class _NewMenuItemState extends State<NewMenuItem> {
                               security: false,
                             ),
                           ),
-                        ])),
+                        ]),
+                      )),
+                    ),
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: sm.scaledWidth(16),
-                          vertical: sm.scaledHeight(2)),
+                          horizontal: sm.w(16), vertical: sm.h(2)),
                       child: roundedButton(
                           clicker: () async {
                             List<MultipartFile> formData = [];
-                            formData.clear();
+
                             try {
-                              for (int i = 0; i < result.files.length; i++) {
-                                var v;
-                                String fileName =
-                                    result.files[i].path.split('/').last;
-                                v = await MultipartFile.fromFile(
-                                    result.files[i].path,
-                                    filename: fileName);
-                                formData.add(v);
-                              }
+                              if (result?.files?.isNotEmpty ?? false)
+                                for (var _v in result?.files) {
+                                  var v;
+                                  String fileName = _v.path.split('/').last;
+                                  v = await MultipartFile.fromFile(_v.path,
+                                      filename: fileName);
+                                  formData.add(v);
+                                }
                             } catch (e) {
-                              print("Error:${e.toString()}");
+                              print("Error1:${e.toString()}");
                             }
 
                             if (key.currentState.validate()) {
                               pr?.show();
-                              var _map = FormData.fromMap({
+                              var _map = {
                                 "menu_item_id": widget?.model?.id ?? "",
                                 "title": _myTitleEditTextController.text,
                                 "category_id": snapshot.data.data
-                                    .getIdByName(_selectedCategory),
+                                    .getIdByName(_selectedCategory.text)
+                                    .toString(),
                                 "price": _myPriceEditTextController.text,
                                 "description":
                                     _myDescriptionEditTextController.text,
@@ -339,13 +351,20 @@ class _NewMenuItemState extends State<NewMenuItem> {
                                 "type": _selectedType,
                                 "max_qty_per_order":
                                     _myMaxQuantityEditTextController.text,
-                                if (formData.isNotEmpty) "photo": formData
-                              });
-                              print("_map:${_map.toString()}");
-                              WebService.funMenuCreate(
-                                      _map, context, widget?.model?.id != null)
+                                if (result?.files?.isNotEmpty ?? false)
+                                  "photo": formData
+                              };
+                              var _data = FormData.fromMap(_map);
+                              // print(
+                              //     "abc${snapshot.data.data.getIdByName(_selectedCategory.text)}");
+
+                              // print(
+                              //     "_map:${snapshot.data.data.getIdByName(_selectedCategory.text)}");
+                              // print("_map:${_map.toString()}");
+                              WebService.funMenuCreate(_data, context, haveData)
                                   .then((value) {
                                 pr?.hide();
+                                print("value.status:${value.status}");
                                 if (value.status == 'success') {
                                   Navigator.pop(context);
                                 } else {

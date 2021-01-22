@@ -55,9 +55,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -71,15 +69,13 @@ class _CreateCampaignState extends State<CreateCampaign> {
       ),
       body: Container(
         color: myBackGround,
-        padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(4)),
+        padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
         margin: EdgeInsets.only(
-          top: sm.scaledHeight(2),
+          top: sm.h(2),
         ),
         child: ListView(
           children: [
             Card(
-              elevation: 10,
-              shape: rrb,
               child: Padding(
                 padding: EdgeInsets.all(20.0),
                 child: Builder(
@@ -170,8 +166,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: sm.scaledWidth(16),
-                    vertical: sm.scaledHeight(4)),
+                    horizontal: sm.w(16), vertical: sm.h(4)),
                 child: roundedButton(
                     clicker: () => funSublim(),
                     clr: Colors.red,

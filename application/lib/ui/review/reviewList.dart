@@ -34,9 +34,7 @@ class _reviewListState extends State<reviewList> {
     var y = 5;
     var x = 5;
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -53,8 +51,7 @@ class _reviewListState extends State<reviewList> {
       ),
       body: Column(children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: sm.scaledWidth(4), vertical: sm.scaledHeight(3)),
+          padding: EdgeInsets.symmetric(horizontal: sm.w(4), vertical: sm.h(3)),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -70,7 +67,7 @@ class _reviewListState extends State<reviewList> {
           ]),
         ),
         Padding(
-          padding: EdgeInsets.only(left: sm.scaledWidth(6), bottom: 12),
+          padding: EdgeInsets.only(left: sm.w(6), bottom: 12),
           child: Row(
             children: [
               Column(children: [
@@ -113,16 +110,15 @@ class _reviewListState extends State<reviewList> {
           ),
         ),
         Container(
-          height: sm.scaledHeight(62),
+          height: sm.h(62),
           child: Card(
-            shape: rrb,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 6),
               child: Column(
                 children: [
-                  Container(height: sm.scaledHeight(4), child: header()),
+                  Container(height: sm.h(4), child: header()),
                   Container(
-                    height: sm.scaledHeight(56),
+                    height: sm.h(56),
                     child: ListView(
                       children: [
                         for (int i = 0; i < (rlm.length ?? 0); i++)
@@ -151,8 +147,6 @@ class _reviewListState extends State<reviewList> {
     return InkWell(
       onTap: function,
       child: Card(
-        elevation: 4,
-        shape: rrb,
         child: Container(
             padding: EdgeInsets.symmetric(vertical: 6),
             margin: EdgeInsets.symmetric(vertical: 12),

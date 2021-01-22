@@ -75,7 +75,6 @@ class _settingState extends State<setting> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text("Settings", style: titleStyle),
@@ -96,7 +95,7 @@ class _settingState extends State<setting> {
                 leading: Padding(
                   padding: const EdgeInsets.only(right: 12.0),
                   child: CircleAvatar(
-                    radius: sm.scaledWidth(8),
+                    radius: sm.w(8),
                     backgroundImage: NetworkImage(photoUrl = photoUrl ?? ''),
                   ),
                 ),
@@ -121,8 +120,7 @@ class _settingState extends State<setting> {
                 children: [
                   ListTile(
                     leading: SvgPicture.asset('assets/icon/set.svg',
-                        alignment: Alignment.center,
-                        height: sm.scaledHeight(3)),
+                        alignment: Alignment.center, height: sm.h(3)),
                     title: Text(
                       "Business Settings",
                       style:
@@ -144,8 +142,7 @@ class _settingState extends State<setting> {
                   ),
                   Container(
                     height: settingHeight,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: sm.scaledWidth(14)),
+                    padding: EdgeInsets.symmetric(horizontal: sm.w(14)),
                     child: Column(children: [
                       for (int i = 0; i < 4; i++)
                         listItems(
@@ -162,8 +159,7 @@ class _settingState extends State<setting> {
                   SizedBox(height: 20),
                   ListTile(
                     leading: SvgPicture.asset('assets/icon/menu.svg',
-                        alignment: Alignment.center,
-                        height: sm.scaledHeight(3)),
+                        alignment: Alignment.center, height: sm.h(3)),
                     title: Text(
                       "Business Tools",
                       style:
@@ -185,8 +181,7 @@ class _settingState extends State<setting> {
                   ),
                   Container(
                     height: settingTool,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: sm.scaledWidth(14)),
+                    padding: EdgeInsets.symmetric(horizontal: sm.w(14)),
                     child: Column(children: [
                       for (int _i = 4; _i < 11; _i++)
                         listItems(
@@ -207,8 +202,7 @@ class _settingState extends State<setting> {
                     },
                     child: ListTile(
                       leading: SvgPicture.asset('assets/icon/horn.svg',
-                          alignment: Alignment.center,
-                          height: sm.scaledHeight(3)),
+                          alignment: Alignment.center, height: sm.h(3)),
                       title: Text(
                         "Advertise",
                         style: TextStyle(
@@ -218,8 +212,7 @@ class _settingState extends State<setting> {
                   ),
                   ListTile(
                     leading: SvgPicture.asset('assets/icon/help.svg',
-                        alignment: Alignment.center,
-                        height: sm.scaledHeight(3)),
+                        alignment: Alignment.center, height: sm.h(3)),
                     title: Text(
                       "Help",
                       style:
@@ -259,8 +252,7 @@ class _settingState extends State<setting> {
         onTap: clicker,
         child: Row(
           children: [
-            SvgPicture.asset(ico,
-                alignment: Alignment.center, height: sm.scaledHeight(3)),
+            SvgPicture.asset(ico, alignment: Alignment.center, height: sm.h(3)),
             SizedBox(
               width: 20,
             ),

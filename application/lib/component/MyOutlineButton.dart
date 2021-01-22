@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myColors.dart';
+
 class MyOutlineButton extends StatelessWidget {
   String title;
   Function function;
@@ -11,11 +12,11 @@ class MyOutlineButton extends StatelessWidget {
     return InkWell(
       onTap: function,
       child: Container(
-        width: sm.scaledWidth(65),
-        height: sm.scaledHeight(6.5),
+        width: sm.w(65),
+        height: sm.h(6.5),
         margin: EdgeInsets.symmetric(
-          horizontal: sm.scaledWidth(14),
-          vertical: sm.scaledHeight(2),
+          horizontal: sm.w(14),
+          vertical: sm.h(2),
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),

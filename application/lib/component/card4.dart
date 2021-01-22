@@ -23,8 +23,6 @@ class card4 extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Card(
-      shape: rrb,
-      elevation: 4,
       child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         Container(
@@ -39,7 +37,7 @@ class card4 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: sm.scaledWidth(6),
+              width: sm.w(6),
             ),
             Text(ammount,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),

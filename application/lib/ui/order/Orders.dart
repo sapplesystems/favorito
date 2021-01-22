@@ -30,9 +30,7 @@ class _Orders extends State<Orders> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -97,7 +95,7 @@ class _Orders extends State<Orders> {
               ),
               Container(
                   padding: EdgeInsets.all(8.0),
-                  height: sm.scaledHeight(80),
+                  height: sm.h(80),
                   child: ListView.builder(
                       itemCount: inputOrdersList.length,
                       itemBuilder: (BuildContext context, int index) {

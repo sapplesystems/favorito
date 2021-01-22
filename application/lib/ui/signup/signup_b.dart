@@ -67,7 +67,6 @@ class _signup_bState extends State<signup_b> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -81,12 +80,12 @@ class _signup_bState extends State<signup_b> {
       ),
       body: Container(
         color: myBackGround,
-        height: sm.scaledHeight(90),
+        height: sm.h(90),
         child: Stack(
           children: [
             Positioned(
-              left: sm.scaledWidth(30),
-              right: sm.scaledWidth(30),
+              left: sm.w(30),
+              right: sm.w(30),
               child: Text(
                 "Sign Up",
                 textAlign: TextAlign.center,
@@ -100,9 +99,9 @@ class _signup_bState extends State<signup_b> {
               ),
             ),
             Positioned(
-              bottom: sm.scaledWidth(6),
-              left: sm.scaledWidth(22),
-              right: sm.scaledWidth(22),
+              bottom: sm.w(6),
+              left: sm.w(22),
+              right: sm.w(22),
               child: roundedButton(
                 clicker: () {
                   funSublim();
@@ -112,11 +111,11 @@ class _signup_bState extends State<signup_b> {
               ),
             ),
             Positioned(
-              top: sm.scaledWidth(30),
-              left: sm.scaledWidth(10),
-              right: sm.scaledWidth(10),
+              top: sm.w(30),
+              left: sm.w(10),
+              right: sm.w(10),
               child: Container(
-                  height: sm.scaledWidth(100),
+                  height: sm.w(100),
                   decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -124,9 +123,9 @@ class _signup_bState extends State<signup_b> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   padding: EdgeInsets.only(
-                    top: sm.scaledHeight(8),
-                    left: sm.scaledWidth(2),
-                    right: sm.scaledWidth(2),
+                    top: sm.h(8),
+                    left: sm.w(2),
+                    right: sm.w(2),
                   ),
                   child: Builder(
                     builder: (context) => Form(
@@ -147,7 +146,7 @@ class _signup_bState extends State<signup_b> {
                               child: DropdownSearch<String>(
                                   mode: Mode.MENU,
                                   maxHeight: busy.length * 58.0,
-                                  showSelectedItem: true, 
+                                  showSelectedItem: true,
                                   items: busy,
                                   label: ddlabel,
                                   hint: "Please Select Business Type",
@@ -209,11 +208,11 @@ class _signup_bState extends State<signup_b> {
                   )),
             ),
             Positioned(
-                top: sm.scaledWidth(5),
-                left: sm.scaledWidth(30),
-                right: sm.scaledWidth(30),
+                top: sm.w(5),
+                left: sm.w(30),
+                right: sm.w(30),
                 child: SvgPicture.asset('assets/icon/maskgroup.svg',
-                    alignment: Alignment.center, height: sm.scaledHeight(20)))
+                    alignment: Alignment.center, height: sm.h(20)))
           ],
         ),
       ),

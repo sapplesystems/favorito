@@ -35,6 +35,7 @@ import 'package:Favorito/model/dashModel.dart';
 import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItem.dart';
+import 'package:Favorito/model/menu/MenuItem/MenuItemModel.dart';
 import 'package:Favorito/model/menu/MenuSettingModel.dart';
 import 'package:Favorito/model/menu/MenuVerbose.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
@@ -1549,7 +1550,7 @@ class WebService {
     }
   }
 
-  static Future<BaseResponseModel> funMenuStatusChange(Map _map) async {
+  static Future<MenuItemOnlyModel> funMenuStatusChange(Map _map) async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuStatusChange;
@@ -1563,7 +1564,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return BaseResponseModel.fromJson(
+      return MenuItemOnlyModel.fromJson(
           convert.json.decode(response.toString()));
     }
   }

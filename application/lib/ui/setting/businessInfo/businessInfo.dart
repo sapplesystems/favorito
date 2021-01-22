@@ -95,8 +95,7 @@ class _businessInfoState extends State<businessInfo> {
         elevation: 0,
       ),
       body: Container(
-        padding: EdgeInsets.only(
-            top: sm.scaledHeight(2), bottom: sm.scaledHeight(0)),
+        padding: EdgeInsets.only(top: sm.h(2), bottom: sm.h(0)),
         child: ListView(
           children: [
             Text("Business Information",
@@ -107,7 +106,7 @@ class _businessInfoState extends State<businessInfo> {
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2)),
             Container(
-              height: sm.scaledHeight(24),
+              height: sm.h(24),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -273,10 +272,9 @@ class _businessInfoState extends State<businessInfo> {
               ]),
             ),
             Container(
-                margin: EdgeInsets.only(bottom: sm.scaledWidth(30)),
+                margin: EdgeInsets.only(bottom: sm.w(30)),
                 padding: EdgeInsets.symmetric(
-                    horizontal: sm.scaledWidth(16),
-                    vertical: sm.scaledHeight(2)),
+                    horizontal: sm.w(16), vertical: sm.h(2)),
                 child: roundedButton(
                     clicker: () {
                       funSublim();

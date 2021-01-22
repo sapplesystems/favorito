@@ -67,7 +67,6 @@ class _WaitListSettingState extends State<WaitListSetting> {
     localizations = MaterialLocalizations.of(context);
 
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
           elevation: 0,
@@ -89,12 +88,9 @@ class _WaitListSettingState extends State<WaitListSetting> {
                     child: ListView(
                       children: [
                         Card(
-                            elevation: 8,
-                            shape: rrb,
                             child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: sm.scaledHeight(4),
-                                    horizontal: sm.scaledWidth(8)),
+                                    vertical: sm.h(4), horizontal: sm.w(8)),
                                 child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
@@ -166,8 +162,8 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                       plusMinus(
                                           "Available resources", controller[0]),
                                       Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: sm.scaledHeight(2)),
+                                        padding:
+                                            EdgeInsets.only(bottom: sm.h(2)),
                                         child: txtfieldboundry(
                                           valid: true,
                                           title: title[3],
@@ -202,8 +198,8 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                       plusMinus("Booking/Slot", controller[3]),
                                       plusMinus("Booking/Day", controller[4]),
                                       Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: sm.scaledHeight(2)),
+                                          padding:
+                                              EdgeInsets.only(bottom: sm.h(2)),
                                           child: txtfieldboundry(
                                               valid: true,
                                               title: title[0],
@@ -212,8 +208,8 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                               maxLines: 1,
                                               security: false)),
                                       Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: sm.scaledHeight(2)),
+                                          padding:
+                                              EdgeInsets.only(bottom: sm.h(2)),
                                           child: txtfieldboundry(
                                               valid: true,
                                               title: title[1],
@@ -231,10 +227,10 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                     ]))),
                         Padding(
                             padding: EdgeInsets.only(
-                                left: sm.scaledWidth(5),
-                                right: sm.scaledWidth(11),
-                                top: sm.scaledWidth(16),
-                                bottom: sm.scaledWidth(16)),
+                                left: sm.w(5),
+                                right: sm.w(11),
+                                top: sm.w(16),
+                                bottom: sm.w(16)),
                             child: roundedButton(
                                 clicker: () {
                                   if (_key.currentState.validate())
@@ -310,7 +306,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
       "announcement": controller[6].text,
       "except_days": days
     };
-    WebService.funWaitlistSaveSetting(_map,context).then((value) {
+    WebService.funWaitlistSaveSetting(_map, context).then((value) {
       if (value.status == "success") {
         BotToast.showText(text: value.message);
       }

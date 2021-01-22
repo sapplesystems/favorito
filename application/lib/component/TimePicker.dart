@@ -48,7 +48,7 @@ class _TimePicker extends State<TimePicker> {
           child: InkWell(
               onTap: () => _selectDate(context),
               child: SizedBox(
-                width: sm.scaledHeight(40),
+                width: sm.h(40),
                 child: OutlineGradientButton(
                   child: Center(child: Text(widget.selectedTimeText)),
                   gradient: LinearGradient(colors: [myGrey, myGrey]),

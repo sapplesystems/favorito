@@ -23,9 +23,7 @@ class _CatalogState extends State<Catalogs> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -71,7 +69,7 @@ class _CatalogState extends State<Catalogs> {
                 else {
                   _catalogListdata = snapshot.data;
                   return Container(
-                    // height: sm.scaledHeight(90),
+                    // height: sm.h(90),
                     margin:
                         EdgeInsets.only(left: 16.0, right: 16.0, bottom: 2.0),
                     child: ListView.builder(
@@ -89,13 +87,9 @@ class _CatalogState extends State<Catalogs> {
                               setState(() {});
                             }),
                             child: Card(
-                              // elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
                               child: Container(
-                                  height: sm.scaledHeight(10),
-                                  width: sm.scaledWidth(80),
+                                  height: sm.h(10),
+                                  width: sm.w(80),
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(color: Colors.white),

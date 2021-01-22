@@ -60,7 +60,6 @@ class _CategoryFormState extends State<CategoryForm> {
     sm = SizeManager(context);
     return SafeArea(
       child: Scaffold(
-        backgroundColor: myBackGround,
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: ListView(children: [
@@ -146,7 +145,7 @@ class _CategoryFormState extends State<CategoryForm> {
                       title: " Selected Days "),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: sm.scaledWidth(14)),
+                  padding: EdgeInsets.symmetric(horizontal: sm.w(14)),
                   child: roundedButton(
                       clicker: () {
                         var avail = "";

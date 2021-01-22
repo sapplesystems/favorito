@@ -38,14 +38,9 @@ class _card1State extends State<card1> {
     return InkWell(
       onTap: widget.function,
       child: Card(
-        shape: rrb,
-        elevation: 2,
         child: Container(
           padding: EdgeInsets.only(
-              bottom: sm.scaledHeight(2),
-              right: sm.scaledHeight(3),
-              top: sm.scaledHeight(1),
-              left: sm.scaledHeight(2)),
+              bottom: sm.h(2), right: sm.h(3), top: sm.h(1), left: sm.h(2)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,7 +64,7 @@ class _card1State extends State<card1> {
                   letterSpacing: 0.26,
                 ),
               ),
-              SizedBox(height: sm.scaledHeight(6)),
+              SizedBox(height: sm.h(6)),
               Row(
                 children: [
                   for (int i = 0; i < hList.length; i++)

@@ -48,7 +48,6 @@ class _StoreSettingState extends State<StoreSetting> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -131,7 +130,7 @@ class _StoreSettingState extends State<StoreSetting> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
-                  width: sm.scaledWidth(20),
+                  width: sm.w(20),
                   child: TimePicker(
                     selectedTimeText: _selectedStorePickupStartTimeText,
                     selectedTime: _intitialTime,
@@ -141,7 +140,7 @@ class _StoreSettingState extends State<StoreSetting> {
                   ),
                 ),
                 SizedBox(
-                  width: sm.scaledWidth(20),
+                  width: sm.w(20),
                   child: TimePicker(
                     selectedTimeText: _selectedStorePickupEndTimeText,
                     selectedTime: _intitialTime,
@@ -191,7 +190,7 @@ class _StoreSettingState extends State<StoreSetting> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
-                  width: sm.scaledWidth(20),
+                  width: sm.w(20),
                   child: TimePicker(
                     selectedTimeText: _selectedDeliveryStartTimeText,
                     selectedTime: _intitialTime,
@@ -201,7 +200,7 @@ class _StoreSettingState extends State<StoreSetting> {
                   ),
                 ),
                 SizedBox(
-                  width: sm.scaledWidth(20),
+                  width: sm.w(20),
                   child: TimePicker(
                     selectedTimeText: _selectedDeliveryEndTimeText,
                     selectedTime: _intitialTime,
@@ -235,8 +234,8 @@ class _StoreSettingState extends State<StoreSetting> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: sm.scaledWidth(15), vertical: 16.0),
+              padding:
+                  EdgeInsets.symmetric(horizontal: sm.w(15), vertical: 16.0),
               child: roundedButton(
                 clicker: () {},
                 clr: Colors.red,

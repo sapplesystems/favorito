@@ -42,9 +42,7 @@ class _Bookings extends State<Bookings> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
               icon: Icon(Icons.arrow_back, color: myBackGround),
@@ -85,11 +83,10 @@ class _Bookings extends State<Bookings> {
             ? Center(child: Text('Please wait its loading...'))
             : ListView(children: [
                 Container(
-                    height: sm.scaledHeight(6),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: sm.scaledWidth(30)),
+                    height: sm.h(6),
+                    padding: EdgeInsets.symmetric(horizontal: sm.w(30)),
                     child: SizedBox(
-                      width: sm.scaledWidth(40),
+                      width: sm.w(40),
                       child: DatePicker(
                         selectedDateText: _selectedDateText,
                         selectedDate: _initialDate,
@@ -99,16 +96,15 @@ class _Bookings extends State<Bookings> {
                       ),
                     )),
                 Container(
-                  height: sm.scaledHeight(24),
+                  height: sm.h(24),
                   margin: EdgeInsets.symmetric(
-                      vertical: sm.scaledHeight(4),
-                      horizontal: sm.scaledWidth(8)),
+                      vertical: sm.h(4), horizontal: sm.w(8)),
                   child: GridView.builder(
                     itemCount: blm.slots.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        crossAxisSpacing: sm.scaledWidth(3),
-                        mainAxisSpacing: sm.scaledHeight(0)),
+                        crossAxisSpacing: sm.w(3),
+                        mainAxisSpacing: sm.h(0)),
                     itemBuilder: (BuildContext context, int index) {
                       return InkWell(
                         onTap: () => setState(() {
@@ -128,7 +124,7 @@ class _Bookings extends State<Bookings> {
                                       topLeft: Radius.circular(10.0),
                                       topRight: Radius.circular(10.0)),
                                 ),
-                                width: sm.scaledWidth(10),
+                                width: sm.w(10),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 8.0,
@@ -151,7 +147,7 @@ class _Bookings extends State<Bookings> {
                                 ),
                               ),
                               Container(
-                                width: sm.scaledWidth(10),
+                                width: sm.w(10),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.only(
@@ -193,7 +189,7 @@ class _Bookings extends State<Bookings> {
                         ),
                       ),
                       Container(
-                        height: sm.scaledHeight(40),
+                        height: sm.h(40),
                         child: ListView.builder(
                             itemCount: blm.slots.length != 0
                                 ? blm.slots[selectedSlot].slotData.length
@@ -206,8 +202,6 @@ class _Bookings extends State<Bookings> {
                                   print("dsa");
                                 },
                                 child: Card(
-                                    elevation: 2,
-                                    shape: rrb,
                                     borderOnForeground: true,
                                     child: InkWell(
                                       onTap: () {
@@ -294,10 +288,10 @@ class _Bookings extends State<Bookings> {
     Navigator.push(
       context,
       PopupLayout(
-        top: sm.scaledHeight(30),
-        left: sm.scaledWidth(10),
-        right: sm.scaledWidth(10),
-        bottom: sm.scaledHeight(30),
+        top: sm.h(30),
+        left: sm.w(10),
+        right: sm.w(10),
+        bottom: sm.h(30),
         child: PopupContent(
           content: Scaffold(
             resizeToAvoidBottomPadding: false,

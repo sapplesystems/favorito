@@ -42,8 +42,10 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         maxLength: widget.maxlen,
         decoration: InputDecoration(
             labelText: widget.title,
+            labelStyle: Theme.of(context).textTheme.body2,
             counterText: "",
             hintText: widget.hint,
+            hintStyle: Theme.of(context).textTheme.subhead,
             fillColor: Colors.transparent,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
@@ -51,9 +53,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,
-        style: TextStyle(
-          fontFamily: "Poppins",
-        ),
+        style: Theme.of(context).textTheme.body1,
         maxLines: widget.maxLines,
         onChanged: widget.myOnChanged,
         enabled: widget.isEnabled,

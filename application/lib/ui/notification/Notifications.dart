@@ -32,9 +32,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -49,7 +47,7 @@ class _NotificationsState extends State<Notifications> {
         ),
         body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Container(
-            height: sm.scaledHeight(75),
+            height: sm.h(75),
             margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
             child: ListView.builder(
                 itemCount: _notificationsListdata.notifications.length,
@@ -69,8 +67,8 @@ class _NotificationsState extends State<Notifications> {
                           borderRadius:
                               BorderRadius.all(Radius.circular(20.0))),
                       child: Container(
-                          height: sm.scaledHeight(10),
-                          width: sm.scaledWidth(80),
+                          height: sm.h(10),
+                          width: sm.w(80),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(color: Colors.white),
@@ -105,7 +103,7 @@ class _NotificationsState extends State<Notifications> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              width: sm.scaledWidth(50),
+              width: sm.w(50),
               child: roundedButton(
                 clicker: () {
                   Navigator.push(

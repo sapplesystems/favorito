@@ -30,10 +30,8 @@ class _adSpentState extends State<adSpent> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: myBackGround,
           title: Text("Ad Spent", style: titleStyle),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -53,7 +51,7 @@ class _adSpentState extends State<adSpent> {
           ],
         ),
         body: Container(
-            height: sm.scaledHeight(87.5),
+            height: sm.h(87.5),
             child: ListView(
               physics: const NeverScrollableScrollPhysics(),
               children: [
@@ -62,12 +60,11 @@ class _adSpentState extends State<adSpent> {
                     shape: rrbTop,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: sm.scaledWidth(2),
-                          vertical: sm.scaledWidth(8)),
+                          horizontal: sm.w(2), vertical: sm.w(8)),
                       child: Column(
                         children: [
                           Container(
-                            height: sm.scaledHeight(64),
+                            height: sm.h(64),
                             child: ListView(
                               children: [
                                 for (int i = 0;
@@ -82,7 +79,6 @@ class _adSpentState extends State<adSpent> {
                                       })).whenComplete(() => getPageData());
                                     },
                                     child: Card(
-                                      elevation: 2,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
@@ -143,8 +139,8 @@ class _adSpentState extends State<adSpent> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    left: sm.scaledWidth(22),
-                                    right: sm.scaledWidth(2),
+                                    left: sm.w(22),
+                                    right: sm.w(2),
                                   ),
                                   child: Image.asset(
                                     "assets/icon/reqCal.png",
@@ -168,7 +164,7 @@ class _adSpentState extends State<adSpent> {
       SvgPicture.asset(
         ico,
         alignment: Alignment.center,
-        height: sm.scaledHeight(1.4),
+        height: sm.h(1.4),
       )
     ]);
   }

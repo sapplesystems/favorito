@@ -56,7 +56,6 @@ class _NewCatlogState extends State<NewCatlog> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text("Catalog",
@@ -87,8 +86,8 @@ class _NewCatlogState extends State<NewCatlog> {
         child: ListView(
           children: [
             Container(
-              height: sm.scaledHeight(20),
-              margin: EdgeInsets.symmetric(vertical: sm.scaledHeight(4)),
+              height: sm.h(20),
+              margin: EdgeInsets.symmetric(vertical: sm.h(4)),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -131,7 +130,7 @@ class _NewCatlogState extends State<NewCatlog> {
                         }
                       },
                       child: Container(
-                        width: sm.scaledHeight(18),
+                        width: sm.h(18),
                         child: Card(
                             semanticContainer: true,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -149,16 +148,13 @@ class _NewCatlogState extends State<NewCatlog> {
                   if (imgUrls != null)
                     for (int i = imgUrls.length - 1; i >= 0; i--) //Network
                       Container(
-                        width: sm.scaledHeight(20),
+                        width: sm.h(20),
                         child: Card(
                             semanticContainer: true,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: FadeInImage.memoryNetwork(
                                 placeholder: kTransparentImage,
                                 image: imgUrls[i]),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            elevation: 5,
                             margin: EdgeInsets.all(10)),
                       )
                 ],
@@ -173,8 +169,7 @@ class _NewCatlogState extends State<NewCatlog> {
                       child: Column(children: [
                         for (int i = 0; i < 5; i++)
                           Padding(
-                            padding:
-                                EdgeInsets.only(bottom: sm.scaledHeight(1)),
+                            padding: EdgeInsets.only(bottom: sm.h(1)),
                             child: txtfieldboundry(
                               valid: true,
                               title: title[i],
@@ -188,8 +183,7 @@ class _NewCatlogState extends State<NewCatlog> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: sm.scaledWidth(16),
-                    vertical: sm.scaledHeight(2)),
+                    horizontal: sm.w(16), vertical: sm.h(2)),
                 child: roundedButton(
                     clicker: () {
                       if (_formKey.currentState.validate()) funSublim();

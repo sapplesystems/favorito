@@ -62,11 +62,23 @@ class Data {
     return val;
   }
 
-  int getIdByName(String name) {
-    int val;
+  String getIdByName(String name) {
+    String val;
     for (var v in this.category) {
-      if (name == v.categoryName) val = v.id;
+      if (name == v.categoryName) {
+        val = v.id.toString();
+      }
     }
+    print("val$val");
     return val;
+  }
+
+  String getNameById(String id) {
+    String name;
+    for (var v in this.category) {
+      print("idIs:${id}:${v.id}");
+      if (id.toString() == v.id.toString()) name = v.categoryName;
+    }
+    return name;
   }
 }

@@ -137,14 +137,13 @@ class _BusinessProfileState extends State<BusinessProfile>
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           actions: [
             IconButton(
               icon: SvgPicture.asset(
                 'assets/icon/save.svg',
-                height: sm.scaledWidth(6.4),
+                height: sm.w(6.4),
               ),
               onPressed: () {},
             )
@@ -169,11 +168,7 @@ class _BusinessProfileState extends State<BusinessProfile>
               margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
               child: Stack(children: [
                 Card(
-                  margin: EdgeInsets.only(top: sm.scaledHeight(10)),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
+                  margin: EdgeInsets.only(top: sm.h(10)),
                   child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
@@ -182,21 +177,20 @@ class _BusinessProfileState extends State<BusinessProfile>
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
                             Padding(
-                                padding:
-                                    EdgeInsets.only(top: sm.scaledHeight(4)),
+                                padding: EdgeInsets.only(top: sm.h(4)),
                                 child: Stack(children: [
                                   ClipRRect(
                                       borderRadius: BorderRadius.circular(20.0),
                                       child: _image == null
                                           ? Image.network(
                                               _controller[0].text,
-                                              height: sm.scaledHeight(20),
-                                              width: sm.scaledWidth(72),
+                                              height: sm.h(20),
+                                              width: sm.w(72),
                                               fit: BoxFit.cover,
                                             )
                                           : Container(
-                                              height: sm.scaledHeight(20),
-                                              width: sm.scaledWidth(78),
+                                              height: sm.h(20),
+                                              width: sm.w(78),
                                               child: Image.file(
                                                 _image,
                                                 fit: BoxFit.cover,
@@ -324,9 +318,9 @@ class _BusinessProfileState extends State<BusinessProfile>
                                       children: [
                                         Container(
                                           padding: EdgeInsets.symmetric(
-                                              vertical: sm.scaledWidth(1)),
-                                          width: sm.scaledWidth(60),
-                                          height: sm.scaledWidth(14),
+                                              vertical: sm.w(1)),
+                                          width: sm.w(60),
+                                          height: sm.w(14),
                                           child: ListView(
                                             scrollDirection: Axis.horizontal,
                                             children: [
@@ -548,14 +542,13 @@ class _BusinessProfileState extends State<BusinessProfile>
                   ),
                 ),
                 Positioned(
-                    top: sm.scaledHeight(5),
-                    left: sm.scaledWidth(14),
-                    right: sm.scaledWidth(14),
+                    top: sm.h(5),
+                    left: sm.w(14),
+                    right: sm.w(14),
                     child: Container(
                         decoration: bd1,
                         padding: EdgeInsets.symmetric(
-                            horizontal: sm.scaledWidth(4),
-                            vertical: sm.scaledHeight(2)),
+                            horizontal: sm.w(4), vertical: sm.h(2)),
                         child: Column(children: [
                           Text(
                             "Your Business ID",
@@ -571,7 +564,7 @@ class _BusinessProfileState extends State<BusinessProfile>
           Align(
             alignment: Alignment.center,
             child: Container(
-              width: sm.scaledWidth(60),
+              width: sm.w(60),
               margin: EdgeInsets.only(bottom: 12.0),
               child: roundedButton(
                   clicker: () {
@@ -590,10 +583,10 @@ class _BusinessProfileState extends State<BusinessProfile>
     Navigator.push(
             context,
             PopupLayout(
-                top: sm.scaledHeight(36),
-                left: sm.scaledWidth(3),
-                right: sm.scaledWidth(3),
-                bottom: sm.scaledHeight(30),
+                top: sm.h(36),
+                left: sm.w(3),
+                right: sm.w(3),
+                bottom: sm.h(30),
                 child: PopupContent(
                     content: Scaffold(
                         resizeToAvoidBottomPadding: false, body: widget))))

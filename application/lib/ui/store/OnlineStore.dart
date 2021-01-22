@@ -74,7 +74,6 @@ class _OnlineStoreState extends State<OnlineStore> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -103,7 +102,7 @@ class _OnlineStoreState extends State<OnlineStore> {
         ],
       ),
       body: Container(
-        height: sm.scaledHeight(100),
+        height: sm.h(100),
         child: Column(
           children: [
             Padding(

@@ -74,9 +74,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
     localizations = MaterialLocalizations.of(context);
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -89,10 +87,6 @@ class _ManualAppoinment extends State<ManualAppoinment> {
           Padding(
               padding: EdgeInsets.all(8),
               child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
                   child: Builder(
                       builder: (context) => Form(
                           key: _formKey,
@@ -109,7 +103,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           SizedBox(
-                                            width: sm.scaledWidth(40),
+                                            width: sm.w(40),
                                             child: Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
@@ -140,9 +134,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                                             });
                                                           },
                                                           child: SizedBox(
-                                                            width:
-                                                                sm.scaledWidth(
-                                                                    40),
+                                                            width: sm.w(40),
                                                             child:
                                                                 OutlineGradientButton(
                                                               child: Center(
@@ -168,7 +160,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                                 ]),
                                           ),
                                           SizedBox(
-                                              width: sm.scaledWidth(40),
+                                              width: sm.w(40),
                                               child: InkWell(
                                                   onTap: () {
                                                     showTimePicker(
@@ -199,7 +191,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                                     });
                                                   },
                                                   child: SizedBox(
-                                                    width: sm.scaledHeight(40),
+                                                    width: sm.h(40),
                                                     child:
                                                         OutlineGradientButton(
                                                       child: Center(
@@ -248,7 +240,8 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                   child: DropdownSearch<String>(
                                       validator: (v) =>
                                           v == '' ? "required field" : null,
-                                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                                      autoValidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       mode: Mode.MENU,
                                       selectedItem: controller[4].text,
                                       items: serviceListText,
@@ -264,7 +257,8 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                   child: DropdownSearch<String>(
                                       validator: (v) =>
                                           v == '' ? "required field" : null,
-                                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                                      autoValidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       mode: Mode.MENU,
                                       selectedItem: controller[5].text,
                                       items: personListText,
@@ -288,8 +282,8 @@ class _ManualAppoinment extends State<ManualAppoinment> {
           Visibility(
             visible: widget.data == null,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: sm.scaledWidth(15), vertical: 16.0),
+              padding:
+                  EdgeInsets.symmetric(horizontal: sm.w(15), vertical: 16.0),
               child: roundedButton(
                 clicker: () {
                   if (_formKey.currentState.validate()) {
@@ -323,7 +317,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                     };
 
                     print("_map ${_map.toString()}");
-                    WebService.funAppoinmentCreate(_map,context).then((value) {
+                    WebService.funAppoinmentCreate(_map, context).then((value) {
                       if (value.status == "success") {
                         BotToast.showText(text: value.message);
                         initializeDefaultValues();

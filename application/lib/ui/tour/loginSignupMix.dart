@@ -11,14 +11,14 @@ class loginSignup extends StatelessWidget {
     SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(top: sm.scaledHeight(10)),
+        margin: EdgeInsets.only(top: sm.h(10)),
         child: Center(
           child: Column(
             children: [
               SvgPicture.asset(
                 'assets/icon/f.svg',
                 alignment: Alignment.center,
-                height: sm.scaledHeight(20),
+                height: sm.h(20),
               ),
               Text(
                 "FAVORITO",
@@ -31,25 +31,24 @@ class loginSignup extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: sm.scaledHeight(12)),
+                padding: EdgeInsets.only(top: sm.h(12)),
                 child: SvgPicture.asset(
                   'assets/icon/man.svg',
                   alignment: Alignment.center,
-                  height: sm.scaledHeight(20),
+                  height: sm.h(20),
                 ),
               ),
               InkWell(
                 onTap: () => Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Login())),
                 child: Container(
-                  margin: EdgeInsets.only(top: sm.scaledWidth(20)),
+                  margin: EdgeInsets.only(top: sm.w(20)),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: myRed,
                   ),
                   padding: EdgeInsets.symmetric(
-                      horizontal: sm.scaledWidth(20),
-                      vertical: sm.scaledHeight(2)),
+                      horizontal: sm.w(20), vertical: sm.h(2)),
                   child: Text(
                     "Log In",
                     textAlign: TextAlign.center,
@@ -64,7 +63,7 @@ class loginSignup extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: sm.scaledWidth(4)),
+                margin: EdgeInsets.only(top: sm.w(4)),
                 child: Text(
                   "Don’t have account yet?",
                   textAlign: TextAlign.center,
@@ -81,7 +80,7 @@ class loginSignup extends StatelessWidget {
                 onTap: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => signup_a())),
                 child: Container(
-                  margin: EdgeInsets.only(top: sm.scaledWidth(4)),
+                  margin: EdgeInsets.only(top: sm.w(4)),
                   child: Text(
                     "Sign Up",
                     textAlign: TextAlign.center,

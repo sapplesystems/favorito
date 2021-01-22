@@ -79,28 +79,28 @@ class _WaitListDetail extends State<WaitListDetail> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  iconSize: sm.scaledWidth(8),
+                  iconSize: sm.w(8),
                   icon: Icon(Icons.call),
                   onPressed: () {
                     _callPhone('tel:${widget.waitlistData.contact}');
                   },
                 ),
                 IconButton(
-                    iconSize: sm.scaledWidth(8),
+                    iconSize: sm.w(8),
                     icon: Icon(Icons.check_circle),
                     onPressed: () {
                       widget.action("accepted", widget.waitlistData.id);
                       Navigator.pop(context);
                     }),
                 IconButton(
-                    iconSize: sm.scaledWidth(8),
+                    iconSize: sm.w(8),
                     icon: Icon(Icons.close),
                     onPressed: () {
                       widget.action("rejected", widget.waitlistData.id);
                       Navigator.pop(context);
                     }),
                 IconButton(
-                  iconSize: sm.scaledWidth(8),
+                  iconSize: sm.w(8),
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     widget.delete(widget.waitlistData.id, widget.index);
