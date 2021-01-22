@@ -1,18 +1,14 @@
 import 'package:Favorito/component/DeleteItem.dart';
 import 'package:Favorito/component/EditItem.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/model/menu/MenuDisplayItemModel.dart';
 import 'package:Favorito/model/menu/MenuItem/ItemData.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItem.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/ui/menu/CategoryForm.dart';
 import 'package:Favorito/ui/menu/item/NewMenuItem.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import '../../../utils/myString.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MenuItem extends StatefulWidget {
   int id;
@@ -25,11 +21,10 @@ class MenuItem extends StatefulWidget {
 class _MenuItemState extends State<MenuItem> {
   ItemData model = ItemData();
   ProgressDialog pr;
-  // var fut;
+
   @override
   void initState() {
     super.initState();
-    // fut = ;
   }
 
   @override
@@ -60,10 +55,9 @@ class _MenuItemState extends State<MenuItem> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2)),
               leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.black),
+                icon: Icon(Icons.keyboard_backspace, color: Colors.black),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              centerTitle: true,
               iconTheme: IconThemeData(color: Colors.black),
               elevation: 0,
             ),
