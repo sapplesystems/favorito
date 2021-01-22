@@ -44,7 +44,6 @@ class _BookingSettingState extends State<BookingSetting> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Color(0xfffff4f4),
         elevation: 0,
@@ -69,8 +68,6 @@ class _BookingSettingState extends State<BookingSetting> {
             child: ListView(
               children: [
                 Card(
-                    elevation: 8,
-                    shape: rrb,
                     child: Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: sm.h(4), horizontal: sm.w(8)),

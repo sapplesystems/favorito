@@ -23,8 +23,6 @@ class card4 extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Card(
-      shape: rrb,
-      elevation: 4,
       child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         Container(

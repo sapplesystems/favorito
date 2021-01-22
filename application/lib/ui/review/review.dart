@@ -2,7 +2,6 @@ import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/review/ReviewModel.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -53,9 +52,7 @@ class _reviewState extends State<review> {
 
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           // leading: IconButton(
           //   icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -84,8 +81,6 @@ class _reviewState extends State<review> {
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     height: sm.h(54),
                     child: Card(
-                        elevation: 4,
-                        shape: rrb,
                         child:
                             bodyData(ctrl: ctrl, data: rm, rat: widget.rating)),
                   ),

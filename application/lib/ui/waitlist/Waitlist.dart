@@ -34,9 +34,7 @@ class Waitlists extends State<Waitlist> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -91,130 +89,116 @@ class Waitlists extends State<Waitlist> {
                                   context, _popupBodyShowDetail(va, index));
                             },
                             child: Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: sm.w(10),
-                                        child: Text(va.noOfPerson.toString(),
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: sm.w(10),
+                                    child: Text(va.noOfPerson.toString(),
+                                        style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                  SizedBox(
+                                    width: sm.w(45),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(
+                                            va.name.toLowerCase(),
                                             style: TextStyle(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
-                                      SizedBox(
-                                        width: sm.w(45),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                va.name.toLowerCase(),
-                                                style: TextStyle(
-                                                    fontSize: 22,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                "Walk-in | ${va.walkinAt}",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: AutoSizeText(
-                                                va?.specialNotes ?? '',
-                                                style: TextStyle(color: myGrey),
-                                                maxLines: 1,
-                                                minFontSize: 16,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              IconButton(
-                                                iconSize: sm.w(8),
-                                                icon: Icon(Icons.call,
-                                                    color: myRed),
-                                                onPressed: () => _callPhone(
-                                                    'tel:${va.contact}'),
-                                              ),
-                                              IconButton(
-                                                iconSize: sm.w(8),
-                                                icon: Icon(
-                                                    FontAwesomeIcons.trashAlt,
-                                                    size: 16,
-                                                    color: myRed),
-                                                onPressed: () => waitListDelete(
-                                                    va.id, index),
-                                              )
-                                            ],
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w600),
                                           ),
-                                          Row(
-                                            children: [
-                                              IconButton(
-                                                  iconSize: sm.w(8),
-                                                  icon: Icon(Icons.check_circle,
-                                                      color:
-                                                          va.waitlistStatus ==
-                                                                  "accepted"
-                                                              ? myGrey
-                                                              : myRed),
-                                                  onPressed: () {
-                                                    if (va.waitlistStatus !=
-                                                        "accepted")
-                                                      UpdateWaitList(
-                                                          "accepted", va.id);
-                                                  }),
-                                              IconButton(
-                                                  iconSize: sm.w(8),
-                                                  icon: Icon(Icons.close,
-                                                      color:
-                                                          va.waitlistStatus ==
-                                                                  "rejected"
-                                                              ? myGrey
-                                                              : myRed),
-                                                  onPressed: () {
-                                                    if (va.waitlistStatus !=
-                                                        "rejected")
-                                                      UpdateWaitList(
-                                                          "rejected", va.id);
-                                                  })
-                                            ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(
+                                            "Walk-in | ${va.walkinAt}",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: AutoSizeText(
+                                            va?.specialNotes ?? '',
+                                            style: TextStyle(color: myGrey),
+                                            maxLines: 1,
+                                            minFontSize: 16,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            iconSize: sm.w(8),
+                                            icon:
+                                                Icon(Icons.call, color: myRed),
+                                            onPressed: () =>
+                                                _callPhone('tel:${va.contact}'),
+                                          ),
+                                          IconButton(
+                                            iconSize: sm.w(8),
+                                            icon: Icon(
+                                                FontAwesomeIcons.trashAlt,
+                                                size: 16,
+                                                color: myRed),
+                                            onPressed: () =>
+                                                waitListDelete(va.id, index),
                                           )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                              iconSize: sm.w(8),
+                                              icon: Icon(Icons.check_circle,
+                                                  color: va.waitlistStatus ==
+                                                          "accepted"
+                                                      ? myGrey
+                                                      : myRed),
+                                              onPressed: () {
+                                                if (va.waitlistStatus !=
+                                                    "accepted")
+                                                  UpdateWaitList(
+                                                      "accepted", va.id);
+                                              }),
+                                          IconButton(
+                                              iconSize: sm.w(8),
+                                              icon: Icon(Icons.close,
+                                                  color: va.waitlistStatus ==
+                                                          "rejected"
+                                                      ? myGrey
+                                                      : myRed),
+                                              onPressed: () {
+                                                if (va.waitlistStatus !=
+                                                    "rejected")
+                                                  UpdateWaitList(
+                                                      "rejected", va.id);
+                                              })
                                         ],
                                       )
                                     ],
-                                  ),
-                                )),
+                                  )
+                                ],
+                              ),
+                            )),
                           );
                         }),
                   ),

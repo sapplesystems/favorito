@@ -22,8 +22,8 @@ BoxDecoration bd2 = BoxDecoration(
     border: Border.all(color: Colors.white),
     borderRadius: BorderRadius.all(Radius.circular(20)));
 
-RoundedRectangleBorder rrb = RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(15.0)));
+RoundedRectangleBorder roundedRectangleBorder = RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(16.0)));
 
 RoundedRectangleBorder rrb28 = RoundedRectangleBorder(
     borderRadius: BorderRadius.all(Radius.circular(28.0)));

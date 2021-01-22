@@ -35,7 +35,6 @@ class _dashboardState extends State<dashboard> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70.0),
           child: AppBar(
@@ -44,13 +43,12 @@ class _dashboardState extends State<dashboard> {
                 top: sm.w(10),
               ),
               child: Text(
-                "DASHBOARD",
+                "Dashboard",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
+                style: Theme.of(context).textTheme.title,
               ),
             ),
             centerTitle: true,
-            backgroundColor: myBackGround,
             elevation: 0,
             leading: IconButton(
               icon: Icon(null, color: Colors.black),

@@ -39,7 +39,6 @@ class _checkinsState extends State<checkins> {
               ),
             ),
             centerTitle: true,
-            backgroundColor: myBackGround,
             elevation: 0,
             leading: IconButton(
               icon: Icon(null, color: Colors.black),

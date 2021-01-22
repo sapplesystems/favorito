@@ -30,10 +30,8 @@ class _adSpentState extends State<adSpent> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: myBackGround,
           title: Text("Ad Spent", style: titleStyle),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -81,7 +79,6 @@ class _adSpentState extends State<adSpent> {
                                       })).whenComplete(() => getPageData());
                                     },
                                     child: Card(
-                                      elevation: 2,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(

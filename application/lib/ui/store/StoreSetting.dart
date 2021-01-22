@@ -48,7 +48,6 @@ class _StoreSettingState extends State<StoreSetting> {
     SizeManager sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),

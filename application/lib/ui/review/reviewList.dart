@@ -34,9 +34,7 @@ class _reviewListState extends State<reviewList> {
     var y = 5;
     var x = 5;
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -114,7 +112,6 @@ class _reviewListState extends State<reviewList> {
         Container(
           height: sm.h(62),
           child: Card(
-            shape: rrb,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 6),
               child: Column(
@@ -150,8 +147,6 @@ class _reviewListState extends State<reviewList> {
     return InkWell(
       onTap: function,
       child: Card(
-        elevation: 4,
-        shape: rrb,
         child: Container(
             padding: EdgeInsets.symmetric(vertical: 6),
             margin: EdgeInsets.symmetric(vertical: 12),

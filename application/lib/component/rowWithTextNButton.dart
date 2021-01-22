@@ -26,7 +26,7 @@ class rowWithTextNButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(txt1),
+          Text(txt1, style: Theme.of(context).textTheme.subtitle2),
           InkWell(
             onTap: function,
             child: Visibility(

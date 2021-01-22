@@ -27,7 +27,6 @@ class _ManualWaitListState extends State<ManualWaitList> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text("Manual WaitList",

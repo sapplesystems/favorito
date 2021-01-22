@@ -35,7 +35,6 @@ class _highlightsState extends State<highlights> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: null,

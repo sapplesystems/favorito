@@ -92,9 +92,7 @@ class _ContactPersonState extends State<ContactPerson> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -241,130 +239,122 @@ class _ContactPersonState extends State<ContactPerson> {
             Container(
               margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
               child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
                   child: Builder(
-                    builder: (context) => Form(
-                      key: _form2Key,
-                      autovalidate: _autoValidateForm,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              "Bank Details",
-                              style: TextStyle(
-                                  fontSize: 24.0, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: txtfieldboundry(
-                                controller: _myNameEditController,
-                                title: "Name",
-                                security: false,
-                                valid: true,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: txtfieldboundry(
-                              controller: _myAccountNoEditController,
-                              title: "A/C Number",
-                              security: false,
-                              valid: true,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: txtfieldboundry(
-                              controller: _myIFSCEditController,
-                              title: "IFSC code",
-                              security: false,
-                              valid: true,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: txtfieldboundry(
-                              controller: _myUPIEditController,
-                              title: "UPI",
-                              security: false,
-                              valid: true,
-                            ),
-                          ),
-                        ],
+                builder: (context) => Form(
+                  key: _form2Key,
+                  autovalidate: _autoValidateForm,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Bank Details",
+                          style: TextStyle(
+                              fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  )),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: txtfieldboundry(
+                            controller: _myNameEditController,
+                            title: "Name",
+                            security: false,
+                            valid: true,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: txtfieldboundry(
+                          controller: _myAccountNoEditController,
+                          title: "A/C Number",
+                          security: false,
+                          valid: true,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: txtfieldboundry(
+                          controller: _myIFSCEditController,
+                          title: "IFSC code",
+                          security: false,
+                          valid: true,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: txtfieldboundry(
+                          controller: _myUPIEditController,
+                          title: "UPI",
+                          security: false,
+                          valid: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
             ),
             Container(
               margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
               child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
                   child: Builder(
-                    builder: (context) => Form(
-                      key: _form3Key,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              "Branch Details",
-                              style: TextStyle(
-                                  fontSize: 24.0, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: TextFormField(
-                              controller: _myBranchSearchEditController,
-                              decoration: InputDecoration(
-                                labelText: "Search Branch",
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.search),
-                                  onPressed: () {
-                                    WebService.funSearchBranches(
-                                            _myBranchSearchEditController.text,
-                                            context)
-                                        .then((value) {
-                                      for (var branch in value.data) {
-                                        BranchDetailsModel model1 =
-                                            BranchDetailsModel();
-                                        model1.id = branch.id.toString();
-                                        model1.name = branch.businessName;
-                                        model1.address = branch.buisnessAddress;
-                                        model1.imageUrl = branch.photo == null
-                                            ? ''
-                                            : branch.photo;
-                                        model1.isSelected = false;
-                                        _searchedBranches.add(model1);
-                                      }
-                                      showPopup(context, _popupBody(),
-                                          'Select Branch');
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: _selectedBranches.length > 0,
-                            child: BranchDetailsListViewDelete(
-                                inputList: _selectedBranches),
-                          )
-                        ],
+                builder: (context) => Form(
+                  key: _form3Key,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Branch Details",
+                          style: TextStyle(
+                              fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  )),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextFormField(
+                          controller: _myBranchSearchEditController,
+                          decoration: InputDecoration(
+                            labelText: "Search Branch",
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                WebService.funSearchBranches(
+                                        _myBranchSearchEditController.text,
+                                        context)
+                                    .then((value) {
+                                  for (var branch in value.data) {
+                                    BranchDetailsModel model1 =
+                                        BranchDetailsModel();
+                                    model1.id = branch.id.toString();
+                                    model1.name = branch.businessName;
+                                    model1.address = branch.buisnessAddress;
+                                    model1.imageUrl = branch.photo == null
+                                        ? ''
+                                        : branch.photo;
+                                    model1.isSelected = false;
+                                    _searchedBranches.add(model1);
+                                  }
+                                  showPopup(
+                                      context, _popupBody(), 'Select Branch');
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: _selectedBranches.length > 0,
+                        child: BranchDetailsListViewDelete(
+                            inputList: _selectedBranches),
+                      )
+                    ],
+                  ),
+                ),
+              )),
             ),
             Align(
               alignment: Alignment.center,

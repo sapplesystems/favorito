@@ -4,7 +4,6 @@ import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/model/claimInfo.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -61,10 +60,9 @@ class _BusinessClaimState extends State<BusinessClaim> {
 
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         // actions: [Icon(Icons.refresh, color: Colors.black)],
-        backgroundColor: myBackGround,
+
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -99,8 +97,6 @@ class _BusinessClaimState extends State<BusinessClaim> {
                     ),
                   ),
                   Card(
-                    elevation: 10,
-                    shape: rrb,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Builder(

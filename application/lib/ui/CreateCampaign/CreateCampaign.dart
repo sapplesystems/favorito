@@ -55,9 +55,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: myBackGround,
         elevation: 0,
         leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -78,8 +76,6 @@ class _CreateCampaignState extends State<CreateCampaign> {
         child: ListView(
           children: [
             Card(
-              elevation: 10,
-              shape: rrb,
               child: Padding(
                 padding: EdgeInsets.all(20.0),
                 child: Builder(

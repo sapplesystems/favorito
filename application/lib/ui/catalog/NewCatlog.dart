@@ -56,7 +56,6 @@ class _NewCatlogState extends State<NewCatlog> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text("Catalog",
@@ -156,9 +155,6 @@ class _NewCatlogState extends State<NewCatlog> {
                             child: FadeInImage.memoryNetwork(
                                 placeholder: kTransparentImage,
                                 image: imgUrls[i]),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            elevation: 5,
                             margin: EdgeInsets.all(10)),
                       )
                 ],

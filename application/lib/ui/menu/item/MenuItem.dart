@@ -50,7 +50,6 @@ class _MenuItemState extends State<MenuItem> {
           model = snapshot.data.data[0];
 
           return Scaffold(
-            backgroundColor: myBackGround,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               title: Text(model.title ?? "",
@@ -74,11 +73,12 @@ class _MenuItemState extends State<MenuItem> {
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: ListView(shrinkWrap: true, children: [
                 Container(
-                  height: sm.h(14),
+                  height:
+                      snapshot?.data?.data[0]?.photo.length == 0 ? 0 : sm.h(14),
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      for (var _v in snapshot.data.data[0].photo ?? 0)
+                      for (var _v in snapshot?.data?.data[0]?.photo)
                         Card(
                           semanticContainer: true,
                           clipBehavior: Clip.antiAliasWithSaveLayer,

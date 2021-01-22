@@ -67,7 +67,6 @@ class _WaitListSettingState extends State<WaitListSetting> {
     localizations = MaterialLocalizations.of(context);
 
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
           elevation: 0,
@@ -89,8 +88,6 @@ class _WaitListSettingState extends State<WaitListSetting> {
                     child: ListView(
                       children: [
                         Card(
-                            elevation: 8,
-                            shape: rrb,
                             child: Padding(
                                 padding: EdgeInsets.symmetric(
                                     vertical: sm.h(4), horizontal: sm.w(8)),

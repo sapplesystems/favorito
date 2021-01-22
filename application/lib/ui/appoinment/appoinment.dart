@@ -43,9 +43,7 @@ class _Appoinment extends State<Appoinment> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -205,8 +203,6 @@ class _Appoinment extends State<Appoinment> {
                                   BotToast.showText(text: "UnderProcess");
                                 },
                                 child: Card(
-                                  elevation: 2,
-                                  shape: rrb,
                                   borderOnForeground: true,
                                   child: InkWell(
                                     onTap: () {

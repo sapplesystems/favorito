@@ -95,7 +95,6 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     sm = SizeManager(context);
 
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
           elevation: 0,
@@ -131,82 +130,78 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             child: ListView(
               children: [
                 Card(
-                    elevation: 8,
-                    shape: rrb,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: sm.h(4), horizontal: sm.w(8)),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                  padding: EdgeInsets.symmetric(
+                      vertical: sm.h(4), horizontal: sm.w(8)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        plusMinus("Advance Booking(Day)", controller[0]),
+                        plusMinus("Advance Booking(Hours)", controller[1]),
+                        DropdownSearch<String>(
+                          validator: (v) => v == '' ? "required field" : null,
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
+                          mode: Mode.MENU,
+                          selectedItem: controller[2].text,
+                          items: slot,
+                          label: "Slot Length",
+                          hint: "Please Select Slot",
+                          showSearchBox: false,
+                          onChanged: (value) {
+                            setState(() {
+                              controller[2].text = value;
+                            });
+                          },
+                        ),
+                        plusMinus("Booking/Slot", controller[3]),
+                        plusMinus("Booking/Day", controller[4]),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: sm.h(2)),
+                          child: txtfieldboundry(
+                            valid: true,
+                            title: title[1],
+                            hint: "Enter ${title[0]}",
+                            controller: controller[5],
+                            maxLines: 4,
+                            security: false,
+                          ),
+                        ),
+                        Column(
                           children: [
-                            plusMinus("Advance Booking(Day)", controller[0]),
-                            plusMinus("Advance Booking(Hours)", controller[1]),
-                            DropdownSearch<String>(
-                              validator: (v) =>
-                                  v == '' ? "required field" : null,
-                              autoValidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              mode: Mode.MENU,
-                              selectedItem: controller[2].text,
-                              items: slot,
-                              label: "Slot Length",
-                              hint: "Please Select Slot",
-                              showSearchBox: false,
-                              onChanged: (value) {
-                                setState(() {
-                                  controller[2].text = value;
-                                });
-                              },
-                            ),
-                            plusMinus("Booking/Slot", controller[3]),
-                            plusMinus("Booking/Day", controller[4]),
-                            Padding(
-                              padding: EdgeInsets.only(bottom: sm.h(2)),
-                              child: txtfieldboundry(
-                                valid: true,
-                                title: title[1],
-                                hint: "Enter ${title[0]}",
-                                controller: controller[5],
-                                maxLines: 4,
-                                security: false,
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                addNewLabel("Services", labelClicked),
-                                Divider(color: myGrey, height: 2),
-                                if (servicesList != null)
-                                  for (int i = 0; i < servicesList?.length; i++)
-                                    //
-                                    my_ServiceSwitch(
-                                      datalist: servicesList,
-                                      i: i,
-                                      function: changeit,
-                                      identity: "s",
-                                    ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                addNewLabel("Person", labelClicked),
-                                Divider(color: myGrey, height: 2),
-                                if (_personList != null)
-                                  for (int i = 0; i < _personList?.length; i++)
-                                    //
-                                    my_ServiceSwitch(
-                                      datalist: _personList,
-                                      i: i,
-                                      function: changeit,
-                                      identity: "p",
-                                    ),
-                              ],
-                            ),
+                            addNewLabel("Services", labelClicked),
                             Divider(color: myGrey, height: 2),
-                            if (_restrictionList != null)
-                              additionalFunctionRistrict(
-                                  "Restrictions", _restrictionList),
-                          ]),
-                    )),
+                            if (servicesList != null)
+                              for (int i = 0; i < servicesList?.length; i++)
+                                //
+                                my_ServiceSwitch(
+                                  datalist: servicesList,
+                                  i: i,
+                                  function: changeit,
+                                  identity: "s",
+                                ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            addNewLabel("Person", labelClicked),
+                            Divider(color: myGrey, height: 2),
+                            if (_personList != null)
+                              for (int i = 0; i < _personList?.length; i++)
+                                //
+                                my_ServiceSwitch(
+                                  datalist: _personList,
+                                  i: i,
+                                  function: changeit,
+                                  identity: "p",
+                                ),
+                          ],
+                        ),
+                        Divider(color: myGrey, height: 2),
+                        if (_restrictionList != null)
+                          additionalFunctionRistrict(
+                              "Restrictions", _restrictionList),
+                      ]),
+                )),
                 Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: sm.w(16), vertical: sm.h(2)),

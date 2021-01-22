@@ -137,7 +137,6 @@ class _BusinessProfileState extends State<BusinessProfile>
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           actions: [
@@ -170,10 +169,6 @@ class _BusinessProfileState extends State<BusinessProfile>
               child: Stack(children: [
                 Card(
                   margin: EdgeInsets.only(top: sm.h(10)),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
                   child: Builder(
                     builder: (context) => Form(
                         key: _formKey,

@@ -71,9 +71,7 @@ class _ManualBooking extends State<ManualBooking> {
     localizations = MaterialLocalizations.of(context);
     sm = SizeManager(context);
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -85,10 +83,6 @@ class _ManualBooking extends State<ManualBooking> {
           Padding(
               padding: EdgeInsets.all(8),
               child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
                   child: Builder(
                       builder: (context) => Form(
                           key: _formKey,

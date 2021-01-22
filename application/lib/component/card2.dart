@@ -19,8 +19,6 @@ class _card2State extends State<card2> {
     return InkWell(
       onTap: widget.function,
       child: Card(
-        shape: rrb,
-        elevation: 2,
         child: Container(
           padding: EdgeInsets.all(sm.h(2.6)),
           child: Column(

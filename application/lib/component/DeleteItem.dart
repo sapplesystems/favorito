@@ -13,7 +13,6 @@ class DeleteItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
-                  color: myBackGround,
                   border: Border.all(color: myRed),
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               child: Icon(

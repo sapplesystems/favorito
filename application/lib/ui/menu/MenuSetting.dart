@@ -65,9 +65,7 @@ class _MenuSettingState extends State<MenuSetting> {
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: 'Fetching Data, please wait');
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
-          backgroundColor: myBackGround,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

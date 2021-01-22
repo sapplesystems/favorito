@@ -34,7 +34,6 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       body: ListView(
         children: [
           Padding(

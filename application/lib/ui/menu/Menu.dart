@@ -4,10 +4,9 @@ import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/menu/CategoryPage.dart';
 import 'package:Favorito/ui/menu/MenuSetting.dart';
+import 'package:Favorito/ui/menu/MenuSwitch.dart';
 import 'package:Favorito/ui/menu/item/MenuItem.dart';
 import 'package:Favorito/ui/menu/item/NewMenuItem.dart';
-import 'package:Favorito/utils/Styles.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -34,7 +33,7 @@ class _MenuState extends State<Menu> {
     sm = SizeManager(context);
     pr = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(message: 'Fetching Data, please wait');
+    pr.style(message: 'Please wait');
     return Scaffold(
       body: FutureBuilder<MenuBaseModel>(
         future: WebService.funMenuList(),
@@ -52,9 +51,7 @@ class _MenuState extends State<Menu> {
                 setState(() {});
               },
               child: Scaffold(
-                backgroundColor: myBackGround,
                 appBar: AppBar(
-                  backgroundColor: myBackGround,
                   elevation: 0,
                   title: Text(
                     snapshot.data.businessType == 3
@@ -62,7 +59,7 @@ class _MenuState extends State<Menu> {
                         : snapshot.data.businessType == 4
                             ? "Online Store"
                             : "",
-                    style: Theme.of(context).textTheme.body1,
+                    style: Theme.of(context).textTheme.title,
                   ),
                   actions: [
                     IconButton(
@@ -108,7 +105,7 @@ class _MenuState extends State<Menu> {
                                 ))),
                       ),
                       Container(
-                        height: sm.h(80),
+                        height: sm.h(70),
                         padding: const EdgeInsets.only(
                             left: 16.0, right: 16, bottom: 16, top: 0),
                         child: ListView(
@@ -151,7 +148,6 @@ class _MenuState extends State<Menu> {
                         builder: (context) => CategoryPage(
                               title: title.split('|')[0],
                               id: title.split('|')[1],
-                              isActivate: true,
                             ))).whenComplete(() => setState(() {}));
               },
               child: Text(
@@ -175,7 +171,7 @@ class _MenuState extends State<Menu> {
                   });
                 },
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 10),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -196,26 +192,7 @@ class _MenuState extends State<Menu> {
                           ),
                         ),
                       ),
-                      Switch(
-                        value: child.isActivated,
-                        onChanged: (value) async {
-                          pr.show();
-
-                          await WebService.funMenuStatusChange({
-                            "is_activated": child.isActivated ? 0 : 1,
-                            "item_id": child.id
-                          }).then((value) {
-                            if (value.status == 'success') {
-                              setState(() {
-                                child.isActivated = !child.isActivated;
-                              });
-                            }
-                            pr.hide();
-                          });
-                        },
-                        activeTrackColor: myRedLight,
-                        activeColor: Colors.red,
-                      ),
+                      MenuSwitch(id: child.id.toString()),
                     ],
                   ),
                 ),

@@ -37,7 +37,6 @@ class _OnlineStoreItem extends State<OnlineStoreItem> {
     initializeValues();
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(widget.name,

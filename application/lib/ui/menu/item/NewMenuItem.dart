@@ -73,7 +73,6 @@ class _NewMenuItemState extends State<NewMenuItem> {
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: 'Please wait');
     return Scaffold(
-        backgroundColor: myBackGround,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text("New Item",
@@ -101,6 +100,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
             else if (snapshot.hasError)
               return Center(child: Text("Somthing went wrong"));
             else {
+              double spaceBetween = 3.4;
               if (haveData)
                 _selectedCategory.text =
                     snapshot.data.data.getNameById(widget.model.menuCategoryId);
@@ -108,7 +108,8 @@ class _NewMenuItemState extends State<NewMenuItem> {
                 children: [
                   Container(
                     height: sm.h(14),
-                    margin: EdgeInsets.symmetric(vertical: sm.h(2)),
+                    margin: EdgeInsets.symmetric(
+                        vertical: sm.h(2), horizontal: sm.w(3.4)),
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
@@ -185,14 +186,21 @@ class _NewMenuItemState extends State<NewMenuItem> {
                   Form(
                     key: key,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Container(
-                        decoration: bd1,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 40.0),
-                        margin: EdgeInsets.symmetric(horizontal: 12),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: sm.w(5),
+                          right: sm.w(5),
+                          top: sm.w(2),
+                          bottom: sm.w(5)),
+                      child: Card(
+                          child: Container(
+                        padding: EdgeInsets.only(
+                            top: sm.h(4), left: sm.w(4), right: sm.w(4)),
+                        // margin: EdgeInsets.symmetric(horizontal: 20),
                         child: Column(children: [
                           Padding(
-                            padding: EdgeInsets.only(bottom: sm.h(4)),
+                            padding:
+                                EdgeInsets.only(bottom: sm.h(spaceBetween)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Title",
@@ -204,10 +212,11 @@ class _NewMenuItemState extends State<NewMenuItem> {
                           ),
                           Padding(
                             padding: EdgeInsets.only(
-                                bottom: sm.h(4),
+                                bottom: sm.h(spaceBetween),
                                 left: sm.w(2.6),
                                 right: sm.w(2.6)),
                             child: DropdownSearch<String>(
+                                showSelectedItem: false,
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
                                 autoValidateMode:
@@ -228,7 +237,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                                 }),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: sm.h(4)),
+                            padding: EdgeInsets.only(bottom: sm.h(2)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Price",
@@ -240,7 +249,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: sm.h(4)),
+                            padding: EdgeInsets.only(bottom: sm.h(2)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Description",
@@ -251,7 +260,8 @@ class _NewMenuItemState extends State<NewMenuItem> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: sm.h(4)),
+                            padding:
+                                EdgeInsets.only(bottom: sm.h(spaceBetween)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Quantity",
@@ -264,7 +274,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                           ),
                           Padding(
                             padding: EdgeInsets.only(
-                                bottom: sm.h(4),
+                                bottom: sm.h(spaceBetween),
                                 left: sm.w(2.6),
                                 right: sm.w(2.6)),
                             child: Visibility(
@@ -290,7 +300,8 @@ class _NewMenuItemState extends State<NewMenuItem> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: sm.h(4)),
+                            padding:
+                                EdgeInsets.only(bottom: sm.h(spaceBetween)),
                             child: txtfieldboundry(
                               valid: true,
                               title: "Max. quantity per order",
@@ -301,7 +312,9 @@ class _NewMenuItemState extends State<NewMenuItem> {
                               security: false,
                             ),
                           ),
-                        ])),
+                        ]),
+                      )),
+                    ),
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(
