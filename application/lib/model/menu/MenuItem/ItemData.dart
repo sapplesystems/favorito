@@ -12,6 +12,7 @@ class ItemData {
   String type;
   String isActivated;
   String maxQtyPerOrder;
+  // String out_of_stock
 
   ItemData(
       {this.photo,

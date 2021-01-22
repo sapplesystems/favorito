@@ -36,16 +36,20 @@ class _MenuState extends State<Menu> {
     pr.style(message: 'Please wait');
     return Scaffold(
       body: FutureBuilder<MenuBaseModel>(
-        future: WebService.funMenuList(),
+        future: WebService.funMenuList(context),
         builder: (BuildContext context, AsyncSnapshot<MenuBaseModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: Text(loading));
           else if (snapshot.hasError)
             return Center(child: Text("Something went wrong.."));
           else {
+            _dataMap.clear();
             for (var key in snapshot.data.data)
-              _dataMap[key.categoryName + '|' + key.categoryId.toString()] =
-                  key.items;
+              _dataMap[key.categoryName +
+                  '|' +
+                  key.categoryId.toString() +
+                  '|' +
+                  key.outOfStock.toString()] = key.items;
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {});
@@ -72,7 +76,8 @@ class _MenuState extends State<Menu> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => NewMenuItem()));
+                                builder: (context) => NewMenuItem(
+                                    showVeg: snapshot.data.businessType == 3)));
                       },
                     ),
                     Padding(
@@ -112,9 +117,8 @@ class _MenuState extends State<Menu> {
                           // shrinkWrap: true,
                           children: <Widget>[
                             Column(children: [
-                              Divider(),
                               for (var key in _dataMap.keys)
-                                _header(key, _dataMap[key]),
+                                _header(key, _dataMap[key], snapshot.data)
                             ]),
                           ],
                         ),
@@ -128,7 +132,7 @@ class _MenuState extends State<Menu> {
     );
   }
 
-  Widget _header(String title, List<Items> childList) {
+  Widget _header(String title, List<Items> childList, MenuBaseModel snapshot) {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(children: [
@@ -165,7 +169,8 @@ class _MenuState extends State<Menu> {
                   Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MenuItem(child.id)))
+                              builder: (context) => MenuItem(
+                                  child.id, snapshot.businessType == 3)))
                       .whenComplete(() {
                     setState(() {});
                   });
@@ -175,11 +180,14 @@ class _MenuState extends State<Menu> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      child.type == "Veg"
-                          ? SvgPicture.asset('assets/icon/foodTypeVeg.svg',
-                              height: 18)
-                          : SvgPicture.asset('assets/icon/foodTypeNonVeg.svg',
-                              height: 18),
+                      Visibility(
+                        visible: snapshot.businessType == 3,
+                        child: child.type == "Veg"
+                            ? SvgPicture.asset('assets/icon/foodTypeVeg.svg',
+                                height: 18)
+                            : SvgPicture.asset('assets/icon/foodTypeNonVeg.svg',
+                                height: 18),
+                      ),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
@@ -192,7 +200,7 @@ class _MenuState extends State<Menu> {
                           ),
                         ),
                       ),
-                      MenuSwitch(id: child.id.toString()),
+                      MenuSwitch(id: child.id.toString(), title: title)
                     ],
                   ),
                 ),

@@ -3,13 +3,15 @@ import 'package:Favorito/model/menu/MenuItem/MenuItem.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItemModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import '../../utils/myString.dart';
 
 class MenuSwitch extends StatefulWidget {
   String id;
-  MenuSwitch({this.id});
+  String title;
+  MenuSwitch({this.id, this.title});
   @override
   _MenuSwitchState createState() => _MenuSwitchState();
 }
@@ -38,21 +40,27 @@ class _MenuSwitchState extends State<MenuSwitch> {
             return Switch(
               value: snapshot.data.data[0].isActivated == 1,
               onChanged: (value) async {
-                pr.show();
-
-                await WebService.funMenuStatusChange({
-                  "api_type": "set",
-                  "item_id": widget.id,
-                  "is_activated": snapshot.data.data[0].isActivated == 1 ? 0 : 1
-                }).then((value) {
-                  if (value.status == 'success') {
-                    setState(() {
-                      snapshot.data.data[0].isActivated =
-                          snapshot.data.data[0].isActivated == 0 ? 1 : 0;
-                    });
-                  }
-                  pr.hide();
-                });
+                print("widget.title${widget.title.split('|')[2]}");
+                if (widget.title.split('|')[2] == "0") {
+                  pr.show();
+                  await WebService.funMenuStatusChange({
+                    "api_type": "set",
+                    "item_id": widget.id,
+                    "is_activated":
+                        snapshot.data.data[0].isActivated == 1 ? 0 : 1
+                  }).then((value) {
+                    if (value.status == 'success') {
+                      setState(() {
+                        snapshot.data.data[0].isActivated =
+                            snapshot.data.data[0].isActivated == 0 ? 1 : 0;
+                      });
+                    }
+                    pr.hide();
+                  });
+                } else {
+                  BotToast.showText(
+                      text: "${widget?.title?.split("|")[0]} is not available");
+                }
               },
               activeTrackColor: myRedLight,
               activeColor: Colors.red,

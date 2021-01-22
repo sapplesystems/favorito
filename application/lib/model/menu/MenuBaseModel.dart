@@ -28,4 +28,17 @@ class MenuBaseModel {
 
     return data;
   }
+
+  String isAvailable(String id) {
+    print("id is :$id");
+    String val;
+    for (var v in this.data) {
+      if (v.categoryId.toString() == id) {
+        val = v.outOfStock.toString();
+        print("id is :$id");
+      }
+    }
+    print("id is :$val");
+    return val;
+  }
 }

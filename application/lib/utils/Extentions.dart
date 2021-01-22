@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import 'package:progress_dialog/progress_dialog.dart';
 
 extension CustomExtention on Widget {
   Widget center() => Center(child: this);
@@ -53,3 +54,18 @@ extension StringExtension on String {
     return "${hh > 12 ? hh - 12 : hh} $turn";
   }
 }
+
+// ProgressDialog pr;
+
+// extension MyDialog on ProgressDialog {
+//   loader(BuildContext context, String message) {
+//     pr = ProgressDialog(context,
+//         type: ProgressDialogType.Normal, isDismissible: false);
+//     pr.style(message: 'Please wait');
+//     pr.show();
+//   }
+
+//   void show() {
+//     // pr.hide();
+//   }
+// }

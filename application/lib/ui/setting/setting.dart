@@ -15,7 +15,6 @@ import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:Favorito/utils/Prefs.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -118,20 +117,20 @@ class _settingState extends State<setting> {
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Column(
                 children: [
-                  ListTile(
-                    leading: SvgPicture.asset('assets/icon/set.svg',
-                        alignment: Alignment.center, height: sm.h(3)),
-                    title: Text(
-                      "Business Settings",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                    ),
-                    trailing: InkWell(
-                      onTap: () {
-                        double _v = settingHeight == 0.0 ? 168.0 : 0.0;
-                        setState(() => settingHeight = _v);
-                      },
-                      child: Icon(
+                  InkWell(
+                    onTap: () {
+                      double _v = settingHeight == 0.0 ? 168.0 : 0.0;
+                      setState(() => settingHeight = _v);
+                    },
+                    child: ListTile(
+                      leading: SvgPicture.asset('assets/icon/set.svg',
+                          alignment: Alignment.center, height: sm.h(3)),
+                      title: Text(
+                        "Business Settings",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w500),
+                      ),
+                      trailing: Icon(
                         settingHeight != 0
                             ? Icons.arrow_drop_up
                             : Icons.arrow_drop_down,
@@ -157,26 +156,26 @@ class _settingState extends State<setting> {
                     ]),
                   ),
                   SizedBox(height: 20),
-                  ListTile(
-                    leading: SvgPicture.asset('assets/icon/menu.svg',
-                        alignment: Alignment.center, height: sm.h(3)),
-                    title: Text(
-                      "Business Tools",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(
+                  InkWell(
+                    onTap: () {
+                      double _v = settingTool == 0.0 ? 300.0 : 0.0;
+                      setState(() => settingTool = _v);
+                    },
+                    child: ListTile(
+                      leading: SvgPicture.asset('assets/icon/menu.svg',
+                          alignment: Alignment.center, height: sm.h(3)),
+                      title: Text(
+                        "Business Tools",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w500),
+                      ),
+                      trailing: Icon(
                         settingTool != 0
                             ? Icons.arrow_drop_up
                             : Icons.arrow_drop_down,
                         size: 28,
                         color: Colors.black,
                       ),
-                      onPressed: () {
-                        double _v = settingTool == 0.0 ? 300.0 : 0.0;
-                        setState(() => settingTool = _v);
-                      },
                     ),
                   ),
                   Container(
