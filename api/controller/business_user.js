@@ -325,3 +325,57 @@ exports.getRegisteredEmailMobile = function(req, res, next) {
 
     }
 }
+
+// exports.getRoomId = async function(req, res, next) {
+
+//     if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
+//         var source_id = req.userdata.business_id;
+//     } else if (req.userdata.id != null && req.userdata.id != undefined && req.userdata.id != '') {
+//         var source_id = req.userdata.id;
+//     }
+
+//     if (req.body.target_id != null && req.body.target_id != undefined && req.body.target_id != '') {
+//         target_id = req.body.target_id
+//     } else {
+//         return res.status(400).json({ status: 'error', message: 'target_id is missing' });
+//     }
+
+//     sql_exist_room_id = `SELECT room_id from business_chat_messages where source_id = '${}'`
+
+//     sql_new_get_room_id = `SELECT MAX(room_id) as room_id FROM business_chat_messages`
+//     result_get_room_id = await exports.run_query(sql_new_get_room_id)
+//     return res.send()
+//         // if (result_get_room_id[0].room_id == null) {
+//         //     room_id = 1
+//         // } else {
+//         //     room_id = result_get_room_id[0].room_id + 1
+//         // }
+//         // return res.send({ t: room_id })
+
+//     // return res.send({ user_id, business_id })
+// }
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+}

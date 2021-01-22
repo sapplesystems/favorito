@@ -68,6 +68,13 @@ socket.on('user-joined', name => {
     append(name + ' join the chat', 'right');
 });
 
+socket.on('console.log', data => {
+    alert("asdfsd")
+    console.log(data)
+});
+
+
+
 socket.on('receive', data => {
     var msg = data.name + ': ' + data.message;
     if (data.photo != '') {
