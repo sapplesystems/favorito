@@ -104,7 +104,7 @@ class _NotificationsState extends State<Notifications> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: sm.w(50),
-              child: roundedButton(
+              child: RoundedButton(
                 clicker: () {
                   Navigator.push(
                       context,

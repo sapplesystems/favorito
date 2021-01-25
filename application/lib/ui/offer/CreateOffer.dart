@@ -171,7 +171,7 @@ class _CreateOfferState extends State<CreateOffer> {
                 child: Container(
                   width: sm.w(50),
                   margin: EdgeInsets.only(bottom: 16.0),
-                  child: roundedButton(
+                  child: RoundedButton(
                     clicker: () {
                       if (_formKey.currentState.validate()) {
                         var requestData = CreateOfferRequestModel();

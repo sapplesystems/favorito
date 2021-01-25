@@ -127,7 +127,7 @@ class _Tour_aState extends State<Tour_a> {
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(vertical: sm.h(4)),
-                    child: roundedButton(
+                    child: RoundedButton(
                       title: "LOGIN",
                       clr: myRed,
                     ),

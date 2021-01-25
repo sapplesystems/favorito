@@ -1,4 +1,6 @@
 //shared prefrence
+import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
+
 String TOKEN = "TOKEN";
 String POSTEL = "POSTEL";
 String welcometxt = "Welcome to Favorito";
@@ -34,3 +36,6 @@ String waitingJoin = 'Join waitlist';
 String waitingCancel = 'Cancel waitlist';
 String waitingCanceled = 'Canceled';
 String currentWaitlistAt = 'Current waitlist at';
+String yourBasket = 'Your Basket';
+String bookAnAppointment = 'Book An Appointment';
+// final List<MenuItemModel> bucket = [];

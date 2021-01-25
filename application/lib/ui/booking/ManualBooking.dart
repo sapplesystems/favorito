@@ -200,7 +200,7 @@ class _ManualBooking extends State<ManualBooking> {
                               ]))))),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(15), vertical: 16.0),
-            child: roundedButton(
+            child: RoundedButton(
               clicker: () {
                 if (_formKey.currentState.validate()) {
                   if (_selectedDateText == 'Select Date') {

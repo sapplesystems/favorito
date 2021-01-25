@@ -115,7 +115,7 @@ class _JobListState extends State<JobList> {
                           alignment: Alignment.center,
                           child: Container(
                             width: sm.w(50),
-                            child: roundedButton(
+                            child: RoundedButton(
                               clicker: () {
                                 Navigator.push(
                                     context,

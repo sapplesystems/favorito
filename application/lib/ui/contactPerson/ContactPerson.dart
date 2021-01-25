@@ -361,7 +361,7 @@ class _ContactPersonState extends State<ContactPerson> {
               child: Container(
                 width: sm.w(50),
                 margin: EdgeInsets.only(bottom: 16.0),
-                child: roundedButton(
+                child: RoundedButton(
                   clicker: () {
                     if (_form1Key.currentState.validate() &&
                         _form2Key.currentState.validate()) {

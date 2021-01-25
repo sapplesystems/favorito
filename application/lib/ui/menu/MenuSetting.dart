@@ -371,7 +371,7 @@ class _MenuSettingState extends State<MenuSetting> {
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: sm.w(15), vertical: 16.0),
-                      child: roundedButton(
+                      child: RoundedButton(
                         clicker: () async {
                           pr.show();
                           Map _map = {

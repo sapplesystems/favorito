@@ -3,19 +3,24 @@ import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuItem.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
+import 'package:favorito_user/utils/Singletons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-
-import 'package:favorito_user/utils/MyString.dart';
+import '../../utils/myString.dart';
 
 class MenuPage extends StatefulWidget {
+  Basket basket = Basket();
   CatItem catItem;
+
   MenuPage({this.catItem});
   @override
-  _MenuPagesState createState() => _MenuPagesState();
+  MenuPagesState createState() => basket.getMenuPagesState();
 }
 
-class _MenuPagesState extends State<MenuPage> {
+class MenuPagesState extends State<MenuPage> {
   SizeManager sm;
+  refresh() {
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -47,13 +52,13 @@ class _MenuPagesState extends State<MenuPage> {
                 : ListView.builder(
                     itemCount: snapshot.data.data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return MenuItem(data: snapshot.data.data[index]);
+                      return MenuItem(
+                        data: snapshot.data.data[index],
+                        isRefresh: false,
+                        callBack: () {},
+                      );
                     });
           }
         });
   }
 }
-
-// ListView(
-//       children: [for (int i = 0; i < 100; i++) ],
-//     )

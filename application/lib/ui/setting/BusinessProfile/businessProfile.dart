@@ -345,11 +345,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                                                     FontWeight
                                                                         .w400)),
                                                         Text(
-                                                            selecteddayList[
-                                                                selecteddayList
-                                                                        .keys
-                                                                        .toList()[
-                                                                    i]],
+                                                            "${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)} - ${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
                                                             style: TextStyle(
                                                                 fontSize: 14,
                                                                 fontWeight:
@@ -566,7 +562,7 @@ class _BusinessProfileState extends State<BusinessProfile>
             child: Container(
               width: sm.w(60),
               margin: EdgeInsets.only(bottom: 12.0),
-              child: roundedButton(
+              child: RoundedButton(
                   clicker: () {
                     if (_formKey.currentState.validate()) _prepareWebService();
                   },

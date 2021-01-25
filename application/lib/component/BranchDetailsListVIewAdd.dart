@@ -73,7 +73,7 @@ class _BranchDetailsListViewAdd extends State<BranchDetailsListViewAdd> {
           child: Container(
             width: sm.w(50),
             margin: EdgeInsets.only(bottom: 16.0, top: 16.0),
-            child: roundedButton(
+            child: RoundedButton(
               clicker: () {
                 for (var model in widget.inputList) {
                   if (model.isSelected) {

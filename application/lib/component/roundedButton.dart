@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myColors.dart';
-class roundedButton extends StatelessWidget {
+
+class RoundedButton extends StatelessWidget {
   Color clr;
   String title;
   Function clicker;
-  roundedButton({this.clr, this.title, this.clicker});
+  RoundedButton({this.clr, this.title, this.clicker});
   @override
   Widget build(BuildContext context) {
-    clr == null ? (clr = myRed) : (clr = clr);
-    return GestureDetector(
+    return InkWell(
       onTap: clicker,
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
-            color: clr,
+            color: clr ?? myRed,
           ),
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
           child: Text(title,

@@ -236,7 +236,7 @@ class _StoreSettingState extends State<StoreSetting> {
             Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: sm.w(15), vertical: 16.0),
-              child: roundedButton(
+              child: RoundedButton(
                 clicker: () {},
                 clr: Colors.red,
                 title: "Save",

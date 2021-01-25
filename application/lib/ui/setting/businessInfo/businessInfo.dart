@@ -275,7 +275,7 @@ class _businessInfoState extends State<businessInfo> {
                 margin: EdgeInsets.only(bottom: sm.w(30)),
                 padding: EdgeInsets.symmetric(
                     horizontal: sm.w(16), vertical: sm.h(2)),
-                child: roundedButton(
+                child: RoundedButton(
                     clicker: () {
                       funSublim();
                     },

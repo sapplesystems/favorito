@@ -21,8 +21,6 @@ class WaitListController {
   }
 
   Future<WaitlistListModel> getPageData() async {
-    await WebService.funGetWaitlist(context).then((value) {
-      return value;
-    });
+    await WebService.funGetWaitlist(context).then((value) => value);
   }
 }

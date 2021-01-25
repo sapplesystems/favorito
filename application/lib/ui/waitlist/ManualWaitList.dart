@@ -2,7 +2,6 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -85,7 +84,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
           Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: sm.w(16), vertical: sm.h(2)),
-              child: roundedButton(
+              child: RoundedButton(
                   clicker: () {
                     if (_frmKey.currentState.validate()) funSublim();
                   },

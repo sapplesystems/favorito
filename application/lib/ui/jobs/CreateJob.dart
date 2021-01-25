@@ -340,7 +340,7 @@ class _CreateJobState extends State<CreateJob> {
                 child: Container(
                   width: sm.w(50),
                   margin: EdgeInsets.only(bottom: 16.0),
-                  child: roundedButton(
+                  child: RoundedButton(
                     clicker: () {
                       if (_formKey.currentState.validate()) {
                         var _requestData = CreateJobRequestModel();
