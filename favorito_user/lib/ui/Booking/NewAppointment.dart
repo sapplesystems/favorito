@@ -2,7 +2,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/DatePicker.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';

@@ -7,8 +7,8 @@ class Basket {
   static List<MenuItemModel> list = List<MenuItemModel>();
   static FabState fabState = FabState();
   static MenuPagesState menuPagesState = MenuPagesState();
-  static FloatingActionButtonsState floatingActionButtonsState =
-      FloatingActionButtonsState();
+  // static FloatingActionButtonsState floatingActionButtonsState =
+  //     FloatingActionButtonsState();
   void addDataToList(MenuItemModel data) {
     list.add(data);
   }
@@ -33,13 +33,13 @@ class Basket {
     return list;
   }
 
-  FloatingActionButtonsState getFloatingActionButtonsState() {
-    return floatingActionButtonsState;
-  }
+  // FloatingActionButtonsState getFloatingActionButtonsState() {
+  //   return floatingActionButtonsState;
+  // }
 
-  void floatingActionButtonsRefresh() {
-    floatingActionButtonsState.refresh();
-  }
+  // void floatingActionButtonsRefresh() {
+  //   floatingActionButtonsState.refresh();
+  // }
 
   MenuPagesState getMenuPagesState() {
     return menuPagesState;

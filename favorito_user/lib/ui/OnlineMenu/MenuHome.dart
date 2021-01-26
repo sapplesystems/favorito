@@ -10,7 +10,6 @@ import 'package:favorito_user/ui/OnlineMenu/FloatingActionButtons.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-import 'package:favorito_user/utils/Singletons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -46,7 +45,6 @@ class _MenuHomeState extends State<MenuHome> {
 
   @override
   Widget build(BuildContext context) {
-    Basket basket = Basket();
     sm = SizeManager(context);
     pr = ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(message: 'Please wait');
@@ -128,7 +126,7 @@ class _MenuHomeState extends State<MenuHome> {
                   return Center(child: Text(wentWrong));
                 } else {
                   // if (cat.length == 1)
-                  print("snapshot.data.data${snapshot.data.data.length}");
+                  // print("snapshot.data.data${snapshot?.data.data.length}");
                   cat.clear();
                   ca.id = 0;
                   ca.categoryName = 'All';

@@ -155,10 +155,9 @@ class _MenuItemState extends State<MenuItem> {
         ++widget.data.quantity;
         basket.getMyObjectsList().add(widget.data);
       }
-      // basket.menuPagesRefresh();
 
       widget.callBack();
-      basket.floatingActionButtonsRefresh();
+      // basket.floatingActionButtonsRefresh();
 
       basket.fabStateRefresh();
 
