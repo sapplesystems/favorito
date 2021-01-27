@@ -1,0 +1,115 @@
+body {
+    background: url('bg-3.jpg');
+    background-size: cover;
+    height: 700px;
+    font-family: 'Sofia';
+    font-size: 22px;
+}
+
+#let-me-chat {
+    line-height: 13px;
+}
+
+#client-name {
+    opacity: 0.4;
+}
+
+#room-name {
+    opacity: 0.4;
+}
+
+#msg_for_user {
+    background-color: red;
+    border-radius: 8px!important;
+}
+
+.chat-box {
+    border: 2px solid #887e7e;
+    height: 490px;
+    position: relative;
+    border-radius: 30px;
+}
+
+.msg-area {
+    overflow: auto;
+    max-height: 410px;
+}
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+
+.msg-area::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Hide scrollbar for IE, Edge and Firefox */
+
+.msg-area {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+#msg-n-send {
+    position: absolute;
+    bottom: 0;
+    font-size: large;
+    font-weight: 500;
+    color: white;
+}
+
+.text-msg {
+    line-height: 32px;
+    border-radius: 30px;
+}
+
+.send-button {
+    border-radius: 30px;
+}
+
+#file {
+    border-radius: 30px;
+    max-width: 40%;
+}
+
+.msg-section {
+    border: 1px solid #67515a;
+    padding: 13px;
+    border-radius: 29px;
+    overflow: auto;
+    line-break: anywhere;
+}
+
+.msg-section::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Hide scrollbar for IE, Edge and Firefox */
+
+.msg-section {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+@media only screen and (max-width: 600px) {
+    #room-name {
+        width: 80%;
+    }
+    #client-name {
+        width: 80%;
+    }
+    .chat-box-main {
+        width: 90%!important;
+    }
+    .chat-box {
+        border: 2px solid #887e7e;
+        height: 510px;
+        position: relative;
+        border-radius: 30px;
+    }
+}
