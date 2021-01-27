@@ -205,7 +205,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                 Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: sm.w(16), vertical: sm.h(2)),
-                    child: roundedButton(
+                    child: RoundedButton(
                         clicker: () {
                           if (controller[3].text.isNotEmpty) funSublim();
                         },

@@ -20,6 +20,7 @@ class DeleteItem extends StatelessWidget {
                 color: myRed,
               ),
             ),
+            SizedBox(height: 6),
             Text(
               'Delete Item',
               style: TextStyle(fontSize: 16),

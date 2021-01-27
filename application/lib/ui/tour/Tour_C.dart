@@ -76,7 +76,7 @@ class Tour_c extends StatelessWidget {
               bottom: sm.h(7),
               left: sm.w(12),
               right: sm.w(12),
-              child: roundedButton(
+              child: RoundedButton(
                 clicker: () {},
                 clr: Colors.red,
                 title: "SIGN UP",

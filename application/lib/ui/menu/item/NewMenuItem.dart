@@ -6,9 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/menu/MenuVerbose.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -19,7 +17,8 @@ import '../../../utils/Extentions.dart';
 
 class NewMenuItem extends StatefulWidget {
   ItemData model;
-  NewMenuItem({this.model});
+  bool showVeg;
+  NewMenuItem({this.model, @required this.showVeg});
   @override
   _NewMenuItemState createState() => _NewMenuItemState();
 }
@@ -38,7 +37,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
   String _selectedType;
   GlobalKey<FormState> key = GlobalKey();
   var fut;
-  bool _isFoodItem = true;
+  bool _isFoodItem = false;
   List imgFiles = [];
   List imgs = [];
   FilePickerResult result;
@@ -48,7 +47,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
     haveData = widget.model != null;
     assigner();
     super.initState();
-
+    _isFoodItem = widget.showVeg;
     fut = WebService.funMenuVerbose();
     _typeList = ["Veg", "Non-veg"];
   }
@@ -319,7 +318,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                   Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: sm.w(16), vertical: sm.h(2)),
-                      child: roundedButton(
+                      child: RoundedButton(
                           clicker: () async {
                             List<MultipartFile> formData = [];
 
@@ -348,7 +347,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                                 "description":
                                     _myDescriptionEditTextController.text,
                                 "quantity": _myQuantityEditTextController.text,
-                                "type": _selectedType,
+                                "type": _selectedType ?? 0,
                                 "max_qty_per_order":
                                     _myMaxQuantityEditTextController.text,
                                 if (result?.files?.isNotEmpty ?? false)
@@ -361,7 +360,8 @@ class _NewMenuItemState extends State<NewMenuItem> {
                               // print(
                               //     "_map:${snapshot.data.data.getIdByName(_selectedCategory.text)}");
                               // print("_map:${_map.toString()}");
-                              WebService.funMenuCreate(_data, context, haveData)
+                              await WebService.funMenuCreate(
+                                      _data, context, haveData)
                                   .then((value) {
                                 pr?.hide();
                                 print("value.status:${value.status}");

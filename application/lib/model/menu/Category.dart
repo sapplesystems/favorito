@@ -67,7 +67,7 @@ class Items {
   int quantity;
   String type;
   int maxQtyPerOrder;
-  bool isActivated;
+  // bool isActivated;
   List photoId;
   List photos;
 
@@ -79,7 +79,7 @@ class Items {
       this.quantity,
       this.type,
       this.maxQtyPerOrder,
-      this.isActivated,
+      // this.isActivated,
       this.photoId,
       this.photos});
 
@@ -91,7 +91,7 @@ class Items {
     quantity = json['quantity'];
     type = json['type'];
     maxQtyPerOrder = json['max_qty_per_order'];
-    isActivated = json['is_activated'] == 1 ? true : false;
+    // isActivated = json['is_activated'] == 1 ? true : false;
     photoId = json['photo_id'] ?? [];
     photos = json['photos'] ?? [];
   }
@@ -105,7 +105,7 @@ class Items {
     data['quantity'] = this.quantity;
     data['type'] = this.type;
     data['max_qty_per_order'] = this.maxQtyPerOrder;
-    data['is_activated'] = this.isActivated;
+    // data['is_activated'] = this.isActivated;
     data['photo_id'] = this.photoId;
     data['photos'] = this.photos;
     return data;

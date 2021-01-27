@@ -82,7 +82,7 @@ class _signup_aState extends State<signup_a> {
               bottom: sm.w(4),
               left: sm.w(20),
               right: sm.w(20),
-              child: roundedButton(
+              child: RoundedButton(
                   clicker: () {
                     if (ctrl[0].text == null || ctrl[0].text == "") {
                       BotToast.showText(text: "Please check Business Type");

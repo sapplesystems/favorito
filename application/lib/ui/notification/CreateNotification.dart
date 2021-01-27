@@ -414,7 +414,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                   child: Container(
                     width: sm.w(50),
                     margin: EdgeInsets.only(bottom: 16.0),
-                    child: roundedButton(
+                    child: RoundedButton(
                       clicker: () {
                         if (_formKey.currentState.validate()) {
                           var requestData = CreateNotificationRequestModel();

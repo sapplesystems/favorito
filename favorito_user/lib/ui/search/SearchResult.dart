@@ -305,7 +305,7 @@ class _SearchResultState extends State<SearchResult> {
                 child: Center(
                   child: identifier == 1
                       ? Text(
-                          "Book An Appointment",
+                          "Book An Appointment", //bookAnAppointment
                           style: TextStyle(
                               fontWeight: FontWeight.w400, color: myRed),
                         )

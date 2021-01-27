@@ -3,7 +3,6 @@ import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -231,7 +230,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                 right: sm.w(11),
                                 top: sm.w(16),
                                 bottom: sm.w(16)),
-                            child: roundedButton(
+                            child: RoundedButton(
                                 clicker: () {
                                   if (_key.currentState.validate())
                                     submitDataCall();

@@ -7,6 +7,7 @@ class MenuItemModel {
   var photoId;
   var photos;
   var businessId;
+  int quantity;
 
   MenuItemModel(
       {this.id,
@@ -16,7 +17,8 @@ class MenuItemModel {
       this.type,
       this.photoId,
       this.photos,
-      this.businessId});
+      this.businessId,
+      this.quantity});
 
   MenuItemModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

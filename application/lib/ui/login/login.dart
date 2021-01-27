@@ -125,7 +125,7 @@ class _LoginState extends State<Login> {
                   EdgeInsets.only(top: 16, left: sm.w(16), right: sm.w(16)),
               // padding: EdgeInsets.symmetric(
               //     horizontal: sm.w(16), vertical: sm.w(12)),
-              child: roundedButton(
+              child: RoundedButton(
                   clicker: () => funClick(), clr: Colors.red, title: "Login")),
           Center(
             child: Padding(

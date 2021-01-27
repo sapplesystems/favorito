@@ -43,9 +43,11 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
             padding: EdgeInsets.only(top: 10.0),
             decoration: bd1,
             child: Column(children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [for (int i = 0; i < 7; i++) days(i)]),
+              Expanded(
+                child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [for (int i = 0; i < 7; i++) days(i)]),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
                 child:
@@ -94,11 +96,8 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
                       child: fromTo(txt: _endTime, clr: myGrey))
                 ]),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                InkWell(
-                    onTap: () => funAdd(),
-                    child: fromTo(txt: "Add", clr: myRed)),
-              ])
+              InkWell(
+                  onTap: () => funAdd(), child: fromTo(txt: "Add", clr: myRed))
             ])),
         Positioned(
           right: -14,
@@ -126,16 +125,13 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
       child: Container(
           margin: EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: widget.tempState[j]
-                ? myGrey
-                : _daysSelectedList[j]
-                    ? myRed
-                    : Colors.white,
-            border: Border.all(width: 1.0, color: myGrey),
-            borderRadius: BorderRadius.all(
-                Radius.circular(5.0) //                 <--- border radius here
-                ),
-          ),
+              color: widget.tempState[j]
+                  ? myGrey
+                  : _daysSelectedList[j]
+                      ? myRed
+                      : Colors.white,
+              border: Border.all(width: 1.0, color: myGrey),
+              borderRadius: BorderRadius.all(Radius.circular(5.0))),
           child: Padding(
             padding: const EdgeInsets.all(4.0),
             child: Column(children: [

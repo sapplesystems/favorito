@@ -21,6 +21,7 @@ class EditItem extends StatelessWidget {
                 color: myRed,
               ),
             ),
+            SizedBox(height: 6),
             Text(
               'Edit Item',
               style: TextStyle(fontSize: 16),

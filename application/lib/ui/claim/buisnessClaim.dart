@@ -334,7 +334,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                   Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: sm.w(16), vertical: sm.h(4)),
-                      child: roundedButton(
+                      child: RoundedButton(
                           clicker: () async {
                             pr.show();
                             await WebService.funClaimAdd(ctrlMobile.text,

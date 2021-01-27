@@ -27,4 +27,12 @@ class MenuItemBaseModel {
     }
     return data;
   }
+
+  void setQuantity(int id, int quantity) {
+    for (var v in this.data) {
+      if (id == v.id) {
+        v.quantity = quantity;
+      }
+    }
+  }
 }

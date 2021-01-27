@@ -61,6 +61,7 @@ import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:progress_dialog/progress_dialog.dart';
@@ -1569,7 +1570,7 @@ class WebService {
     }
   }
 
-  static Future<MenuBaseModel> funMenuList() async {
+  static Future<MenuBaseModel> funMenuList(context) async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuList;
@@ -1642,7 +1643,8 @@ class WebService {
     print("funMenuCreate:${url}");
     response = await dio
         .post(url, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+        .catchError((onError) => onErrorCall(onError, context))
+        .timeout(Duration(minutes: 1));
     print("profileImageUpdate:${response.toString()}");
 
     if (response.statusCode == HttpStatus.ok)

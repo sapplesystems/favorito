@@ -167,7 +167,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
             Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: sm.w(16), vertical: sm.h(4)),
-                child: roundedButton(
+                child: RoundedButton(
                     clicker: () => funSublim(),
                     clr: Colors.red,
                     title: "Run Ad"))

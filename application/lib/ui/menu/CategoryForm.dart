@@ -146,7 +146,7 @@ class _CategoryFormState extends State<CategoryForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: sm.w(14)),
-                  child: roundedButton(
+                  child: RoundedButton(
                       clicker: () {
                         var avail = "";
                         if (selectedDays.length > 0)

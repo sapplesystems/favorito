@@ -102,7 +102,7 @@ class _signup_bState extends State<signup_b> {
               bottom: sm.w(6),
               left: sm.w(22),
               right: sm.w(22),
-              child: roundedButton(
+              child: RoundedButton(
                 clicker: () {
                   funSublim();
                 },
