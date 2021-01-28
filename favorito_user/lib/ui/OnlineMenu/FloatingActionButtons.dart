@@ -1,3 +1,4 @@
+import 'package:favorito_user/component/RoundedButton.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/Fab.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuItem.dart';
@@ -12,11 +13,10 @@ class FloatingActionButtons extends StatefulWidget {
   Basket basket = Basket();
 
   @override
-  FloatingActionButtonsState createState() =>
-      basket.getFloatingActionButtonsState();
+  _FloatingActionButtonsState createState() => _FloatingActionButtonsState();
 }
 
-class FloatingActionButtonsState extends State<FloatingActionButtons> {
+class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   SizeManager sm;
   String totel;
 
@@ -26,41 +26,40 @@ class FloatingActionButtonsState extends State<FloatingActionButtons> {
   }
 
   void refresh() {
-    setState(() {
-      print("clicked");
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
 
-    totel = widget.basket.getTotelPrice();
-
-    print("clicked:${totel}");
     return FloatingActionButton(
         onPressed: () {
           showModalBottomSheet<void>(
               context: context,
               enableDrag: true,
-              isScrollControlled: true,
-              backgroundColor: myBackGround,
               builder: (BuildContext context) {
                 return StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
                   return Container(
-                    height: sm.h(70),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
+                    height: sm.h(60),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30)),
+                    ),
+                    child: ListView(
                       children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: sm.h(3)),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: myGrey,
+                        Center(
+                          child: Container(
+                            margin: EdgeInsets.only(top: sm.w(4)),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: myGreyLight,
+                            ),
+                            width: sm.w(18),
+                            height: 6,
                           ),
-                          width: sm.w(20),
-                          height: 6,
                         ),
                         Row(
                           children: [
@@ -92,7 +91,7 @@ class FloatingActionButtonsState extends State<FloatingActionButtons> {
                                         widget.basket.getMyObjectsList()[index],
                                     isRefresh: true,
                                     callBack: () {
-                                      widget.basket.menuPagesRefresh();
+                                      // widget.basket.menuPagesRefresh();
                                       setState(() {});
                                     });
                               }),
@@ -107,13 +106,16 @@ class FloatingActionButtonsState extends State<FloatingActionButtons> {
                                       fontFamily: 'Gilroy-Medium',
                                       fontSize: 16)),
                               Spacer(),
-                              Text(widget.basket.getTotelPrice() + "\u{20B9}",
+                              Text(widget?.basket?.getTotelPrice() + "\u{20B9}",
                                   style: TextStyle(
                                       fontFamily: 'Gilroy-Medium',
                                       fontSize: 16)),
                             ],
                           ),
-                          // widget(child: ElevatedButton(child: Text(''),onPressed: (){}))
+                        ),
+                        RoundedButton(
+                          clicker: () {},
+                          title: 'Confirm Order',
                         )
                       ],
                     ),

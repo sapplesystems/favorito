@@ -1,42 +1,25 @@
+import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuItem.dart';
-import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
-import 'package:favorito_user/utils/Singletons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 import '../../utils/myString.dart';
 
-class MenuPage extends StatefulWidget {
-  Basket basket = Basket();
-  CatItem catItem;
-
-  MenuPage({this.catItem});
-  @override
-  MenuPagesState createState() => basket.getMenuPagesState();
-}
-
-class MenuPagesState extends State<MenuPage> {
-  SizeManager sm;
-  refresh() {
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    sm = SizeManager(context);
+    print("page reloaded");
+    // SizeManager sm = SizeManager(context);
+    var va = Provider.of<MenuHomeProvider>(context, listen: false);
 
     return FutureBuilder<MenuItemBaseModel>(
         future: APIManager.menuTabItemGet({
-          "business_id": widget.catItem.buId,
-          "category_id": widget.catItem.cat.toString(),
-          "keyword": widget.catItem.txt,
-          "filter": {"only_veg": "${widget.catItem.isVeg ? 1 : 0}"}
+          "business_id": va.businessId,
+          "category_id": va.getBusinessDetail().cat ?? 0,
+          "keyword": va.getBusinessDetail().txt,
+          "filter": {"only_veg": "${va.getBusinessDetail().isVeg ? 1 : 0}"}
         }),
         builder:
             (BuildContext context, AsyncSnapshot<MenuItemBaseModel> snapshot) {
