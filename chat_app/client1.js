@@ -28,6 +28,7 @@ const append = (message, position) => {
         audio.play();
     }*/
 };
+
 form.addEventListener('submit', async(e) => {
     e.preventDefault();
     const files = document.querySelector('input[type=file]').files;

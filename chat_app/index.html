@@ -4,24 +4,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <title>Lets Chat</title>
+    <!-- google font -->
+    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="index.js"></script>
+
     <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
-    <script defer type="text/javascript" src="client.js"></script>
-    <link rel="stylesheet" href="style.css">
+
+
 </head>
 
-<body>
-    <nav>
-        <h1>Welcome to the chat app</h1>
-        <img class="logo" src="chat.png" alt="chat">
-    </nav>
-    <div class="container"></div>
-    <div class="send">
-        <form action="#" id="send-container" method="post" enctype="multipart/form-data">
-            <input type="text" name="messageInp" id="messageInp">
-            <input type="file" name="file" id="file">
-            <button class="btn" type="submit">Send</button>
-        </form>
+<body class="body text-white">
+    <div class="main">
+        <h1 class="text-center mt-4">
+            <b>Lets Chat....</b>
+        </h1>
+
+        <div class="join-room-main w-75 mt-5 mx-auto">
+            <div class="enter-room text-center">
+                <label for="room-name"><h5>Enter Room Number</h5> </label>
+                <input class="input" type="text" name="room_name" id="room-name">
+                <button class="btn btn-danger join-room-button my-2">Enter In Room!!</button>
+            </div>
+        </div>
+
+        <div class="chat-box-main w-50 mx-auto ">
+            <div class="enter-token text-center">
+                <label for="token"><h5>Enter Token</h5> </label>
+                <input class="input" type="text" name="token" id="token">
+            </div>
+            <div class="enter-target text-center">
+                <label for="target_id"><h5>Enter Target</h5> </label>
+                <input class="input" type="text" name="target_id" id="target_id">
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-danger let-me-chat my-2 text-center">Let me chat!!</button>
+            </div>
+
+            <div class="mx-auto w-75 text-center" id="msg_for_user"></div>
+            <div class="chat-box mt-2 mx-auto">
+                <div class="msg-area p-2">
+                </div>
+                <div class="w-100" id="msg-n-send">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <input type="text" class="text-msg w-100" id="text-msg">
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-danger send-button w-100">Send</button>
+                            <!-- <input type="file" class="btn btn-danger" name="file" id="file"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
