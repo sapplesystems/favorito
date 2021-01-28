@@ -14,7 +14,6 @@ class FloatingActionButtons extends StatefulWidget {
 
   @override
   _FloatingActionButtonsState createState() => _FloatingActionButtonsState();
-  // basket.getFloatingActionButtonsState();
 }
 
 class _FloatingActionButtonsState extends State<FloatingActionButtons> {
@@ -92,7 +91,7 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
                                         widget.basket.getMyObjectsList()[index],
                                     isRefresh: true,
                                     callBack: () {
-                                      widget.basket.menuPagesRefresh();
+                                      // widget.basket.menuPagesRefresh();
                                       setState(() {});
                                     });
                               }),

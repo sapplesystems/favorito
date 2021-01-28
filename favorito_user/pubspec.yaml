@@ -38,6 +38,7 @@ dependencies:
   transparent_image:
   url_launcher:
   percent_indicator:
+  provider:
   flutter:
     sdk: flutter
 

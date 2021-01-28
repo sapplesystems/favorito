@@ -1,3 +1,4 @@
+import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/component/FollowBtn.dart';
 import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
@@ -11,9 +12,9 @@ import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import '../../../utils/Extentions.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../utils/Extentions.dart';
 
 class BusinessProfile extends StatefulWidget {
   String businessId;
@@ -355,12 +356,10 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     break;
                   case 'Online Menu':
                     {
-                      WaitListDataModel wdm = WaitListDataModel();
-                      wdm.businessId = data.data[0].businessId;
-                      wdm.businessName = data.data[0].businessName;
-
-                      Navigator.of(context)
-                          .pushNamed('/menuHome', arguments: wdm);
+                      Provider.of<MenuHomeProvider>(context, listen: false)
+                          .setBusinessIdName(data.data[0].businessId,
+                              data.data[0].businessName);
+                      Navigator.of(context).pushNamed('/menuHome');
                     }
                 }
               },

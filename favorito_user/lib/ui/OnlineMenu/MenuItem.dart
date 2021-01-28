@@ -159,9 +159,9 @@ class _MenuItemState extends State<MenuItem> {
       widget.callBack();
       // basket.floatingActionButtonsRefresh();
 
-      basket.fabStateRefresh();
+      // basket.fabStateRefresh();
 
-      if (widget.isRefresh) basket.getMenuPagesState();
+      // if (widget.isRefresh) basket.getMenuPagesState();
     });
   }
 }

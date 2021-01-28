@@ -4,10 +4,10 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class Fab extends StatefulWidget {
   Basket basket = Basket();
   @override
-  FabState createState() => basket.getFabState();
+  _FabState createState() => _FabState();
 }
 
-class FabState extends State<Fab> {
+class _FabState extends State<Fab> {
   Basket basket = Basket();
   int counter = 0;
   refresh() {
