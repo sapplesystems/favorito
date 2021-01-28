@@ -1,47 +1,25 @@
 import 'dart:async';
+import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/Business/Category.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
-import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
-import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/FloatingActionButtons.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
-import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
-class MenuHome extends StatefulWidget {
-  WaitListDataModel data;
-  MenuHome({this.data});
-  @override
-  _MenuHomeState createState() => _MenuHomeState();
-}
-
-class _MenuHomeState extends State<MenuHome> {
+class MenuHome extends StatelessWidget {
+  MenuHomeProvider menuHomeProvider = MenuHomeProvider();
   var _mySearchEditTextController = TextEditingController();
   SizeManager sm;
-  var fut;
-  Widget pages;
-  CatItem catItems = CatItem();
-  String txt = '';
+
   List<MenuItemModel> menuItemBaseModel = [];
   ProgressDialog pr;
   ControllerCallback controller;
-  List<Category> cat = [];
-  Category ca = Category();
-
-  @override
-  void initState() {
-    super.initState();
-    fut = APIManager.menuTabGet({'business_id': widget.data.businessId});
-    catItems.buId = widget.data.businessId;
-    catItems.isVeg = catItems.isVeg ?? false;
-    catItems.index = catItems.index ?? 0;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +35,7 @@ class _MenuHomeState extends State<MenuHome> {
             title: Text('Menu', style: TextStyle(fontFamily: 'Gilroy-Medium')),
           ),
           body: ListView(children: [
-            Text(widget?.data?.businessName ?? "",
+            Text(menuHomeProvider.businessName ?? "business name",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 20)),
             Divider(),
@@ -75,16 +53,18 @@ class _MenuHomeState extends State<MenuHome> {
                       prefixIcon: 'search',
                       keyBoardAction: TextInputAction.search,
                       atSubmit: (_val) {
-                        setState(() {
-                          txt = _val;
-                          catItems.txt = _val;
-                        });
+                        // setState(() {
+                        menuHomeProvider.txt = _val;
+                        menuHomeProvider.catItems.txt = _val;
+                        // });
                       },
                       prefClick: () {
-                        setState(() {
-                          txt = _mySearchEditTextController.text;
-                          catItems.txt = txt;
-                        });
+                        // setState(() {
+                        menuHomeProvider.txt = _mySearchEditTextController.text;
+
+                        menuHomeProvider.catItems.txt =
+                            _mySearchEditTextController.text;
+                        // });
                       }),
                 ),
                 Column(children: [
@@ -99,7 +79,7 @@ class _MenuHomeState extends State<MenuHome> {
                     padding: EdgeInsets.only(
                         left: sm.w(2), right: sm.w(1), top: sm.h(1)),
                     child: NeumorphicSwitch(
-                      value: catItems.isVeg ?? false,
+                      value: menuHomeProvider.getIsVeg() ?? false,
                       height: sm.h(3.5),
                       style: NeumorphicSwitchStyle(
                           activeThumbColor: Colors.green,
@@ -107,9 +87,10 @@ class _MenuHomeState extends State<MenuHome> {
                           inactiveTrackColor: Color(0xfff4f6fc),
                           inactiveThumbColor: myBackGround),
                       onChanged: (val) {
-                        setState(() {
-                          catItems.isVeg = val;
-                        });
+                        Provider.of<MenuHomeProvider>(context, listen: false)
+                            .setIsVeg(val);
+                        menuHomeProvider.catItems.isVeg = val;
+                        // });
                       },
                     ),
                   ),
@@ -117,7 +98,8 @@ class _MenuHomeState extends State<MenuHome> {
               ]),
             ),
             FutureBuilder<MenuTabModel>(
-              future: fut,
+              future: Provider.of<MenuHomeProvider>(context, listen: false)
+                  .getMenuData(),
               builder:
                   (BuildContext context, AsyncSnapshot<MenuTabModel> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
@@ -125,41 +107,53 @@ class _MenuHomeState extends State<MenuHome> {
                 else if (snapshot.hasError) {
                   return Center(child: Text(wentWrong));
                 } else {
-                  // if (cat.length == 1)
-                  // print("snapshot.data.data${snapshot?.data.data.length}");
-                  cat.clear();
-                  ca.id = 0;
-                  ca.categoryName = 'All';
-                  cat.add(ca);
-                  cat.addAll(snapshot.data.data);
+                  var va = Provider.of<MenuHomeProvider>(context, listen: true);
                   return Container(
                     height: 500,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          height: sm.h(6),
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: cat.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return MaterialButton(
-                                  shape: catItems.index == index
-                                      ? UnderlineInputBorder()
-                                      : null,
-                                  onPressed: () {
-                                    categorySelector(index);
-                                    setState(() {});
-                                  },
-                                  child: Text(cat[index]?.categoryName,
-                                      style: Theme.of(context)
-                                          .primaryTextTheme
-                                          .bodyText1),
-                                );
-                              }),
-                        ),
+                            height: sm.h(6),
+                            child: Consumer<MenuHomeProvider>(
+                              builder: (context, data, child) {
+                                return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: va.cat.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return MaterialButton(
+                                        shape: Provider.of<MenuHomeProvider>(
+                                                        context,
+                                                        listen: true)
+                                                    .catItems
+                                                    .selectedCatId ==
+                                                index
+                                            ? UnderlineInputBorder()
+                                            : null,
+                                        onPressed: () {
+                                          Provider.of<MenuHomeProvider>(context,
+                                                  listen: false)
+                                              .categorySelector(index);
+                                          Provider.of<MenuHomeProvider>(context,
+                                                  listen: false)
+                                              .notifyListeners();
+                                        },
+                                        child: Text(
+                                            Provider.of<MenuHomeProvider>(
+                                                    context,
+                                                    listen: true)
+                                                .cat[index]
+                                                ?.categoryName,
+                                            style: Theme.of(context)
+                                                .primaryTextTheme
+                                                .bodyText1),
+                                      );
+                                    });
+                              },
+                            )),
                         Divider(),
-                        Container(height: sm.h(60), child: pages)
+                        Container(height: sm.h(60), child: MenuPage())
                       ],
                     ),
                   );
@@ -169,11 +163,5 @@ class _MenuHomeState extends State<MenuHome> {
           ]),
           floatingActionButton: FloatingActionButtons()),
     );
-  }
-
-  void categorySelector(int index) {
-    catItems.index = index;
-    catItems.cat = cat[index].id.toString();
-    pages = MenuPage(catItem: catItems);
   }
 }

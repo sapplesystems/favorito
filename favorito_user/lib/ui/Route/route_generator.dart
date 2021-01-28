@@ -62,7 +62,7 @@ class RouteGenerator {
       case '/personalInfo':
         return MaterialPageRoute(builder: (_) => PersonalInfo());
       case '/menuHome':
-        return MaterialPageRoute(builder: (_) => MenuHome(data: args));
+        return MaterialPageRoute(builder: (_) => MenuHome());
       default:
         return _errorRoute();
     }

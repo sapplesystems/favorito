@@ -4,7 +4,7 @@ class CatItem {
   String cat;
   String txt;
   List filter;
-  int index = 0;
+  int selectedCatId = 0;
   bool isVeg = false;
   CatItem(
       {this.buId,
@@ -12,6 +12,6 @@ class CatItem {
       this.cat,
       this.filter,
       this.txt,
-      this.index,
+      this.selectedCatId,
       this.isVeg});
 }
