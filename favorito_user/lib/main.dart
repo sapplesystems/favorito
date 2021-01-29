@@ -1,6 +1,8 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
+import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
+import 'package:favorito_user/utils/Singletons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -16,6 +18,8 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
+          ChangeNotifierProvider(create: (context) => BasketControllers()),
+          ChangeNotifierProvider(create: (context) => OptController()),
           // Provider(create: (context) => MenuHomeProvider()),
         ],
         child: MyApp(),

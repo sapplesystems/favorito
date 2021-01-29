@@ -1,23 +1,12 @@
 import 'package:favorito_user/utils/Singletons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
-class Fab extends StatefulWidget {
-  Basket basket = Basket();
-  @override
-  _FabState createState() => _FabState();
-}
-
-class _FabState extends State<Fab> {
-  Basket basket = Basket();
-  int counter = 0;
-  refresh() {
-    setState(() {
-      counter = basket.getMyObjectsList().length;
-    });
-  }
-
-  @override
+class Fab extends StatelessWidget {
   Widget build(BuildContext context) {
+    var vaFalse = Provider.of<BasketControllers>(context, listen: false);
+    var vaTrue = Provider.of<BasketControllers>(context, listen: true);
+
     return Stack(
       children: <Widget>[
         Padding(
@@ -41,7 +30,7 @@ class _FabState extends State<Fab> {
               minHeight: 12,
             ),
             child: new Text(
-              counter.toString(),
+              vaTrue.getMyObjectsList().length.toString(),
               style: new TextStyle(
                 color: Colors.white,
                 fontSize: 10,

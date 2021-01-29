@@ -1,33 +1,39 @@
+import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/component/VegNonVegMarka.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Singletons.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
-class MenuItem extends StatefulWidget {
+class MenuItems extends StatefulWidget {
   MenuItemModel data;
   Function callBack;
   bool isRefresh;
-  MenuItem({this.data, this.callBack, this.isRefresh});
+  MenuItems({this.data, this.callBack, this.isRefresh});
 
   @override
   _MenuItemState createState() => _MenuItemState();
 }
 
-class _MenuItemState extends State<MenuItem> {
+class _MenuItemState extends State<MenuItems> {
+  var vaTrue;
+  var vaFalse;
   SizeManager sm;
 
-  Basket basket = Basket();
+  BasketControllers basket = BasketControllers();
   @override
   Widget build(BuildContext context) {
+    vaFalse = Provider.of<BasketControllers>(context, listen: false);
+    vaTrue = Provider.of<BasketControllers>(context, listen: true);
     widget?.data?.quantity =
         widget.data.quantity == null ? 0 : widget?.data?.quantity;
 
     if (basket.getMyObjectsList() != null)
-      for (int _i = 0; _i < basket?.getMyObjectsList()?.length; _i++)
-        if (widget.data.id == basket?.getMyObjectsList()[_i].id)
-          widget.data.quantity = basket?.getMyObjectsList()[_i]?.quantity ?? 0;
+      for (int _i = 0; _i < vaTrue?.getMyObjectsList()?.length; _i++)
+        if (widget.data.id == vaTrue?.getMyObjectsList()[_i].id)
+          widget.data.quantity = vaTrue?.getMyObjectsList()[_i]?.quantity ?? 0;
     sm = SizeManager(context);
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -95,7 +101,9 @@ class _MenuItemState extends State<MenuItem> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => updateBucket(true),
+                    onTap: () {
+                      updateBucket(true);
+                    },
                     child: Icon(
                       Icons.add,
                       color: myRedDark1,
@@ -134,18 +142,18 @@ class _MenuItemState extends State<MenuItem> {
   void updateBucket(bool add) {
     bool avail = false;
     setState(() {
-      if (basket.getMyObjectsList() != null)
-        for (int i = 0; i < basket?.getMyObjectsList()?.length; i++) {
-          if (basket.getMyObjectsList()[i].id == widget?.data?.id) {
+      if (vaTrue.getMyObjectsList() != null)
+        for (int i = 0; i < vaTrue?.getMyObjectsList()?.length; i++) {
+          if (vaTrue.getMyObjectsList()[i].id == widget?.data?.id) {
             if (add) {
               widget?.data?.quantity = ++widget?.data?.quantity;
             } else {
               widget.data.quantity =
                   widget.data.quantity > 0 ? (--widget.data.quantity) : 0;
             }
-            basket.getMyObjectsList()[i] = widget?.data;
+            vaTrue.getMyObjectsList()[i] = widget?.data;
             if (!add && widget.data.quantity == 0)
-              basket.getMyObjectsList().removeAt(i);
+              vaTrue.getMyObjectsList().removeAt(i);
 
             avail = true;
           }
@@ -153,15 +161,10 @@ class _MenuItemState extends State<MenuItem> {
 
       if (!avail) {
         ++widget.data.quantity;
-        basket.getMyObjectsList().add(widget.data);
+        vaTrue.getMyObjectsList().add(widget.data);
       }
-
+      vaFalse.notifyListeners();
       widget.callBack();
-      // basket.floatingActionButtonsRefresh();
-
-      // basket.fabStateRefresh();
-
-      // if (widget.isRefresh) basket.getMenuPagesState();
     });
   }
 }

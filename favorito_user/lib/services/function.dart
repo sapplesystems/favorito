@@ -16,6 +16,7 @@ class service {
   static final baseUserBooking = baseUser + 'booking/';
   static final baseUserAppointment = baseUser + 'appointment/';
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
+  static final baseUserOrder = baseUser + 'order/';
 
 //function
   static final register = baseUser2 + 'register';
@@ -71,6 +72,9 @@ class service {
   static final menuTabGet = UserBusinessMenu + 'get-category';
   static final menuTabItemGet =
       UserBusinessMenu + 'get-category-item'; //this is based on previous
-  // static final searchItemCategory =
-  //     UserBusinessMenu + 'search-item-category'; //this is based on previous
+
+  //Order
+  static final userOrderCreate =
+      baseUserOrder + 'create-order'; //this is used to create a new order
+
 }
