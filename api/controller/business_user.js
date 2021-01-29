@@ -2,6 +2,8 @@ var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
+const e = require('express');
+const { run_query } = require('./business_information');
 
 
 var user_role = ['Owner', 'Manager', 'Employee'];
@@ -291,6 +293,10 @@ exports.addAnotherBranch = function(req, res, next) {
     }
 };
 
+/* 
+Get the profile picture
+ */
+
 exports.getProfilePhoto = function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT CONCAT('" + img_path + "',photo) as photo FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
@@ -305,10 +311,12 @@ exports.getProfilePhoto = function(req, res, next) {
         } catch (error) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
         }
-
     }
 }
 
+/* 
+ *Get registered email and phone number with the verification detail 
+ */
 exports.getRegisteredEmailMobile = function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT business_email, business_phone, is_email_verified, is_phone_verified FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
@@ -326,34 +334,85 @@ exports.getRegisteredEmailMobile = function(req, res, next) {
     }
 }
 
-// exports.getRoomId = async function(req, res, next) {
+/* 
+It return the room id 
+If the target and source already exist then it return the room_id accordingly
+If the target and source is not already exist then it return the new room_id 
+ */
+exports.getRoomId = async function(req, res, next) {
+    if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
+        var source_id = req.userdata.business_id;
+    } else if (req.userdata.id != null && req.userdata.id != undefined && req.userdata.id != '') {
+        var source_id = req.userdata.id;
+    }
 
-//     if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
-//         var source_id = req.userdata.business_id;
-//     } else if (req.userdata.id != null && req.userdata.id != undefined && req.userdata.id != '') {
-//         var source_id = req.userdata.id;
-//     }
+    if (req.body.target_id != null && req.body.target_id != undefined && req.body.target_id != '') {
+        target_id = req.body.target_id
+    } else {
+        return res.status(400).json({ status: 'error', message: 'target_id is missing' });
+    }
 
-//     if (req.body.target_id != null && req.body.target_id != undefined && req.body.target_id != '') {
-//         target_id = req.body.target_id
-//     } else {
-//         return res.status(400).json({ status: 'error', message: 'target_id is missing' });
-//     }
+    sql_exist_room_id = `SELECT room_id from business_chat_messages \n\
+    where (source_id = '${source_id}' and target_id = '${target_id}') \n\
+    or (source_id = '${target_id}' and target_id = '${source_id}') limit 1`
+    try {
+        result_exist_room_id = await exports.run_query(sql_exist_room_id)
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+    }
+    if (result_exist_room_id == '') {
+        sql_new_get_room_id = `SELECT MAX(room_id) as room_id FROM business_chat_messages`
+        try {
+            result_get_room_id = await exports.run_query(sql_new_get_room_id)
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+        }
+        if (result_get_room_id[0].room_id == null) {
+            room_id = 1
+        } else {
+            room_id = result_get_room_id[0].room_id + 1
+        }
+    } else {
+        room_id = result_exist_room_id[0].room_id
+    }
+    return res.status(200).json({ status: 'success', message: 'success', data: [{ room_id }] });
+}
 
-//     sql_exist_room_id = `SELECT room_id from business_chat_messages where source_id = '${}'`
+/* 
+ Return all the chats by the pagination 
+ when send current number of the pages it 
+ it will return the message from current to 20 more
+*/
+exports.getChats = async(req, res, next) => {
+    if (!req.body.room_id) {
+        return res.status(400).json({ status: 'failed', message: 'room_id is missing ' });
+    } else {
+        room_id = req.body.room_id
+    }
 
-//     sql_new_get_room_id = `SELECT MAX(room_id) as room_id FROM business_chat_messages`
-//     result_get_room_id = await exports.run_query(sql_new_get_room_id)
-//     return res.send()
-//         // if (result_get_room_id[0].room_id == null) {
-//         //     room_id = 1
-//         // } else {
-//         //     room_id = result_get_room_id[0].room_id + 1
-//         // }
-//         // return res.send({ t: room_id })
+    if (req.body.current_no_msg) {
+        current_no_msg = req.body.current_no_msg
+    } else {
+        current_no_msg = 0
+    }
+    offset = current_no_msg
+    limit = current_no_msg + 20
 
-//     // return res.send({ user_id, business_id })
-// }
+    try {
+        sql_get_messages = `SELECT id, source_id, target_id, message from business_chat_messages where room_id = '${room_id}' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
+        result_get_message = await exports.run_query(sql_get_messages)
+    } catch (error) {
+        return res.status(500).send({ status: 'failed', message: 'failed', error })
+    }
+    if (result_get_message != '') {
+        return res.status(200).send({ status: 'success', message: 'success', data: result_get_message })
+    } else {
+        return res.status(400).send({ status: 'success', message: 'There is no message to show.' })
+    }
+}
+
+
+
 
 exports.run_query = (sql, param = false) => {
     if (param == false) {
