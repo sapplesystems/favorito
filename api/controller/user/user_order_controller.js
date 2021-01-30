@@ -23,7 +23,7 @@ exports.getOrderList = async function(req, res, next) {
             const order = result_sql[i];
             // temp.order = order
             try {
-                var sql_detail_order = `SELECT b_m_i.id as item_id , b_m_i.title as item,b_o_d.quantity FROM business_orders as b_o JOIN business_order_detail as b_o_d JOIN business_menu_item as b_m_i ON b_o.order_id = b_o_d.order_id AND b_m_i.id =b_o_d.item_id WHERE b_o_d.order_id = '${order.order_id}'`
+                var sql_detail_order = `SELECT b_m_i.id as item_id , b_m_i.title as item,b_o_d.quantity as qty FROM business_orders as b_o JOIN business_order_detail as b_o_d JOIN business_menu_item as b_m_i ON b_o.order_id = b_o_d.order_id AND b_m_i.id =b_o_d.item_id WHERE b_o_d.order_id = '${order.order_id}'`
                 result_detail_order = await exports.run_query(sql_detail_order)
                 order.order_detail = result_detail_order
             } catch (error) {
@@ -275,6 +275,55 @@ exports.createOrder = async function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+/* 
+Create order verbose
+ */
+
+exports.createOrderVerbose = async(req, res, next) => {
+    if (!req.body.business_id) {
+        return res.status(400).json({ status: 'error', message: 'business_id is missing' });
+    } else {
+        business_id = req.body.business_id
+    }
+
+    sql_setting = `SELECT id,business_id, accepting_order ,take_away as take_away_c,delivery as delivery_c, dine_in as dine_in_c,\n\
+    IF(take_away_start_time < NOW() AND  take_away_end_time > NOW(), '1','0') AS take_away, \n\
+    take_away_minimum_bill, take_away_packaging_charge,\n\
+    IF(dine_in_start_time < NOW() AND dine_in_end_time > NOW(), '1','0') AS dine_in,\n\
+    IF(delivery_start_time < NOW() AND delivery_end_time > NOW(), '1','0') AS delivery,\n\
+    delivery_minium_bill, delivery_packaging_charge \n\
+    FROM business_menu_setting\n\
+    WHERE business_id = '${business_id}'`
+
+    result_setting = await exports.run_query(sql_setting)
+        // return res.send(result_setting)
+    final_data = []
+
+    if (result_setting[0].accepting_order == 0) {
+        final_data.push({ accepting_order: 0 })
+    } else {
+        final_data.push({ accepting_order: 1 })
+    }
+
+    if (result_setting[0].take_away == 1 && result_setting[0].take_away_c == 1) {
+        final_data.push({ attribute: "take_away", minimum_bill: result_setting[0].take_away_minimum_bill, packaging_charge: result_setting[0].take_away_packaging_charge })
+    }
+
+    if (result_setting[0].delivery == 1 && result_setting[0].delivery_c == 1) {
+        final_data.push({ attribute: "delivery", minimum_bill: result_setting[0].delivery_minium_bill, packaging_charge: result_setting[0].delivery_packaging_charge })
+    }
+
+    if (result_setting[0].dine_in == 1 && result_setting[0].dine_in_c == 1) {
+        final_data.push({ attribute: "dine_in" })
+    }
+
+    sql_payment = `SELECT payment_method from business_informations where business_id = '${business_id}'`
+    result_peyment = await exports.run_query(sql_payment)
+    payment_methods = result_peyment[0].payment_method.split(',')
+    console.log(payment_methods)
+    return res.status(200).json({ status: 'success', message: 'success', data: { order_type: final_data, payment_type: payment_methods } });
+}
 
 exports.run_query = (sql, param = false) => {
     if (param == false) {
