@@ -1,12 +1,12 @@
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class RoundedButton extends StatelessWidget {
   Color clr;
   String title;
   Function clicker;
-  RoundedButton({this.clr, @required this.title, @required this.clicker});
+  TextStyle textStyle;
+  RoundedButton({this.clr, this.title, this.clicker, this.textStyle});
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -19,11 +19,14 @@ class RoundedButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
           child: Text(title,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: "Gilroy-Bold",
-                  letterSpacing: 1))),
+              style: textStyle == null
+                  ? TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontFamily: "Gilroy-Bold",
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 1)
+                  : textStyle)),
     );
   }
 }

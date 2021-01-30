@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
+import 'package:favorito_user/model/appModel/Business/BaseResponse.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
@@ -509,15 +510,15 @@ class APIManager {
     return MenuItemBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-// //Menu item search
-//   static Future<MenuItemBaseModel> searchItemCategory(Map _map) async {
-//     String token = await Prefs.token;
-//     print("menuItemRequest : ${_map.toString()}");
-//     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-//     print("service.searchItemCategory : ${service.searchItemCategory}");
-//     response =
-//         await dio.post(service.searchItemCategory, data: _map, options: opt);
-//     print("service.searchItemCategory : ${response.toString}");
-//     return MenuItemBaseModel.fromJson(convert.jsonDecode(response.toString()));
-//   }
+//order
+  static Future<BaseResponse> userOrderCreate(Map _map) async {
+    String token = await Prefs.token;
+    print("menuItemRequest : ${_map.toString()}");
+    opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.userOrderCreate : ${service.userOrderCreate}");
+    response =
+        await dio.post(service.userOrderCreate, data: _map, options: opt);
+    print("service.userOrderCreate : ${response.toString}");
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
 }

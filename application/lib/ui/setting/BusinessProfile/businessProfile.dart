@@ -561,12 +561,18 @@ class _BusinessProfileState extends State<BusinessProfile>
             alignment: Alignment.center,
             child: Container(
               width: sm.w(60),
-              margin: EdgeInsets.only(bottom: 12.0),
+              margin: EdgeInsets.only(bottom: 8.0),
               child: RoundedButton(
                   clicker: () {
                     if (_formKey.currentState.validate()) _prepareWebService();
                   },
                   clr: Colors.red,
+                  textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontFamily: "Gilroy-Bold",
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 1),
                   title: donetxt),
             ),
           )
