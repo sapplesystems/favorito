@@ -10,7 +10,7 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:provider/provider.dart';
 
-class signup_a extends StatelessWidget {
+class Signup_a extends StatelessWidget {
   var signUpProviderTrue;
   var signUpProviderFalse;
 
@@ -36,7 +36,7 @@ class signup_a extends StatelessWidget {
           child: ListView(
             children: [
               Text(
-                "SignUp",
+                "Sign Up",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -94,15 +94,21 @@ class signup_a extends StatelessWidget {
                                         signUpProviderTrue.getBusinessName(),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 2),
-                                  child: txtfieldboundry(
-                                      valid: true,
-                                      controller:
-                                          signUpProviderTrue.controller[0],
-                                      title: "Business Name",
-                                      security: false),
-                                ),
+                                Consumer<SignUpProvider>(
+                                    builder: (context, _data, child) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(top: 2),
+                                    child: txtfieldboundry(
+                                        valid: true,
+                                        controller:
+                                            signUpProviderTrue.controller[0],
+                                        title:
+                                            signUpProviderTrue.getTypeId() == 1
+                                                ? "Business Name"
+                                                : "Full Name",
+                                        security: false),
+                                  );
+                                }),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 8.0, right: 8, top: 2),
@@ -170,7 +176,7 @@ class signup_a extends StatelessWidget {
                       )),
                     ),
                     Positioned(
-                        top: sm.h(4),
+                        top: sm.h(2),
                         left: sm.w(30),
                         right: sm.w(30),
                         child: SvgPicture.asset('assets/icon/maskgroup.svg',
@@ -179,8 +185,11 @@ class signup_a extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: sm.w(20), vertical: sm.w(10)),
+                padding: EdgeInsets.only(
+                    left: sm.w(20),
+                    right: sm.w(20),
+                    top: sm.w(2),
+                    bottom: sm.w(12)),
                 child: RoundedButton(
                     clicker: () {
                       if (_formKey.currentState.validate()) {

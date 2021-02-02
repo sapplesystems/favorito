@@ -19,7 +19,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -139,15 +138,15 @@ class _BusinessProfileState extends State<BusinessProfile>
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          actions: [
-            IconButton(
-              icon: SvgPicture.asset(
-                'assets/icon/save.svg',
-                height: sm.w(6.4),
-              ),
-              onPressed: () {},
-            )
-          ],
+          // actions: [
+          //   IconButton(
+          //     icon: SvgPicture.asset(
+          //       'assets/icon/save.svg',
+          //       height: sm.w(6.4),
+          //     ),
+          //     onPressed: () {},
+          //   )
+          // ],
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
@@ -176,8 +175,10 @@ class _BusinessProfileState extends State<BusinessProfile>
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
+                            SizedBox(height: sm.h(4)),
                             Padding(
-                                padding: EdgeInsets.only(top: sm.h(4)),
+                                padding: EdgeInsets.only(
+                                    top: sm.h(5), bottom: sm.h(2)),
                                 child: Stack(children: [
                                   ClipRRect(
                                       borderRadius: BorderRadius.circular(20.0),
@@ -198,14 +199,32 @@ class _BusinessProfileState extends State<BusinessProfile>
                                                 width: double.infinity,
                                                 alignment: Alignment.center,
                                               ))),
-                                  Positioned(
-                                      child: IconButton(
-                                          onPressed: () =>
-                                              getImage(ImgSource.Gallery),
-                                          icon: Icon(Icons
-                                              .center_focus_strong_outlined),
-                                          color: Colors.deepOrange))
+                                  // Positioned(
+                                  //     child: IconButton(
+                                  //         onPressed: () =>
+                                  //             getImage(ImgSource.Gallery),
+                                  //         icon: Icon(Icons
+                                  //             .center_focus_strong_outlined),
+                                  //         color: Colors.deepOrange)
+                                  //         )
                                 ])),
+
+                            Container(
+                              width: sm.w(40),
+                              margin: EdgeInsets.only(bottom: 12.0),
+                              child: RoundedButton(
+                                  clicker: () {
+                                    getImage(ImgSource.Gallery);
+                                  },
+                                  clr: Colors.red,
+                                  textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontFamily: "Gilroy-Bold",
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: 1),
+                                  title: "Change Photo"),
+                            ),
                             txtfieldboundry(
                               controller: _controller[1],
                               title: "Business Name",
@@ -329,29 +348,39 @@ class _BusinessProfileState extends State<BusinessProfile>
                                                   i++)
                                                 Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(horizontal: 6),
+                                                          .symmetric(
+                                                      horizontal: 12),
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Column(children: [
-                                                        Text(
-                                                            selecteddayList.keys
-                                                                .toList()[i],
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400)),
-                                                        Text(
-                                                            "${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)} - ${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
-                                                            style: TextStyle(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w200)),
-                                                      ])
+                                                      Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                                selecteddayList
+                                                                        .keys
+                                                                        .toList()[
+                                                                    i],
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                            SizedBox(height: 2),
+                                                            Text(
+                                                                "${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)} - ${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w200)),
+                                                          ])
                                                     ],
                                                   ),
                                                 )
@@ -360,8 +389,11 @@ class _BusinessProfileState extends State<BusinessProfile>
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            showPopup(context,
-                                                _popupBodyShowDetail());
+                                            showPopup(
+                                                context,
+                                                WorkingDateTime(
+                                                    selecteddayList:
+                                                        selecteddayList));
                                           },
                                           child: Text("Add",
                                               style:
@@ -389,6 +421,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                       Text("By Appointment Only",
                                           style: TextStyle(
                                               fontSize: 16,
+                                              fontFamily: 'Gilroy-Bold',
                                               color: Colors.grey)),
                                       Icon(
                                         byAppointment == false
@@ -401,8 +434,23 @@ class _BusinessProfileState extends State<BusinessProfile>
                                     ]),
                               ),
                             ),
+                            SizedBox(height: sm.h(2)),
+                            Row(
+                              children: [
+                                Text('\t\t\tWhere are you located?',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'Gilroy-Medium',
+                                        color: Colors.grey)),
+                              ],
+                            ),
                             Container(
                               //_controller[6] is allign for this
+                              margin: EdgeInsets.all(8),
+
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: myGrey, width: 1)),
                               height: 250,
                               child: _initPosition != null
                                   ? MyGoogleMap(
@@ -538,24 +586,32 @@ class _BusinessProfileState extends State<BusinessProfile>
                   ),
                 ),
                 Positioned(
-                    top: sm.h(5),
-                    left: sm.w(14),
-                    right: sm.w(14),
-                    child: Container(
-                        decoration: bd1,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: sm.w(4), vertical: sm.h(2)),
-                        child: Column(children: [
-                          Text(
-                            "Your Business ID",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            business_id,
-                            style: TextStyle(fontSize: 14),
-                          )
-                        ])))
+                    top: sm.h(4),
+                    left: sm.w(8),
+                    right: sm.w(8),
+                    child: Card(
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: sm.w(0), vertical: sm.h(3)),
+                          child: Column(children: [
+                            Text(
+                              "Your Business ID",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                  fontFamily: 'Gilroy-Medium'),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              business_id,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  letterSpacing: 1.2,
+                                  fontFamily: 'Gilroy-Medium'),
+                            )
+                          ])),
+                    ))
               ])),
           Align(
             alignment: Alignment.center,
@@ -569,10 +625,10 @@ class _BusinessProfileState extends State<BusinessProfile>
                   clr: Colors.red,
                   textStyle: TextStyle(
                       color: Colors.white,
-                      fontSize: 10,
+                      fontSize: 18,
                       fontFamily: "Gilroy-Bold",
                       fontWeight: FontWeight.w400,
-                      letterSpacing: 1),
+                      letterSpacing: 1.5),
                   title: donetxt),
             ),
           )
@@ -593,13 +649,6 @@ class _BusinessProfileState extends State<BusinessProfile>
                     content: Scaffold(
                         resizeToAvoidBottomPadding: false, body: widget))))
         .whenComplete(() => setState(() {}));
-  }
-
-  Widget _popupBodyShowDetail() {
-    return Container(
-        child: WorkingDateTime(
-      selecteddayList: selecteddayList,
-    ));
   }
 
   void _cityWebData() async {

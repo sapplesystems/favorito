@@ -110,16 +110,19 @@ class _dashboardState extends State<dashboard> {
                           MaterialPageRoute(
                               builder: (context) => businessInfo()));
                     }),
-                rowWithTextNButton(
-                    txt1: "Send for verification",
-                    txt2: "Verify",
-                    check: is_verified,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BusinessClaim()));
-                    }),
+                Visibility(
+                  visible: is_verified == "0" ? true : false,
+                  child: rowWithTextNButton(
+                      txt1: "Send for verification",
+                      txt2: "Verify",
+                      check: is_verified,
+                      function: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BusinessClaim()));
+                      }),
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: sm.h(2)),
                   child: Row(

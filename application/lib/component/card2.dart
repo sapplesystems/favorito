@@ -37,14 +37,17 @@ class _card2State extends State<card2> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    widget.ratings,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontFamily: "Gilroy-Medium",
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 0.60,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      widget.ratings,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontFamily: "Gilroy-Medium",
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 0.60,
+                      ),
                     ),
                   ),
                   SvgPicture.asset(

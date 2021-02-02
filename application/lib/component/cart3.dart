@@ -19,7 +19,7 @@ class card3 extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: sm.h(2), left: sm.w(2)),
               child: Text(txt1,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

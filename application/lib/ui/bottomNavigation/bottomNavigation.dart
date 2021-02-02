@@ -22,10 +22,7 @@ class _bottomNavigationState extends State<bottomNavigation> {
     dashboard(),
     Bookings(),
     setting(),
-    // checkins(),
     Menu(),
-    // MenuItem(),
-    // Appoinment(),
     setting()
   ];
 
@@ -68,8 +65,9 @@ class _bottomNavigationState extends State<bottomNavigation> {
   void decide() async {
     var token = await Prefs.token;
     if (token == null || token == "") {
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Login()),
+          (Route<dynamic> route) => false);
     } else
       print("Token:$token");
   }
