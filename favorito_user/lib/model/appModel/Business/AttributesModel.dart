@@ -12,4 +12,6 @@ class Attributes {
     data['attribute_name'] = this.attributeName;
     return data;
   }
+
+  String toString() => 'Attributes{attributeName:$attributeName}';
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
+import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/model/appModel/Business/BaseResponse.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
@@ -9,6 +10,7 @@ import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
+import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
@@ -453,37 +455,38 @@ class APIManager {
 
   //booking
   static Future<BookingOrAppointmentListModel> baseUserBookingList(
-      [Map _map]) async {
+      Map _map, int isBooking) async {
     String token = await Prefs.token;
+    String url = isBooking == 0
+        ? service.baseUserBookingList
+        : service.baseUserAppointmentList;
+
     print('Resuest data : ${_map.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserBookingList : ${service.baseUserBookingList}");
+    print("service.baseUserBookingList : $url");
 
-    response =
-        await dio.post(service.baseUserBookingList, data: _map, options: opt);
+    response = await dio.post(url, data: _map, options: opt);
     print("service.baseUserBookingList : ${response.toString}");
     return BookingOrAppointmentListModel.fromJson(
         convert.jsonDecode(response.toString()));
   }
 
-  //appoinment
-  static Future<BookingOrAppointmentListModel> baseUserAppointmentList(
-      [Map _map]) async {
+  //getTableVerboseData
+  // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
+  static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
     String token = await Prefs.token;
+    String url = service.baseUserBookingVerbose;
     print('Resuest data : ${_map.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print(
-        "service.baseUserAppointmentList : ${service.baseUserAppointmentList}");
+    print("baseUserBookingVerbose : $url");
 
-    response = await dio.post(service.baseUserAppointmentList,
-        data: _map, options: opt);
-    print("service.baseUserAppointmentList : ${response.toString}");
-    return BookingOrAppointmentListModel.fromJson(
-        convert.jsonDecode(response.toString()));
+    response = await dio.post(url, data: _map, options: opt);
+    print("baseUserBookingVerbose response : ${response.toString}");
+    return BookTableVerbose.fromJson(convert.jsonDecode(response.toString()));
   }
 
   //Menu
@@ -502,7 +505,6 @@ class APIManager {
   static Future<MenuItemBaseModel> menuTabItemGet(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
-
     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print("service.menuTabItemGet : ${service.menuTabItemGet}");
     response = await dio.post(service.menuTabItemGet, data: _map, options: opt);
@@ -520,5 +522,17 @@ class APIManager {
         await dio.post(service.userOrderCreate, data: _map, options: opt);
     print("service.userOrderCreate : ${response.toString}");
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//order verbose
+  static Future<ModelOption> userOrderCreateVerbose(Map _map) async {
+    String token = await Prefs.token;
+    print("menuItemRequest : ${_map.toString()}");
+    opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.userOrderCreateVerbose : ${service.userOrderCreateVerbose}");
+    response = await dio.post(service.userOrderCreateVerbose,
+        data: _map, options: opt);
+    print("service.userOrderCreateVerbose : ${response.toString}");
+    return ModelOption.fromJson(convert.jsonDecode(response.toString()));
   }
 }

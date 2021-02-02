@@ -1,8 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/Providers/BookTableProvider.dart';
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
-import 'package:favorito_user/utils/Singletons.dart';
+import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -20,6 +21,7 @@ void main() {
           ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
           ChangeNotifierProvider(create: (context) => BasketControllers()),
           ChangeNotifierProvider(create: (context) => OptController()),
+          ChangeNotifierProvider(create: (context) => AppBookProvider()),
           // Provider(create: (context) => MenuHomeProvider()),
         ],
         child: MyApp(),
@@ -35,11 +37,12 @@ class MyApp extends StatelessWidget {
         builder: BotToastInit(),
         navigatorObservers: [BotToastNavigatorObserver()],
         theme: NeumorphicThemeData(
-            defaultTextColor: myRed,
-            accentColor: Colors.grey,
-            variantColor: Colors.black38,
-            depth: 8,
-            intensity: 0.65),
+          defaultTextColor: myRed,
+          accentColor: Colors.grey,
+          variantColor: Colors.black38,
+          depth: 8,
+          intensity: 0.65,
+        ),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute,
       );

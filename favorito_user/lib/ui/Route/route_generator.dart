@@ -47,8 +47,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Waitlist(data: args));
 
       case '/bookingOrAppointmentList':
-        return MaterialPageRoute(
-            builder: (_) => BookingOrAppointmentParent(data: args));
+        return MaterialPageRoute(builder: (_) => BookingOrAppointmentParent());
 
       case '/searchResult':
         return MaterialPageRoute(builder: (_) => SearchResult(data: args));

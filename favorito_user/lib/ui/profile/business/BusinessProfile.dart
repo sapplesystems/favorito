@@ -1,3 +1,4 @@
+import 'package:favorito_user/Providers/BookTableProvider.dart';
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/component/FollowBtn.dart';
 import 'package:favorito_user/component/favoriteBtn.dart';
@@ -33,12 +34,16 @@ class _BusinessProfileState extends State<BusinessProfile> {
   @override
   void initState() {
     super.initState();
+
     fut = APIManager.baseUserProfileDetail({'business_id': widget.businessId});
   }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+    Provider.of<AppBookProvider>(context, listen: false)
+        .setBusinessId(widget.businessId);
+
     return Scaffold(
         backgroundColor: Colors.white,
         body: FutureBuilder<businessProfileModel>(
@@ -50,8 +55,9 @@ class _BusinessProfileState extends State<BusinessProfile> {
             else {
               if (data != snapshot.data) data = snapshot.data;
               widget.attribute.clear();
-              for (var _v in data.data[0].attributes)
-                widget.attribute.add(_v.attributeName);
+              widget.attribute
+                  .addAll(data.data[0].attributes.map((e) => e.attributeName));
+
               return ListView(
                 children: [
                   Container(
@@ -338,8 +344,8 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     break;
                   case 'Appointment':
                     {
-                      badm.businessId = data.data[0].businessId;
-                      badm.isBooking = 1;
+                      Provider.of<AppBookProvider>(context, listen: false)
+                          .setIsBooking(1);
                       Navigator.of(context).pushNamed(
                           '/bookingOrAppointmentList',
                           arguments: badm);

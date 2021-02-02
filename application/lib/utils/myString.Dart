@@ -31,3 +31,4 @@ String donetxt = "Done";
 String bookingSetting = "Booking Setting";
 String loading = "Loading...";
 String wentWrong = "Something went wrong..";
+String businessInformation = "Business Information";

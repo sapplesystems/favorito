@@ -1,56 +1,89 @@
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/component/RoundedButton.dart';
-import 'package:favorito_user/component/VegNonVegMarka.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/Fab.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuItem.dart';
+import 'package:favorito_user/ui/OnlineMenu/Options.dart';
+import 'package:favorito_user/ui/OnlineMenu/PayOption.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-import 'package:favorito_user/utils/Singletons.dart';
+import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../utils/myString.dart';
 
 class FloatingActionButtons extends StatefulWidget {
-  GlobalKey key;
-  FloatingActionButtons({this.key});
   @override
   _FloatingActionButtonsState createState() => _FloatingActionButtonsState();
 }
 
 class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   SizeManager sm;
-  var vaTrue;
+  var providerBasketTrue;
+  var providerBasketFalse;
+  var providerMenuFalse;
+  var providerMenuTrue;
   var vaFalse;
   var vaOptFalse;
   var vaOptTrue;
   String totel;
   String title = yourBasket;
-
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    vaTrue = Provider.of<BasketControllers>(context, listen: true);
+    providerBasketTrue = Provider.of<BasketControllers>(context, listen: true);
+    providerBasketFalse =
+        Provider.of<BasketControllers>(context, listen: false);
+    providerMenuFalse = Provider.of<MenuHomeProvider>(context, listen: false);
+    providerMenuTrue = Provider.of<MenuHomeProvider>(context, listen: true);
     vaFalse = Provider.of<MenuHomeProvider>(context, listen: false);
     vaOptFalse = Provider.of<OptController>(context, listen: false);
     vaOptTrue = Provider.of<OptController>(context, listen: true);
 
     return FloatingActionButton(
         onPressed: () {
-          bucketBottomSheet();
-          // callCustomizetion();
+          bucketBottomSheet(context);
         },
         backgroundColor: myBackGround,
         child: Fab());
   }
 
-  void callCustomizetion() {
-    title = "customizetion";
+  body2(context) {
+    return Scrollbar(
+      child: Column(
+        children: [
+          Container(
+            height: sm.h(60),
+            child: Consumer<MenuHomeProvider>(
+              builder: (context, data, child) {
+                return ListView(
+                  children: [
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: new NeverScrollableScrollPhysics(),
+                        itemCount: data.modelOption.data.paymentType.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Options();
+                        }),
+                    Divider(),
+                    PayOption(),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void callCustomizetion(BuildContext context) {
+    title = customizetion;
     showModalBottomSheet<void>(
         enableDrag: true,
         isScrollControlled: true,
-        context: widget.key.currentContext,
+        context: context,
         backgroundColor: Color.fromRGBO(255, 0, 0, 0),
         builder: (BuildContext context) {
           return StatefulBuilder(
@@ -65,14 +98,19 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
               ),
               child: ListView(
                 physics: new NeverScrollableScrollPhysics(),
-                children: <Widget>[header(), body2(), footer()],
+                children: <Widget>[
+                  header(context),
+                  body2(context),
+                  footer(context)
+                ],
               ),
             );
           });
         });
   }
 
-  void bucketBottomSheet() {
+  void bucketBottomSheet(BuildContext context) {
+    title = yourBasket;
     showModalBottomSheet<void>(
         enableDrag: true,
         isScrollControlled: true,
@@ -91,18 +129,20 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
               ),
               child: ListView(
                 physics: new NeverScrollableScrollPhysics(),
-                children: <Widget>[header(), body1(), footer()],
+                children: <Widget>[
+                  header(context),
+                  body1(context),
+                  footer(context)
+                ],
               ),
             );
           });
         });
   }
 
-  header() {
+  header(BuildContext context) {
     return Container(
-      height: 100,
-      child: ListView(
-        physics: new NeverScrollableScrollPhysics(),
+      child: Column(
         children: [
           Center(
             child: Container(
@@ -138,7 +178,7 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
     );
   }
 
-  footer() {
+  footer(BuildContext context) {
     return Container(
       height: 100,
       child: ListView(
@@ -155,8 +195,8 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
                 Spacer(),
                 Consumer<BasketControllers>(builder: (context, _data, child) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(_data?.getTotelPrice() + "\u{20B9}",
+                    padding: const EdgeInsets.all(0.0),
+                    child: Text("${_data.allPrice() ?? 0.toString()}\u{20B9}",
                         style: TextStyle(
                             fontFamily: 'Gilroy-Medium', fontSize: 16)),
                   );
@@ -168,7 +208,7 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
             padding: EdgeInsets.symmetric(horizontal: sm.w(16), vertical: 2),
             child: RoundedButton(
               clicker: () {
-                callCustomizetion();
+                callCustomizetion(context);
               },
               textStyle: TextStyle(
                   color: Colors.white,
@@ -184,54 +224,21 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
     );
   }
 
-  body1() => Container(
+  body1(context) => Container(
         height: sm.h(30),
         child: Scrollbar(
           child: ListView.builder(
-              itemCount: vaTrue.getMyObjectsList().length,
+              itemCount: providerBasketTrue.getMyObjectsList().length,
               itemBuilder: (BuildContext context, int index) {
                 return MenuItems(
-                    data: vaTrue.getMyObjectsList()[index],
+                    data: providerBasketTrue.getMyObjectsList()[index],
                     isRefresh: true,
                     callBack: () {
-                      vaTrue.notifyListeners();
+                      providerBasketTrue.notifyListeners();
                     });
               }),
         ),
       );
-
-  body2() {
-    vaOptTrue = Provider.of<OptController>(widget.key.currentContext, listen: true);
-
-    // Colors.grey
-    // Icons.check_box_outline_blank,
-    return Container(
-      height: sm.h(62),
-      child: Scrollbar(
-        child: ListView.builder(
-            itemCount: vaOptFalse.getOpt().length,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(children: [
-                  VegNonVegMarka(isVeg: true),
-                  IconButton(
-                    icon: Icon(
-                      vaOptTrue.,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                     vaOptTrue.o
-                    },
-                  ),
-                  Text("Olive Carry"),
-                  Text("100 \u{20B9}")
-                ]),
-              );
-            }),
-      ),
-    );
-  }
 }
 
 // Map _map = {
