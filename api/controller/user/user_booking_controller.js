@@ -93,7 +93,7 @@ exports.getBookingVerbose = async(req, res, next) => {
                 try {
                     result_count_booking = await exports.run_query(sql_count_booking)
                     if (result_count_booking[0].count < result_booking_setting[0].booking_per_slot) {
-                        available_slot.push([time_1, time_2])
+                        available_slot.push({ start_time: time_1, end_time: time_2 })
                     }
                     if (count_loop == slots_data.slots.length) {
                         resolve(available_slot)

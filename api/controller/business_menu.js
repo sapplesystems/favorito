@@ -564,6 +564,7 @@ exports.editCategory = async function(req, res, next) {
             } catch (error) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
             }
+
         }
 
         var sql = "update business_menu_category set " + update_columns + " where id='" + id + "'";

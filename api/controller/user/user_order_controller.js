@@ -301,9 +301,9 @@ exports.createOrderVerbose = async(req, res, next) => {
     final_data = []
 
     if (result_setting[0].accepting_order == 0) {
-        final_data.push({ accepting_order: 0 })
+        accepting_order = 0
     } else {
-        final_data.push({ accepting_order: 1 })
+        accepting_order = 1
     }
 
     if (result_setting[0].take_away == 1 && result_setting[0].take_away_c == 1) {
@@ -321,8 +321,7 @@ exports.createOrderVerbose = async(req, res, next) => {
     sql_payment = `SELECT payment_method from business_informations where business_id = '${business_id}'`
     result_peyment = await exports.run_query(sql_payment)
     payment_methods = result_peyment[0].payment_method.split(',')
-    console.log(payment_methods)
-    return res.status(200).json({ status: 'success', message: 'success', data: { order_type: final_data, payment_type: payment_methods } });
+    return res.status(200).json({ status: 'success', message: 'success', data: { accepting_order, order_type: final_data, payment_type: payment_methods } });
 }
 
 exports.run_query = (sql, param = false) => {
