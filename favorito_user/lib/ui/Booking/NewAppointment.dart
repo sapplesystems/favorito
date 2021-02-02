@@ -31,8 +31,6 @@ class _NewAppointmentState extends State<NewAppointment> {
 
   List<SlotListModel> slotList = [];
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   initializeDefaultValues() {
     _autoValidateForm = false;
 

@@ -17,7 +17,6 @@ class MenuHome extends StatelessWidget {
   List<MenuItemModel> menuItemBaseModel = [];
   ProgressDialog pr;
   ControllerCallback controller;
-  GlobalKey<ScaffoldState> key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -26,11 +25,10 @@ class MenuHome extends StatelessWidget {
 
     var vaTrue = Provider.of<MenuHomeProvider>(context, listen: true);
     var vaFalse = Provider.of<MenuHomeProvider>(context, listen: false);
-
+    vaTrue.userOrderCreateVerbose();
     vaTrue.getMenuData();
     return SafeArea(
       child: Scaffold(
-        key: key,
         backgroundColor: myBackGround,
         appBar: myAppBar(),
         body: RefreshIndicator(
@@ -85,7 +83,7 @@ class MenuHome extends StatelessWidget {
             )
           ]),
         ),
-        floatingActionButton: FloatingActionButtons(key:key),
+        floatingActionButton: FloatingActionButtons(),
       ),
     );
   }

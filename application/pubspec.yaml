@@ -32,6 +32,7 @@ dependencies:
   dropdown_search:
   percent_indicator:
   
+  
   flutter:
     sdk: flutter
 
@@ -47,7 +48,7 @@ dependencies:
   flutter_tagging: ^2.2.0+3
   shared_preferences: ^0.5.6+3
   google_maps_flutter: ^0.5.32
-  provider: ^4.3.2+2
+  provider:
   transparent_image: ^0.1.0
   async_loader: ^0.1.2
   find_dropdown: ^0.2.0
@@ -57,7 +58,8 @@ dependencies:
   outline_gradient_button: ^1.0.0+2
   flutter_rating: ^0.0.2
   geolocator: ^5.3.1
-  progress_dialog: ^1.2.4
+  progress_dialog:
+  
   
 
 dev_dependencies:

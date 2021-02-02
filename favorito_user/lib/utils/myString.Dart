@@ -39,4 +39,5 @@ String currentWaitlistAt = 'Current waitlist at';
 String yourBasket = 'Your Basket';
 String customizetion = 'Customizetion';
 String bookAnAppointment = 'Book An Appointment';
+String bookTable = 'Book Table';
 // final List<MenuItemModel> bucket = [];

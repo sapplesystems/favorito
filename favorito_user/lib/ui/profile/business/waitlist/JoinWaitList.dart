@@ -32,7 +32,7 @@ class _JoinWaitListState extends State<JoinWaitList> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(message: 'Fetching Data, please wait');
+    pr.style(message: 'Please wait...');
     return SafeArea(
         child: Scaffold(
       backgroundColor: Color(0xfff9faff),
@@ -45,75 +45,7 @@ class _JoinWaitListState extends State<JoinWaitList> {
               padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            int i = int.parse(controller[0].text);
-                            controller[0].text = (i > 1 ? --i : i).toString();
-                          });
-                        },
-                        child: Card(
-                          color: myBackGround,
-                          elevation: 12,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8.0)),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(sm.w(4)),
-                            child: Icon(
-                              Icons.remove,
-                              color: myRed,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Neumorphic(
-                        margin: EdgeInsets.symmetric(horizontal: sm.h(2)),
-                        style: NeumorphicStyle(
-                            depth: -10,
-                            boxShape: NeumorphicBoxShape.roundRect(
-                              BorderRadius.circular(28),
-                            ),
-                            color: Colors.white60),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: sm.w(10), vertical: sm.w(5)),
-                          child: Text(
-                            controller[0].text,
-                            style: TextStyle(color: Color(0xff686868)),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            int i = int.parse(controller[0].text);
-                            controller[0].text = (++i).toString();
-                          });
-                        },
-                        child: Card(
-                          color: myBackGround,
-                          elevation: 12,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8.0)),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(sm.w(4)),
-                            child: Icon(
-                              Icons.add,
-                              color: myRed,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  counterAddRemove(),
                   Padding(
                     padding: EdgeInsets.only(top: sm.h(3)),
                     child: EditTextComponent(
@@ -181,5 +113,75 @@ class _JoinWaitListState extends State<JoinWaitList> {
         ),
       ),
     ));
+  }
+
+  counterAddRemove() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        InkWell(
+          onTap: () {
+            setState(() {
+              int i = int.parse(controller[0].text);
+              controller[0].text = (i > 1 ? --i : i).toString();
+            });
+          },
+          child: Card(
+            color: myBackGround,
+            elevation: 12,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(sm.w(4)),
+              child: Icon(
+                Icons.remove,
+                color: myRed,
+              ),
+            ),
+          ),
+        ),
+        Neumorphic(
+          margin: EdgeInsets.symmetric(horizontal: sm.h(2)),
+          style: NeumorphicStyle(
+              depth: -10,
+              boxShape: NeumorphicBoxShape.roundRect(
+                BorderRadius.circular(28),
+              ),
+              color: Colors.white60),
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: sm.w(10), vertical: sm.w(5)),
+            child: Text(
+              controller[0].text,
+              style: TextStyle(color: Color(0xff686868)),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            setState(() {
+              int i = int.parse(controller[0].text);
+              controller[0].text = (++i).toString();
+            });
+          },
+          child: Card(
+            color: myBackGround,
+            elevation: 12,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(sm.w(4)),
+              child: Icon(
+                Icons.add,
+                color: myRed,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

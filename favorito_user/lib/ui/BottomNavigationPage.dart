@@ -1,3 +1,4 @@
+import 'package:favorito_user/Providers/BookTableProvider.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
@@ -9,6 +10,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -17,19 +19,15 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
-  BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
-
   static List _widgetOptions = [];
 
   @override
   void initState() {
-    badm.businessId = null;
-    badm.isBooking = 2;
-
+    Provider.of<AppBookProvider>(context, listen: false).setIsBooking(2);
     _widgetOptions = <Widget>[
       Home(),
       Search(),
-      BookingOrAppointmentParent(data: badm),
+      BookingOrAppointmentParent(),
       Chat(),
       Profile()
     ];
@@ -55,7 +53,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    SizeManager sm = SizeManager(context);
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

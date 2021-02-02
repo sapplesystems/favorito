@@ -98,7 +98,7 @@ class _businessInfoState extends State<businessInfo> {
         padding: EdgeInsets.only(top: sm.h(2), bottom: sm.h(0)),
         child: ListView(
           children: [
-            Text("Business Information",
+            Text("Business Information", //businessInformation replace this
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black,

@@ -1,4 +1,4 @@
-import 'package:favorito_user/utils/Singletons.dart';
+import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 

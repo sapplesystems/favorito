@@ -29,7 +29,7 @@ class service {
   static final trendingBusiness = baseBusinessDashboard + 'get-trending-nearby';
   static final topRatedBusiness = baseBusinessDashboard + 'get-top-rated';
 
-  static final UserBusinessMenu = baseUserBusiness + 'menu/';
+  static final userBusinessMenu = baseUserBusiness + 'menu/';
   static final mostPopulerBusiness = baseBusinessDashboard + 'get-most-popular';
   static final foodBusiness = baseBusinessDashboard + 'get-business-by-food';
   static final jobBusiness = baseBusinessDashboard + 'get-business-by-job';
@@ -63,18 +63,20 @@ class service {
 
   //booking
   static final baseUserBookingList = baseUserBooking + 'get-book-table';
+  static final baseUserBookingVerbose = baseUserBooking + 'get-booking-verbose';
 
   //appoinment
   static final baseUserAppointmentList =
       baseUserAppointment + 'get-booking-appointment';
 
   //appoinment
-  static final menuTabGet = UserBusinessMenu + 'get-category';
+  static final menuTabGet = userBusinessMenu + 'get-category';
   static final menuTabItemGet =
-      UserBusinessMenu + 'get-category-item'; //this is based on previous
+      userBusinessMenu + 'get-category-item'; //this is based on previous
 
   //Order
   static final userOrderCreate =
       baseUserOrder + 'create-order'; //this is used to create a new order
-
+  static final userOrderCreateVerbose =
+      userOrderCreate + '-verbose'; //this is used to create a new order
 }

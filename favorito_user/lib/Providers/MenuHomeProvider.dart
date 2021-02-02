@@ -2,6 +2,7 @@ import 'package:favorito_user/model/appModel/Business/Category.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
+import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class MenuHomeProvider extends ChangeNotifier {
   List<MenuItemModel> bucket = List<MenuItemModel>();
-
+  ModelOption modelOption = ModelOption();
   MenuTabModel menuTabModel = MenuTabModel();
   CatItem catItems = CatItem();
   String businessId;
@@ -100,7 +101,6 @@ class MenuHomeProvider extends ChangeNotifier {
     print("businessId:$businessId");
     await APIManager.menuTabGet({'business_id': businessId}).then((value) {
       menuTabModel = value;
-
       setCategories(value.data);
     });
   }
@@ -114,4 +114,18 @@ class MenuHomeProvider extends ChangeNotifier {
       "filter": {"only_veg": "${getBusinessDetail().isVeg ? 1 : 0}"}
     });
   }
+
+  //options
+  userOrderCreateVerbose() async {
+    print("businessId:$businessId");
+    await APIManager.userOrderCreateVerbose({'business_id': businessId})
+        .then((value) {
+      if (value.status == 'success') {
+        modelOption = value;
+      }
+    });
+    // notifyListeners();
+  }
+
+  getModelOption() => modelOption;
 }

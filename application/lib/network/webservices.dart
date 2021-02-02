@@ -74,25 +74,20 @@ class WebService {
   static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
   static ProgressDialog pr;
 
-  static Future<busyListModel> funGetBusyList(BuildContext context) async {
+  static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
     print("Request URL:${serviceFunction.funBusyList}");
-    response = await dio
-        .post(serviceFunction.funBusyList)
-        .catchError((onError) => onErrorCall(onError, context));
-
+    response = await dio.post(serviceFunction.funBusyList);
     _data = busyListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData1:${_data.status}");
     return _data;
   }
 
-  static Future<CatListModel> funGetCatList(
-      Map _map, BuildContext context) async {
+  static Future<CatListModel> funGetCatList(Map _map) async {
     CatListModel _data = CatListModel();
     print("Request URL:${serviceFunction.funCatList}");
-    response = await dio
-        .post(serviceFunction.funCatList, data: _map)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funCatList, data: _map);
+    // .catchError((onError) => onErrorCall(onError, );
     _data = CatListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData2:${_data.status}");
     return _data;
