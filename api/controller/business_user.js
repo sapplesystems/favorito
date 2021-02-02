@@ -396,7 +396,7 @@ exports.getChats = async(req, res, next) => {
         current_no_msg = 0
     }
     offset = current_no_msg
-    limit = current_no_msg + 20
+    limit = 20
 
     try {
         sql_get_messages = `SELECT id, source_id, target_id, message from business_chat_messages where room_id = '${room_id}' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`

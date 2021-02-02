@@ -85,6 +85,14 @@ exports.updateProfile = function(req, res, next) {
             if (req.body.working_hours === 'Select Hours') {
                 saveBusinessHours(business_id, req.body.business_hours);
             }
+            if (req.body.working_hours === 'Always Open') {
+                let days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                var business_hours_always_open = []
+                for (let i = 0; i < days.length; i++) {
+                    business_hours_always_open.push({ business_days: days[i], business_start_hours: "00:00", business_end_hours: "23:59" })
+                }
+                saveBusinessHours(business_id, business_hours_always_open);
+            }
             update_columns += ", working_hours='" + req.body.working_hours + "' ";
         }
         if (website_arr != '' && website_arr != 'undefined') {
@@ -103,7 +111,7 @@ exports.updateProfile = function(req, res, next) {
         var sql = "update business_master set " + update_columns + " where id='" + id + "'";
         db.query(sql, function(err, rows, fields) {
             if (err) {
-                return res.status(500).json({ status: 'error', message: 'Business user profile could not be updated.' });
+                return res.status(500).json({ status: 'error', message: 'Business user profile could not be updated.', err });
             }
             return res.status(200).json({ status: 'success', message: 'Business user profile updated successfully.' });
         });
@@ -120,7 +128,6 @@ function saveBusinessHours(business_id, business_hours) {
                 return res.status(500).json({ status: 'error', message: 'Business user profile could not be updated.' });
             } else {
                 var arr_len = business_hours.length;
-
                 for (var i = 0; i < arr_len; i++) {
                     var day = business_hours[i]['business_days'];
                     var start_time = business_hours[i]['business_start_hours'];
