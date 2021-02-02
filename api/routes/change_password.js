@@ -8,6 +8,10 @@ var ChangePasswordController = require('../controller/change_password');
 router.post('/', CheckAuth, ChangePasswordController.changePassword);
 router.post('/update-password', ChangePasswordController.updatePassword);
 
-router.post('/update-password', ChangePasswordController.updatePassword);
+/* Send email with the otp and return the business id with success msg */
+router.post('/send-otp-email', ChangePasswordController.sendOtpOnEmail);
+
+/* to verify otp and change the password */
+router.post('/verify-otp-change-password', ChangePasswordController.verifyOtpChangePassword);
 
 module.exports = router;

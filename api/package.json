@@ -26,6 +26,7 @@
         "nodemon": "^2.0.6",
         "pincode-validator": "^1.0.3",
         "socket.io": "^2.3.0",
-        "uniqid": "^5.2.0"
+        "uniqid": "^5.2.0",
+        "validator": "^13.5.2"
     }
 }
