@@ -20,7 +20,7 @@ class SignUpProvider extends ChangeNotifier {
   List<busData> _busdata = [];
   String _businessName;
   String _categoryName;
-  int _typeId = 0;
+  int _typeId = 1;
   int _categoryId = 0;
   bool catvisib = false;
   bool _checked = false;
@@ -110,37 +110,31 @@ class SignUpProvider extends ChangeNotifier {
   getCategoryId() => _categoryId;
 
   Future<CatListModel> funRegister() async {
-    pr.show();
+    // pr.show();
     Map<String, dynamic> _map = {
-      "business_type_id": getTypeId(),
-      "business_name": getBusinessName(),
-      "business_category_id": getCategoryId(),
+      "business_type_id": _typeId,
+      "business_name": _businessName,
+      "business_category_id": _categoryId,
       "postal_code": controller[1].text,
       "business_phone": controller[2].text,
       "display_name": controller[3].text,
       "email": controller[5].text,
       "password": controller[6].text,
-      "reach_whatsapp": getChecked(),
-      "role": controller[4].text
+      "reach_whatsapp": _checked,
+      "role": _typeId == 1 ? controller[4].text : "owner"
     };
 
     print("Request:${_map}");
-    BotToast.showText(text: "Registration SuccessFull!!");
-    Navigator.pop(context);
-    Navigator.pop(context);
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => Login()));
 
-    // WebService.funRegister(_map, context).then((value) {
-    //   if (value.status == 'success') {
-    //     BotToast.showText(text: "Registration SuccessFull!!");
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     // Navigator.push(
-    //     //     context, MaterialPageRoute(builder: (context) => Login()));
-    //   } else {
-    //     BotToast.showText(text: value.message.toString());
-    //   }
-    // });
+    WebService.funRegister(_map, context).then((value) {
+      // pr.hide();
+      if (value.status == 'success') {
+        BotToast.showText(text: "Registration SuccessFull!!");
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      } else {
+        BotToast.showText(text: value.message.toString());
+      }
+    });
   }
 }

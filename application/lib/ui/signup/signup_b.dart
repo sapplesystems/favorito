@@ -121,7 +121,11 @@ class signup_b extends StatelessWidget {
                                           showSearchBox: true,
                                           items: signUpProviderTrue
                                               .getCategoryAll(),
-                                          label: "Business Category",
+                                          label:
+                                              signUpProviderTrue.getTypeId() ==
+                                                      1
+                                                  ? "Business Category"
+                                                  : "Category",
                                           hint:
                                               "Please Select Business Category",
                                           onChanged: (val) => signUpProviderTrue

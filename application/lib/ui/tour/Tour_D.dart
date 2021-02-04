@@ -79,8 +79,7 @@ class Tour_d extends StatelessWidget {
               right: sm.w(12),
               child: RoundedButton(
                 clicker: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => loginSignup()));
+                  Navigator.of(context).pushNamed('/loginSignup');
                 },
                 clr: Colors.red,
                 title: "Let's Start",

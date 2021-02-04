@@ -2,7 +2,6 @@ import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
-import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -22,7 +21,6 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    decide();
     super.initState();
     setState(() {
       userCtrl.text = "rohit.shukla@sapple.co.in";
@@ -142,7 +140,7 @@ class _LoginState extends State<Login> {
               child: InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => signup_a()));
+                      MaterialPageRoute(builder: (context) => Signup_a()));
                 },
                 child: Text(
                   "Sign Up",
@@ -152,9 +150,8 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
-          SizedBox(height: sm.w(10)),
           Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
               "By continuing, you agree to Favorito's Terms of Service and acknowledge Favorito's \nPrivacy Policy.",
               textAlign: TextAlign.center,
@@ -186,18 +183,6 @@ class _LoginState extends State<Login> {
         } else {
           BotToast.showText(text: value.message.toString());
         }
-      });
-    }
-  }
-
-  void decide() async {
-    var token = await Prefs.token;
-    if (token != null && token != "") {
-      print("Token:$token");
-      Future.delayed(Duration.zero, () {
-        Navigator.pop(context);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => bottomNavigation()));
       });
     }
   }

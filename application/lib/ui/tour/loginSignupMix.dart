@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
-class loginSignup extends StatelessWidget {
+class LoginSignup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
@@ -78,7 +78,7 @@ class loginSignup extends StatelessWidget {
               ),
               InkWell(
                 onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => signup_a())),
+                    MaterialPageRoute(builder: (context) => Signup_a())),
                 child: Container(
                   margin: EdgeInsets.only(top: sm.w(4)),
                   child: Text(

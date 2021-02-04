@@ -10,8 +10,7 @@ class fromTo extends StatelessWidget {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Container(
-        child: Container(
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.all(2),
       width: sm.w(24),
       height: sm.h(4),
       decoration: BoxDecoration(
@@ -28,6 +27,6 @@ class fromTo extends StatelessWidget {
           style: TextStyle(color: clr),
         ),
       ),
-    ));
+    );
   }
 }

@@ -30,7 +30,8 @@ class rowWithTextNButton extends StatelessWidget {
           InkWell(
             onTap: function,
             child: Visibility(
-              visible: check == "0" ? true : false,
+              // visible: check == "0" ? true : false,
+              visible: true,
               child: TxtBorder(bosrderColor: myRed, h: 20, w: 54, txt: txt2),
             ),
           )

@@ -6,7 +6,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
 class WorkingDateTime extends StatefulWidget {
-  // bool selected = false;
   TextEditingController controller = TextEditingController();
   List<bool> tempState = [];
   Map<String, String> selecteddayList;
@@ -40,7 +39,7 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
     return Stack(
       children: [
         Container(
-            padding: EdgeInsets.only(top: 10.0),
+            padding: EdgeInsets.only(top: 20.0),
             decoration: bd1,
             child: Column(children: [
               Expanded(
