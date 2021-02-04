@@ -30,7 +30,7 @@ exports.updateProfilePhoto = function(req, res, next) {
     }
 };
 
-exports.updateProfile = function(req, res, next) {
+exports.updateProfile = async function(req, res, next) {
     try {
         var id = req.userdata.id;
         var business_id = req.userdata.business_id;
@@ -49,6 +49,7 @@ exports.updateProfile = function(req, res, next) {
         if (req.body.landline != '' && req.body.landline != null) {
             update_columns += ", landline='" + req.body.landline + "' ";
         }
+
         if (address_arr && address_arr != 'undefined') {
             if (address_arr[0] != '') {
                 update_columns += ", address1='" + address_arr[0] + "' ";
@@ -63,6 +64,7 @@ exports.updateProfile = function(req, res, next) {
                 update_columns += ", address3='" + third_address + "' ";
             }
         }
+
         if (req.body.pincode != '' && req.body.pincode != null) {
             update_columns += ", pincode='" + req.body.pincode + "' ";
         }
@@ -75,12 +77,15 @@ exports.updateProfile = function(req, res, next) {
         if (req.body.country_id != '' && req.body.country_id != null) {
             update_columns += ", country_id='" + req.body.country_id + "' ";
         }
+
         if (req.body.location != '' && req.body.location != null) {
             update_columns += ", location='" + req.body.location + "' ";
         }
         if (req.body.by_appointment_only != 'undefined' && req.body.by_appointment_only != '' && req.body.by_appointment_only != null) {
             update_columns += ", by_appointment_only='" + req.body.by_appointment_only + "' ";
         }
+
+
         if (req.body.working_hours != '' && req.body.working_hours != null) {
             if (req.body.working_hours === 'Select Hours') {
                 saveBusinessHours(business_id, req.body.business_hours);
@@ -92,20 +97,30 @@ exports.updateProfile = function(req, res, next) {
                     business_hours_always_open.push({ business_days: days[i], business_start_hours: "00:00", business_end_hours: "23:59" })
                 }
                 saveBusinessHours(business_id, business_hours_always_open);
+
             }
             update_columns += ", working_hours='" + req.body.working_hours + "' ";
         }
-        if (website_arr != '' && website_arr != 'undefined') {
+
+        if (website_arr != '' && website_arr != undefined) {
             update_columns += ", website='" + website_arr.join('|_|') + "' ";
         }
         if (req.body.business_email != '' && req.body.business_email != null) {
             update_columns += ", business_email='" + req.body.business_email + "' ";
         }
+
         if (req.body.short_description != '' && req.body.short_description != null) {
             update_columns += ", short_description='" + req.body.short_description + "' ";
         }
+
         if (req.file && req.file.filename != '') {
             update_columns += ", photo='" + req.file.filename + "' ";
+        }
+
+        if (req.body.business_name && req.body.business_phone && address_arr && req.body.pincode && req.body.town_city && req.body.state_id && req.body.country_id && req.body.location & req.body.working_hours && website_arr && req.body.business_email) {
+            update_columns += ", is_profile_completed='1' ";
+        } else {
+            update_columns += ", is_profile_completed='0' ";
         }
 
         var sql = "update business_master set " + update_columns + " where id='" + id + "'";
@@ -138,5 +153,29 @@ function saveBusinessHours(business_id, business_hours) {
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
     }
 }

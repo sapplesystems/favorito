@@ -109,7 +109,7 @@ exports.register = function(req, res, next) {
                             }
                         });
                     } else {
-                        return res.status(403).json({ status: 'error', message: 'Username already exist' });
+                        return res.status(200).json({ status: 'error', message: 'Email or mobile number is already registered' });
                     }
                 }
             });
@@ -118,6 +118,65 @@ exports.register = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.isAccountExist = async(req, res) => {
+    if (!req.body.api_type) {
+        return res.status(400).json({ status: 'error', message: 'api_type is missing either mobile or email' });
+    }
+
+    if (req.body.api_type == 'mobile') {
+        if (!req.body.mobile) {
+            return res.status(400).json({ status: 'error', message: 'Mobile number is missing' });
+        } else {
+            sql_mobile_check = `SELECT id FROM business_master WHERE business_phone = '${req.body.mobile}'`
+            result_mobile_check = await exports.run_query(sql_mobile_check)
+            if (result_mobile_check == '') {
+                return res.status(200).json({ status: 'success', message: 'This mobile number is available', data: [{ is_exist: 0 }] });
+            } else {
+                return res.status(200).json({ status: 'success', message: 'Already exist', data: [{ is_exist: 1 }] });
+            }
+        }
+    }
+    if (req.body.api_type == 'email') {
+        if (!req.body.email) {
+            return res.status(400).json({ status: 'error', message: 'email number is missing' });
+        } else {
+            sql_email_check = `SELECT id FROM business_master WHERE business_email = '${req.body.email}'`
+            result_email_check = await exports.run_query(sql_email_check)
+            if (result_email_check == '') {
+                return res.status(200).json({ status: 'success', message: 'This email number is available', data: [{ is_exist: 0 }] });
+            } else {
+                return res.status(200).json({ status: 'success', message: 'Already exist', data: [{ is_exist: 1 }] });
+            }
+        }
+    }
+
+}
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+}
 
 // async..await is not allowed in global scope, must use a wrapper
 async function main() {

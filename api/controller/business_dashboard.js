@@ -5,8 +5,7 @@ var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 exports.getDashboardDetail = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` \n\
-                    WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
+        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
 
         try {
             var sql_number_order = `SELECT COUNT(id) as count FROM business_orders WHERE business_id = '${business_id}'`
@@ -17,6 +16,8 @@ exports.getDashboardDetail = async function(req, res, next) {
             var result_avg_rating = await exports.run_query(sql_avg_rating)
             var sql_number_checkin = `SELECT COUNT(id) as count FROM business_check_in WHERE business_id = '${business_id}'`
             var result_number_checkin = await exports.run_query(sql_number_checkin)
+            var sql_get_accepting_order_status = `SELECT accepting_order from business_menu_setting where business_id = '${business_id}'`
+            var result_get_accepting_order_status = await exports.run_query(sql_get_accepting_order_status)
         } catch (error) {
             return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
         }
@@ -30,6 +31,7 @@ exports.getDashboardDetail = async function(req, res, next) {
             var data = {
                 id: row.id,
                 business_id: row.business_id,
+                status: result_get_accepting_order_status[0].accepting_order,
                 business_name: row.business_name,
                 photo: row.photo,
                 business_status: row.business_status,
@@ -52,10 +54,8 @@ exports.getDashboardDetail = async function(req, res, next) {
     }
 };
 
-
 /* 
 It will return the business only if it is available on that day and inside the time limit 
-
 */
 exports.trendingNearby = async function(req, res, next) {
     try {
@@ -77,12 +77,12 @@ exports.trendingNearby = async function(req, res, next) {
         weekday[6] = "Saturday";
         var day = weekday[d.getDay()].substring(0, 3);
 
-        var sql = "SELECT b_m.id, b_m.business_id, \n\
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, \n\
         IFNULL((SELECT AVG(rating) FROM business_ratings WHERE business_id = b_m.business_id),0) as avg_rating,\n\
          b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status \n\
          FROM `business_master` AS b_m \n\
          LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-         WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
+         WHERE b_m.is_verified='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
          AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset + " ";
 
@@ -156,12 +156,12 @@ exports.newBusiness = async function(req, res, next) {
         var day = weekday[d.getDay()].substring(0, 3);
         // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 10";
 
-        var sql = "SELECT b_m.id, b_m.business_id, \n\
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, \n\
         IFNULL((SELECT AVG(rating) FROM business_ratings WHERE business_id = b_m.business_id),0) as avg_rating,\n\
          b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status \n\
          FROM `business_master` AS b_m \n\
          LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-         WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
+         WHERE b_m.is_verified='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
          AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset + " ";
 
@@ -207,12 +207,12 @@ exports.topRated = async function(req, res, next) {
         var day = weekday[d.getDay()].substring(0, 3);
         // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 10";
 
-        var sql = "SELECT b_m.id, b_m.business_id, \n\
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, \n\
         IFNULL((SELECT AVG(rating) FROM business_ratings WHERE business_id = b_m.business_id),0) as avg_rating,\n\
          b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status \n\
          FROM `business_master` AS b_m \n\
          LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-         WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
+         WHERE b_m.is_verified='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
          AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset + " ";
 
@@ -259,12 +259,12 @@ exports.mostPopular = async function(req, res, next) {
         var day = weekday[d.getDay()].substring(0, 3);
         // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 10";
 
-        var sql = "SELECT b_m.id, b_m.business_id, \n\
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, \n\
         IFNULL((SELECT AVG(rating) FROM business_ratings WHERE business_id = b_m.business_id),0) as avg_rating,\n\
          b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status \n\
          FROM `business_master` AS b_m \n\
          LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-         WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
+         WHERE b_m.is_verified='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
          AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset + " ";
 
@@ -310,12 +310,12 @@ exports.sponsored = async function(req, res, next) {
         var day = weekday[d.getDay()].substring(0, 3);
         // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 10";
 
-        var sql = "SELECT b_m.id, b_m.business_id, \n\
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, \n\
         IFNULL((SELECT AVG(rating) FROM business_ratings WHERE business_id = b_m.business_id),0) as avg_rating,\n\
          b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status \n\
          FROM `business_master` AS b_m \n\
          LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-         WHERE b_m.is_activated='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
+         WHERE b_m.is_verified='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
          AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset + " ";
         result_master = await exports.run_query(sql)
@@ -352,7 +352,7 @@ exports.getBusinessByAppointment = async function(req, res, next) {
         }
         limit = 10
 
-        var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -388,7 +388,7 @@ exports.getBusinessByFreelancer = async function(req, res, next) {
         }
         limit = 10
 
-        var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -422,7 +422,7 @@ exports.getBusinessByBookTable = async(req, res, next) => {
         }
         limit = 10
 
-        var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo,b_m.business_type_id, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.by_appointment_only = 0 AND b_m.business_type_id = 1 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo,b_m.business_type_id, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 0 AND b_m.business_type_id = 1 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -464,7 +464,7 @@ exports.getBusinessByJob = async function(req, res, next) {
                 regex += '|' + element.business_id
             }
         });
-        var sql = `SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -508,7 +508,7 @@ exports.getBusinessByFood = async(req, res, next) => {
         result_sub_category_id.forEach(element => {
             regex += '|' + element.id
         });
-        var sql = `SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -552,7 +552,7 @@ exports.getBusinessByDoctor = async(req, res, next) => {
             result_sub_category_id.forEach(element => {
                 regex += '|' + element.id
             });
-            var sql = `SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
+            var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
 
             result_master = await exports.run_query(sql)
             var final_data = []

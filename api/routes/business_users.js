@@ -87,4 +87,11 @@ router.post('/get-room-id', CheckAuth, UserController.getRoomId);
 
 router.post('/get-chats', CheckAuth, UserController.getChats);
 
+router.post('/is-account-exist', UserRegisterController.isAccountExist);
+
+
+
+
+
+
 module.exports = router;
