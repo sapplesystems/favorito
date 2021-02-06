@@ -21,7 +21,7 @@ exports.getProfile = function(req, res, next) {
         var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
         business_email,concat('" + img_path + "',photo) as photo, address1,address2,address3,pincode,town_city,state_id,country_id, \n\
         location, by_appointment_only, working_hours, website,short_description,business_status \n\
-        FROM business_master WHERE id='" + id + "' and business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
+        FROM business_master WHERE  business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
 
         db.query(sql, function(err, rows, fields) {
             if (err) {
@@ -37,10 +37,31 @@ exports.getProfile = function(req, res, next) {
                     rows[0]['website'] = website;
                 }
                 if (rows[0]['working_hours'] === 'Select Hours') {
-                    var q2 = "select id,`day`,start_hours,end_hours from business_hours \n\
+                    var q2 = "select `day`,start_hours,end_hours from business_hours \n\
                                 where business_id='" + business_id + "' and deleted_at is null";
                     db.query(q2, function(error, hours) {
-                        rows[0].hours = hours;
+                        // code for the make the group of same time
+                        let final_hours = []
+                        let start_day = hours[0].day
+                        let end_day = ''
+                        for (let i = 0; i < hours.length; i++) {
+                            const element = hours[i];
+                            if (hours[i + 1] && element.start_hours == hours[i + 1].start_hours && element.end_hours == hours[i + 1].end_hours) {
+                                end_day = hours[i + 1].day
+                            } else {
+                                if (end_day) {
+                                    hours[i].day = `${start_day} - ${end_day}`
+                                    end_day = ''
+                                } else {
+                                    hours[i].day = `${start_day}`
+                                }
+                                final_hours.push(hours[i])
+                                if (hours[i + 1]) {
+                                    start_day = hours[i + 1].day
+                                }
+                            }
+                        }
+                        rows[0].hours = final_hours;
                         return res.status(200).json({ status: 'success', message: 'success', data: rows[0], hours_drop_down_list: hours_drop_down_list });
                     });
                 } else {
@@ -80,8 +101,8 @@ exports.login = function(req, res, next) {
                     // change token expire here
                     if (enc_result == true) {
                         var token = jwt.sign({
-                            email: result[0].email,
-                            phone: result[0].phone,
+                            email: result[0].business_email,
+                            phone: result[0].business_phone,
                             id: result[0].id,
                             business_id: result[0].business_id,
                         }, 'secret', {
@@ -91,8 +112,8 @@ exports.login = function(req, res, next) {
                         var user_data = {
                             id: result[0].id,
                             business_id: result[0].business_id,
-                            email: result[0].email,
-                            phone: result[0].phone,
+                            email: result[0].business_email,
+                            phone: result[0].business_phone,
                         };
 
                         // extra code for to mail the token to the Rohit sir for the testing purpose 

@@ -25,6 +25,7 @@
         "nodemailer": "^6.4.11",
         "nodemon": "^2.0.6",
         "pincode-validator": "^1.0.3",
+        "pm2": "^4.5.4",
         "socket.io": "^2.3.0",
         "uniqid": "^5.2.0",
         "validator": "^13.5.2"

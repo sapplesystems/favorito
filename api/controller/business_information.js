@@ -82,7 +82,6 @@ exports.getBusinessInformationUpdate = async function(req, res, next) {
                 var sql_sub_delete = `DELETE FROM business_sub_category WHERE business_id = '${business_id}'`
                 await exports.run_query(sql_sub_delete)
 
-
                 var sql_sub_category = 'INSERT INTO business_sub_category (business_id,sub_category_id) VALUES ?'
                 await exports.run_query(sql_sub_category, [all_sub_categories])
 
@@ -135,6 +134,22 @@ exports.getBusinessInformationUpdate = async function(req, res, next) {
                 all_attributes.push([business_id, element])
             });
             try {
+                // if the business_information is completed update the is_information_completed
+                if (req.body.categories && req.body.sub_categories && req.body.price_range && req.body.payment_method) {
+                    sql_is_info_complete = `update business_master set is_information_completed = '1' where business_id = '${business_id}'`
+                } else {
+                    sql_is_info_complete = `update business_master set is_information_completed = '0' where business_id = '${business_id}'`
+                }
+                result_is_info_complete = await exports.run_query(sql_is_info_complete)
+
+                // now checking for is_activated
+                let sql_if_all_verified = `select is_verified, is_information_completed,is_profile_completed from business_master where business_id = '${business_id}'`
+                let result_if_all_verified = await exports.run_query(sql_if_all_verified)
+                if (result_if_all_verified[0].is_verified && result_if_all_verified[0].is_information_completed && result_if_all_verified[0].is_profile_completed) {
+                    sql_update_is_activated = `update business_master set is_activated = 1 where business_id = '${business_id}'`
+                    result_update_is_activated = await exports.run_query(sql_update_is_activated)
+                }
+
                 // This will work on update also
                 var sql_attribute = `DELETE FROM business_attributes WHERE business_id = '${business_id}'`
                 await exports.run_query(sql_attribute)
