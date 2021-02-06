@@ -92,6 +92,9 @@ class Data {
     }
     return data;
   }
+
+  String toString() =>
+      "{ id : $id , business_id : $businessId , firstName : $firstName , lastName : $lastName , email : $email , phone : $phone , phone : $phone , role : $role , bankAcHolderName : $bankAcHolderName , ifscCode : $ifscCode , upi : $upi}";
 }
 
 class Branches {

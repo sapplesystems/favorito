@@ -138,8 +138,7 @@ class WebService {
     return _returnData;
   }
 
-  static Future<BaseResponseModel> profileImageUpdate(
-      File file, BuildContext context) async {
+  static Future<BaseResponseModel> profileImageUpdate(File file) async {
     String token = await Prefs.token;
     Options _opt =
         Options(contentType: Headers.formUrlEncodedContentType, headers: {
@@ -151,11 +150,8 @@ class WebService {
     });
 
     BaseResponseModel _returnData = BaseResponseModel();
-    response = await dio
-        .post(serviceFunction.funProfileUpdatephoto,
-            data: formData, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funProfileUpdatephoto,
+        data: formData, options: _opt);
     print("profileImageUpdate:${response.toString()}");
 
     if (response.statusCode == HttpStatus.ok) {
@@ -168,14 +164,11 @@ class WebService {
     return response.data;
   }
 
-  static Future<profileDataModel> getProfileData(BuildContext context) async {
+  static Future<profileDataModel> getProfileData() async {
     String token = await Prefs.token;
     Options _opt =
         Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(serviceFunction.funUserProfile, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funUserProfile, options: _opt);
     if (response.statusCode == HttpStatus.ok) {
       return profileDataModel
           .fromJson(convert.json.decode(response.toString()));
@@ -256,9 +249,9 @@ class WebService {
         .post(serviceFunction.funBusyRegister, data: _map, options: opt)
         .catchError((onError) => onErrorCall(onError, context));
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
-    Prefs.setToken(_data.token.toString().trim());
+    // Prefs.setToken(_data.token.toString().trim());
     print("responseData7:${_data.toString().trim()}");
-    print("token:${_data.token.toString().trim()}");
+    // print("token:${_data.token.toString().trim()}");
     return _data;
   }
 
@@ -274,31 +267,26 @@ class WebService {
     return _data.status == "success" ? _data : _data;
   }
 
-  static Future<CityListModel> funGetCities(BuildContext context) async {
+  static Future<CityListModel> funGetCities() async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     CityListModel _returnData = CityListModel();
-    response = await dio
-        .post(serviceFunction.funGetCities, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetCities, options: _opt);
     _returnData =
         CityListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_returnData.status}");
     return _returnData;
   }
 
-  static Future<StateListModel> funGetStates(BuildContext context) async {
+  static Future<StateListModel> funGetStates() async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     StateListModel _returnData = StateListModel();
-    response = await dio
-        .post(serviceFunction.funGetStates, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetStates, options: _opt);
     _returnData =
         StateListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_returnData.status}");
@@ -312,7 +300,7 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
-    Map<String, dynamic> _map = {"pincode": int.parse(pincode)};
+    Map<String, dynamic> _map = {"postal_code": int.parse(pincode)};
     response = await dio
         .post(serviceFunction.funValidPincode, data: _map, options: _opt)
         .catchError((onError) => onErrorCall(onError, context));
@@ -441,7 +429,7 @@ class WebService {
       "contact_via": requestData.contact_via,
       "contact_value": requestData.contact_value,
       "city": requestData.city,
-      "pincode": requestData.pincode
+      "postal_code": requestData.pincode
     };
     response = await dio
         .post(serviceFunction.funCreateJob, data: _map, options: _opt)
@@ -471,40 +459,26 @@ class WebService {
     return _returnData;
   }
 
-  static Future<BaseResponseModel> funUpdateContactPerson(
-      UpdateContactPerson requestData,
-      List<BranchDetailsModel> branchList,
-      BuildContext context) async {
+  static Future<BaseResponseModel> funUpdateContactPerson(Map _map) async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    BaseResponseModel _returnData = BaseResponseModel();
-    Map<String, dynamic> _map = {
-      "first_name": requestData.firtName,
-      "last_name": requestData.lastName,
-      "role": requestData.role,
-      "bank_ac_holder_name": requestData.name,
-      "account_number": requestData.accNo,
-      "ifsc_code": requestData.ifsc,
-      "upi": requestData.upi
-    };
 
-    response = await dio
-        .post(serviceFunction.funUpdateContactPerson, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
-    _returnData =
-        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    return _returnData;
+    response = await dio.post(serviceFunction.funUpdateContactPerson,
+        data: _map, options: _opt);
+    // .catchError((onError) => onErrorCall(onError, context))
+
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    ;
   }
 
-  static Future<CityModelResponse> funGetCityByPincode(
-      String pincode, BuildContext context) async {
+  static Future<CityModelResponse> funGetCityByPincode(String pincode) async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    Map<String, dynamic> _map = {"pincode": int.parse(pincode)};
+    Map<String, dynamic> _map = {"postal_code": int.parse(pincode)};
     CityModelResponse _returnData = CityModelResponse();
     print("Request URL:${serviceFunction.funGetCityByPincode}");
     response = await dio.post(serviceFunction.funGetCityByPincode,
@@ -712,7 +686,7 @@ class WebService {
         .fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<bookingListModel> funBookingList(BuildContext context) async {
+  static Future<bookingListModel> funBookingList() async {
     String token = await Prefs.token;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(serviceFunction.funBookingList, options: opt);
@@ -735,8 +709,7 @@ class WebService {
     return _returnData;
   }
 
-  static Future<BusinessProfileModel> funGetBusinessProfileData(
-      BuildContext context) async {
+  static Future<BusinessProfileModel> funGetBusinessProfileData() async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -745,10 +718,8 @@ class WebService {
     print(
         "BusinessProfile request url: ${serviceFunction.funGetBusinessProfileData}");
     print("token: $token");
-    response = await dio
-        .post(serviceFunction.funGetBusinessProfileData,
-            data: null, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetBusinessProfileData,
+        data: null, options: _opt);
     _returnData =
         BusinessProfileModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
@@ -824,7 +795,7 @@ class WebService {
       "contact_via": requestData.contact_via,
       "contact_value": requestData.contact_value,
       "city": requestData.city,
-      "pincode": requestData.pincode
+      "postal_code": requestData.pincode
     };
     response = await dio
         .post(serviceFunction.funCreateJob, data: _map, options: _opt)

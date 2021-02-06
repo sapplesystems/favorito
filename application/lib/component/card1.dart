@@ -39,6 +39,8 @@ class _card1State extends State<card1> {
       onTap: widget.function,
       child: Card(
         child: Container(
+          width: sm.w(42),
+          height: sm.w(42),
           padding: EdgeInsets.only(
               bottom: sm.h(2), right: sm.h(3), top: sm.h(1), left: sm.h(2)),
           child: Column(

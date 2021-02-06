@@ -70,8 +70,6 @@ class signup_b extends StatelessWidget {
                         child: Builder(
                           builder: (context) => Form(
                             key: _formKey,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
                             child: ListView(
                               shrinkWrap: true,
                               physics: new NeverScrollableScrollPhysics(),

@@ -256,8 +256,7 @@ class _CreateNotificationState extends State<CreateNotification> {
                                   _stateVisible = false;
                                   _cityVisible = true;
                                   _pincodeVisible = false;
-                                  WebService.funGetCities(context)
-                                      .then((value) {
+                                  WebService.funGetCities().then((value) {
                                     setState(() {
                                       _cityListModel = value;
                                     });

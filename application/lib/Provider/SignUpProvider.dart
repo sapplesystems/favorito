@@ -113,7 +113,7 @@ class SignUpProvider extends ChangeNotifier {
     // pr.show();
     Map<String, dynamic> _map = {
       "business_type_id": _typeId,
-      "business_name": _businessName,
+      "business_name": controller[0].text,
       "business_category_id": _categoryId,
       "postal_code": controller[1].text,
       "business_phone": controller[2].text,
@@ -129,9 +129,8 @@ class SignUpProvider extends ChangeNotifier {
     WebService.funRegister(_map, context).then((value) {
       // pr.hide();
       if (value.status == 'success') {
-        BotToast.showText(text: "Registration SuccessFull!!");
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+        // BotToast.showText(text: "Registration SuccessFull!!");
+        Navigator.of(context).pushNamed('/');
       } else {
         BotToast.showText(text: value.message.toString());
       }
