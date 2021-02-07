@@ -1,7 +1,5 @@
-const { response } = require('../app');
 var db = require('../config/db');
 var dateArr = ['2020-11-04', '2020-11-03'];
-var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 
 
 exports.business_get_checkin = async(req, res, next) => {

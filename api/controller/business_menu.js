@@ -147,6 +147,7 @@ exports.getMenuItems = async function(req, res, next) {
     }
 }
 
+
 /**
  * LIST ALL MENU ALONG WITH THE SUB CATEGORY
  */
@@ -564,7 +565,6 @@ exports.editCategory = async function(req, res, next) {
             } catch (error) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
             }
-
         }
 
         var sql = "update business_menu_category set " + update_columns + " where id='" + id + "'";
@@ -601,6 +601,7 @@ exports.getSetting = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
 
 /**
  * UPDATE BUSINESS MENU SETTING

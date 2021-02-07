@@ -43,7 +43,11 @@ exports.getBusinessInformation = async function(req, res, next) {
                 rows[0].sub_categories = await exports.getSubCategories(business_id);
                 rows[0].tags = await exports.getTags(business_id);
                 rows[0].attributes = await exports.getAttributes(business_id);
-                rows[0].payment_method = (rows[0].payment_method).split(',');
+                if (rows[0].payment_method) {
+                    rows[0].payment_method = (rows[0].payment_method).split(',');
+                } else {
+                    rows[0].payment_method = ''
+                }
                 rows[0].photos = await exports.getBusinessInformationUploads(business_id);
                 return res.status(200).json({ status: 'success', message: 'success', dd_verbose: dd_verbose, data: rows[0] });
             }
@@ -255,7 +259,7 @@ exports.geAttributeList = function(req, res, next) {
 exports.getSubCategories = function(business_id) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = `SELECT b_c.id as category_id, b_c.category_name as sub_category_name FROM business_sub_category as b_s_c JOIN business_categories as b_c WHERE b_s_c.sub_category_id = b_c.id AND b_s_c.business_id = '${business_id}'`
+            var sql = `SELECT b_c.id as id, b_c.category_name as sub_category_name FROM business_sub_category as b_s_c JOIN business_categories as b_c WHERE b_s_c.sub_category_id = b_c.id AND b_s_c.business_id = '${business_id}'`
             db.query(sql, function(err, result) {
                 resolve(result);
             });

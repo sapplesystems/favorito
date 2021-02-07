@@ -13,5 +13,4 @@ router.post('/send-otp-email', ChangePasswordController.sendOtpOnEmail);
 
 /* to verify otp and change the password */
 router.post('/verify-otp-change-password', ChangePasswordController.verifyOtpChangePassword);
-
 module.exports = router;

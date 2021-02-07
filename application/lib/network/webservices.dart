@@ -473,21 +473,9 @@ class WebService {
     ;
   }
 
-  static Future<CityModelResponse> funGetCityByPincode(String pincode) async {
-    String token = await Prefs.token;
-    Options _opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    Map<String, dynamic> _map = {"postal_code": int.parse(pincode)};
-    CityModelResponse _returnData = CityModelResponse();
-    print("Request URL:${serviceFunction.funGetCityByPincode}");
-    response = await dio.post(serviceFunction.funGetCityByPincode,
-        data: _map, options: _opt);
-    // .catchError((onError) => onErrorCall(onError, context));
-    _returnData =
-        CityModelResponse.fromJson(convert.json.decode(response.toString()));
-    print("responseData5:${_returnData.toString()}");
-    return _returnData;
+  static Future<CityModelResponse> funGetCityByPincode(Map _map) async {
+    response = await dio.post(serviceFunction.funGetCityByPincode, data: _map);
+    return CityModelResponse.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<PincodeListModel> funGetPicodesForCity(

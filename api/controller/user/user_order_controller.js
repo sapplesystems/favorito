@@ -276,10 +276,6 @@ exports.createOrder = async function(req, res, next) {
     }
 };
 
-/* 
-Create order verbose
- */
-
 exports.createOrderVerbose = async(req, res, next) => {
     if (!req.body.business_id) {
         return res.status(400).json({ status: 'error', message: 'business_id is missing' });
@@ -323,6 +319,7 @@ exports.createOrderVerbose = async(req, res, next) => {
     payment_methods = result_peyment[0].payment_method.split(',')
     return res.status(200).json({ status: 'success', message: 'success', data: { accepting_order, order_type: final_data, payment_type: payment_methods } });
 }
+
 
 exports.run_query = (sql, param = false) => {
     if (param == false) {

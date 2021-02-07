@@ -134,13 +134,20 @@ class Signup_a extends StatelessWidget {
                                       )),
                                 ),
                                 txtfieldboundry(
-                                    controller:
-                                        signUpProviderTrue.controller[1],
-                                    valid: true,
-                                    maxlen: 6,
-                                    keyboardSet: TextInputType.number,
-                                    title: "Postal Code",
-                                    security: false),
+                                  controller: signUpProviderTrue.controller[1],
+                                  valid: true,
+                                  maxlen: 6,
+                                  error: signUpProviderTrue.error[1],
+                                  keyboardSet: TextInputType.number,
+                                  title: "Postal Code",
+                                  security: false,
+                                  myOnChanged: (_v) {
+                                    _v.length == 6
+                                        ? signUpProviderTrue.pinCaller(_v)
+                                        // ignore: unnecessary_statements
+                                        : null;
+                                  },
+                                ),
                                 txtfieldboundry(
                                     controller:
                                         signUpProviderTrue.controller[2],

@@ -11,11 +11,15 @@ class SignUpProvider extends ChangeNotifier {
   SignUpProvider() {
     getCategory();
     getBusiness();
-    for (int _i = 0; _i < 8; _i++) controller.add(TextEditingController());
+    for (int _i = 0; _i < 8; _i++) {
+      controller.add(TextEditingController());
+      error.add(null);
+    }
   }
   BuildContext context;
   ProgressDialog pr;
   List<TextEditingController> controller = [];
+  List<String> error = [];
   List<catData> _catdata = [];
   List<busData> _busdata = [];
   String _businessName;
@@ -134,6 +138,20 @@ class SignUpProvider extends ChangeNotifier {
       } else {
         BotToast.showText(text: value.message.toString());
       }
+    });
+  }
+
+  void pinCaller(String _val) async {
+    pr.show();
+    await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
+      pr.hide();
+      if (value.data.city == null) {
+        error[1] = value.message;
+        controller[1].text = '';
+      } else {
+        error[1] = null;
+      }
+      notifyListeners();
     });
   }
 }

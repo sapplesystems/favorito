@@ -54,8 +54,10 @@ router.post('/profile', CheckAuth, UserController.getProfile);
 
 router.post('/profile/update', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfile);
 
-router.post('/profile/update-photo', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfilePhoto);
+// updating the working hour
+router.post('/profile/update-working-hour', CheckAuth, UpdateBusinessUserProfileController.updateProfileWorkingHour);
 
+router.post('/profile/update-photo', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfilePhoto);
 
 router.post('/owner-profile', CheckAuth, UserController.getBusinessOwnerProfile);
 
@@ -88,10 +90,5 @@ router.post('/get-room-id', CheckAuth, UserController.getRoomId);
 router.post('/get-chats', CheckAuth, UserController.getChats);
 
 router.post('/is-account-exist', UserRegisterController.isAccountExist);
-
-
-
-
-
 
 module.exports = router;

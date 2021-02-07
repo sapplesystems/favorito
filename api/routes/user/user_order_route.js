@@ -12,5 +12,4 @@ router.post('/create-order', CheckAuth, UserOrderController.createOrder);
 router.post('/create-order-verbose', CheckAuth, UserOrderController.createOrderVerbose);
 
 
-
 module.exports = router;

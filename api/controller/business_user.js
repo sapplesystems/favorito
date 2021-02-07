@@ -2,8 +2,6 @@ var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
-const e = require('express');
-const { run_query } = require('./business_information');
 
 
 var user_role = ['Owner', 'Manager', 'Employee'];
@@ -42,26 +40,29 @@ exports.getProfile = function(req, res, next) {
                     db.query(q2, function(error, hours) {
                         // code for the make the group of same time
                         let final_hours = []
-                        let start_day = hours[0].day
-                        let end_day = ''
-                        for (let i = 0; i < hours.length; i++) {
-                            const element = hours[i];
-                            if (hours[i + 1] && element.start_hours == hours[i + 1].start_hours && element.end_hours == hours[i + 1].end_hours) {
-                                end_day = hours[i + 1].day
-                            } else {
-                                if (end_day) {
-                                    hours[i].day = `${start_day} - ${end_day}`
-                                    end_day = ''
+                        if (hours[0]) {
+                            let start_day = hours[0].day
+                            let end_day = ''
+                            for (let i = 0; i < hours.length; i++) {
+                                const element = hours[i];
+                                if (hours[i + 1] && element.start_hours == hours[i + 1].start_hours && element.end_hours == hours[i + 1].end_hours) {
+                                    end_day = hours[i + 1].day
                                 } else {
-                                    hours[i].day = `${start_day}`
-                                }
-                                final_hours.push(hours[i])
-                                if (hours[i + 1]) {
-                                    start_day = hours[i + 1].day
+                                    if (end_day) {
+                                        hours[i].day = `${start_day} - ${end_day}`
+                                        end_day = ''
+                                    } else {
+                                        hours[i].day = `${start_day}`
+                                    }
+                                    final_hours.push(hours[i])
+                                    if (hours[i + 1]) {
+                                        start_day = hours[i + 1].day
+                                    }
                                 }
                             }
+                            rows[0].hours = final_hours;
                         }
-                        rows[0].hours = final_hours;
+
                         return res.status(200).json({ status: 'success', message: 'success', data: rows[0], hours_drop_down_list: hours_drop_down_list });
                     });
                 } else {
@@ -258,6 +259,12 @@ exports.updateBusinessOwnerProfile = function(req, res, next) {
         if (req.body.upi != '' && req.body.upi != 'undefined' && req.body.upi != null) {
             update_columns += ", upi='" + req.body.upi + "' ";
         }
+        if (req.body.email != '' && req.body.email != 'undefined' && req.body.email != null) {
+            update_columns += ", upi='" + req.body.email + "' ";
+        }
+        if (req.body.phone != '' && req.body.phone != 'undefined' && req.body.phone != null) {
+            update_columns += ", upi='" + req.body.phone + "' ";
+        }
 
         var bid = req.body.bid;
         if (bid && bid != 'undefined') {
@@ -314,10 +321,6 @@ exports.addAnotherBranch = function(req, res, next) {
     }
 };
 
-/* 
-Get the profile picture
- */
-
 exports.getProfilePhoto = function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT CONCAT('" + img_path + "',photo) as photo FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
@@ -332,12 +335,10 @@ exports.getProfilePhoto = function(req, res, next) {
         } catch (error) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
         }
+
     }
 }
 
-/* 
- *Get registered email and phone number with the verification detail 
- */
 exports.getRegisteredEmailMobile = function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT business_email, business_phone, is_email_verified, is_phone_verified FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
@@ -355,11 +356,6 @@ exports.getRegisteredEmailMobile = function(req, res, next) {
     }
 }
 
-/* 
-It return the room id 
-If the target and source already exist then it return the room_id accordingly
-If the target and source is not already exist then it return the new room_id 
- */
 exports.getRoomId = async function(req, res, next) {
     if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
         var source_id = req.userdata.business_id;
@@ -399,17 +395,14 @@ exports.getRoomId = async function(req, res, next) {
     return res.status(200).json({ status: 'success', message: 'success', data: [{ room_id }] });
 }
 
-/* 
- Return all the chats by the pagination 
- when send current number of the pages it 
- it will return the message from current to 20 more
-*/
 exports.getChats = async(req, res, next) => {
+
     if (!req.body.room_id) {
         return res.status(400).json({ status: 'failed', message: 'room_id is missing ' });
     } else {
         room_id = req.body.room_id
     }
+
 
     if (req.body.current_no_msg) {
         current_no_msg = req.body.current_no_msg

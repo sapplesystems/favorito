@@ -38,7 +38,6 @@ exports.all_business_main_category = function(req, res, next) {
     }
 };
 
-
 // return data from the all_business_sub_category table
 exports.getSubCategoriesByBusiness = async(req, res) => {
     if (req.body.business_id) {
@@ -54,7 +53,6 @@ exports.getSubCategoriesByBusiness = async(req, res) => {
 
     } catch (error) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
-
     }
 }
 

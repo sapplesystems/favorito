@@ -213,7 +213,7 @@ exports.verifyOtp = async function(req, res, next) {
                     sql_update_is_verified = `UPDATE business_master set is_verified = 1 where business_id = '${req.userdata.business_id}'`
                     result_update_is_verified = await exports.run_query(sql_update_is_verified)
                 }
-                let sql_check_all_verified = `SELECT is_verified, is_information_completed, is_profile_completed from business_master where business_id = '${ req.userdata.business_id}'`
+                let sql_check_all_verified = `SELECT is_verified, is_information_completed, is_profile_completed where business_id = '${ req.userdata.business_id}'`
                 let result_check_all_verified = await exports.run_query(sql_check_all_verified)
                 if (result_check_all_verified[0].is_verified && result_check_all_verified[0].is_information_completed && result_check_all_verified[0].is_profile_completed) {
                     sql_update_is_activated = `UPDATE business_master set is_activated = 1 where business_id = '${req.userdata.business_id}'`
@@ -225,7 +225,7 @@ exports.verifyOtp = async function(req, res, next) {
             }
 
         } catch (error) {
-            return res.status(500).json({ status: 'error', message: 'Something went wrong.', error })
+            return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
         }
     }
 }
@@ -268,6 +268,7 @@ exports.run_query = (sql, param = false) => {
         return new Promise((resolve, reject) => {
             db.query(sql, param, (error, result) => {
                 if (error) {
+                    console.log(error)
                     reject(error);
                 } else {
                     resolve(result);

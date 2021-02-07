@@ -21,6 +21,7 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class BusinessProfile extends StatefulWidget {
   @override
@@ -37,7 +38,8 @@ class _BusinessProfileState extends State<BusinessProfile>
   Completer<GoogleMapController> _GMapcontroller = Completer();
   Set<Marker> _marker = {};
   List<TextEditingController> _controller = List();
-
+  List<String> error = List();
+  ProgressDialog pr;
   int addressLength = 1;
   int webSiteLength = 1;
   List<String> cityList = ["Please Select ..."];
@@ -53,8 +55,9 @@ class _BusinessProfileState extends State<BusinessProfile>
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ddCity = GlobalKey<DropdownSearchState<String>>();
   final ddState = GlobalKey<DropdownSearchState<String>>();
-
+  String addOrChangePhoto = '';
   File _image;
+  final dd1 = GlobalKey<DropdownSearchState<String>>();
 
   Future getImage(ImgSource source) async {
     var image = await ImagePickerGC.pickImage(
@@ -77,7 +80,10 @@ class _BusinessProfileState extends State<BusinessProfile>
     _getCurrentLocation();
     getBusinessProfileData();
     WidgetsBinding.instance.addObserver(this);
-    for (int i = 0; i < 16; i++) _controller.add(TextEditingController());
+    for (int i = 0; i < 16; i++) {
+      _controller.add(TextEditingController());
+      error.add(null);
+    }
 
     super.initState();
     _cityWebData();
@@ -113,6 +119,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    pr = ProgressDialog(context)..style(message: "Please Wait..");
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -177,14 +184,6 @@ class _BusinessProfileState extends State<BusinessProfile>
                                                 width: double.infinity,
                                                 alignment: Alignment.center,
                                               ))),
-                                  // Positioned(
-                                  //     child: IconButton(
-                                  //         onPressed: () =>
-                                  //             getImage(ImgSource.Gallery),
-                                  //         icon: Icon(Icons
-                                  //             .center_focus_strong_outlined),
-                                  //         color: Colors.deepOrange)
-                                  //         )
                                 ])),
 
                             Container(
@@ -201,7 +200,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                       fontFamily: "Gilroy-Bold",
                                       fontWeight: FontWeight.w400,
                                       letterSpacing: 1),
-                                  title: "Change Photo"),
+                                  title: addOrChangePhoto),
                             ),
                             txtfieldboundry(
                               controller: _controller[1],
@@ -228,7 +227,8 @@ class _BusinessProfileState extends State<BusinessProfile>
                               keyboardSet: TextInputType.number,
                               hint: "Enter Landline number",
                             ),
-                            BusinessHours(),
+                            BusinessHours(dd1: dd1),
+
                             //  InkWell(
                             //   onTap: () {
                             //     setState(() {
@@ -334,6 +334,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                 security: false,
                                 valid: true,
                                 maxlen: 6,
+                                error: error[9],
                                 keyboardSet: TextInputType.number,
                                 hint: "Enter Pincode",
                                 myOnChanged: (_val) {
@@ -575,6 +576,9 @@ class _BusinessProfileState extends State<BusinessProfile>
       addressList.add(va.address3 ?? '');
       addressLength = addressList.length;
       _controller[0].text = va.photo ?? '';
+      setState(() {
+        addOrChangePhoto = va.photo == null ? 'add photo' : 'change photo';
+      });
       _controller[1].text = va.businessName ?? '';
       _controller[2].text = va.businessPhone ?? '';
       _controller[3].text = va.landline ?? "";
@@ -583,7 +587,9 @@ class _BusinessProfileState extends State<BusinessProfile>
       _controller[7].text = addressList[1] ?? '';
       _controller[8].text = addressList[2] ?? '';
       _controller[9].text = va.postalCode ?? '';
-      setState(() {});
+
+      dd1.currentState.changeSelectedItem(va.workingHours);
+
       pinCaller(va.postalCode);
       _controller[13].text = va.businessEmail;
       _controller[14].text = va.shortDescription;
@@ -603,12 +609,16 @@ class _BusinessProfileState extends State<BusinessProfile>
     });
   }
 
-  void pinCaller(_val) {
+  void pinCaller(String _val) async {
     if (_val.length == 6) {
-      WebService.funGetCityByPincode(_val).then((value) {
+      pr.show();
+      await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
+        pr.hide();
         if (value.data.city == null) {
-          BotToast.showText(text: value.message);
+          error[9] = value.message;
           return;
+        } else {
+          error[9] = null;
         }
         ddCity.currentState.changeSelectedItem(value.data.city);
         ddState.currentState.changeSelectedItem(value.data.stateName);
@@ -618,7 +628,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       setState(() {
         _controller[10].text = "";
         _controller[11].text = "";
-        _controller[12].text = "";
+        // _controller[12].text = "";
       });
     }
   }

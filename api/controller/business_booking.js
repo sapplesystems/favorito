@@ -22,6 +22,7 @@ exports.all_business_booking = async function(req, res, next) {
         Condition += " AND DATE(created_datetime) = '" + today_date + "' ";
 
         var sql1 = "SELECT start_time,end_time,slot_length,booking_per_slot FROM business_booking_setting WHERE business_id='" + business_id + "'";
+
         db.query(sql1, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -33,7 +34,6 @@ exports.all_business_booking = async function(req, res, next) {
             if (slot_lenght == 0) {
                 return res.status(500).json({ status: 'error', message: 'Business setting slot length is not saved correctly' });
             }
-
             if (starttime == null && endtime == null) {
                 var sql2 = "SELECT * FROM `business_master` AS bm  WHERE bm.`business_id` = '" + business_id + "'";
                 db.query(sql2, async function(err, result1) {
@@ -317,7 +317,6 @@ exports.getBookingSlots = async function(business_id, date, starttime, endtime, 
                 var timeend = startdate_time;
 
                 var timeslotarray = await timeslotdata(business_id, timestart, timeend);
-
                 if (timeslotarray != 'undefined' && timeslotarray != null && timeslotarray != '') {
                     var startDate = new Date(new Date(timestart).getTime());
                     var endDate = new Date(new Date(timeend).getTime());
@@ -378,7 +377,6 @@ function addMinutes(time, minutes) {
         ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
     return tempTime;
 }
-
 
 function newstarttime(datetime, minutes) {
     // var date = new Date(new Date(datetime).getTime() + minutes * 60000);
