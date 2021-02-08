@@ -7,6 +7,7 @@ var UserProfileController = require('../../controller/user/user_profile_controll
 var UserProfileBusinessDetailController = require('../../controller/user/user_profile_business_detail_controller');
 var UserProfilBusinessOverview = require('../../controller/user/user_profile_business_detail_controller');
 
+
 var multer = require('multer');
 var storage_user_profile = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -40,9 +41,6 @@ router.post('/end-relation', CheckAuth, UserProfileController.endRelation);
 // get all relation by the relation_type
 router.post('/get-all-relation', CheckAuth, UserProfileController.getAllRelation);
 
-router.post('/get-distance', CheckAuth, UserProfilBusinessOverview.getDistance);
-
-
 // This is use for the set and the get of the user detial 
 router.post('/user-detail', CheckAuth, UserProfileController.userDetail);
 
@@ -52,10 +50,8 @@ router.get('/user-terms-condition', (req, res) => {
 });
 
 // privacy policy for the user link
-router.get('/user-privacy', (req, res) => {
+router.get('/user-privacy-policy', (req, res) => {
     res.render('privacy_policy_user.hbs')
 });
-
-
 
 module.exports = router;

@@ -15,6 +15,9 @@ router.post('/get-appointment-verbose', CheckAuth, UserAppointmentController.get
 // get all person by service id 
 router.post('/get-person-by-service', CheckAuth, UserAppointmentController.getPersonByServiceId);
 
+// get all person by service id 
+router.post('/get-person-by-service', CheckAuth, UserAppointmentController.getPersonByServiceId);
+
 router.post('/get-booking-appointment', CheckAuth, UserAppointmentController.getBookingAppointment);
 
 

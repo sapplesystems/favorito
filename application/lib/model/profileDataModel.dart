@@ -39,7 +39,6 @@ class Data {
   String address1;
   String address2;
   String address3;
-  String pincode;
   String townCity;
   int stateId;
   int countryId;
@@ -64,7 +63,6 @@ class Data {
       this.address1,
       this.address2,
       this.address3,
-      this.pincode,
       this.townCity,
       this.stateId,
       this.countryId,
@@ -89,7 +87,6 @@ class Data {
     address1 = json['address1'];
     address2 = json['address2'];
     address3 = json['address3'];
-    pincode = json['pincode'];
     townCity = json['town_city'];
     stateId = json['state_id'];
     countryId = json['country_id'];
@@ -121,7 +118,6 @@ class Data {
     data['address1'] = this.address1;
     data['address2'] = this.address2;
     data['address3'] = this.address3;
-    data['pincode'] = this.pincode;
     data['town_city'] = this.townCity;
     data['state_id'] = this.stateId;
     data['country_id'] = this.countryId;

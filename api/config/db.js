@@ -1,5 +1,5 @@
-var mysql = require('mysql');
-
+// var mysql = require('mysql');
+const mysql = require("mysql2")
 var connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -8,8 +8,12 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
-  if (err) throw err;
-  console.log('connected!');
+  if (err){
+    console.log(err);
+    throw err;
+  } else {
+    console.log('connected!');
+  }
 });
 
 module.exports = connection;

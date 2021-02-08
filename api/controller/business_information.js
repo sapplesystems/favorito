@@ -259,7 +259,7 @@ exports.geAttributeList = function(req, res, next) {
 exports.getSubCategories = function(business_id) {
     try {
         return new Promise(function(resolve, reject) {
-            var sql = `SELECT b_c.id as category_id, b_c.category_name as sub_category_name FROM business_sub_category as b_s_c JOIN business_categories as b_c WHERE b_s_c.sub_category_id = b_c.id AND b_s_c.business_id = '${business_id}'`
+            var sql = `SELECT b_c.id as id, b_c.category_name as sub_category_name FROM business_sub_category as b_s_c JOIN business_categories as b_c WHERE b_s_c.sub_category_id = b_c.id AND b_s_c.business_id = '${business_id}'`
             db.query(sql, function(err, result) {
                 resolve(result);
             });

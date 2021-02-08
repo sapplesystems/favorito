@@ -2,15 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:Favorito/component/MyGoogleMap.dart';
-import 'package:Favorito/component/PopupContent.dart';
-import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldPostAction.dart';
-import 'package:Favorito/component/workingDateTime.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHours.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/utils/myString.Dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
@@ -23,6 +21,7 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class BusinessProfile extends StatefulWidget {
   @override
@@ -39,7 +38,8 @@ class _BusinessProfileState extends State<BusinessProfile>
   Completer<GoogleMapController> _GMapcontroller = Completer();
   Set<Marker> _marker = {};
   List<TextEditingController> _controller = List();
-  Map<String, String> selecteddayList = {};
+  List<String> error = List();
+  ProgressDialog pr;
   int addressLength = 1;
   int webSiteLength = 1;
   List<String> cityList = ["Please Select ..."];
@@ -53,11 +53,11 @@ class _BusinessProfileState extends State<BusinessProfile>
   int cityId = 0;
   List<String> addressList = [];
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final dd1 = GlobalKey<DropdownSearchState<String>>();
   final ddCity = GlobalKey<DropdownSearchState<String>>();
   final ddState = GlobalKey<DropdownSearchState<String>>();
-
+  String addOrChangePhoto = '';
   File _image;
+  final dd1 = GlobalKey<DropdownSearchState<String>>();
 
   Future getImage(ImgSource source) async {
     var image = await ImagePickerGC.pickImage(
@@ -70,7 +70,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
     );
     setState(() => _image = image);
-    WebService.profileImageUpdate(image, context).then((value) {
+    WebService.profileImageUpdate(image).then((value) {
       print("ImageUpdated:${value.message}");
     });
   }
@@ -80,7 +80,10 @@ class _BusinessProfileState extends State<BusinessProfile>
     _getCurrentLocation();
     getBusinessProfileData();
     WidgetsBinding.instance.addObserver(this);
-    for (int i = 0; i < 16; i++) _controller.add(TextEditingController());
+    for (int i = 0; i < 16; i++) {
+      _controller.add(TextEditingController());
+      error.add(null);
+    }
 
     super.initState();
     _cityWebData();
@@ -93,10 +96,8 @@ class _BusinessProfileState extends State<BusinessProfile>
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
       _position = position;
-      setState(() {
-        _initPosition = CameraPosition(
-            target: LatLng(_position.latitude, _position.longitude), zoom: 17);
-      });
+      _initPosition = CameraPosition(
+          target: LatLng(_position.latitude, _position.longitude), zoom: 17);
     }).catchError((e) {
       print(e);
     });
@@ -109,32 +110,16 @@ class _BusinessProfileState extends State<BusinessProfile>
     });
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _controller.clear();
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      _appLifecycleState = state;
-      print("My App State: $_appLifecycleState");
-    });
-  }
-
   getBusinessProfileData() {
-    WebService.funGetBusinessProfileData(context).then((value) {
-      setState(() {
-        _businessProfileData = value;
-      });
+    WebService.funGetBusinessProfileData().then((value) {
+      _businessProfileData = value;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    pr = ProgressDialog(context)..style(message: "Please Wait..");
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -199,14 +184,6 @@ class _BusinessProfileState extends State<BusinessProfile>
                                                 width: double.infinity,
                                                 alignment: Alignment.center,
                                               ))),
-                                  // Positioned(
-                                  //     child: IconButton(
-                                  //         onPressed: () =>
-                                  //             getImage(ImgSource.Gallery),
-                                  //         icon: Icon(Icons
-                                  //             .center_focus_strong_outlined),
-                                  //         color: Colors.deepOrange)
-                                  //         )
                                 ])),
 
                             Container(
@@ -223,7 +200,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                       fontFamily: "Gilroy-Bold",
                                       fontWeight: FontWeight.w400,
                                       letterSpacing: 1),
-                                  title: "Change Photo"),
+                                  title: addOrChangePhoto),
                             ),
                             txtfieldboundry(
                               controller: _controller[1],
@@ -250,34 +227,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                               keyboardSet: TextInputType.number,
                               hint: "Enter Landline number",
                             ),
-                            Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: DropdownSearch<String>(
-                                    validator: (_v) {
-                                      var va;
-                                      if (_v == "") {
-                                        va = 'required field';
-                                      } else {
-                                        va = null;
-                                      }
-                                      return va;
-                                    },
-                                    key: dd1,
-                                    autoValidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    mode: Mode.MENU,
-                                    showSelectedItem: true,
-                                    selectedItem: _controller[4].text,
-                                    items: ["Select Hours", "Always Open"],
-                                    label: "Working Hours",
-                                    hint: "Please Select",
-                                    showSearchBox: false,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _controller[4].text =
-                                            value != null ? value : "";
-                                      });
-                                    })),
+                            BusinessHours(dd1: dd1),
 
                             //  InkWell(
                             //   onTap: () {
@@ -308,103 +258,6 @@ class _BusinessProfileState extends State<BusinessProfile>
                             //   ),
                             // ),
 
-                            Visibility(
-                              visible: _controller[4].text == "Select Hours",
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 18, right: 18),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Business Hours",
-                                            style: TextStyle(color: myGrey)),
-                                        InkWell(
-                                          onTap: () => setState(
-                                              () => selecteddayList.clear()),
-                                          child: Text("Reset",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: sm.w(1)),
-                                          width: sm.w(60),
-                                          height: sm.w(14),
-                                          child: ListView(
-                                            scrollDirection: Axis.horizontal,
-                                            children: [
-                                              for (int i = 0;
-                                                  i < selecteddayList.length;
-                                                  i++)
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 12),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                                selecteddayList
-                                                                        .keys
-                                                                        .toList()[
-                                                                    i],
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                            SizedBox(height: 2),
-                                                            Text(
-                                                                "${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)} - ${(selecteddayList[selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w200)),
-                                                          ])
-                                                    ],
-                                                  ),
-                                                )
-                                            ],
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            showPopup(
-                                                context,
-                                                WorkingDateTime(
-                                                    selecteddayList:
-                                                        selecteddayList));
-                                          },
-                                          child: Text("Add",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
                             InkWell(
                               onTap: () {
                                 setState(() {
@@ -481,6 +334,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                                 security: false,
                                 valid: true,
                                 maxlen: 6,
+                                error: error[9],
                                 keyboardSet: TextInputType.number,
                                 hint: "Enter Pincode",
                                 myOnChanged: (_val) {
@@ -635,24 +489,8 @@ class _BusinessProfileState extends State<BusinessProfile>
         ]));
   }
 
-  showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
-    SizeManager sm = SizeManager(context);
-
-    Navigator.push(
-            context,
-            PopupLayout(
-                top: sm.h(36),
-                left: sm.w(3),
-                right: sm.w(3),
-                bottom: sm.h(30),
-                child: PopupContent(
-                    content: Scaffold(
-                        resizeToAvoidBottomPadding: false, body: widget))))
-        .whenComplete(() => setState(() {}));
-  }
-
   void _cityWebData() async {
-    WebService.funGetCities(context).then((value) {
+    WebService.funGetCities().then((value) {
       if (value.message == "success") {
         _cityModel.clear();
         cityList.clear();
@@ -665,7 +503,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   }
 
   void _stateWebData() async {
-    WebService.funGetStates(context).then((value) {
+    WebService.funGetStates().then((value) {
       if (value.message == "success") {
         _stateModel.clear();
         _stateList.clear();
@@ -683,15 +521,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       website = _controller[_i + 15].text + "," + website;
     }
     List<Map> lst = List();
-    for (int i = 0; i < selecteddayList.length; i++) {
-      var va = selecteddayList[(selecteddayList.keys.toList())[i]].split("-");
-      Map<String, String> dayData = Map();
-      dayData["business_days"] =
-          "${(selecteddayList.keys.toList())[i].toString()}";
-      dayData["business_start_hours"] = "${va[0].toString()}";
-      dayData["business_end_hours"] = "${va[1].toString()}";
-      lst.add(dayData);
-    }
+
     _controller[5].text = lst.toString();
     if (_controller[4].text == "Select Hours" && lst.length == 0) {
       BotToast.showText(text: "Please select time stols!!");
@@ -706,7 +536,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       "landline": _controller[3].text,
       "business_phone": _controller[2].text,
       "address": addressList,
-      "pincode": _controller[9].text,
+      "postal_code": _controller[9].text,
       "town_city": _controller[10].text,
       "state_id": _controller[11].text,
       "country_id": '1',
@@ -729,7 +559,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   }
 
   void getProfileData() async {
-    await WebService.getProfileData(context).then((value) {
+    await WebService.getProfileData().then((value) {
       var va = value.data;
       print("datam${value.data.toString()}");
       addressList.clear();
@@ -741,22 +571,26 @@ class _BusinessProfileState extends State<BusinessProfile>
           va.website.removeAt(i);
       }
 
-      addressList.add(va.address1.replaceAll('undefined', ''));
-      addressList.add(va.address2.replaceAll('undefined', ''));
-      addressList.add(va.address3.replaceAll('undefined', ''));
+      addressList.add(va.address1 ?? '');
+      addressList.add(va.address2 ?? '');
+      addressList.add(va.address3 ?? '');
       addressLength = addressList.length;
-      _controller[0].text = va.photo;
-      _controller[1].text = va.businessName;
-      _controller[2].text = va.businessPhone;
-      _controller[3].text = va.landline;
+      _controller[0].text = va.photo ?? '';
+      setState(() {
+        addOrChangePhoto = va.photo == null ? 'add photo' : 'change photo';
+      });
+      _controller[1].text = va.businessName ?? '';
+      _controller[2].text = va.businessPhone ?? '';
+      _controller[3].text = va.landline ?? "";
       _controller[4].text = va.workingHours;
+      _controller[6].text = addressList[0] ?? '';
+      _controller[7].text = addressList[1] ?? '';
+      _controller[8].text = addressList[2] ?? '';
+      _controller[9].text = va.postalCode ?? '';
+
       dd1.currentState.changeSelectedItem(va.workingHours);
-      _controller[6].text = addressList[0];
-      _controller[7].text = addressList[1];
-      _controller[8].text = addressList[2];
-      _controller[9].text = va.pincode;
-      setState(() {});
-      pinCaller(va.pincode);
+
+      pinCaller(va.postalCode);
       _controller[13].text = va.businessEmail;
       _controller[14].text = va.shortDescription;
       for (int i = 0, m = -1; i < va.website.length; i++) {
@@ -772,18 +606,19 @@ class _BusinessProfileState extends State<BusinessProfile>
         _initPosition = CameraPosition(
             target: LatLng(double.parse(_v[0]), double.parse(_v[1])), zoom: 17);
       });
-      for (int _i = 0; _i < va.hours.length; _i++)
-        selecteddayList[(va.hours.toList())[_i].day] =
-            "${(va.hours.toList())[_i].startHours}-${(va.hours.toList())[_i].endHours}";
     });
   }
 
-  void pinCaller(_val) {
+  void pinCaller(String _val) async {
     if (_val.length == 6) {
-      WebService.funGetCityByPincode(_val, context).then((value) {
+      pr.show();
+      await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
+        pr.hide();
         if (value.data.city == null) {
-          BotToast.showText(text: value.message);
+          error[9] = value.message;
           return;
+        } else {
+          error[9] = null;
         }
         ddCity.currentState.changeSelectedItem(value.data.city);
         ddState.currentState.changeSelectedItem(value.data.stateName);
@@ -793,7 +628,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       setState(() {
         _controller[10].text = "";
         _controller[11].text = "";
-        _controller[12].text = "";
+        // _controller[12].text = "";
       });
     }
   }

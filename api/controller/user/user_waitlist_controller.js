@@ -1,59 +1,10 @@
 var db = require('../../config/db');
 var moment = require('moment');
 const { end } = require('../../config/db');
-const { now } = require('moment');
+
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 
-
 // get all waitlist by business_id
-exports.get_waitlist = async function(req, res, next) {
-    if (req.body.business_id == '' || req.body.business_id == null || req.body.business_id == undefined) {
-        return res.status(400).json({ status: 'error', message: 'business_id is required.' });
-    } else if (req.userdata.id == '' || req.userdata.id == null || req.userdata.id == undefined) {
-        return res.status(400).json({ status: 'error', message: 'user_id is required.' });
-    }
-    sql_waitlist = `SELECT id, user_id, business_id,no_of_person, waitlist_status, DATE_FORMAT(created_at ,"%Y-%m-%d %H:%i:%s") as booked_slot ,DATE_FORMAT(updated_at ,"%Y-%m-%d %H:%i:%s") as updated_at FROM business_waitlist WHERE user_id = '${req.userdata.id}' AND business_id = '${req.body.business_id}' AND deleted_at IS NULL`
-
-    sql_business_detail = `SELECT business_name FROM business_master WHERE business_id = '${req.body.business_id}'`
-    sql_business_waitlist_setting = `SELECT slot_length, minium_wait_time FROM business_waitlist_setting WHERE business_id = '${req.body.business_id}'`
-    try {
-        result_business_waitlist_setting = await exports.run_query(sql_business_waitlist_setting)
-        result_waitlist = await exports.run_query(sql_waitlist)
-        if (result_waitlist == '') {
-            return res.status(200).json({ status: 'success', message: 'Waitlist is not saved yet', date: [] });
-        }
-
-        slot_length = result_business_waitlist_setting[0].slot_length
-        time_1 = result_waitlist[0].booked_slot
-        added_time = parseInt(result_waitlist[0].booked_slot.substring(11, 13)) + parseInt(slot_length)
-        time_2 = time_1.substring(0, 11) + added_time + time_1.substring(13);
-        sql_count_total_waitlist = `SELECT COUNT(business_id) as count FROM business_waitlist \n\
-        WHERE business_id = '${req.body.business_id}' \n\
-        AND deleted_at IS NULL \n\
-        AND created_at >= '${time_1}'
-        AND created_at < '${time_2}'`
-        result_count_total_waitlist = await exports.run_query(sql_count_total_waitlist)
-        console.log();
-        result_business_name = await exports.run_query(sql_business_detail)
-        data = []
-        data_object = {}
-
-        data_object.waitlist_id = result_waitlist[0].id
-        data_object.created_at = result_waitlist[0].booked_slot
-        data_object.updated_at = result_waitlist[0].updated_at
-        data_object.user_id = result_waitlist[0].user_id
-        data_object.waitlist_status = result_waitlist[0].waitlist_status
-        data_object.business_name = result_business_name[0].business_name
-        data_object.booked_slot = result_waitlist[0].booked_slot.substring(11, 16)
-        data_object.no_of_person = result_waitlist[0].no_of_person
-        data_object.minimum_wait_time = result_business_waitlist_setting[0].minium_wait_time
-        data_object.parties_before_you = parseInt(result_count_total_waitlist[0].count) - 1
-        res.status(200).send({ status: 'success', message: 'success', data: [data_object] })
-    } catch (error) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
-    }
-};
-
 exports.get_waitlist = async function(req, res, next) {
     if (req.body.business_id == '' || req.body.business_id == null || req.body.business_id == undefined) {
         return res.status(400).json({ status: 'error', message: 'business_id is required.' });
@@ -249,7 +200,6 @@ exports.set_waitlist = async function(req, res, next) {
 
     data_to_insert.business_id = business_id
     data_to_insert.user_id = user_id
-
     if (req.body.no_of_person == '' || req.body.no_of_person == null || req.body.no_of_person == undefined) {
         return res.status(403).json({ status: 'error', message: 'Number of person is required.' });
     } else {
@@ -279,8 +229,6 @@ exports.set_waitlist = async function(req, res, next) {
     } else {
         data_to_insert.name = ''
     }
-
-
 
     if (req.body.waitlist_id != '' && req.body.waitlist_id != null && req.body.waitlist_id != undefined) {
         var sql = `UPDATE business_waitlist SET updated_at = NOW(), ? WHERE id = ${req.body.waitlist_id}`;

@@ -1,6 +1,7 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/myCss.dart';
-import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/utils/RouteGenerator.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -14,6 +15,8 @@ void main() {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => SignUpProvider()),
+      ChangeNotifierProvider(create: (context) => ContactPersonProvider()),
+      ChangeNotifierProvider(create: (context) => BusinessHoursProvider()),
     ], child: MyApp()));
   });
 }

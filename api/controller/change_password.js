@@ -60,7 +60,7 @@ exports.changePassword = function(req, res, next) {
                                     if (error) {
                                         return res.status(403).json({ status: 'error', message: 'Password could not be changed.' });
                                     }
-                                    return res.status(403).json({ status: 'error', message: 'Password changed successfully.' });
+                                    return res.status(200).json({ status: 'success', message: 'Password changed successfully.' });
                                 });
                             });
                         }
@@ -154,6 +154,7 @@ exports.verifyOtpChangePassword = async(req, res) => {
         return res.status(400).json({ status: 'error', message: 'Something went wrong', error });
     }
 }
+
 
 var sendMail = (email, otp) => {
     return new Promise((resolve, reject) => {

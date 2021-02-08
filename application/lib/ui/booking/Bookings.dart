@@ -307,7 +307,7 @@ class _Bookings extends State<Bookings> {
   }
 
   void getPageData() async {
-    await WebService.funBookingList(context).then((value) {
+    await WebService.funBookingList().then((value) {
       if (value.status == "success") {
         setState(() {
           blm = value;

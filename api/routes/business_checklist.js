@@ -17,4 +17,5 @@ router.post('/check-in-list', CheckAuth, BusinessChecklistController.business_ch
 
 router.post('/get-checkin', CheckAuth, BusinessChecklistController.business_get_checkin)
 
+
 module.exports = router;

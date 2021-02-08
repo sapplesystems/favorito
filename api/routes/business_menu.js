@@ -27,9 +27,10 @@ var upload = multer({ storage: storage });
 router.post('/dd-verbose', CheckAuth, MenuController.dd_verbose);
 
 /**
- * GET LIST ALL MENU ALONG WITH SUB CATEGORY
+ * GET LIST ALL MENU
  */
 router.post('/list', CheckAuth, MenuController.listAllMenu);
+
 
 /**
  * GET LIST ALL MENU

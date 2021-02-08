@@ -8,6 +8,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _LoginState extends State<Login> {
   TextEditingController userCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  ProgressDialog pr;
   @override
   void initState() {
     super.initState();

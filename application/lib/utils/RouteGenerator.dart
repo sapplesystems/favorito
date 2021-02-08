@@ -1,7 +1,6 @@
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:Favorito/ui/tour/Splash.dart';
-import 'package:Favorito/ui/tour/loginSignupMix.dart';
 import 'package:flutter/material.dart';
 
 class RouteGenerator {
@@ -56,7 +55,7 @@ class RouteGenerator {
       // case '/menuHome':
       //   return MaterialPageRoute(builder: (_) => MenuHome());
       default:
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => Login());
     }
   }
 

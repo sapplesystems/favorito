@@ -19,7 +19,6 @@ exports.addAttribute = function(req, res, next) {
     }
 };
 
-// list all the attribute 
 exports.listAttribute = function(req, res, next) {
     try {
         var cond = "";
@@ -38,9 +37,6 @@ exports.listAttribute = function(req, res, next) {
     }
 };
 
-
-
-// update the attributes 
 exports.updateAttribute = function(req, res, next) {
     try {
         if (req.body.attribute_id == '' || req.body.attribute_id == 'undefined' || req.body.attribute_id == null) {

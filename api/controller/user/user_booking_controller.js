@@ -5,6 +5,7 @@ const e = require('express');
 const async = require('async');
 // const { reset } = require('google-distance-matrix');
 
+
 //  add user notes by user_id and booking id 
 exports.setBookingNote = async function(req, res, next) {
     if (req.body.booking_id != null && req.body.booking_id != undefined && req.body.booking_id != '') {
@@ -201,76 +202,6 @@ exports.setBookTable = async function(req, res, next) {
 }
 
 // get all booking by user_id
-exports.getBookTable = async function(req, res, next) {
-    var business_id = null
-    if (req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') {
-        user_id = req.body.user_id
-    } else {
-        user_id = req.userdata.id
-    }
-    if (req.body.business_id) {
-        business_id = req.body.business_id
-    }
-    if (req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') {
-        if (business_id != null) {
-            var condition = " WHERE b_b.user_id = '" + req.body.user_id + "' AND b_b.business_id = '" + business_id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
-        } else {
-            var condition = " WHERE b_b.user_id = '" + req.body.user_id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
-        }
-    } else if (req.userdata.id) {
-        if (business_id != null) {
-            var condition = " WHERE b_b.user_id = '" + req.userdata.id + "' AND b_b.business_id = '" + business_id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
-        } else {
-            var condition = " WHERE b_b.user_id = '" + req.userdata.id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
-        }
-    } else {
-        return res.status(400).json({ status: 'failed', message: 'user_id is missing' });
-    }
-
-    var sql = "SELECT b_b.id, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, IFNULL(AVG(b_r.rating),0) as avg_rating,b_m.business_phone,b_b.special_notes as special_notes, b_b.business_id,b_b.no_of_person,b_b.booking_status as status,DATE_FORMAT(b_b.created_datetime , '%Y%m%d%h%i%s') as time,DATE_FORMAT(b_b.created_datetime , '%Y-%m-%d %h:%i:%s') AS created_datetime\n\
-    FROM business_booking AS b_b \n\
-    JOIN business_master AS b_m \n\
-    LEFT JOIN business_ratings AS b_r \n\
-    ON b_m.business_id = b_b.business_id \n\
-    AND b_r.business_id = b_b.business_id" + condition;
-
-    try {
-        result = await exports.run_query(sql)
-        if (result == '') {
-            return res.status(200).send({ status: 'success', message: 'Data not found', data: [] })
-        }
-        var sql_booking_setting = "SELECT slot_length FROM business_booking_setting WHERE business_id='" + result[0].business_id + "'";
-        final_data = []
-        async.eachSeries(result, async function(data, callback) {
-            var result_booking_setting = await exports.run_query(sql_booking_setting)
-            db.query(`SELECT reviews FROM business_reviews WHERE user_id = '${data.user_id}' AND business_id = '${data.business_id}' LIMIT 1`, function(error, results1) {
-                if (error) {
-                    return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
-                }
-                if (results1 && results1[0] && results1[0].reviews) {
-                    data.review = results1[0].reviews
-                } else {
-                    data.review = ''
-                }
-                data.slot_length = result_booking_setting[0].slot_length
-                    // data.slot_date = moment(data.created_datetime).format('Do MMMM')
-                    // data.slot_start_time = `${data.created_datetime.substring(11, 13)}:00`
-                    // data.slot_end_time = `${(parseInt(data.created_datetime.substring(11, 13))+parseInt(result_booking_setting[0].slot_length))}:00`
-                final_data.push(data)
-                return
-            });
-        }, function(err, results) {
-            if (final_data == '') {
-                return res.status(200).send({ status: 'success', message: 'Data not found', data: final_data })
-            }
-            return res.status(200).send({ status: 'success', message: 'Success', data: final_data })
-        });
-    } catch (error) {
-        return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
-    }
-}
-
-// get all booking by user_id
 exports.getBookingAndAppointment = async function(req, res, next) {
     // getting the all appointment detail
     var business_id = null
@@ -379,6 +310,76 @@ exports.getBookingAndAppointment = async function(req, res, next) {
                 return res.status(200).send({ status: 'success', message: 'Data not found', data: final_array })
             }
             return res.status(200).send({ status: 'success', message: 'Success', data: final_array })
+        });
+    } catch (error) {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
+    }
+}
+
+// get all booking by user_id
+exports.getBookTable = async function(req, res, next) {
+    var business_id = null
+    if (req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') {
+        user_id = req.body.user_id
+    } else {
+        user_id = req.userdata.id
+    }
+    if (req.body.business_id) {
+        business_id = req.body.business_id
+    }
+    if (req.body.user_id != null && req.body.user_id != undefined && req.body.user_id != '') {
+        if (business_id != null) {
+            var condition = " WHERE b_b.user_id = '" + req.body.user_id + "' AND b_b.business_id = '" + business_id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
+        } else {
+            var condition = " WHERE b_b.user_id = '" + req.body.user_id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
+        }
+    } else if (req.userdata.id) {
+        if (business_id != null) {
+            var condition = " WHERE b_b.user_id = '" + req.userdata.id + "' AND b_b.business_id = '" + business_id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
+        } else {
+            var condition = " WHERE b_b.user_id = '" + req.userdata.id + "' AND b_b.deleted_at IS NULL GROUP BY b_b.id ORDER BY created_datetime DESC"
+        }
+    } else {
+        return res.status(400).json({ status: 'failed', message: 'user_id is missing' });
+    }
+
+    var sql = "SELECT b_b.id, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, IFNULL(AVG(b_r.rating),0) as avg_rating,b_m.business_phone,b_b.special_notes as special_notes, b_b.business_id,b_b.no_of_person,b_b.booking_status as status,DATE_FORMAT(b_b.created_datetime , '%Y%m%d%h%i%s') as time,DATE_FORMAT(b_b.created_datetime , '%Y-%m-%d %h:%i:%s') AS created_datetime\n\
+    FROM business_booking AS b_b \n\
+    JOIN business_master AS b_m \n\
+    LEFT JOIN business_ratings AS b_r \n\
+    ON b_m.business_id = b_b.business_id \n\
+    AND b_r.business_id = b_b.business_id" + condition;
+
+    try {
+        result = await exports.run_query(sql)
+        if (result == '') {
+            return res.status(200).send({ status: 'success', message: 'Data not found', data: [] })
+        }
+        var sql_booking_setting = "SELECT slot_length FROM business_booking_setting WHERE business_id='" + result[0].business_id + "'";
+        final_data = []
+        async.eachSeries(result, async function(data, callback) {
+            var result_booking_setting = await exports.run_query(sql_booking_setting)
+            db.query(`SELECT reviews FROM business_reviews WHERE user_id = '${data.user_id}' AND business_id = '${data.business_id}' LIMIT 1`, function(error, results1) {
+                if (error) {
+                    return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
+                }
+                if (results1 && results1[0] && results1[0].reviews) {
+                    data.review = results1[0].reviews
+                } else {
+                    data.review = ''
+                }
+                data.slot_length = result_booking_setting[0].slot_length
+                    // data.slot_date = moment(data.created_datetime).format('Do MMMM')
+                    // data.slot_start_time = `${data.created_datetime.substring(11, 13)}:00`
+                    // data.slot_end_time = `${(parseInt(data.created_datetime.substring(11, 13))+parseInt(result_booking_setting[0].slot_length))}:00`
+                final_data.push(data)
+                return
+            });
+        }, function(err, results) {
+            if (final_data == '') {
+                return res.status(200).send({ status: 'success', message: 'Data not found', data: final_data })
+            }
+            return res.status(200).send({ status: 'success', message: 'Success', data: final_data })
         });
     } catch (error) {
         return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });

@@ -2,8 +2,6 @@ var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
-const e = require('express');
-const { run_query } = require('./business_information');
 
 
 var user_role = ['Owner', 'Manager', 'Employee'];
@@ -323,10 +321,6 @@ exports.addAnotherBranch = function(req, res, next) {
     }
 };
 
-/* 
-Get the profile picture
- */
-
 exports.getProfilePhoto = function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT CONCAT('" + img_path + "',photo) as photo FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
@@ -341,12 +335,10 @@ exports.getProfilePhoto = function(req, res, next) {
         } catch (error) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
         }
+
     }
 }
 
-/* 
- *Get registered email and phone number with the verification detail 
- */
 exports.getRegisteredEmailMobile = function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT business_email, business_phone, is_email_verified, is_phone_verified FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
@@ -364,11 +356,6 @@ exports.getRegisteredEmailMobile = function(req, res, next) {
     }
 }
 
-/* 
-It return the room id 
-If the target and source already exist then it return the room_id accordingly
-If the target and source is not already exist then it return the new room_id 
- */
 exports.getRoomId = async function(req, res, next) {
     if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
         var source_id = req.userdata.business_id;
@@ -408,17 +395,14 @@ exports.getRoomId = async function(req, res, next) {
     return res.status(200).json({ status: 'success', message: 'success', data: [{ room_id }] });
 }
 
-/* 
- Return all the chats by the pagination 
- when send current number of the pages it 
- it will return the message from current to 20 more
-*/
 exports.getChats = async(req, res, next) => {
+
     if (!req.body.room_id) {
         return res.status(400).json({ status: 'failed', message: 'room_id is missing ' });
     } else {
         room_id = req.body.room_id
     }
+
 
     if (req.body.current_no_msg) {
         current_no_msg = req.body.current_no_msg

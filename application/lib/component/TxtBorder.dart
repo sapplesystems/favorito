@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 class TxtBorder extends StatelessWidget {
   String txt;
   Color bosrderColor;
-  double h;
   double w;
-  TxtBorder({this.txt, this.bosrderColor, this.h, this.w});
+  TxtBorder({this.txt, this.bosrderColor, this.w});
   @override
   Widget build(BuildContext context) {
     return Container(
       width: w,
-      height: h,
+      padding: EdgeInsets.only(top: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         border: Border.all(

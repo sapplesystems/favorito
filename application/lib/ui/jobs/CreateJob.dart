@@ -314,10 +314,9 @@ class _CreateJobState extends State<CreateJob> {
                                         }
                                       }
                                     } else {
-                                      WebService.funGetCityByPincode(
-                                              _myPincodeEditController.text,
-                                              context)
-                                          .then((value) {
+                                      WebService.funGetCityByPincode({
+                                        'pincode': _myPincodeEditController.text
+                                      }).then((value) {
                                         setState(() {
                                           CityList city = CityList();
                                           city.id = value.data.id;

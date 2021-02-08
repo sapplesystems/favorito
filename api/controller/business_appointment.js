@@ -461,7 +461,6 @@ exports.get_setting = async function(req, res, next) {
  */
 
 exports.getBusinessSlot = async function(business_id) {
-    console.log('id is ' + business_id);
     var sql = "SELECT working_hours FROM business_master WHERE business_id='" + business_id + "'"
     var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var today_day = days[new Date().getDay()];

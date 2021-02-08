@@ -32,7 +32,7 @@ class rowWithTextNButton extends StatelessWidget {
             child: Visibility(
               // visible: check == "0" ? true : false,
               visible: true,
-              child: TxtBorder(bosrderColor: myRed, h: 20, w: 54, txt: txt2),
+              child: TxtBorder(bosrderColor: myRed, w: 54, txt: txt2),
             ),
           )
         ],

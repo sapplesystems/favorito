@@ -14,6 +14,7 @@ class txtfieldboundry extends StatefulWidget {
   Function myOnChanged;
   RegExp myregex;
   Function prefClick;
+  String error;
   txtfieldboundry(
       {this.title,
       this.security,
@@ -26,7 +27,8 @@ class txtfieldboundry extends StatefulWidget {
       this.isEnabled,
       this.maxLines,
       this.myOnChanged,
-      this.prefClick});
+      this.prefClick,
+      this.error});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -41,6 +43,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         obscureText: widget.security,
         maxLength: widget.maxlen,
         decoration: InputDecoration(
+            errorText: widget.error,
             labelText: widget.title,
             labelStyle: Theme.of(context).textTheme.body2,
             counterText: "",

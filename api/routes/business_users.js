@@ -56,11 +56,15 @@ router.post('/profile/update', upload_business_profile.single('photo'), CheckAut
 
 // updating the working hour
 router.post('/profile/update-working-hour', CheckAuth, UpdateBusinessUserProfileController.updateProfileWorkingHour);
+<<<<<<< HEAD
 
 router.post('/profile/get-working-hour', CheckAuth, UpdateBusinessUserProfileController.getProfileWorkingHour);
 
 router.post('/profile/update-photo', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfilePhoto);
+=======
+>>>>>>> f3fb81d6e5ff79380f38667ec00ce00406a96136
 
+router.post('/profile/update-photo', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfilePhoto);
 
 router.post('/owner-profile', CheckAuth, UserController.getBusinessOwnerProfile);
 
@@ -93,10 +97,5 @@ router.post('/get-room-id', CheckAuth, UserController.getRoomId);
 router.post('/get-chats', CheckAuth, UserController.getChats);
 
 router.post('/is-account-exist', UserRegisterController.isAccountExist);
-
-
-
-
-
 
 module.exports = router;
