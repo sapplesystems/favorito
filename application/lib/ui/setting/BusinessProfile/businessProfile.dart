@@ -523,10 +523,10 @@ class _BusinessProfileState extends State<BusinessProfile>
     List<Map> lst = List();
 
     _controller[5].text = lst.toString();
-    if (_controller[4].text == "Select Hours" && lst.length == 0) {
-      BotToast.showText(text: "Please select time stols!!");
-      return;
-    }
+    // if (_controller[4].text == "Select Hours" && lst.length == 0) {
+    //   BotToast.showText(text: "Please select time stols!!");
+    //   return;
+    // }
     addressList.clear();
     for (int i = 0; i < addressLength; i++)
       addressList.add(_controller[i + 6].text);
@@ -541,14 +541,14 @@ class _BusinessProfileState extends State<BusinessProfile>
       "state_id": _controller[11].text,
       "country_id": '1',
       "location": "${_position.latitude},${_position.longitude}",
-      "working_hours": _controller[4].text,
+      "working_hours": dd1.currentState.getSelectedItem,
       "website": website.split(","),
       "business_email": _controller[13].text,
       "short_description": _controller[14].text,
       "photo": "${_controller[0].text}",
       "business_hours": lst
     };
-
+    print("_map:${_map.toString()}");
     WebService.funUserProfileUpdate(_map, context).then((value) async {
       if (value.status == 'success') {
         BotToast.showLoading(duration: Duration(seconds: 1));

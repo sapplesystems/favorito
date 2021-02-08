@@ -32,6 +32,10 @@ class serviceFunction {
   static String funWaitlistDelete = baseUrl1 + 'waitlist/delete';
   static String funSearchBranches = baseUrl2 + 'business-user/search-branch';
   static String funGetBusinessProfileData = baseUrl2 + 'business-user/profile';
+  static String funGetBusinessWorkingHours =
+      funGetBusinessProfileData + '/get-working-hour';
+  static String funSetBusinessWorkingHours =
+      funGetBusinessProfileData + '/update-working-hour';
   static String funGetOfferData = funOffer + 'list';
   static String funEditOffer = funOffer + 'edit';
   static String funGetEditJobData = baseUrl2 + 'job/detail';

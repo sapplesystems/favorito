@@ -12,8 +12,10 @@ import 'package:Favorito/model/appoinment/personModel.dart';
 import 'package:Favorito/model/booking/bookingListModel.dart';
 import 'package:Favorito/model/booking/bookingSettingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
+import 'package:Favorito/model/business/HoursModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
+import 'package:Favorito/model/businessProfile/BusinessHoursModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
@@ -58,6 +60,7 @@ import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHours.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -711,6 +714,29 @@ class WebService {
     _returnData =
         BusinessProfileModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
+  }
+
+  static Future<HoursModel> funGetBusinessWorkingHours() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funGetBusinessWorkingHours;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("BusinessProfile request url: $url");
+    print("token: $token");
+    response = await dio.post(url, data: null, options: _opt);
+    return HoursModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<HoursModel> funSetBusinessWorkingHours(_map) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funSetBusinessWorkingHours;
+    Options _opt =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("BusinessProfile request url: $url");
+    print("token: $token");
+    response = await dio.post(url, data: _map, options: _opt);
+    return HoursModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<OfferListDataModel> funGetOfferData(

@@ -222,6 +222,42 @@ exports.updateProfile = async function(req, res, next) {
     }
 };
 
+exports.getProfileWorkingHour = async(req, res, next) => {
+    
+    business_id = req.userdata.business_id
+    var sql_get_hours = "select `day`,start_hours,end_hours from business_hours \n\
+    where business_id='" + business_id + "' and deleted_at is null";
+    // return res.send(await exports.run_query(sql_get_hours))
+    db.query(sql_get_hours, function(error, hours) {
+        // code for the make the group of same time
+        let final_hours = []
+       
+        if(hours.length>0){
+            
+        let start_day = hours[0].day
+        let end_day = ''
+        for (let i = 0; i < hours.length; i++) {
+            const element = hours[i];
+            if (hours[i + 1] && element.start_hours == hours[i + 1].start_hours && element.end_hours == hours[i + 1].end_hours) {
+                end_day = hours[i + 1].day
+            } else {
+                if (end_day) {
+                    hours[i].day = `${start_day} - ${end_day}`
+                    end_day = ''
+                } else {
+                    hours[i].day = `${start_day}`
+                }
+                final_hours.push(hours[i])
+                if (hours[i + 1]) {
+                    start_day = hours[i + 1].day
+                }
+            }
+        }
+        }
+        return res.status(200).json({ status: 'success', message: 'success', data: final_hours });
+    });
+}
+
 exports.updateProfileWorkingHour = async(req, res, next) => {
     if (!req.body.business_hours) {
         return res.status(400).json({ status: 'error', message: 'business_hours is missing' });

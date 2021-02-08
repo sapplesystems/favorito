@@ -2,7 +2,7 @@ import 'package:Favorito/component/fromTo.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/Abc.dart';
-import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +12,9 @@ class WorkingDateTime extends StatefulWidget {
   TextEditingController controller = TextEditingController();
   List<bool> tempState = [];
   Map<String, String> selecteddayList;
+  bool choozy;
 
-  WorkingDateTime({this.selecteddayList});
+  WorkingDateTime({this.selecteddayList, this.choozy});
 
   @override
   _WorkingDateTimeState createState() => _WorkingDateTimeState();
@@ -33,12 +34,26 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
     _temp1.addAll(widget.selecteddayList);
     super.initState();
     for (int i = 0; i < daylist.length; i++) {
-      widget.tempState.add(widget.selecteddayList.containsKey(daylist[i]));
+      print("dddd" + daylist[i]);
+      bool g = widget.selecteddayList.containsKey(daylist[i]);
+      widget.tempState.add(g);
     }
     print("widget.selecteddayList:${widget.selecteddayList}");
     widget.selecteddayList.isNotEmpty
         ? widget.selecteddayList.addAll(widget.selecteddayList)
         : "";
+    try {
+      _startTime =
+          (widget.selecteddayList[widget.selecteddayList.keys.toList()[0]])
+              .split('-')[0];
+      _startTime = _startTime.substring(0, 5);
+      print("_endTime3:${_endTime}");
+      _endTime =
+          (widget.selecteddayList[widget.selecteddayList.keys.toList()[0]])
+              .split('-')[1];
+      _endTime = _endTime.substring(0, 5);
+      print("_endTime1:${_endTime}");
+    } catch (e) {}
     for (var _v in widget.selecteddayList?.keys.toList()) {
       alredy.add(_v);
     }
@@ -46,15 +61,19 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
     for (var _v in alredy) {
       // print("aaaaa${_v}");
       if (_v.contains('-')) {
-        int _start = daylist.indexOf(_v.split(' - ')[0]);
-        int _end = daylist.indexOf(_v.split(' - ')[1]);
+        int _start = daylist.indexOf(_v.split('-')[0].trim());
+        int _end = daylist.indexOf(_v.split('-')[1].trim());
         print("aaaaa${_start}");
         print("aaaaa${_end}");
         for (int i = _start; i <= _end; i++) {
           widget.tempState[i] = true;
         }
+
+        _daysSelectedList[_start] = true;
+        _daysSelectedList[_end] = true;
       } else {
-        widget.tempState[daylist.indexOf(_v.split(' - ')[0])] = true;
+        widget.tempState[daylist.indexOf(_v.split('-')[0])] = true;
+        _daysSelectedList[daylist.indexOf(_v.split('-')[0])] = true;
         // int _start = daylist.indexOf(_v);
         // _daysSelectedList[_start] = true;
       }
@@ -87,10 +106,9 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
                           initialTime: TimeOfDay.now(),
                           builder: (BuildContext context, Widget child) {
                             return MediaQuery(
-                              data: MediaQuery.of(context)
-                                  .copyWith(alwaysUse24HourFormat: true),
-                              child: child,
-                            );
+                                data: MediaQuery.of(context)
+                                    .copyWith(alwaysUse24HourFormat: true),
+                                child: child);
                           },
                         ).then((value) {
                           setState(() {
@@ -115,7 +133,6 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
                           },
                         ).then((value) {
                           setState(() {
-                            // _endTime = value.format(context);
                             _endTime = localizations.formatTimeOfDay(value,
                                 alwaysUse24HourFormat: true);
                           });
@@ -142,17 +159,7 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
     return InkWell(
       onTap: () {
         setState(() {
-          print("widget.tempState[j]:${widget.tempState[j]}");
-          // if (!widget.tempState[j]) {
-          print("_daysSelectedList[j]:${_daysSelectedList[j]}");
-          if (_daysSelectedList[j]) {
-            print("widget1");
-            _daysSelectedList[j] = false;
-          } else {
-            print("widget12");
-            _daysSelectedList[j] = true;
-          }
-          // }
+          _daysSelectedList[j] = !_daysSelectedList[j];
         });
       },
       child: Container(
@@ -190,16 +197,17 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
           _startTime != "" &&
           _endTime != null &&
           _endTime != "") {
-        if (_daysSelectedList[i])
-          widget.selecteddayList[daylist[i]] = "$_startTime - $_endTime";
-        else
+        if (_daysSelectedList[i]) {
+          print("_endTime2:${_endTime}");
+          widget.selecteddayList[daylist[i]] = "$_startTime-$_endTime";
+        } else
           widget.selecteddayList.remove([daylist[i]]);
       } else {
         BotToast.showText(text: "Please select start and end times.");
         return;
       }
 
-      print("_daysSelectedList:${widget.selecteddayList.toString()}");
+      print("_daysSelectedList1:${widget.selecteddayList.toString()}");
     }
 
     // businessHoursBallancer() {
@@ -208,40 +216,28 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
 
     List<Abc> list2 = [];
     List<Abc> list3 = [];
-    // Map<String, String> selecteddayList = {
-    //   "Mon": "12:22 - 14:22",
-    //   "Wed": "16:23 - 21:23",
-    //   "Thu": "12:22 - 14:22",
-    //   "Tue": "12:22 - 14:22",
-    //   "Fri": "12:22 - 14:22",
-    //   "Sat": "16:23 - 21:23",
-    //   "Sun": "16:23 - 21:23"
-    // };
+
     for (int i = 0; i < widget.selecteddayList.length; i++) {
       Abc abc = Abc();
       abc.day = widget.selecteddayList.keys.toList()[i];
       abc.start =
           (widget.selecteddayList[widget.selecteddayList.keys.toList()[i]])
+              .trim()
               .substring(0, 5);
       abc.end =
           (widget.selecteddayList[widget.selecteddayList.keys.toList()[i]])
-              .substring(8, 13);
+              .split('-')[1]
+              .trim()
+              .substring(0, 5);
       list.add(abc);
     }
-    for (int _i = 0; _i < ls.length; _i++) {
-      for (int _j = 0; _j < list.length; _j++) {
-        if (ls[_i] == list[_j].day) {
-          list3.add(list[_j]);
-        } else {
-          // list3.add(Abc());
-        }
-      }
-    }
+    for (int _i = 0; _i < ls.length; _i++)
+      for (int _j = 0; _j < list.length; _j++)
+        if (ls[_i] == list[_j].day) list3.add(list[_j]);
 
     list2 = [];
     var counter = 0;
     for (int i = 0; i < list3.length; i++) {
-      // if (list3[i].day != null) {
       if (i < list3.length - 1 &&
           list3[i].start == list3[i + 1].start &&
           list3[i].end == list3[i + 1].end &&
@@ -257,22 +253,31 @@ class _WorkingDateTimeState extends State<WorkingDateTime> {
               Abc(start: list3[i].start, end: list3[i].end, day: list3[i].day));
         } else {
           list2[list2.length - 1].day =
-              "${list2[list2.length - 1].day} - ${list3[i].day}";
+              "${list2[list2.length - 1].day}-${list3[i].day}";
           counter = 0;
         }
-        // }
       }
     }
 
-    // print(list2.length);
     widget.selecteddayList.clear();
-
     Map<String, String> _temp = {};
-    for (var v in list2) _temp[v.day] = "${v.start} - ${v.end}";
+    for (var v in list3) {
+      _temp[v.day] = "${v.start}-${v.end}";
+    }
 
     _temp1?.addAll(_temp);
-    // }
-    widget.selecteddayList.addAll(_temp1);
+
+    widget.selecteddayList.addAll(_temp);
+    Provider.of<BusinessHoursProvider>(context, listen: false)
+        .selecteddayList
+        .clear();
+
+    Provider.of<BusinessHoursProvider>(context, listen: false)
+        .selecteddayList
+        .addAll(_temp);
+
+    Provider.of<BusinessHoursProvider>(context, listen: false).setData();
+
     Navigator.pop(context);
   }
 }
