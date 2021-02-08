@@ -43,7 +43,11 @@ exports.getBusinessInformation = async function(req, res, next) {
                 rows[0].sub_categories = await exports.getSubCategories(business_id);
                 rows[0].tags = await exports.getTags(business_id);
                 rows[0].attributes = await exports.getAttributes(business_id);
-                rows[0].payment_method = (rows[0].payment_method).split(',');
+                if (rows[0].payment_method) {
+                    rows[0].payment_method = (rows[0].payment_method).split(',');
+                } else {
+                    rows[0].payment_method = ''
+                }
                 rows[0].photos = await exports.getBusinessInformationUploads(business_id);
                 return res.status(200).json({ status: 'success', message: 'success', dd_verbose: dd_verbose, data: rows[0] });
             }

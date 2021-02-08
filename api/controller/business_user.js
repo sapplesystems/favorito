@@ -42,26 +42,29 @@ exports.getProfile = function(req, res, next) {
                     db.query(q2, function(error, hours) {
                         // code for the make the group of same time
                         let final_hours = []
-                        let start_day = hours[0].day
-                        let end_day = ''
-                        for (let i = 0; i < hours.length; i++) {
-                            const element = hours[i];
-                            if (hours[i + 1] && element.start_hours == hours[i + 1].start_hours && element.end_hours == hours[i + 1].end_hours) {
-                                end_day = hours[i + 1].day
-                            } else {
-                                if (end_day) {
-                                    hours[i].day = `${start_day} - ${end_day}`
-                                    end_day = ''
+                        if (hours[0]) {
+                            let start_day = hours[0].day
+                            let end_day = ''
+                            for (let i = 0; i < hours.length; i++) {
+                                const element = hours[i];
+                                if (hours[i + 1] && element.start_hours == hours[i + 1].start_hours && element.end_hours == hours[i + 1].end_hours) {
+                                    end_day = hours[i + 1].day
                                 } else {
-                                    hours[i].day = `${start_day}`
-                                }
-                                final_hours.push(hours[i])
-                                if (hours[i + 1]) {
-                                    start_day = hours[i + 1].day
+                                    if (end_day) {
+                                        hours[i].day = `${start_day} - ${end_day}`
+                                        end_day = ''
+                                    } else {
+                                        hours[i].day = `${start_day}`
+                                    }
+                                    final_hours.push(hours[i])
+                                    if (hours[i + 1]) {
+                                        start_day = hours[i + 1].day
+                                    }
                                 }
                             }
+                            rows[0].hours = final_hours;
                         }
-                        rows[0].hours = final_hours;
+
                         return res.status(200).json({ status: 'success', message: 'success', data: rows[0], hours_drop_down_list: hours_drop_down_list });
                     });
                 } else {
@@ -257,6 +260,12 @@ exports.updateBusinessOwnerProfile = function(req, res, next) {
         }
         if (req.body.upi != '' && req.body.upi != 'undefined' && req.body.upi != null) {
             update_columns += ", upi='" + req.body.upi + "' ";
+        }
+        if (req.body.email != '' && req.body.email != 'undefined' && req.body.email != null) {
+            update_columns += ", upi='" + req.body.email + "' ";
+        }
+        if (req.body.phone != '' && req.body.phone != 'undefined' && req.body.phone != null) {
+            update_columns += ", upi='" + req.body.phone + "' ";
         }
 
         var bid = req.body.bid;

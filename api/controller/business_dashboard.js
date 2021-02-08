@@ -12,12 +12,17 @@ exports.getDashboardDetail = async function(req, res, next) {
             var result_number_order = await exports.run_query(sql_number_order)
             var sql_number_catalogs = `SELECT COUNT(id) as count FROM business_catalogs WHERE business_id = '${business_id}'`
             var result_number_catalogs = await exports.run_query(sql_number_catalogs)
-            var sql_avg_rating = `SELECT AVG(rating) as avg_rating FROM business_ratings WHERE business_id = '${business_id}'`
+            var sql_avg_rating = `SELECT ifnull(AVG(rating),0) as avg_rating FROM business_ratings WHERE business_id = '${business_id}'`
             var result_avg_rating = await exports.run_query(sql_avg_rating)
             var sql_number_checkin = `SELECT COUNT(id) as count FROM business_check_in WHERE business_id = '${business_id}'`
             var result_number_checkin = await exports.run_query(sql_number_checkin)
             var sql_get_accepting_order_status = `SELECT accepting_order from business_menu_setting where business_id = '${business_id}'`
             var result_get_accepting_order_status = await exports.run_query(sql_get_accepting_order_status)
+            if (result_get_accepting_order_status != '') {
+                accepting_order_status = result_get_accepting_order_status[0].accepting_order
+            } else {
+                accepting_order_status = 0
+            }
         } catch (error) {
             return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
         }
@@ -31,7 +36,7 @@ exports.getDashboardDetail = async function(req, res, next) {
             var data = {
                 id: row.id,
                 business_id: row.business_id,
-                status: result_get_accepting_order_status[0].accepting_order,
+                status: accepting_order_status,
                 business_name: row.business_name,
                 photo: row.photo,
                 business_status: row.business_status,
@@ -53,6 +58,7 @@ exports.getDashboardDetail = async function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
 
 /* 
 It will return the business only if it is available on that day and inside the time limit 

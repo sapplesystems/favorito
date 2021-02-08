@@ -19,13 +19,13 @@ router.post('/dd-verbose', CheckAuth, JobController.dd_verbose);
 /**
  * FETCH ALL PINCODE OF THE CITY
  */
-router.post('/city-pincode', CheckAuth, JobController.city_pincode);
+router.post('/city-pincode', JobController.city_pincode);
 
 
 /**
  * FETCH ID, CITY NAME FROM THE PINCODE
  */
-router.post('/city-from-pincode', CheckAuth, JobController.city_from_pincode);
+router.post('/city-from-pincode', JobController.city_from_pincode);
 
 
 /**

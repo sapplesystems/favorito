@@ -53,12 +53,11 @@ exports.register = function(req, res, next) {
             last_name = split_name.join(' ');;
         }
 
-
         bcrypt.hash(password, 10, function(err, hash) {
             if (err) {
                 return res.status(403).json({ status: 'error', message: 'Password encryption failed' });
             }
-            var cslq = "select count(*) as c from business_users where (email='" + email + "' or phone='" + phone + "') and is_deleted=0 and deleted_at is null";
+            var cslq = "select count(*) as c from business_master where (business_email='" + email + "' or business_phone='" + phone + "') and deleted_at is null";
             db.query(cslq, function(chkerr, check) {
                 if (chkerr) {
                     return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -115,7 +114,7 @@ exports.register = function(req, res, next) {
             });
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', e });
     }
 };
 
@@ -123,7 +122,6 @@ exports.isAccountExist = async(req, res) => {
     if (!req.body.api_type) {
         return res.status(400).json({ status: 'error', message: 'api_type is missing either mobile or email' });
     }
-
     if (req.body.api_type == 'mobile') {
         if (!req.body.mobile) {
             return res.status(400).json({ status: 'error', message: 'Mobile number is missing' });
