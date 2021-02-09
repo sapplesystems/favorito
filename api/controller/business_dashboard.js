@@ -62,7 +62,6 @@ exports.getDashboardDetail = async function(req, res, next) {
 
 /* 
 It will return the business only if it is available on that day and inside the time limit 
-
 */
 exports.trendingNearby = async function(req, res, next) {
     try {
