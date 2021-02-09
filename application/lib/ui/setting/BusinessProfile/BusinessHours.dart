@@ -20,7 +20,7 @@ class BusinessHours extends StatelessWidget {
     bspTrue = Provider.of<BusinessHoursProvider>(context, listen: true);
     bspFalse = Provider.of<BusinessHoursProvider>(context, listen: false);
     sm = SizeManager(context);
-    bspTrue.getData();
+
     return Padding(
       padding: EdgeInsets.all(0),
       child: Column(
@@ -33,116 +33,129 @@ class BusinessHours extends StatelessWidget {
                   autoValidateMode: AutovalidateMode.onUserInteraction,
                   mode: Mode.MENU,
                   showSelectedItem: true,
-                  selectedItem: bspTrue.controller.text,
+                  selectedItem: bspFalse.controller.text,
                   items: ["Select Hours", "Always Open"],
                   label: "Working Hours",
                   hint: "Please Select",
                   showSearchBox: false,
                   maxHeight: 110,
                   onChanged: (value) {
-                    bspTrue.controller.text = value != null ? value : "";
-                    bspTrue.notifyListeners();
+                    bspFalse.controller.text = value != null ? value : "";
+                    bspFalse.notifyListeners();
                   })),
           Visibility(
-            visible: bspTrue.controller.text == "Select Hours",
-            child: InkWell(
-              onTap: () {},
-              child: Padding(
-                padding: EdgeInsets.only(left: 18, right: 18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Business Hours", style: TextStyle(color: myGrey)),
-                        InkWell(
-                          onTap: () => bspTrue.selecteddayList.clear(),
-                          onLongPress: () {},
-                          child: Text("Reset",
-                              style: TextStyle(color: Colors.red)),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: sm.w(1)),
-                          width: sm.w(60),
-                          height: sm.w(14),
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              for (int i = 0;
-                                  i < bspTrue.selecteddayList.length;
-                                  i++)
-                                InkWell(
-                                  onTap: () {
-                                    bspTrue.temp.clear();
-                                    bspTrue.temp[bspTrue.selecteddayList.keys
-                                            .toList()[i]] =
-                                        bspTrue.selecteddayList[bspTrue
+            visible: bspFalse.controller.text == "Select Hours",
+            child: Padding(
+              padding: EdgeInsets.only(left: 18, right: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Business Hours", style: TextStyle(color: myGrey)),
+                      InkWell(
+                        onTap: () {
+                          // bspTrue.selecteddayList.clear(),
+                          bspTrue.getData();
+                        },
+                        child:
+                            Text("Reset", style: TextStyle(color: Colors.red)),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: sm.w(1)),
+                        width: sm.w(60),
+                        height: sm.w(14),
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            for (int i = 0;
+                                i < bspTrue.selecteddayList.length;
+                                i++)
+                              InkWell(
+                                onTap: () {
+                                  bspTrue.setMod(true);
+                                  if (((bspTrue.selecteddayList.keys
+                                          .toList())[i])
+                                      .contains('-')) {
+                                    print("range is called");
+                                    int _a = bspTrue.daylist.indexOf((((bspTrue
                                             .selecteddayList.keys
-                                            .toList()[i]];
-                                    showPopup(
-                                        context,
-                                        WorkingDateTime(
-                                            selecteddayList: bspTrue.temp,
-                                            choozy: true));
-                                    print(
-                                        "abc:${bspTrue.temp.keys.toList()[i]}");
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  bspTrue.selecteddayList.keys
-                                                      .toList()[i],
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w400)),
-                                              SizedBox(height: 2),
-                                              Text(
-                                                  "${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)}-${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w200)),
-                                            ])
-                                      ],
-                                    ),
+                                            .toList())[i])
+                                        .split('-')[0]
+                                        .trim()));
+
+                                    int _b = bspTrue.daylist.indexOf((((bspTrue
+                                            .selecteddayList.keys
+                                            .toList())[i])
+                                        .split('-')[1]
+                                        .trim()));
+                                    print("$_a ab ");
+                                    for (int _i = _a; _i <= _b; _i++) {
+                                      bspTrue.renge.add(_i);
+                                      bspTrue.selectDay(_i);
+                                    }
+                                  } else {
+                                    print("single is called");
+
+                                    bspTrue.renge.add(bspTrue.daylist.indexOf(
+                                        bspTrue.selecteddayList.keys
+                                            .toList()[i]));
+                                    bspTrue.selectDay(bspTrue.daylist.indexOf(
+                                        bspTrue.selecteddayList.keys
+                                            .toList()[i]));
+                                  }
+                                  showPopup(context, WorkingDateTime());
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                bspTrue.selecteddayList.keys
+                                                    .toList()[i],
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                            SizedBox(height: 2),
+                                            Text(
+                                                "${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)}-${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w200)),
+                                          ])
+                                    ],
                                   ),
-                                )
-                            ],
-                          ),
+                                ),
+                              )
+                          ],
                         ),
-                        InkWell(
-                          onTap: () {
-                            showPopup(
-                                context,
-                                WorkingDateTime(
-                                  selecteddayList: bspTrue.selecteddayList,
-                                  choozy: false,
-                                ));
-                          },
-                          child:
-                              Text("Add", style: TextStyle(color: Colors.red)),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          bspTrue.setMod(false);
+                          showPopup(context, WorkingDateTime());
+                        },
+                        child: Text("Add", style: TextStyle(color: Colors.red)),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
           ),
@@ -173,11 +186,7 @@ class BusinessHours extends StatelessWidget {
                 left: sm.w(3),
                 right: sm.w(3),
                 bottom: sm.h(30),
-                child: PopupContent(
-                    content: Scaffold(
-                        resizeToAvoidBottomPadding: false, body: widget))))
-        .whenComplete(() {
-      // setState(() {});
-    });
+                child: PopupContent(content: widget)))
+        .whenComplete(() => bspTrue.popupClosed());
   }
 }

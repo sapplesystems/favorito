@@ -484,9 +484,8 @@ class WebService {
   static Future<PincodeListModel> funGetPicodesForCity(
       int cityId, BuildContext context) async {
     String token = await Prefs.token;
-    Options _opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Options _opt =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"city_id": cityId};
     PincodeListModel _returnData = PincodeListModel();
     response = await dio

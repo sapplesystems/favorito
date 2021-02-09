@@ -143,8 +143,16 @@ class Hours {
   String day;
   String startHours;
   String endHours;
+  bool open;
+  bool selected;
 
-  Hours({this.id, this.day, this.startHours, this.endHours});
+  Hours(
+      {this.id,
+      this.day,
+      this.startHours,
+      this.endHours,
+      this.open,
+      this.selected});
 
   Hours.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -161,4 +169,7 @@ class Hours {
     data['end_hours'] = this.endHours;
     return data;
   }
+
+  String toString() =>
+      "{day:$day,startHours:$startHours,endHours:$endHours,open:$open,selected:$selected}";
 }
