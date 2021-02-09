@@ -78,9 +78,11 @@ class BusinessHoursProvider extends ChangeNotifier {
   void popupClosed() {
     print("this is called 3");
     renge.clear();
+    getData();
     for (int i = 0; i < daysHours.length; i++) daysHours[i].selected = false;
     startTime = 'Start Time';
     endTime = 'End Time';
+    notifyListeners();
   }
 
   pickDate(val) {
@@ -97,9 +99,9 @@ class BusinessHoursProvider extends ChangeNotifier {
           .formatTimeOfDay(value, alwaysUse24HourFormat: true)
           .toString();
       if (val)
-        startTime = s;
+        startTime = s.substring(0, 5);
       else
-        endTime = s;
+        endTime = s.substring(0, 5);
       notifyListeners();
     });
   }
@@ -172,8 +174,8 @@ class BusinessHoursProvider extends ChangeNotifier {
     print("${daysHours[_index].open}");
     print("${daysHours.toString()}");
 
-    if (_isEdit && renge.contains(_index)) {
-      if (daysHours[_index].open) {
+    if (_isEdit) {
+      if (renge.contains(_index) && daysHours[_index].open) {
         daysHours[_index].selected = !daysHours[_index].selected;
         if (!daysHours[_index].selected) {
           print("doing off");
@@ -182,7 +184,10 @@ class BusinessHoursProvider extends ChangeNotifier {
         startTime = daysHours[_index].startHours;
         endTime = daysHours[_index].endHours;
       } else {
-        print("ggggggg");
+        daysHours[_index].selected = true;
+        daysHours[_index].startHours = startTime;
+        daysHours[_index].endHours = endTime;
+        daysHours[_index].open = true;
       }
     } else if (!_isEdit) {
       if (!daysHours[_index].open) {
