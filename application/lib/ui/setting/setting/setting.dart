@@ -1,8 +1,12 @@
 import 'dart:ui';
+import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/component/listItem.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
+import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
+import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
 import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
@@ -166,6 +170,12 @@ class Setting extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Prefs().clear();
+                    photoUrl = "";
+                    Provider.of<SignUpProvider>(context).dispose();
+                    Provider.of<ContactPersonProvider>(context).dispose();
+                    Provider.of<BusinessHoursProvider>(context).dispose();
+                    Provider.of<SettingProvider>(context).dispose();
+                    Provider.of<ForgetPassProvider>(context).dispose();
                     Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Login()));

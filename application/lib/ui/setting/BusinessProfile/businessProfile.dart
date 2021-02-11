@@ -53,6 +53,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   int stateId = 0;
   int cityId = 0;
   List<String> addressList = [];
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ddCity = GlobalKey<DropdownSearchState<String>>();
   final ddState = GlobalKey<DropdownSearchState<String>>();
@@ -143,15 +144,6 @@ class _BusinessProfileState extends State<BusinessProfile>
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          // actions: [
-          //   IconButton(
-          //     icon: SvgPicture.asset(
-          //       'assets/icon/save.svg',
-          //       height: sm.w(6.4),
-          //     ),
-          //     onPressed: () {},
-          //   )
-          // ],
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
@@ -176,7 +168,6 @@ class _BusinessProfileState extends State<BusinessProfile>
                   child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
