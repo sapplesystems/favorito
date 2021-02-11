@@ -45,7 +45,7 @@ class BusinessInfoData {
       });
     }
     priceRange = json['price_range'];
-    paymentMethod = json['payment_method'].cast<String>();
+    paymentMethod = json['payment_method']?.cast<String>();
     if (json['attributes'] != null) {
       attributes = new List<AttributeList>();
       json['attributes'].forEach((v) {

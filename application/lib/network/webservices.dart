@@ -148,23 +148,12 @@ class WebService {
       HttpHeaders.authorizationHeader: "Bearer $token",
     });
     String fileName = file.path.split('/').last;
-    FormData formData = FormData.fromMap({
-      "photo": await MultipartFile.fromFile(file.path, filename: fileName),
-    });
-
-    BaseResponseModel _returnData = BaseResponseModel();
+    FormData formData = FormData.fromMap(
+        {"photo": await MultipartFile.fromFile(file.path, filename: fileName)});
     response = await dio.post(serviceFunction.funProfileUpdatephoto,
         data: formData, options: _opt);
-    print("profileImageUpdate:${response.toString()}");
 
-    if (response.statusCode == HttpStatus.ok) {
-      _returnData =
-          BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    } else {
-      print("responseData4:${response.statusCode}");
-    }
-
-    return response.data;
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<profileDataModel> getProfileData() async {

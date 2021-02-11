@@ -29,7 +29,7 @@ class Data {
   Data({this.contactVia, this.cityList});
 
   Data.fromJson(Map<String, dynamic> json) {
-    contactVia = json['contact_via'].cast<String>();
+    contactVia = json['contact_via']?.cast<String>();
     if (json['city_list'] != null) {
       cityList = new List<CityList>();
       json['city_list'].forEach((v) {

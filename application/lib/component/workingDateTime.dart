@@ -20,6 +20,7 @@ class WorkingDateTime extends StatelessWidget {
       Container(
         height: sm.h(8.5),
         child: Expanded(
+          flex: 1,
           child: ListView(scrollDirection: Axis.horizontal, children: [
             for (int i = 0; i < 7; i++)
               InkWell(

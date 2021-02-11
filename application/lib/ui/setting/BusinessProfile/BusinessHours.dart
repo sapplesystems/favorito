@@ -1,5 +1,4 @@
-import 'package:Favorito/component/PopupContent.dart';
-import 'package:Favorito/component/PopupLayout.dart';
+import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/component/workingDateTime.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
@@ -59,8 +58,8 @@ class BusinessHours extends StatelessWidget {
                           // bspTrue.selecteddayList.clear(),
                           bspTrue.getData();
                         },
-                        child:
-                            Text("Reset", style: TextStyle(color: Colors.red)),
+                        child: Text("Refresh slot \u27F3",
+                            style: TextStyle(color: Colors.red)),
                       )
                     ],
                   ),
@@ -111,7 +110,12 @@ class BusinessHours extends StatelessWidget {
                                         bspTrue.selecteddayList.keys
                                             .toList()[i]));
                                   }
-                                  showPopup(context, WorkingDateTime());
+                                  showPopup(
+                                          ctx: context,
+                                          widget: WorkingDateTime(),
+                                          callback: () {},
+                                          sm: sm)
+                                      .show();
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -148,8 +152,13 @@ class BusinessHours extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          bspTrue.setMod(false);
-                          showPopup(context, WorkingDateTime());
+                          showPopup(
+                                  ctx: context,
+                                  widget: WorkingDateTime(),
+                                  callback: () => bspTrue.popupClosed(),
+                                  sm: sm)
+                              .show();
+                          // bspTrue.setMod(false);
                         },
                         child: Text("Add", style: TextStyle(color: Colors.red)),
                       )
@@ -162,31 +171,5 @@ class BusinessHours extends StatelessWidget {
         ],
       ),
     );
-  }
-// for (int i = 0; i < selecteddayList.length; i++) {
-//       var va = selecteddayList[(selecteddayList.keys.toList())[i]].split("-");
-//       Map<String, String> dayData = Map();
-//       dayData["business_days"] =
-//           "${(selecteddayList.keys.toList())[i].toString()}";
-//       dayData["business_start_hours"] = "${va[0].toString()}";
-//       dayData["business_end_hours"] = "${va[1].toString()}";
-//       lst.add(dayData);
-//     }
-// for (int _i = 0; _i < va.hours.length; _i++)
-//         selecteddayList[(va.hours.toList())[_i].day] =
-//             "${(va.hours.toList())[_i].startHours}-${(va.hours.toList())[_i].endHours}";
-
-  showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
-    SizeManager sm = SizeManager(context);
-
-    Navigator.push(
-            context,
-            PopupLayout(
-                top: sm.h(36),
-                left: sm.w(3),
-                right: sm.w(3),
-                bottom: sm.h(30),
-                child: PopupContent(content: widget)))
-        .whenComplete(() => bspTrue.popupClosed());
   }
 }

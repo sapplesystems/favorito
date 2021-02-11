@@ -1,3 +1,6 @@
+import 'package:Favorito/component/showPopup.dart';
+import 'package:Favorito/component/workingDateTime.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -63,7 +66,6 @@ class BusinessHoursProvider extends ChangeNotifier {
               print("Error1:${e.toString()}");
             }
           }
-          print("daysHours:${"this is called 2 daysHours.toString()"}");
         }
       }
       notifyListeners();
@@ -75,7 +77,7 @@ class BusinessHoursProvider extends ChangeNotifier {
     this.context = context;
   }
 
-  void popupClosed() {
+  popupClosed() {
     print("this is called 3");
     renge.clear();
     getData();
@@ -106,7 +108,7 @@ class BusinessHoursProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> setData(Map _map) async {
+  setData(Map _map) async {
     print("_map2:${_map.toString()}");
     await WebService.funSetBusinessWorkingHours(_map).then((value) {
       if (value.status == 'success') {
@@ -161,7 +163,7 @@ class BusinessHoursProvider extends ChangeNotifier {
     setData(_map);
   }
 
-  void refresh() => notifyListeners();
+  refresh() => notifyListeners();
   setMod(_val) {
     _isEdit = _val;
     notifyListeners();
@@ -169,7 +171,7 @@ class BusinessHoursProvider extends ChangeNotifier {
 
   bool getMod() => _isEdit;
 
-  void selectDay(int _index) {
+  selectDay(int _index) {
     print("$_isEdit $_index");
     print("${daysHours[_index].open}");
     print("${daysHours.toString()}");

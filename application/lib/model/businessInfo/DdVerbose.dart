@@ -14,8 +14,8 @@ class DdVerbose {
       this.attributeList});
 
   DdVerbose.fromJson(Map<String, dynamic> json) {
-    staticPaymentMethod = json['static_payment_method'].cast<String>();
-    staticPriceRange = json['static_price_range'].cast<int>();
+    staticPaymentMethod = json['static_payment_method']?.cast<String>();
+    staticPriceRange = json['static_price_range']?.cast<int>();
     if (json['tag_list'] != null) {
       tagList = new List<TagList>();
       json['tag_list'].forEach((v) {

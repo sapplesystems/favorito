@@ -29,8 +29,8 @@ class CreateOffer {
   CreateOffer({this.offerStatusDropDown, this.offerTypeDropDown});
 
   CreateOffer.fromJson(Map<String, dynamic> json) {
-    offerStatusDropDown = json['offer_status_drop_down'].cast<String>();
-    offerTypeDropDown = json['offer_type_drop_down'].cast<String>();
+    offerStatusDropDown = json['offer_status_drop_down']?.cast<String>();
+    offerTypeDropDown = json['offer_type_drop_down']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

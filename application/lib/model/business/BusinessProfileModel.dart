@@ -11,7 +11,7 @@ class BusinessProfileModel {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-    hoursDropDownList = json['hours_drop_down_list'].cast<String>();
+    hoursDropDownList = json['hours_drop_down_list']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -96,7 +96,7 @@ class Data {
     location = json['location'];
     byAppointmentOnly = json['by_appointment_only'];
     workingHours = json['working_hours'];
-    website = json['website'].cast<String>();
+    website = json['website']?.cast<String>();
     shortDescription = json['short_description'];
     businessStatus = json['business_status'];
     if (json['hours'] != null) {

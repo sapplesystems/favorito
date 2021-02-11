@@ -10,7 +10,7 @@ class ContactPersonRequiredDataModel {
   ContactPersonRequiredDataModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    userRole = (json['user_role'] as List<dynamic>).cast<String>();
+    userRole = (json['user_role'] as List<dynamic>)?.cast<String>();
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 

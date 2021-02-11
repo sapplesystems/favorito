@@ -21,13 +21,13 @@ class _LoginState extends State<Login> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   ProgressDialog pr;
   @override
-  void initState() {
-    super.initState();
-    setState(() {
-      userCtrl.text = "rohit.shukla@sapple.co.in";
-      passCtrl.text = "sapple@123";
-    });
-  }
+  // void initState() {
+  //   super.initState();
+  //   setState(() {
+  //     userCtrl.text = "rohits.shukla@sapple.co.in";
+  //     passCtrl.text = "sapple@123";
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -90,20 +90,23 @@ class _LoginState extends State<Login> {
                                   controller: passCtrl,
                                   security: true,
                                 )),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Forgot Password?",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: myRed,
-                                    fontSize: 16,
-                                    fontFamily: "Roboto",
-                                    fontWeight: FontWeight.w400,
+                            InkWell(
+                              onTap: () => {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Forgot Password?",
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                      color: myRed,
+                                      fontSize: 16,
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
