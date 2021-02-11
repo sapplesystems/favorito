@@ -91,7 +91,8 @@ class _LoginState extends State<Login> {
                                   security: true,
                                 )),
                             InkWell(
-                              onTap: () => {},
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed('/forgetPass'),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [

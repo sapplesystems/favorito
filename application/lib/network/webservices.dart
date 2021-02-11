@@ -3,6 +3,7 @@ import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
+import 'package:Favorito/model/VerifyOtp.dart';
 import 'package:Favorito/model/adSpentModel.dart';
 import 'package:Favorito/model/appoinment/RestrictionModel.dart';
 import 'package:Favorito/model/appoinment/appoinmentSeviceModel.dart';
@@ -1369,6 +1370,23 @@ class WebService {
       return BaseResponseModel.fromJson(
           convert.json.decode(response.toString()));
     }
+  }
+
+  static Future<verifyOtpModel> funForgetPass(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funForgetPass;
+    response = await dio.post(url, data: _map);
+    return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<verifyOtpModel> funVerifyOtp(Map _map) async {
+    String url = serviceFunction.funVerifyOtp;
+    response = await dio.post(url, data: _map);
+    if (response.statusCode == 400) {
+      print("hfshkjhkjdshsnfsdvnkjd:${response.statusCode}");
+    }
+    return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<BaseResponseModel> funClaimVerifyOtp(

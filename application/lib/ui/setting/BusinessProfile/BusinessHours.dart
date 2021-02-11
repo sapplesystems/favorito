@@ -113,7 +113,7 @@ class BusinessHours extends StatelessWidget {
                                   showPopup(
                                           ctx: context,
                                           widget: WorkingDateTime(),
-                                          callback: () {},
+                                          callback: () => bspTrue.popupClosed(),
                                           sm: sm)
                                       .show();
                                 },
@@ -152,13 +152,13 @@ class BusinessHours extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
+                          bspTrue.setMod(false);
                           showPopup(
                                   ctx: context,
                                   widget: WorkingDateTime(),
                                   callback: () => bspTrue.popupClosed(),
                                   sm: sm)
                               .show();
-                          // bspTrue.setMod(false);
                         },
                         child: Text("Add", style: TextStyle(color: Colors.red)),
                       )

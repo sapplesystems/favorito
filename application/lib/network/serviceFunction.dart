@@ -129,4 +129,7 @@ class serviceFunction {
   static String funMenuSettingUpdate = funMenu + 'setting-update';
   static String funMenuItemDetail = funMenu + 'menu-item-detail';
   static String funMenuItemDelete = funMenu + 'delete-menu-item';
+  static String funForgetPass = baseUrl2 + 'change-password/send-otp-email';
+  static String funVerifyOtp =
+      baseUrl2 + 'change-password/verify-otp-change-password';
 }

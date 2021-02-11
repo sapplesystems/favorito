@@ -1,6 +1,3 @@
-import 'package:Favorito/component/showPopup.dart';
-import 'package:Favorito/component/workingDateTime.dart';
-import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -35,6 +32,7 @@ class BusinessHoursProvider extends ChangeNotifier {
       daysHours.add(Hours(
           day: _d, open: false, selected: false, startHours: "", endHours: ""));
     }
+    getData();
   }
   getData() async {
     await WebService.funGetBusinessWorkingHours().then((value) {
@@ -78,7 +76,6 @@ class BusinessHoursProvider extends ChangeNotifier {
   }
 
   popupClosed() {
-    print("this is called 3");
     renge.clear();
     getData();
     for (int i = 0; i < daysHours.length; i++) daysHours[i].selected = false;
@@ -133,25 +130,27 @@ class BusinessHoursProvider extends ChangeNotifier {
 
     for (int i = 0; i < daysHours.length; i++) {
       Map<String, String> m = Map();
-      print(
-          "ddd${daysHours[i].day}:${daysHours[i].selected}-${daysHours[i].open}");
+
+      m['business_days'] = daysHours[i].day;
       if (_isEdit) {
         if (daysHours[i].open) {
-          m['business_days'] = daysHours[i].day;
-          m['business_start_hours'] =
-              daysHours[i].startHours.trim().substring(0, 5);
-          m['business_end_hours'] =
-              daysHours[i].endHours.trim().substring(0, 5);
+          if (daysHours[i].selected) {
+            m['business_start_hours'] = startTime;
+            m['business_end_hours'] = endTime;
+          } else {
+            m['business_start_hours'] =
+                daysHours[i].startHours.trim().substring(0, 5);
+            m['business_end_hours'] =
+                daysHours[i].endHours.trim().substring(0, 5);
+          }
           h.add(m);
-        } else if (!daysHours[i].open && daysHours[i].selected) {}
+        }
       } else {
         if (daysHours[i].selected) {
-          m['business_days'] = daysHours[i].day;
           m['business_start_hours'] = startTime;
           m['business_end_hours'] = endTime;
           h.add(m);
         } else if (daysHours[i].open) {
-          m['business_days'] = daysHours[i].day;
           m['business_start_hours'] = daysHours[i].startHours;
           m['business_end_hours'] = daysHours[i].endHours;
           h.add(m);

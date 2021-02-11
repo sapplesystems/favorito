@@ -334,7 +334,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                             ),
                             for (int i = 0; i < addressLength; i++)
                               txtfieldPostAction(
-                                  ctrl: _controller[i + 6],
+                                  controller: _controller[i + 6],
                                   hint: "Enter Address ${i + 1}",
                                   title: "Address ${i + 1}",
                                   maxLines: 1,
@@ -444,7 +444,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                             ),
                             for (int i = 0; i < webSiteLength; i++)
                               txtfieldPostAction(
-                                  ctrl: _controller[i + 15],
+                                  controller: _controller[i + 15],
                                   hint: "Enter Website ",
                                   title: "Website ",
                                   maxLines: 1,

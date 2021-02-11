@@ -1,6 +1,7 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
+import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/utils/RouteGenerator.dart';
@@ -19,6 +20,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => ContactPersonProvider()),
       ChangeNotifierProvider(create: (context) => BusinessHoursProvider()),
       ChangeNotifierProvider(create: (context) => SettingProvider()),
+      ChangeNotifierProvider(create: (context) => ForgetPassProvider()),
     ], child: MyApp()));
   });
 }

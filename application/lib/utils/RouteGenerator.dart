@@ -1,3 +1,4 @@
+import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:Favorito/ui/tour/Splash.dart';
@@ -25,8 +26,8 @@ class RouteGenerator {
       case '/bottomNavigationBar':
         return MaterialPageRoute(builder: (_) => BottomNavigationBar());
 
-      // case '/profileDetail':
-      //   return MaterialPageRoute(builder: (_) => ProfileDetail());
+      case '/forgetPass':
+        return MaterialPageRoute(builder: (_) => ForgetPass());
 
       // case '/businessProfile':
       //   return MaterialPageRoute(
