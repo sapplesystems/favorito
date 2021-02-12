@@ -420,7 +420,6 @@ exports.sponsored = async function(req, res, next) {
         weekday[5] = "Friday";
         weekday[6] = "Saturday";
         var day = weekday[d.getDay()].substring(0, 3);
-        // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_activated='1' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT 10";
 
         var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, \n\
         IFNULL((SELECT AVG(rating) FROM business_ratings WHERE business_id = b_m.business_id),0) as avg_rating,\n\
@@ -456,15 +455,32 @@ exports.sponsored = async function(req, res, next) {
 // this is for the freelancer
 exports.getBusinessByAppointment = async function(req, res, next) {
     try {
-
+        let latitude = undefined
+        let longitude = undefined
         if (req.body.current_no_business) {
             offset = req.body.current_no_business
         } else {
             offset = 0
         }
+
+        if (req.body.latitude && req.body.longitude) {
+            latitude = req.body.latitude
+            longitude = req.body.longitude
+        } else {
+            try {
+                pincode_user = await user_pincode(req.userdata.id)
+            } catch (error) {
+                return res.status(403).json({ status: 'error', message: 'Pincode is not found , please update the pincode' });
+            }
+            const geo_location_detail = (await geocoder.geocode(pincode_user));
+            latitude = geo_location_detail[0].latitude
+            longitude = geo_location_detail[0].longitude
+        }
         limit = 10
 
-        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
+        SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
+           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -493,14 +509,33 @@ exports.getBusinessByAppointment = async function(req, res, next) {
 // same as above for now
 exports.getBusinessByFreelancer = async function(req, res, next) {
     try {
+        let latitude = undefined
+        let longitude = undefined
         if (req.body.current_no_business) {
             offset = req.body.current_no_business
         } else {
             offset = 0
         }
+
+        if (req.body.latitude && req.body.longitude) {
+            latitude = req.body.latitude
+            longitude = req.body.longitude
+        } else {
+            try {
+                pincode_user = await user_pincode(req.userdata.id)
+            } catch (error) {
+                return res.status(403).json({ status: 'error', message: 'Pincode is not found , please update the pincode' });
+            }
+            const geo_location_detail = (await geocoder.geocode(pincode_user));
+            latitude = geo_location_detail[0].latitude
+            longitude = geo_location_detail[0].longitude
+        }
         limit = 10
 
-        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,  \n\
+        SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
+           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM 
+        business_master  AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id  ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
