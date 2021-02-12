@@ -62,8 +62,6 @@ router.post('/profile/get-working-hour', CheckAuth, UpdateBusinessUserProfileCon
 
 router.post('/profile/update-photo', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfilePhoto);
 
-router.post('/profile/update-photo', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfilePhoto);
-
 router.post('/owner-profile', CheckAuth, UserController.getBusinessOwnerProfile);
 
 router.post('/search-branch', CheckAuth, UserController.searchBranch);

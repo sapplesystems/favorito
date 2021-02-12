@@ -108,7 +108,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     txtfieldPostAction(
-                                        ctrl: ctrlMobile,
+                                        controller: ctrlMobile,
                                         hint: "Enter business phone",
                                         title: "Phone",
                                         keyboardSet: TextInputType.number,
@@ -145,72 +145,70 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         }),
                                     Visibility(
                                       visible: (sentOtp),
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Text(
-                                              "Enter Otp",
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 20),
-                                            ),
+                                      child: Column(children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Text(
+                                            "Enter Otp",
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 20),
                                           ),
-                                          PinCodeTextField(
-                                            length: 5,
-                                            controller: textEditingController,
-                                            obscureText: true,
-                                            appContext: context,
-                                            animationType: AnimationType.fade,
-                                            pinTheme: PinTheme(
-                                                shape: PinCodeFieldShape.box,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                fieldHeight: 50,
-                                                fieldWidth: 40,
-                                                activeFillColor: Colors.white,
-                                                disabledColor: Colors.red,
-                                                activeColor: Colors.black,
-                                                inactiveColor: Colors.black,
-                                                selectedColor: Colors.red,
-                                                inactiveFillColor: Colors.white,
-                                                selectedFillColor: Colors.white,
-                                                borderWidth: 1),
-                                            animationDuration:
-                                                Duration(milliseconds: 300),
-                                            backgroundColor: Colors.white,
-                                            enableActiveFill: true,
-                                            errorAnimationController:
-                                                errorController,
-                                            onCompleted: (v) async {
-                                              pr.show();
-                                              await WebService
-                                                      .funClaimVerifyOtp(
-                                                          {"otp": v.toString()},
-                                                          context)
-                                                  .then((value) {
-                                                pr.hide();
-                                                BotToast.showText(
-                                                    text: value.message);
-                                                if (value.status == 'success') {
-                                                  sentOtp = false;
-                                                  getClaimData();
-                                                } else if (value.status ==
-                                                    'fail') {
-                                                  textEditingController.clear();
-                                                  print(
-                                                      "value.message:${value.message}");
-                                                }
-                                              });
-                                            },
-                                            beforeTextPaste: (text) {
-                                              print("Allowing to paste $text");
-                                              //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                                              //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                                              return true;
-                                            },
-                                          ),
-                                          Row(
+                                        ),
+                                        PinCodeTextField(
+                                          length: 5,
+                                          controller: textEditingController,
+                                          obscureText: true,
+                                          appContext: context,
+                                          animationType: AnimationType.fade,
+                                          pinTheme: PinTheme(
+                                              shape: PinCodeFieldShape.box,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              fieldHeight: 50,
+                                              fieldWidth: 40,
+                                              activeFillColor: Colors.white,
+                                              disabledColor: Colors.red,
+                                              activeColor: Colors.black,
+                                              inactiveColor: Colors.black,
+                                              selectedColor: Colors.red,
+                                              inactiveFillColor: Colors.white,
+                                              selectedFillColor: Colors.white,
+                                              borderWidth: 1),
+                                          animationDuration:
+                                              Duration(milliseconds: 300),
+                                          backgroundColor: Colors.white,
+                                          enableActiveFill: true,
+                                          errorAnimationController:
+                                              errorController,
+                                          onCompleted: (v) async {
+                                            pr.show();
+                                            await WebService.funClaimVerifyOtp(
+                                                    {"otp": v.toString()},
+                                                    context)
+                                                .then((value) {
+                                              pr.hide();
+                                              BotToast.showText(
+                                                  text: value.message);
+                                              if (value.status == 'success') {
+                                                sentOtp = false;
+                                                getClaimData();
+                                              } else if (value.status ==
+                                                  'fail') {
+                                                textEditingController.clear();
+                                                print(
+                                                    "value.message:${value.message}");
+                                              }
+                                            });
+                                          },
+                                          beforeTextPaste: (text) {
+                                            print("Allowing to paste $text");
+                                            //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                                            //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                                            return true;
+                                          },
+                                        ),
+                                        Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
@@ -250,16 +248,14 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ]),
+                                      ]),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 10),
                                       child: txtfieldPostAction(
-                                          ctrl: ctrlMail,
+                                          controller: ctrlMail,
                                           hint: "Enter business Email",
                                           title: "Email",
                                           maxLines: 1,

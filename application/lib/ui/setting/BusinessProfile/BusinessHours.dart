@@ -1,5 +1,4 @@
-import 'package:Favorito/component/PopupContent.dart';
-import 'package:Favorito/component/PopupLayout.dart';
+import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/component/workingDateTime.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
@@ -20,6 +19,7 @@ class BusinessHours extends StatelessWidget {
     bspTrue = Provider.of<BusinessHoursProvider>(context, listen: true);
     bspFalse = Provider.of<BusinessHoursProvider>(context, listen: false);
     sm = SizeManager(context);
+
     return Padding(
       padding: EdgeInsets.all(0),
       child: Column(
@@ -32,18 +32,18 @@ class BusinessHours extends StatelessWidget {
                   autoValidateMode: AutovalidateMode.onUserInteraction,
                   mode: Mode.MENU,
                   showSelectedItem: true,
-                  selectedItem: bspTrue.controller.text,
+                  selectedItem: bspFalse.controller.text,
                   items: ["Select Hours", "Always Open"],
                   label: "Working Hours",
                   hint: "Please Select",
                   showSearchBox: false,
                   maxHeight: 110,
                   onChanged: (value) {
-                    bspTrue.controller.text = value != null ? value : "";
-                    bspTrue.notifyListeners();
+                    bspFalse.controller.text = value != null ? value : "";
+                    bspFalse.notifyListeners();
                   })),
           Visibility(
-            visible: bspTrue.controller.text == "Select Hours",
+            visible: bspFalse.controller.text == "Select Hours",
             child: Padding(
               padding: EdgeInsets.only(left: 18, right: 18),
               child: Column(
@@ -54,10 +54,12 @@ class BusinessHours extends StatelessWidget {
                     children: [
                       Text("Business Hours", style: TextStyle(color: myGrey)),
                       InkWell(
-                        onTap: () => bspTrue.selecteddayList.clear(),
-                        onLongPress: () {},
-                        child:
-                            Text("Reset", style: TextStyle(color: Colors.red)),
+                        onTap: () {
+                          // bspTrue.selecteddayList.clear(),
+                          bspTrue.getData();
+                        },
+                        child: Text("Refresh slot \u27F3",
+                            style: TextStyle(color: Colors.red)),
                       )
                     ],
                   ),
@@ -76,7 +78,45 @@ class BusinessHours extends StatelessWidget {
                                 i < bspTrue.selecteddayList.length;
                                 i++)
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  bspTrue.setMod(true);
+                                  if (((bspTrue.selecteddayList.keys
+                                          .toList())[i])
+                                      .contains('-')) {
+                                    print("range is called");
+                                    int _a = bspTrue.daylist.indexOf((((bspTrue
+                                            .selecteddayList.keys
+                                            .toList())[i])
+                                        .split('-')[0]
+                                        .trim()));
+
+                                    int _b = bspTrue.daylist.indexOf((((bspTrue
+                                            .selecteddayList.keys
+                                            .toList())[i])
+                                        .split('-')[1]
+                                        .trim()));
+                                    print("$_a ab ");
+                                    for (int _i = _a; _i <= _b; _i++) {
+                                      bspTrue.renge.add(_i);
+                                      bspTrue.selectDay(_i);
+                                    }
+                                  } else {
+                                    print("single is called");
+
+                                    bspTrue.renge.add(bspTrue.daylist.indexOf(
+                                        bspTrue.selecteddayList.keys
+                                            .toList()[i]));
+                                    bspTrue.selectDay(bspTrue.daylist.indexOf(
+                                        bspTrue.selecteddayList.keys
+                                            .toList()[i]));
+                                  }
+                                  showPopup(
+                                          ctx: context,
+                                          widget: WorkingDateTime(),
+                                          callback: () => bspTrue.popupClosed(),
+                                          sm: sm)
+                                      .show();
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12),
@@ -97,7 +137,7 @@ class BusinessHours extends StatelessWidget {
                                                         FontWeight.w400)),
                                             SizedBox(height: 2),
                                             Text(
-                                                "${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split(" - ")[0]).substring(0, 5)} - ${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 6)}",
+                                                "${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)}-${(bspTrue.selecteddayList[bspTrue.selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
@@ -112,10 +152,13 @@ class BusinessHours extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
+                          bspTrue.setMod(false);
                           showPopup(
-                              context,
-                              WorkingDateTime(
-                                  selecteddayList: bspTrue.selecteddayList));
+                                  ctx: context,
+                                  widget: WorkingDateTime(),
+                                  callback: () => bspTrue.popupClosed(),
+                                  sm: sm)
+                              .show();
                         },
                         child: Text("Add", style: TextStyle(color: Colors.red)),
                       )
@@ -128,35 +171,5 @@ class BusinessHours extends StatelessWidget {
         ],
       ),
     );
-  }
-// for (int i = 0; i < selecteddayList.length; i++) {
-//       var va = selecteddayList[(selecteddayList.keys.toList())[i]].split("-");
-//       Map<String, String> dayData = Map();
-//       dayData["business_days"] =
-//           "${(selecteddayList.keys.toList())[i].toString()}";
-//       dayData["business_start_hours"] = "${va[0].toString()}";
-//       dayData["business_end_hours"] = "${va[1].toString()}";
-//       lst.add(dayData);
-//     }
-// for (int _i = 0; _i < va.hours.length; _i++)
-//         selecteddayList[(va.hours.toList())[_i].day] =
-//             "${(va.hours.toList())[_i].startHours}-${(va.hours.toList())[_i].endHours}";
-
-  showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
-    SizeManager sm = SizeManager(context);
-
-    Navigator.push(
-            context,
-            PopupLayout(
-                top: sm.h(36),
-                left: sm.w(3),
-                right: sm.w(3),
-                bottom: sm.h(30),
-                child: PopupContent(
-                    content: Scaffold(
-                        resizeToAvoidBottomPadding: false, body: widget))))
-        .whenComplete(() {
-      // setState(() {});
-    });
   }
 }

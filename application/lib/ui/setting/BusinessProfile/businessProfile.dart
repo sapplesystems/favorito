@@ -22,6 +22,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class BusinessProfile extends StatefulWidget {
   @override
@@ -52,15 +53,16 @@ class _BusinessProfileState extends State<BusinessProfile>
   int stateId = 0;
   int cityId = 0;
   List<String> addressList = [];
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ddCity = GlobalKey<DropdownSearchState<String>>();
   final ddState = GlobalKey<DropdownSearchState<String>>();
-  String addOrChangePhoto = '';
+  String addOrChangePhoto = 'add photo';
   File _image;
   final dd1 = GlobalKey<DropdownSearchState<String>>();
 
   Future getImage(ImgSource source) async {
-    var image = await ImagePickerGC.pickImage(
+    _image = await ImagePickerGC.pickImage(
       context: context,
       source: source,
       imageQuality: 10,
@@ -69,9 +71,28 @@ class _BusinessProfileState extends State<BusinessProfile>
         color: Colors.red,
       ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
     );
-    setState(() => _image = image);
-    WebService.profileImageUpdate(image).then((value) {
-      print("ImageUpdated:${value.message}");
+
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: _image.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: myRed,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(minimumAspectRatio: 1.0));
+
+    setState(() => _image = croppedFile);
+    pr.show();
+    await WebService.profileImageUpdate(_image).then((value) {
+      if (value.status == "success") pr.hide();
     });
   }
 
@@ -80,7 +101,7 @@ class _BusinessProfileState extends State<BusinessProfile>
     _getCurrentLocation();
     getBusinessProfileData();
     WidgetsBinding.instance.addObserver(this);
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 18; i++) {
       _controller.add(TextEditingController());
       error.add(null);
     }
@@ -123,15 +144,6 @@ class _BusinessProfileState extends State<BusinessProfile>
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          // actions: [
-          //   IconButton(
-          //     icon: SvgPicture.asset(
-          //       'assets/icon/save.svg',
-          //       height: sm.w(6.4),
-          //     ),
-          //     onPressed: () {},
-          //   )
-          // ],
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
@@ -156,7 +168,6 @@ class _BusinessProfileState extends State<BusinessProfile>
                   child: Builder(
                     builder: (context) => Form(
                         key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(children: [
@@ -172,14 +183,14 @@ class _BusinessProfileState extends State<BusinessProfile>
                                               _controller[0].text,
                                               height: sm.h(20),
                                               width: sm.w(72),
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.fill,
                                             )
                                           : Container(
                                               height: sm.h(20),
                                               width: sm.w(78),
                                               child: Image.file(
                                                 _image,
-                                                fit: BoxFit.cover,
+                                                fit: BoxFit.fill,
                                                 height: double.infinity,
                                                 width: double.infinity,
                                                 alignment: Alignment.center,
@@ -314,7 +325,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                             ),
                             for (int i = 0; i < addressLength; i++)
                               txtfieldPostAction(
-                                  ctrl: _controller[i + 6],
+                                  controller: _controller[i + 6],
                                   hint: "Enter Address ${i + 1}",
                                   title: "Address ${i + 1}",
                                   maxLines: 1,
@@ -424,7 +435,7 @@ class _BusinessProfileState extends State<BusinessProfile>
                             ),
                             for (int i = 0; i < webSiteLength; i++)
                               txtfieldPostAction(
-                                  ctrl: _controller[i + 15],
+                                  controller: _controller[i + 15],
                                   hint: "Enter Website ",
                                   title: "Website ",
                                   maxLines: 1,
@@ -495,7 +506,7 @@ class _BusinessProfileState extends State<BusinessProfile>
         _cityModel.clear();
         cityList.clear();
         _cityModel.addAll(value.data);
-        for (int i = 0; i < _cityModel.length; i++)
+        for (int i = 0; i < _cityModel?.length; i++)
           cityList.add(_cityModel[i].city);
         setState(() {});
       }
@@ -508,7 +519,7 @@ class _BusinessProfileState extends State<BusinessProfile>
         _stateModel.clear();
         _stateList.clear();
         _stateModel.addAll(value.data);
-        for (int i = 0; i < _stateModel.length; i++)
+        for (int i = 0; i < _stateModel?.length; i++)
           _stateList.add(_stateModel[i].state);
         setState(() {});
       }
@@ -523,10 +534,10 @@ class _BusinessProfileState extends State<BusinessProfile>
     List<Map> lst = List();
 
     _controller[5].text = lst.toString();
-    if (_controller[4].text == "Select Hours" && lst.length == 0) {
-      BotToast.showText(text: "Please select time stols!!");
-      return;
-    }
+    // if (_controller[4].text == "Select Hours" && lst.length == 0) {
+    //   BotToast.showText(text: "Please select time stols!!");
+    //   return;
+    // }
     addressList.clear();
     for (int i = 0; i < addressLength; i++)
       addressList.add(_controller[i + 6].text);
@@ -541,14 +552,14 @@ class _BusinessProfileState extends State<BusinessProfile>
       "state_id": _controller[11].text,
       "country_id": '1',
       "location": "${_position.latitude},${_position.longitude}",
-      "working_hours": _controller[4].text,
+      "working_hours": dd1.currentState.getSelectedItem,
       "website": website.split(","),
       "business_email": _controller[13].text,
       "short_description": _controller[14].text,
       "photo": "${_controller[0].text}",
       "business_hours": lst
     };
-
+    print("_map:${_map.toString()}");
     WebService.funUserProfileUpdate(_map, context).then((value) async {
       if (value.status == 'success') {
         BotToast.showLoading(duration: Duration(seconds: 1));
@@ -560,22 +571,20 @@ class _BusinessProfileState extends State<BusinessProfile>
 
   void getProfileData() async {
     await WebService.getProfileData().then((value) {
-      var va = value.data;
+      var va = value?.data;
       print("datam${value.data.toString()}");
-      addressList.clear();
-      for (int i = 0; i < va.website.length; i++) {
-        va.website[i] = va.website[i].trim();
-        if (va.website[i].length > 4) {
-          webSiteLengthPlus();
-        } else
-          va.website.removeAt(i);
-      }
+      addressList?.clear();
+      if (va?.website != null)
+        for (var _v in va?.website) {
+          if (_v.trim().isEmpty) webSiteLengthPlus();
+        }
 
       addressList.add(va.address1 ?? '');
       addressList.add(va.address2 ?? '');
       addressList.add(va.address3 ?? '');
-      addressLength = addressList.length;
+      addressLength = addressList?.length;
       _controller[0].text = va.photo ?? '';
+
       setState(() {
         addOrChangePhoto = va.photo == null ? 'add photo' : 'change photo';
       });
@@ -588,13 +597,13 @@ class _BusinessProfileState extends State<BusinessProfile>
       _controller[8].text = addressList[2] ?? '';
       _controller[9].text = va.postalCode ?? '';
 
-      dd1.currentState.changeSelectedItem(va.workingHours);
+      dd1.currentState.changeSelectedItem(va?.workingHours);
 
       pinCaller(va.postalCode);
       _controller[13].text = va.businessEmail;
       _controller[14].text = va.shortDescription;
-      for (int i = 0, m = -1; i < va.website.length; i++) {
-        if (va.website[i].length > 4) {
+      for (int i = 0, m = -1; i < va.website?.length; i++) {
+        if (va.website[i]?.length > 4) {
           m++;
           _controller[m + 15].text = va.website[i];
         }
@@ -610,7 +619,7 @@ class _BusinessProfileState extends State<BusinessProfile>
   }
 
   void pinCaller(String _val) async {
-    if (_val.length == 6) {
+    if (_val?.length == 6) {
       pr.show();
       await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
         pr.hide();

@@ -21,13 +21,13 @@ class _LoginState extends State<Login> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   ProgressDialog pr;
   @override
-  void initState() {
-    super.initState();
-    setState(() {
-      userCtrl.text = "rohit.shukla@sapple.co.in";
-      passCtrl.text = "sapple@123";
-    });
-  }
+  // void initState() {
+  //   super.initState();
+  //   setState(() {
+  //     userCtrl.text = "rohits.shukla@sapple.co.in";
+  //     passCtrl.text = "sapple@123";
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,42 +55,43 @@ class _LoginState extends State<Login> {
               right: 16.0,
               bottom: 32.0,
             ),
-            child: Stack(
-              children: [
-                Card(
-                  margin: EdgeInsets.only(top: sm.h(10)),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    child: Builder(
-                      builder: (context) => Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: sm.h(8)),
+            child: Stack(children: [
+              Card(
+                margin: EdgeInsets.only(top: sm.h(10)),
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  child: Builder(
+                    builder: (context) => Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: sm.h(8)),
+                            child: txtfieldboundry(
+                              valid: true,
+                              title: "Email/Phone",
+                              controller: userCtrl,
+                              security: false,
+                            ),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.symmetric(vertical: sm.h(4)),
                               child: txtfieldboundry(
                                 valid: true,
-                                title: "Email/Phone",
-                                controller: userCtrl,
-                                security: false,
-                              ),
-                            ),
-                            Padding(
-                                padding:
-                                    EdgeInsets.symmetric(vertical: sm.h(4)),
-                                child: txtfieldboundry(
-                                  valid: true,
-                                  maxLines: 1,
-                                  title: "Password",
-                                  controller: passCtrl,
-                                  security: true,
-                                )),
-                            Row(
+                                maxLines: 1,
+                                title: "Password",
+                                controller: passCtrl,
+                                security: true,
+                              )),
+                          InkWell(
+                            onTap: () =>
+                                Navigator.of(context).pushNamed('/forgetPass'),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
@@ -105,25 +106,23 @@ class _LoginState extends State<Login> {
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                Positioned(
-                    left: sm.w(30),
-                    right: sm.w(30),
-                    child: SvgPicture.asset('assets/icon/maskgroup.svg',
-                        alignment: Alignment.center, height: sm.h(20))),
-              ],
-            ),
+              ),
+              Positioned(
+                  left: sm.w(30),
+                  right: sm.w(30),
+                  child: SvgPicture.asset('assets/icon/maskgroup.svg',
+                      alignment: Alignment.center, height: sm.h(20))),
+            ]),
           ),
           Padding(
               padding:
                   EdgeInsets.only(top: 16, left: sm.w(16), right: sm.w(16)),
-              // padding: EdgeInsets.symmetric(
-              //     horizontal: sm.w(16), vertical: sm.w(12)),
               child: RoundedButton(
                   clicker: () => funClick(), clr: Colors.red, title: "Login")),
           Center(
@@ -139,10 +138,7 @@ class _LoginState extends State<Login> {
             child: Padding(
               padding: EdgeInsets.only(top: sm.h(1)),
               child: InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Signup_a()));
-                },
+                onTap: () => Navigator.of(context).pushNamed('/signUpA'),
                 child: Text(
                   "Sign Up",
                   style: TextStyle(

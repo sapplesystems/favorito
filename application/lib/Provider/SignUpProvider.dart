@@ -133,7 +133,7 @@ class SignUpProvider extends ChangeNotifier {
     WebService.funRegister(_map, context).then((value) {
       // pr.hide();
       if (value.status == 'success') {
-        // BotToast.showText(text: "Registration SuccessFull!!");
+        BotToast.showText(text: "Registration SuccessFull!!");
         Navigator.of(context).pushNamed('/');
       } else {
         BotToast.showText(text: value.message.toString());

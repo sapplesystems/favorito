@@ -30,7 +30,7 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     cpc = json['cpc'].cast<dynamic>();
-    adStatus = json['ad_status'].cast<String>();
+    adStatus = json['ad_status']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {

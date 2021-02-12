@@ -9,19 +9,20 @@ class txtfieldPostAction extends StatefulWidget {
   int maxlen;
   bool valid;
   TextInputType keyboardSet;
-  TextEditingController ctrl;
+  TextEditingController controller;
   IconData sufixIcon;
   Function myOnChanged;
   RegExp myregex;
   Function sufixClick;
   String sufixTxt;
+  String errorText;
   Color sufixColor;
 
   txtfieldPostAction(
       {this.title,
       this.security,
       this.hint,
-      this.ctrl,
+      this.controller,
       this.maxlen,
       this.keyboardSet,
       this.myregex,
@@ -31,6 +32,7 @@ class txtfieldPostAction extends StatefulWidget {
       this.sufixClick,
       this.sufixColor,
       this.sufixTxt,
+      this.errorText,
       this.sufixIcon});
   @override
   _txtfieldPostActionState createState() => _txtfieldPostActionState();
@@ -40,20 +42,21 @@ class _txtfieldPostActionState extends State<txtfieldPostAction> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: TextFormField(
-        controller: widget.ctrl,
+        controller: widget.controller,
         obscureText: widget.security,
         maxLength: widget.maxlen,
         decoration: InputDecoration(
+            errorText: widget.errorText ?? '',
             labelText: widget.title,
             counterText: "",
             suffix: InkWell(
                 onTap: () => widget.sufixClick(),
                 child: widget.sufixTxt == null
                     ? Icon(widget.sufixIcon,
-                        size: 16,
-                        semanticLabel: "dhjh",
+                        size: 22,
+                        semanticLabel: "",
                         textDirection: TextDirection.ltr,
                         color: widget.sufixColor != null
                             ? widget.sufixColor

@@ -32,10 +32,10 @@ class Data {
   Data({this.action, this.audience, this.area, this.status, this.stateList});
 
   Data.fromJson(Map<String, dynamic> json) {
-    action = json['action'].cast<String>();
-    audience = json['audience'].cast<String>();
-    area = json['area'].cast<String>();
-    status = json['status'].cast<String>();
+    action = json['action']?.cast<String>();
+    audience = json['audience']?.cast<String>();
+    area = json['area']?.cast<String>();
+    status = json['status']?.cast<String>();
     if (json['state_list'] != null) {
       stateList = new List<StateModel>();
       json['state_list'].forEach((v) {

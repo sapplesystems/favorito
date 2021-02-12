@@ -10,7 +10,7 @@ class OfferListDataModel {
   OfferListDataModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    offerStatusDropDown = json['offer_status_drop_down'].cast<String>();
+    offerStatusDropDown = json['offer_status_drop_down']?.cast<String>();
     if (json['data'] != null) {
       data = new List<OfferDataModel>();
       json['data'].forEach((v) {

@@ -233,8 +233,9 @@ class _dashboardState extends State<dashboard> {
       catalogoues = value.catalogoues.toString();
       orders = value.orders.toString();
       free_credit = value.freeCredit.toString();
-      paid_credit = value.paidCredit.toString();
-      setState(() {});
+      setState(() {
+        paid_credit = value.paidCredit.toString();
+      });
     });
   }
 }

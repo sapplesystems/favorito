@@ -1,3 +1,5 @@
+import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:Favorito/ui/tour/Splash.dart';
@@ -10,7 +12,7 @@ class RouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (_) => Splash());
 
-      case '/signUp':
+      case '/signUpA':
         return MaterialPageRoute(builder: (_) => Signup_a());
 
       // case '/navbar':
@@ -19,14 +21,14 @@ class RouteGenerator {
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
 
-      // case '/profile':
-      //   return MaterialPageRoute(builder: (_) => Profile());
+      case '/bottomNavigation':
+        return MaterialPageRoute(builder: (_) => bottomNavigation());
 
       case '/bottomNavigationBar':
         return MaterialPageRoute(builder: (_) => BottomNavigationBar());
 
-      // case '/profileDetail':
-      //   return MaterialPageRoute(builder: (_) => ProfileDetail());
+      case '/forgetPass':
+        return MaterialPageRoute(builder: (_) => ForgetPass());
 
       // case '/businessProfile':
       //   return MaterialPageRoute(

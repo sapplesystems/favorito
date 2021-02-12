@@ -3,6 +3,7 @@ import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
+import 'package:Favorito/model/VerifyOtp.dart';
 import 'package:Favorito/model/adSpentModel.dart';
 import 'package:Favorito/model/appoinment/RestrictionModel.dart';
 import 'package:Favorito/model/appoinment/appoinmentSeviceModel.dart';
@@ -12,8 +13,10 @@ import 'package:Favorito/model/appoinment/personModel.dart';
 import 'package:Favorito/model/booking/bookingListModel.dart';
 import 'package:Favorito/model/booking/bookingSettingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
+import 'package:Favorito/model/business/HoursModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
+import 'package:Favorito/model/businessProfile/BusinessHoursModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
@@ -58,6 +61,7 @@ import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHours.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -145,23 +149,12 @@ class WebService {
       HttpHeaders.authorizationHeader: "Bearer $token",
     });
     String fileName = file.path.split('/').last;
-    FormData formData = FormData.fromMap({
-      "photo": await MultipartFile.fromFile(file.path, filename: fileName),
-    });
-
-    BaseResponseModel _returnData = BaseResponseModel();
+    FormData formData = FormData.fromMap(
+        {"photo": await MultipartFile.fromFile(file.path, filename: fileName)});
     response = await dio.post(serviceFunction.funProfileUpdatephoto,
         data: formData, options: _opt);
-    print("profileImageUpdate:${response.toString()}");
 
-    if (response.statusCode == HttpStatus.ok) {
-      _returnData =
-          BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    } else {
-      print("responseData4:${response.statusCode}");
-    }
-
-    return response.data;
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<profileDataModel> getProfileData() async {
@@ -481,9 +474,8 @@ class WebService {
   static Future<PincodeListModel> funGetPicodesForCity(
       int cityId, BuildContext context) async {
     String token = await Prefs.token;
-    Options _opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Options _opt =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"city_id": cityId};
     PincodeListModel _returnData = PincodeListModel();
     response = await dio
@@ -711,6 +703,29 @@ class WebService {
     _returnData =
         BusinessProfileModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
+  }
+
+  static Future<HoursModel> funGetBusinessWorkingHours() async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funGetBusinessWorkingHours;
+    Options _opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("BusinessProfile request url: $url");
+    print("token: $token");
+    response = await dio.post(url, data: null, options: _opt);
+    return HoursModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<HoursModel> funSetBusinessWorkingHours(_map) async {
+    String token = await Prefs.token;
+    String url = serviceFunction.funSetBusinessWorkingHours;
+    Options _opt =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("BusinessProfile request url: $url");
+    print("token: $token");
+    response = await dio.post(url, data: _map, options: _opt);
+    return HoursModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<OfferListDataModel> funGetOfferData(
@@ -1355,6 +1370,23 @@ class WebService {
       return BaseResponseModel.fromJson(
           convert.json.decode(response.toString()));
     }
+  }
+
+  static Future<verifyOtpModel> funForgetPass(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funForgetPass;
+    response = await dio.post(url, data: _map);
+    return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  static Future<verifyOtpModel> funVerifyOtp(Map _map) async {
+    String url = serviceFunction.funVerifyOtp;
+    response = await dio.post(url, data: _map);
+    if (response.statusCode == 400) {
+      print("hfshkjhkjdshsnfsdvnkjd:${response.statusCode}");
+    }
+    return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<BaseResponseModel> funClaimVerifyOtp(

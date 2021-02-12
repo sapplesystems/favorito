@@ -6,7 +6,7 @@ import 'package:Favorito/ui/dashboard/dashboard.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/menu/Menu.dart';
 import 'package:Favorito/ui/menu/item/MenuItem.dart';
-import 'package:Favorito/ui/setting/setting.dart';
+import 'package:Favorito/ui/setting/setting/setting.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,9 +21,9 @@ class _bottomNavigationState extends State<bottomNavigation> {
   static List<Widget> _widgetOptions = <Widget>[
     dashboard(),
     Bookings(),
-    setting(),
+    Setting(),
     Menu(),
-    setting()
+    Setting()
   ];
 
   @override
