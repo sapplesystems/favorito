@@ -584,6 +584,7 @@ class _BusinessProfileState extends State<BusinessProfile>
       addressList.add(va.address3 ?? '');
       addressLength = addressList?.length;
       _controller[0].text = va.photo ?? '';
+
       setState(() {
         addOrChangePhoto = va.photo == null ? 'add photo' : 'change photo';
       });
