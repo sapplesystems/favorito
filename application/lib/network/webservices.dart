@@ -51,6 +51,7 @@ import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/model/orderListModel.dart';
+import 'package:Favorito/model/photoModel.dart';
 import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
 import 'package:Favorito/model/review/ReviewListModel.dart';
@@ -61,10 +62,8 @@ import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/ui/login/login.dart';
-import 'package:Favorito/ui/setting/BusinessProfile/BusinessHours.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
@@ -98,7 +97,6 @@ class WebService {
   }
 
   static Future<DashData> funGetDashBoard(BuildContext context) async {
-    // pr = ProgressDialog(context);
     String token = await Prefs.token;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -142,7 +140,7 @@ class WebService {
     return _returnData;
   }
 
-  static Future<BaseResponseModel> profileImageUpdate(File file) async {
+  static Future<photoModel> profileImageUpdate(File file) async {
     String token = await Prefs.token;
     Options _opt =
         Options(contentType: Headers.formUrlEncodedContentType, headers: {
@@ -154,11 +152,12 @@ class WebService {
     response = await dio.post(serviceFunction.funProfileUpdatephoto,
         data: formData, options: _opt);
 
-    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+    return photoModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<profileDataModel> getProfileData() async {
     String token = await Prefs.token;
+    print("token:$token");
     Options _opt =
         Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(serviceFunction.funUserProfile, options: _opt);
@@ -467,7 +466,9 @@ class WebService {
   }
 
   static Future<CityModelResponse> funGetCityByPincode(Map _map) async {
-    response = await dio.post(serviceFunction.funGetCityByPincode, data: _map);
+    Options _opt = Options(contentType: Headers.formUrlEncodedContentType);
+    response = await dio.post(serviceFunction.funGetCityByPincode,
+        data: _map, options: _opt);
     return CityModelResponse.fromJson(convert.json.decode(response.toString()));
   }
 
@@ -810,8 +811,7 @@ class WebService {
   }
 
   //this service is used for business profile
-  static Future<BaseResponseModel> funUserProfileUpdate(
-      Map _map, BuildContext context) async {
+  static Future<BaseResponseModel> funUserProfileUpdate(Map _map) async {
     String token = await Prefs.token;
     Options _opt = Options(contentType: Headers.jsonContentType, headers: {
       HttpHeaders.authorizationHeader: "Bearer $token",
@@ -820,9 +820,9 @@ class WebService {
     BaseResponseModel _returnData = BaseResponseModel();
     print("Request URL:${serviceFunction.funUserProfileUpdate}");
     print("RequestData URL:${_map.toString()}");
-    response = await dio
-        .post(serviceFunction.funUserProfileUpdate, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funUserProfileUpdate,
+        data: _map, options: _opt);
+    // .catchError((onError) => onErrorCall(onError));
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData1:${_returnData.status}");

@@ -1,3 +1,4 @@
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myString.Dart';
 
@@ -48,31 +49,33 @@ class _txtfieldPostActionState extends State<txtfieldPostAction> {
         obscureText: widget.security,
         maxLength: widget.maxlen,
         decoration: InputDecoration(
-            errorText: widget.errorText ?? '',
-            labelText: widget.title,
-            counterText: "",
-            suffix: InkWell(
-                onTap: () => widget.sufixClick(),
-                child: widget.sufixTxt == null
-                    ? Icon(widget.sufixIcon,
-                        size: 22,
-                        semanticLabel: "",
-                        textDirection: TextDirection.ltr,
-                        color: widget.sufixColor != null
-                            ? widget.sufixColor
-                            : Colors.blue)
-                    : Text(
-                        widget.sufixTxt,
-                        style: TextStyle(
-                            color: widget.sufixColor != null
-                                ? widget.sufixColor
-                                : Colors.blue),
-                      )),
-            hintText: widget.hint,
-            fillColor: Colors.transparent,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: BorderSide())),
+          errorText: widget.errorText ?? '',
+          labelText: widget.title,
+          counterText: "",
+          suffix: InkWell(
+              onTap: () => widget.sufixClick(),
+              child: widget.sufixTxt == null
+                  ? Icon(widget.sufixIcon,
+                      size: 22,
+                      semanticLabel: "",
+                      textDirection: TextDirection.ltr,
+                      color: widget.sufixColor != null
+                          ? widget.sufixColor
+                          : Colors.blue)
+                  : Text(
+                      widget.sufixTxt,
+                      style: TextStyle(
+                          color: widget.sufixColor != null
+                              ? widget.sufixColor
+                              : Colors.blue),
+                    )),
+          hintText: widget.hint,
+          fillColor: Colors.transparent,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide(color: myGrey),
+          ),
+        ),
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,
@@ -85,7 +88,6 @@ class _txtfieldPostActionState extends State<txtfieldPostAction> {
     );
   }
 
-  // ignore: missing_return
   String _validation(String text, bool valid, String lbl, RegExp myregex) {
     if (valid) {
       if (myregex != null && text.isNotEmpty)

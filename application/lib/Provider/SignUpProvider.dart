@@ -59,9 +59,7 @@ class SignUpProvider extends ChangeNotifier {
   getTnCChecked() => _tnCchecked;
 
   Future<CatListModel> getCategory() async {
-    pr.show();
     await WebService.funGetCatList({"business_type_id": _typeId}).then((value) {
-      pr.hide();
       _catdata.clear();
       _catdata.addAll(value.data);
       notifyListeners();

@@ -66,8 +66,8 @@ class BusinessHoursProvider extends ChangeNotifier {
           }
         }
       }
-      notifyListeners();
-      Navigator.pop(context);
+      // notifyListeners();
+      // Navigator.pop(context);
     });
   }
 
@@ -118,6 +118,7 @@ class BusinessHoursProvider extends ChangeNotifier {
         e.open = false;
       });
       getData();
+      Navigator.pop(context);
     });
   }
 
@@ -182,8 +183,8 @@ class BusinessHoursProvider extends ChangeNotifier {
           print("doing off");
           daysHours[_index].open = false;
         }
-        startTime = daysHours[_index].startHours;
-        endTime = daysHours[_index].endHours;
+        startTime = daysHours[_index].startHours.trim().substring(0, 5);
+        endTime = daysHours[_index].endHours.trim().substring(0, 5);
       } else {
         daysHours[_index].selected = true;
         daysHours[_index].startHours = startTime;

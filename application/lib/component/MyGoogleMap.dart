@@ -31,7 +31,7 @@ class _MyGoogleMapState extends State<MyGoogleMap> {
           child: GoogleMap(
             initialCameraPosition: widget.initPosition,
             onMapCreated: (GoogleMapController controller) {
-              widget.controller.complete(controller);
+              // widget.controller.complete(controller);
               // setState(() {
               //   widget.marker.add(Marker(
               //       markerId: MarkerId('marker_1'),

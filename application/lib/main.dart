@@ -3,6 +3,7 @@ import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/utils/RouteGenerator.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -21,6 +22,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => BusinessHoursProvider()),
       ChangeNotifierProvider(create: (context) => SettingProvider()),
       ChangeNotifierProvider(create: (context) => ForgetPassProvider()),
+      ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
     ], child: MyApp()));
   });
 }
