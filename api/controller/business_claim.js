@@ -231,7 +231,12 @@ exports.verifyOtp = async function(req, res, next) {
 }
 
 exports.sendSms = async function(phone, otp) {
-    var options = { authorization: process.env.FASTSENDSMS_API_KEY, message: `You one time password is ${otp}`, numbers: [phone] }
+    var options = {
+        authorization: process.env.FASTSENDSMS_API_KEY,
+        message: `<#> Favorito: Your code is ${otp}
+        FA+9qCX9VSu`,
+        numbers: [phone]
+    }
     fast2sms.sendMessage(options).then(function(data) {
         console.log('OTP is sent successfully', data);
         return true

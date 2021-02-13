@@ -1,7 +1,7 @@
 var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var nodemailer = require('nodemailer');
-
+const fast2sms = require('fast-two-sms');
 
 exports.updatePassword = (req, res, next) => {
     if (req.body.business_id == null || req.body.business_id == undefined || req.body.business_id == '') {
@@ -81,18 +81,20 @@ exports.sendOtpOnEmail = async(req, res, next) => {
     if (!req.body.email_or_phone) {
         return res.status(400).json({ status: 'error', message: 'Email id or Phone number is missing' });
     }
-
     //  regex of email check
     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(req.body.email_or_phone)) {
         let email = req.body.email_or_phone
         sql_is_email_exist = `SELECT business_id FROM business_master WHERE business_email = '${email}'`
-
         result_is_email_exist = await exports.run_query(sql_is_email_exist)
         if (result_is_email_exist != '') {
             business_id = result_is_email_exist[0].business_id
         }
         if (result_is_email_exist == '') {
-            return res.status(200).json({ status: 'success', message: 'Your business email is invalid , please try again with correct email id .' });
+            return res.status(200).json({
+                status: 'success',
+                message: 'Invalid email-id',
+                data: [{ response_status: 'failed' }]
+            });
         }
 
         let otp = Math.floor(Math.random() * 90000) + 10000;
@@ -101,14 +103,44 @@ exports.sendOtpOnEmail = async(req, res, next) => {
             if (is_mail_sent) {
                 sql_insert_otp = `UPDATE business_master SET email_otp = '${otp}' WHERE business_id = '${business_id}'`
                 result_insert_otp = await exports.run_query(sql_insert_otp)
-                return res.status(200).json({ status: 'success', message: 'Email is sent with OTP', data: [{ busines_id: business_id }] });
+                return res.status(200).json({ status: 'success', message: 'Email is sent with OTP', data: [{ busines_id: business_id, response_status: 'success' }] });
             }
         } catch (error) {
             return res.status(500).json({ status: 'failed', message: 'Email cannot be sent due to some issue.', error });
         }
 
-    } else if (Number.isInteger(req.body.email_or_phone)) {
-        return res.send({ t: 'phone' })
+    } else if (req.body.email_or_phone != '') {
+        let otp = Math.floor(Math.random() * 90000) + 10000;
+        let phone = req.body.email_or_phone
+        sql_is_phone_exist = `SELECT business_id FROM business_master WHERE business_phone = '${phone}'`
+        result_is_phone_exist = await exports.run_query(sql_is_phone_exist)
+        if (result_is_phone_exist != '') {
+            business_id = result_is_phone_exist[0].business_id
+        }
+        if (result_is_phone_exist == '') {
+            return res.status(200).json({
+                status: 'success',
+                message: 'Invalid phone number',
+                data: [{ response_status: 'failed' }]
+            });
+        } else {
+            var options = {
+                authorization: process.env.FASTSENDSMS_API_KEY,
+                message: `<#> Favorito: Your code is ${otp}
+                FA+9qCX9VSu`,
+                numbers: [phone]
+            }
+            fast2sms.sendMessage(options).then(async function(data) {
+                // send sms or email otp is saved in the email_otp column and verified from the there only
+                sql_insert_otp = `UPDATE business_master SET email_otp = '${otp}' WHERE business_id = '${business_id}'`
+                result_insert_otp = await exports.run_query(sql_insert_otp)
+                return res.status(200).json({ status: 'success', message: 'Email is sent with OTP', data: [{ busines_id: business_id, response_status: 'success' }] });
+                console.log('OTP is sent successfully', data);
+            }).catch(function(error) {
+                console.log(`Error in sending otp ${error}`)
+                return res.status(500).json({ status: 'error', message: 'Something went wrong' });
+            })
+        }
     } else {
         return res.status(400).json({ status: 'error', message: 'Not a valid email or password' });
     }
@@ -140,10 +172,12 @@ exports.verifyOtpChangePassword = async(req, res) => {
         if (result_check_otp != '') {
             bcrypt.hash(password, 10, function(err, hash) {
                 let sql_change_pswrd = "UPDATE business_master SET `password`='" + hash + "' WHERE business_id='" + business_id + "'";
-                db.query(sql_change_pswrd, function(error, resp) {
+                db.query(sql_change_pswrd, async function(error, resp) {
                     if (error) {
                         return res.status(403).json({ status: 'error', message: 'Password could not be changed, Something went wrong' });
                     }
+                    let sql_remove_top = "UPDATE business_master SET `email_otp`= null WHERE business_id='" + business_id + "'";
+                    result_remove_top = await exports.run_query(sql_remove_top)
                     return res.status(200).json({ status: 'success', message: 'Password changed successfully.' });
                 });
             });

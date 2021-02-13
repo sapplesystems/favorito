@@ -29,7 +29,7 @@ exports.updateProfilePhoto = function(req, res, next) {
 };
 
 exports.updateProfileWorkingHour = async(req, res, next) => {
-    if (!req.body.business_hours) {
+    if (!req.body.business_hours || req.body.business_hours == '' || req.body.business_hours.length == 0) {
         return res.status(400).json({ status: 'error', message: 'business_hours is missing' });
     }
     business_id = req.userdata.business_id
