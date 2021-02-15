@@ -132,4 +132,6 @@ class serviceFunction {
   static String funForgetPass = baseUrl2 + 'change-password/send-otp-email';
   static String funVerifyOtp =
       baseUrl2 + 'change-password/verify-otp-change-password';
+  static String funChangePassword =
+      baseUrl2 + 'change-password/change-password-by-old';
 }

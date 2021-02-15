@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
-import 'package:Favorito/utils/myColors.dart';
 
 class dashboard extends StatefulWidget {
   @override
@@ -233,9 +232,9 @@ class _dashboardState extends State<dashboard> {
       catalogoues = value.catalogoues.toString();
       orders = value.orders.toString();
       free_credit = value.freeCredit.toString();
-      // setState(() {
-      paid_credit = value.paidCredit.toString();
-      // });
+      setState(() {
+        paid_credit = value.paidCredit.toString();
+      });
     });
   }
 }

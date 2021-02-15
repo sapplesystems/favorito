@@ -1,5 +1,6 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
@@ -25,6 +26,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => ForgetPassProvider()),
       ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
       ChangeNotifierProvider(create: (context) => dashboardProvider()),
+      ChangeNotifierProvider(create: (context) => ResetPassProvider()),
     ], child: MyApp()));
   });
 }

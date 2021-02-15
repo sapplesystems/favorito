@@ -9,11 +9,13 @@ class ContactPersonProvider extends ChangeNotifier {
   BuildContext context;
   // String displayName = '';
   // String displayEmail = '';
+
   List<TextEditingController> controller = [];
   final GlobalKey<FormState> form1Key = GlobalKey<FormState>();
   final GlobalKey<FormState> form2Key = GlobalKey<FormState>();
   final GlobalKey<FormState> form3Key = GlobalKey<FormState>();
   final roleKey = GlobalKey<DropdownSearchState<String>>();
+
   String selectedRole = '';
   List<String> roleList = [];
   List<BranchDetailsModel> searchedBranches = [];

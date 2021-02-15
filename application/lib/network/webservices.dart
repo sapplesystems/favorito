@@ -60,6 +60,7 @@ import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/utils/Prefs.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1345,12 +1346,26 @@ class WebService {
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
   }
 
+//forgetPassword
   static Future<verifyOtpModel> funVerifyOtp(Map _map) async {
     String url = serviceFunction.funVerifyOtp;
     response = await dio.post(url, data: _map);
     if (response.statusCode == 400) {
-      print("hfshkjhkjdshsnfsdvnkjd:${response.statusCode}");
+      BotToast.showText(text: response.statusMessage);
     }
+    return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+//resetPassword
+  static Future<verifyOtpModel> funChangePassword(Map _map) async {
+    print("map:${_map}");
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = serviceFunction.funChangePassword;
+    response = await dio.post(url, data: _map, options: opt);
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
   }
 
