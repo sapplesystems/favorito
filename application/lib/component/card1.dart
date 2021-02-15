@@ -1,5 +1,4 @@
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myColors.dart';
 

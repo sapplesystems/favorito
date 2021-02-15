@@ -77,10 +77,13 @@ class BusinessHoursProvider extends ChangeNotifier {
 
   popupClosed() {
     renge.clear();
-    getData();
-    for (int i = 0; i < daysHours.length; i++) daysHours[i].selected = false;
+    for (int i = 0; i < daysHours.length; i++) {
+      daysHours[i].selected = false;
+      daysHours[i].open = false;
+    }
     startTime = 'Start Time';
     endTime = 'End Time';
+    getData();
     notifyListeners();
   }
 

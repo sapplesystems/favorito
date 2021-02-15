@@ -1,10 +1,7 @@
-import 'package:Favorito/component/BranchDetailsListViewDelete.dart';
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
-import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';

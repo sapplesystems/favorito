@@ -98,55 +98,57 @@ class ForgetPass extends StatelessWidget {
                           visible: fpTrue.sentOtp ?? false,
                           child: Column(children: [
                             Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                "Enter Otp",
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 20),
+                                padding: EdgeInsets.only(
+                                    top: sm.h(3), bottom: sm.h(1)),
+                                child: Text("Enter Otp",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 20))),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: sm.h(1.4), right: sm.h(1.4)),
+                              child: PinCodeTextField(
+                                length: 5,
+                                // controller: fpTrue.textEditingController,
+                                obscureText: true,
+                                appContext: context,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp('[0-9]')),
+                                ],
+                                animationType: AnimationType.fade,
+                                pinTheme: PinTheme(
+                                    shape: PinCodeFieldShape.box,
+                                    borderRadius: BorderRadius.circular(5),
+                                    fieldHeight: 50,
+                                    fieldWidth: 40,
+                                    activeFillColor: Colors.white,
+                                    disabledColor: Colors.red,
+                                    activeColor: Colors.black,
+                                    inactiveColor: Colors.black,
+                                    selectedColor: Colors.red,
+                                    inactiveFillColor: Colors.white,
+                                    selectedFillColor: Colors.white,
+                                    borderWidth: 1),
+                                animationDuration: Duration(milliseconds: 300),
+                                backgroundColor: Colors.white,
+                                enablePinAutofill: true,
+                                enableActiveFill: true,
+                                onChanged: (v) {
+                                  fpFalse.actualOtp = v;
+                                  fpTrue.notifyListeners();
+                                },
+                                // errorAnimationController: fpTrue.errorController,
+                                onCompleted: (v) {
+                                  fpFalse.actualOtp = v;
+                                },
+                                // beforeTextPaste: (text) {
+                                //   print("Allowing to paste $text");
+                                //   //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                                //   //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                                //   return true;
+                                // },
                               ),
-                            ),
-                            PinCodeTextField(
-                              length: 5,
-                              // controller: fpTrue.textEditingController,
-                              obscureText: true,
-                              appContext: context,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9]')),
-                              ],
-                              animationType: AnimationType.fade,
-                              pinTheme: PinTheme(
-                                  shape: PinCodeFieldShape.box,
-                                  borderRadius: BorderRadius.circular(5),
-                                  fieldHeight: 50,
-                                  fieldWidth: 40,
-                                  activeFillColor: Colors.white,
-                                  disabledColor: Colors.red,
-                                  activeColor: Colors.black,
-                                  inactiveColor: Colors.black,
-                                  selectedColor: Colors.red,
-                                  inactiveFillColor: Colors.white,
-                                  selectedFillColor: Colors.white,
-                                  borderWidth: 1),
-                              animationDuration: Duration(milliseconds: 300),
-                              backgroundColor: Colors.white,
-                              enablePinAutofill: true,
-                              enableActiveFill: true,
-                              onChanged: (v) {
-                                fpFalse.actualOtp = v;
-                                fpTrue.notifyListeners();
-                              },
-                              // errorAnimationController: fpTrue.errorController,
-                              onCompleted: (v) {
-                                fpFalse.actualOtp = v;
-                              },
-                              // beforeTextPaste: (text) {
-                              //   print("Allowing to paste $text");
-                              //   //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                              //   //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                              //   return true;
-                              // },
                             ),
                             Padding(
                                 padding: EdgeInsets.only(top: sm.h(1)),
@@ -170,27 +172,30 @@ class ForgetPass extends StatelessWidget {
                                   },
                                   sufixIcon: fpTrue.iconData,
                                 )),
-                            txtfieldPostAction(
-                              valid: true,
-                              maxLines: 1,
-                              hint: "Confirm Password",
-                              controller: fpTrue.cPassCtrl,
-                              errorText: fpTrue.ctrlPassError,
-                              security:
-                                  (fpTrue.iconData2 == Icons.visibility_off),
-                              myOnChanged: (n) {
-                                fpTrue.notifyListeners();
-                              },
-                              sufixColor: myRed,
-                              sufixClick: () {
-                                fpTrue.iconData2 =
-                                    fpTrue.iconData2 == Icons.visibility
-                                        ? Icons.visibility_off
-                                        : Icons.visibility;
+                            Padding(
+                              padding: EdgeInsets.only(top: sm.h(2.4)),
+                              child: txtfieldPostAction(
+                                valid: true,
+                                maxLines: 1,
+                                hint: "Confirm Password",
+                                controller: fpTrue.cPassCtrl,
+                                errorText: fpTrue.ctrlPassError,
+                                security:
+                                    (fpTrue.iconData2 == Icons.visibility_off),
+                                myOnChanged: (n) {
+                                  fpTrue.notifyListeners();
+                                },
+                                sufixColor: myRed,
+                                sufixClick: () {
+                                  fpTrue.iconData2 =
+                                      fpTrue.iconData2 == Icons.visibility
+                                          ? Icons.visibility_off
+                                          : Icons.visibility;
 
-                                fpTrue.notifyListeners();
-                              },
-                              sufixIcon: fpTrue.iconData2,
+                                  fpTrue.notifyListeners();
+                                },
+                                sufixIcon: fpTrue.iconData2,
+                              ),
                             ),
                           ]),
                         ),

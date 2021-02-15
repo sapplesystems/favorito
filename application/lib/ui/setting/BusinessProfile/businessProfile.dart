@@ -54,25 +54,23 @@ class BusinessProfile extends StatelessWidget {
                               Padding(
                                   padding: EdgeInsets.only(
                                       top: sm.h(5), bottom: sm.h(2)),
-                                  child: Stack(children: [
-                                    ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        child: (data.controller[0].text.isEmpty)
-                                            ? Container(
-                                                height: sm.h(20),
-                                                width: sm.w(50),
-                                                child: Image.asset(
-                                                  'assets/icon/upload.png',
-                                                  fit: BoxFit.fill,
-                                                ))
-                                            : Image.network(
-                                                data.controller[0].text,
-                                                height: sm.h(20),
-                                                width: sm.w(72),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: (data.controller[0].text.isEmpty)
+                                          ? Container(
+                                              height: sm.h(20),
+                                              width: sm.w(50),
+                                              child: Image.asset(
+                                                'assets/icon/upload.png',
                                                 fit: BoxFit.fill,
-                                              )),
-                                  ])),
+                                              ))
+                                          : Image.network(
+                                              data?.controller[0]?.text ??
+                                                  "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngitem.com%2Fmiddle%2FhhmRJo_profile-icon-png-image-free-download-searchpng-employee%2F&psig=AOvVaw1JN_EBIRV8qqhAz589M0kw&ust=1613456728598000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjgwvKg6-4CFQAAAAAdAAAAABAD",
+                                              height: sm.h(20),
+                                              width: sm.w(72),
+                                              fit: BoxFit.fill,
+                                            ))),
                               Container(
                                 width: sm.w(40),
                                 margin: EdgeInsets.only(bottom: 12.0),
@@ -174,7 +172,7 @@ class BusinessProfile extends StatelessWidget {
                                   security: false,
                                   valid: true,
                                   maxlen: 6,
-                                  error: data.error[9],
+                                  error: v.error[9],
                                   keyboardSet: TextInputType.number,
                                   hint: "Enter Pincode",
                                   myOnChanged: (_val) {

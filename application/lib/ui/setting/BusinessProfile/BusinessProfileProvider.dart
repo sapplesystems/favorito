@@ -145,8 +145,17 @@ class BusinessProfileProvider extends ChangeNotifier {
   }
 
   getProfileData() async {
-    pr?.show()?.timeout(Duration(seconds: 2));
+    try {
+      pr?.show()?.timeout(Duration(seconds: 10));
+    } catch (e) {
+      print(e.toString);
+    }
     await WebService.getProfileData().then((value) {
+      try {
+        pr?.hide()?.timeout(Duration(seconds: 10));
+      } catch (e) {
+        print(e.toString);
+      }
       if (pr.isShowing()) pr.hide();
       var va = value?.data;
       addressList?.clear();
@@ -156,7 +165,7 @@ class BusinessProfileProvider extends ChangeNotifier {
           if (va.website[i].trim().isNotEmpty &&
               va.website[i].characters.length > 2) {
             controller[15 + i].text = va.website[0];
-            webSiteLengthPlus();
+            if (va.website.length < webSiteLength) webSiteLengthPlus();
           }
         }
 
@@ -180,7 +189,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       controller[8].text = addressList[2] ?? '';
       controller[9].text = va.postalCode ?? '';
 
-      dd1.currentState.changeSelectedItem(va?.workingHours ?? "");
+      dd1?.currentState?.changeSelectedItem(va?.workingHours ?? "");
 
       pinCaller(va.postalCode);
       controller[13].text = va.businessEmail;
@@ -211,14 +220,16 @@ class BusinessProfileProvider extends ChangeNotifier {
         } else
           error[9] = null;
 
-        ddCity.currentState.changeSelectedItem(value.data.city);
-        ddState.currentState.changeSelectedItem(value.data.stateName);
+        ddCity?.currentState?.changeSelectedItem(value.data.city);
+        ddState?.currentState?.changeSelectedItem(value.data.stateName);
         controller[12].text = "India";
       });
     } else {
       controller[10].text = "";
       controller[11].text = "";
+      error[9] = null;
     }
+    notifyListeners();
   }
 
   setContext(BuildContext context) {

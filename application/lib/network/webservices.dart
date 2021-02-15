@@ -16,16 +16,13 @@ import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/business/HoursModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
-import 'package:Favorito/model/businessProfile/BusinessHoursModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
 import 'package:Favorito/model/checkinsModel.dart';
 import 'package:Favorito/model/claimInfo.dart';
-import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
 import 'package:Favorito/model/contactPerson/SearchBranchResonseModel.dart';
-import 'package:Favorito/model/contactPerson/UpdateContactPerson.dart';
 import 'package:Favorito/model/highLightesData.dart';
 import 'package:Favorito/model/job/CityModelResponse.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
@@ -90,7 +87,6 @@ class WebService {
     CatListModel _data = CatListModel();
     print("Request URL:${serviceFunction.funCatList}");
     response = await dio.post(serviceFunction.funCatList, data: _map);
-    // .catchError((onError) => onErrorCall(onError, );
     _data = CatListModel.fromJson(convert.json.decode(response.toString()));
     print("responseData2:${_data.status}");
     return _data;
@@ -101,12 +97,10 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("token:${token}");
     dashModel _data = dashModel();
     print("Request URL:${serviceFunction.funDash}");
-    response = await dio
-        .post(serviceFunction.funDash, options: opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funDash, options: opt);
 
     if (response.statusCode == 200) {
       _data = dashModel.fromJson(convert.json.decode(response.toString()));
@@ -125,10 +119,8 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     NotificationListRequestModel _returnData = NotificationListRequestModel();
-    response = await dio
-        .post(serviceFunction.funNotificationsList, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response =
+        await dio.post(serviceFunction.funNotificationsList, options: _opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:${serviceFunction.funNotificationsList}");
@@ -178,11 +170,9 @@ class WebService {
         CreateNotificationRequiredDataModel();
 
     print("Request URL:${serviceFunction.funGetCreateNotificationDefaultData}");
-    response = await dio
-        .post(serviceFunction.funGetCreateNotificationDefaultData,
-            options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(
+        serviceFunction.funGetCreateNotificationDefaultData,
+        options: _opt);
     _returnData = CreateNotificationRequiredDataModel.fromJson(
         convert.json.decode(response.toString()));
     print("responseData5:${_returnData.status}");
@@ -197,10 +187,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
 
     print("Request URL:${serviceFunction.funGetCreateNotificationDefaultData}");
-    response = await dio
-        .post(serviceFunction.funNotificationsDetail, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funNotificationsDetail,
+        data: _map, options: _opt);
     return NotificationOneModel.fromJson(
         convert.json.decode(response.toString()));
   }
@@ -222,10 +210,8 @@ class WebService {
       "area_detail": requestData.areaDetail,
       "quantity": requestData.selectedQuantity
     };
-    response = await dio
-        .post(serviceFunction.funCreateNotification, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funCreateNotification,
+        data: _map, options: _opt);
 
     print("Request URL:${serviceFunction.funCreateNotification}");
     _returnData =
@@ -251,9 +237,7 @@ class WebService {
     loginModel _data = loginModel();
     print('Login Request : ${_data.toString()}');
     response =
-            await dio.post(serviceFunction.funLogin, data: _map, options: opt)
-        // .catchError((onError) => onErrorCall(onError, context))
-        ;
+        await dio.post(serviceFunction.funLogin, data: _map, options: opt);
     _data = loginModel.fromJson(convert.json.decode(response.toString()));
     Prefs.setToken(_data.token.toString().trim());
     return _data.status == "success" ? _data : _data;
@@ -293,9 +277,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
     Map<String, dynamic> _map = {"postal_code": int.parse(pincode)};
-    response = await dio
-        .post(serviceFunction.funValidPincode, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funValidPincode,
+        data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData8:${_returnData.status}");
@@ -310,9 +293,8 @@ class WebService {
     JobListRequestModel _returnData = JobListRequestModel();
 
     print("Request URL:${serviceFunction.funGetJobs}");
-    response = await dio
-        .post(serviceFunction.funGetJobs, data: null, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response =
+        await dio.post(serviceFunction.funGetJobs, data: null, options: _opt);
     _returnData =
         JobListRequestModel.fromJson(convert.json.decode(response.toString()));
     print("responseData5:${_returnData.status}");
@@ -327,10 +309,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     CreateJobRequiredDataModel _returnData = CreateJobRequiredDataModel();
 
-    response = await dio
-        .post(serviceFunction.funGetCreateJobDefaultData,
-            data: null, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetCreateJobDefaultData,
+        data: null, options: _opt);
     _returnData = CreateJobRequiredDataModel.fromJson(
         convert.json.decode(response.toString()));
     return _returnData;
@@ -378,7 +358,6 @@ class WebService {
     CreateOfferRequiredDataModel _returnData = CreateOfferRequiredDataModel();
     response = await dio.post(serviceFunction.funGetCreateOfferDefaultData,
         options: _opt);
-    // .catchError((onError) => onErrorCall(onError, context));
     _returnData = CreateOfferRequiredDataModel.fromJson(
         convert.json.decode(response.toString()));
     print("responseData9:${_returnData.status}");
@@ -398,9 +377,8 @@ class WebService {
       "offer_status": requestData.selectedOfferState,
       "offer_type": requestData.selectedOfferType
     };
-    response = await dio
-        .post(serviceFunction.funCreateOffer, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funCreateOffer,
+        data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData10:${_returnData.status}");
@@ -423,9 +401,8 @@ class WebService {
       "city": requestData.city,
       "postal_code": requestData.pincode
     };
-    response = await dio
-        .post(serviceFunction.funCreateJob, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response =
+        await dio.post(serviceFunction.funCreateJob, data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_returnData.status}");
@@ -440,7 +417,7 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     ContactPersonRequiredDataModel _returnData =
         ContactPersonRequiredDataModel();
-
+    print("token:${token}");
     response = await dio
         .post(serviceFunction.funContactPersonRequiredData,
             data: null, options: _opt)
@@ -1237,9 +1214,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentSaveSetting;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1254,9 +1229,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentCreate;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1271,9 +1244,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentDetail;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1288,9 +1259,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentVerbose;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1306,9 +1275,7 @@ class WebService {
     print("tiken:${token}");
     String url = serviceFunction.funAppoinmentList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1325,9 +1292,7 @@ class WebService {
     print("tiken:${token}");
     String url = serviceFunction.funCheckinslist;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1397,9 +1362,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1417,9 +1380,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1446,7 +1407,6 @@ class WebService {
     print("_map:${_map.toString()}");
     FormData formData = FormData.fromMap(_map);
     response = await dio.post(url, data: formData, options: opt);
-    // .catchError((onError) => onErrorCall(onError, context));
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1629,7 +1589,6 @@ class WebService {
     print("funMenuCreate:${url}");
     response = await dio
         .post(url, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context))
         .timeout(Duration(minutes: 1));
     print("profileImageUpdate:${response.toString()}");
 
