@@ -79,4 +79,11 @@ class service {
       baseUserOrder + 'create-order'; //this is used to create a new order
   static final userOrderCreateVerbose =
       userOrderCreate + '-verbose'; //this is used to create a new order
+
+  //sendOtp
+  static final sendOtp = base +
+      'user-change-password/send-otp-change-password'; //this is used to create a new order
+  static final verifyOtp = base +
+      'user-change-password/verify-otp-change-password'; //this is used to create a new order
+
 }

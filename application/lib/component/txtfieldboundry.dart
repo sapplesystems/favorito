@@ -56,8 +56,8 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
                 borderSide: BorderSide())),
-        validator: (value) =>
-            _validation(value, widget.valid, widget.title, widget.myregex),
+        // validator: (value) =>
+        //     _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,
         style: Theme.of(context).textTheme.body1,
         maxLines: widget.maxLines,

@@ -22,6 +22,7 @@ import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
 import 'package:dio/dio.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
+import 'package:favorito_user/model/otp/SendOtpModel.dart';
 import 'dart:convert' as convert;
 
 import 'package:favorito_user/services/function.dart';
@@ -534,5 +535,21 @@ class APIManager {
         data: _map, options: opt);
     print("service.userOrderCreateVerbose : ${response.toString}");
     return ModelOption.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//sendOtp
+  static Future<SendOtpModel> sendOtp(Map _map) async {
+    print("url : ${service.sendOtp}");
+    response = await dio.post(service.sendOtp, data: _map);
+    print("service.userOrderCreateVerbose : ${response.toString}");
+    return SendOtpModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//verify otp
+  static Future<BaseResponse> verifyOtp(Map _map) async {
+    print("url : ${service.verifyOtp}");
+    response = await dio.post(service.verifyOtp, data: _map);
+    print("service.verifyOtp : ${response.toString}");
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
 }

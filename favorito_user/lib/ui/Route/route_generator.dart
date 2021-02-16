@@ -2,6 +2,7 @@ import 'package:favorito_user/component/Following.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/BottomNavigationPage.dart';
+import 'package:favorito_user/ui/ForgetPassword/forgetPassword.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHome.dart';
 import 'package:favorito_user/ui/Signup.dart';
@@ -62,6 +63,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => PersonalInfo());
       case '/menuHome':
         return MaterialPageRoute(builder: (_) => MenuHome());
+      case '/forgetPassword':
+        return MaterialPageRoute(builder: (_) => ForgetPassword());
       default:
         return _errorRoute();
     }

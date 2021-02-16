@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/Providers/BookTableProvider.dart';
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
+import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ void main() {
           ChangeNotifierProvider(create: (context) => BasketControllers()),
           ChangeNotifierProvider(create: (context) => OptController()),
           ChangeNotifierProvider(create: (context) => AppBookProvider()),
+          ChangeNotifierProvider(create: (context) => ForgetPasswordProvider()),
           // Provider(create: (context) => MenuHomeProvider()),
         ],
         child: MyApp(),

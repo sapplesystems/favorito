@@ -79,6 +79,7 @@ class _SignupState extends State<Signup> {
                             child: EditTextComponent(
                               ctrl: controller[i],
                               title: title[i],
+                              hint: title[i],
                               security: i == 3 ? true : false,
                               valid: true,
                               maxLines: 1,

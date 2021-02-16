@@ -1,25 +1,18 @@
-class BaseResponse<T> {
+class BaseResponse {
   String status;
   String message;
-  T data;
 
-  BaseResponse({this.status, this.message, this.data});
+  BaseResponse({this.status, this.message});
 
-  factory BaseResponse.fromJson(Map<String, dynamic> json) {
-    return BaseResponse(
-      status: json["status"],
-      message: json["msg"] ?? "",
-      data: json['data'],
-    );
+  BaseResponse.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data;
-    }
     return data;
   }
 }
