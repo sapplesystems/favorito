@@ -3,68 +3,27 @@ import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/waitlist/WaitlistProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myString.Dart';
+import 'package:provider/provider.dart';
 
-class WaitListSetting extends StatefulWidget {
-  @override
-  _WaitListSettingState createState() => _WaitListSettingState();
-}
-
-class _WaitListSettingState extends State<WaitListSetting> {
-  GlobalKey<FormState> _key = GlobalKey();
-  String startTime = "00:00";
-  String endTime = "00:00";
-  MaterialLocalizations localizations;
-  List title = [
-    "Waitlist Manager",
-    "Anouncement",
-    "Discription",
-    "Minimum Wait Time(minuts)",
-    "Slot Length",
-    "Except"
-  ];
-  List<String> slot = [
-    "15 min",
-    "20 min",
-    "25 min",
-    "30 min",
-    "35 min",
-    "40 min",
-    "45 min",
-    "50 min"
-  ];
+class WaitListSetting extends StatelessWidget {
   SizeManager sm;
-  List<String> list = [
-    "Sunday",
-    "Monday",
-    "TuesDay",
-    "WednesDay",
-    "ThursDay",
-    "FriDay",
-    "SaturDay"
-  ];
-  List<String> selectedList = [];
-  List<TextEditingController> controller = [];
-
-  void initState() {
-    getPageData();
-    super.initState();
-    for (int i = 0; i < 7; i++) controller.add(TextEditingController());
-    controller[0].text = "0";
-    controller[3].text = "0";
-    controller[4].text = "0";
-  }
-
+  WaitlistProvider vaTrue;
+  WaitlistProvider vaFalse;
+  bool b = true;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    localizations = MaterialLocalizations.of(context);
+    vaTrue = Provider.of<WaitlistProvider>(context, listen: true);
+    vaFalse = Provider.of<WaitlistProvider>(context, listen: false);
+    vaTrue.setContext(context);
 
+    if (b) vaFalse.getPageData(context);
+    b = false;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -80,7 +39,7 @@ class _WaitListSettingState extends State<WaitListSetting> {
         ),
         body: Builder(
             builder: (context) => Form(
-                  key: _key,
+                  key: vaFalse.key,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -101,33 +60,32 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           InkWell(
-                                              onTap: () {
-                                                showTimePicker(
-                                                  context: context,
-                                                  initialTime: TimeOfDay.now(),
-                                                  builder:
-                                                      (BuildContext context,
-                                                          Widget child) {
-                                                    return MediaQuery(
-                                                      data: MediaQuery.of(
-                                                              context)
-                                                          .copyWith(
-                                                              alwaysUse24HourFormat:
-                                                                  true),
-                                                      child: child,
-                                                    );
-                                                  },
-                                                ).then((value) {
-                                                  setState(() {
-                                                    startTime = localizations
+                                              onTap: () => showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                        TimeOfDay.now(),
+                                                    builder:
+                                                        (BuildContext context,
+                                                            Widget child) {
+                                                      return MediaQuery(
+                                                        data: MediaQuery.of(
+                                                                context)
+                                                            .copyWith(
+                                                                alwaysUse24HourFormat:
+                                                                    true),
+                                                        child: child,
+                                                      );
+                                                    },
+                                                  ).then((value) {
+                                                    vaFalse.startTime = vaFalse
+                                                        .localizations
                                                         .formatTimeOfDay(value,
                                                             alwaysUse24HourFormat:
                                                                 true);
-                                                  });
-                                                });
-                                              },
+                                                  }),
                                               child: fromTo(
-                                                  txt: startTime, clr: myRed)),
+                                                  txt: vaFalse.startTime,
+                                                  clr: myRed)),
                                           InkWell(
                                               onTap: () {
                                                 showTimePicker(
@@ -146,30 +104,30 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                                     );
                                                   },
                                                 ).then((value) {
-                                                  setState(() {
-                                                    endTime = localizations
-                                                        .formatTimeOfDay(value,
-                                                            alwaysUse24HourFormat:
-                                                                true);
-                                                  });
+                                                  vaFalse.endTime = vaFalse
+                                                      .localizations
+                                                      .formatTimeOfDay(value,
+                                                          alwaysUse24HourFormat:
+                                                              true);
                                                 });
                                               },
                                               child: fromTo(
-                                                  txt: endTime, clr: myRed))
+                                                  txt: vaFalse.endTime,
+                                                  clr: myRed))
                                         ],
                                       ),
-                                      plusMinus(
-                                          "Available resources", controller[0]),
+                                      plusMinus("Available resources",
+                                          vaFalse.controller[0]),
                                       Padding(
                                         padding:
                                             EdgeInsets.only(bottom: sm.h(2)),
                                         child: txtfieldboundry(
                                           valid: true,
-                                          title: title[3],
+                                          title: vaFalse.title[3],
                                           isEnabled: true,
                                           keyboardSet: TextInputType.number,
-                                          hint: "Enter ${title[0]}",
-                                          controller: controller[1],
+                                          hint: "Enter ${vaFalse.title[0]}",
+                                          controller: vaFalse.controller[1],
                                           maxLines: 1,
                                           security: false,
                                         ),
@@ -177,33 +135,37 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: DropdownSearch<String>(
+                                            key: vaTrue.slotKey,
                                             validator: (v) => v == ''
                                                 ? "required field"
                                                 : null,
                                             autoValidateMode: AutovalidateMode
                                                 .onUserInteraction,
                                             mode: Mode.MENU,
-                                            selectedItem: controller[2].text,
-                                            items: slot,
-                                            label: "${title[4]}",
-                                            hint: "Please Select ${title[4]}",
+                                            selectedItem:
+                                                vaTrue.controller[2].text,
+                                            items: vaTrue.slot,
+                                            label: "${vaTrue.title[4]}",
+                                            hint:
+                                                "Please Select ${vaTrue.title[4]}",
                                             showSearchBox: false,
                                             onChanged: (value) {
-                                              setState(() {
-                                                controller[2].text = value;
-                                              });
+                                              vaFalse.controller[2].text =
+                                                  value;
                                             }),
                                       ),
-                                      plusMinus("Booking/Slot", controller[3]),
-                                      plusMinus("Booking/Day", controller[4]),
+                                      plusMinus("Booking/Slot",
+                                          vaFalse.controller[3]),
+                                      plusMinus(
+                                          "Booking/Day", vaFalse.controller[4]),
                                       Padding(
                                           padding:
                                               EdgeInsets.only(bottom: sm.h(2)),
                                           child: txtfieldboundry(
                                               valid: true,
-                                              title: title[0],
-                                              hint: "Enter ${title[0]}",
-                                              controller: controller[5],
+                                              title: vaFalse.title[0],
+                                              hint: "Enter ${vaFalse.title[0]}",
+                                              controller: vaFalse.controller[5],
                                               maxLines: 1,
                                               security: false)),
                                       Padding(
@@ -211,18 +173,19 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                               EdgeInsets.only(bottom: sm.h(2)),
                                           child: txtfieldboundry(
                                               valid: true,
-                                              title: title[1],
-                                              hint: "Enter ${title[0]}",
-                                              controller: controller[6],
+                                              title: vaFalse.title[1],
+                                              hint: "Enter ${vaFalse.title[0]}",
+                                              controller: vaFalse.controller[6],
                                               maxLines: 4,
                                               security: false)),
                                       MyTags(
-                                          sourceList: list,
-                                          selectedList: selectedList,
-                                          hint: "Please select ${title[5]}",
+                                          sourceList: vaFalse.list,
+                                          selectedList: vaFalse.selectedList,
+                                          hint:
+                                              "Please select ${vaFalse.title[5]}",
                                           border: true,
                                           directionVeticle: false,
-                                          title: title[5])
+                                          title: vaTrue.title[5])
                                     ]))),
                         Padding(
                             padding: EdgeInsets.only(
@@ -232,8 +195,8 @@ class _WaitListSettingState extends State<WaitListSetting> {
                                 bottom: sm.w(16)),
                             child: RoundedButton(
                                 clicker: () {
-                                  if (_key.currentState.validate())
-                                    submitDataCall();
+                                  if (vaFalse.key.currentState.validate())
+                                    vaFalse.submitDataCall();
                                 },
                                 clr: Colors.red,
                                 title: "Done"))
@@ -254,61 +217,21 @@ class _WaitListSettingState extends State<WaitListSetting> {
             onPressed: () {
               int a = int.parse(ctrl.text);
               a = a > 0 ? a - 1 : a;
-              setState(() => ctrl.text = a.toString());
+              ctrl.text = a.toString();
+              vaTrue.notifyListeners();
             },
           ),
           fromTo(txt: ctrl.text, clr: myRed),
           IconButton(
             icon: Icon(Icons.add_circle_outline, size: 28, color: myRed),
             onPressed: () {
-              setState(() => ctrl.text = (int.parse(ctrl.text) + 1).toString());
+              ctrl.text = (int.parse(ctrl.text) + 1).toString();
+
+              vaTrue.notifyListeners();
             },
           )
         ]),
       )
     ]);
-  }
-
-  void getPageData() async {
-    await WebService.funWaitlistSetting(context).then((value) {
-      if (value.status == "success") {
-        var va = value.data[0];
-        startTime = va.startTime;
-        endTime = va.endTime;
-        controller[0].text = va.availableResource.toString();
-        controller[1].text = va.miniumWaitTime.toString();
-        controller[2].text = va.slotLength.toString();
-        controller[3].text = va.bookingPerSlot.toString();
-        controller[4].text = va.bookingPerDay.toString();
-        controller[5].text = va.waitlistManagerName.toString();
-        controller[6].text = va.announcement.toString();
-        selectedList = va.exceptDays.split(",");
-        setState(() {});
-      }
-    });
-  }
-
-  void submitDataCall() {
-    var days = "";
-    for (int _i = 0; _i < selectedList.length; _i++)
-      days = days + (_i == 0 ? "" : ",") + selectedList[_i];
-
-    Map _map = {
-      "start_time": startTime,
-      "end_time": endTime,
-      "available_resource": controller[0].text,
-      "minium_wait_time": controller[1].text,
-      "slot_length": controller[2].text,
-      "booking_per_slot": controller[3].text,
-      "booking_per_day": controller[4].text,
-      "waitlist_manager_name": controller[5].text,
-      "announcement": controller[6].text,
-      "except_days": days
-    };
-    WebService.funWaitlistSaveSetting(_map, context).then((value) {
-      if (value.status == "success") {
-        BotToast.showText(text: value.message);
-      }
-    });
   }
 }

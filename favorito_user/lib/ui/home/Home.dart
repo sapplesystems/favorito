@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
               ctrl: _mySearchEditTextController,
               hint: "Search",
               security: false,
-              valid: true,
+              valid: false,
               keyboardSet: TextInputType.text,
               prefixIcon: 'search',
               keyBoardAction: TextInputAction.search,

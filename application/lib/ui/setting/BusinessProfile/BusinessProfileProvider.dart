@@ -265,14 +265,10 @@ class BusinessProfileProvider extends ChangeNotifier {
   Future getImage(ImgSource source) async {
     File image;
     image = await ImagePickerGC.pickImage(
-      context: context,
-      source: source,
-      imageQuality: 10,
-      cameraIcon: Icon(
-        Icons.add,
-        color: Colors.red,
-      ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
-    );
+        context: context,
+        source: source,
+        imageQuality: 10,
+        cameraIcon: Icon(Icons.add, color: Colors.red));
 
     File croppedFile = await ImageCropper.cropImage(
         sourcePath: image.path,

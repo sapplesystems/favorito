@@ -2,9 +2,11 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/Regexer.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class ManualWaitList extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class ManualWaitList extends StatefulWidget {
 }
 
 class _ManualWaitListState extends State<ManualWaitList> {
+  ProgressDialog pr;
   List<TextEditingController> controller = [];
   List<String> selectedlist = [];
   GlobalKey<FormState> _frmKey = GlobalKey();
@@ -24,6 +27,8 @@ class _ManualWaitListState extends State<ManualWaitList> {
 
   @override
   Widget build(BuildContext context) {
+    pr = ProgressDialog(context, type: ProgressDialogType.Normal)
+      ..style(message: 'Please wait..');
     sm = SizeManager(context);
     return Scaffold(
       appBar: AppBar(
@@ -69,6 +74,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
                               child: txtfieldboundry(
                                 valid: true,
                                 title: title[i],
+                                myregex: i == 1 ? mobileRegex : null,
                                 hint: "Enter ${title[i]}",
                                 controller: controller[i],
                                 keyboardSet: (i == 1 || i == 2)
@@ -96,6 +102,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
   }
 
   void funSublim() {
+    pr.show().timeout(Duration(seconds: 15));
     Map _map = {
       "name": controller[0].text,
       "contact": controller[1].text,
@@ -103,6 +110,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
       "special_notes": controller[3].text
     };
     WebService.funCreateWaitlist(_map, context).then((value) {
+      pr.hide();
       if (value.status == "success") {
         BotToast.showText(text: value.message);
         Navigator.pop(context);

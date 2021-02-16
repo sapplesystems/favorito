@@ -524,7 +524,10 @@ class WebService {
   static Future<waitListSettingModel> funWaitlistSetting(
       BuildContext context) async {
     String token = await Prefs.token;
-    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    print("token:${token}");
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(serviceFunction.funWaitlistSetting,
         data: null, options: opt);
     print("funGetCatalogs:${response.toString()}");

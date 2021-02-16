@@ -44,88 +44,100 @@ class EditTextComponent extends StatefulWidget {
 class _EditTextComponentState extends State<EditTextComponent> {
   @override
   Widget build(BuildContext context) {
-    return Neumorphic(
-      style: NeumorphicStyle(
-          shape: NeumorphicShape.convex,
-          depth: -8,
-          lightSource: LightSource.topLeft,
-          color: myEditTextBackground,
-          boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.all(Radius.circular(30.0)))),
-      child: TextFormField(
-        controller: widget.ctrl,
-        obscureText: widget.security,
-        maxLength: widget.maxlen,
-        inputFormatters: [
-          widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
-        ],
-        decoration: InputDecoration(
-          prefixIcon: widget.prefixIcon == 'mail'
-              ? InkWell(
-                  child: Icon(Icons.mail_outline),
-                  onTap: () {},
-                )
-              : widget.prefixIcon == 'password'
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Neumorphic(
+          style: NeumorphicStyle(
+              shape: NeumorphicShape.convex,
+              depth: -8,
+              lightSource: LightSource.topLeft,
+              color: myEditTextBackground,
+              boxShape: NeumorphicBoxShape.roundRect(
+                  BorderRadius.all(Radius.circular(30.0)))),
+          child: TextField(
+            controller: widget.ctrl,
+            obscureText: widget.security,
+            maxLength: widget.maxlen,
+            inputFormatters: [
+              widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
+            ],
+            decoration: InputDecoration(
+              prefixIcon: widget.prefixIcon == 'mail'
                   ? InkWell(
-                      child: Icon(Icons.lock_outline),
+                      child: Icon(Icons.mail_outline),
                       onTap: () {},
                     )
-                  : widget.prefixIcon == 'name'
+                  : widget.prefixIcon == 'password'
                       ? InkWell(
-                          child: Icon(Icons.contacts),
+                          child: Icon(Icons.lock_outline),
                           onTap: () {},
                         )
-                      : widget.prefixIcon == 'phone'
+                      : widget.prefixIcon == 'name'
                           ? InkWell(
-                              child: Icon(Icons.phone),
+                              child: Icon(Icons.contacts),
                               onTap: () {},
                             )
-                          : widget.prefixIcon == 'search'
+                          : widget.prefixIcon == 'phone'
                               ? InkWell(
-                                  child: Icon(Icons.search),
-                                  onTap: () {
-                                    widget.prefClick();
-                                  },
+                                  child: Icon(Icons.phone),
+                                  onTap: () {},
                                 )
-                              : widget.prefixIcon == 'postal'
+                              : widget.prefixIcon == 'search'
                                   ? InkWell(
-                                      child: Icon(Icons.location_searching),
+                                      child: Icon(Icons.search),
                                       onTap: () {
                                         widget.prefClick();
                                       },
                                     )
-                                  : widget.prefixIcon == 'address'
+                                  : widget.prefixIcon == 'postal'
                                       ? InkWell(
-                                          child: Icon(Icons.home_outlined),
+                                          child: Icon(Icons.location_searching),
                                           onTap: () {
                                             widget.prefClick();
                                           },
                                         )
-                                      : null,
-          labelText: widget.title ?? '',
-          counterText: "",
-          hintText: widget.hint,
-          contentPadding: EdgeInsets.only(left: 16.0),
-          fillColor: Colors.transparent,
-          border: InputBorder.none,
+                                      : widget.prefixIcon == 'address'
+                                          ? InkWell(
+                                              child: Icon(Icons.home_outlined),
+                                              onTap: () {
+                                                widget.prefClick();
+                                              },
+                                            )
+                                          : null,
+              labelText: widget.title ?? '',
+              counterText: "",
+              hintText: widget.hint,
+              contentPadding: EdgeInsets.only(left: 16.0),
+              fillColor: Colors.transparent,
+              border: InputBorder.none,
+            ),
+            keyboardType: widget.keyboardSet,
+            textInputAction: widget.keyBoardAction,
+            style: TextStyle(
+              fontFamily: "Poppins",
+            ),
+            maxLines: widget.maxLines ?? 1,
+            onChanged: widget.myOnChanged,
+            enabled: widget.isEnabled,
+            // onFieldSubmitted: widget.atSubmit,
+          ),
         ),
-        validator: (value) =>
-            _validation(value, widget.valid, widget.title, widget.myregex),
-        keyboardType: widget.keyboardSet,
-        textInputAction: widget.keyBoardAction,
-        style: TextStyle(
-          fontFamily: "Poppins",
-        ),
-        maxLines: widget.maxLines ?? 1,
-        onChanged: widget.myOnChanged,
-        enabled: widget.isEnabled,
-        onFieldSubmitted: widget.atSubmit,
-      ),
+        if (widget.valid)
+          Text(
+            _validation(widget.ctrl.text, widget.valid, widget.hint,
+                    widget.myregex) ??
+                '',
+            style: TextStyle(color: myRed),
+            textAlign: TextAlign.left,
+          )
+      ],
     );
   }
 
   // ignore: missing_return
   String _validation(String text, bool valid, String lbl, RegExp myregex) {
+    print('ssss$text, $lbl');
     if (valid) {
       if (myregex != null && text.isNotEmpty)
         return myregex.hasMatch(text) ? null : "$lbl";
