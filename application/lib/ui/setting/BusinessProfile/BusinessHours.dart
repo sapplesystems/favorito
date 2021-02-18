@@ -142,7 +142,11 @@ class BusinessHours extends StatelessWidget {
                             ctx: context,
                             widget: WorkingDateTime(),
                             callback: () => bspTrue.popupClosed(),
-                            sm: sm)
+                            sm: sm,
+                            sizesLeft: 3,
+                            sizesRight: 3,
+                            sizesTop: 20,
+                            sizesBottom: 50)
                         .show();
                   },
                   child: Text("Add", style: TextStyle(color: Colors.red)),

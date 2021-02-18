@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/otp/SendOtpModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -81,7 +82,7 @@ class ForgetPasswordProvider extends ChangeNotifier {
       await APIManager.verifyOtp(_map).then((value) {
         pr.hide();
         if (value.status == 'success') {
-          clear();
+          allClear();
         } else {
           print("value.message${value.message}");
           BotToast.showText(text: value.message);
@@ -91,10 +92,68 @@ class ForgetPasswordProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  clear() {
+  onChange(int _index) {
+    switch (_index) {
+      case 0:
+        {
+          if (emailRegex.hasMatch(acces[_index].controller.text))
+            acces[_index].error = null;
+          else {
+            acces[_index].error = 'Invalid email';
+          }
+          notifyListeners();
+        }
+        break;
+
+      case 2:
+        {
+          if (passwordRegex.hasMatch(acces[_index].controller.text)) {
+            acces[_index].error = null;
+            if (acces[_index + 1].controller.text != '' &&
+                (acces[_index].controller.text !=
+                    acces[_index + 1].controller.text)) {
+              acces[_index + 1].error = 'Password mismatch';
+            } else
+              acces[_index + 1].error = null;
+          } else {
+            acces[_index].error =
+                validator.validatePassword(acces[_index].controller.text);
+          }
+          notifyListeners();
+        }
+        break;
+
+      case 3:
+        {
+          if (passwordRegex.hasMatch(acces[_index].controller.text)) {
+            acces[_index].error = null;
+            if (acces[_index - 1].controller.text != null &&
+                (acces[_index].controller.text !=
+                    acces[_index - 1].controller.text)) {
+              acces[_index].error = 'Password mismatch';
+            } else {
+              acces[_index].error = null;
+            }
+          } else {
+            acces[_index].error =
+                validator.validatePassword(acces[_index].controller.text);
+          }
+          notifyListeners();
+        }
+        break;
+
+      default:
+        {
+          //statements;
+        }
+        break;
+    }
+  }
+
+  allClear() {
     for (int i = 0; i < 4; i++) {
-      acces[i].error = '';
-      acces[i].controller.text = '';
+      Acces a = Acces();
+      acces[i] = a;
     }
     otpForworded = false;
     didNotReceive = '';

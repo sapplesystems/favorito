@@ -16,30 +16,44 @@ import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
 
 class BusinessProfile extends StatelessWidget {
+  BusinessProfileProvider v;
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    var v = Provider.of<BusinessProfileProvider>(context, listen: true);
+    v = Provider.of<BusinessProfileProvider>(context, listen: true);
     v.setContext(context);
+    if (v.controller[1]?.text.isEmpty) {
+      print("rrrrrrrrr");
+      v.getProfileData(false);
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
-        v.getProfileData();
+        v.getProfileData(true);
       },
       child: Consumer<BusinessProfileProvider>(builder: (context, data, child) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => Navigator.of(context).pop(),
+        return WillPopScope(
+          onWillPop: () {
+            print("backpresed");
+            v.needSave(false);
+            Navigator.pop(context);
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    v.needSave(false);
+                  }),
+              iconTheme: IconThemeData(color: Colors.white),
+              elevation: 0,
             ),
-            iconTheme: IconThemeData(color: Colors.white),
-            elevation: 0,
-          ),
-          body: ListView(children: [
-            Text("Business Profile",
-                textAlign: TextAlign.center, style: appBarStyle),
-            Container(
+            body: ListView(controller: v.listviewController, children: [
+              Text("Business Profile",
+                  textAlign: TextAlign.center, style: appBarStyle),
+              Container(
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: Stack(children: [
                   Card(
@@ -61,9 +75,8 @@ class BusinessProfile extends StatelessWidget {
                                               height: sm.h(20),
                                               width: sm.w(50),
                                               child: Image.asset(
-                                                'assets/icon/upload.png',
-                                                fit: BoxFit.fill,
-                                              ))
+                                                  'assets/icon/upload.png',
+                                                  fit: BoxFit.fill))
                                           : Image.network(
                                               data?.controller[0]?.text ??
                                                   "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngitem.com%2Fmiddle%2FhhmRJo_profile-icon-png-image-free-download-searchpng-employee%2F&psig=AOvVaw1JN_EBIRV8qqhAz589M0kw&ust=1613456728598000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjgwvKg6-4CFQAAAAAdAAAAABAD",
@@ -92,6 +105,7 @@ class BusinessProfile extends StatelessWidget {
                                   controller: data.controller[i],
                                   title: data.titleList[i],
                                   security: false,
+                                  myOnChanged: (d) => v.needSave(true),
                                   valid: data.validateList[i],
                                   maxlen: i == 3 ? 12 : 50,
                                   focusNode: data.focusnode[i],
@@ -161,6 +175,9 @@ class BusinessProfile extends StatelessWidget {
                                     sufixColor: myGrey,
                                     sufixTxt: "Add Line",
                                     security: false,
+                                    myOnChanged: (_) {
+                                      v.needSave(true);
+                                    },
                                     sufixClick: () {
                                       if (data.addressLength < 3)
                                         data.addressLength =
@@ -177,6 +194,7 @@ class BusinessProfile extends StatelessWidget {
                                   hint: "Enter Pincode",
                                   myOnChanged: (_val) {
                                     data.pinCaller(_val);
+                                    v.needSave(true);
                                   }),
                               Padding(
                                 padding: EdgeInsets.all(8.0),
@@ -234,6 +252,8 @@ class BusinessProfile extends StatelessWidget {
                                   onChanged: (_value) {
                                     data.controller[11].text = _value;
                                     data.controller[12].text = "India";
+
+                                    v.needSave(true);
                                   },
                                 ),
                               ),
@@ -243,6 +263,9 @@ class BusinessProfile extends StatelessWidget {
                                 security: false,
                                 valid: false,
                                 isEnabled: false,
+                                myOnChanged: (_) {
+                                  v.needSave(true);
+                                },
                                 hint: "Enter Country",
                               ),
                               txtfieldboundry(
@@ -250,6 +273,9 @@ class BusinessProfile extends StatelessWidget {
                                 title: "Email",
                                 security: false,
                                 valid: true,
+                                myOnChanged: (_) {
+                                  v.needSave(true);
+                                },
                                 hint: "Enter Email",
                               ),
                               txtfieldboundry(
@@ -258,6 +284,9 @@ class BusinessProfile extends StatelessWidget {
                                 maxLines: 3,
                                 valid: true,
                                 security: false,
+                                myOnChanged: (_) {
+                                  v.needSave(true);
+                                },
                                 hint: "Enter Description",
                               ),
                               for (int i = 0; i < data.webSiteLength; i++)
@@ -267,6 +296,9 @@ class BusinessProfile extends StatelessWidget {
                                     title: "Website ",
                                     maxLines: 1,
                                     valid: false,
+                                    myOnChanged: (_) {
+                                      v.needSave(true);
+                                    },
                                     sufixColor: myRed,
                                     sufixTxt: "Add Line",
                                     security: false,
@@ -283,49 +315,55 @@ class BusinessProfile extends StatelessWidget {
                       right: sm.w(8),
                       child: Card(
                         child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: sm.w(0), vertical: sm.h(4)),
-                            child: Column(children: [
-                              Text(
-                                "Your Business ID",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13,
-                                    fontFamily: 'Gilroy-Medium'),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                business_id,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    letterSpacing: 1.2,
-                                    fontFamily: 'Gilroy-Medium'),
-                              )
-                            ])),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: sm.w(0), vertical: sm.h(4)),
+                          child: Column(children: [
+                            Text(
+                              "Your Business ID",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                  fontFamily: 'Gilroy-Medium'),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              business_id,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  letterSpacing: 1.2,
+                                  fontFamily: 'Gilroy-Medium'),
+                            )
+                          ]),
+                        ),
                       ))
-                ])),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: sm.w(60),
-                margin: EdgeInsets.only(bottom: 8.0),
-                child: RoundedButton(
-                    clicker: () {
-                      if (data.formKey.currentState.validate())
-                        data.prepareWebService();
-                    },
-                    clr: Colors.red,
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontFamily: "Gilroy-Bold",
-                        fontWeight: FontWeight.w400,
-                        letterSpacing: 1.5),
-                    title: donetxt),
+                ]),
               ),
-            )
-          ]),
+              Visibility(
+                visible: v.getNeedSave(),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: sm.w(60),
+                    margin: EdgeInsets.only(bottom: 8.0),
+                    child: RoundedButton(
+                        clicker: () {
+                          if (data.formKey.currentState.validate())
+                            data.prepareWebService();
+                        },
+                        clr: Colors.red,
+                        textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: "Gilroy-Bold",
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 1.5),
+                        title: donetxt),
+                  ),
+                ),
+              )
+            ]),
+          ),
         );
       }),
     );

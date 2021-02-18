@@ -20,7 +20,9 @@ class EditTextComponent extends StatefulWidget {
   Function prefClick;
   Function myOnChanged;
   Function atSubmit;
+  Function suffixTap;
   String error;
+  String suffixTxt;
   EditTextComponent(
       {this.title,
       this.security,
@@ -38,6 +40,8 @@ class EditTextComponent extends StatefulWidget {
       this.prefClick,
       this.prefixIcon,
       this.atSubmit,
+      this.suffixTxt,
+      this.suffixTap,
       this.error});
   @override
   _EditTextComponentState createState() => _EditTextComponentState();
@@ -63,6 +67,9 @@ class _EditTextComponentState extends State<EditTextComponent> {
             widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
           ],
           decoration: InputDecoration(
+            suffix: InkWell(
+                onTap: () => widget.suffixTap(),
+                child: Text(widget.suffixTxt ?? null)),
             prefixIcon: widget.prefixIcon == 'mail'
                 ? InkWell(
                     child: Icon(Icons.mail_outline),
@@ -108,7 +115,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
             labelText: '',
             counterText: "",
             hintText: widget.hint,
-            contentPadding: EdgeInsets.only(left: 16.0),
+            contentPadding: EdgeInsets.only(right: 16.0),
             fillColor: Colors.transparent,
             border: InputBorder.none,
           ),

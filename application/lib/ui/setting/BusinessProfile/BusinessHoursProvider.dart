@@ -26,6 +26,7 @@ class BusinessHoursProvider extends ChangeNotifier {
   String startTime = 'Start Time';
   String endTime = 'End Time';
   List<int> renge = [];
+  // bool
   BusinessHoursProvider() {
     for (var _d in daylist) {
       print("this is called 1");
@@ -66,7 +67,7 @@ class BusinessHoursProvider extends ChangeNotifier {
           }
         }
       }
-      // notifyListeners();
+      notifyListeners();
       // Navigator.pop(context);
     });
   }
@@ -200,5 +201,9 @@ class BusinessHoursProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  allClear() {
+    selecteddayList.clear();
   }
 }

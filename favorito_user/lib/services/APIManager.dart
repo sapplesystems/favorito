@@ -8,6 +8,7 @@ import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
+import 'package:favorito_user/model/appModel/CheckAccountmodel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
@@ -547,9 +548,27 @@ class APIManager {
 
 //verify otp
   static Future<BaseResponse> verifyOtp(Map _map) async {
-    print("url : ${service.verifyOtp}");
+    String token = await Prefs.token;
+    print("token : $token");
+
     response = await dio.post(service.verifyOtp, data: _map);
     print("service.verifyOtp : ${response.toString}");
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//verify otp
+  static Future<CheckAccountmodel> checkId(Map _map) async {
+    print("url : ${service.verifyOtp}");
+    response = await dio.post(service.checkId, data: _map);
+    print("service.verifyOtp : ${response.toString}");
+    return CheckAccountmodel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//verify Email/Mobile
+  static Future<CheckAccountmodel> checkMobileOrEmail(Map _map) async {
+    print("url : ${service.verifyOtp}");
+    response = await dio.post(service.checkMobileOrEmail, data: _map);
+    print("service.verifyOtp : ${response.toString}");
+    return CheckAccountmodel.fromJson(convert.jsonDecode(response.toString()));
   }
 }

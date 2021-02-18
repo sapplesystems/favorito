@@ -24,6 +24,7 @@ class ForgetPassword extends StatelessWidget {
       child: WillPopScope(
         onWillPop: () {
           Navigator.pop(context);
+          prTrue.allClear();
         },
         child: Scaffold(
           body: Padding(
@@ -51,10 +52,13 @@ class ForgetPassword extends StatelessWidget {
                   hint: prFalse.title[0],
                   security: false,
                   valid: true,
+                  suffixTxt: '',
+                  myOnChanged: (_) {
+                    prTrue.onChange(0);
+                  },
                   error: prTrue.acces[0].error,
                   myregex: emailAndMobileRegex,
                   maxLines: 1,
-                  formate: FilteringTextInputFormatter.singleLineFormatter,
                   maxlen: 50,
                   keyboardSet: TextInputType.emailAddress,
                   prefixIcon: prFalse.prefix[0],
@@ -146,6 +150,10 @@ class ForgetPassword extends StatelessWidget {
                             title: prFalse.title[i],
                             hint: prFalse.title[i],
                             security: true,
+                            suffixTxt: '',
+                            myOnChanged: (_) {
+                              prTrue.onChange(i);
+                            },
                             error: prTrue.acces[i].error,
                             valid: true,
                             maxLines: 1,

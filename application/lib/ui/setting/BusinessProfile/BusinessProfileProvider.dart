@@ -16,12 +16,13 @@ import 'package:image_cropper/image_cropper.dart';
 
 class BusinessProfileProvider extends ChangeNotifier {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   CameraPosition initPosition;
   Completer<GoogleMapController> GMapcontroller = Completer();
   Set<Marker> marker = {};
   List<TextEditingController> controller = List();
+
+  ScrollController listviewController = ScrollController();
   List<FocusNode> focusnode = List();
   List<String> error = List();
   bool firstTime = true;
@@ -52,6 +53,13 @@ class BusinessProfileProvider extends ChangeNotifier {
     TextInputType.number,
     TextInputType.number
   ];
+  bool _showDone = false;
+  needSave(val) {
+    _showDone = val;
+    notifyListeners();
+  }
+
+  getNeedSave() => _showDone;
 
   BusinessProfileProvider() {
     _getCurrentLocation();
@@ -60,7 +68,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       focusnode.add(FocusNode());
       error.add(null);
     }
-    getProfileData();
+    getProfileData(false);
     _cityWebData();
     _stateWebData();
   }
@@ -144,18 +152,20 @@ class BusinessProfileProvider extends ChangeNotifier {
     });
   }
 
-  getProfileData() async {
-    try {
-      pr?.show()?.timeout(Duration(seconds: 10));
-    } catch (e) {
-      print(e.toString);
-    }
-    await WebService.getProfileData().then((value) {
+  getProfileData(bool val) async {
+    if (val)
       try {
-        pr?.hide()?.timeout(Duration(seconds: 10));
+        pr?.show()?.timeout(Duration(seconds: 10));
       } catch (e) {
         print(e.toString);
       }
+    await WebService.getProfileData().then((value) {
+      if (val)
+        try {
+          pr?.hide()?.timeout(Duration(seconds: 10));
+        } catch (e) {
+          print(e.toString);
+        }
       if (pr.isShowing()) pr.hide();
       var va = value?.data;
       addressList?.clear();
@@ -168,6 +178,9 @@ class BusinessProfileProvider extends ChangeNotifier {
             if (va.website.length < webSiteLength) webSiteLengthPlus();
           }
         }
+      controller[1].text = va.businessName ?? '';
+      controller[2].text = va.businessPhone ?? '';
+      controller[3].text = va.landline ?? "";
 
       addressList.add(va.address1 ?? '');
       addressList.add(va.address2 ?? '');
@@ -178,7 +191,6 @@ class BusinessProfileProvider extends ChangeNotifier {
         controller[0].text = va.photo;
         addOrChangePhoto = 'change photo';
       }
-      controller[1].text = va.businessName ?? '';
       print("va.businessName${va.businessName}");
       controller[2].text = va.businessPhone ?? '';
       controller[3].text = va.landline ?? "";
@@ -200,12 +212,15 @@ class BusinessProfileProvider extends ChangeNotifier {
         initPosition = CameraPosition(
             target: LatLng(double.parse(_v[0]), double.parse(_v[1])), zoom: 17);
       }
+      controller[4].text = va.workingHours;
       // notifyListeners();
       if (controller[4].text == "Select Hours" ||
           controller[4].text == 'Select Hours') {
         // Provider.of<BusinessHoursProvider>(context, listen: false).getData();
       }
-      FocusScope.of(context).requestFocus(focusnode[1]);
+
+      listviewController.animateTo(listviewController.position.minScrollExtent,
+          curve: Curves.easeOut, duration: const Duration(milliseconds: 5));
       notifyListeners();
       return value;
     });
@@ -230,6 +245,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       error[9] = null;
     }
     notifyListeners();
+    needSave(false);
   }
 
   setContext(BuildContext context) {
@@ -295,6 +311,14 @@ class BusinessProfileProvider extends ChangeNotifier {
         addOrChangePhoto = 'change photo';
         notifyListeners();
       }
+    });
+  }
+
+  allClear() {
+    BusinessProfileModel _temp = BusinessProfileModel();
+    _businessProfileData = _temp;
+    controller.forEach((e) {
+      e.text = '';
     });
   }
 }

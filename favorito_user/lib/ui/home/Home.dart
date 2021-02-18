@@ -85,8 +85,11 @@ class _HomeState extends State<Home> {
             child: EditTextComponent(
               ctrl: _mySearchEditTextController,
               hint: "Search",
+              // suffixTap: () {},
+              suffixTxt: '',
               security: false,
               valid: false,
+              error: '',
               keyboardSet: TextInputType.text,
               prefixIcon: 'search',
               keyBoardAction: TextInputAction.search,

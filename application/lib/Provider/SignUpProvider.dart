@@ -1,13 +1,16 @@
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
-import 'package:Favorito/ui/login/login.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class SignUpProvider extends ChangeNotifier {
+  final categoryKey = GlobalKey<DropdownSearchState<String>>();
+  final categoryKey1 = GlobalKey<DropdownSearchState<String>>();
+  final categoryKey2 = GlobalKey<DropdownSearchState<String>>();
+
   SignUpProvider() {
     getCategory();
     getBusiness();
@@ -131,6 +134,7 @@ class SignUpProvider extends ChangeNotifier {
     WebService.funRegister(_map, context).then((value) {
       // pr.hide();
       if (value.status == 'success') {
+        allClear();
         BotToast.showText(text: "Registration SuccessFull!!");
         Navigator.of(context).pushNamed('/');
       } else {
@@ -151,5 +155,25 @@ class SignUpProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  allClear() {
+    for (int _i = 0; _i < 8; _i++) {
+      controller[_i].text = '';
+      error[_i] = null;
+    }
+
+    _checked = false;
+    _tnCchecked = false;
+    _categoryId = null;
+    _categoryName = null;
+
+    error[1] = null;
+    // categoryKey.currentState.initState();
+
+    categoryKey.currentState.changeSelectedItem(null);
+    categoryKey1.currentState.changeSelectedItem(null);
+    categoryKey2.currentState.changeSelectedItem(null);
+    notifyListeners();
   }
 }

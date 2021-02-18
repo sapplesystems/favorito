@@ -3,6 +3,7 @@ import 'package:Favorito/component/listItem.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/utils/Prefs.dart';
@@ -171,6 +172,10 @@ class Setting extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Prefs().clear();
+                    Provider.of<BusinessProfileProvider>(context, listen: false)
+                        .allClear();
+                    Provider.of<BusinessHoursProvider>(context, listen: false)
+                        .allClear();
                     Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Login()));

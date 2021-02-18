@@ -15,7 +15,7 @@ class BusinessProfileData {
   int totalReviews;
   String startHours;
   String endHours;
-  int distance;
+  double distance;
   int businessCategoryId;
   String businessName;
   String townCity;

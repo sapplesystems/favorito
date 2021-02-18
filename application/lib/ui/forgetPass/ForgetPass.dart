@@ -73,14 +73,11 @@ class ForgetPass extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              fpTrue.didNotReceive,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 10,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
+                            Text(fpTrue.didNotReceive,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    decoration: TextDecoration.underline)),
                             InkWell(
                               onTap: () => fpTrue.funSendOtpSms(),
                               child: Text(

@@ -89,11 +89,12 @@ class signup_b extends StatelessWidget {
                                     ? Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: DropdownSearch<String>(
+                                          key: signUpProviderTrue.categoryKey2,
                                           mode: Mode.MENU,
                                           maxHeight:
                                               signUpProviderTrue.busy.length *
                                                   58.0,
-                                          showSelectedItem: true,
+                                          // showSelectedItem: true,
                                           items: signUpProviderTrue.busy,
                                           label: 'Contact Person Role',
                                           hint: 'Contact Person Role',

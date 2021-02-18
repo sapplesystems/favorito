@@ -5,7 +5,7 @@ import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/ForgetPassword/forgetPassword.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHome.dart';
-import 'package:favorito_user/ui/Signup.dart';
+import 'package:favorito_user/ui/Signup/Signup.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';

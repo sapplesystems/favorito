@@ -34,8 +34,10 @@ class _BusinessProfileState extends State<BusinessProfile> {
   @override
   void initState() {
     super.initState();
-
+    print("lllllll:${widget.businessId}");
     fut = APIManager.baseUserProfileDetail({'business_id': widget.businessId});
+    // fut =
+    //     APIManager.baseUserProfileDetail({'business_id': "KIR4WQ4N7KF68EZKW"});
   }
 
   @override

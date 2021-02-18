@@ -1,7 +1,6 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/Signup.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,9 @@ class _LoginState extends State<Login> {
     pr.style(message: 'Fetching Data, please wait');
 
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: () {
+        _onWillPop();
+      },
       child: Scaffold(
         backgroundColor: Color(0xffedf0f5),
         body: Padding(
@@ -71,6 +72,8 @@ class _LoginState extends State<Login> {
                           hint: title[i],
                           security: i == 1 ? true : false,
                           valid: true,
+                          suffixTap: () {},
+                          suffixTxt: '',
                           maxLines: 1,
                           formate:
                               FilteringTextInputFormatter.singleLineFormatter,
@@ -111,8 +114,7 @@ class _LoginState extends State<Login> {
                 child: Padding(
                   padding: EdgeInsets.only(top: sm.h(1)),
                   child: InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Signup())),
+                    onTap: () => Navigator.of(context).pushNamed('/signUp'),
                     child: Text(
                       "Sign Up",
                       style: TextStyle(
@@ -178,7 +180,7 @@ class _LoginState extends State<Login> {
           context: context,
           builder: (context) => new AlertDialog(
             title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit'),
+            content: new Text('Do you want to exit an App'),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
