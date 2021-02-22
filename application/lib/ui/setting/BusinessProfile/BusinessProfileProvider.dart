@@ -17,9 +17,9 @@ import 'package:image_cropper/image_cropper.dart';
 class BusinessProfileProvider extends ChangeNotifier {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
-  CameraPosition initPosition;
+  CameraPosition _initPosition;
   Completer<GoogleMapController> GMapcontroller = Completer();
-  Set<Marker> marker = {};
+  Set<Marker> _marker = {};
   List<TextEditingController> controller = List();
 
   ScrollController listviewController = ScrollController();
@@ -35,7 +35,6 @@ class BusinessProfileProvider extends ChangeNotifier {
   List<StateList> stateModel = [];
   bool byAppointment = false;
   bool onWhatsapp = false;
-  Position currentPosition;
   int stateId = 0;
   int cityId = 0;
   List<String> addressList = [];
@@ -118,9 +117,9 @@ class BusinessProfileProvider extends ChangeNotifier {
     String positions;
     try {
       _getCurrentLocation();
-      positions = currentPosition?.latitude.toString() +
+      positions = _initPosition?.target?.latitude.toString() +
           ',' +
-          currentPosition?.longitude.toString();
+          _initPosition?.target?.longitude.toString();
       print("positions:${positions}");
     } catch (e) {
       BotToast.showText(text: 'To continue turn on location services!');
@@ -147,6 +146,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       if (value.status == 'success') {
         BotToast.showLoading(duration: Duration(seconds: 1));
         await Future.delayed(const Duration(seconds: 1));
+        needSave(false);
         BotToast.showText(text: value.message);
       }
     });
@@ -168,6 +168,11 @@ class BusinessProfileProvider extends ChangeNotifier {
         }
       if (pr.isShowing()) pr.hide();
       var va = value?.data;
+
+      if (va.location != null) {
+        var _v = (va.location?.split(','));
+        setPosition(_v);
+      }
       addressList?.clear();
       if (va?.website != null)
         for (int i = 0; i < va.website.length; i++) {
@@ -179,6 +184,7 @@ class BusinessProfileProvider extends ChangeNotifier {
           }
         }
       controller[1].text = va.businessName ?? '';
+
       controller[2].text = va.businessPhone ?? '';
       controller[3].text = va.landline ?? "";
 
@@ -207,11 +213,6 @@ class BusinessProfileProvider extends ChangeNotifier {
       controller[13].text = va.businessEmail;
       controller[14].text = va.shortDescription;
 
-      if (va.location != null) {
-        var _v = (va.location?.split(','));
-        initPosition = CameraPosition(
-            target: LatLng(double.parse(_v[0]), double.parse(_v[1])), zoom: 17);
-      }
       controller[4].text = va.workingHours;
       // notifyListeners();
       if (controller[4].text == "Select Hours" ||
@@ -220,7 +221,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       }
 
       listviewController.animateTo(listviewController.position.minScrollExtent,
-          curve: Curves.easeOut, duration: const Duration(milliseconds: 5));
+          curve: Curves.easeOut, duration: const Duration(milliseconds: 1));
       notifyListeners();
       return value;
     });
@@ -269,9 +270,8 @@ class BusinessProfileProvider extends ChangeNotifier {
     await geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
-      this.currentPosition = position;
-      initPosition = CameraPosition(
-          target: LatLng(position.latitude, position.longitude), zoom: 17);
+      setPosition(
+          [position.latitude.toString(), position.longitude.toString()]);
     }).catchError((e) {
       print(e);
     });
@@ -321,4 +321,19 @@ class BusinessProfileProvider extends ChangeNotifier {
       e.text = '';
     });
   }
+
+  void setPosition(List<String> _v) {
+    Marker _val = Marker(
+      markerId: MarkerId('new Address'),
+      position: LatLng(double.parse(_v[0]), double.parse(_v[1])),
+    );
+
+    _initPosition = CameraPosition(target: _val.position, zoom: 17);
+    _marker.clear();
+    _marker.add(_val);
+    notifyListeners();
+  }
+
+  CameraPosition getPosition() => _initPosition;
+  getMarget() => _marker;
 }

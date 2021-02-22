@@ -6,6 +6,8 @@ import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -26,6 +28,8 @@ void main() {
           ChangeNotifierProvider(create: (context) => AppBookProvider()),
           ChangeNotifierProvider(create: (context) => ForgetPasswordProvider()),
           ChangeNotifierProvider(create: (context) => SignupProvider()),
+          ChangeNotifierProvider(create: (context) => PersonalInfoProvider()),
+          ChangeNotifierProvider(create: (context) => UserAddressProvider()),
           // Provider(create: (context) => MenuHomeProvider()),
         ],
         child: MyApp(),

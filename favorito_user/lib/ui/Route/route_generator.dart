@@ -9,7 +9,7 @@ import 'package:favorito_user/ui/Signup/Signup.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfo.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';

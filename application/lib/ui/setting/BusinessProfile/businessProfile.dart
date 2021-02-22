@@ -154,15 +154,13 @@ class BusinessProfile extends StatelessWidget {
                                 margin: EdgeInsets.all(8),
 
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(30),
                                     border:
                                         Border.all(color: myGrey, width: 1)),
                                 height: 250,
-                                child: data.initPosition != null
+                                child: data.getPosition() != null
                                     ? MyGoogleMap(
-                                        controller: data.GMapcontroller,
-                                        initPosition: data.initPosition,
-                                        marker: data.marker)
+                                        controller: data.GMapcontroller)
                                     : Container(),
                               ),
                               for (int i = 0; i < data.addressLength; i++)

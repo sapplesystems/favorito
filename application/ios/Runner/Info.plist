@@ -43,6 +43,7 @@
 		<false />
 		<key>io.flutter.embadded_views_preview</key>
 		<true />
+		<String>YES</String>
 		<key>NSLocationWhenInUseUsageDescription</key>
    <string>This app needs access to location when open.</string>
    <key>NSLocationAlwaysUsageDescription</key>

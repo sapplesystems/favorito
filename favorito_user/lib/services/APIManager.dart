@@ -73,35 +73,31 @@ class APIManager {
     } catch (e) {
       BotToast.showText(text: e.toString());
     }
-    print("Request URL:${service.register}");
+    print("Request URL:${service.businessCarousel}");
     print("responseData1:${response.toString()}");
     return CarouselModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<AddressListModel> getAddress(context) async {
+  static Future<AddressListModel> getAddress() async {
     String token = await Prefs.token;
     String url = service.getAddress;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
     return AddressListModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<ProfileImageModel> getUserImage(context) async {
+  static Future<ProfileImageModel> getUserImage() async {
     String token = await Prefs.token;
     String url = service.getUserImage;
     opt = Options(
         contentType: Headers.jsonContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     return ProfileImageModel.fromJson(convert.json.decode(response.toString()));
   }
@@ -328,7 +324,6 @@ class APIManager {
   static Future<ProfileModel> userdetail(Map _map) async {
     String token = await Prefs.token;
     print('token : ${token.toString()}');
-
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});

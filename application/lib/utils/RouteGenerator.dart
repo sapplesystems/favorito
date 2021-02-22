@@ -1,3 +1,4 @@
+import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
 import 'package:Favorito/ui/login/login.dart';
@@ -34,8 +35,8 @@ class RouteGenerator {
       //   return MaterialPageRoute(
       //       builder: (_) => BusinessProfile(businessId: args));
 
-      // case '/following':
-      //   return MaterialPageRoute(builder: (_) => Following());
+      case '/adSpent':
+        return MaterialPageRoute(builder: (_) => adSpent());
 
       // case '/waitlist':
       //   return MaterialPageRoute(builder: (_) => Waitlist(data: args));

@@ -1,6 +1,7 @@
 import 'package:favorito_user/Providers/BookTableProvider.dart';
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/component/FollowBtn.dart';
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
@@ -219,14 +220,12 @@ class _BusinessProfileState extends State<BusinessProfile> {
 
   Widget headerPart() => Stack(
         children: [
-          Image.network(
-            data?.data[0]?.photo,
-            height: sm.h(38),
-            width: sm.w(100),
-            fit: BoxFit.fill,
-          ),
           Container(
-            color: Colors.black.withOpacity(.2),
+              height: sm.h(38),
+              width: sm.w(100),
+              child: ImageMaster(url: data?.data[0]?.photo)),
+          Container(
+            color: Colors.black.withOpacity(0.2),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
