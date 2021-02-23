@@ -72,26 +72,24 @@ class Catalogs extends StatelessWidget {
                                     margin: EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 8),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      image: DecorationImage(
-                                          image: NetworkImage(vaTrue
-                                              .catalogListdata
-                                              .data[index]
-                                              .photos = vaTrue.catalogListdata
-                                                  .data[index].photos
-                                                  .split(",")[0] ??
-                                              ''),
-                                          fit: BoxFit.fill),
-                                    ),
+                                        borderRadius: BorderRadius.circular(6),
+                                        image: DecorationImage(
+                                            image: NetworkImage(vaTrue
+                                                .catalogListdata
+                                                .data[index]
+                                                .photos = vaTrue.catalogListdata
+                                                    .data[index].photos
+                                                    .split(",")[0] ??
+                                                ''),
+                                            fit: BoxFit.fill)),
                                   ),
                                   Expanded(
                                       flex: 3,
                                       child: Padding(
-                                        padding: EdgeInsets.only(left: 4.0),
-                                        child: Text(vaTrue.catalogListdata
-                                                ?.data[index].catalogTitle ??
-                                            ''),
-                                      )),
+                                          padding: EdgeInsets.only(left: 4.0),
+                                          child: Text(vaTrue.catalogListdata
+                                                  ?.data[index].catalogTitle ??
+                                              ''))),
                                   Expanded(
                                       flex: 1,
                                       child: SvgPicture.asset(

@@ -14,6 +14,7 @@ import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 class BusinessClaim extends StatefulWidget {
   @override
@@ -33,6 +34,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
   String otpverify = "verify";
   String emailverify = "verify";
   List<File> files = [];
+  FilePickerResult result;
   @override
   void initState() {
     super.initState();
@@ -84,6 +86,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                 top: sm.h(2),
               ),
               child: ListView(
+                shrinkWrap: true,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(bottom: sm.h(4)),
@@ -109,10 +112,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                   children: [
                                     txtfieldPostAction(
                                         controller: ctrlMobile,
+                                        // enalble: false,
                                         hint: "Enter business phone",
                                         title: "Phone",
-                                        keyboardSet: TextInputType.number,
                                         maxLines: 1,
+                                        readOnly: true,
                                         maxlen: 10,
                                         valid: true,
                                         sufixTxt:
@@ -223,7 +227,8 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
-                                                  pr.show();
+                                                  pr.show().timeout(
+                                                      Duration(seconds: 2));
                                                   await WebService
                                                       .funSendOtpSms({
                                                     "mobile": ctrlMobile.text
@@ -259,6 +264,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           hint: "Enter business Email",
                                           title: "Email",
                                           maxLines: 1,
+                                          readOnly: true,
                                           myregex: emailRegex,
                                           keyboardSet:
                                               TextInputType.emailAddress,
@@ -275,7 +281,9 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   : Icons.check_circle,
                                           security: false,
                                           sufixClick: () async {
-                                            pr.show();
+                                            pr
+                                                .show()
+                                                .timeout(Duration(seconds: 2));
                                             await WebService
                                                     .funSendEmailVerifyLink(
                                                         context)
@@ -295,14 +303,14 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                     MyOutlineButton(
                                       title: "Upload Document",
                                       function: () async {
-                                        FilePickerResult result =
-                                            await FilePicker.platform
-                                                .pickFiles(allowMultiple: true);
+                                        result = await FilePicker.platform
+                                            .pickFiles(allowMultiple: true);
 
                                         if (result != null) {
                                           files = result.paths
                                               .map((path) => File(path))
                                               .toList();
+                                          setState(() {});
                                         }
                                         // if (result != null) {
                                         //   List<File> files = result.paths
@@ -310,7 +318,8 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         //       .toList();
                                         // }
                                         // FilePickerResult result =
-                                        //     await FilePicker.platform.pickFiles();
+                                        //     await FilePicker.platform
+                                        //         .pickFiles();
 
                                         if (result != null) {
                                           PlatformFile file =
@@ -322,7 +331,55 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           print(file.extension);
                                           print(file.path);
                                         }
+                                        double d = 0;
+                                        for (int i = 0;
+                                            i < result.files.length;
+                                            i++) {
+                                          d = d +
+                                              double.parse(result.files[i].size
+                                                  .toString());
+
+                                          if (d >
+                                              double.parse(FlutterConfig.get(
+                                                  'image_max_length'))) {
+                                            BotToast.showText(
+                                                text: FlutterConfig.get(
+                                                    'image_max_length_message'));
+                                            setState(() {
+                                              result.files.clear();
+                                            });
+                                          }
+                                        }
                                       },
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sm.w(4)),
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: result?.files?.length ?? 0,
+                                          itemBuilder: (_context, _index) =>
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 4.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                        result
+                                                            .files[_index].name,
+                                                        textAlign:
+                                                            TextAlign.left),
+                                                    Text(
+                                                        '${result.files[_index].size.toString()}kb',
+                                                        textAlign:
+                                                            TextAlign.right)
+                                                  ],
+                                                ),
+                                              )),
                                     ),
                                   ]))),
                     ),
@@ -337,7 +394,10 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                     ctrlMail.text, files, context)
                                 .then((value) {
                               pr.hide();
+
                               BotToast.showText(text: value.message);
+                              result.files.clear();
+                              Navigator.pop(context);
                             });
                           },
                           clr: Colors.red,

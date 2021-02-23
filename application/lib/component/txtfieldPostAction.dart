@@ -19,6 +19,8 @@ class txtfieldPostAction extends StatefulWidget {
   String sufixTxt;
   String errorText;
   Color sufixColor;
+  bool enalble;
+  bool readOnly;
 
   txtfieldPostAction(
       {this.title,
@@ -35,7 +37,9 @@ class txtfieldPostAction extends StatefulWidget {
       this.sufixColor,
       this.sufixTxt,
       this.errorText,
-      this.sufixIcon});
+      this.sufixIcon,
+      this.enalble,
+      this.readOnly});
   @override
   _txtfieldPostActionState createState() => _txtfieldPostActionState();
 }
@@ -47,9 +51,11 @@ class _txtfieldPostActionState extends State<txtfieldPostAction> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: TextFormField(
+        enabled: widget.enalble ?? true,
         controller: widget.controller,
         obscureText: widget.security,
         maxLength: widget.maxlen,
+        readOnly: widget.readOnly ?? false,
         decoration: InputDecoration(
           errorText: widget.errorText ?? null,
           labelText: widget.title,
