@@ -220,8 +220,10 @@ class BusinessProfileProvider extends ChangeNotifier {
         // Provider.of<BusinessHoursProvider>(context, listen: false).getData();
       }
 
-      listviewController.animateTo(listviewController.position.minScrollExtent,
-          curve: Curves.easeOut, duration: const Duration(milliseconds: 1));
+      listviewController.animateTo(
+          listviewController?.position?.minScrollExtent,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 1));
       notifyListeners();
       return value;
     });

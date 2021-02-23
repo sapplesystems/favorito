@@ -1,5 +1,6 @@
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
@@ -16,8 +17,8 @@ class RouteGenerator {
       case '/signUpA':
         return MaterialPageRoute(builder: (_) => Signup_a());
 
-      // case '/navbar':
-      //   return MaterialPageRoute(builder: (_) => BottomNavBar());
+      // case '/newCatlog':
+      //   return MaterialPageRoute(builder: (_) => NewCatlog());
 
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());

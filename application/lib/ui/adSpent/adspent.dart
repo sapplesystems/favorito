@@ -184,8 +184,8 @@ class _adSpentState extends State<adSpent> {
             ]))
       ]),
       Column(children: [
-        credit("Free Credit", freeCredit.toString(), "assets/icon/warning.svg"),
-        credit("Paid Credit", paidCredit.toString(), "null")
+        credit("Free Credit", '$freeCredit', "assets/icon/warning.svg"),
+        credit("Paid Credit", '$paidCredit', "null")
       ]),
     ]);
   }

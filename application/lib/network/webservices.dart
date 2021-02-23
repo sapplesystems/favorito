@@ -17,6 +17,7 @@ import 'package:Favorito/model/business/HoursModel.dart';
 import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
+import 'package:Favorito/model/catalog/CatalogDetailModel.dart';
 import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
 import 'package:Favorito/model/checkinsModel.dart';
@@ -469,10 +470,10 @@ class WebService {
 
   static Future<CatlogListModel> funGetCatalogs(BuildContext context) async {
     String token = await Prefs.token;
+    print("token:$token");
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    CatalogListRequestModel _returnData = CatalogListRequestModel();
 
     response = await dio
         .post(serviceFunction.funGetCatalogs, data: null, options: _opt)
@@ -482,8 +483,7 @@ class WebService {
   }
 
   //this api is used to upload photo of catalog
-  static Future<businessInfoImage> catlogImageUpdate(
-      List files, var id, BuildContext context) async {
+  static Future<businessInfoImage> catlogImageUpdate(List files, var id) async {
     String token = await Prefs.token;
     Options _opt =
         Options(contentType: Headers.formUrlEncodedContentType, headers: {
@@ -497,9 +497,8 @@ class WebService {
     Map<String, dynamic> _map = {"photo": va, "catalog_id": id};
     print("_map:${_map.toString()}");
     FormData formData = FormData.fromMap(_map);
-    response = await dio
-        .post(serviceFunction.funCatalogAddPhoto, data: formData, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funCatalogAddPhoto,
+        data: formData, options: _opt);
     return businessInfoImage.fromJson(convert.json.decode(response.toString()));
   }
 
@@ -517,6 +516,22 @@ class WebService {
         .catchError((onError) => onErrorCall(onError, context));
     print("catlogEdit:${response.toString()}");
     return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  // funCatalogEdit
+  static Future<CatalogDetailModel> funCatalogDetail(Map _map) async {
+    String token = await Prefs.token;
+    print("token:$token");
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    print("_map:${_map.toString()}");
+    response = await dio.post(serviceFunction.funCatalogDetail,
+        data: _map, options: _opt);
+    print("catlogEdit:${response.toString()}");
+    return CatalogDetailModel.fromJson(
+        convert.json.decode(response.toString()));
   }
 
   //********************************************************Waitlist***************************************************

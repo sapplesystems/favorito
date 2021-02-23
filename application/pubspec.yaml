@@ -21,7 +21,6 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  # get:
   flutter_svg:
   dio:
   neumorphic:
@@ -65,6 +64,7 @@ dependencies:
   
 
 dev_dependencies:
+  flutter_config:
   flutter_test:
     sdk: flutter
 

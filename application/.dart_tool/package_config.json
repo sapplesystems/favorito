@@ -134,6 +134,12 @@
       "languageVersion": "2.10"
     },
     {
+      "name": "flutter_config",
+      "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/flutter_config-1.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "flutter_multi_chip_select",
       "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/flutter_multi_chip_select-0.1.1",
       "packageUri": "lib/",
@@ -596,7 +602,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-02-22T06:22:47.196989Z",
+  "generated": "2021-02-23T06:54:59.353616Z",
   "generator": "pub",
   "generatorVersion": "2.10.5"
 }

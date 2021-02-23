@@ -1,6 +1,7 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
+import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
@@ -14,9 +15,12 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_config/flutter_config.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
+  print('size:${FlutterConfig.get('image_max_length')}');
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MultiProvider(providers: [
@@ -29,6 +33,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => dashboardProvider()),
       ChangeNotifierProvider(create: (context) => ResetPassProvider()),
       ChangeNotifierProvider(create: (context) => WaitlistProvider()),
+      ChangeNotifierProvider(create: (context) => CatalogsProvider()),
     ], child: MyApp()));
   });
 }

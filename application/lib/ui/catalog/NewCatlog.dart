@@ -1,90 +1,57 @@
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/model/catalog/Catalog.dart';
-import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/utils/myColors.dart';
-import 'package:bot_toast/bot_toast.dart';
+import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
+import 'package:Favorito/utils/Regexer.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class NewCatlog extends StatefulWidget {
-  CatalogModel ct;
-  NewCatlog(ct) {
-    this.ct = ct;
-  }
-  @override
-  _NewCatlogState createState() => _NewCatlogState();
-}
-
-class _NewCatlogState extends State<NewCatlog> {
-  List<bool> checked = [false, false, false];
-  List<bool> radioChecked = [true, false, false];
-
-  bool _autovalidate = false;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var submitBtnTxt = "Submit";
-  List<String> lst = [];
-  List<TextEditingController> controller = [];
-  List<String> selectedlist = [];
-  List title = ["Title", "Price", "Discription", "Url", "Id"];
-
-  List<File> imgFiles = List();
-  List<String> imgUrls = List();
-  List<String> imgUrlsId = List();
-  void initState() {
-    imgUrls = (widget.ct != null && widget.ct.photos != null)
-        ? widget.ct.photos.split(",")
-        : null;
-    imgUrlsId = (widget.ct != null && widget.ct.photos != null)
-        ? widget.ct.photosId.split(",")
-        : null;
-    super.initState();
-    for (int i = 0; i < 5; i++) controller.add(TextEditingController());
-    if (widget.ct != null) {
-      controller[0].text = widget.ct.catalogTitle;
-      controller[1].text = widget.ct.catalogPrice.toString();
-      controller[2].text = widget.ct.catalogDesc;
-      controller[3].text = widget.ct.productUrl;
-      controller[4].text = widget.ct.productId;
-    }
-  }
-
+class NewCatlog extends StatelessWidget {
+  CatalogsProvider vaTrue;
+  CatalogsProvider vaFalse;
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text("Catalog",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2)),
-        actions: [
-          // IconButton(
-          //   icon: Icon(Icons.error_outline, color: Colors.black),
-          //   onPressed: () => Navigator.of(context).pop(),
-          // )
-        ],
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+    vaTrue = Provider.of<CatalogsProvider>(context, listen: true);
+    vaFalse = Provider.of<CatalogsProvider>(context, listen: false);
+    vaFalse.setContext(context);
+    return WillPopScope(
+      onWillPop: () {
+        vaTrue.clearAll();
+        vaTrue.getCatelogList(false);
+        Navigator.of(context).pop();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text(vaTrue.newCatalogTxt,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontFamily: 'Gilroy-Bold',
+                  letterSpacing: 2)),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              vaTrue.clearAll();
+              vaTrue.getCatelogList(false);
+              Navigator.of(context).pop();
+            },
+          ),
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          elevation: 0,
         ),
-        centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: ListView(
-          children: [
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: ListView(children: [
             Container(
               height: sm.h(20),
               margin: EdgeInsets.symmetric(vertical: sm.h(4)),
@@ -92,43 +59,7 @@ class _NewCatlogState extends State<NewCatlog> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   InkWell(
-                      onTap: () async {
-                        FilePickerResult result = await FilePicker.platform
-                            .pickFiles(
-                                type: FileType.custom,
-                                allowedExtensions: ['jpg'],
-                                allowMultiple: true);
-                        if (result != null)
-                          setState(() => imgFiles.addAll(
-                              result.paths.map((path) => File(path)).toList()));
-
-                        if (result != null) {
-                          PlatformFile file = result.files.first;
-                          print(file.name);
-                          print(file.bytes);
-                          print(file.size);
-                          print(file.extension);
-                          print(file.path);
-
-                          WebService.catlogImageUpdate(
-                                  result.files,
-                                  widget.ct != null ? widget.ct.id : null,
-                                  context)
-                              .then((value) {
-                            if (value.status == "success") {
-                              imgUrls.clear();
-                              imgUrlsId.clear();
-                              for (int i = 0; i < value.data.length; i++) {
-                                if (!imgUrlsId.contains(value.data[i].id)) {
-                                  imgUrls.add(value.data[i].photo);
-                                  imgUrlsId.add(value.data[i].id.toString());
-                                }
-                              }
-                            }
-                            setState(() {});
-                          });
-                        }
-                      },
+                      onTap: () => vaFalse.attachImages(),
                       child: Container(
                         width: sm.h(18),
                         child: Card(
@@ -136,86 +67,76 @@ class _NewCatlogState extends State<NewCatlog> {
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: Padding(
                                 padding: const EdgeInsets.all(18),
-                                child: Icon(
-                                  Icons.cloud_upload_outlined,
-                                  size: 30,
-                                )),
+                                child: Icon(Icons.cloud_upload_outlined,
+                                    size: 30)),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             elevation: 5,
                             margin: EdgeInsets.all(10)),
                       )),
-                  if (imgUrls != null)
-                    for (int i = imgUrls.length - 1; i >= 0; i--) //Network
-                      Container(
-                        width: sm.h(20),
+                  if (vaTrue.imgUrls != null)
+                    for (int i = vaTrue.imgUrls.length - 1; i >= 0; i--)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Card(
                             semanticContainer: true,
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: FadeInImage.memoryNetwork(
+                                fit: BoxFit.cover,
+                                width: sm.h(17),
                                 placeholder: kTransparentImage,
-                                image: imgUrls[i]),
-                            margin: EdgeInsets.all(10)),
+                                image: vaTrue.imgUrls[i]),
+                            margin: EdgeInsets.all(0)),
                       )
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Builder(
-                  builder: (context) => Form(
-                      key: _formKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: Column(children: [
-                        for (int i = 0; i < 5; i++)
-                          Padding(
-                            padding: EdgeInsets.only(bottom: sm.h(1)),
-                            child: txtfieldboundry(
-                              valid: true,
-                              title: title[i],
-                              hint: "Enter ${title[i]}",
-                              controller: controller[i],
-                              maxLines: i == 2 ? 4 : 1,
-                              security: false,
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Builder(
+                    builder: (context) => Form(
+                        key: vaTrue.formKey,
+                        autovalidate: vaTrue.autovalidate,
+                        child: Column(children: [
+                          for (int i = 0; i < 5; i++)
+                            Padding(
+                              padding: EdgeInsets.only(bottom: sm.h(1)),
+                              child: txtfieldboundry(
+                                valid: true,
+                                title: vaTrue.title[i],
+                                hint:
+                                    "Enter Catalog ${vaTrue.title[i].toString().toLowerCase()}",
+                                controller: vaTrue.controller[i],
+                                maxLines: i == 2 ? 4 : 1,
+                                myregex: i == 3 ? urlRegex : null,
+                                myOnChanged: (_) {
+                                  vaTrue.needSubmit(true);
+                                },
+                                keyboardSet: i == 3
+                                    ? TextInputType.emailAddress
+                                    : (i == 1 || i == 4)
+                                        ? TextInputType.number
+                                        : TextInputType.text,
+                                security: false,
+                              ),
                             ),
-                          ),
-                      ]))),
+                        ]))),
+              ),
             ),
-            Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: sm.w(16), vertical: sm.h(2)),
-                child: RoundedButton(
-                    clicker: () {
-                      if (_formKey.currentState.validate()) funSublim();
-                    },
-                    clr: Colors.red,
-                    title: submitBtnTxt))
-          ],
+            Visibility(
+              visible: vaTrue.getNeedSubmit(),
+              child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: sm.w(16), vertical: sm.h(2)),
+                  child: RoundedButton(
+                      clicker: () => vaTrue.funSublim(),
+                      clr: Colors.red,
+                      title: vaTrue.submitBtnTxt)),
+            )
+          ]),
         ),
       ),
     );
-  }
-
-  funSublim() async {
-    Map _map = {
-      "catalog_id": widget.ct.id,
-      "catalog_title": controller[0].text,
-      "catalog_price": controller[1].text,
-      "catalog_desc": controller[2].text,
-      "product_url": controller[3].text,
-      "product_id": controller[4].text
-    };
-    setState(() => submitBtnTxt = "Please Wait..");
-    await WebService.catlogEdit(_map, context).then((value) {
-      if (value.status == "success") {
-        // for (var va in controller) va.text = "";
-        BotToast.showText(text: value.message);
-        BotToast.showLoading(duration: Duration(seconds: 1));
-        // Navigator.pop(context);
-
-        setState(() => submitBtnTxt = "Submit");
-      } else
-        BotToast.showText(text: value.message);
-    });
   }
 }
