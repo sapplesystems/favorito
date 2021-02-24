@@ -55,41 +55,40 @@ class NewCatlog extends StatelessWidget {
             Container(
               height: sm.h(20),
               margin: EdgeInsets.symmetric(vertical: sm.h(4)),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  InkWell(
-                      onTap: () => vaFalse.attachImages(),
-                      child: Container(
-                        width: sm.h(18),
-                        child: Card(
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Padding(
-                                padding: const EdgeInsets.all(18),
-                                child: Icon(Icons.cloud_upload_outlined,
-                                    size: 30)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            elevation: 5,
-                            margin: EdgeInsets.all(10)),
-                      )),
-                  if (vaTrue.imgUrls != null)
-                    for (int i = vaTrue.imgUrls.length - 1; i >= 0; i--)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: FadeInImage.memoryNetwork(
-                                fit: BoxFit.cover,
-                                width: sm.h(17),
-                                placeholder: kTransparentImage,
-                                image: vaTrue.imgUrls[i]),
-                            margin: EdgeInsets.all(0)),
-                      )
-                ],
-              ),
+              child: ListView(scrollDirection: Axis.horizontal, children: [
+                InkWell(
+                    onTap: () => vaFalse.attachImages(),
+                    child: Container(
+                      width: sm.h(18),
+                      child: Card(
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Padding(
+                              padding: const EdgeInsets.all(18),
+                              child:
+                                  Icon(Icons.cloud_upload_outlined, size: 30)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          elevation: 5,
+                          margin: EdgeInsets.all(10)),
+                    )),
+                if (vaTrue.imgUrls != null)
+                  for (int i = vaTrue.imgUrls.length - 1; i >= 0; i--)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: vaTrue.imgUrls[i] != null
+                          ? Card(
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: FadeInImage.memoryNetwork(
+                                  fit: BoxFit.cover,
+                                  width: sm.h(17),
+                                  placeholder: kTransparentImage,
+                                  image: vaTrue.imgUrls[i]),
+                              margin: EdgeInsets.all(0))
+                          : null,
+                    )
+              ]),
             ),
             Card(
               child: Padding(

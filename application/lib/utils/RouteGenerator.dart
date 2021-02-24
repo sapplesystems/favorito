@@ -1,3 +1,4 @@
+import 'package:Favorito/component/NetworkImages.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
@@ -39,8 +40,12 @@ class RouteGenerator {
       case '/adSpent':
         return MaterialPageRoute(builder: (_) => adSpent());
 
-      // case '/waitlist':
-      //   return MaterialPageRoute(builder: (_) => Waitlist(data: args));
+      case '/networkImages':
+        return MaterialPageRoute(
+            builder: (_) => NetworkImages(
+                  url:
+                      'https://wonderfulengineering.com/wp-content/uploads/2016/01/nature-wallpapers-38-610x381.jpg',
+                ));
 
       // case '/bookingOrAppointmentList':
       //   return MaterialPageRoute(builder: (_) => BookingOrAppointmentParent());

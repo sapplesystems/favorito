@@ -5,6 +5,7 @@ import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
+import 'package:Favorito/ui/offer/offersProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
@@ -34,6 +35,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => ResetPassProvider()),
       ChangeNotifierProvider(create: (context) => WaitlistProvider()),
       ChangeNotifierProvider(create: (context) => CatalogsProvider()),
+      ChangeNotifierProvider(create: (context) => OffersProvider()),
     ], child: MyApp()));
   });
 }

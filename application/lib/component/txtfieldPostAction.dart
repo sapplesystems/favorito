@@ -82,7 +82,7 @@ class _txtfieldPostActionState extends State<txtfieldPostAction> {
           hintText: widget.hint,
           fillColor: Colors.transparent,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(4.0),
             borderSide: BorderSide(color: myGrey),
           ),
         ),

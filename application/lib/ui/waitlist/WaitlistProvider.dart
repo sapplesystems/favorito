@@ -9,7 +9,7 @@ class WaitlistProvider extends ChangeNotifier {
   ProgressDialog pr;
   GlobalKey<FormState> key = GlobalKey();
   final slotKey = GlobalKey<DropdownSearchState<String>>();
-
+  bool _done = false;
   List title = [
     "Waitlist Manager",
     "Anouncement",
@@ -38,6 +38,12 @@ class WaitlistProvider extends ChangeNotifier {
     "FriDay",
     "SaturDay"
   ];
+  needSave(bool _val) {
+    _done = _val;
+    notifyListeners();
+  }
+
+  getNeedSave() => _done;
 
   List<String> selectedList = [];
   List<TextEditingController> controller = [];
@@ -51,18 +57,18 @@ class WaitlistProvider extends ChangeNotifier {
       // pr.hide();
       if (value.status == "success") {
         var va = value.data[0];
-        startTime = va.startTime;
-        endTime = va.endTime;
+        startTime = va?.startTime.substring(0, 5) ?? '00:00';
+        endTime = va?.endTime.substring(0, 5) ?? '00:00';
         controller[0].text = va.availableResource.toString();
-        controller[1].text = va.miniumWaitTime.toString();
-        controller[2].text = va.slotLength.toString();
-        controller[3].text = va.bookingPerSlot.toString();
-        controller[4].text = va.bookingPerDay.toString();
-        controller[5].text = va.waitlistManagerName.toString();
-        controller[6].text = va.announcement.toString();
-        selectedList = va.exceptDays.split(",");
+        controller[1].text = va.miniumWaitTime?.toString() ?? '';
+        controller[2].text = va.slotLength.toString() ?? '60';
+        controller[3].text = va.bookingPerSlot?.toString();
+        controller[4].text = va.bookingPerDay?.toString();
+        controller[5].text = va.waitlistManagerName?.toString();
+        controller[6].text = va.announcement?.toString();
+        selectedList = va.exceptDays?.split(",");
 
-        slotKey?.currentState?.changeSelectedItem('25');
+        slotKey?.currentState?.changeSelectedItem('25 min');
         selectedList.forEach((element) => list.remove(element));
         notifyListeners();
       }
@@ -91,6 +97,9 @@ class WaitlistProvider extends ChangeNotifier {
       pr.hide();
       if (value.status == "success") {
         BotToast.showText(text: value.message);
+
+        needSave(false);
+        notifyListeners();
       }
     });
   }
@@ -106,5 +115,27 @@ class WaitlistProvider extends ChangeNotifier {
     pr = ProgressDialog(context, type: ProgressDialogType.Normal)
       ..style(message: 'Please wait..');
     localizations = MaterialLocalizations.of(context);
+  }
+
+  dateTimePicker(bool _val) {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child);
+      },
+    ).then((value) {
+      var _va =
+          localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
+      if (_val) {
+        startTime = _va;
+      } else {
+        endTime = _va;
+      }
+      needSave(true);
+      notifyListeners();
+    });
   }
 }

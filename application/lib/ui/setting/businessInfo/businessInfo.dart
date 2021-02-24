@@ -1,6 +1,7 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/model/AttributeList.dart';
 import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
@@ -134,24 +135,40 @@ class _businessInfoState extends State<businessInfo> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16.0),
               margin: EdgeInsets.symmetric(horizontal: 12),
               child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: DropdownSearch<String>(
-                    validator: (v) => v == '' ? "required field" : null,
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                    mode: Mode.MENU,
-                    key: _keyCategory,
-                    showSelectedItem: true,
-                    selectedItem: controller[0].text,
-                    enabled: false,
-                    // items: catLst != null ? catLst.values.toList() : null,
-                    label: "Category",
-                    hint: "Please Select Category",
-                    onChanged: (value) {
-                      setState(() => controller[0].text = value);
-                    },
-                  ),
+                TextFormField(
+                  controller: controller[0],
+                  decoration: InputDecoration(
+                      labelText: "Category",
+                      labelStyle: Theme.of(context).textTheme.body2,
+                      counterText: "",
+                      enabled: false,
+                      hintText: "Enter Category",
+                      hintStyle: Theme.of(context).textTheme.subhead,
+                      fillColor: Colors.transparent,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide())),
                 ),
+
+                //this is commented due to tester
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 8),
+                //   child: DropdownSearch<String>(
+                //     validator: (v) => v == '' ? "required field" : null,
+                //     autoValidateMode: AutovalidateMode.onUserInteraction,
+                //     mode: Mode.MENU,
+                //     key: _keyCategory,
+                //     showSelectedItem: true,
+                //     selectedItem: controller[0].text,
+                //     enabled: false,
+                //     // items: catLst != null ? catLst.values.toList() : null,
+                //     label: "Category",
+                //     hint: "Please Select Category",
+                //     onChanged: (value) {
+                //       setState(() => controller[0].text = value);
+                //     },
+                //   ),
+                // ),
                 MyTags(
                     sourceList: totalSubCategoriesName,
                     selectedList: selectedSubCategoriesName,

@@ -312,15 +312,6 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                               .toList();
                                           setState(() {});
                                         }
-                                        // if (result != null) {
-                                        //   List<File> files = result.paths
-                                        //       .map((path) => File(path))
-                                        //       .toList();
-                                        // }
-                                        // FilePickerResult result =
-                                        //     await FilePicker.platform
-                                        //         .pickFiles();
-
                                         if (result != null) {
                                           PlatformFile file =
                                               result.files.first;

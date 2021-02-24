@@ -54,7 +54,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
             hintStyle: Theme.of(context).textTheme.subhead,
             fillColor: Colors.transparent,
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(4.0),
                 borderSide: BorderSide())),
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),

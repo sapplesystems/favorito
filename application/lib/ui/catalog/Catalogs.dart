@@ -52,7 +52,7 @@ class Catalogs extends StatelessWidget {
                   return InkWell(
                     onTap: () {
                       vaTrue.setSelectedCatalog(
-                          vaTrue.catalogListdata?.data[index].id.toString());
+                          vaTrue.catalogListdata?.data[index]?.id.toString());
                       vaTrue.newCatalogTxt = 'Edit Catalog';
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => NewCatlog()));
@@ -75,12 +75,17 @@ class Catalogs extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(6),
                                         image: DecorationImage(
                                             image: NetworkImage(vaTrue
-                                                .catalogListdata
-                                                .data[index]
-                                                .photos = vaTrue.catalogListdata
-                                                    .data[index].photos
-                                                    .split(",")[0] ??
-                                                ''),
+                                                        .catalogListdata
+                                                        ?.data[index]
+                                                        ?.photos !=
+                                                    null
+                                                ? vaTrue.catalogListdata
+                                                    ?.data[index]?.photos
+                                                    ?.split(',')[0]
+                                                : vaTrue.catalogListdata
+                                                        ?.data[index]?.photos ??
+                                                    ''
+                                                        ''),
                                             fit: BoxFit.fill)),
                                   ),
                                   Expanded(
@@ -88,7 +93,7 @@ class Catalogs extends StatelessWidget {
                                       child: Padding(
                                           padding: EdgeInsets.only(left: 4.0),
                                           child: Text(vaTrue.catalogListdata
-                                                  ?.data[index].catalogTitle ??
+                                                  ?.data[index]?.catalogTitle ??
                                               ''))),
                                   Expanded(
                                       flex: 1,

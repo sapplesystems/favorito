@@ -89,26 +89,32 @@ class _dashboardState extends State<dashboard> {
                     ],
                   ),
                 ),
-                rowWithTextNButton(
-                    txt1: "Complete Your Profile",
-                    txt2: "Fill",
-                    check: is_profile_completed,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BusinessProfile()));
-                    }),
-                rowWithTextNButton(
-                    txt1: "Complete your information",
-                    txt2: "Now",
-                    check: is_information_completed,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => businessInfo()));
-                    }),
+                Visibility(
+                  visible: is_profile_completed == '0' ? true : false,
+                  child: rowWithTextNButton(
+                      txt1: "Complete Your Profile",
+                      txt2: "Fill",
+                      check: is_profile_completed,
+                      function: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BusinessProfile()));
+                      }),
+                ),
+                Visibility(
+                  visible: is_information_completed == '0' ? true : false,
+                  child: rowWithTextNButton(
+                      txt1: "Complete your information",
+                      txt2: "Now",
+                      check: is_information_completed,
+                      function: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => businessInfo()));
+                      }),
+                ),
                 Visibility(
                   visible: is_verified == "0" ? true : false,
                   child: rowWithTextNButton(
@@ -184,8 +190,9 @@ class _dashboardState extends State<dashboard> {
                     "Advertise",
                     "Reach new audience searching for related services",
                     () => Navigator.of(context).pushNamed('/adSpent')),
-                rowCard(
-                    "Notifications", "Send Direct Update to Customer", () {}),
+                rowCard("Notifications", "Send Direct Update to Customer", () {
+                  // Navigator.of(context).pushNamed('/networkImages');
+                }),
               ])),
         ));
   }

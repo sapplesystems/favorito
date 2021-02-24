@@ -45,11 +45,10 @@ class _MenuState extends State<Menu> {
           else {
             _dataMap.clear();
             for (var key in snapshot.data.data)
-              _dataMap[key.categoryName +
-                  '|' +
-                  key.categoryId.toString() +
-                  '|' +
-                  key.outOfStock.toString()] = key.items;
+              _dataMap[key.categoryName ??
+                  '' + '|' + key.categoryId.toString() ??
+                  '' + '|' + key.outOfStock.toString() ??
+                  ''] = key.items;
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {});
