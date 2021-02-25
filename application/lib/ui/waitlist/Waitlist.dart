@@ -96,14 +96,14 @@ class Waitlists extends State<Waitlist> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: sm.w(10),
+                                    width: sm.w(12),
                                     child: Text(va.noOfPerson.toString(),
                                         style: TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.w400)),
                                   ),
                                   SizedBox(
-                                    width: sm.w(45),
+                                    width: sm.w(43),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -112,8 +112,10 @@ class Waitlists extends State<Waitlist> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
-                                          child: Text(
+                                          child: AutoSizeText(
                                             va.name.toLowerCase(),
+                                            minFontSize: 22,
+                                            maxLines: 1,
                                             style: TextStyle(
                                                 fontSize: 22,
                                                 fontWeight: FontWeight.w600),
@@ -154,14 +156,46 @@ class Waitlists extends State<Waitlist> {
                                                 _callPhone('tel:${va.contact}'),
                                           ),
                                           IconButton(
-                                            iconSize: sm.w(8),
-                                            icon: Icon(
-                                                FontAwesomeIcons.trashAlt,
-                                                size: 16,
-                                                color: myRed),
-                                            onPressed: () =>
-                                                waitListDelete(va.id, index),
-                                          )
+                                              iconSize: sm.w(8),
+                                              icon: Icon(
+                                                  FontAwesomeIcons.trashAlt,
+                                                  size: 16,
+                                                  color: myRed),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  child: new AlertDialog(
+                                                    title: const Text(
+                                                        "Please confirm"),
+                                                    content: Text(
+                                                        'Are you sure do you want to delete?'),
+                                                    actions: [
+                                                      new FlatButton(
+                                                          child:
+                                                              const Text("Ok"),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            waitListDelete(
+                                                                va.id, index);
+                                                          }),
+                                                      new FlatButton(
+                                                        child: const Text(
+                                                            "Cancel"),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                      ),
+                                                      new FlatButton(
+                                                        child: const Text(''),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              })
                                         ],
                                       ),
                                       Row(
@@ -214,20 +248,15 @@ class Waitlists extends State<Waitlist> {
   showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
     SizeManager sm = SizeManager(context);
     Navigator.push(
-      context,
-      PopupLayout(
-        top: sm.h(30),
-        left: sm.w(10),
-        right: sm.w(10),
-        bottom: sm.h(30),
-        child: PopupContent(
-          content: Scaffold(
-            resizeToAvoidBottomPadding: false,
-            body: widget,
-          ),
-        ),
-      ),
-    );
+        context,
+        PopupLayout(
+            top: sm.h(30),
+            left: sm.w(10),
+            right: sm.w(10),
+            bottom: sm.h(30),
+            child: PopupContent(
+                content: Scaffold(
+                    resizeToAvoidBottomPadding: false, body: widget))));
   }
 
   Widget _popupBodyShowDetail(WaitlistModel model, int index) {

@@ -23,7 +23,6 @@ class ViewMore extends StatelessWidget {
                     fontFamily: 'Gilroy-Bold',
                     fontSize: 26))),
         body: ListView.builder(
-            physics: new NeverScrollableScrollPhysics(),
             itemCount: data.length,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(

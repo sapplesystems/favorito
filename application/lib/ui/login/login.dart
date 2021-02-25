@@ -1,7 +1,6 @@
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
-import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -20,18 +19,12 @@ class _LoginState extends State<Login> {
   TextEditingController passCtrl = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   ProgressDialog pr;
-  @override
-  // void initState() {
-  //   super.initState();
-  //   setState(() {
-  //     userCtrl.text = "rohits.shukla@sapple.co.in";
-  //     passCtrl.text = "sapple@123";
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    pr = ProgressDialog(context, type: ProgressDialogType.Normal)
+      ..style(message: 'please wait..');
     return Scaffold(
       body: ListView(
         children: [
@@ -171,8 +164,9 @@ class _LoginState extends State<Login> {
         "username": userCtrl.text,
         "password": passCtrl.text
       };
-      BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
+      pr.show().timeout(Duration(seconds: 5));
       WebService.funGetLogin(_map, context).then((value) {
+        pr.hide();
         if (value.status == "success") {
           Navigator.pop(context);
           Navigator.push(context,

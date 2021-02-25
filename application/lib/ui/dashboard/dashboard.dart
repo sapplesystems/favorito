@@ -212,7 +212,7 @@ class _dashboardState extends State<dashboard> {
 
   Widget credit(String title, String ammount, String ico) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24, top: 16),
+      padding:  EdgeInsets.only(left: 12, top: 16),
       child: Row(children: [
         Text("${title} : "),
         Text("${ammount}  "),

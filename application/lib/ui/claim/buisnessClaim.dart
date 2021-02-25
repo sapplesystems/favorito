@@ -307,14 +307,14 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                             .pickFiles(allowMultiple: true);
 
                                         if (result != null) {
-                                          files = result.paths
-                                              .map((path) => File(path))
+                                          files = result?.paths
+                                              ?.map((path) => File(path))
                                               .toList();
                                           setState(() {});
                                         }
                                         if (result != null) {
                                           PlatformFile file =
-                                              result.files.first;
+                                              result?.files?.first;
 
                                           print(file.name);
                                           print(file.bytes);
@@ -324,10 +324,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         }
                                         double d = 0;
                                         for (int i = 0;
-                                            i < result.files.length;
+                                            i < result?.files?.length;
                                             i++) {
                                           d = d +
-                                              double.parse(result.files[i].size
+                                              double.parse(result
+                                                  ?.files[i]?.size
                                                   .toString());
 
                                           if (d >

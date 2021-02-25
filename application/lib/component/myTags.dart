@@ -11,6 +11,7 @@ class MyTags extends StatefulWidget {
   String title;
   String hint;
   Function refresh;
+  bool searchable;
   MyTags(
       {this.sourceList,
       this.title,
@@ -18,6 +19,7 @@ class MyTags extends StatefulWidget {
       this.hint,
       this.selectedList,
       this.directionVeticle,
+        this.searchable,
       this.refresh});
   @override
   _MyTagsState createState() => _MyTagsState();
@@ -45,7 +47,7 @@ class _MyTagsState extends State<MyTags> {
               items: widget.sourceList != null ? widget.sourceList : null,
               label: widget.title,
               hint: widget.hint,
-              showSearchBox: true,
+              showSearchBox: widget.searchable??true,
               onChanged: (value) {
                 setState(() {
                   widget.selectedList.add(value);

@@ -312,9 +312,9 @@ class _businessInfoState extends State<businessInfo> {
         var _va = value.data;
         var _vaddV = value.ddVerbose;
         loadedImageList = _va.photos;
-        _keyCategory.currentState.changeSelectedItem(_va.categoryName);
+        _keyCategory?.currentState?.changeSelectedItem(_va?.categoryName);
         catid = _va.categoryId;
-
+        controller[0].text = _va?.categoryName;
         selectedSubCategories = _va.subCategories;
         for (int i = 0; i < selectedSubCategories.length; i++)
           selectedSubCategoriesName.add(selectedSubCategories[i].categoryName);

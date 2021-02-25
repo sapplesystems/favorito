@@ -49,32 +49,37 @@ class WaitListSetting extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: ListView(
-                        shrinkWrap: true,
                         children: [
                           Card(
                               child: Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: sm.h(4), horizontal: sm.w(8)),
-                                  child: Column(children: [
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
                                     Text("Start waitlist daily at",
+                                        textAlign: TextAlign.left,
                                         style: TextStyle(color: Colors.grey)),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          InkWell(
-                                              onTap: () =>
-                                                  vaTrue.dateTimePicker(true),
-                                              child: fromTo(
-                                                  txt: vaFalse.startTime,
-                                                  clr: myRed)),
-                                          InkWell(
-                                              onTap: () =>
-                                                  vaTrue.dateTimePicker(false),
-                                              child: fromTo(
-                                                  txt: vaFalse.endTime,
-                                                  clr: myRed))
-                                        ]),
+                                    Padding(
+                                      padding:  EdgeInsets.symmetric(horizontal: 20.0),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                                onTap: () =>
+                                                    vaTrue.dateTimePicker(true),
+                                                child: fromTo(
+                                                    txt: vaFalse.startTime,
+                                                    clr: myRed,txtClr: Colors.black)),
+                                            InkWell(
+                                                onTap: () =>
+                                                    vaTrue.dateTimePicker(false),
+                                                child: fromTo(
+                                                    txt: vaFalse.endTime,
+                                                    clr: myRed,txtClr: Colors.black))
+                                          ]),
+                                    ),
                                     plusMinus("Available resources",
                                         vaTrue.controller[0]),
                                     Padding(
@@ -142,6 +147,7 @@ class WaitListSetting extends StatelessWidget {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: sm.h(1)),
                                       child: MyTags(
+                                          searchable:false,
                                           sourceList: vaFalse.list,
                                           selectedList: vaFalse.selectedList,
                                           hint:
@@ -189,7 +195,7 @@ class WaitListSetting extends StatelessWidget {
               vaTrue.notifyListeners();
             },
           ),
-          fromTo(txt: ctrl.text, clr: myRed),
+          fromTo(txt: ctrl.text, clr: myRed,txtClr: Colors.black),
           IconButton(
             icon: Icon(Icons.add_circle_outline, size: 28, color: myRed),
             onPressed: () {

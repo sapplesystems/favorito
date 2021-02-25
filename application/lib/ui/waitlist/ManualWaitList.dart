@@ -18,7 +18,8 @@ class _ManualWaitListState extends State<ManualWaitList> {
   List<TextEditingController> controller = [];
   List<String> selectedlist = [];
   GlobalKey<FormState> _frmKey = GlobalKey();
-  List title = ["User Name", "Contact", "Number of Persons", "Special Notes"];
+  List title = ["User Name", "Contact", "Number of Persons", "SpecialNotes"];
+  List maxlens = [50,10,3, 200];
   SizeManager sm;
   void initState() {
     super.initState();
@@ -80,7 +81,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
                                 keyboardSet: (i == 1 || i == 2)
                                     ? TextInputType.number
                                     : TextInputType.text,
-                                maxlen: i == 1 ? 10 : 50,
+                                maxlen: maxlens[i],
                                 maxLines: i == 3 ? 4 : 1,
                                 security: false,
                               ),

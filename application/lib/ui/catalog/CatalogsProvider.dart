@@ -78,6 +78,7 @@ class CatalogsProvider extends ChangeNotifier {
     double size = 0;
     FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
+        allowCompression: true,
         allowedExtensions: ['jpg'],
         allowMultiple: false);
     if (result != null)
@@ -85,39 +86,42 @@ class CatalogsProvider extends ChangeNotifier {
 
     if (result != null) {
       PlatformFile file = result.files.first;
-      print(file.name);
-      print(file.bytes);
-      print(file.size);
+      print("File name:${file.name}");
+      print("size in byte:${file.bytes}");
+      print("Size:${file.size}");
       print(file.extension);
-      print(file.path);
+      print(file?.path);
 
-      if (!result.isSinglePick) {
-        for (int i = 0; i < result.files.length; i++)
-          size = size + result.files[i].size;
-      }
+      for (int i = 0; i < result?.files?.length; i++)
+        size = size + result.files[i].size;
+      print("size in loop:${size}");
 
-      if (double.parse(size.toString()) <
-          double.parse(FlutterConfig.get('image_max_length'))) {
-        pr.show();
-        WebService.catlogImageUpdate(result.files, selectedId ?? '')
-            .then((value) {
-          pr.hide();
-          if (value.status == "success") {
-            imgUrls.clear();
-            imgUrlsId.clear();
-            for (int i = 0; i < value.data.length; i++) {
-              if (!imgUrlsId.contains(value.data[i].id)) {
-                imgUrls.add(value.data[i].photo);
-                imgUrlsId.add(value.data[i].id.toString());
+      try {
+        if (double.parse(size.toString()) < 2048) {
+          pr.show().timeout(Duration(seconds: 10));
+          WebService.catlogImageUpdate(result.files, selectedId ?? '')
+              .then((value) {
+            pr.hide();
+            if (value.status == "success") {
+              imgUrls.clear();
+              imgUrlsId.clear();
+              for (int i = 0; i < value.data.length; i++) {
+                if (!imgUrlsId.contains(value.data[i].id)) {
+                  imgUrls.add(value.data[i].photo);
+                  imgUrlsId.add(value.data[i].id.toString());
+                }
+                selectedId = value.catalogId.toString();
               }
-              selectedId = value.catalogId.toString();
             }
-          }
-          notifyListeners();
-        });
-      } else {
+            notifyListeners();
+          });
+        } else {
+          pr.hide();
+          BotToast.showText(text: 'size of attachment is greater then 2 mb');
+          // text: FlutterConfig.get('image_max_length_message'));
+        }
+      } catch (e) {} finally {
         pr.hide();
-        BotToast.showText(text: FlutterConfig.get('image_max_length_message'));
       }
     }
   }

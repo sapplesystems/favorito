@@ -86,7 +86,7 @@ class _CreateOfferState extends State<CreateOffer> {
         ),
         body: Container(
             decoration: BoxDecoration(
-              color: myBackGround,
+              color: myBackGround
             ),
             child: ListView(children: [
               Container(

@@ -134,6 +134,8 @@ class _MenuSettingState extends State<MenuSetting> {
                           activeTextColor: Colors.white,
                           inactiveTextColor: Colors.white,
                           onChanged: (value) {
+
+
                             setState(() {
                               v.acceptingOrder = value ? 1 : 0;
                             });

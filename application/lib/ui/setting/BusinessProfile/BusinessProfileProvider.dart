@@ -4,6 +4,7 @@ import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -13,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:provider/provider.dart';
 
 class BusinessProfileProvider extends ChangeNotifier {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
@@ -314,6 +316,7 @@ class BusinessProfileProvider extends ChangeNotifier {
         controller[0].text = value.data[0].photo;
         addOrChangePhoto = 'change photo';
         notifyListeners();
+        Provider.of<SettingProvider>(context,listen: false).getProfileImage();
       }
     });
   }

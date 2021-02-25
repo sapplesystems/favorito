@@ -50,6 +50,7 @@ import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/model/orderListModel.dart';
 import 'package:Favorito/model/photoModel.dart';
+import 'package:Favorito/model/profile/ProfileImage.dart';
 import 'package:Favorito/model/profileDataModel.dart';
 import 'package:Favorito/model/registerModel.dart';
 import 'package:Favorito/model/review/ReviewListModel.dart';
@@ -242,7 +243,7 @@ class WebService {
         await dio.post(serviceFunction.funLogin, data: _map, options: opt);
     _data = loginModel.fromJson(convert.json.decode(response.toString()));
     Prefs.setToken(_data.token.toString().trim());
-    return _data.status == "success" ? _data : _data;
+    return _data;
   }
 
   static Future<CityListModel> funGetCities() async {
@@ -1690,6 +1691,21 @@ class WebService {
       print("Response is :${response.toString()}");
       return BaseResponseModel.fromJson(
           convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<ProfileImage> funUserPhoto() async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.funUserPhoto;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return ProfileImage.fromJson(convert.json.decode(response.toString()));
     }
   }
 

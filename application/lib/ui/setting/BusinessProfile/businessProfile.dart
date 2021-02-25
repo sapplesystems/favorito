@@ -22,10 +22,8 @@ class BusinessProfile extends StatelessWidget {
     SizeManager sm = SizeManager(context);
     v = Provider.of<BusinessProfileProvider>(context, listen: true);
     v.setContext(context);
-    if (v.controller[1]?.text.isEmpty) {
-      print("rrrrrrrrr");
-      v.getProfileData(false);
-    }
+    if (v?.controller[1]?.text?.isEmpty) v.getProfileData(false);
+
 
     return RefreshIndicator(
       onRefresh: () async {

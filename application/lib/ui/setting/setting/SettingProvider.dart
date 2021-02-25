@@ -1,3 +1,4 @@
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/PageViews/PageViews.dart';
 import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
@@ -12,6 +13,10 @@ import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
 
 class SettingProvider extends ChangeNotifier {
+  SettingProvider(){
+    getProfileImage();
+  }
+  String photo='';
   List<String> title = [
     "Bussiness Profile",
     "Bussiness Information",
@@ -22,7 +27,7 @@ class SettingProvider extends ChangeNotifier {
     "Waitlist",
     "catalogs",
     "Create Highlights",
-    "Page View",
+    "Page View"
   ];
   List<String> icon = [
     "shop",
@@ -34,7 +39,7 @@ class SettingProvider extends ChangeNotifier {
     "waiting",
     "catlog",
     "highlights",
-    "eye",
+    "eye"
   ];
   List<Widget> pages = [
     BusinessProfile(),
@@ -59,5 +64,13 @@ class SettingProvider extends ChangeNotifier {
   changeSettingTool() {
     settingTool = !settingTool;
     notifyListeners();
+  }
+
+  getProfileImage()async{
+   await WebService.funUserPhoto().then((value) {
+      if(value.status=='success')
+        this.photo = value.result[0].photo??'';
+      notifyListeners();
+    });
   }
 }

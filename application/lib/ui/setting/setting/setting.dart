@@ -17,14 +17,11 @@ import 'package:provider/provider.dart';
 class Setting extends StatelessWidget {
   SettingProvider spTrue;
   SettingProvider spFalse;
-  BusinessProfileProvider guest;
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     spTrue = Provider.of<SettingProvider>(context, listen: true);
     spFalse = Provider.of<SettingProvider>(context, listen: false);
-    guest = Provider.of<BusinessProfileProvider>(context, listen: true)
-        .setContext(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -44,12 +41,10 @@ class Setting extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: ListTile(
                   leading: Padding(
-                    padding: const EdgeInsets.only(right: 12.0),
+                    padding:  EdgeInsets.only(right: 12.0),
                     child: CircleAvatar(
                         radius: sm.w(8),
-                        backgroundImage: NetworkImage(guest?.controller != null
-                            ? guest?.controller[0].text
-                            : "")),
+                        backgroundImage: NetworkImage(spTrue?.photo)),
                   ),
                   title: Text(
                     business_name,

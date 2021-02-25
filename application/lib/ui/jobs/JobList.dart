@@ -71,7 +71,8 @@ class _JobListState extends State<JobList> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => CreateJob(
-                                                    _jobList.data[index].id)))
+                                                    // _jobList.data[index].id
+                                                    )))
                                         .whenComplete(() => getPageData());
                                   },
                                   child: Card(
@@ -120,7 +121,7 @@ class _JobListState extends State<JobList> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => CreateJob(null)));
+                                        builder: (context) => CreateJob()));
                               },
                               clr: Colors.red,
                               title: "Add New",

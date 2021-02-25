@@ -30,7 +30,7 @@ class CatalogDetailModel {
 class Data {
   int id;
   String catalogTitle;
-  int catalogPrice;
+  var catalogPrice;
   String catalogDesc;
   String productUrl;
   String productId;

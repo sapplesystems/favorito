@@ -57,7 +57,7 @@ class NewCatlog extends StatelessWidget {
               margin: EdgeInsets.symmetric(vertical: sm.h(4)),
               child: ListView(scrollDirection: Axis.horizontal, children: [
                 InkWell(
-                    onTap: () => vaFalse.attachImages(),
+                    onTap: () => vaTrue.attachImages(),
                     child: Container(
                       width: sm.h(18),
                       child: Card(
