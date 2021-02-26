@@ -103,7 +103,11 @@ class BusinessHours extends StatelessWidget {
                                     ctx: context,
                                     widget: WorkingDateTime(),
                                     callback: () => bspTrue.popupClosed(),
-                                    sm: sm)
+                                    sm: sm,
+                                    sizesLeft: 3,
+                                    sizesRight: 3,
+                                    sizesTop: 24,
+                                    sizesBottom: 44)
                                 .show();
                           },
                           child: Padding(
@@ -145,8 +149,8 @@ class BusinessHours extends StatelessWidget {
                             sm: sm,
                             sizesLeft: 3,
                             sizesRight: 3,
-                            sizesTop: 20,
-                            sizesBottom: 50)
+                            sizesTop: 24,
+                            sizesBottom: 44)
                         .show();
                   },
                   child: Text("Add", style: TextStyle(color: Colors.red)),

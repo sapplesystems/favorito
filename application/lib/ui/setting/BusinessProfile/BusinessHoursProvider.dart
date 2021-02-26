@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BusinessHoursProvider extends ChangeNotifier {
+  String hoursTitle1 = 'Existing Slots';
+  String hoursTitle2 = 'Add New Slots';
   List<Hours> daysHours = List();
   bool _isEdit = false;
   BuildContext context;

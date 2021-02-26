@@ -197,7 +197,7 @@ class BusinessProfileProvider extends ChangeNotifier {
 
       if (va?.photo != null) {
         controller[0].text = va.photo;
-        addOrChangePhoto = 'change photo';
+        addOrChangePhoto = 'Change Photo';
       }
       print("va.businessName${va.businessName}");
       controller[2].text = va.businessPhone ?? '';
@@ -314,9 +314,9 @@ class BusinessProfileProvider extends ChangeNotifier {
       if (value.status == "success") {
         pr.hide();
         controller[0].text = value.data[0].photo;
-        addOrChangePhoto = 'change photo';
+        addOrChangePhoto = 'Change Photo';
         notifyListeners();
-        Provider.of<SettingProvider>(context,listen: false).getProfileImage();
+        Provider.of<SettingProvider>(context, listen: false).getProfileImage();
       }
     });
   }

@@ -13,10 +13,11 @@ import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
 
 class SettingProvider extends ChangeNotifier {
-  SettingProvider(){
+  SettingProvider() {
     getProfileImage();
   }
-  String photo='';
+  String photo = '';
+  String shortdescription = '';
   List<String> title = [
     "Bussiness Profile",
     "Bussiness Information",
@@ -66,10 +67,12 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getProfileImage()async{
-   await WebService.funUserPhoto().then((value) {
-      if(value.status=='success')
-        this.photo = value.result[0].photo??'';
+  getProfileImage() async {
+    await WebService.funUserPhoto().then((value) {
+      if (value.status == 'success') {
+        this.photo = value.result[0].photo ?? '';
+        this.shortdescription = value.result[0].shortDescription ?? '';
+      }
       notifyListeners();
     });
   }

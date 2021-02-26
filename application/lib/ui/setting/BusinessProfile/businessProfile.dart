@@ -24,7 +24,6 @@ class BusinessProfile extends StatelessWidget {
     v.setContext(context);
     if (v?.controller[1]?.text?.isEmpty) v.getProfileData(false);
 
-
     return RefreshIndicator(
       onRefresh: () async {
         v.getProfileData(true);
@@ -112,8 +111,11 @@ class BusinessProfile extends StatelessWidget {
                                 ),
                               BusinessHours(dd1: data.dd1),
                               InkWell(
-                                onTap: () =>
-                                    data.byAppointment = !data.byAppointment,
+                                onTap: () {
+                                  data.byAppointment = !data.byAppointment;
+                                  data.needSave(true);
+                                  data.notifyListeners();
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 16, horizontal: 20),
@@ -167,9 +169,9 @@ class BusinessProfile extends StatelessWidget {
                                     hint: "Enter Address ${i + 1}",
                                     title: "Address ${i + 1}",
                                     maxLines: 1,
-                                    valid: data.addressLength > 0,
+                                    valid: i == 0,
                                     sufixColor: myGrey,
-                                    sufixTxt: "Add Line",
+                                    sufixTxt: (i == 0) ? "Add Line" : '',
                                     security: false,
                                     myOnChanged: (_) {
                                       v.needSave(true);

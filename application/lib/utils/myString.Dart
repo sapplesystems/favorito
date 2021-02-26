@@ -32,3 +32,5 @@ String bookingSetting = "Booking Setting";
 String loading = "Loading...";
 String wentWrong = "Something went wrong..";
 String businessInformation = "Business Information";
+String hoursTitle1 = 'Existing Slots';
+String hoursTitle2 = 'Add New Slots';

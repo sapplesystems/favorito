@@ -137,200 +137,197 @@ class _CreateJobState extends State<CreateJob> {
                       builder: (context) => Form(
                         key: _formKey,
                         autovalidate: _autoValidateForm,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: txtfieldboundry(
-                                controller: _myTitleEditController,
-                                title: "Title",
-                                security: false,
-                                valid: true,
-                              ),
+                        child: Column(children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: txtfieldboundry(
+                              controller: _myTitleEditController,
+                              title: "Title",
+                              security: false,
+                              valid: true,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: txtfieldboundry(
-                                controller: _myDescriptionEditController,
-                                title: "Description",
-                                security: false,
-                                maxLines: 5,
-                                valid: true,
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: txtfieldboundry(
+                              controller: _myDescriptionEditController,
+                              title: "Description",
+                              security: false,
+                              maxLines: 5,
+                              valid: true,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: FlutterTagging<SkillListRequiredDataModel>(
-                                initialItems: _selectedSkillList,
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      borderSide: BorderSide(),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.transparent,
-                                    hintText: 'Search Skill',
-                                    labelText: 'Select Skill',
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: FlutterTagging<SkillListRequiredDataModel>(
+                              initialItems: _selectedSkillList,
+                              textFieldConfiguration: TextFieldConfiguration(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    borderSide: BorderSide(),
                                   ),
+                                  filled: true,
+                                  fillColor: Colors.transparent,
+                                  hintText: 'Search Skill',
+                                  labelText: 'Select Skill',
                                 ),
-                                findSuggestions: WebService.getLanguages,
-                                additionCallback: (value) {
-                                  return SkillListRequiredDataModel(value, 0);
-                                },
-                                onAdded: (skill) {
-                                  // can call a service to add new skill
-                                  return SkillListRequiredDataModel(
-                                      skill.skillName, skill.id);
-                                },
-                                configureSuggestion: (skill) {
-                                  return SuggestionConfiguration(
-                                    title: Text(skill.skillName),
-                                    additionWidget: Chip(
-                                      avatar: Icon(
-                                        Icons.add_circle,
-                                        color: Colors.white,
-                                      ),
-                                      label: Text('Add New Tag'),
-                                      labelStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                      backgroundColor: Colors.green,
+                              ),
+                              findSuggestions: WebService.getLanguages,
+                              additionCallback: (value) {
+                                return SkillListRequiredDataModel(value, 0);
+                              },
+                              onAdded: (skill) {
+                                // can call a service to add new skill
+                                return SkillListRequiredDataModel(
+                                    skill.skillName, skill.id);
+                              },
+                              configureSuggestion: (skill) {
+                                return SuggestionConfiguration(
+                                  title: Text(skill.skillName),
+                                  additionWidget: Chip(
+                                    avatar: Icon(
+                                      Icons.add_circle,
+                                      color: Colors.white,
                                     ),
-                                  );
-                                },
-                                configureChip: (skill) {
-                                  return ChipConfiguration(
-                                    label: Text(skill.skillName),
+                                    label: Text('Add New Tag'),
+                                    labelStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w300,
+                                    ),
                                     backgroundColor: Colors.green,
-                                    labelStyle: TextStyle(color: Colors.white),
-                                    deleteIconColor: Colors.white,
-                                  );
-                                },
-                                onChanged: () {
-                                  setState(() {});
-                                },
-                              ),
+                                  ),
+                                );
+                              },
+                              configureChip: (skill) {
+                                return ChipConfiguration(
+                                  label: Text(skill.skillName),
+                                  backgroundColor: Colors.green,
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  deleteIconColor: Colors.white,
+                                );
+                              },
+                              onChanged: () {
+                                setState(() {});
+                              },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: DropdownSearch<String>(
-                                validator: (v) =>
-                                    v == '' ? "required field" : null,
-                                autoValidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                mode: Mode.MENU,
-                                selectedItem: _selectedContactOption,
-                                items: _contactOptionsList,
-                                label: "Contact Via",
-                                hint: "Please Select Option",
-                                showSearchBox: false,
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value == _contactOptionsList[0]) {
-                                      _contactHint = 'Enter number for call';
-                                    } else {
-                                      _contactHint = 'Enter email for chat';
-                                    }
-                                    _selectedContactOption = value;
-                                  });
-                                },
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: DropdownSearch<String>(
+                              validator: (v) =>
+                                  v == '' ? "required field" : null,
+                              autoValidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              mode: Mode.MENU,
+                              selectedItem: _selectedContactOption,
+                              items: _contactOptionsList,
+                              label: "Contact Via",
+                              hint: "Please Select Option",
+                              showSearchBox: false,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value == _contactOptionsList[0]) {
+                                    _contactHint = 'Enter number for call';
+                                  } else {
+                                    _contactHint = 'Enter email for chat';
+                                  }
+                                  _selectedContactOption = value;
+                                });
+                              },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: txtfieldboundry(
-                                controller: _myContactEditController,
-                                title: "Contact",
-                                security: false,
-                                keyboardSet: TextInputType.number,
-                                maxlen: 10,
-                                hint: _contactHint,
-                                maxLines: 1,
-                                valid: true,
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: txtfieldboundry(
+                              controller: _myContactEditController,
+                              title: "Contact",
+                              security: false,
+                              keyboardSet: TextInputType.number,
+                              maxlen: 10,
+                              hint: _contactHint,
+                              maxLines: 1,
+                              valid: true,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: DropdownSearch<CityList>(
-                                validator: (v) =>
-                                    v == null ? "required field" : null,
-                                autoValidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                mode: Mode.MENU,
-                                showSelectedItem: true,
-                                compareFn: (CityList i, CityList s) =>
-                                    i.isEqual(s),
-                                itemAsString: (CityList u) => u.userAsString(),
-                                selectedItem: _selectedCity,
-                                items: _cityList,
-                                label: "City",
-                                hint: "Please Select City",
-                                showSearchBox: false,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedCity = value;
-                                    _pincodesForCity.clear();
-                                    WebService.funGetPicodesForCity(
-                                            _selectedCity.id, context)
-                                        .then((value) {
-                                      setState(() {
-                                        _pincodesForCity = value.pincodeModel;
-                                      });
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: DropdownSearch<CityList>(
+                              validator: (v) =>
+                                  v == null ? "required field" : null,
+                              autoValidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              mode: Mode.MENU,
+                              showSelectedItem: true,
+                              compareFn: (CityList i, CityList s) =>
+                                  i.isEqual(s),
+                              itemAsString: (CityList u) => u.userAsString(),
+                              selectedItem: _selectedCity,
+                              items: _cityList,
+                              label: "City",
+                              hint: "Please Select City",
+                              showSearchBox: false,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedCity = value;
+                                  _pincodesForCity.clear();
+                                  WebService.funGetPicodesForCity(
+                                          _selectedCity.id, context)
+                                      .then((value) {
+                                    setState(() {
+                                      _pincodesForCity = value.pincodeModel;
                                     });
                                   });
-                                },
-                              ),
+                                });
+                              },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: txtfieldboundry(
-                                controller: _myPincodeEditController,
-                                title: "Pincode",
-                                security: false,
-                                hint: 'Please enter pincode',
-                                maxLines: 1,
-                                valid: true,
-                                maxlen: 6,
-                                myOnChanged: (val) {
-                                  if (_myPincodeEditController.text.length ==
-                                      6) {
-                                    if (_pincodesForCity.length != 0) {
-                                      for (var temp in _pincodesForCity) {
-                                        if (temp.pincode ==
-                                            _myPincodeEditController.text) {
-                                          break;
-                                        } else {
-                                          if (_pincodesForCity.indexOf(temp) ==
-                                              _pincodesForCity.length - 1) {
-                                            _pincodesForCity.clear();
-                                            _selectedCity = null;
-                                            BotToast.showText(
-                                                text:
-                                                    "Please enter a pincode from selected city");
-                                          }
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: txtfieldboundry(
+                              controller: _myPincodeEditController,
+                              title: "Pincode",
+                              security: false,
+                              hint: 'Please enter pincode',
+                              maxLines: 1,
+                              valid: true,
+                              maxlen: 6,
+                              myOnChanged: (val) {
+                                if (_myPincodeEditController.text.length == 6) {
+                                  if (_pincodesForCity.length != 0) {
+                                    for (var temp in _pincodesForCity) {
+                                      if (temp.pincode ==
+                                          _myPincodeEditController.text) {
+                                        break;
+                                      } else {
+                                        if (_pincodesForCity.indexOf(temp) ==
+                                            _pincodesForCity.length - 1) {
+                                          _pincodesForCity.clear();
+                                          _selectedCity = null;
+                                          BotToast.showText(
+                                              text:
+                                                  "Please enter a pincode from selected city");
                                         }
                                       }
-                                    } else {
-                                      WebService.funGetCityByPincode({
-                                        'pincode': _myPincodeEditController.text
-                                      }).then((value) {
-                                        setState(() {
-                                          CityList city = CityList();
-                                          city.id = value.data.id;
-                                          city.city = value.data.city;
-                                          _selectedCity = city;
-                                        });
-                                      });
                                     }
+                                  } else {
+                                    WebService.funGetCityByPincode({
+                                      'pincode': _myPincodeEditController.text
+                                    }).then((value) {
+                                      setState(() {
+                                        CityList city = CityList();
+                                        city.id = value.data.id;
+                                        city.city = value.data.city;
+                                        _selectedCity = city;
+                                      });
+                                    });
                                   }
-                                },
-                              ),
+                                }
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ]),
                       ),
                     )),
               ),

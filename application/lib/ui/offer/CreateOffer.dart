@@ -24,6 +24,7 @@ class CreateOffer extends StatefulWidget {
 class _CreateOfferState extends State<CreateOffer> {
   final stateKey = GlobalKey<DropdownSearchState<String>>();
   final typeKey = GlobalKey<DropdownSearchState<String>>();
+  String buttonTxt = '';
   String _selectedOfferState = '';
   String _selectedOfferType = '';
   CreateOfferRequiredDataModel _offerRequiredData =
@@ -45,6 +46,7 @@ class _CreateOfferState extends State<CreateOffer> {
   initializeDefaultValues() {
     WebService.funGetCreateOfferDefaultData(context).then((value) {
       setState(() {
+        buttonTxt = "Post Offer";
         _offerRequiredData = value;
         if (widget.offerData == null) {
           _selectedOfferState = '';
@@ -52,6 +54,7 @@ class _CreateOfferState extends State<CreateOffer> {
           _myTitleEditController.text = '';
           _myDescriptionEditController.text = '';
         } else {
+          buttonTxt = "Edit Offer";
           stateKey.currentState
               .changeSelectedItem(widget?.offerData?.offerStatus?.trim());
           typeKey.currentState
@@ -85,9 +88,7 @@ class _CreateOfferState extends State<CreateOffer> {
           ),
         ),
         body: Container(
-            decoration: BoxDecoration(
-              color: myBackGround
-            ),
+            decoration: BoxDecoration(color: myBackGround),
             child: ListView(children: [
               Container(
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
@@ -229,7 +230,7 @@ class _CreateOfferState extends State<CreateOffer> {
                       }
                     },
                     clr: Colors.red,
-                    title: "Post Offer",
+                    title: buttonTxt,
                   ),
                 ),
               ),

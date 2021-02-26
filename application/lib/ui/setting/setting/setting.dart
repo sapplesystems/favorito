@@ -41,7 +41,7 @@ class Setting extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: ListTile(
                   leading: Padding(
-                    padding:  EdgeInsets.only(right: 12.0),
+                    padding: EdgeInsets.only(right: 12.0),
                     child: CircleAvatar(
                         radius: sm.w(8),
                         backgroundImage: NetworkImage(spTrue?.photo)),
@@ -54,7 +54,7 @@ class Setting extends StatelessWidget {
                         fontSize: 18),
                   ),
                   subtitle: Text(
-                    "We are buggest food chain vased is Surat Gujrat",
+                    spTrue?.shortdescription,
                     style: TextStyle(wordSpacing: 2, fontSize: 16),
                   ),
                 ),

@@ -4,6 +4,7 @@ import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:Favorito/utils/myString.dart';
 
 class WorkingDateTime extends StatelessWidget {
   SizeManager sm;
@@ -17,6 +18,7 @@ class WorkingDateTime extends StatelessWidget {
     bhpFalse.SetContexts(context);
     bhpFalse.localizations = MaterialLocalizations.of(context);
     return Column(children: [
+      Text(bhpTrue.getMod() ? bhpTrue.hoursTitle1 : bhpTrue.hoursTitle2),
       Container(
         height: sm.h(8.5),
         child: ListView(scrollDirection: Axis.horizontal, children: [

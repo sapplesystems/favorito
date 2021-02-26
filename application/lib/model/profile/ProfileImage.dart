@@ -29,17 +29,19 @@ class ProfileImage {
 
 class Result {
   String photo;
+  String shortDescription;
 
-  Result({this.photo});
+  Result({this.photo, this.shortDescription});
 
   Result.fromJson(Map<String, dynamic> json) {
     photo = json['photo'];
+    shortDescription = json['short_description'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['photo'] = this.photo;
+    data['short_description'] = this.shortDescription;
     return data;
   }
 }
-

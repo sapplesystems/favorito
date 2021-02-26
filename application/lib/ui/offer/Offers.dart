@@ -42,17 +42,18 @@ class _OfferState extends State<Offers> {
         activeCurrentUserOfferList.clear();
         inactiveCurrentUserOfferList.clear();
         for (var temp in value.data) {
-          if (temp.offerStatus == 'Activated' &&
-              temp.offerType == 'Current Offer') {
-            activeCurrentUserOfferList.add(temp);
-          } else if (temp.offerStatus == 'Inactive' &&
-              temp.offerType == 'Current Offer') {
-            inactiveCurrentUserOfferList.add(temp);
-          } else if (temp.offerStatus == 'Activated' &&
-              temp.offerType == 'New User Offer') {
-            activeNewUserOfferList.add(temp);
-          } else {
-            inactiveNewUserOfferList.add(temp);
+          if (temp.offerType == 'Current Offer') {
+            if (temp.offerStatus == 'Activated') {
+              activeCurrentUserOfferList.add(temp);
+            } else {
+              inactiveCurrentUserOfferList.add(temp);
+            }
+          } else if (temp.offerType == 'New User Offer') {
+            if (temp.offerStatus == 'Activated') {
+              activeNewUserOfferList.add(temp);
+            } else {
+              inactiveNewUserOfferList.add(temp);
+            }
           }
         }
 
