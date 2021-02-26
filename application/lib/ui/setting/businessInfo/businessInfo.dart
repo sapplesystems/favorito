@@ -1,7 +1,6 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/myTags.dart';
 import 'package:Favorito/component/roundedButton.dart';
-import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/model/AttributeList.dart';
 import 'package:Favorito/model/PhotoData.dart';
 import 'package:Favorito/model/SubCategories.dart';
@@ -24,7 +23,6 @@ class businessInfo extends StatefulWidget {
 
 class _businessInfoState extends State<businessInfo> {
   List<bool> checked = [];
-
   List<bool> radioChecked = [];
   var loadedImageList = [];
   final _keyCategory = GlobalKey<DropdownSearchState<String>>();
@@ -60,6 +58,8 @@ class _businessInfoState extends State<businessInfo> {
   List<AttributeList> selectAttribute = [];
   List<int> selectAttributeId = [];
   List<String> selectAttributeName = [];
+  bool needSave = false;
+  String donetxt = 'Done';
   //selected attribute id
   SubCategoryModel subCategoryModel = SubCategoryModel();
 
@@ -175,6 +175,7 @@ class _businessInfoState extends State<businessInfo> {
                     hint: "Please select Sub category",
                     border: true,
                     directionVeticle: false,
+                    refresh: () => setNeedSave(true),
                     title: " Sub Category"),
                 MyTags(
                     sourceList: totalTagName,
@@ -182,6 +183,7 @@ class _businessInfoState extends State<businessInfo> {
                     hint: "Please select Tags",
                     border: true,
                     directionVeticle: false,
+                    refresh: () => setNeedSave(true),
                     title: "Tags"),
                 Row(children: [
                   Padding(
@@ -205,6 +207,7 @@ class _businessInfoState extends State<businessInfo> {
                           padding: EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
+                              setNeedSave(true);
                               print("priceRange ${i}");
                               priceRange = priceRangelist[i];
                               for (int j = 0; j < priceRangelist.length; j++) {
@@ -213,7 +216,6 @@ class _businessInfoState extends State<businessInfo> {
                                 else
                                   radioChecked[i] = false;
                               }
-                              setState(() {});
                             },
                             child: Row(children: [
                               Icon(
@@ -253,11 +255,10 @@ class _businessInfoState extends State<businessInfo> {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
-                          setState(() {
-                            selectPay.contains(totalpay[i])
-                                ? selectPay.remove(totalpay[i])
-                                : selectPay.add(totalpay[i]);
-                          });
+                          selectPay.contains(totalpay[i])
+                              ? selectPay.remove(totalpay[i])
+                              : selectPay.add(totalpay[i]);
+                          setNeedSave(true);
                         },
                         child: Row(children: [
                           Icon(
@@ -283,21 +284,27 @@ class _businessInfoState extends State<businessInfo> {
                     hint: "Please select Attributes",
                     title: " Attributes",
                     border: false,
+                    refresh: () {
+                      setNeedSave(true);
+                    },
                     directionVeticle: true,
                   ),
                 ]),
               ]),
             ),
-            Container(
-                margin: EdgeInsets.only(bottom: sm.w(30)),
-                padding: EdgeInsets.symmetric(
-                    horizontal: sm.w(16), vertical: sm.h(2)),
-                child: RoundedButton(
-                    clicker: () {
-                      funSublim();
-                    },
-                    clr: Colors.red,
-                    title: "Done"))
+            Visibility(
+              visible: getNeedSave(),
+              child: Container(
+                  margin: EdgeInsets.only(bottom: sm.w(30)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: sm.w(16), vertical: sm.h(2)),
+                  child: RoundedButton(
+                      clicker: () {
+                        funSublim();
+                      },
+                      clr: Colors.red,
+                      title: donetxt)),
+            )
           ],
         ),
       ),
@@ -343,8 +350,9 @@ class _businessInfoState extends State<businessInfo> {
           totalAttributeName.add(totalAttribute[i].attributeName);
 
         selectAttribute.addAll(_va.attributes);
+        // for (var _v in selectAttribute) totalAttribute.remove(_v);
         for (int i = 0; i < selectAttribute.length; i++)
-          selectAttributeName.add(totalAttribute[i].attributeName);
+          selectAttributeName.add(selectAttribute[i].attributeName);
         photoData.addAll(_va.photos);
         setState(() {});
       }
@@ -382,6 +390,7 @@ class _businessInfoState extends State<businessInfo> {
       };
       WebService.setBusinessInfoData(_map, context).then((value) {
         if (value.status == "success") {
+          FocusScope.of(context).unfocus();
           BotToast.showText(text: value.message);
           Navigator.pop(context);
         }
@@ -405,6 +414,7 @@ class _businessInfoState extends State<businessInfo> {
         photoData.addAll(value.data);
       }
     });
+
     setState(() => _image = image);
   }
 
@@ -438,5 +448,13 @@ class _businessInfoState extends State<businessInfo> {
 
     priceRangelist.clear();
     photoData.clear();
+  }
+
+  getNeedSave() => needSave;
+
+  setNeedSave(bool _val) {
+    setState(() {
+      needSave = _val;
+    });
   }
 }

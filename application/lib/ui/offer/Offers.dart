@@ -4,6 +4,7 @@ import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/offer/CreateOffer.dart';
 import 'package:Favorito/ui/offer/ViewMore.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -105,39 +106,84 @@ class _OfferState extends State<Offers> {
           child: ListView(
             shrinkWrap: true,
             children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    left: sm.w(20), right: sm.w(20), top: 8.0, bottom: 16.0),
-                child: InkWell(
-                  onTap: () {
-                    showPopup(
-                            sm: sm,
-                            ctx: context,
-                            callback: () {},
-                            widget: popupBody(sm),
-                            sizesLeft: 20,
-                            sizesTop: 40,
-                            sizesBottom: 40,
-                            sizesRight: 20)
-                        .show();
+              // Padding(
+              //   padding: EdgeInsets.only(
+              //       left: sm.w(20), right: sm.w(20), top: 8.0, bottom: 16.0),
+              //   child: InkWell(
+              //     onTap: () {
+              //       showPopup(
+              //               sm: sm,
+              //               ctx: context,
+              //               callback: () {},
+              //               widget: popupBody(sm),
+              //               sizesLeft: 24,
+              //               sizesTop: 40,
+              //               sizesBottom: 40,
+              //               sizesRight: 24)
+              //           .show();
+              //     },
+              //     child: TextFormField(
+              //       controller: controller,
+              //       readOnly: true,
+              //       enabled: false,
+              //       decoration: InputDecoration(
+              //         counterText: "",
+              //         contentPadding: EdgeInsets.only(
+              //             left: sm.w(12), right: sm.w(4), bottom: sm.w(6)),
+              //         suffix:
+              //             Icon(Icons.arrow_drop_down, size: 22, color: myGrey),
+              //         suffixIconConstraints: BoxConstraints(),
+              //         fillColor: Colors.transparent,
+              //         border: OutlineInputBorder(
+              //             borderRadius: BorderRadius.circular(16.0),
+              //             borderSide: BorderSide(color: myGrey)),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+              Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: sm.w(4), vertical: sm.w(4)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: sm.w(24), vertical: sm.w(0)),
+                child: DropdownSearch<String>(
+                  validator: (v) => v == '' ? "required field" : null,
+                  mode: Mode.MENU,
+                  maxHeight: (offerTypeList.length ?? 0) * 52.0,
+                  showSelectedItem: true,
+
+                  selectedItem: _selectedOfferType,
+                  items: offerTypeList != null ? offerTypeList : null,
+                  // label: "Offer Type",
+
+                  hint: "Please Select Offer Type",
+                  showSearchBox: false,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedOfferType = value;
+                      print(_selectedOfferType);
+                      if (_selectedOfferType == offerTypeList[0].trim()) {
+                        newUserOfferInputList.clear();
+                        for (var data in activeNewUserOfferList) {
+                          newUserOfferInputList.add(data);
+                        }
+                        currentUserOfferInputList.clear();
+                        for (var data in activeCurrentUserOfferList) {
+                          currentUserOfferInputList.add(data);
+                        }
+                      } else {
+                        newUserOfferInputList.clear();
+                        for (var data in inactiveNewUserOfferList) {
+                          newUserOfferInputList.add(data);
+                        }
+                        currentUserOfferInputList.clear();
+                        for (var data in inactiveCurrentUserOfferList) {
+                          currentUserOfferInputList.add(data);
+                        }
+                      }
+                    });
                   },
-                  child: TextFormField(
-                    controller: controller,
-                    readOnly: true,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      counterText: "",
-                      contentPadding: EdgeInsets.only(
-                          left: sm.w(12), right: sm.w(4), bottom: sm.w(6)),
-                      suffix:
-                          Icon(Icons.arrow_drop_down, size: 22, color: myGrey),
-                      suffixIconConstraints: BoxConstraints(),
-                      fillColor: Colors.transparent,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide(color: myGrey)),
-                    ),
-                  ),
                 ),
               ),
               Text("New User Offers",
@@ -380,9 +426,10 @@ class _OfferState extends State<Offers> {
             });
             Navigator.pop(context);
           },
-          child: Text(offerTypeList[0], textAlign: TextAlign.center)),
+          child: Text("    ${offerTypeList[0]}     ",
+              textAlign: TextAlign.center)),
       Divider(
-        height: sm.h(2),
+        height: sm.h(4),
       ),
       InkWell(
           onTap: () {
@@ -401,43 +448,8 @@ class _OfferState extends State<Offers> {
             });
             Navigator.pop(context);
           },
-          child: Text(offerTypeList[1], textAlign: TextAlign.center))
+          child:
+              Text("    ${offerTypeList[1]}     ", textAlign: TextAlign.center))
     ]);
   }
 }
-
-// DropdownSearch<String>(
-//                     validator: (v) => v == '' ? "required field" : null,
-//                     mode: Mode.MENU,
-//                     showSelectedItem: true,
-//                     selectedItem: _selectedOfferType,
-//                     items: offerTypeList != null ? offerTypeList : null,
-//                     label: "Offer Type",
-//                     hint: "Please Select Offer Type",
-//                     showSearchBox: false,
-//                     onChanged: (value) {
-//                       setState(() {
-//                         _selectedOfferType = value;
-//                         print(_selectedOfferType);
-//                         if (_selectedOfferType == offerTypeList[0].trim()) {
-//                           newUserOfferInputList.clear();
-//                           for (var data in activeNewUserOfferList) {
-//                             newUserOfferInputList.add(data);
-//                           }
-//                           currentUserOfferInputList.clear();
-//                           for (var data in activeCurrentUserOfferList) {
-//                             currentUserOfferInputList.add(data);
-//                           }
-//                         } else {
-//                           newUserOfferInputList.clear();
-//                           for (var data in inactiveNewUserOfferList) {
-//                             newUserOfferInputList.add(data);
-//                           }
-//                           currentUserOfferInputList.clear();
-//                           for (var data in inactiveCurrentUserOfferList) {
-//                             currentUserOfferInputList.add(data);
-//                           }
-//                         }
-//                       });
-//                     },
-//                   ),

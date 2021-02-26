@@ -83,7 +83,7 @@ class _CreateOfferState extends State<CreateOffer> {
               onPressed: () => Navigator.of(context).pop()),
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
-            "Create Offer",
+            buttonTxt,
             style: TextStyle(color: Colors.black, fontFamily: 'Gilroy-Bold'),
           ),
         ),
@@ -95,15 +95,14 @@ class _CreateOfferState extends State<CreateOffer> {
                 child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(15.0))),
                     child: Builder(
                       builder: (context) => Form(
                         key: _formKey,
                         autovalidate: _autoValidateForm,
                         child: Column(children: [
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
                             child: txtfieldboundry(
                               controller: _myTitleEditController,
                               title: "Title",
@@ -112,7 +111,7 @@ class _CreateOfferState extends State<CreateOffer> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
                             child: txtfieldboundry(
                               controller: _myDescriptionEditController,
                               title: "Description",
@@ -122,7 +121,8 @@ class _CreateOfferState extends State<CreateOffer> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: sm.w(7), vertical: sm.w(2)),
                             child: DropdownSearch<String>(
                               key: stateKey,
                               maxHeight: (_offerRequiredData
@@ -130,7 +130,7 @@ class _CreateOfferState extends State<CreateOffer> {
                                       1) *
                                   52.0,
                               validator: (v) =>
-                                  v == '' ? "required field" : null,
+                                  v == '' ? "Please Select Offer State" : null,
                               autoValidateMode:
                                   AutovalidateMode.onUserInteraction,
                               mode: Mode.MENU,
@@ -150,7 +150,8 @@ class _CreateOfferState extends State<CreateOffer> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: sm.w(7), vertical: sm.w(2)),
                             child: DropdownSearch<String>(
                               key: typeKey,
                               maxHeight: (_offerRequiredData
@@ -158,7 +159,7 @@ class _CreateOfferState extends State<CreateOffer> {
                                       1) *
                                   52.0,
                               validator: (v) =>
-                                  v == '' ? "required field" : null,
+                                  v == '' ? "Please Select Offer Type" : null,
                               autoValidateMode:
                                   AutovalidateMode.onUserInteraction,
                               mode: Mode.MENU,
@@ -203,6 +204,8 @@ class _CreateOfferState extends State<CreateOffer> {
                             pr.hide();
                             if (value.status == 'success') {
                               setState(() {
+                                stateKey.currentState.changeSelectedItem(null);
+                                typeKey.currentState.changeSelectedItem(null);
                                 initializeDefaultValues();
                                 BotToast.showText(text: value.message);
                               });
@@ -218,6 +221,8 @@ class _CreateOfferState extends State<CreateOffer> {
                             pr.hide();
                             if (value.status == 'success') {
                               setState(() {
+                                // stateKey.currentState.changeSelectedItem(null);
+                                // typeKey.currentState.changeSelectedItem(null);
                                 BotToast.showText(text: value.message);
                               });
                             } else {

@@ -144,12 +144,22 @@ class BusinessProfileProvider extends ChangeNotifier {
       "photo": "${controller[0].text}",
     };
     print("_map:${map.toString()}");
+    pr.show().timeout(Duration(seconds: 5));
     WebService.funUserProfileUpdate(map).then((value) async {
+      pr.hide();
+      Provider.of<SettingProvider>(context, listen: false).getProfileImage();
       if (value.status == 'success') {
-        BotToast.showLoading(duration: Duration(seconds: 1));
         await Future.delayed(const Duration(seconds: 1));
         needSave(false);
         BotToast.showText(text: value.message);
+
+        try {
+          listviewController.animateTo(
+              listviewController?.position?.minScrollExtent,
+              curve: Curves.easeOut,
+              duration: const Duration(microseconds: 1));
+          FocusScope.of(context).unfocus();
+        } catch (e) {}
       }
     });
   }

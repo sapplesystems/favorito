@@ -97,28 +97,30 @@ class _dashboardState extends State<dashboard> {
                       check: is_profile_completed,
                       function: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BusinessProfile()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BusinessProfile()))
+                            .whenComplete(() => calldashBoard());
                       }),
                 ),
                 Visibility(
                   visible: is_information_completed == '0' ? true : false,
                   child: rowWithTextNButton(
-                      txt1: "Complete your information",
+                      txt1: "Complete Your Information",
                       txt2: "Now",
                       check: is_information_completed,
                       function: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => businessInfo()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => businessInfo()))
+                            .whenComplete(() => calldashBoard());
                       }),
                 ),
                 Visibility(
                   visible: is_verified == "0" ? true : false,
                   child: rowWithTextNButton(
-                      txt1: "Send for verification",
+                      txt1: "Send For Verification",
                       txt2: "Verify",
                       check: is_verified,
                       function: () {
@@ -137,17 +139,19 @@ class _dashboardState extends State<dashboard> {
                           checkins: check_ins,
                           function: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => checkins()));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => checkins()))
+                                .whenComplete(() => calldashBoard());
                           }),
                       card2(
                         ratings: ratings,
                         function: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => reviewList()));
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => reviewList()))
+                              .whenComplete(() => calldashBoard());
                         },
                       )
                     ],
@@ -170,9 +174,10 @@ class _dashboardState extends State<dashboard> {
                           InkWell(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Orders()));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Orders()))
+                                    .whenComplete(() => calldashBoard());
                               },
                               child: card3(txt1: "Orders", title: orders))
                         ])),
@@ -189,8 +194,11 @@ class _dashboardState extends State<dashboard> {
                 rowCard(
                     "Advertise",
                     "Reach new audience searching for related services",
-                    () => Navigator.of(context).pushNamed('/adSpent')),
-                rowCard("Notifications", "Send Direct Update to Customer", () {
+                    () => Navigator.of(context)
+                        .pushNamed('/adSpent')
+                        .whenComplete(() => calldashBoard())
+                        .whenComplete(() => calldashBoard())),
+                rowCard("Notifications", "Send Direct Update To Customer", () {
                   // Navigator.of(context).pushNamed('/networkImages');
                 }),
               ])),
@@ -212,7 +220,7 @@ class _dashboardState extends State<dashboard> {
 
   Widget credit(String title, String ammount, String ico) {
     return Padding(
-      padding:  EdgeInsets.only(left: 12, top: 16),
+      padding: EdgeInsets.only(left: 12, top: 16),
       child: Row(children: [
         Text("${title} : "),
         Text("${ammount}  "),

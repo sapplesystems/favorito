@@ -19,7 +19,7 @@ class MyTags extends StatefulWidget {
       this.hint,
       this.selectedList,
       this.directionVeticle,
-        this.searchable,
+      this.searchable,
       this.refresh});
   @override
   _MyTagsState createState() => _MyTagsState();
@@ -47,11 +47,12 @@ class _MyTagsState extends State<MyTags> {
               items: widget.sourceList != null ? widget.sourceList : null,
               label: widget.title,
               hint: widget.hint,
-              showSearchBox: widget.searchable??true,
+              showSearchBox: widget.searchable ?? true,
               onChanged: (value) {
                 setState(() {
                   widget.selectedList.add(value);
                   widget.sourceList.remove(value);
+                  widget.refresh();
                 });
               })),
       SizedBox(
@@ -75,6 +76,7 @@ class _MyTagsState extends State<MyTags> {
                       function: () => setState(() {
                             widget.sourceList.add(widget.selectedList[i]);
                             widget.selectedList.removeAt(i);
+                            widget.refresh();
                           }))
               ]))
     ]);

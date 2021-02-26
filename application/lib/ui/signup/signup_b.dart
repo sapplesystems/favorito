@@ -206,11 +206,11 @@ class signup_b extends StatelessWidget {
           signUpProviderTrue.controller[7].text) {
         signUpProviderTrue.controller[6].text = "";
         signUpProviderTrue.controller[7].text = "";
-        BotToast.showText(text: "Please confirm your password!");
+        BotToast.showText(text: signUpProviderTrue.passError);
         return;
       }
       if (!signUpProviderTrue.getTnCChecked()) {
-        BotToast.showText(text: "Please confirm T&C!");
+        BotToast.showText(text: signUpProviderTrue.tnc);
         return;
       }
       signUpProviderTrue.funRegister();

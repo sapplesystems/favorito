@@ -102,6 +102,7 @@ class BusinessProfile extends StatelessWidget {
                                   controller: data.controller[i],
                                   title: data.titleList[i],
                                   security: false,
+                                  isEnabled: i == 2 ? false : true,
                                   myOnChanged: (d) => v.needSave(true),
                                   valid: data.validateList[i],
                                   maxlen: i == 3 ? 12 : 50,
@@ -171,7 +172,7 @@ class BusinessProfile extends StatelessWidget {
                                     maxLines: 1,
                                     valid: i == 0,
                                     sufixColor: myGrey,
-                                    sufixTxt: (i == 0) ? "Add Line" : '',
+                                    sufixTxt: '',
                                     security: false,
                                     myOnChanged: (_) {
                                       v.needSave(true);
@@ -187,6 +188,7 @@ class BusinessProfile extends StatelessWidget {
                                   security: false,
                                   valid: true,
                                   maxlen: 6,
+                                  isEnabled: false,
                                   error: v.error[9],
                                   keyboardSet: TextInputType.number,
                                   hint: "Enter Pincode",
@@ -202,6 +204,7 @@ class BusinessProfile extends StatelessWidget {
                                   mode: Mode.MENU,
                                   key: data.ddCity,
                                   showSelectedItem: true,
+                                  enabled: false,
                                   validator: (_v) {
                                     var va;
                                     if (_v == "") {
@@ -239,6 +242,7 @@ class BusinessProfile extends StatelessWidget {
                                       AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
                                   key: data.ddState,
+                                  enabled: false,
                                   showSelectedItem: true,
                                   selectedItem: data.controller[11].text,
                                   items: data.stateList != null
@@ -270,6 +274,7 @@ class BusinessProfile extends StatelessWidget {
                                 controller: data.controller[13],
                                 title: "Email",
                                 security: false,
+                                isEnabled: false,
                                 valid: true,
                                 myOnChanged: (_) {
                                   v.needSave(true);

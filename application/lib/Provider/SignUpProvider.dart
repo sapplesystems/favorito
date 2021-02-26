@@ -32,6 +32,8 @@ class SignUpProvider extends ChangeNotifier {
   bool catvisib = false;
   bool _checked = false;
   bool _tnCchecked = false;
+  String passError = "Password and Confirm password should match!";
+  String tnc = "Please accept T&C!";
   List<String> busy = ["Owner", "Manager", "Employee"];
   setContext(BuildContext context) {
     this.context = context;

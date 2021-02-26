@@ -35,12 +35,14 @@ class _BusinessClaimState extends State<BusinessClaim> {
   String emailverify = "verify";
   List<File> files = [];
   FilePickerResult result;
+  bool needSubmit = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getClaimData();
     });
+    setNeedSubmit(false);
   }
 
   @override
@@ -153,7 +155,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         Padding(
                                           padding: const EdgeInsets.all(12.0),
                                           child: Text(
-                                            "Enter Otp",
+                                            "Enter OTP",
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 20),
@@ -217,12 +219,12 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                "Did not receive OTP, ",
+                                                "Did not receive OTP ?, ",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 10,
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  // decoration:
+                                                  // TextDecoration.underline,
                                                 ),
                                               ),
                                               InkWell(
@@ -245,7 +247,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   });
                                                 },
                                                 child: Text(
-                                                  "Send Again",
+                                                  "Regenerate OTP",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: myRed,
@@ -281,23 +283,26 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   : Icons.check_circle,
                                           security: false,
                                           sufixClick: () async {
-                                            pr
-                                                .show()
-                                                .timeout(Duration(seconds: 2));
-                                            await WebService
-                                                    .funSendEmailVerifyLink(
-                                                        context)
-                                                .then((value) {
-                                              pr.hide();
-                                              BotToast.showText(
-                                                  text: value.message);
-                                              if (value.status == 'success') {
-                                                setState(() {
-                                                  emailverify = "";
-                                                });
-                                                getClaimData();
-                                              }
-                                            });
+                                            if (clm?.result[0]
+                                                    ?.isEmailVerified ==
+                                                0) {
+                                              pr.show().timeout(
+                                                  Duration(seconds: 2));
+                                              await WebService
+                                                      .funSendEmailVerifyLink(
+                                                          context)
+                                                  .then((value) {
+                                                pr.hide();
+                                                BotToast.showText(
+                                                    text: value.message);
+                                                if (value.status == 'success') {
+                                                  setState(() {
+                                                    emailverify = "";
+                                                  });
+                                                  getClaimData();
+                                                }
+                                              });
+                                            }
                                           }),
                                     ),
                                     MyOutlineButton(
@@ -307,6 +312,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                             .pickFiles(allowMultiple: true);
 
                                         if (result != null) {
+                                          setNeedSubmit(true);
                                           files = result?.paths
                                               ?.map((path) => File(path))
                                               .toList();
@@ -376,24 +382,29 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                   ]))),
                     ),
                   ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: sm.w(16), vertical: sm.h(4)),
-                      child: RoundedButton(
-                          clicker: () async {
-                            pr.show();
-                            await WebService.funClaimAdd(ctrlMobile.text,
-                                    ctrlMail.text, files, context)
-                                .then((value) {
-                              pr.hide();
-
-                              BotToast.showText(text: value.message);
-                              result.files.clear();
-                              Navigator.pop(context);
-                            });
-                          },
-                          clr: Colors.red,
-                          title: "Done"))
+                  Visibility(
+                    visible: getNeedSubmit(),
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: sm.w(16), vertical: sm.h(4)),
+                        child: RoundedButton(
+                            clicker: () async {
+                              pr.show();
+                              await WebService.funClaimAdd(ctrlMobile.text,
+                                      ctrlMail.text, files, context)
+                                  .then((value) {
+                                pr.hide();
+                                setNeedSubmit(false);
+                                BotToast.showText(
+                                    text: value.message,
+                                    duration: Duration(seconds: 5));
+                                result.files.clear();
+                                // Navigator.pop(context);
+                              });
+                            },
+                            clr: Colors.red,
+                            title: "Submit")),
+                  )
                 ],
               ),
             ),
@@ -414,4 +425,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
       }
     });
   }
+
+  setNeedSubmit(_val) => setState(() => needSubmit = _val);
+  getNeedSubmit() => needSubmit;
 }

@@ -176,7 +176,7 @@ class Signup_a extends StatelessWidget {
                                     title: Text(
                                       "Reach me on whatsapp",
                                       style: TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 14,
                                         fontFamily: "Roboto",
                                         fontWeight: FontWeight.w400,
                                         letterSpacing: 0.32,
