@@ -18,7 +18,6 @@ import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogDetailModel.dart';
-import 'package:Favorito/model/catalog/CatalogListRequestModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
 import 'package:Favorito/model/checkinsModel.dart';
 import 'package:Favorito/model/claimInfo.dart';
@@ -59,23 +58,23 @@ import 'package:Favorito/model/review/ReviewintroModel.dart';
 import 'package:Favorito/model/TagModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
+import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
-import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/utils/Prefs.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
+import 'package:connectivity/connectivity.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 Response response;
 
 class WebService {
-  // var context = flutterPluginBinding.applicationContext;
   static Dio dio = new Dio();
-  static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
-  static ProgressDialog pr;
+  static Options opt = Options();
 
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
@@ -95,24 +94,73 @@ class WebService {
     return _data;
   }
 
-  static Future<DashData> funGetDashBoard(BuildContext context) async {
+  static Future serviceCall(RequestModel requestModel) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.mobile &&
+        connectivityResult != ConnectivityResult.wifi) {
+      BotToast.showText(text: 'Please check internet connection..');
+      return;
+    }
     String token = await Prefs.token;
-    opt = Options(
+    // String token = await Prefs.token + 'abc';
+    print("token:$token");
+    print("requestData:${requestModel.data}");
+    final ProgressDialog pr = ProgressDialog(requestModel.context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
+    Options opt =
+        Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    Options opt1 = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    print("token:${token}");
-    dashModel _data = dashModel();
-    print("Request URL:${serviceFunction.funDash}");
-    response = await dio.post(serviceFunction.funDash, options: opt);
+    try {
+      response = await dio.post(requestModel.url,
+          options: requestModel.isRaw ? opt : opt1, data: requestModel.data);
 
-    if (response.statusCode == 200) {
-      _data = dashModel.fromJson(convert.json.decode(response.toString()));
-      print("DashBoard Data is:${_data.toString()}");
-    } else if (response.statusCode != 200) {
-      Prefs().clear();
+      pr.hide();
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        response = null;
+      } else {
+        pr.hide();
+        if (e.response.statusCode == 401) {
+          BotToast.showText(
+              text: BaseResponseModel.fromJson(
+                      convert.json.decode(e.response.toString()))
+                  .message);
+          print("${requestModel.url}:401");
+          Navigator.of(requestModel.context).pushNamed('/login');
+        }
+
+        if (e.response.statusCode == 403) {
+          BotToast.showText(
+              text: BaseResponseModel.fromJson(
+                      convert.json.decode(e.response.toString()))
+                  .message);
+          print("${requestModel.url}:403");
+        }
+      }
+    } finally {
+      pr.hide();
     }
-    print("responseData3:${_data.status}");
-    return _data.data;
+
+    return response ?? '';
   }
 
   static Future<NotificationListRequestModel> funGetNotifications(
@@ -226,9 +274,8 @@ class WebService {
   static Future<registerModel> funRegister(
       Map _map, BuildContext context) async {
     registerModel _data = registerModel();
-    response = await dio
-        .post(serviceFunction.funBusyRegister, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funBusyRegister,
+        data: _map, options: opt);
     _data = registerModel.fromJson(convert.json.decode(response.toString()));
     // Prefs.setToken(_data.token.toString().trim());
     print("responseData7:${_data.toString().trim()}");
@@ -236,15 +283,15 @@ class WebService {
     return _data;
   }
 
-  static Future<loginModel> funGetLogin(Map _map, BuildContext context) async {
-    loginModel _data = loginModel();
-    print('Login Request : ${_data.toString()}');
-    response =
-        await dio.post(serviceFunction.funLogin, data: _map, options: opt);
-    _data = loginModel.fromJson(convert.json.decode(response.toString()));
-    Prefs.setToken(_data.token.toString().trim());
-    return _data;
-  }
+  // static Future<loginModel> funGetLogin(Map _map, BuildContext context) async {
+  //   loginModel _data = loginModel();
+  //   print('Login Request : ${_data.toString()}');
+  //   response =
+  //       await dio.post(serviceFunction.funLogin, data: _map, options: opt);
+  //   _data = loginModel.fromJson(convert.json.decode(response.toString()));
+  //   Prefs.setToken(_data.token.toString().trim());
+  //   return _data;
+  // }
 
   static Future<CityListModel> funGetCities() async {
     String token = await Prefs.token;
@@ -278,14 +325,11 @@ class WebService {
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    BaseResponseModel _returnData = BaseResponseModel();
     Map<String, dynamic> _map = {"postal_code": int.parse(pincode)};
     response = await dio.post(serviceFunction.funValidPincode,
         data: _map, options: _opt);
-    _returnData =
-        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData8:${_returnData.status}");
-    return _returnData;
+
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<JobListRequestModel> funGetJobs(BuildContext context) async {
@@ -421,10 +465,8 @@ class WebService {
     ContactPersonRequiredDataModel _returnData =
         ContactPersonRequiredDataModel();
     print("token:${token}");
-    response = await dio
-        .post(serviceFunction.funContactPersonRequiredData,
-            data: null, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funContactPersonRequiredData,
+        data: null, options: _opt);
     _returnData = ContactPersonRequiredDataModel.fromJson(
         convert.json.decode(response.toString()));
     print("responseData5:${_returnData.status}");
@@ -459,9 +501,8 @@ class WebService {
         Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"city_id": cityId};
     PincodeListModel _returnData = PincodeListModel();
-    response = await dio
-        .post(serviceFunction.funGetPincodesForCity, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetPincodesForCity,
+        data: _map, options: _opt);
     _returnData =
         PincodeListModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
@@ -476,9 +517,8 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
 
-    response = await dio
-        .post(serviceFunction.funGetCatalogs, data: null, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetCatalogs,
+        data: null, options: _opt);
     print("funGetCatalogs:${response.toString()}");
     return CatlogListModel.fromJson(convert.json.decode(response.toString()));
   }
@@ -512,9 +552,8 @@ class WebService {
       HttpHeaders.authorizationHeader: "Bearer $token",
     });
     print("_map:${_map.toString()}");
-    response = await dio
-        .post(serviceFunction.funCatalogEdit, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funCatalogEdit,
+        data: _map, options: _opt);
     print("catlogEdit:${response.toString()}");
     return businessInfoImage.fromJson(convert.json.decode(response.toString()));
   }
@@ -572,9 +611,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
 
-    response = await dio
-        .post(serviceFunction.funWaitlistDelete, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funWaitlistDelete,
+        data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
@@ -589,9 +627,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
 
-    response = await dio
-        .post(serviceFunction.funWaitlistSaveSetting, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funWaitlistSaveSetting,
+        data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
@@ -604,9 +641,7 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     WaitlistListModel _returnData = WaitlistListModel();
 
-    response = await dio
-        .post(serviceFunction.funGetWaitlist, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetWaitlist, options: _opt);
     _returnData =
         WaitlistListModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
@@ -620,9 +655,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     WaitlistListModel _returnData = WaitlistListModel();
 
-    response = await dio
-        .post(serviceFunction.funCreateWaitlist, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funCreateWaitlist,
+        data: _map, options: _opt);
     _returnData =
         WaitlistListModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
@@ -679,9 +713,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"search_branch": searchText};
     SearchBranchResponseModel _returnData = SearchBranchResponseModel();
-    response = await dio
-        .post(serviceFunction.funSearchBranches, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funSearchBranches,
+        data: _map, options: _opt);
     _returnData = SearchBranchResponseModel.fromJson(
         convert.json.decode(response.toString()));
     return _returnData;
@@ -733,9 +766,8 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     OfferListDataModel _returnData = OfferListDataModel();
-    response = await dio
-        .post(serviceFunction.funGetOfferData, data: null, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetOfferData,
+        data: null, options: _opt);
     _returnData =
         OfferListDataModel.fromJson(convert.json.decode(response.toString()));
     return _returnData;
@@ -755,9 +787,8 @@ class WebService {
       "offer_status": requestData.selectedOfferState,
       "offer_type": requestData.selectedOfferType
     };
-    response = await dio
-        .post(serviceFunction.funEditOffer, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response =
+        await dio.post(serviceFunction.funEditOffer, data: _map, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData10:${_returnData.status}");
@@ -772,9 +803,8 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"job_id": _jobId};
     EditJobDataModel _returnData = EditJobDataModel();
-    response = await dio
-        .post(serviceFunction.funGetEditJobData, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funGetEditJobData,
+        data: _map, options: _opt);
     _returnData =
         EditJobDataModel.fromJson(convert.json.decode(response.toString()));
     print("_returnData:${_returnData.data[0].toString}");
@@ -782,25 +812,15 @@ class WebService {
   }
 
   static Future<BaseResponseModel> funEditJob(
-      CreateJobRequestModel requestData, BuildContext context) async {
+      RequestModel requestModel, BuildContext context) async {
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     BaseResponseModel _returnData = BaseResponseModel();
-    Map<String, dynamic> _map = {
-      "id": requestData.id,
-      "title": requestData.title,
-      "description": requestData.description,
-      "skills": requestData.skills,
-      "contact_via": requestData.contact_via,
-      "contact_value": requestData.contact_value,
-      "city": requestData.city,
-      "postal_code": requestData.pincode
-    };
-    response = await dio
-        .post(serviceFunction.funCreateJob, data: _map, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+
+    response = await dio.post(requestModel.url,
+        data: requestModel.data, options: _opt);
     _returnData =
         BaseResponseModel.fromJson(convert.json.decode(response.toString()));
     print("responseData3:${_returnData.status}");
@@ -857,10 +877,8 @@ class WebService {
     };
     print("_map:${_map.toString()}");
     FormData formData = FormData.fromMap(_map);
-    response = await dio
-        .post(serviceFunction.funUserInformationAddPhoto,
-            data: formData, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funUserInformationAddPhoto,
+        data: formData, options: _opt);
     return businessInfoImage.fromJson(convert.json.decode(response.toString()));
   }
 
@@ -894,9 +912,8 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     SubCategoryModel _returnData = SubCategoryModel();
-    response = await dio
-        .post(serviceFunction.funSubCatList, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response =
+        await dio.post(serviceFunction.funSubCatList, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -927,10 +944,8 @@ class WebService {
     };
     print("_map:${_map.toString()}");
     FormData formData = FormData.fromMap(_map);
-    response = await dio
-        .post(serviceFunction.funUserHighlightAddPhoto,
-            data: formData, options: _opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funUserHighlightAddPhoto,
+        data: formData, options: _opt);
     return businessInfoImage.fromJson(convert.json.decode(response.toString()));
   }
 
@@ -941,9 +956,8 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(serviceFunction.funUserHighlightSave, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(serviceFunction.funUserHighlightSave,
+        data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -959,9 +973,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -975,9 +987,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funAdSpentList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -990,9 +1000,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funTagList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1005,9 +1013,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funCampainVerbose;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
@@ -1022,9 +1028,7 @@ class WebService {
         ? serviceFunction.funCreateCampainEdit
         : serviceFunction.funCreateCampain;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
     ;
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1038,9 +1042,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funOrderList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1058,9 +1060,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1077,9 +1077,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1096,9 +1094,7 @@ class WebService {
         ? serviceFunction.funAppoinmentSaveRestriction
         : serviceFunction.funAppoinmentEditRestriction;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1120,9 +1116,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1139,9 +1133,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1159,9 +1151,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1179,9 +1169,7 @@ class WebService {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1196,9 +1184,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentPerson;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1213,9 +1199,7 @@ class WebService {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentService;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     try {
       if (response.statusCode == HttpStatus.ok) {
@@ -1306,7 +1290,7 @@ class WebService {
   }
 
   //*************************************/Checkins/*********************************/
-//this is used to get checkinslist
+  //this is used to get checkinslist
   static Future<checkinsModel> funCheckinslist(BuildContext context) async {
     String token = await Prefs.token;
     print("tiken:${token}");
@@ -1365,17 +1349,18 @@ class WebService {
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
   }
 
-//forgetPassword
+  //forgetPassword
   static Future<verifyOtpModel> funVerifyOtp(Map _map) async {
     String url = serviceFunction.funVerifyOtp;
     response = await dio.post(url, data: _map);
     if (response.statusCode == 400) {
-      BotToast.showText(text: response.statusMessage);
+      BotToast.showText(
+          text: response.statusMessage, duration: Duration(seconds: 5));
     }
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
   }
 
-//resetPassword
+  //resetPassword
   static Future<verifyOtpModel> funChangePassword(Map _map) async {
     print("map:${_map}");
     String token = await Prefs.token;
@@ -1709,10 +1694,8 @@ class WebService {
     }
   }
 
-  static onErrorCall(onError, context) async {
-    if (onError.error == "Http status error [401]") {
-      Prefs().clear();
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-    }
+  static void hideit(ProgressDialog pr) {
+    pr.hide();
+    if (pr.isShowing()) hideit(pr);
   }
 }

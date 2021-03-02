@@ -35,8 +35,9 @@ class WaitListSetting extends StatelessWidget {
           title: Text(waitlistSetting,
               style: TextStyle(
                   color: Colors.black,
+                  fontSize: 26,
                   fontFamily: 'Gilroy-Bold',
-                  letterSpacing: 1.2)),
+                  letterSpacing: .2)),
         ),
         body: RefreshIndicator(
           onRefresh: () async {
@@ -55,111 +56,127 @@ class WaitListSetting extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       vertical: sm.h(4), horizontal: sm.w(8)),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                    Text("Start waitlist daily at",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(color: Colors.grey)),
-                                    Padding(
-                                      padding:  EdgeInsets.symmetric(horizontal: 20.0),
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            InkWell(
-                                                onTap: () =>
-                                                    vaTrue.dateTimePicker(true),
-                                                child: fromTo(
-                                                    txt: vaFalse.startTime,
-                                                    clr: myRed,txtClr: Colors.black)),
-                                            InkWell(
-                                                onTap: () =>
-                                                    vaTrue.dateTimePicker(false),
-                                                child: fromTo(
-                                                    txt: vaFalse.endTime,
-                                                    clr: myRed,txtClr: Colors.black))
-                                          ]),
-                                    ),
-                                    plusMinus("Available resources",
-                                        vaTrue.controller[0]),
-                                    Padding(
-                                        padding:
-                                            EdgeInsets.only(bottom: sm.h(2)),
-                                        child: txtfieldboundry(
-                                            valid: true,
-                                            title: vaFalse.title[3],
-                                            isEnabled: true,
-                                            myOnChanged: (n) {},
-                                            keyboardSet: TextInputType.number,
-                                            hint: "Enter ${vaFalse.title[0]}",
-                                            controller: vaFalse.controller[1],
-                                            maxLines: 1,
-                                            security: false)),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: DropdownSearch<String>(
-                                          key: vaTrue.slotKey,
-                                          validator: (v) =>
-                                              v == '' ? "required field" : null,
-                                          autoValidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          mode: Mode.MENU,
-                                          // selectedItem:
-                                          //     vaTrue.controller[2].text,
-                                          items: vaTrue.slot,
-                                          label: "${vaTrue.title[4]}",
-                                          hint:
-                                              "Please Select ${vaTrue.title[4]}",
-                                          showSearchBox: false,
-                                          onChanged: (value) {
-                                            vaTrue.needSave(true);
-                                            vaTrue.controller[2].text = value;
-                                          }),
-                                    ),
-                                    plusMinus(
-                                        "Booking/Slot", vaFalse.controller[3]),
-                                    plusMinus(
-                                        "Booking/Day", vaFalse.controller[4]),
-                                    Padding(
-                                        padding:
-                                            EdgeInsets.only(bottom: sm.h(2)),
-                                        child: txtfieldboundry(
-                                            valid: true,
-                                            title: vaFalse.title[0],
-                                            hint: "Enter ${vaFalse.title[0]}",
-                                            controller: vaFalse.controller[5],
-                                            maxLines: 1,
-                                            security: false)),
-                                    Padding(
-                                        padding:
-                                            EdgeInsets.only(bottom: sm.h(2)),
-                                        child: txtfieldboundry(
-                                            valid: true,
-                                            title: vaFalse.title[1],
-                                            hint: "Enter ${vaFalse.title[0]}",
-                                            controller: vaFalse.controller[6],
-                                            maxLines: 4,
-                                            myOnChanged: (n) {
-                                              vaTrue.needSave(true);
-                                            },
-                                            security: false)),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: sm.h(1)),
-                                      child: MyTags(
-                                          searchable:false,
-                                          sourceList: vaFalse.list,
-                                          selectedList: vaFalse.selectedList,
-                                          hint:
-                                              "Please select ${vaFalse.title[5]}",
-                                          border: true,
-                                          refresh: () {
-                                            vaTrue.needSave(true);
-                                          },
-                                          directionVeticle: false,
-                                          title: vaTrue.title[5]),
-                                    )
-                                  ]))),
+                                        Text("Start waitlist daily at",
+                                            textAlign: TextAlign.left,
+                                            style:
+                                                TextStyle(color: Colors.grey)),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 20.0),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                InkWell(
+                                                    onTap: () => vaTrue
+                                                        .dateTimePicker(true),
+                                                    child: fromTo(
+                                                        txt: vaFalse.startTime,
+                                                        clr: myRed,
+                                                        txtClr: Colors.black)),
+                                                InkWell(
+                                                    onTap: () => vaTrue
+                                                        .dateTimePicker(false),
+                                                    child: fromTo(
+                                                        txt: vaFalse.endTime,
+                                                        clr: myRed,
+                                                        txtClr: Colors.black))
+                                              ]),
+                                        ),
+                                        plusMinus("Available resources",
+                                            vaTrue.controller[0]),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: sm.h(2)),
+                                            child: txtfieldboundry(
+                                                valid: true,
+                                                title: vaFalse.title[3],
+                                                isEnabled: true,
+                                                myOnChanged: (n) {},
+                                                keyboardSet:
+                                                    TextInputType.number,
+                                                hint:
+                                                    "Enter ${vaFalse.title[3]}",
+                                                controller:
+                                                    vaFalse.controller[1],
+                                                maxLines: 1,
+                                                security: false)),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: DropdownSearch<String>(
+                                              key: vaTrue.slotKey,
+                                              validator: (v) => v == ''
+                                                  ? "required field"
+                                                  : null,
+                                              autoValidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              mode: Mode.MENU,
+                                              // selectedItem:
+                                              //     vaTrue.controller[2].text,
+                                              items: vaTrue.slot,
+                                              label: "${vaTrue.title[4]}",
+                                              hint:
+                                                  "Please Select ${vaTrue.title[4]}",
+                                              showSearchBox: false,
+                                              onChanged: (value) {
+                                                vaTrue.needSave(true);
+                                                vaTrue.controller[2].text =
+                                                    value;
+                                              }),
+                                        ),
+                                        plusMinus("Bookings/Slot",
+                                            vaFalse.controller[3]),
+                                        plusMinus("Bookings/Day",
+                                            vaFalse.controller[4]),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: sm.h(2)),
+                                            child: txtfieldboundry(
+                                                valid: true,
+                                                title: vaFalse.title[0],
+                                                hint:
+                                                    "Enter ${vaFalse.title[0]}",
+                                                controller:
+                                                    vaFalse.controller[5],
+                                                maxLines: 1,
+                                                security: false)),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: sm.h(2)),
+                                            child: txtfieldboundry(
+                                                valid: true,
+                                                title: vaFalse.title[1],
+                                                hint:
+                                                    "Enter ${vaFalse.title[1]}",
+                                                controller:
+                                                    vaFalse.controller[6],
+                                                maxLines: 4,
+                                                myOnChanged: (n) {
+                                                  vaTrue.needSave(true);
+                                                },
+                                                security: false)),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: sm.h(1)),
+                                          child: MyTags(
+                                              searchable: false,
+                                              sourceList: vaFalse.list,
+                                              selectedList:
+                                                  vaFalse.selectedList,
+                                              hint:
+                                                  "Please select ${vaFalse.title[5]}",
+                                              border: true,
+                                              refresh: () {
+                                                vaTrue.needSave(true);
+                                              },
+                                              directionVeticle: false,
+                                              title: vaTrue.title[5]),
+                                        )
+                                      ]))),
                           Padding(
                               padding: EdgeInsets.only(
                                   left: sm.w(5),
@@ -195,7 +212,7 @@ class WaitListSetting extends StatelessWidget {
               vaTrue.notifyListeners();
             },
           ),
-          fromTo(txt: ctrl.text, clr: myRed,txtClr: Colors.black),
+          fromTo(txt: ctrl.text, clr: myRed, txtClr: Colors.black),
           IconButton(
             icon: Icon(Icons.add_circle_outline, size: 28, color: myRed),
             onPressed: () {

@@ -18,8 +18,8 @@ class _ManualWaitListState extends State<ManualWaitList> {
   List<TextEditingController> controller = [];
   List<String> selectedlist = [];
   GlobalKey<FormState> _frmKey = GlobalKey();
-  List title = ["User Name", "Contact", "Number of Persons", "SpecialNotes"];
-  List maxlens = [50,10,3, 200];
+  List title = ["User Name", "Contact", "Number of Persons", "Special Notes"];
+  List maxlens = [50, 10, 3, 200];
   SizeManager sm;
   void initState() {
     super.initState();
@@ -35,23 +35,23 @@ class _ManualWaitListState extends State<ManualWaitList> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text("Manual WaitList",
-            textAlign: TextAlign.center,
+            // textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontFamily: 'Gilroy-Bold',
                 letterSpacing: 2)),
         actions: [
-          IconButton(
-            icon: Icon(Icons.error_outline, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          )
+          // IconButton(
+          //   icon: Icon(Icons.error_outline, color: Colors.black),
+          //   onPressed: () => Navigator.of(context).pop(),
+          // )
         ],
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        centerTitle: true,
+        // centerTitle: true,
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
@@ -96,7 +96,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
                     if (_frmKey.currentState.validate()) funSublim();
                   },
                   clr: Colors.red,
-                  title: "Done"))
+                  title: "Save"))
         ],
       ),
     );

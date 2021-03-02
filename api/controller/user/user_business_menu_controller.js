@@ -18,7 +18,7 @@ exports.getMenuCategories = async function(req, res, next) {
 
         var sql_menu_category = "SELECT b_m_c.id, b_c.category_name,b_m_c.out_of_stock \n\
         FROM business_menu_category as b_m_c\n\
-        LEFT JOIN business_categories as b_c ON b_c.id = b_m_c.category_id\n\
+        LEFT JOIN business_menu_category_master as b_c ON b_c.id = b_m_c.category_id\n\
         WHERE " + COND
         result_menu_category = await exports.run_query(sql_menu_category)
         if (result_menu_category == '') {

@@ -12,12 +12,16 @@ exports.getDashboardDetail = async function(req, res, next) {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
         try {
+            sql_data_ads_spent = `select total_spent,free_credits,paid_credits from business_ad_credits where business_id = '${business_id}'`
+            result_data_ads_spent = await exports.run_query(sql_data_ads_spent)
             var sql_number_order = `SELECT COUNT(id) as count FROM business_orders WHERE business_id = '${business_id}'`
             var result_number_order = await exports.run_query(sql_number_order)
             var sql_number_catalogs = `SELECT COUNT(id) as count FROM business_catalogs WHERE business_id = '${business_id}'`
             var result_number_catalogs = await exports.run_query(sql_number_catalogs)
             var sql_avg_rating = `SELECT ifnull(AVG(rating),0) as avg_rating FROM business_ratings WHERE business_id = '${business_id}'`
             var result_avg_rating = await exports.run_query(sql_avg_rating)
+			var sql_rating_count = `SELECT ifnull(count(rating),0) as rating_count FROM business_ratings WHERE business_id = '${business_id}'`
+			var result_rating_count = await exports.run_query(sql_rating_count)
             var sql_number_checkin = `SELECT COUNT(id) as count FROM business_check_in WHERE business_id = '${business_id}'`
             var result_number_checkin = await exports.run_query(sql_number_checkin)
             var sql_get_accepting_order_status = `SELECT accepting_order from business_menu_setting where business_id = '${business_id}'`
@@ -37,6 +41,21 @@ exports.getDashboardDetail = async function(req, res, next) {
                 return res.status(403).send({ status: 'error', message: 'No record found.' });
             }
             var row = result_set[0];
+            if (result_data_ads_spent[0] && result_data_ads_spent[0].total_spent) {
+                total_spent = result_data_ads_spent[0].total_spent
+            } else {
+                total_spent = 0
+            }
+            if (result_data_ads_spent[0] && result_data_ads_spent[0].free_credits) {
+                free_credits = result_data_ads_spent[0].free_credits
+            } else {
+                free_credits = 0
+            }
+            if (result_data_ads_spent[0] && result_data_ads_spent[0].paid_credits) {
+                paid_credits = result_data_ads_spent[0].paid_credits
+            } else {
+                paid_credits = 0
+            }
             var data = {
                 id: row.id,
                 business_id: row.business_id,
@@ -51,10 +70,12 @@ exports.getDashboardDetail = async function(req, res, next) {
                 is_verified: row.is_verified,
                 check_ins: result_number_checkin[0].count,
                 ratings: result_avg_rating[0].avg_rating,
+				rating_count: result_rating_count[0].rating_count,
                 catalogoues: result_number_catalogs[0].count,
                 orders: result_number_order[0].count,
-                free_credit: 50,
-                paid_credit: 500,
+                total_spent: total_spent,
+                free_credit: free_credits,
+                paid_credit: paid_credits,
             };
             return res.status(200).json({ status: 'success', message: 'success', data: data });
         });
@@ -62,7 +83,6 @@ exports.getDashboardDetail = async function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
-
 var user_pincode = (user_id) => {
     return new Promise(async(resolve, reject) => {
         try {
@@ -562,14 +582,34 @@ exports.getBusinessByFreelancer = async function(req, res, next) {
 // get all the business for book table whose by_appointment =0 and business_type_id = 1
 exports.getBusinessByBookTable = async(req, res, next) => {
     try {
+        let latitude = undefined
+        let longitude = undefined
         if (req.body.current_no_business) {
             offset = req.body.current_no_business
         } else {
             offset = 0
         }
+
+        if (req.body.latitude && req.body.longitude) {
+            latitude = req.body.latitude
+            longitude = req.body.longitude
+        } else {
+            try {
+                pincode_user = await user_pincode(req.userdata.id)
+            } catch (error) {
+                return res.status(403).json({ status: 'error', message: 'Pincode is not found , please update the pincode' });
+            }
+            const geo_location_detail = (await geocoder.geocode(pincode_user));
+            latitude = geo_location_detail[0].latitude
+            longitude = geo_location_detail[0].longitude
+        }
         limit = 10
 
-        var sql = "SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo,b_m.business_type_id, b_m.business_status FROM `business_master` AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 0 AND b_m.business_type_id = 1 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset;
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
+        SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
+           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
+           ,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo,b_m.business_type_id, b_m.business_status FROM
+        business_master  AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 0 AND b_m.business_type_id = 1 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -595,10 +635,26 @@ exports.getBusinessByBookTable = async(req, res, next) => {
 
 exports.getBusinessByJob = async function(req, res, next) {
     try {
+        let latitude = undefined
+        let longitude = undefined
         if (req.body.current_no_business) {
             offset = req.body.current_no_business
         } else {
             offset = 0
+        }
+
+        if (req.body.latitude && req.body.longitude) {
+            latitude = req.body.latitude
+            longitude = req.body.longitude
+        } else {
+            try {
+                pincode_user = await user_pincode(req.userdata.id)
+            } catch (error) {
+                return res.status(403).json({ status: 'error', message: 'Pincode is not found , please update the pincode' });
+            }
+            const geo_location_detail = (await geocoder.geocode(pincode_user));
+            latitude = geo_location_detail[0].latitude
+            longitude = geo_location_detail[0].longitude
         }
         limit = 10
         var sql_get_business_id = `SELECT business_id FROM jobs`
@@ -611,7 +667,11 @@ exports.getBusinessByJob = async function(req, res, next) {
                 regex += '|' + element.business_id
             }
         });
-        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
+
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
+        SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
+           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
+           ,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -638,11 +698,26 @@ exports.getBusinessByJob = async function(req, res, next) {
 // get all the business which deals with food as category and sub category
 exports.getBusinessByFood = async(req, res, next) => {
     try {
-
+        let latitude = undefined
+        let longitude = undefined
         if (req.body.current_no_business) {
             offset = req.body.current_no_business
         } else {
             offset = 0
+        }
+
+        if (req.body.latitude && req.body.longitude) {
+            latitude = req.body.latitude
+            longitude = req.body.longitude
+        } else {
+            try {
+                pincode_user = await user_pincode(req.userdata.id)
+            } catch (error) {
+                return res.status(403).json({ status: 'error', message: 'Pincode is not found , please update the pincode' });
+            }
+            const geo_location_detail = (await geocoder.geocode(pincode_user));
+            latitude = geo_location_detail[0].latitude
+            longitude = geo_location_detail[0].longitude
         }
         limit = 10
 
@@ -655,7 +730,10 @@ exports.getBusinessByFood = async(req, res, next) => {
         result_sub_category_id.forEach(element => {
             regex += '|' + element.id
         });
-        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,\n\
+        SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
+           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
+           ,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -683,10 +761,26 @@ exports.getBusinessByFood = async(req, res, next) => {
 exports.getBusinessByDoctor = async(req, res, next) => {
     try {
 
+        let latitude = undefined
+        let longitude = undefined
         if (req.body.current_no_business) {
             offset = req.body.current_no_business
         } else {
             offset = 0
+        }
+
+        if (req.body.latitude && req.body.longitude) {
+            latitude = req.body.latitude
+            longitude = req.body.longitude
+        } else {
+            try {
+                pincode_user = await user_pincode(req.userdata.id)
+            } catch (error) {
+                return res.status(403).json({ status: 'error', message: 'Pincode is not found , please update the pincode' });
+            }
+            const geo_location_detail = (await geocoder.geocode(pincode_user));
+            latitude = geo_location_detail[0].latitude
+            longitude = geo_location_detail[0].longitude
         }
         limit = 10
 
@@ -699,7 +793,10 @@ exports.getBusinessByDoctor = async(req, res, next) => {
             result_sub_category_id.forEach(element => {
                 regex += '|' + element.id
             });
-            var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id LIMIT ${limit} OFFSET ${offset}`;
+            var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
+            SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
+               POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
+               ,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null , distance LIMIT ${limit} OFFSET ${offset}`;
 
             result_master = await exports.run_query(sql)
             var final_data = []

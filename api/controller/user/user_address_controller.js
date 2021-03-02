@@ -4,7 +4,7 @@ exports.getAddress = async function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT address1, address2, address3, pincode, town_city, state_id, country_id, location FROM business_master WHERE business_id = '" + req.userdata.business_id + "'";
     } else if (req.userdata.id) {
-        var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address FROM user_address WHERE user_id = '" + req.userdata.id + "'";
+        var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address, IFNULL(address_type,'') as address_type FROM user_address WHERE user_id = '" + req.userdata.id + "'";
         var sql_name = "SELECT first_name, last_name FROM users WHERE id = '" + req.userdata.id + "'"
     } else {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
@@ -20,7 +20,6 @@ exports.getAddress = async function(req, res, next) {
         })
         db.query(sql, function(err, result) {
             return res.status(200).json({ status: 'success', message: 'success', data: { user_name: user_name, addresses: result } });
-            // return res.status(200).json({ status: 'success', message: 'success', data: result });
         })
     } catch (error) {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.', error: error });
@@ -91,6 +90,9 @@ exports.changeAddress = async function(req, res, next) {
             if (req.body.address) {
                 set += ", address = '" + req.body.address + "'"
             }
+            if (req.body.address_type) {
+                set += ", address_type = '" + req.body.address_type + "'"
+            }
             try {
                 var sql = "UPDATE user_address SET " + set + " WHERE id='" + req.body.address_id + "'";
                 update_result = await exports.executeSql(sql, res)
@@ -122,6 +124,9 @@ exports.changeAddress = async function(req, res, next) {
                 if (req.body.address) {
                     address = req.body.address
                 }
+                if (req.body.address_type) {
+                    address_type = req.body.address_type
+                }
                 var user_id = req.userdata.id
                 data_to_enter = {
                     city: city,
@@ -130,7 +135,8 @@ exports.changeAddress = async function(req, res, next) {
                     country: country,
                     landmark: landmark,
                     address: address,
-                    user_id: user_id
+                    user_id: user_id,
+                    address_type: address_type,
                 }
 
                 var sql = "INSERT user_address SET ?";

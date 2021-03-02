@@ -272,13 +272,14 @@ class BusinessProfileProvider extends ChangeNotifier {
 
   void webSiteLengthPlus() {
     webSiteLength++;
-    print("_v:${webSiteLength}");
     controller.add(TextEditingController());
+    notifyListeners();
   }
 
   getBusinessProfileData() {
     WebService.funGetBusinessProfileData().then((value) {
       _businessProfileData = value;
+      notifyListeners();
     });
   }
 
@@ -329,14 +330,17 @@ class BusinessProfileProvider extends ChangeNotifier {
         Provider.of<SettingProvider>(context, listen: false).getProfileImage();
       }
     });
+    notifyListeners();
   }
 
   allClear() {
     BusinessProfileModel _temp = BusinessProfileModel();
     _businessProfileData = _temp;
+    webSiteLength = 1;
     controller.forEach((e) {
       e.text = '';
     });
+    notifyListeners();
   }
 
   void setPosition(List<String> _v) {

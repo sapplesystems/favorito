@@ -33,7 +33,7 @@ exports.getSubCategory = (req, res) => {
 
         sql_categories = ` SELECT b_m_c.id as id, b_m_c.category_id as category_id, b_c.category_name as category_name \n\
          FROM business_menu_category as b_m_c \n\
-         LEFT JOIN business_categories as b_c \n\
+         LEFT JOIN business_menu_category_master as b_c \n\
          ON b_m_c.category_id = b_c.id \n\
          WHERE b_m_c.business_id = '${business_id}'`
 
@@ -76,7 +76,7 @@ exports.getMenuCategoryListByPagination = async function(req, res, next) {
         var COND = "b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
         var sql = "SELECT b_m_c.id,b_c.id as category_id, b_c.category_name, b_m_c.details, b_m_c.slot_start_time, b_m_c.slot_end_time, b_m_c.available_on, b_m_c.out_of_stock \n\
             FROM business_menu_category as b_m_c\n\
-            LEFT JOIN business_categories as b_c ON b_c.id = b_m_c.category_id \n\
+            LEFT JOIN business_menu_category_master as b_c ON b_c.id = b_m_c.category_id \n\
             WHERE " + COND + " LIMIT 20 OFFSET " + data_from;
         db.query(sql, function(e, cat) {
             if (e) {
@@ -104,7 +104,7 @@ exports.getMenuCategories = function(business_id, req, res = false) {
 
             var sql = "SELECT b_m_c.id as category_id, b_c.category_name, b_m_c.details,tax, b_m_c.slot_start_time, b_m_c.slot_end_time, b_m_c.available_on, b_m_c.out_of_stock \n\
             FROM business_menu_category AS b_m_c \n\
-            LEFT JOIN business_categories AS b_c ON b_c.id = b_m_c.category_id \n\
+            LEFT JOIN business_menu_category_master AS b_c ON b_c.id = b_m_c.category_id \n\
             WHERE " + COND;
             db.query(sql, function(e, cat) {
                 var data = (cat.length > 1) ? cat : cat[0];
@@ -156,9 +156,14 @@ exports.listAllMenu = async function(req, res, next) {
         var business_id = req.userdata.business_id;
         var sql = "SELECT b_m_c.id, b_c.category_name as category_name , b_m_c.out_of_stock as out_of_stock\n\
             FROM business_menu_category AS b_m_c\n\
-            LEFT JOIN business_categories AS b_c ON b_m_c.category_id = b_c.id\n\
+            LEFT JOIN business_menu_category_master AS b_c ON b_m_c.category_id = b_c.id\n\
             WHERE b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' \n\
             AND b_m_c.parent_id='0' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
+        // var sql = "SELECT b_m_c.id, b_c.category_name as category_name , b_m_c.out_of_stock as out_of_stock\n\
+        //     FROM business_menu_category AS b_m_c\n\
+        //     LEFT JOIN business_categories AS b_c ON b_m_c.category_id = b_c.id\n\
+        //     WHERE b_m_c.business_id='" + business_id + "' AND b_m_c.menu_type_id='" + menu_type_id + "' \n\
+        //     AND b_m_c.parent_id='0' AND b_m_c.is_activated='1' AND b_m_c.deleted_at IS NULL";
 
         sql_attributes = `SELECT GROUP_CONCAT(attributes_id) as attributes from business_attributes where business_id  = '${business_id}'`;
         result_attributes = await exports.run_query(sql_attributes)
@@ -175,6 +180,9 @@ exports.listAllMenu = async function(req, res, next) {
 
         var data = [];
         db.query(sql, async function(err, result) {
+            if (err) {
+                console.log(err)
+            }
             var result_length = result.length;
             for (var i = 0; i < result_length; i++) {
                 var category_id = result[i].id;
@@ -682,6 +690,38 @@ exports.updateMenuSetting = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.changeMenuAcceptOrderStatus = async(req, res, next) => {
+    var business_id = req.userdata.business_id;
+
+    // checking if every checks are ok then it will allow to change the status of the menu accepting status .
+    let sql_if_all_verified = `select is_email_verified,is_phone_verified, is_information_completed,is_profile_completed from business_master where business_id = '${business_id}'`
+    let result_if_all_verified = await exports.run_query(sql_if_all_verified)
+    if (result_if_all_verified[0].is_phone_verified && result_if_all_verified[0].is_email_verified && result_if_all_verified[0].is_information_completed && result_if_all_verified[0].is_profile_completed) {
+        var update_columns = " updated_at=now() ";
+
+        if (req.body.accepting_order != '' && req.body.accepting_order != 'undefined' && req.body.accepting_order != null) {
+            update_columns += ", accepting_order='" + req.body.accepting_order + "' ";
+        } else {
+            return res.status(400).json({ status: 'error', message: 'accepting_order is missing' });
+        }
+
+        try {
+            var sql_update_order_accept_status = "update business_menu_setting set " + update_columns + " where business_id='" + business_id + "'";
+            result_sql_update_order_accept_status = await exports.run_query(sql_update_order_accept_status)
+
+            // update is_verified from the business_master table if the accepting_order is off and on
+            sql_update_is_verified_business_master = `update business_master set is_verified = '${req.body.accepting_order}' where business_id = '${business_id}'`
+            result_update_is_verified_business_master = await exports.run_query(sql_update_is_verified_business_master)
+
+            return res.status(200).json({ status: 'success', message: 'Accepting order status updated' });
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong' });
+        }
+    } else {
+        return res.status(200).json({ status: 'Failed', message: 'First complete your profile, information, and verification in order to change the status' });
+    }
+}
 
 /**
  * Delete menu item photo

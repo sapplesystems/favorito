@@ -204,11 +204,15 @@ class _ManualBooking extends State<ManualBooking> {
               clicker: () {
                 if (_formKey.currentState.validate()) {
                   if (_selectedDateText == 'Select Date') {
-                    BotToast.showText(text: "Please select a date");
+                    BotToast.showText(
+                        text: "Please select a date",
+                        duration: Duration(seconds: 5));
                     return;
                   }
                   if (_selectedTimeText == 'Select Time') {
-                    BotToast.showText(text: "Please select a time");
+                    BotToast.showText(
+                        text: "Please select a time",
+                        duration: Duration(seconds: 5));
                     return;
                   }
 
@@ -225,11 +229,15 @@ class _ManualBooking extends State<ManualBooking> {
                   widget.data == null
                       ? WebService.funCreateManualBooking(_map, context)
                           .then((value) {
-                          BotToast.showText(text: value.message);
+                          BotToast.showText(
+                              text: value.message,
+                              duration: Duration(seconds: 5));
                           initializeDefaultValues();
                         })
                       : WebService.funBookingEdit(_map).then((value) {
-                          BotToast.showText(text: value.message);
+                          BotToast.showText(
+                              text: value.message,
+                              duration: Duration(seconds: 5));
                           initializeDefaultValues();
                         });
                 }

@@ -34,6 +34,7 @@ class _card1State extends State<card1> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    print("widget.checkins:${widget.checkins}");
     return InkWell(
       onTap: widget.function,
       child: Card(
@@ -46,7 +47,7 @@ class _card1State extends State<card1> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.checkins,
+                widget.checkins ?? '0',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 30,

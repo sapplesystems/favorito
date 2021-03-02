@@ -15,7 +15,7 @@ exports.addClaim = async function(req, res, next) {
         var claim_count = await checkClaimCount(business_id);
 
         if (claim_count >= 3) {
-            return res.status(200).json({ status: 'fail', message: 'You can not claim to this business as you have already claimed more than ' + claim_count + ' times.' });
+            return res.status(200).json({ status: 'fail', message: 'You can not claim this business as you have already claimed more than ' + claim_count + ' times.' });
         }
 
         var postval = { business_id: business_id };
@@ -40,7 +40,7 @@ exports.addClaim = async function(req, res, next) {
                     db.query(sql);
                 }
             }
-            return res.status(200).json({ status: 'success', message: 'Claimed successfully.' });
+            return res.status(200).json({ status: 'success', message: 'Business Claim submitted successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' + e });
@@ -58,7 +58,7 @@ exports.addClaimPhotos = async function(req, res, next) {
         var claim_count = await checkClaimCount(business_id);
 
         if (claim_count >= 3) {
-            return res.status(403).json({ status: 'error', message: 'You can not claim to this business as you have already claimed ' + claim_count + ' times.' });
+            return res.status(403).json({ status: 'error', message: 'You can not claim this business as you have already claimed ' + claim_count + ' times.' });
         }
 
         if (req.files && req.files.length) {
@@ -140,7 +140,7 @@ exports.sendEmailVerifyLink = function(req, res, next) {
             console.log(`Error in sending the mail ${error}`);
         } else {
             console.log('Email sent: ' + info.response);
-            res.status(200).send({ status: "success", message: "email sent" })
+            res.status(200).send({ status: "success", message: "Verification Email sent!" })
         }
     });
 }
@@ -213,7 +213,7 @@ exports.verifyOtp = async function(req, res, next) {
                     sql_update_is_verified = `UPDATE business_master set is_verified = 1 where business_id = '${req.userdata.business_id}'`
                     result_update_is_verified = await exports.run_query(sql_update_is_verified)
                 }
-                let sql_check_all_verified = `SELECT is_verified, is_information_completed, is_profile_completed where business_id = '${ req.userdata.business_id}'`
+                let sql_check_all_verified = `SELECT is_verified, is_information_completed, is_profile_completed from business_master where business_id = '${ req.userdata.business_id}'`
                 let result_check_all_verified = await exports.run_query(sql_check_all_verified)
                 if (result_check_all_verified[0].is_verified && result_check_all_verified[0].is_information_completed && result_check_all_verified[0].is_profile_completed) {
                     sql_update_is_activated = `UPDATE business_master set is_activated = 1 where business_id = '${req.userdata.business_id}'`
@@ -225,7 +225,7 @@ exports.verifyOtp = async function(req, res, next) {
             }
 
         } catch (error) {
-            return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+            return res.status(500).json({ status: 'error', message: 'Something went wrong.', error })
         }
     }
 }

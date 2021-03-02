@@ -104,8 +104,7 @@ class NewCatlog extends StatelessWidget {
                               child: txtfieldboundry(
                                 valid: true,
                                 title: vaTrue.title[i],
-                                hint:
-                                    "Enter Catalog ${vaTrue.title[i].toString().toLowerCase()}",
+                                hint: vaTrue.getHint(i),
                                 controller: vaTrue.controller[i],
                                 maxLines: i == 2 ? 4 : 1,
                                 myregex: i == 3 ? urlRegex : null,

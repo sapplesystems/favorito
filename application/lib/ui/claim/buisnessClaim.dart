@@ -14,7 +14,7 @@ import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:flutter_config/flutter_config.dart';
+// import 'package:flutter_config/flutter_config.dart';
 
 class BusinessClaim extends StatefulWidget {
   @override
@@ -145,7 +145,9 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                 });
                                               }
                                               BotToast.showText(
-                                                  text: value.message);
+                                                  text: value.message,
+                                                  duration:
+                                                      Duration(seconds: 5));
                                             });
                                           }
                                         }),
@@ -195,7 +197,9 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                 .then((value) {
                                               pr.hide();
                                               BotToast.showText(
-                                                  text: value.message);
+                                                  text: value.message,
+                                                  duration:
+                                                      Duration(seconds: 5));
                                               if (value.status == 'success') {
                                                 sentOtp = false;
                                                 getClaimData();
@@ -243,7 +247,9 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                       });
                                                     }
                                                     BotToast.showText(
-                                                        text: value.message);
+                                                        text: value.message,
+                                                        duration: Duration(
+                                                            seconds: 5));
                                                   });
                                                 },
                                                 child: Text(
@@ -294,7 +300,9 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   .then((value) {
                                                 pr.hide();
                                                 BotToast.showText(
-                                                    text: value.message);
+                                                    text: value.message,
+                                                    duration:
+                                                        Duration(seconds: 5));
                                                 if (value.status == 'success') {
                                                   setState(() {
                                                     emailverify = "";
@@ -337,16 +345,16 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   ?.files[i]?.size
                                                   .toString());
 
-                                          if (d >
-                                              double.parse(FlutterConfig.get(
-                                                  'image_max_length'))) {
-                                            BotToast.showText(
-                                                text: FlutterConfig.get(
-                                                    'image_max_length_message'));
-                                            setState(() {
-                                              result.files.clear();
-                                            });
-                                          }
+                                          // if (d >
+                                          //     double.parse(FlutterConfig.get(
+                                          //         'image_max_length'))) {
+                                          //   BotToast.showText(
+                                          //       text: FlutterConfig.get(
+                                          //           'image_max_length_message'));
+                                          setState(() {
+                                            result.files.clear();
+                                          });
+                                          // }
                                         }
                                       },
                                     ),

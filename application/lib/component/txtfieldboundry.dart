@@ -1,3 +1,4 @@
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myString.Dart';
 
@@ -48,10 +49,10 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         decoration: InputDecoration(
             errorText: widget.error,
             labelText: widget.title,
-            labelStyle: Theme.of(context).textTheme.body2,
+            labelStyle: TextStyle(color: myGrey, fontFamily: 'Gilroy-Regular'),
             counterText: "",
             hintText: widget.hint,
-            hintStyle: Theme.of(context).textTheme.subhead,
+            hintStyle: TextStyle(color: myGrey, fontFamily: 'Gilroy-Regular'),
             fillColor: Colors.transparent,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),

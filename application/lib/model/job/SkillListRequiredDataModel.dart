@@ -8,4 +8,6 @@ class SkillListRequiredDataModel extends Taggable {
 
   @override
   List<Object> get props => [skillName];
+
+  String toString() => '{id:$id,skillName:$skillName}';
 }

@@ -7,7 +7,6 @@ import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 
 class Offers extends StatefulWidget {
@@ -42,30 +41,45 @@ class _OfferState extends State<Offers> {
         inactiveNewUserOfferList.clear();
         activeCurrentUserOfferList.clear();
         inactiveCurrentUserOfferList.clear();
+        // for (var temp in value.data) {
+        //   if (temp.offerType == 'Current Offer') {
+        //     if (temp.offerStatus == 'Activated') {
+        //       activeCurrentUserOfferList.add(temp);
+        //     } else {
+        //       inactiveCurrentUserOfferList.add(temp);
+        //     }
+        //   } else if (temp.offerType == 'New User Offer') {
+        //     if (temp.offerStatus == 'Activated') {
+        //       activeNewUserOfferList.add(temp);
+        //     } else {
+        //       inactiveNewUserOfferList.add(temp);
+        //     }
+        //   }
+        // }
         for (var temp in value.data) {
-          if (temp.offerType == 'Current Offer') {
-            if (temp.offerStatus == 'Activated') {
+          if (temp.offerStatus == 'Activated') {
+            if (temp.offerType == 'Current Offer') {
               activeCurrentUserOfferList.add(temp);
-            } else {
-              inactiveCurrentUserOfferList.add(temp);
-            }
-          } else if (temp.offerType == 'New User Offer') {
-            if (temp.offerStatus == 'Activated') {
+            } else if (temp.offerType == 'New User Offer') {
               activeNewUserOfferList.add(temp);
-            } else {
+            }
+          } else {
+            if (temp.offerType == 'Current Offer') {
+              inactiveCurrentUserOfferList.add(temp);
+            } else if (temp.offerType == 'New User Offer') {
               inactiveNewUserOfferList.add(temp);
             }
           }
         }
-
-        newUserOfferInputList.clear();
-        for (var data in activeNewUserOfferList) {
-          newUserOfferInputList.add(data);
-        }
-        currentUserOfferInputList.clear();
-        for (var data in activeCurrentUserOfferList) {
-          currentUserOfferInputList.add(data);
-        }
+        showData(_selectedOfferType);
+        // newUserOfferInputList.clear();
+        // for (var data in activeNewUserOfferList) {
+        //   newUserOfferInputList.add(data);
+        // }
+        // currentUserOfferInputList.clear();
+        // for (var data in activeCurrentUserOfferList) {
+        //   currentUserOfferInputList.add(data);
+        // }
       });
     });
   }
@@ -88,18 +102,32 @@ class _OfferState extends State<Offers> {
                     fontSize: 26)),
             actions: [
               IconButton(
-                icon: SvgPicture.asset('assets/icon/addWaitlist.svg',
-                    alignment: Alignment.center),
-                onPressed: () {
-                  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateOffer(
-                                    offerData: null,
-                                  )))
-                      .whenComplete(() => initializeIntitialValues());
-                },
-              ),
+                  icon: Icon(
+                    Icons.add_circle_outline,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateOffer(
+                                      offerData: null,
+                                    )))
+                        .whenComplete(() => initializeIntitialValues());
+                  }),
+              // IconButton(
+              //   icon: SvgPicture.asset('assets/icon/addWaitlist.svg',
+              //       alignment: Alignment.center),
+              //   onPressed: () {
+              //     Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => CreateOffer(
+              //                       offerData: null,
+              //                     )))
+              //         .whenComplete(() => initializeIntitialValues());
+              //   },
+              // ),
             ]),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12),
@@ -160,29 +188,7 @@ class _OfferState extends State<Offers> {
                   hint: "Please Select Offer Type",
                   showSearchBox: false,
                   onChanged: (value) {
-                    setState(() {
-                      _selectedOfferType = value;
-                      print(_selectedOfferType);
-                      if (_selectedOfferType == offerTypeList[0].trim()) {
-                        newUserOfferInputList.clear();
-                        for (var data in activeNewUserOfferList) {
-                          newUserOfferInputList.add(data);
-                        }
-                        currentUserOfferInputList.clear();
-                        for (var data in activeCurrentUserOfferList) {
-                          currentUserOfferInputList.add(data);
-                        }
-                      } else {
-                        newUserOfferInputList.clear();
-                        for (var data in inactiveNewUserOfferList) {
-                          newUserOfferInputList.add(data);
-                        }
-                        currentUserOfferInputList.clear();
-                        for (var data in inactiveCurrentUserOfferList) {
-                          currentUserOfferInputList.add(data);
-                        }
-                      }
-                    });
+                    showData(value);
                   },
                 ),
               ),
@@ -451,5 +457,29 @@ class _OfferState extends State<Offers> {
           child:
               Text("    ${offerTypeList[1]}     ", textAlign: TextAlign.center))
     ]);
+  }
+
+  void showData(value) {
+    setState(() {
+      _selectedOfferType = value;
+      newUserOfferInputList.clear();
+      currentUserOfferInputList.clear();
+      newUserOfferInputList.clear();
+      currentUserOfferInputList.clear();
+
+      if (_selectedOfferType == offerTypeList[0].trim()) {
+        for (var data in activeNewUserOfferList)
+          newUserOfferInputList.add(data);
+
+        for (var data in activeCurrentUserOfferList)
+          currentUserOfferInputList.add(data);
+      } else {
+        for (var data in inactiveNewUserOfferList)
+          newUserOfferInputList.add(data);
+
+        for (var data in inactiveCurrentUserOfferList)
+          currentUserOfferInputList.add(data);
+      }
+    });
   }
 }

@@ -25,12 +25,13 @@ class Catalogs extends StatelessWidget {
             title: Text("Catalogs",
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24,
-                    fontFamily: 'Gilroy-Bold')),
-            centerTitle: true,
+                    fontSize: 26,
+                    fontFamily: 'Gilroy-Bold',
+                    letterSpacing: .2)),
+            // centerTitle: true,
             actions: [
               IconButton(
-                  icon: Icon(Icons.add, color: Colors.black),
+                  icon: Icon(Icons.add_circle_outline, size: 30),
                   onPressed: () {
                     vaTrue.newCatalogTxt = 'New Catalog';
                     Navigator.push(

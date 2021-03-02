@@ -51,16 +51,19 @@ exports.getBusinessDetail = async function(req, res) {
         } catch (error) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
         }
-        var sql = "SELECT b_m.id, b_m.business_id,IFNULL(b_m.short_description,'') as short_desciption,IFNULL(b_i.price_range ,0) AS price_range, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations AS b_i JOIN business_hours as b_h  JOIN business_ratings AS b_r LEFT JOIN business_reviews as b_rev ON b_m.business_id = b_r.business_id AND b_m.business_id = b_rev.business_id AND b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
+        var sql = "SELECT b_m.id, b_m.business_id,IFNULL(b_m.short_description,'') as short_desciption,IFNULL(b_i.price_range ,0) AS price_range, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations AS b_i LEFT JOIN business_hours as b_h ON  b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
+
         db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
+            }
+            if (result == '') {
+                return res.status(204).send({ status: 'success', message: 'No contect found', data: result })
             }
             result[0].avg_rating = avg_rating;
             result[0].attributes = result_attributes;
             result[0].relation = result_relation;
 
-            console.log(result.data)
             return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
         })
     } catch (error) {

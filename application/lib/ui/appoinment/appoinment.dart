@@ -200,7 +200,9 @@ class _Appoinment extends State<Appoinment> {
 
                               return InkWell(
                                 onTap: () {
-                                  BotToast.showText(text: "UnderProcess");
+                                  BotToast.showText(
+                                      text: "UnderProcess",
+                                      duration: Duration(seconds: 5));
                                 },
                                 child: Card(
                                   borderOnForeground: true,

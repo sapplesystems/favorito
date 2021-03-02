@@ -5,6 +5,7 @@ import 'package:Favorito/model/menu/MenuItem/ItemData.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItem.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/menu/item/NewMenuItem.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -32,7 +33,19 @@ class _MenuItemState extends State<MenuItem> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(message: 'Please wait');
+    pr.style(
+        message: 'Please wait...',
+        borderRadius: 8.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 8.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
     print("widget.id${widget.id}");
     return Scaffold(
         body: FutureBuilder<MenuItemModel>(

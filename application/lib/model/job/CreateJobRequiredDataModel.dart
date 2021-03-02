@@ -1,3 +1,5 @@
+import 'package:Favorito/model/job/CityList.dart';
+
 class CreateJobRequiredDataModel {
   String status;
   String message;
@@ -46,31 +48,41 @@ class Data {
     }
     return data;
   }
-}
 
-class CityList {
-  int id;
-  String city;
-
-  CityList({this.id, this.city});
-
-  CityList.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    city = json['city'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['city'] = this.city;
-    return data;
-  }
-
-  bool isEqual(CityList model) {
-    return this?.id == model?.id;
-  }
-
-  String userAsString() {
-    return '${this.city}';
+  getCityIdByName(String _name) {
+    int id;
+    cityList.forEach((element) {
+      if (element.city == _name) {
+        id = element.id;
+      }
+    });
+    return id;
   }
 }
+
+// class CityList {
+//   int id;
+//   String city;
+
+//   CityList({this.id, this.city});
+
+//   CityList.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     city = json['city'];
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['id'] = this.id;
+//     data['city'] = this.city;
+//     return data;
+//   }
+
+//   bool isEqual(CityList model) {
+//     return this?.id == model?.id;
+//   }
+
+//   String userAsString() {
+//     return '${this.city}';
+//   }
+// }

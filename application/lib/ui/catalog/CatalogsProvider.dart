@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_config/flutter_config.dart';
 
 class CatalogsProvider extends ChangeNotifier {
   BuildContext context;
@@ -16,11 +15,11 @@ class CatalogsProvider extends ChangeNotifier {
   String selectedId;
   bool autovalidate = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  var submitBtnTxt = "Submit";
+  var submitBtnTxt = "Save";
   List<String> lst = [];
   List<TextEditingController> controller = [];
   List<String> selectedlist = [];
-  List title = ["Title", "Price", "Discription", "Url", "Id"];
+  List title = ["Title", "Price", "Description", "Url", "ID"];
   List<File> imgFiles = List();
   List<String> imgUrls = List();
   bool _needSubmit = false;
@@ -30,11 +29,30 @@ class CatalogsProvider extends ChangeNotifier {
 
     getCatelogList(false);
   }
+
+  String getHint(int i) {
+    return ((i == 3) || (i == 4))
+        ? ' Enter Product ' + title[i].toString().toUpperCase()
+        : ' Enter Catalog ' + title[i].toString().toLowerCase();
+  }
+
   setContext(BuildContext _context) {
     this.context = _context;
     pr = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: true)
-      ..style(message: 'please wait..');
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
   }
 
   getCatelogList(bool _val) async {
@@ -61,12 +79,14 @@ class CatalogsProvider extends ChangeNotifier {
       await WebService.catlogEdit(_map, context).then((value) {
         if (value.status == "success") {
           clearAll();
-          BotToast.showText(text: value.message);
+          BotToast.showText(
+              text: value.message, duration: Duration(seconds: 5));
 
-          submitBtnTxt = "Submit";
+          submitBtnTxt = "Save";
           Navigator.pop(context);
         } else
-          BotToast.showText(text: value.message);
+          BotToast.showText(
+              text: value.message, duration: Duration(seconds: 5));
       });
     } else {
       autovalidate = true;
@@ -117,7 +137,9 @@ class CatalogsProvider extends ChangeNotifier {
           });
         } else {
           pr.hide();
-          BotToast.showText(text: 'size of attachment is greater then 2 mb');
+          BotToast.showText(
+              text: 'size of attachment is greater then 2 mb',
+              duration: Duration(seconds: 5));
           // text: FlutterConfig.get('image_max_length_message'));
         }
       } catch (e) {} finally {

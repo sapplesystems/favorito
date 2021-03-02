@@ -16,6 +16,7 @@ class serviceFunction {
   static String funGetCreateOfferDefaultData = baseUrl2 + 'offer/dd-verbose';
   static String funCreateOffer = baseUrl2 + 'offer/create';
   static String funCreateJob = baseUrl2 + 'job/create';
+  static String funEditJob = baseUrl2 + 'job/edit';
   static String funUserPhoto = baseUrl1 + 'user/profile-photo';
   static String funContactPersonRequiredData =
       baseUrl2 + 'business-user/owner-profile';
@@ -40,7 +41,6 @@ class serviceFunction {
   static String funGetOfferData = funOffer + 'list';
   static String funEditOffer = funOffer + 'edit';
   static String funGetEditJobData = baseUrl2 + 'job/detail';
-  static String funEditJob = baseUrl2 + 'job/edit';
   static String funUserProfileUpdate = baseUrl1 + 'user/profile/update';
   static String funProfileUpdatephoto = baseUrl1 + 'user/profile/update-photo';
   static String funUserProfile = baseUrl1 + 'user/profile';

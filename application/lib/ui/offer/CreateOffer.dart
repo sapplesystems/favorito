@@ -24,7 +24,7 @@ class CreateOffer extends StatefulWidget {
 class _CreateOfferState extends State<CreateOffer> {
   final stateKey = GlobalKey<DropdownSearchState<String>>();
   final typeKey = GlobalKey<DropdownSearchState<String>>();
-  String buttonTxt = '';
+  String buttonTxt = "Post Offer";
   String _selectedOfferState = '';
   String _selectedOfferType = '';
   CreateOfferRequiredDataModel _offerRequiredData =
@@ -101,7 +101,8 @@ class _CreateOfferState extends State<CreateOffer> {
                         key: _formKey,
                         autovalidate: _autoValidateForm,
                         child: Column(children: [
-                          Padding(
+                          Container(
+                            margin: EdgeInsets.only(top: sm.w(4)),
                             padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
                             child: txtfieldboundry(
                               controller: _myTitleEditController,

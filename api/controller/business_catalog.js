@@ -42,7 +42,7 @@ exports.findCatalog = function (req, res, next) {
         var business_id = req.userdata.business_id;
 
         if (req.body.catalog_id == '' || req.body.catalog_id == 'undefined' || req.body.catalog_id == null) {
-            return res.status(403).json({ status: 'error', message: 'Catalog id not found.' });
+            return res.status(403).json({ status: 'error', message: 'Catalog I not found.' });
         }
 
         var cond = " AND c.id='" + req.body.catalog_id + "' ";
@@ -167,7 +167,7 @@ exports.updateCatalog = function (req, res, next) {
             }
             return res.status(200).json({
                 status: 'success',
-                message: 'Job updated successfully.',
+                message: 'Catalog saved successfully.',
             });
         });
     } catch (e) {

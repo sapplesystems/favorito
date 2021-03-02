@@ -28,6 +28,22 @@ router.post('/login', UserLoginController.login);
 
 router.post('/is-profile-exist', UserRegisterController.isProfileExist);
 
+// end-point- /api/user/is-account-exist
+router.post('/is-account-exist', UserRegisterController.isAccountExist);
+
+// send otp sms
+router.post('/mobile-otp-send', CheckAuth, UserRegisterController.sendVerifyOtp);
+
+router.post('/mobile-otp-verify', CheckAuth, UserRegisterController.verifyOtp);
+
+router.post('/send-email-verify-link', CheckAuth, UserRegisterController.sendEmailVerifyLink);
+
+
+// router.post('/let-me-verify', CheckAuth, UserRegisterController.verifyEmailLink);
+
+router.get('/let-me-verify/:token', UserRegisterController.verifyEmailLink);
+
+
 
 
 module.exports = router;

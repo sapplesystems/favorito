@@ -16,9 +16,9 @@ exports.getCaruoselData = async function(req, res) {
         }
 
         if (business_id != null) {
-            var sql = 'SELECT id, business_id, CONCAT("' + img_path + '",asset_url) as photo FROM business_uploads WHERE type = "Photo" AND business_id = "' + business_id + '"'
+            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m  ON b_u.business_id = b_m.business_id  WHERE type = "Photo" AND b_u.business_id = "' + business_id + '"'
         } else {
-            var sql = 'SELECT id, business_id, CONCAT("' + img_path + '",asset_url) as photo FROM business_uploads WHERE type = "Photo" GROUP BY business_id LIMIT 20'
+            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m ON b_u.business_id = b_m.business_id WHERE type = "Photo" GROUP BY business_id LIMIT 20'
         }
 
         db.query(sql, function(err, result) {
@@ -397,19 +397,17 @@ exports.userDetail = async(req, res, next) => {
         switch (req.body.api_type) {
             case 'get':
                 // get address
-                sql_get_detail = `SELECT full_name, email,phone, postal, profile_id, reach_whatsapp, short_description FROM users WHERE id = '${user_id}'`
+                sql_get_detail = `SELECT full_name, email,phone, postal, profile_id,is_phone_verify,is_email_verify,status, reach_whatsapp, short_description FROM users WHERE id = '${user_id}'`
                 result_sql_get_detail = await exports.run_query(sql_get_detail)
-                sql_get_address = `SELECT id as address_id,city,state,pincode,country,landmark,address,default_address FROM user_address WHERE user_id = '${user_id}'`
-                result_sql_get_address = await exports.run_query(sql_get_address)
-                final_data = { detail: result_sql_get_detail[0], address: result_sql_get_address }
+                final_data = { detail: result_sql_get_detail[0] }
                 return res.status(200).send({ status: 'success', message: 'success', data: final_data })
                 break;
             case 'set':
                 data_to_insert = {}
-                if (req.body.full_name != '' || req.body.full_name != 'undefined' || req.body.full_name != null) {
+                if (req.body.full_name != '' && req.body.full_name != 'undefined' && req.body.full_name != null) {
                     data_to_insert.full_name = req.body.full_name
                 }
-                if (req.body.postal_code != '' || req.body.postal_code != 'undefined' || req.body.postal_code != null) {
+                if (req.body.postal_code != '' && req.body.postal_code != 'undefined' && req.body.postal_code != null) {
                     data_to_insert.postal = req.body.postal_code
                 }
                 if (req.body.short_description != '' && req.body.short_description != null) {

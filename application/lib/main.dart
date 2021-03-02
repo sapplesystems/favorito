@@ -6,6 +6,7 @@ import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
 import 'package:Favorito/ui/jobs/JobProvider.dart';
+import 'package:Favorito/ui/notification/NotificationProvider.dart';
 import 'package:Favorito/ui/offer/offersProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
@@ -17,12 +18,12 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_config/flutter_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterConfig.loadEnvVariables();
-  print('size:${FlutterConfig.get('image_max_length')}');
+  await DotEnv.load(fileName: ".env");
+  // print('size:${FlutterConfig.get('image_max_length')}');
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MultiProvider(providers: [
@@ -38,6 +39,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => CatalogsProvider()),
       ChangeNotifierProvider(create: (context) => OffersProvider()),
       ChangeNotifierProvider(create: (context) => JobProvider()),
+      ChangeNotifierProvider(create: (context) => NotificationsProvider()),
     ], child: MyApp()));
   });
 }

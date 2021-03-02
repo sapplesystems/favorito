@@ -17,10 +17,16 @@ class listItems extends StatelessWidget {
         onTap: clicker,
         child: Row(
           children: [
-            SvgPicture.asset("assets/icon/$ico.svg",
-                alignment: Alignment.center, height: sm.h(3)),
-            SizedBox(width: 20),
-            Text(title.trim(), style: TextStyle(fontSize: 18))
+            SizedBox(width: sm.w(1)),
+            Expanded(
+              flex: 2,
+              child: SvgPicture.asset("assets/icon/$ico.svg",
+                  alignment: Alignment.center, height: sm.h(3)),
+            ),
+            SizedBox(width: sm.w(2)),
+            Expanded(
+                flex: 10,
+                child: Text(title.trim(), style: TextStyle(fontSize: 18)))
           ],
         ),
       ),

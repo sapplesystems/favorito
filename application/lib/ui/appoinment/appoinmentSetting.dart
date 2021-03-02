@@ -232,7 +232,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     pr?.show();
     WebService.funAppoinmentSaveSetting(_map, context).then((value) {
       pr?.hide();
-      if (value.status == "success") BotToast.showText(text: value.message);
+      if (value.status == "success")
+        BotToast.showText(text: value.message, duration: Duration(seconds: 5));
     });
   }
 
@@ -470,7 +471,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                   .then((value) {
                 pr?.hide();
                 if (value.status == "success") {
-                  BotToast.showText(text: value.message);
+                  BotToast.showText(
+                      text: value.message, duration: Duration(seconds: 5));
                   getService(true);
                   Navigator.pop(context);
                 }
@@ -539,7 +541,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
               pr?.hide();
               if (value.status == "success") {
                 getPerson();
-                BotToast.showText(text: value.message);
+                BotToast.showText(
+                    text: value.message, duration: Duration(seconds: 5));
                 Navigator.pop(context);
                 for (int i = 7; i < 11; i++) controller[i].text = "";
               }
@@ -916,7 +919,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
         .then((_value) {
       pr?.hide();
       if (_value.status == "success") {
-        BotToast.showText(text: _value.message);
+        BotToast.showText(text: _value.message, duration: Duration(seconds: 5));
         getRestriction();
         Navigator.pop(context);
       }
@@ -946,7 +949,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
           .then((value) {
         pr?.hide();
         if (value.status == "success") {
-          BotToast.showText(text: value.message);
+          BotToast.showText(
+              text: value.message, duration: Duration(seconds: 5));
         }
       });
     }
@@ -965,7 +969,8 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
           .then((value) {
         pr?.hide();
         if (value.status == "success") {
-          BotToast.showText(text: value.message);
+          BotToast.showText(
+              text: value.message, duration: Duration(seconds: 5));
         }
       });
     }

@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt');
 var nodemailer = require('nodemailer');
 const fast2sms = require('fast-two-sms');
 
+
 exports.updatePassword = (req, res, next) => {
     if (req.body.business_id == null || req.body.business_id == undefined || req.body.business_id == '') {
         return res.status(500).json({ status: 'error', message: 'business_id is missing' });
@@ -36,11 +37,11 @@ exports.changePassword = function(req, res, next) {
         } else if (req.body.new_password == '' || req.body.new_password == 'undefined' || req.body.new_password == null) {
             return res.status(403).json({ status: 'error', message: 'New password not found.' });
         } else if (req.body.confirm_password == '' || req.body.confirm_password == 'undefined' || req.body.confirm_password == null) {
-            return res.status(403).json({ status: 'error', message: 'Confirm passwod not found.' });
+            return res.status(403).json({ status: 'error', message: 'Confirm password not found.' });
         } else if (req.body.new_password != req.body.confirm_password) {
             return res.status(403).json({ status: 'error', message: 'New password and confirm password does not match.' });
         } else {
-            var sql = "select * from business_users where business_id='" + req.userdata.business_id + "' and is_deleted=0 and deleted_at is null";
+            var sql = "select * from business_master where business_id='" + req.userdata.business_id + "' and deleted_at is null";
             db.query(sql, function(err, result) {
                 if (err) {
                     return res.json({ status: 'error', message: 'Something went wrong.', data: err });
@@ -50,15 +51,15 @@ exports.changePassword = function(req, res, next) {
                     }
                     bcrypt.compare(req.body.old_password, result[0].password, function(err, enc_result) {
                         if (err) {
-                            return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
+                            return res.status(200).json({ status: 'error', message: 'Something went wrong.', data: err });
                         } else if (enc_result === false) {
-                            return res.status(403).json({ status: 'error', message: 'Old pssword does not match.', data: err });
+                            return res.status(200).json({ status: 'error', message: 'Old password does not match.', data: err });
                         } else {
                             bcrypt.hash(req.body.new_password, 10, function(err, hash) {
-                                var uq = "UPDATE business_users SET `password`='" + hash + "', org_password='" + req.body.new_password + "' WHERE business_id='" + req.userdata.business_id + "'";
+                                var uq = "UPDATE business_master SET `password`='" + hash + "' WHERE business_id='" + req.userdata.business_id + "'";
                                 db.query(uq, function(error, resp) {
                                     if (error) {
-                                        return res.status(403).json({ status: 'error', message: 'Password could not be changed.' });
+                                        return res.status(200).json({ status: 'error', message: 'Password could not be changed.' });
                                     }
                                     return res.status(200).json({ status: 'success', message: 'Password changed successfully.' });
                                 });
@@ -72,6 +73,7 @@ exports.changePassword = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
 
 /*
 Check req is email or phone number accordingly it sends the OTP

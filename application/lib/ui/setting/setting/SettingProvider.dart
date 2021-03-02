@@ -11,7 +11,14 @@ import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
 
+import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/utils/Prefs.dart';
+import 'package:provider/provider.dart';
+
 class SettingProvider extends ChangeNotifier {
+  BuildContext _context;
   SettingProvider() {
     getProfileImage();
   }
@@ -25,7 +32,7 @@ class SettingProvider extends ChangeNotifier {
     "Create Offer",
     "Jobs",
     "Waitlist",
-    "catalogs",
+    "Catalogs",
     "Create Highlights",
     "Page View"
   ];
@@ -74,5 +81,17 @@ class SettingProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  setContext(BuildContext _context) {
+    this._context = _context;
+  }
+
+  logout() {
+    Prefs().clear();
+    Provider.of<BusinessProfileProvider>(_context, listen: false).allClear();
+    Provider.of<BusinessHoursProvider>(_context, listen: false).allClear();
+    Navigator.pop(_context);
+    Navigator.of(_context).pushNamed('/login');
   }
 }

@@ -2,11 +2,7 @@ import 'dart:ui';
 import 'package:Favorito/component/listItem.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
-import 'package:Favorito/ui/login/login.dart';
-import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
-import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
-import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -22,6 +18,7 @@ class Setting extends StatelessWidget {
     SizeManager sm = SizeManager(context);
     spTrue = Provider.of<SettingProvider>(context, listen: true);
     spFalse = Provider.of<SettingProvider>(context, listen: false);
+    spFalse.setContext(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -165,24 +162,12 @@ class Setting extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    Prefs().clear();
-                    Provider.of<BusinessProfileProvider>(context, listen: false)
-                        .allClear();
-                    Provider.of<BusinessHoursProvider>(context, listen: false)
-                        .allClear();
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Login()));
-                  },
+                  onTap: () => spFalse.logout(),
                   child: ListTile(
-                    leading: Icon(FontAwesomeIcons.signOutAlt),
-                    title: Text(
-                      "Logout",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                    ),
-                  ),
+                      leading: Icon(FontAwesomeIcons.signOutAlt),
+                      title: Text("Logout",
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w500))),
                 ),
               ],
             ),

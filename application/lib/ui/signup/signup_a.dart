@@ -22,12 +22,9 @@ class Signup_a extends StatelessWidget {
     signUpProviderTrue = Provider.of<SignUpProvider>(context, listen: true);
     signUpProviderFalse = Provider.of<SignUpProvider>(context, listen: false);
     signUpProviderFalse.setContext(context);
-    return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context);
 
-        signUpProviderTrue.allClear();
-      },
+    return WillPopScope(
+      onWillPop: () => signUpProviderTrue.allClear(),
       child: Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -79,7 +76,7 @@ class Signup_a extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: DropdownSearch<String>(
-                                      key: signUpProviderTrue.categoryKey1,
+                                      key: SignUpProvider.categoryKey1,
                                       mode: Mode.MENU,
                                       validator: (v) =>
                                           (v == null) ? "required field" : null,
@@ -89,14 +86,13 @@ class Signup_a extends StatelessWidget {
                                               .getBusinessNameAll()
                                               .length *
                                           58.0,
-                                      showSelectedItem: true,
+                                      // showSelectedItem: true,
                                       items: signUpProviderTrue
                                           .getBusinessNameAll(),
                                       label: "Business Type",
                                       hint: "Please Select Business Type",
-                                      onChanged: (String val) =>
-                                          signUpProviderTrue
-                                              .businessIdByName(val),
+                                      onChanged: (val) => signUpProviderTrue
+                                          .businessIdByName(val),
                                       selectedItem:
                                           signUpProviderTrue.getBusinessName(),
                                     ),
@@ -123,7 +119,7 @@ class Signup_a extends StatelessWidget {
                                     child: Visibility(
                                         visible: signUpProviderTrue.catvisib,
                                         child: DropdownSearch<String>(
-                                          key: signUpProviderTrue.categoryKey,
+                                          key: SignUpProvider.categoryKey,
                                           mode: Mode.MENU,
                                           // maxHeight: busy.length * 58.0,
                                           validator: (v) => (v == '')
@@ -176,7 +172,7 @@ class Signup_a extends StatelessWidget {
                                     title: Text(
                                       "Reach me on whatsapp",
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 10,
                                         fontFamily: "Roboto",
                                         fontWeight: FontWeight.w400,
                                         letterSpacing: 0.32,

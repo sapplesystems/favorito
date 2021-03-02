@@ -93,7 +93,7 @@ exports.login = function(req, res, next) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             } else {
                 if (result.length === 0) {
-                    return res.status(200).json({ status: 'Fail', message: 'Incorrect username or password.' });
+                    return res.status(401).json({ status: 'Fail', message: 'Incorrect username or password.',data:[] });
                 }
                 bcrypt.compare(req.body.password, result[0].password, function(err, enc_result) {
                     if (err) {
@@ -155,7 +155,7 @@ exports.login = function(req, res, next) {
 
                         return res.status(200).json({ status: 'success', message: 'success', data: user_data, token: token });
                     } else {
-                        return res.status(403).json({ status: 'error', message: 'Incorrect username or password' });
+                        return res.status(200).json({ status: 'error', message: 'Incorrect username or password',data:{}, token: null });
                     }
                 });
             }
@@ -260,10 +260,10 @@ exports.updateBusinessOwnerProfile = function(req, res, next) {
             update_columns += ", upi='" + req.body.upi + "' ";
         }
         if (req.body.email != '' && req.body.email != 'undefined' && req.body.email != null) {
-            update_columns += ", upi='" + req.body.email + "' ";
+            update_columns += ", email='" + req.body.email + "' ";
         }
         if (req.body.phone != '' && req.body.phone != 'undefined' && req.body.phone != null) {
-            update_columns += ", upi='" + req.body.phone + "' ";
+            update_columns += ", phone='" + req.body.phone + "' ";
         }
 
         var bid = req.body.bid;
@@ -296,6 +296,7 @@ exports.updateBusinessOwnerProfile = function(req, res, next) {
     }
 };
 
+
 /**
  * BUSINESS OWNER PROFILE ADD ANOTHER BRANCH
  */
@@ -323,7 +324,7 @@ exports.addAnotherBranch = function(req, res, next) {
 
 exports.getProfilePhoto = function(req, res, next) {
     if (req.userdata.business_id) {
-        var sql = "SELECT CONCAT('" + img_path + "',photo) as photo FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
+        var sql = "SELECT CONCAT('" + img_path + "',photo) as photo,short_description FROM business_master WHERE business_id = '" + req.userdata.business_id + "' AND deleted_at IS NULL"
             // var sql = "SELECT * FROM business_master WHERE business_id = '" + req.userdata.business_id + "'AND deleted_at IS NULL"
         try {
             db.query(sql, function(error, result) {

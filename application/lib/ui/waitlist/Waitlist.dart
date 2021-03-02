@@ -23,11 +23,6 @@ class Waitlist extends StatefulWidget {
 class Waitlists extends State<Waitlist> {
   WaitlistListModel waitlistData;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   refresh() => setState(() {});
 
   @override
@@ -43,10 +38,17 @@ class Waitlists extends State<Waitlist> {
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: Text(waitlist, style: TextStyle(color: Colors.black)),
+          title: Text(waitlist,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 26,
+                  fontFamily: 'Gilroy-Bold')),
           actions: [
             IconButton(
-                icon: Icon(Icons.add_circle_outline),
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  size: 30,
+                ),
                 onPressed: () {
                   Navigator.push(
                           context,
@@ -56,7 +58,7 @@ class Waitlists extends State<Waitlist> {
                 }),
             IconButton(
                 icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
-                    height: 20),
+                    height: 26),
                 onPressed: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => WaitListSetting())))
           ],
@@ -76,7 +78,9 @@ class Waitlists extends State<Waitlist> {
                   margin:
                       EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                   child: RefreshIndicator(
-                    onRefresh: () => getPageData(),
+                    onRefresh: () async {
+                      setState(() {});
+                    },
                     child: ListView.builder(
                         itemCount: waitlistData.data == null
                             ? 0
@@ -168,7 +172,7 @@ class Waitlists extends State<Waitlist> {
                                                     title: const Text(
                                                         "Please confirm"),
                                                     content: Text(
-                                                        'Are you sure do you want to delete?'),
+                                                        'Are you sure you want to delete ?'),
                                                     actions: [
                                                       new FlatButton(
                                                           child:

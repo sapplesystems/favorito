@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:Favorito/network/webservices.dart';
 
 class dashboardProvider extends ChangeNotifier {
-  DashData dashData = DashData();
+  dashModel dashData = dashModel();
   Future<DashData> calldashBoard(context) async {
-    await WebService.funGetDashBoard(context).then((value) {
-      dashData = value;
-      notifyListeners();
-      // dashData.businessId = value.businessId;
+    // await WebService.funGetDashBoard(context).then((value) {
+    //   dashData = value;
+      // notifyListeners();
+      // dashData.businessId = value.busi nessId;
       // dashData.businessName = value.businessName;
       // dashData.businessStatus = value.businessStatus;
       // dashData.photo = value.photo;
@@ -23,6 +23,6 @@ class dashboardProvider extends ChangeNotifier {
       // orders = value.orders.toString();
       // freeCredit = value.freeCredit.toString();
       // paidCredit = value.paidCredit.toString();
-    });
+    // });
   }
 }

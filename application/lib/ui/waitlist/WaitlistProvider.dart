@@ -14,7 +14,7 @@ class WaitlistProvider extends ChangeNotifier {
     "Waitlist Manager",
     "Anouncement",
     "Discription",
-    "Minimum Wait Time(minuts)",
+    "Minimum Wait Time(minutes)",
     "Slot Length",
     "Except"
   ];
@@ -32,11 +32,11 @@ class WaitlistProvider extends ChangeNotifier {
   List<String> list = [
     "Sunday",
     "Monday",
-    "TuesDay",
-    "WednesDay",
-    "ThursDay",
-    "FriDay",
-    "SaturDay"
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
   ];
   needSave(bool _val) {
     _done = _val;
@@ -57,7 +57,7 @@ class WaitlistProvider extends ChangeNotifier {
       // pr.hide();
       if (value.status == "success") {
         var va = value.data[0];
-        startTime = va?.startTime.substring(0, 5) ?? '00:00';
+        startTime = va?.startTime?.substring(0, 5) ?? '00:00';
         endTime = va?.endTime.substring(0, 5) ?? '00:00';
         controller[0].text = va.availableResource.toString();
         controller[1].text = va.miniumWaitTime?.toString() ?? '';

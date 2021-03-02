@@ -89,7 +89,7 @@ class signup_b extends StatelessWidget {
                                     ? Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: DropdownSearch<String>(
-                                          key: signUpProviderTrue.categoryKey2,
+                                          key: SignUpProvider.categoryKey2,
                                           mode: Mode.MENU,
                                           maxHeight:
                                               signUpProviderTrue.busy.length *
@@ -206,11 +206,11 @@ class signup_b extends StatelessWidget {
           signUpProviderTrue.controller[7].text) {
         signUpProviderTrue.controller[6].text = "";
         signUpProviderTrue.controller[7].text = "";
-        BotToast.showText(text: signUpProviderTrue.passError);
+        BotToast.showText(text: "Please confirm your password!");
         return;
       }
       if (!signUpProviderTrue.getTnCChecked()) {
-        BotToast.showText(text: signUpProviderTrue.tnc);
+        BotToast.showText(text: "Please confirm T&C!");
         return;
       }
       signUpProviderTrue.funRegister();

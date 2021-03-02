@@ -39,7 +39,7 @@ class Prefs {
       // setuserId(null),
       // setrolenumber(null),
       // setHostelId(0),
-      setToken(''),
+      setToken(null),
     ]);
   }
 }

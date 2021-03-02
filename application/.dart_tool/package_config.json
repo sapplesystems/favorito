@@ -62,6 +62,30 @@
       "languageVersion": "2.6"
     },
     {
+      "name": "connectivity",
+      "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/connectivity-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "connectivity_for_web",
+      "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/connectivity_for_web-0.3.1+4",
+      "packageUri": "lib/",
+      "languageVersion": "2.6"
+    },
+    {
+      "name": "connectivity_macos",
+      "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/connectivity_macos-0.1.0+7",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "connectivity_platform_interface",
+      "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/connectivity_platform_interface-1.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
       "name": "convert",
       "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/convert-2.1.1",
       "packageUri": "lib/",
@@ -134,10 +158,10 @@
       "languageVersion": "2.10"
     },
     {
-      "name": "flutter_config",
-      "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/flutter_config-1.0.8",
+      "name": "flutter_dotenv",
+      "rootUri": "file:///Users/rohit/.pub-cache/hosted/pub.dartlang.org/flutter_dotenv-3.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.1"
+      "languageVersion": "2.0"
     },
     {
       "name": "flutter_multi_chip_select",
@@ -602,7 +626,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-02-25T13:04:28.442017Z",
+  "generated": "2021-03-02T10:26:51.662001Z",
   "generator": "pub",
   "generatorVersion": "2.10.5"
 }

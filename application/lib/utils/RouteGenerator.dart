@@ -3,7 +3,9 @@ import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
+import 'package:Favorito/ui/jobs/CreateJob.dart';
 import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/ui/notification/Notifications.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:Favorito/ui/tour/Splash.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,8 @@ class RouteGenerator {
       case '/signUpA':
         return MaterialPageRoute(builder: (_) => Signup_a());
 
-      // case '/newCatlog':
-      //   return MaterialPageRoute(builder: (_) => NewCatlog());
+      case '/createJob':
+        return MaterialPageRoute(builder: (_) => CreateJob());
 
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
@@ -33,9 +35,8 @@ class RouteGenerator {
       case '/forgetPass':
         return MaterialPageRoute(builder: (_) => ForgetPass());
 
-      // case '/businessProfile':
-      //   return MaterialPageRoute(
-      //       builder: (_) => BusinessProfile(businessId: args));
+      case '/notifications':
+        return MaterialPageRoute(builder: (_) => Notifications());
 
       case '/adSpent':
         return MaterialPageRoute(builder: (_) => adSpent());
