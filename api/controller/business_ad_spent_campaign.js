@@ -28,12 +28,31 @@ exports.all_business_campaign = async function(req, res, next) {
                     data.push(result[i]);
                 }
             }
+
+            // fetching the data from the ads_spent table 
+            sql_data_ads_spent = `select total_spent,free_credits,paid_credits from business_ad_credits where business_id = '${business_id}'`
+            result_data_ads_spent = await exports.run_query(sql_data_ads_spent)
+            if (result_data_ads_spent[0] && result_data_ads_spent[0].total_spent) {
+                total_spent = result_data_ads_spent[0].total_spent
+            } else {
+                total_spent = 0
+            }
+            if (result_data_ads_spent[0] && result_data_ads_spent[0].free_credits) {
+                free_credits = result_data_ads_spent[0].free_credits
+            } else {
+                free_credits = 0
+            }
+            if (result_data_ads_spent[0] && result_data_ads_spent[0].paid_credits) {
+                paid_credits = result_data_ads_spent[0].paid_credits
+            } else {
+                paid_credits = 0
+            }
             return res.status(200).json({
                 status: 'success',
                 message: 'success',
-                total_spent: 1000,
-                free_credit: 400,
-                paid_credit: 800,
+                total_spent: total_spent,
+                free_credit: free_credits,
+                paid_credit: paid_credits,
                 data: data
             });
         });
@@ -41,7 +60,6 @@ exports.all_business_campaign = async function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
-
 
 /**
  * FIND AD SPENT CAMPAIGN BY ID
@@ -212,3 +230,28 @@ exports.getTags = function(tag_ids) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+}

@@ -52,7 +52,7 @@ exports.create_manual_waitlist = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'Manual waitlist created successfully.' });
+            return res.status(200).json({ status: 'success', message: 'Waitlist added successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -78,7 +78,7 @@ exports.delete_manual_waitlist = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'Manual waitlist deleted successfully.' });
+            return res.status(200).json({ status: 'success', message: 'Waitlist deleted successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -131,7 +131,7 @@ exports.save_setting = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'Manual waitlist setting saved successfully.' });
+            return res.status(200).json({ status: 'success', message: 'Waitlist settings saved successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -189,7 +189,7 @@ exports.updateWaitlistStatus = function(req, res, next) {
                     }
                 });
             } else {
-                return res.status(200).json({ status: 'error', message: 'Please Send Correct Status' });
+                return res.status(200).json({ status: 'error', message: 'Please try again' });
             }
 
         } else {

@@ -79,20 +79,20 @@ exports.getCityList = function() {
 /**
  * GET PINCODE LIST OF THE CITY
  */
-exports.city_pincode = function(req, res, next) {
-    try {
-        if (req.body.city_id == '' || req.body.city_id == 'undefined' || req.body.city_id == null) {
-            return res.status(403).json({ status: 'error', message: 'City id not found.' });
-        }
-        var city_id = req.body.city_id;
-        var sql = "SELECT id,pincode FROM pincodes where city_id='" + city_id + "'";
-        db.query(sql, function(err, pincode) {
-            return res.status(200).json({ status: 'success', message: 'success', data: pincode });
-        });
-    } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
-    }
-}
+// exports.city_pincode = function(req, res, next) {
+//     try {
+//         if (req.body.city_id == '' || req.body.city_id == 'undefined' || req.body.city_id == null) {
+//             return res.status(403).json({ status: 'error', message: 'City id not found.' });
+//         }
+//         var city_id = req.body.city_id;
+//         var sql = "SELECT id,pincode FROM pincodes where city_id='" + city_id + "'";
+//         db.query(sql, function(err, pincode) {
+//             return res.status(200).json({ status: 'success', message: 'success', data: pincode });
+//         });
+//     } catch (e) {
+//         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+//     }
+// }
 
 
 /**
@@ -108,7 +108,7 @@ exports.city_from_pincode = function(req, res, next) {
         FROM cities WHERE id IN(SELECT city_id FROM pincodes WHERE pincode='" + pincode + "' GROUP BY city_id)";
         db.query(sql, function(err, result) {
             var data = {};
-            var message = 'No data found';
+            var message = 'Pincode not found';
             if (result.length > 0) {
                 message = 'success';
                 data = result[0];
@@ -162,7 +162,7 @@ exports.detail_job = function(req, res, next) {
 /**
  * CREATE NEW JOB
  */
-exports.add_job = function(req, res, next) {
+exports.add_job =async  function(req, res, next) {
     try {
         if (req.body.title == '' || req.body.title == 'undefined' || req.body.title == null) {
             return res.status(403).json({ status: 'error', message: 'Job title not found.' });
@@ -174,9 +174,7 @@ exports.add_job = function(req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Contact via not found.' });
         } else if (req.body.contact_value == '' || req.body.contact_value == 'undefined' || req.body.contact_value == null) {
             return res.status(403).json({ status: 'error', message: 'Contact value not found.' });
-        } else if (req.body.city == '' || req.body.city == 'undefined' || req.body.city == null) {
-            return res.status(403).json({ status: 'error', message: 'City not found.' });
-        } else if (req.body.pincode == '' || req.body.pincode == 'undefined' || req.body.pincode == null) {
+        } else if (req.body.postal_code == '' || req.body.postal_code == 'undefined' || req.body.postal_code == null) {
             return res.status(403).json({ status: 'error', message: 'Pincode not found.' });
         }
 
@@ -186,27 +184,31 @@ exports.add_job = function(req, res, next) {
         var skills = req.body.skills;
         var contact_via = req.body.contact_via;
         var contact_value = req.body.contact_value;
-        var city = req.body.city;
-        var pincode = req.body.pincode;
-
-        var postval = {
-            business_id: business_id,
-            title: title,
-            description: description,
-            skills: skills,
-            contact_via: contact_via,
-            contact_value: contact_value,
-            city: city,
-            pincode: pincode
-        };
-
-        var sql = "INSERT INTO jobs set ?";
-        db.query(sql, postval, function(err, result) {
-            if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
-            }
-            return res.status(200).json({ status: 'success', message: 'Job created successfully.' });
-        });
+        var pincode = req.body.postal_code;
+        let city =await Citycode(pincode);
+        if(city!=''){
+            var postval = {
+                business_id: business_id,
+                title: title,
+                description: description,
+                skills: skills,
+                contact_via: contact_via,
+                contact_value: contact_value,
+                city: city,
+                pincode: pincode
+            };
+    
+            var sql = "INSERT INTO jobs set ?";
+            db.query(sql, postval, function(err, result) {
+                if (err) {
+                    return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                }
+                return res.status(200).json({ status: 'success', message: 'Job created successfully.' });
+            });
+        }else{
+            return res.status(403).json({ status: 'error', message: 'City not found for this pincode' }); 
+        }
+        
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
@@ -216,7 +218,7 @@ exports.add_job = function(req, res, next) {
 /**
  * EDIT JOB
  */
-exports.edit_job = function(req, res, next) {
+exports.edit_job =async function(req, res, next) {
     try {
         if (req.body.job_id == '' || req.body.job_id == 'undefined' || req.body.job_id == null) {
             return res.status(403).json({ status: 'error', message: 'Job id not found.' });
@@ -224,13 +226,12 @@ exports.edit_job = function(req, res, next) {
 
         var business_id = req.userdata.business_id;
         var job_id = req.body.job_id;
-
         var update_columns = " updated_at=now() ";
         if (req.body.title != '' && req.body.title != 'undefined' && req.body.title != null) {
             update_columns += ", title='" + req.body.title + "' ";
         }
         if (req.body.description != '' && req.body.description != 'undefined' && req.body.description != null) {
-            update_columns += ", description='" + description + "' ";
+            update_columns += ", description='" + req.body.description + "' ";
         }
         if (req.body.skills != '' && req.body.skills != 'undefined' && req.body.skills != null) {
             update_columns += ", `skills`='" + req.body.skills + "' ";
@@ -241,15 +242,15 @@ exports.edit_job = function(req, res, next) {
         if (req.body.contact_value != '' && req.body.contact_value != 'undefined' && req.body.contact_value != null) {
             update_columns += ", contact_value='" + req.body.contact_value + "' ";
         }
-        if (req.body.city != '' && req.body.city != 'undefined' && req.body.city != null) {
-            update_columns += ", city='" + city + "' ";
+        if (req.body.postal_code != '' && req.body.postal_code != 'undefined' && req.body.postal_code != null) {
+            update_columns += ", pincode='" + req.body.postal_code + "' ";
         }
-        if (req.body.pincode != '' && req.body.pincode != 'undefined' && req.body.pincode != null) {
-            update_columns += ", pincode='" + pincode + "' ";
+        let city =await Citycode(req.body.postal_code);
+        if(city!=''){
+            update_columns += ", city='" + city + "' ";
         }
 
         var sql = "update jobs set " + update_columns + "  WHERE id='" + job_id + "' AND business_id='" + business_id + "'";
-
         db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -260,6 +261,18 @@ exports.edit_job = function(req, res, next) {
             });
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', e });
     }
 };
+
+/*
+*Get city code from pincode
+**/
+async function Citycode(pincode) {
+    return new Promise(function(resolve, reject) {
+        var sql = "SELECT `city_id` FROM `pincodes` WHERE `pincode`='"+pincode+"' LIMIT 1";
+        db.query(sql, function(err, result) {
+            resolve(result[0].city_id);
+        });
+    });
+}

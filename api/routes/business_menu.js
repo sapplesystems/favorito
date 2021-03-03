@@ -100,4 +100,7 @@ router.post('/menu-item-photo-delete', CheckAuth, MenuController.deleteMenuPhoto
 // delete the menu
 router.post('/delete-menu-item', CheckAuth, MenuController.deleteMenu);
 
+// Change menu accept order status
+router.post('/change-menu-accept-order-status', CheckAuth, MenuController.changeMenuAcceptOrderStatus);
+
 module.exports = router;

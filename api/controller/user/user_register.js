@@ -3,6 +3,9 @@ var bcrypt = require('bcrypt');
 const nodemailer = require("nodemailer");
 var jwt = require('jsonwebtoken');
 var uniqid = require('uniqid');
+var full_url = process.env.BASE_URL + ':' + process.env.APP_PORT;
+const fast2sms = require('fast-two-sms');
+
 
 exports.register = async function(req, res, next) {
     try {
@@ -30,7 +33,7 @@ exports.register = async function(req, res, next) {
                 sql_check_profile_exist = `SELECT COUNT(id) as count FROM users WHERE profile_id = '${req.body.profile_id}'`
                 result_check_profile_exist = await exports.run_query(sql_check_profile_exist)
                 if (result_check_profile_exist[0].count > 0) {
-                    return res.status(200).json({ status: 'success', message: 'This is profile id is already exist' });
+                    return res.status(200).json({ status: 'success', message: 'This profile id is already exist' });
                 }
             } catch (error) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
@@ -101,9 +104,9 @@ exports.register = async function(req, res, next) {
 
                             var messageId = mail(res, result.insertId, result, email).catch(console.error);
                             if (messageId) {
-                                return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, phone: phone, token: token });
+                                return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sent.', id: result.insertId, phone: phone });
                             } else {
-                                return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, phone: phone, token: token });
+                                return res.status(200).json({ status: 'success', message: 'User Registered Successfully, mail sending failed.', id: result.insertId, phone: phone });
                             }
                         });
                     } else {
@@ -122,14 +125,47 @@ exports.isProfileExist = async(req, res, next) => {
         sql_check = `SELECT COUNT(id) AS count FROM users WHERE profile_id = '${req.body.profile_id}'`
         result_sql_check = await exports.run_query(sql_check)
         if (result_sql_check[0].count > 0) {
-            return res.status(200).json({ status: 'success', message: 'This profile id is already exist, please use another one' });
+            return res.status(200).json({ status: 'success', message: 'This profile id is already exist, please use another one', data: [{ is_exist: 1 }] });
         } else {
-            return res.status(200).json({ status: 'success', message: 'Available' });
+            return res.status(200).json({ status: 'success', message: 'Available', data: [{ is_exist: 0 }] });
         }
     } else {
         return res.status(403).json({ status: 'error', message: 'Profile id is missing' });
     }
 }
+
+exports.isAccountExist = async(req, res) => {
+    if (!req.body.api_type) {
+        return res.status(400).json({ status: 'error', message: 'api_type is missing either mobile or email' });
+    }
+    if (req.body.api_type == 'mobile') {
+        if (!req.body.mobile) {
+            return res.status(400).json({ status: 'error', message: 'Mobile number is missing' });
+        } else {
+            sql_mobile_check = `SELECT id FROM users WHERE phone = '${req.body.mobile}'`
+            result_mobile_check = await exports.run_query(sql_mobile_check)
+            if (result_mobile_check == '') {
+                return res.status(200).json({ status: 'success', message: 'This mobile number is available', data: [{ is_exist: 0 }] });
+            } else {
+                return res.status(200).json({ status: 'success', message: 'Already exist', data: [{ is_exist: 1 }] });
+            }
+        }
+    }
+    if (req.body.api_type == 'email') {
+        if (!req.body.email) {
+            return res.status(400).json({ status: 'error', message: 'email number is missing' });
+        } else {
+            sql_email_check = `SELECT id FROM users WHERE email = '${req.body.email}'`
+            result_email_check = await exports.run_query(sql_email_check)
+            if (result_email_check == '') {
+                return res.status(200).json({ status: 'success', message: 'This email is available', data: [{ is_exist: 0 }] });
+            } else {
+                return res.status(200).json({ status: 'success', message: 'Already exist', data: [{ is_exist: 1 }] });
+            }
+        }
+    }
+}
+
 
 // async..await is not allowed in global scope, must use a wrapper
 async function mail(p1, insertId, p3, email) {
@@ -193,6 +229,141 @@ async function mail(p1, insertId, p3, email) {
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...*/
 }
 
+exports.sendEmailVerifyLink = function(req, res, next) {
+    if (req.userdata.id == '' || req.userdata.email == '') {
+        res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+    }
+
+    var token = jwt.sign({
+        id: req.userdata.id,
+        email: req.userdata.email
+    }, 'email_validation_secret', {
+        expiresIn: process.env.EMAIL_VALIDATION_VALIDITY
+    });
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_AUTH_USER,
+            pass: process.env.EMAIL_AUTH_PASSWORD
+        }
+    });
+
+    var mailOptions = {
+        from: process.env.EMAIL_AUTH_USER,
+        to: req.userdata.email,
+        subject: 'Verification link',
+        text: `Verification link`,
+        html: `<h1>Welcome</p><br><a href="${full_url}/api/user/let-me-verify/${token}">Click here to verify the Email</a>`
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.log(`Error in sending the mail ${error}`);
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send({ status: "success", message: "email sent" })
+        }
+    });
+}
+
+exports.verifyEmailLink = async function(req, res, next) {
+    // return res.send('hello')
+    try {
+        var verified_data = jwt.verify(req.params.token, 'email_validation_secret');
+    } catch (error) {
+        res.status(404).json({
+            error: 'Invalid token'
+        });
+    }
+    try {
+        var sql = "UPDATE users SET is_email_verify='1' WHERE id='" + verified_data.id + "'";
+        var result = await exports.run_query(sql)
+        return res.status(200).send("Email is verified")
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+    }
+}
+
+exports.sendVerifyOtp = async function(req, res, next) {
+    try {
+        var otp = Math.floor(Math.random() * 90000) + 10000;
+        if (req.body.mobile != req.userdata.phone) {
+            return res.status(200).json({ status: 'Failed', message: 'Please enter the registered mobile number.' })
+        }
+        if (req.body.mobile) {
+            if (exports.sendSms(req.body.mobile, otp)) {
+                var sql = "UPDATE users SET sms_otp='" + otp + "' WHERE id='" + req.userdata.id + "'";
+                db.query(sql, function(err, result) {
+                    if (err) {
+                        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                    }
+                    return res.status(200).send({ status: 'success', message: 'OTP sent successfully' })
+                })
+            } else {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+            }
+        } else {
+            return res.status(400).json({ status: 'error', message: 'Mobile number is missing.' })
+        }
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+    }
+}
+
+exports.verifyOtp = async function(req, res, next) {
+    if (req.body.otp == null || req.body.otp == '' || req.body.otp == undefined) {
+        return res.status(400).json({ status: 'error', message: 'OTP is require' })
+    } else {
+        try {
+            otp_from_db = await exports.getOtpFromDb(req.userdata.id)
+            if (req.body.otp == otp_from_db[0].sms_otp) {
+                var sql = "UPDATE users SET is_phone_verify='1' WHERE id='" + req.userdata.id + "'";
+                try {
+                    var result = await exports.run_query(sql)
+                    var sql_delete_otp = "UPDATE users SET sms_otp=null WHERE id='" + req.userdata.id + "'";
+                    var result_delete_otp = await exports.run_query(sql_delete_otp)
+                    return res.status(200).send({ status: 'success', message: 'phone is verified' })
+                } catch (error) {
+                    return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+                }
+            } else {
+                return res.status(200).json({ status: 'fail', message: 'OTP is incorrect' })
+            }
+
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong.' })
+        }
+    }
+}
+
+exports.sendSms = async function(phone, otp) {
+    var options = {
+        authorization: process.env.FASTSENDSMS_API_KEY,
+        message: `<#> Favorito: Your code is ${otp}
+        FA+9qCX9VSu`,
+        numbers: [phone]
+    }
+    fast2sms.sendMessage(options).then(function(data) {
+        console.log('OTP is sent successfully', data);
+        return true
+    }).catch(function(error) {
+        console.log(`Error in sending otp ${error}`)
+        return false
+    })
+}
+
+exports.getOtpFromDb = function(id) {
+    return new Promise(function(resolve, reject) {
+        var sql = "SELECT sms_otp FROM users WHERE id='" + id + "'";
+        db.query(sql, function(err, result) {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(result)
+        })
+    })
+}
 
 
 exports.run_query = (sql, param = false) => {

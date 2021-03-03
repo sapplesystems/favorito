@@ -3,10 +3,10 @@ var db = require('../config/db');
 /**
  * FETCH ALL NOTIFICATION
  */
-exports.all_notifications = function (req, res, next) {
+exports.all_notifications = function(req, res, next) {
     try {
         var sql = "SELECT id, title, description FROM business_notifications WHERE business_id='" + req.userdata.business_id + "' AND business_user_id='" + req.userdata.id + "' AND is_deleted='0' AND deleted_at IS NULL";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -20,10 +20,10 @@ exports.all_notifications = function (req, res, next) {
 /**
  * STATIC DROP DONW DETAI TO CREATE THE NOTIFICATION
  */
-exports.dd_verbose = function (req, res, next) {
+exports.dd_verbose = function(req, res, next) {
     try {
         var sql = "SELECT id, `state` from states order by state";
-        db.query(sql, function (err, state_list, fields) {
+        db.query(sql, function(err, state_list, fields) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', data: err });
             }
@@ -44,7 +44,7 @@ exports.dd_verbose = function (req, res, next) {
 /**
  * VERIFY PINCODE
  */
-exports.verify_pincode = function (req, res, next) {
+exports.verify_pincode = function(req, res, next) {
     try {
         if (req.body.pincode == '' || req.body.pincode == 'undefined' || req.body.pincode == null) {
             return res.status(403).json({ status: 'error', message: 'Pincode not found' });
@@ -61,11 +61,10 @@ exports.verify_pincode = function (req, res, next) {
     }
 };
 
-
 /**
  * CREATE NEW NOTIFICATION
  */
-exports.add_notification = function (req, res, next) {
+exports.add_notification = function(req, res, next) {
     try {
         if (req.body.title == '' || req.body.title == 'undefined' || req.body.title == null) {
             return res.status(403).json({ status: 'error', message: 'Notification title not found.' });
@@ -97,8 +96,8 @@ exports.add_notification = function (req, res, next) {
         var business_user_id = req.userdata.id;
 
         var sql = "INSERT INTO business_notifications(title, description, `action`, contact, audience, `area`, area_detail, quantity, business_id, business_user_id) \n\
-                VALUES ('"+ title + "','" + description + "','" + action + "','" + contact + "','" + audience + "','" + area + "','" + area_detail + "','" + quantity + "','" + business_id + "','" + business_user_id + "');";
-        db.query(sql, function (err, result) {
+                VALUES ('" + title + "','" + description + "','" + action + "','" + contact + "','" + audience + "','" + area + "','" + area_detail + "','" + quantity + "','" + business_id + "','" + business_user_id + "');";
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
@@ -109,14 +108,14 @@ exports.add_notification = function (req, res, next) {
     }
 };
 
-exports.detail_notification = function (req, res, next) {
+exports.detail_notification = function(req, res, next) {
     try {
         if (req.body.id == '' || req.body.id == 'undefined' || req.body.id == null) {
             return res.status(403).json({ status: 'error', message: 'Notification id not found.' });
         }
-        var notification_id=req.body.id;
+        var notification_id = req.body.id;
         var sql = "SELECT title, description, `action`, contact, audience, `area`, area_detail, quantity, business_id, business_user_id FROM business_notifications WHERE business_id='" + req.userdata.business_id + "' AND id='" + notification_id + "' AND is_deleted='0' AND deleted_at IS NULL";
-        db.query(sql, function (err, result) {
+        db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }

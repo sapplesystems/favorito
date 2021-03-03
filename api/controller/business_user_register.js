@@ -122,6 +122,7 @@ exports.isAccountExist = async(req, res) => {
     if (!req.body.api_type) {
         return res.status(400).json({ status: 'error', message: 'api_type is missing either mobile or email' });
     }
+
     if (req.body.api_type == 'mobile') {
         if (!req.body.mobile) {
             return res.status(400).json({ status: 'error', message: 'Mobile number is missing' });

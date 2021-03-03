@@ -44,6 +44,10 @@ var userBusinessRoute = require('./routes/user/user_business_route');
 var userAddressRoute = require('./routes/user/user_address_route');
 var userCheckinRoute = require('./routes/user/user_checkin_route');
 var userBusinessMenuRoute = require('./routes/user/user_business_menu_route');
+var userChangePasswordController = require('./routes/user/user_change_password_route');
+var userAdsRoute = require('./routes/user/user_ads_route');
+
+
 
 /*** USER ROUTES DETAIL END *****/
 
@@ -118,6 +122,17 @@ app.use('/api/user-business', userBusinessRoute)
  * USER ROUTES FOR ADDRESS
  */
 app.use('/api/user-address', userAddressRoute)
+
+
+/**
+ * USER ROUTES FOR ADDRESS
+ */
+app.use('/api/user-ads', userAdsRoute)
+
+/**
+ * USER ROUTES FOR CHANGE PASSWORD
+ */
+app.use('/api/user-change-password', userChangePasswordController)
 
 
 // catch 404 and forward to error handler

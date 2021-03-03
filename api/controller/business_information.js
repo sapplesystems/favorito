@@ -46,7 +46,7 @@ exports.getBusinessInformation = async function(req, res, next) {
                 if (rows[0].payment_method) {
                     rows[0].payment_method = (rows[0].payment_method).split(',');
                 } else {
-                    rows[0].payment_method = ''
+                    rows[0].payment_method = []
                 }
                 rows[0].photos = await exports.getBusinessInformationUploads(business_id);
                 return res.status(200).json({ status: 'success', message: 'success', dd_verbose: dd_verbose, data: rows[0] });
@@ -139,7 +139,7 @@ exports.getBusinessInformationUpdate = async function(req, res, next) {
             });
             try {
                 // if the business_information is completed update the is_information_completed
-                if (req.body.categories && req.body.sub_categories && req.body.price_range && req.body.payment_method) {
+                if (req.body.sub_categories && req.body.price_range && req.body.payment_method) {
                     sql_is_info_complete = `update business_master set is_information_completed = '1' where business_id = '${business_id}'`
                 } else {
                     sql_is_info_complete = `update business_master set is_information_completed = '0' where business_id = '${business_id}'`

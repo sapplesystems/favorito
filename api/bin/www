@@ -32,140 +32,39 @@ server.on('listening', onListening);
 /**
  * socket code start here
  */
-// var db = require('../config/db');
-// const io = require('socket.io')(server);
-// const user = {};
-// io.on('connection', socket => {
-//     socket.on('new-user-joined', data => {
-//         user[socket.id] = data;
-//         socket.broadcast.emit('user-joined', data.user_name);
-//     });
+var db = require('../config/db');
+const io = require('socket.io')(server);
+const user = {};
+io.on('connection', socket => {
+    socket.on('new-user-joined', data => {
+        user[socket.id] = data;
+        socket.broadcast.emit('user-joined', data.user_name);
+    });
 
-//     socket.on('send', args => {
-//         var postdata = {
-//             user_id: user[socket.id].user_id,
-//             user_name: user[socket.id].user_name,
-//             message: args.message,
-//             photo: args.photo
-//         };
+    socket.on('send', args => {
+        var postdata = {
+            user_id: user[socket.id].user_id,
+            user_name: user[socket.id].user_name,
+            message: args.message,
+            photo: args.photo
+        };
 
-//         var sql = "INSERT INTO business_chats SET ?";
-//         db.query(sql, postdata, function(err, result) {
-//             if (!err) {
-//                 socket.broadcast.emit('receive', { message: postdata.message, photo: postdata.photo, name: user[socket.id].user_name });
-//             }
-//         });
-//     });
+        var sql = "INSERT INTO business_chats SET ?";
+        db.query(sql, postdata, function(err, result) {
+            if (!err) {
+                socket.broadcast.emit('receive', { message: postdata.message, photo: postdata.photo, name: user[socket.id].user_name });
+            }
+        });
+    });
 
-//     socket.on('disconnect', message => {
-//         socket.broadcast.emit('disconnect', user[socket.id].user_name);
-//         delete user[socket.id];
-//     });
-// });
+    socket.on('disconnect', message => {
+        socket.broadcast.emit('disconnect', user[socket.id].user_name);
+        delete user[socket.id];
+    });
+});
 /**
  * socket code end here
  */
-
-
-/**
- * socket code by amit start here
- */
-
-var jwt = require('jsonwebtoken');
-var db = require('../config/db');
-const { run_query } = require('../controller/business_user');
-const io = require('socket.io')(server);
-io.on('connection', async socket => {
-
-    // when any client get connected
-    console.log('A user connected');
-    //Whenever someone disconnects this piece of code executed
-    socket.on('disconnect', function() {
-        // when any client get disconnected
-        console.log('A user disconnected');
-    });
-
-    // joining of the room
-
-    socket.on('join_room', function(data) {
-        socket.join(data.room_id)
-        console.log('room is joined')
-    })
-
-
-    socket.on('client_msg', async function(data) {
-        // io.sockets.emit('client_msg_server_to_client', { msg_client: data.new_client_msg, client_name: data.client_name });
-        // io.sockets.emit('client_msg_server_to_client', { msg_client: data.new_client_msg, client_name: data.client_name });
-        socket.broadcast.to(data.room_id).emit('client_msg_server_to_client', {
-            msg_client: data.new_client_msg,
-            target_id: data.target_id
-        })
-
-        source_id = 0
-
-        try {
-            var decode = jwt.verify(data.token, 'secret');
-            if (decode.business_id) {
-                source_id = decode.business_id
-            } else {
-                source_id = decode.id
-            }
-        } catch (error) {
-            socket.broadcast.to(data.room_id).emit('error_message_token_expire', {
-                message: 'Token is expire please login again',
-                error: error
-            })
-        }
-
-        insert_chat_data = {
-            source_id: source_id,
-            target_id: data.target_id,
-            room_id: data.room_id,
-            message: data.new_client_msg,
-            photo: 1,
-        }
-        sql_insert_chat = `INSERT INTO business_chat_messages SET ?`
-        try {
-            result_insert_chat = await run_query(sql_insert_chat, insert_chat_data)
-        } catch (error) {
-            socket.broadcast.to(data.room_id).emit('error_message', {
-                message: 'Could not send the message',
-                error: error
-            })
-        }
-    });
-});
-
-// global function to run the query
-exports.run_query = (sql, param = false) => {
-    if (param == false) {
-        return new Promise((resolve, reject) => {
-            db.query(sql, (error, result) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(result);
-                }
-            })
-        })
-    } else {
-        return new Promise((resolve, reject) => {
-            db.query(sql, param, (error, result) => {
-                if (error) {
-                    console.log(error)
-                    reject(error);
-                } else {
-                    resolve(result);
-                }
-            })
-        })
-    }
-}
-
-/**
- * socket code by amit end here
- */
-
 
 /**
  * Normalize a port into a number, string, or false.

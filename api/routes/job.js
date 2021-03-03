@@ -19,7 +19,7 @@ router.post('/dd-verbose', CheckAuth, JobController.dd_verbose);
 /**
  * FETCH ALL PINCODE OF THE CITY
  */
-router.post('/city-pincode', JobController.city_pincode);
+//router.post('/city-pincode', JobController.city_pincode);  // not in use
 
 
 /**

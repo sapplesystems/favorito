@@ -5,8 +5,8 @@ var ChangePasswordController = require('../controller/change_password');
 
 
 /* get method for fetch all products. */
-router.post('/', CheckAuth, ChangePasswordController.changePassword);
-router.post('/update-password', ChangePasswordController.updatePassword);
+router.post('/change-password-by-old', CheckAuth, ChangePasswordController.changePassword);
+router.post('/update-password', CheckAuth, ChangePasswordController.updatePassword);
 
 /* Send email with the otp and return the business id with success msg */
 router.post('/send-otp-email', ChangePasswordController.sendOtpOnEmail);

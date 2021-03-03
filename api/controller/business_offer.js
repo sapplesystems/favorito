@@ -28,7 +28,8 @@ exports.all_offers = function (req, res, next) {
                 status: 'success',
                 message: 'success',
                 offer_status_drop_down: offer_status_drop_down,
-                data: (result.length === 1) ? result[0] : result
+                //commented by parag data: (result.length === 1) ? result[0] : result
+				data:  result
             });
         });
     } catch (e) {
