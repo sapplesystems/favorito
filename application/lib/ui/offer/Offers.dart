@@ -1,13 +1,14 @@
-import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/model/offer/OfferListDataModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/offer/CreateOffer.dart';
 import 'package:Favorito/ui/offer/ViewMore.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:provider/provider.dart';
 
 class Offers extends StatefulWidget {
   @override
@@ -35,53 +36,54 @@ class _OfferState extends State<Offers> {
   }
 
   initializeIntitialValues() async {
-    await WebService.funGetOfferData(context).then((value) {
-      setState(() {
-        activeNewUserOfferList.clear();
-        inactiveNewUserOfferList.clear();
-        activeCurrentUserOfferList.clear();
-        inactiveCurrentUserOfferList.clear();
-        // for (var temp in value.data) {
-        //   if (temp.offerType == 'Current Offer') {
-        //     if (temp.offerStatus == 'Activated') {
-        //       activeCurrentUserOfferList.add(temp);
-        //     } else {
-        //       inactiveCurrentUserOfferList.add(temp);
-        //     }
-        //   } else if (temp.offerType == 'New User Offer') {
-        //     if (temp.offerStatus == 'Activated') {
-        //       activeNewUserOfferList.add(temp);
-        //     } else {
-        //       inactiveNewUserOfferList.add(temp);
-        //     }
-        //   }
-        // }
-        for (var temp in value.data) {
-          if (temp.offerStatus == 'Activated') {
-            if (temp.offerType == 'Current Offer') {
-              activeCurrentUserOfferList.add(temp);
-            } else if (temp.offerType == 'New User Offer') {
-              activeNewUserOfferList.add(temp);
-            }
-          } else {
-            if (temp.offerType == 'Current Offer') {
-              inactiveCurrentUserOfferList.add(temp);
-            } else if (temp.offerType == 'New User Offer') {
-              inactiveNewUserOfferList.add(temp);
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funGetOfferData(context).then((value) {
+        setState(() {
+          activeNewUserOfferList.clear();
+          inactiveNewUserOfferList.clear();
+          activeCurrentUserOfferList.clear();
+          inactiveCurrentUserOfferList.clear();
+          // for (var temp in value.data) {
+          //   if (temp.offerType == 'Current Offer') {
+          //     if (temp.offerStatus == 'Activated') {
+          //       activeCurrentUserOfferList.add(temp);
+          //     } else {
+          //       inactiveCurrentUserOfferList.add(temp);
+          //     }
+          //   } else if (temp.offerType == 'New User Offer') {
+          //     if (temp.offerStatus == 'Activated') {
+          //       activeNewUserOfferList.add(temp);
+          //     } else {
+          //       inactiveNewUserOfferList.add(temp);
+          //     }
+          //   }
+          // }
+          for (var temp in value.data) {
+            if (temp.offerStatus == 'Activated') {
+              if (temp.offerType == 'Current Offer') {
+                activeCurrentUserOfferList.add(temp);
+              } else if (temp.offerType == 'New User Offer') {
+                activeNewUserOfferList.add(temp);
+              }
+            } else {
+              if (temp.offerType == 'Current Offer') {
+                inactiveCurrentUserOfferList.add(temp);
+              } else if (temp.offerType == 'New User Offer') {
+                inactiveNewUserOfferList.add(temp);
+              }
             }
           }
-        }
-        showData(_selectedOfferType);
-        // newUserOfferInputList.clear();
-        // for (var data in activeNewUserOfferList) {
-        //   newUserOfferInputList.add(data);
-        // }
-        // currentUserOfferInputList.clear();
-        // for (var data in activeCurrentUserOfferList) {
-        //   currentUserOfferInputList.add(data);
-        // }
+          showData(_selectedOfferType);
+          // newUserOfferInputList.clear();
+          // for (var data in activeNewUserOfferList) {
+          //   newUserOfferInputList.add(data);
+          // }
+          // currentUserOfferInputList.clear();
+          // for (var data in activeCurrentUserOfferList) {
+          //   currentUserOfferInputList.add(data);
+          // }
+        });
       });
-    });
   }
 
   @override

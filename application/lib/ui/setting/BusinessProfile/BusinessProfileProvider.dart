@@ -5,8 +5,10 @@ import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -75,30 +77,32 @@ class BusinessProfileProvider extends ChangeNotifier {
   }
 
   void _cityWebData() async {
-    WebService.funGetCities().then((value) {
-      if (value.message == "success") {
-        _cityModel.clear();
-        cityList.clear();
-        _cityModel.addAll(value.data);
-        for (int i = 0; i < _cityModel?.length; i++)
-          cityList.add(_cityModel[i].city);
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      WebService.funGetCities().then((value) {
+        if (value.message == "success") {
+          _cityModel.clear();
+          cityList.clear();
+          _cityModel.addAll(value.data);
+          for (int i = 0; i < _cityModel?.length; i++)
+            cityList.add(_cityModel[i].city);
+        }
+      });
   }
 
   void _stateWebData() async {
-    WebService.funGetStates().then((value) {
-      if (value.message == "success") {
-        stateModel.clear();
-        stateList.clear();
-        stateModel.addAll(value.data);
-        for (int i = 0; i < stateModel?.length; i++)
-          stateList.add(stateModel[i].state);
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      WebService.funGetStates().then((value) {
+        if (value.message == "success") {
+          stateModel.clear();
+          stateList.clear();
+          stateModel.addAll(value.data);
+          for (int i = 0; i < stateModel?.length; i++)
+            stateList.add(stateModel[i].state);
+        }
+      });
   }
 
-  prepareWebService() {
+  prepareWebService() async {
     var website = '';
     for (int _i = 0; _i < webSiteLength; _i++) {
       if (controller[_i + 15].text.isEmpty) {
@@ -144,118 +148,126 @@ class BusinessProfileProvider extends ChangeNotifier {
       "photo": "${controller[0].text}",
     };
     print("_map:${map.toString()}");
-    pr.show().timeout(Duration(seconds: 5));
-    WebService.funUserProfileUpdate(map).then((value) async {
-      pr.hide();
-      Provider.of<SettingProvider>(context, listen: false).getProfileImage();
-      if (value.status == 'success') {
-        await Future.delayed(const Duration(seconds: 1));
-        needSave(false);
-        BotToast.showText(text: value.message);
+    if (await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet()) {
+      pr.show().timeout(Duration(seconds: 5));
+      await WebService.funUserProfileUpdate(map).then((value) async {
+        pr.hide();
+        Provider.of<SettingProvider>(context, listen: false).getProfileImage();
+        if (value.status == 'success') {
+          await Future.delayed(const Duration(seconds: 1));
+          needSave(false);
+          BotToast.showText(text: value.message);
+
+          try {
+            listviewController.animateTo(
+                listviewController?.position?.minScrollExtent,
+                curve: Curves.easeOut,
+                duration: const Duration(microseconds: 1));
+            FocusScope.of(context).unfocus();
+          } catch (e) {}
+        }
+      });
+    }
+  }
+
+  getProfileData(bool val) async {
+    if (await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet()) {
+      if (val)
+        try {
+          pr?.show()?.timeout(Duration(seconds: 10));
+        } catch (e) {
+          print(e.toString);
+        }
+      await WebService.getProfileData().then((value) {
+        if (val)
+          try {
+            pr?.hide()?.timeout(Duration(seconds: 10));
+          } catch (e) {
+            print(e.toString);
+          }
+        if (pr.isShowing()) pr.hide();
+        var va = value?.data;
+
+        if (va.location != null) {
+          var _v = (va.location?.split(','));
+          setPosition(_v);
+        }
+        addressList?.clear();
+        if (va?.website != null)
+          for (int i = 0; i < va.website.length; i++) {
+            print("_v1:${controller.length}");
+            if (va.website[i].trim().isNotEmpty &&
+                va.website[i].characters.length > 2) {
+              controller[15 + i].text = va.website[0];
+              if (va.website.length < webSiteLength) webSiteLengthPlus();
+            }
+          }
+        controller[1].text = va.businessName ?? '';
+
+        controller[2].text = va.businessPhone ?? '';
+        controller[3].text = va.landline ?? "";
+
+        addressList.add(va.address1 ?? '');
+        addressList.add(va.address2 ?? '');
+        addressList.add(va.address3 ?? '');
+        addressLength = addressList?.length;
+
+        if (va?.photo != null) {
+          controller[0].text = va.photo;
+          addOrChangePhoto = 'Change Photo';
+        }
+        print("va.businessName${va.businessName}");
+        controller[2].text = va.businessPhone ?? '';
+        controller[3].text = va.landline ?? "";
+        controller[4].text = va.workingHours;
+
+        controller[6].text = addressList[0] ?? '';
+        controller[7].text = addressList[1] ?? '';
+        controller[8].text = addressList[2] ?? '';
+        controller[9].text = va.postalCode ?? '';
+
+        dd1?.currentState?.changeSelectedItem(va?.workingHours ?? "");
+
+        pinCaller(va.postalCode);
+        controller[13].text = va.businessEmail;
+        controller[14].text = va.shortDescription;
+
+        controller[4].text = va.workingHours;
+        // notifyListeners();
+        if (controller[4].text == "Select Hours" ||
+            controller[4].text == 'Select Hours') {
+          // Provider.of<BusinessHoursProvider>(context, listen: false).getData();
+        }
 
         try {
           listviewController.animateTo(
               listviewController?.position?.minScrollExtent,
               curve: Curves.easeOut,
-              duration: const Duration(microseconds: 1));
-          FocusScope.of(context).unfocus();
+              duration: const Duration(milliseconds: 1));
         } catch (e) {}
-      }
-    });
-  }
-
-  getProfileData(bool val) async {
-    if (val)
-      try {
-        pr?.show()?.timeout(Duration(seconds: 10));
-      } catch (e) {
-        print(e.toString);
-      }
-    await WebService.getProfileData().then((value) {
-      if (val)
-        try {
-          pr?.hide()?.timeout(Duration(seconds: 10));
-        } catch (e) {
-          print(e.toString);
-        }
-      if (pr.isShowing()) pr.hide();
-      var va = value?.data;
-
-      if (va.location != null) {
-        var _v = (va.location?.split(','));
-        setPosition(_v);
-      }
-      addressList?.clear();
-      if (va?.website != null)
-        for (int i = 0; i < va.website.length; i++) {
-          print("_v1:${controller.length}");
-          if (va.website[i].trim().isNotEmpty &&
-              va.website[i].characters.length > 2) {
-            controller[15 + i].text = va.website[0];
-            if (va.website.length < webSiteLength) webSiteLengthPlus();
-          }
-        }
-      controller[1].text = va.businessName ?? '';
-
-      controller[2].text = va.businessPhone ?? '';
-      controller[3].text = va.landline ?? "";
-
-      addressList.add(va.address1 ?? '');
-      addressList.add(va.address2 ?? '');
-      addressList.add(va.address3 ?? '');
-      addressLength = addressList?.length;
-
-      if (va?.photo != null) {
-        controller[0].text = va.photo;
-        addOrChangePhoto = 'Change Photo';
-      }
-      print("va.businessName${va.businessName}");
-      controller[2].text = va.businessPhone ?? '';
-      controller[3].text = va.landline ?? "";
-      controller[4].text = va.workingHours;
-
-      controller[6].text = addressList[0] ?? '';
-      controller[7].text = addressList[1] ?? '';
-      controller[8].text = addressList[2] ?? '';
-      controller[9].text = va.postalCode ?? '';
-
-      dd1?.currentState?.changeSelectedItem(va?.workingHours ?? "");
-
-      pinCaller(va.postalCode);
-      controller[13].text = va.businessEmail;
-      controller[14].text = va.shortDescription;
-
-      controller[4].text = va.workingHours;
-      // notifyListeners();
-      if (controller[4].text == "Select Hours" ||
-          controller[4].text == 'Select Hours') {
-        // Provider.of<BusinessHoursProvider>(context, listen: false).getData();
-      }
-
-      try {
-        listviewController.animateTo(
-            listviewController?.position?.minScrollExtent,
-            curve: Curves.easeOut,
-            duration: const Duration(milliseconds: 1));
-      } catch (e) {}
-      notifyListeners();
-      return value;
-    });
+        notifyListeners();
+        return value;
+      });
+    }
   }
 
   void pinCaller(String _val) async {
     if (_val?.length == 6) {
-      await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
-        if (value.data.city == null) {
-          error[9] = value.message;
-          return;
-        } else
-          error[9] = null;
+      if (await Provider.of<UtilProvider>(context, listen: false)
+          .checkInternet())
+        await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
+          if (value.data.city == null) {
+            error[9] = value.message;
+            return;
+          } else
+            error[9] = null;
 
-        ddCity?.currentState?.changeSelectedItem(value.data.city);
-        ddState?.currentState?.changeSelectedItem(value.data.stateName);
-        controller[12].text = "India";
-      });
+          ddCity?.currentState?.changeSelectedItem(value.data.city);
+          ddState?.currentState?.changeSelectedItem(value.data.stateName);
+          controller[12].text = "India";
+        });
     } else {
       controller[10].text = "";
       controller[11].text = "";
@@ -267,7 +279,20 @@ class BusinessProfileProvider extends ChangeNotifier {
 
   setContext(BuildContext context) {
     this.context = context;
-    pr = ProgressDialog(context)..style(message: "Please Wait..");
+    pr = ProgressDialog(context)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
   }
 
   void webSiteLengthPlus() {
@@ -276,11 +301,12 @@ class BusinessProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getBusinessProfileData() {
-    WebService.funGetBusinessProfileData().then((value) {
-      _businessProfileData = value;
-      notifyListeners();
-    });
+  getBusinessProfileData() async {
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funGetBusinessProfileData().then((value) {
+        _businessProfileData = value;
+        notifyListeners();
+      });
   }
 
   _getCurrentLocation() async {
@@ -320,16 +346,22 @@ class BusinessProfileProvider extends ChangeNotifier {
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(minimumAspectRatio: 1.0));
     image = croppedFile;
-    pr.show();
-    await WebService.profileImageUpdate(image).then((value) {
-      if (value.status == "success") {
-        pr.hide();
-        controller[0].text = value.data[0].photo;
-        addOrChangePhoto = 'Change Photo';
-        notifyListeners();
-        Provider.of<SettingProvider>(context, listen: false).getProfileImage();
-      }
-    });
+
+    if (await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet()) {
+      pr.show();
+
+      await WebService.profileImageUpdate(image).then((value) {
+        if (value.status == "success") {
+          pr.hide();
+          controller[0].text = value.data[0].photo;
+          addOrChangePhoto = 'Change Photo';
+          notifyListeners();
+          Provider.of<SettingProvider>(context, listen: false)
+              .getProfileImage();
+        }
+      });
+    }
     notifyListeners();
   }
 

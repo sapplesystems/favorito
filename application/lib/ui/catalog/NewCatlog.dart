@@ -19,7 +19,7 @@ class NewCatlog extends StatelessWidget {
     return WillPopScope(
       onWillPop: () {
         vaTrue.clearAll();
-        vaTrue.getCatelogList(false);
+        vaTrue.getCatelogList(false, context);
         Navigator.of(context).pop();
       },
       child: Scaffold(
@@ -39,7 +39,7 @@ class NewCatlog extends StatelessWidget {
             ),
             onPressed: () {
               vaTrue.clearAll();
-              vaTrue.getCatelogList(false);
+              vaTrue.getCatelogList(false, context);
               Navigator.of(context).pop();
             },
           ),

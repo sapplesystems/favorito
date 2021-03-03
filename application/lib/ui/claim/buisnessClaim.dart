@@ -6,6 +6,7 @@ import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/model/claimInfo.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/Regexer.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -14,6 +15,7 @@ import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 // import 'package:flutter_config/flutter_config.dart';
 
 class BusinessClaim extends StatefulWidget {
@@ -132,7 +134,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         security: false,
                                         sufixClick: () async {
                                           if (clm?.result[0]?.isPhoneVerified ==
-                                              0) {
+                                                  0 &&
+                                              await Provider.of<UtilProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .checkInternet()) {
                                             pr.show();
                                             await WebService.funSendOtpSms(
                                                     {"mobile": ctrlMobile.text})
@@ -190,26 +196,32 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           errorAnimationController:
                                               errorController,
                                           onCompleted: (v) async {
-                                            pr.show();
-                                            await WebService.funClaimVerifyOtp(
-                                                    {"otp": v.toString()},
-                                                    context)
-                                                .then((value) {
-                                              pr.hide();
-                                              BotToast.showText(
-                                                  text: value.message,
-                                                  duration:
-                                                      Duration(seconds: 5));
-                                              if (value.status == 'success') {
-                                                sentOtp = false;
-                                                getClaimData();
-                                              } else if (value.status ==
-                                                  'fail') {
-                                                textEditingController.clear();
-                                                print(
-                                                    "value.message:${value.message}");
-                                              }
-                                            });
+                                            if (await Provider.of<UtilProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .checkInternet()) {
+                                              pr.show();
+                                              await WebService
+                                                      .funClaimVerifyOtp(
+                                                          {"otp": v.toString()},
+                                                          context)
+                                                  .then((value) {
+                                                pr.hide();
+                                                BotToast.showText(
+                                                    text: value.message,
+                                                    duration:
+                                                        Duration(seconds: 5));
+                                                if (value.status == 'success') {
+                                                  sentOtp = false;
+                                                  getClaimData();
+                                                } else if (value.status ==
+                                                    'fail') {
+                                                  textEditingController.clear();
+                                                  print(
+                                                      "value.message:${value.message}");
+                                                }
+                                              });
+                                            }
                                           },
                                           beforeTextPaste: (text) {
                                             print("Allowing to paste $text");
@@ -233,24 +245,30 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
-                                                  pr.show().timeout(
-                                                      Duration(seconds: 2));
-                                                  await WebService
-                                                      .funSendOtpSms({
-                                                    "mobile": ctrlMobile.text
-                                                  }).then((value) {
-                                                    pr.hide();
-                                                    if (value.status ==
-                                                        'success') {
-                                                      setState(() {
-                                                        sentOtp = true;
-                                                      });
-                                                    }
-                                                    BotToast.showText(
-                                                        text: value.message,
-                                                        duration: Duration(
-                                                            seconds: 5));
-                                                  });
+                                                  if (await Provider.of<
+                                                              UtilProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .checkInternet()) {
+                                                    pr.show().timeout(
+                                                        Duration(seconds: 2));
+                                                    await WebService
+                                                        .funSendOtpSms({
+                                                      "mobile": ctrlMobile.text
+                                                    }).then((value) {
+                                                      pr.hide();
+                                                      if (value.status ==
+                                                          'success') {
+                                                        setState(() {
+                                                          sentOtp = true;
+                                                        });
+                                                      }
+                                                      BotToast.showText(
+                                                          text: value.message,
+                                                          duration: Duration(
+                                                              seconds: 5));
+                                                    });
+                                                  }
                                                 },
                                                 child: Text(
                                                   "Regenerate OTP",
@@ -292,24 +310,30 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                             if (clm?.result[0]
                                                     ?.isEmailVerified ==
                                                 0) {
-                                              pr.show().timeout(
-                                                  Duration(seconds: 2));
-                                              await WebService
-                                                      .funSendEmailVerifyLink(
-                                                          context)
-                                                  .then((value) {
-                                                pr.hide();
-                                                BotToast.showText(
-                                                    text: value.message,
-                                                    duration:
-                                                        Duration(seconds: 5));
-                                                if (value.status == 'success') {
-                                                  setState(() {
-                                                    emailverify = "";
-                                                  });
-                                                  getClaimData();
-                                                }
-                                              });
+                                              if (await Provider.of<
+                                                          UtilProvider>(context,
+                                                      listen: false)
+                                                  .checkInternet()) {
+                                                pr.show().timeout(
+                                                    Duration(seconds: 2));
+                                                await WebService
+                                                        .funSendEmailVerifyLink(
+                                                            context)
+                                                    .then((value) {
+                                                  pr.hide();
+                                                  BotToast.showText(
+                                                      text: value.message,
+                                                      duration:
+                                                          Duration(seconds: 5));
+                                                  if (value.status ==
+                                                      'success') {
+                                                    setState(() {
+                                                      emailverify = "";
+                                                    });
+                                                    getClaimData();
+                                                  }
+                                                });
+                                              }
                                             }
                                           }),
                                     ),
@@ -397,18 +421,22 @@ class _BusinessClaimState extends State<BusinessClaim> {
                             horizontal: sm.w(16), vertical: sm.h(4)),
                         child: RoundedButton(
                             clicker: () async {
-                              pr.show();
-                              await WebService.funClaimAdd(ctrlMobile.text,
-                                      ctrlMail.text, files, context)
-                                  .then((value) {
-                                pr.hide();
-                                setNeedSubmit(false);
-                                BotToast.showText(
-                                    text: value.message,
-                                    duration: Duration(seconds: 5));
-                                result.files.clear();
-                                // Navigator.pop(context);
-                              });
+                              if (await Provider.of<UtilProvider>(context,
+                                      listen: false)
+                                  .checkInternet()) {
+                                pr.show();
+                                await WebService.funClaimAdd(ctrlMobile.text,
+                                        ctrlMail.text, files, context)
+                                    .then((value) {
+                                  pr.hide();
+                                  setNeedSubmit(false);
+                                  BotToast.showText(
+                                      text: value.message,
+                                      duration: Duration(seconds: 5));
+                                  result.files.clear();
+                                  // Navigator.pop(context);
+                                });
+                              }
                             },
                             clr: Colors.red,
                             title: "Submit")),
@@ -420,18 +448,21 @@ class _BusinessClaimState extends State<BusinessClaim> {
   }
 
   getClaimData() async {
-    pr.show();
-    await WebService.funClaimInfo(context).then((value) {
-      pr.hide();
-      if (value.status == 'success') {
-        ctrlMail.text = value?.result[0]?.businessEmail;
-        ctrlMobile.text = value?.result[0]?.businessPhone;
+    if (await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet()) {
+      pr.show();
+      await WebService.funClaimInfo(context).then((value) {
+        pr.hide();
+        if (value.status == 'success') {
+          ctrlMail.text = value?.result[0]?.businessEmail;
+          ctrlMobile.text = value?.result[0]?.businessPhone;
 
-        setState(() => clm = value);
-        if (clm?.result[0]?.isPhoneVerified == 1) otpverify = "";
-        if (clm?.result[0]?.isEmailVerified == 1) emailverify = "";
-      }
-    });
+          setState(() => clm = value);
+          if (clm?.result[0]?.isPhoneVerified == 1) otpverify = "";
+          if (clm?.result[0]?.isEmailVerified == 1) emailverify = "";
+        }
+      });
+    }
   }
 
   setNeedSubmit(_val) => setState(() => needSubmit = _val);

@@ -8,6 +8,7 @@ import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/Regexer.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -15,13 +16,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 class JobProvider extends ChangeNotifier {
   int jobId;
   bool jobDataCall = false;
   String formTitle = '';
   BuildContext context;
-  List<String> contactOptionsList = [];
+  List<String> contactOptionsList = ['Phone', 'Email'];
   List<CityList> cityList = [];
   List<SkillListRequiredDataModel> selectedSkillList = [];
   List<PincodeModel> pincodesForCity = [];
@@ -85,9 +87,8 @@ class JobProvider extends ChangeNotifier {
       error.add(null);
       controller.add(TextEditingController());
     }
-
-    initializeDefaultValues();
     verbose();
+    initializeDefaultValues();
   }
   setContext(BuildContext _context) {
     this.context = _context;
@@ -133,7 +134,9 @@ class JobProvider extends ChangeNotifier {
       requestModel.data = _map;
       requestModel.url = serviceFunction.funCreateJob;
       requestModel.context = context;
-      if (jobId == 0) {
+      if (jobId == 0 &&
+          await Provider.of<UtilProvider>(context, listen: false)
+              .checkInternet()) {
         print("aaaanew");
         await WebService.serviceCall(requestModel).then((value) {
           var _v =
@@ -161,15 +164,17 @@ class JobProvider extends ChangeNotifier {
         requestModel.data = _map;
         requestModel.url = serviceFunction.funEditJob;
         requestModel.context = context;
-        await WebService.funEditJob(requestModel, context).then((value) {
-          if (value.status == 'success') {
-            BotToast.showText(text: value.message);
-            allClear();
-            Navigator.of(context).pop();
-          } else {
-            BotToast.showText(text: value.message);
-          }
-        });
+        if (await Provider.of<UtilProvider>(context, listen: false)
+            .checkInternet())
+          await WebService.funEditJob(requestModel, context).then((value) {
+            if (value.status == 'success') {
+              BotToast.showText(text: value.message);
+              allClear();
+              Navigator.of(context).pop();
+            } else {
+              BotToast.showText(text: value.message);
+            }
+          });
       }
     } else
       autoValidateForm = true;
@@ -192,13 +197,14 @@ class JobProvider extends ChangeNotifier {
   }
 
   void verbose() async {
-    await WebService.funGetCreteJobDefaultData(context).then((value) {
-      contactOptionsList.clear();
-      cityList.clear();
-      contactOptionsList.addAll(value.data.contactVia);
-      cityList.addAll(value.data.cityList);
-      notifyListeners();
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funGetCreteJobDefaultData(context).then((value) {
+        // contactOptionsList.clear();
+        cityList.clear();
+        // contactOptionsList.addAll(value.data.contactVia);
+        cityList.addAll(value.data.cityList);
+        notifyListeners();
+      });
   }
 
   initializeDefaultValues() {
@@ -216,10 +222,12 @@ class JobProvider extends ChangeNotifier {
   }
 
   void getJobDataById() async {
+    // allClear();
+    // if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
     await WebService.funGetEditJobData(jobId, context).then((value) {
-      contactOptionsList.clear();
+      // contactOptionsList.clear();
       cityList.clear();
-      contactOptionsList = value.verbose.contactVia;
+      // contactOptionsList = value.verbose.contactVia;
       for (var temp in value.verbose.cityList) {
         CityList city = CityList();
         city.id = temp.id;
@@ -258,24 +266,25 @@ class JobProvider extends ChangeNotifier {
     requestModel.context = context;
     requestModel.url = serviceFunction.funGetCityByPincode;
     requestModel.data = {"pincode": val};
-    await WebService.serviceCall(requestModel).then((value) {
-      var _v =
-          CityModelResponse.fromJson(convert.json.decode(value.toString()));
-      print("ffff${_v.data.city}");
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.serviceCall(requestModel).then((value) {
+        var _v =
+            CityModelResponse.fromJson(convert.json.decode(value.toString()));
+        print("ffff${_v.data.city}");
 
-      try {
-        if (_v.data.city == null) {
-          controller[4].text = '';
-          error[3] = _v.message;
-        } else {
-          error[3] = null;
-          controller[4].text = _v.data.city.trim();
+        try {
+          if (_v.data.city == null) {
+            controller[4].text = '';
+            error[3] = _v.message;
+          } else {
+            error[3] = null;
+            controller[4].text = _v.data.city.trim();
+          }
+        } catch (e) {
+          print("error:${e.toString()}");
         }
-      } catch (e) {
-        print("error:${e.toString()}");
-      }
-      notifyListeners();
-    });
+        notifyListeners();
+      });
   }
 
   allClear() {

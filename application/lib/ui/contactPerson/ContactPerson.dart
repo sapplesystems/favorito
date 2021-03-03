@@ -1,13 +1,9 @@
-import 'package:Favorito/component/PopupContent.dart';
-import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/showPopup.dart';
-import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/ui/ResetPass/ResetPass.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';
 import 'package:flutter/material.dart';

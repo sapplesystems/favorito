@@ -61,6 +61,7 @@ import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
@@ -69,6 +70,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:connectivity/connectivity.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 Response response;
 
@@ -333,19 +335,28 @@ class WebService {
   }
 
   static Future<JobListRequestModel> funGetJobs(BuildContext context) async {
+    if (!await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet())
+      return JobListRequestModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    JobListRequestModel _returnData = JobListRequestModel();
 
     print("Request URL:${serviceFunction.funGetJobs}");
-    response =
-        await dio.post(serviceFunction.funGetJobs, data: null, options: _opt);
-    _returnData =
-        JobListRequestModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData5:${_returnData.status}");
-    return _returnData;
+    try {
+      response =
+          await dio.post(serviceFunction.funGetJobs, data: null, options: _opt);
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return JobListRequestModel(
+            status: 'fail', message: "Server not responding");
+      }
+    }
+    return JobListRequestModel.fromJson(
+        convert.json.decode(response.toString()));
   }
 
   static Future<CreateJobRequiredDataModel> funGetCreteJobDefaultData(
@@ -511,6 +522,10 @@ class WebService {
   //**************************************************Catalog*****************************************************
 
   static Future<CatlogListModel> funGetCatalogs(BuildContext context) async {
+    if (!await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet())
+      return CatlogListModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     print("token:$token");
     Options _opt = Options(
@@ -594,12 +609,9 @@ class WebService {
       Map _map, BuildContext context) async {
     String token = await Prefs.token;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    BaseResponseModel _returnData = BaseResponseModel();
     response = await dio.post(serviceFunction.funWaitlistUpdateStatus,
         data: _map, options: opt);
-    _returnData =
-        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    return _returnData;
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   //this is used for delete waitlist
@@ -635,16 +647,25 @@ class WebService {
   }
 
   static Future<WaitlistListModel> funGetWaitlist(BuildContext context) async {
+    if (!await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet())
+      return WaitlistListModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    WaitlistListModel _returnData = WaitlistListModel();
+    try {
+      response = await dio.post(serviceFunction.funGetWaitlist, options: _opt);
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return WaitlistListModel(
+            status: 'fail', message: "Server not responding");
+      }
+    }
 
-    response = await dio.post(serviceFunction.funGetWaitlist, options: _opt);
-    _returnData =
-        WaitlistListModel.fromJson(convert.json.decode(response.toString()));
-    return _returnData;
+    return WaitlistListModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<WaitlistListModel> funCreateWaitlist(

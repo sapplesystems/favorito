@@ -1,5 +1,6 @@
 import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -8,12 +9,17 @@ import 'package:provider/provider.dart';
 class Catalogs extends StatelessWidget {
   CatalogsProvider vaTrue;
   CatalogsProvider vaFalse;
+  bool isFirst = true;
 
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     vaTrue = Provider.of<CatalogsProvider>(context, listen: true);
     vaFalse = Provider.of<CatalogsProvider>(context, listen: false);
+    if (isFirst) {
+      vaTrue.getCatelogList(true, context);
+      isFirst = false;
+    }
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -35,15 +41,15 @@ class Catalogs extends StatelessWidget {
                   onPressed: () {
                     vaTrue.newCatalogTxt = 'New Catalog';
                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NewCatlog()))
-                        .whenComplete(() => vaTrue.getCatelogList(true));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NewCatlog())).whenComplete(
+                        () => vaTrue.getCatelogList(true, context));
                   })
             ]),
         body: RefreshIndicator(
           onRefresh: () async {
-            vaTrue.getCatelogList(true);
+            vaTrue.getCatelogList(true, context);
           },
           child: Container(
             margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 2.0),

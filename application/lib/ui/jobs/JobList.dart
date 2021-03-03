@@ -1,6 +1,7 @@
 import 'package:Favorito/model/job/JobListRequestModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/jobs/JobProvider.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -60,7 +61,7 @@ class _JobListState extends State<JobList> {
               return Center(child: Text('Please wait its loading...'));
             } else {
               if (snapshot.hasError)
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Center(child: Text('Error: something went wrong..'));
               else {
                 return
                     // ListView(
@@ -111,8 +112,9 @@ class _JobListState extends State<JobList> {
         ));
   }
 
-  void getPageData() async {
-    await WebService.funGetJobs(context)
-        .then((value) => setState(() => _jobList = value));
+  getPageData() async {
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funGetJobs(context)
+          .then((value) => setState(() => _jobList = value));
   }
 }

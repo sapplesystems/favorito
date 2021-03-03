@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class CreateJob extends StatelessWidget {
   JobProvider vaTrue;
   JobProvider vaFalse;
-  bool firstload = false;
+  bool firstload = true;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,9 @@ class CreateJob extends StatelessWidget {
     vaTrue = Provider.of<JobProvider>(context, listen: true);
     vaFalse = Provider.of<JobProvider>(context, listen: false);
     vaFalse.setContext(context);
-    if (!firstload && (vaTrue.getSelectedJobId() == 0)) {
-      firstload = true;
+    if (firstload) {
       vaTrue.allClear();
+      firstload = false;
     }
     return Scaffold(
         appBar: AppBar(

@@ -13,6 +13,7 @@ import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/ui/waitlist/WaitlistProvider.dart';
 import 'package:Favorito/utils/RouteGenerator.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => OffersProvider()),
       ChangeNotifierProvider(create: (context) => JobProvider()),
       ChangeNotifierProvider(create: (context) => NotificationsProvider()),
+      ChangeNotifierProvider(create: (context) => UtilProvider()),
     ], child: MyApp()));
   });
 }

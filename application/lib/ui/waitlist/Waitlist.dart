@@ -1,7 +1,9 @@
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistModel.dart';
 import 'package:Favorito/ui/waitlist/ManualWaitList.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
@@ -277,32 +279,36 @@ class Waitlists extends State<Waitlist> {
       : throw 'Could not Call Phone';
 
   UpdateWaitList(String str, int id) async {
-    await WebService.funWaitlistUpdateStatus(
-            {"waitlist_id": id, "status": str}, context)
-        .then((value) {
-      print(value.message);
-      if (value.status == "success") {
-        WebService.funGetWaitlist(context).then((value) {
-          setState(() {});
-          return value;
-        });
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funWaitlistUpdateStatus(
+              {"waitlist_id": id, "status": str}, context)
+          .then((value) {
+        print(value.message);
+        if (value.status == "success") {
+          WebService.funGetWaitlist(context).then((value) {
+            setState(() {});
+            return value;
+          });
+        }
+      });
   }
 
   getPageData() async {
-    await WebService.funGetWaitlist(context).then((value) {
-      if (value.status == "succcess") {
-        setState(() {
-          waitlistData = value;
-        });
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funGetWaitlist(context).then((value) {
+        if (value.status == "succcess") {
+          setState(() {
+            waitlistData = value;
+          });
+        }
+      });
   }
 
-  waitListDelete(int id, int index) {
-    WebService.funWaitlistDelete({"waitlist_id": id}, context).then((value) {
-      setState(() => waitlistData.data.removeAt(index));
-    });
+  waitListDelete(int id, int index) async {
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funWaitlistDelete({"waitlist_id": id}, context)
+          .then((value) {
+        setState(() => waitlistData.data.removeAt(index));
+      });
   }
 }

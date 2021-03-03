@@ -1,10 +1,13 @@
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 
 class CatalogsProvider extends ChangeNotifier {
   BuildContext context;
@@ -26,8 +29,7 @@ class CatalogsProvider extends ChangeNotifier {
   List<String> imgUrlsId = List();
   CatalogsProvider() {
     for (int i = 0; i < 5; i++) controller.add(TextEditingController());
-
-    getCatelogList(false);
+    // checkinternet();
   }
 
   String getHint(int i) {
@@ -55,9 +57,9 @@ class CatalogsProvider extends ChangeNotifier {
               color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
   }
 
-  getCatelogList(bool _val) async {
+  getCatelogList(bool _val, _context) async {
     _val ? pr?.show() : pr?.hide();
-    await WebService.funGetCatalogs(context).then((value) {
+    await WebService.funGetCatalogs(_context).then((value) {
       _val ? pr?.hide() : pr?.show();
       catalogListdata = value;
       notifyListeners();
@@ -76,6 +78,7 @@ class CatalogsProvider extends ChangeNotifier {
       };
       print("Image Sending id:${_map.toString()}");
       submitBtnTxt = "Please Wait..";
+
       await WebService.catlogEdit(_map, context).then((value) {
         if (value.status == "success") {
           clearAll();
@@ -180,4 +183,11 @@ class CatalogsProvider extends ChangeNotifier {
     imgUrls.clear();
     imgUrlsId.clear();
   }
+
+  // void checkinternet() async {
+  //   if (!await Provider.of<UtilProvider>(this.context, listen: false)
+  //       .checkInternet()) {
+  //     BotToast.showText(text: 'Please chaeck internet connection');
+  //   }
+  // }
 }

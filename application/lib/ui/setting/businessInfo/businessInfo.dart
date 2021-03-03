@@ -8,6 +8,7 @@ import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:provider/provider.dart';
 
 class businessInfo extends StatefulWidget {
   @override
@@ -312,63 +314,66 @@ class _businessInfoState extends State<businessInfo> {
   }
 
   void getPageData() async {
-    await WebService.getBusinessInfoData(context).then((value) async {
-      if (value.message == "success") {
-        await clearDataList();
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.getBusinessInfoData(context).then((value) async {
+        if (value.message == "success") {
+          await clearDataList();
 
-        var _va = value.data;
-        var _vaddV = value.ddVerbose;
-        loadedImageList = _va.photos;
-        _keyCategory?.currentState?.changeSelectedItem(_va?.categoryName);
-        catid = _va.categoryId;
-        controller[0].text = _va?.categoryName;
-        selectedSubCategories = _va.subCategories;
-        for (int i = 0; i < selectedSubCategories.length; i++)
-          selectedSubCategoriesName.add(selectedSubCategories[i].categoryName);
+          var _va = value.data;
+          var _vaddV = value.ddVerbose;
+          loadedImageList = _va.photos;
+          _keyCategory?.currentState?.changeSelectedItem(_va?.categoryName);
+          catid = _va.categoryId;
+          controller[0].text = _va?.categoryName;
+          selectedSubCategories = _va.subCategories;
+          for (int i = 0; i < selectedSubCategories.length; i++)
+            selectedSubCategoriesName
+                .add(selectedSubCategories[i].categoryName);
 
-        loadedImageList = _va.photos;
-        priceRange = int.parse(_va.priceRange);
-        priceRangelist.addAll(_vaddV.staticPriceRange);
-        for (int i = 0; i < _vaddV.staticPriceRange.length; i++)
-          radioChecked.add(false);
+          loadedImageList = _va.photos;
+          priceRange = int.parse(_va.priceRange);
+          priceRangelist.addAll(_vaddV.staticPriceRange);
+          for (int i = 0; i < _vaddV.staticPriceRange.length; i++)
+            radioChecked.add(false);
 
-        totalpay.addAll(_vaddV.staticPaymentMethod);
-        checked.clear();
-        for (var v in totalpay) checked.add(false);
+          totalpay.addAll(_vaddV.staticPaymentMethod);
+          checked.clear();
+          for (var v in totalpay) checked.add(false);
 
-        selectPay.addAll(_va.paymentMethod);
-        totalTag.addAll(_vaddV.tagList);
-        for (int i = 0; i < totalTag.length; i++)
-          totalTagName.add(totalTag[i].tagName);
+          selectPay.addAll(_va.paymentMethod);
+          totalTag.addAll(_vaddV.tagList);
+          for (int i = 0; i < totalTag.length; i++)
+            totalTagName.add(totalTag[i].tagName);
 
-        selectedTag.addAll(_va.tags);
-        for (int i = 0; i < selectedTag.length; i++)
-          selectedTagName.add(selectedTag[i].tagName);
+          selectedTag.addAll(_va.tags);
+          for (int i = 0; i < selectedTag.length; i++)
+            selectedTagName.add(selectedTag[i].tagName);
 
-        totalAttribute.addAll(_vaddV.attributeList);
-        for (int i = 0; i < totalAttribute.length; i++)
-          totalAttributeName.add(totalAttribute[i].attributeName);
+          totalAttribute.addAll(_vaddV.attributeList);
+          for (int i = 0; i < totalAttribute.length; i++)
+            totalAttributeName.add(totalAttribute[i].attributeName);
 
-        selectAttribute.addAll(_va.attributes);
-        // for (var _v in selectAttribute) totalAttribute.remove(_v);
-        for (int i = 0; i < selectAttribute.length; i++)
-          selectAttributeName.add(selectAttribute[i].attributeName);
-        photoData.addAll(_va.photos);
-        setState(() {});
-      }
-    });
+          selectAttribute.addAll(_va.attributes);
+          // for (var _v in selectAttribute) totalAttribute.remove(_v);
+          for (int i = 0; i < selectAttribute.length; i++)
+            selectAttributeName.add(selectAttribute[i].attributeName);
+          photoData.addAll(_va.photos);
+          setState(() {});
+        }
+      });
 
-    await WebService.getSubCat({"category_id": catid}, context).then((value) {
-      if (value.message == "success") {
-        subCategoryModel = value;
-        totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
-        for (var v in selectedSubCategories)
-          totalSubCategoriesName.remove(v.categoryName);
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.getSubCat({"category_id": catid}, context).then((value) {
+        if (value.message == "success") {
+          subCategoryModel = value;
+          totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
+          for (var v in selectedSubCategories)
+            totalSubCategoriesName.remove(v.categoryName);
+        }
+      });
   }
 
-  void funSublim() {
+  void funSublim() async {
     selectedSubCategoriesId.addAll(
         subCategoryModel.getAllSubCategoryId(selectedSubCategoriesName));
 
@@ -388,13 +393,15 @@ class _businessInfoState extends State<businessInfo> {
         "payment_method": selectPay,
         "attributes": selectAttributeId
       };
-      WebService.setBusinessInfoData(_map, context).then((value) {
-        if (value.status == "success") {
-          FocusScope.of(context).unfocus();
-          BotToast.showText(text: value.message);
-          Navigator.pop(context);
-        }
-      });
+      if (await Provider.of<UtilProvider>(context, listen: false)
+          .checkInternet())
+        await WebService.setBusinessInfoData(_map, context).then((value) {
+          if (value.status == "success") {
+            FocusScope.of(context).unfocus();
+            BotToast.showText(text: value.message);
+            Navigator.pop(context);
+          }
+        });
     }
   }
 
@@ -407,13 +414,14 @@ class _businessInfoState extends State<businessInfo> {
         cameraIcon: Icon(Icons.add, color: Colors.red));
     img.add(image);
 
-    await WebService.profileInfoImageUpdate(img, context).then((value) async {
-      if (value.status == "success") {
-        BotToast.showText(text: value.message);
-        photoData.clear();
-        photoData.addAll(value.data);
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.profileInfoImageUpdate(img, context).then((value) async {
+        if (value.status == "success") {
+          BotToast.showText(text: value.message);
+          photoData.clear();
+          photoData.addAll(value.data);
+        }
+      });
 
     setState(() => _image = image);
   }
