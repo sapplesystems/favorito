@@ -1,10 +1,8 @@
-import 'package:Favorito/component/BranchDetailsListViewDelete.dart';
-import 'package:Favorito/component/PopupContent.dart';
-import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/model/contactPerson/BranchDetailsModel.dart';
-import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/ResetPass/ResetPass.dart';
+import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';
@@ -121,7 +119,22 @@ class ContactPerson extends StatelessWidget {
                                 ),
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  showPopup(
+                                    ctx: context,
+                                    callback: () {
+                                      Provider.of<ResetPassProvider>(context,
+                                              listen: false)
+                                          .clear();
+                                    },
+                                    sm: sm,
+                                    widget: ResetPass(),
+                                    sizesRight: 3,
+                                    sizesTop: 10,
+                                    sizesLeft: 3,
+                                    sizesBottom: 36,
+                                  ).show();
+                                },
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: sm.w(12)),
@@ -258,37 +271,37 @@ class ContactPerson extends StatelessWidget {
         ));
   }
 
-  showPopup(BuildContext context, Widget widget, String title,
-      {BuildContext popupContext}) {
-    Navigator.push(
-      context,
-      PopupLayout(
-        top: sm.h(18),
-        left: sm.w(5),
-        right: sm.w(5),
-        bottom: sm.h(18),
-        child: PopupContent(
-          content: Scaffold(
-            appBar: AppBar(
-              title: Text(title),
-              leading: new Builder(builder: (context) {
-                return IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    cpFalse.searchedBranches.clear();
-                    Navigator.of(context).pop(); //close the popup
-                  },
-                );
-              }),
-              brightness: Brightness.light,
-            ),
-            resizeToAvoidBottomPadding: false,
-            body: widget,
-          ),
-        ),
-      ),
-    );
-  }
+  // showPopup(BuildContext context, Widget widget, String title,
+  //     {BuildContext popupContext}) {
+  //   Navigator.push(
+  //     context,
+  //     PopupLayout(
+  //       top: sm.h(18),
+  //       left: sm.w(5),
+  //       right: sm.w(5),
+  //       bottom: sm.h(18),
+  //       child: PopupContent(
+  //         content: Scaffold(
+  //           appBar: AppBar(
+  //             title: Text(title),
+  //             leading: new Builder(builder: (context) {
+  //               return IconButton(
+  //                 icon: Icon(Icons.arrow_back),
+  //                 onPressed: () {
+  //                   cpFalse.searchedBranches.clear();
+  //                   Navigator.of(context).pop(); //close the popup
+  //                 },
+  //               );
+  //             }),
+  //             brightness: Brightness.light,
+  //           ),
+  //           resizeToAvoidBottomPadding: false,
+  //           body: widget,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _popupBody() {
     return Container(

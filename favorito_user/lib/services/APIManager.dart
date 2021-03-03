@@ -8,6 +8,7 @@ import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
+import 'package:favorito_user/model/appModel/CheckAccountmodel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
@@ -22,6 +23,7 @@ import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
 import 'package:dio/dio.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
+import 'package:favorito_user/model/otp/SendOtpModel.dart';
 import 'dart:convert' as convert;
 
 import 'package:favorito_user/services/function.dart';
@@ -71,35 +73,31 @@ class APIManager {
     } catch (e) {
       BotToast.showText(text: e.toString());
     }
-    print("Request URL:${service.register}");
+    print("Request URL:${service.businessCarousel}");
     print("responseData1:${response.toString()}");
     return CarouselModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<AddressListModel> getAddress(context) async {
+  static Future<AddressListModel> getAddress() async {
     String token = await Prefs.token;
     String url = service.getAddress;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
     return AddressListModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<ProfileImageModel> getUserImage(context) async {
+  static Future<ProfileImageModel> getUserImage() async {
     String token = await Prefs.token;
     String url = service.getUserImage;
     opt = Options(
         contentType: Headers.jsonContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     return ProfileImageModel.fromJson(convert.json.decode(response.toString()));
   }
@@ -326,7 +324,6 @@ class APIManager {
   static Future<ProfileModel> userdetail(Map _map) async {
     String token = await Prefs.token;
     print('token : ${token.toString()}');
-
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -534,5 +531,39 @@ class APIManager {
         data: _map, options: opt);
     print("service.userOrderCreateVerbose : ${response.toString}");
     return ModelOption.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//sendOtp
+  static Future<SendOtpModel> sendOtp(Map _map) async {
+    print("url : ${service.sendOtp}");
+    response = await dio.post(service.sendOtp, data: _map);
+    print("service.userOrderCreateVerbose : ${response.toString}");
+    return SendOtpModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//verify otp
+  static Future<BaseResponse> verifyOtp(Map _map) async {
+    String token = await Prefs.token;
+    print("token : $token");
+
+    response = await dio.post(service.verifyOtp, data: _map);
+    print("service.verifyOtp : ${response.toString}");
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//verify otp
+  static Future<CheckAccountmodel> checkId(Map _map) async {
+    print("url : ${service.verifyOtp}");
+    response = await dio.post(service.checkId, data: _map);
+    print("service.verifyOtp : ${response.toString}");
+    return CheckAccountmodel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//verify Email/Mobile
+  static Future<CheckAccountmodel> checkMobileOrEmail(Map _map) async {
+    print("url : ${service.verifyOtp}");
+    response = await dio.post(service.checkMobileOrEmail, data: _map);
+    print("service.verifyOtp : ${response.toString}");
+    return CheckAccountmodel.fromJson(convert.jsonDecode(response.toString()));
   }
 }

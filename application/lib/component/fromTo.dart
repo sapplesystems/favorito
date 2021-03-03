@@ -5,7 +5,9 @@ class fromTo extends StatelessWidget {
   SizeManager sm;
   String txt;
   Color clr;
-  fromTo({this.txt, this.clr});
+  Color txtClr;
+
+  fromTo({this.txt, this.clr,this.txtClr});
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -24,7 +26,7 @@ class fromTo extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           txt,
-          style: TextStyle(color: clr),
+          style: TextStyle(color: txtClr??clr),
         ),
       ),
     );

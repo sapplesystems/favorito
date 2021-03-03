@@ -55,7 +55,9 @@ class TrendingCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: sm.h(1)),
-                  Text('${data.distance} km | ' + data.townCity,
+                  Text(
+                      '${data.distance.toStringAsFixed(1)} km | ' +
+                          data.townCity,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w300,

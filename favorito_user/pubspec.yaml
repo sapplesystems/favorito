@@ -38,6 +38,7 @@ dependencies:
   transparent_image:
   url_launcher:
   percent_indicator:
+  pin_code_fields:
   provider:
   flutter:
     sdk: flutter

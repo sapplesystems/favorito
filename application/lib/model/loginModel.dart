@@ -9,7 +9,7 @@ class loginModel {
   loginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : [];
     token = json['token'];
   }
 
@@ -18,7 +18,7 @@ class loginModel {
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data?.toJson();
     }
     data['token'] = this.token;
     return data;
@@ -49,4 +49,3 @@ class Data {
     return data;
   }
 }
-

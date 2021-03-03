@@ -39,9 +39,9 @@ BoxDecoration bd3 = BoxDecoration(
 
 TextStyle titleStyle = TextStyle(
     color: Colors.black,
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
-    letterSpacing: 1);
+    fontSize: 26,
+    fontFamily: 'Gilroy-Bold',
+    letterSpacing: .2);
 
 TextStyle appBarStyle = TextStyle(
     color: Colors.black,

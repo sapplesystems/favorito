@@ -22,195 +22,205 @@ class Signup_a extends StatelessWidget {
     signUpProviderTrue = Provider.of<SignUpProvider>(context, listen: true);
     signUpProviderFalse = Provider.of<SignUpProvider>(context, listen: false);
     signUpProviderFalse.setContext(context);
-    return Scaffold(
-      appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          )),
-      body: RefreshIndicator(
-          onRefresh: () async {
-            signUpProviderTrue.getBusiness();
-          },
-          child: ListView(
-            children: [
-              Text(
-                "Sign Up",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontFamily: "Gilroy-Bold",
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1,
+
+    return WillPopScope(
+      onWillPop: () => signUpProviderTrue.allClear(),
+      child: Scaffold(
+        appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop(),
+            )),
+        body: RefreshIndicator(
+            onRefresh: () async {
+              signUpProviderTrue.getBusiness();
+            },
+            child: ListView(
+              children: [
+                Text(
+                  "Sign Up",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontFamily: "Gilroy-Bold",
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1,
+                  ),
                 ),
-              ),
-              Container(
-                height: sm.h(86),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: sm.w(30),
-                      left: sm.w(6),
-                      right: sm.w(6),
-                      child: Card(
-                          child: Builder(
-                        builder: (context) => Form(
-                          key: _formKey,
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                top: sm.h(12),
-                                bottom: sm.h(2),
-                                left: 16,
-                                right: 16),
-                            child: ListView(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              physics: new NeverScrollableScrollPhysics(),
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownSearch<String>(
-                                    mode: Mode.MENU,
-                                    validator: (v) =>
-                                        (v == null) ? "required field" : null,
-                                    autoValidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    maxHeight: signUpProviderTrue
-                                            .getBusinessNameAll()
-                                            .length *
-                                        58.0,
-                                    showSelectedItem: true,
-                                    items:
-                                        signUpProviderTrue.getBusinessNameAll(),
-                                    label: "Business Type",
-                                    hint: "Please Select Business Type",
-                                    onChanged: (String val) =>
-                                        signUpProviderTrue
-                                            .businessIdByName(val),
-                                    selectedItem:
-                                        signUpProviderTrue.getBusinessName(),
-                                  ),
-                                ),
-                                Consumer<SignUpProvider>(
-                                    builder: (context, _data, child) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(top: 2),
-                                    child: txtfieldboundry(
-                                        valid: true,
-                                        controller:
-                                            signUpProviderTrue.controller[0],
-                                        title:
-                                            signUpProviderTrue.getTypeId() == 1
-                                                ? "Business Name"
-                                                : "Full Name",
-                                        security: false),
-                                  );
-                                }),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 8, top: 2),
-                                  child: Visibility(
-                                      visible: signUpProviderTrue.catvisib,
-                                      child: DropdownSearch<String>(
-                                        mode: Mode.MENU,
-                                        // maxHeight: busy.length * 58.0,
-                                        validator: (v) =>
-                                            (v == '') ? "required field" : null,
-                                        autoValidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        showSelectedItem: true,
-                                        showSearchBox: true,
-                                        items:
-                                            signUpProviderTrue.getCategoryAll(),
-                                        label: "Business Category",
-                                        hint: "Please Select Business Category",
-                                        onChanged: (val) => signUpProviderTrue
-                                            .setCategoryIdByName(val),
-                                        selectedItem: signUpProviderTrue
-                                            .getCategoryName(),
-                                      )),
-                                ),
-                                txtfieldboundry(
-                                  controller: signUpProviderTrue.controller[1],
-                                  valid: true,
-                                  maxlen: 6,
-                                  error: signUpProviderTrue.error[1],
-                                  keyboardSet: TextInputType.number,
-                                  title: "Postal Code",
-                                  security: false,
-                                  myOnChanged: (_v) {
-                                    _v.length == 6
-                                        ? signUpProviderTrue.pinCaller(_v)
-                                        // ignore: unnecessary_statements
-                                        : null;
-                                  },
-                                ),
-                                txtfieldboundry(
-                                    controller:
-                                        signUpProviderTrue.controller[2],
-                                    valid: true,
-                                    title: signUpProviderTrue.catvisib
-                                        ? "Business Phone"
-                                        : "Phone",
-                                    maxlen: 10,
-                                    keyboardSet: TextInputType.number,
-                                    myregex: mobileRegex,
-                                    security: false),
-                                CheckboxListTile(
-                                  title: Text(
-                                    "Reach me on whatsapp",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontFamily: "Roboto",
-                                      fontWeight: FontWeight.w400,
-                                      letterSpacing: 0.32,
+                Container(
+                  height: sm.h(86),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: sm.w(30),
+                        left: sm.w(6),
+                        right: sm.w(6),
+                        child: Card(
+                            child: Builder(
+                          builder: (context) => Form(
+                            key: _formKey,
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  top: sm.h(12),
+                                  bottom: sm.h(2),
+                                  left: 16,
+                                  right: 16),
+                              child: ListView(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                physics: new NeverScrollableScrollPhysics(),
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: DropdownSearch<String>(
+                                      key: SignUpProvider.categoryKey1,
+                                      mode: Mode.MENU,
+                                      validator: (v) =>
+                                          (v == null) ? "required field" : null,
+                                      autoValidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      maxHeight: signUpProviderTrue
+                                              .getBusinessNameAll()
+                                              .length *
+                                          58.0,
+                                      // showSelectedItem: true,
+                                      items: signUpProviderTrue
+                                          .getBusinessNameAll(),
+                                      label: "Business Type",
+                                      hint: "Please Select Business Type",
+                                      onChanged: (val) => signUpProviderTrue
+                                          .businessIdByName(val),
+                                      selectedItem:
+                                          signUpProviderTrue.getBusinessName(),
                                     ),
                                   ),
-                                  value: signUpProviderTrue.getChecked(),
-                                  onChanged: (newValue) {
-                                    signUpProviderTrue.setChecked(newValue);
-                                  },
-                                  controlAffinity: ListTileControlAffinity
-                                      .leading, //  <-- leading Checkbox
-                                ),
-                              ],
+                                  Consumer<SignUpProvider>(
+                                      builder: (context, _data, child) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(top: 2),
+                                      child: txtfieldboundry(
+                                          valid: true,
+                                          controller:
+                                              signUpProviderTrue.controller[0],
+                                          title:
+                                              signUpProviderTrue.getTypeId() ==
+                                                      1
+                                                  ? "Business Name"
+                                                  : "Full Name",
+                                          security: false),
+                                    );
+                                  }),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0, right: 8, top: 2),
+                                    child: Visibility(
+                                        visible: signUpProviderTrue.catvisib,
+                                        child: DropdownSearch<String>(
+                                          key: SignUpProvider.categoryKey,
+                                          mode: Mode.MENU,
+                                          // maxHeight: busy.length * 58.0,
+                                          validator: (v) => (v == '')
+                                              ? "required field"
+                                              : null,
+                                          autoValidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          // showSelectedItem: true,
+
+                                          showSearchBox: true,
+                                          items: signUpProviderTrue
+                                              .getCategoryAll(),
+                                          label: "Business Category",
+                                          hint:
+                                              "Please Select Business Category",
+                                          onChanged: (val) => signUpProviderTrue
+                                              .setCategoryIdByName(val),
+                                          selectedItem: signUpProviderTrue
+                                              .getCategoryName(),
+                                        )),
+                                  ),
+                                  txtfieldboundry(
+                                    controller:
+                                        signUpProviderTrue.controller[1],
+                                    valid: true,
+                                    maxlen: 6,
+                                    error: signUpProviderTrue.error[1],
+                                    keyboardSet: TextInputType.number,
+                                    title: "Postal Code",
+                                    security: false,
+                                    myOnChanged: (_v) {
+                                      _v.length == 6
+                                          ? signUpProviderTrue.pinCaller(_v)
+                                          // ignore: unnecessary_statements
+                                          : null;
+                                    },
+                                  ),
+                                  txtfieldboundry(
+                                      controller:
+                                          signUpProviderTrue.controller[2],
+                                      valid: true,
+                                      title: signUpProviderTrue.catvisib
+                                          ? "Business Phone"
+                                          : "Phone",
+                                      maxlen: 10,
+                                      keyboardSet: TextInputType.number,
+                                      myregex: mobileRegex,
+                                      security: false),
+                                  CheckboxListTile(
+                                    title: Text(
+                                      "Reach me on whatsapp",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontFamily: "Roboto",
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.32,
+                                      ),
+                                    ),
+                                    value: signUpProviderTrue.getChecked(),
+                                    onChanged: (newValue) {
+                                      signUpProviderTrue.setChecked(newValue);
+                                    },
+                                    controlAffinity: ListTileControlAffinity
+                                        .leading, //  <-- leading Checkbox
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )),
-                    ),
-                    Positioned(
-                        top: sm.h(2),
-                        left: sm.w(30),
-                        right: sm.w(30),
-                        child: SvgPicture.asset('assets/icon/maskgroup.svg',
-                            alignment: Alignment.center, height: sm.h(20))),
-                  ],
+                        )),
+                      ),
+                      Positioned(
+                          top: sm.h(2),
+                          left: sm.w(30),
+                          right: sm.w(30),
+                          child: SvgPicture.asset('assets/icon/maskgroup.svg',
+                              alignment: Alignment.center, height: sm.h(20))),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: sm.w(20),
-                    right: sm.w(20),
-                    top: sm.w(2),
-                    bottom: sm.w(12)),
-                child: RoundedButton(
-                    clicker: () {
-                      if (_formKey.currentState.validate()) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => signup_b()));
-                      }
-                    },
-                    clr: Colors.red,
-                    title: "Next"),
-              ),
-            ],
-          )),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: sm.w(20),
+                      right: sm.w(20),
+                      top: sm.w(2),
+                      bottom: sm.w(12)),
+                  child: RoundedButton(
+                      clicker: () {
+                        if (_formKey.currentState.validate()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => signup_b()));
+                        }
+                      },
+                      clr: Colors.red,
+                      title: "Next"),
+                ),
+              ],
+            )),
+      ),
     );
   }
 }

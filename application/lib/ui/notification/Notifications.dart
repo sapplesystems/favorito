@@ -1,65 +1,50 @@
-import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
 import 'package:Favorito/ui/notification/CreateNotification.dart';
-import 'package:Favorito/utils/myColors.dart';
+import 'package:Favorito/ui/notification/NotificationProvider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:provider/provider.dart';
 
-import '../../network/webservices.dart';
-
-class Notifications extends StatefulWidget {
-  @override
-  _NotificationsState createState() => _NotificationsState();
-}
-
-class _NotificationsState extends State<Notifications> {
-  NotificationListRequestModel _notificationsListdata =
-      NotificationListRequestModel();
-
-  @override
-  void initState() {
-    WebService.funGetNotifications(context).then((value) {
-      setState(() {
-        _notificationsListdata = value;
-      });
-    });
-    super.initState();
-  }
-  //changes is need to check
-
+class Notifications extends StatelessWidget {
+  NotificationsProvider vaTrue;
+  NotificationsProvider vaFalse;
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    vaTrue = Provider.of<NotificationsProvider>(context, listen: true);
+    vaFalse = Provider.of<NotificationsProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: 26),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.black //change your color here
+              ),
           title: Text("Notifications",
-              style: TextStyle(color: Colors.black, letterSpacing: 2.0)),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 26,
+                  fontFamily: 'Gilroy-Bold',
+                  letterSpacing: .2)),
         ),
-        body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        body: ListView(children: [
           Container(
             height: sm.h(75),
             margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
             child: ListView.builder(
-                itemCount: _notificationsListdata.notifications.length,
+                itemCount: vaTrue.notificationsListdata.notifications.length,
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-                      var id = _notificationsListdata.notifications[index].id;
+                      vaTrue.setNotificationId(
+                          vaTrue.notificationsListdata.notifications[index].id);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateNotification(id: id)));
+                              builder: (context) => CreateNotification()));
                     },
                     child: Card(
                       elevation: 5,
@@ -75,47 +60,55 @@ class _NotificationsState extends State<Notifications> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(40))),
                           margin: EdgeInsets.symmetric(vertical: 2.0),
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            title: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4.0),
+                                  child: Text(
+                                      vaTrue.notificationsListdata
+                                          .notifications[index].title,
+                                      style: TextStyle(
+                                          fontFamily: 'Gilroy-Medium',
+                                          fontSize: 18))),
+                              Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4.0),
-                                child: Text(_notificationsListdata
-                                    .notifications[index].title)),
-                            subtitle: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
-                              child: Container(
-                                child: AutoSizeText(
-                                  _notificationsListdata
-                                      .notifications[index].description,
-                                  minFontSize: 14,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                child: Container(
+                                  child: AutoSizeText(
+                                      vaTrue.notificationsListdata
+                                          .notifications[index].description,
+                                      minFontSize: 14,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontFamily: 'Gilroy-Regular',
+                                          fontSize: 16)),
                                 ),
-                              ),
-                            ),
+                              )
+                            ],
                           )),
                     ),
                   );
                 }),
           ),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: sm.w(50),
-              child: RoundedButton(
-                clicker: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateNotification(id: null)));
-                },
-                clr: Colors.red,
-                title: "Create New",
-              ),
-            ),
-          ),
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  width: sm.w(50),
+                  child: RoundedButton(
+                      clicker: () {
+                        vaTrue.allClear();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateNotification()));
+                      },
+                      clr: Colors.red,
+                      title: "Create New")))
         ]));
   }
 }

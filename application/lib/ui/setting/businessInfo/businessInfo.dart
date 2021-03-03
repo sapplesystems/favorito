@@ -8,6 +8,7 @@ import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:provider/provider.dart';
 
 class businessInfo extends StatefulWidget {
   @override
@@ -23,7 +25,6 @@ class businessInfo extends StatefulWidget {
 
 class _businessInfoState extends State<businessInfo> {
   List<bool> checked = [];
-
   List<bool> radioChecked = [];
   var loadedImageList = [];
   final _keyCategory = GlobalKey<DropdownSearchState<String>>();
@@ -59,6 +60,8 @@ class _businessInfoState extends State<businessInfo> {
   List<AttributeList> selectAttribute = [];
   List<int> selectAttributeId = [];
   List<String> selectAttributeName = [];
+  bool needSave = false;
+  String donetxt = 'Done';
   //selected attribute id
   SubCategoryModel subCategoryModel = SubCategoryModel();
 
@@ -134,30 +137,47 @@ class _businessInfoState extends State<businessInfo> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16.0),
               margin: EdgeInsets.symmetric(horizontal: 12),
               child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: DropdownSearch<String>(
-                    validator: (v) => v == '' ? "required field" : null,
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                    mode: Mode.MENU,
-                    key: _keyCategory,
-                    showSelectedItem: true,
-                    selectedItem: controller[0].text,
-                    enabled: false,
-                    // items: catLst != null ? catLst.values.toList() : null,
-                    label: "Category",
-                    hint: "Please Select Category",
-                    onChanged: (value) {
-                      setState(() => controller[0].text = value);
-                    },
-                  ),
+                TextFormField(
+                  controller: controller[0],
+                  decoration: InputDecoration(
+                      labelText: "Category",
+                      labelStyle: Theme.of(context).textTheme.body2,
+                      counterText: "",
+                      enabled: false,
+                      hintText: "Enter Category",
+                      hintStyle: Theme.of(context).textTheme.subhead,
+                      fillColor: Colors.transparent,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide())),
                 ),
+
+                //this is commented due to tester
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 8),
+                //   child: DropdownSearch<String>(
+                //     validator: (v) => v == '' ? "required field" : null,
+                //     autoValidateMode: AutovalidateMode.onUserInteraction,
+                //     mode: Mode.MENU,
+                //     key: _keyCategory,
+                //     showSelectedItem: true,
+                //     selectedItem: controller[0].text,
+                //     enabled: false,
+                //     // items: catLst != null ? catLst.values.toList() : null,
+                //     label: "Category",
+                //     hint: "Please Select Category",
+                //     onChanged: (value) {
+                //       setState(() => controller[0].text = value);
+                //     },
+                //   ),
+                // ),
                 MyTags(
                     sourceList: totalSubCategoriesName,
                     selectedList: selectedSubCategoriesName,
                     hint: "Please select Sub category",
                     border: true,
                     directionVeticle: false,
+                    refresh: () => setNeedSave(true),
                     title: " Sub Category"),
                 MyTags(
                     sourceList: totalTagName,
@@ -165,6 +185,7 @@ class _businessInfoState extends State<businessInfo> {
                     hint: "Please select Tags",
                     border: true,
                     directionVeticle: false,
+                    refresh: () => setNeedSave(true),
                     title: "Tags"),
                 Row(children: [
                   Padding(
@@ -188,6 +209,7 @@ class _businessInfoState extends State<businessInfo> {
                           padding: EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
+                              setNeedSave(true);
                               print("priceRange ${i}");
                               priceRange = priceRangelist[i];
                               for (int j = 0; j < priceRangelist.length; j++) {
@@ -196,7 +218,6 @@ class _businessInfoState extends State<businessInfo> {
                                 else
                                   radioChecked[i] = false;
                               }
-                              setState(() {});
                             },
                             child: Row(children: [
                               Icon(
@@ -236,11 +257,10 @@ class _businessInfoState extends State<businessInfo> {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
-                          setState(() {
-                            selectPay.contains(totalpay[i])
-                                ? selectPay.remove(totalpay[i])
-                                : selectPay.add(totalpay[i]);
-                          });
+                          selectPay.contains(totalpay[i])
+                              ? selectPay.remove(totalpay[i])
+                              : selectPay.add(totalpay[i]);
+                          setNeedSave(true);
                         },
                         child: Row(children: [
                           Icon(
@@ -266,21 +286,27 @@ class _businessInfoState extends State<businessInfo> {
                     hint: "Please select Attributes",
                     title: " Attributes",
                     border: false,
+                    refresh: () {
+                      setNeedSave(true);
+                    },
                     directionVeticle: true,
                   ),
                 ]),
               ]),
             ),
-            Container(
-                margin: EdgeInsets.only(bottom: sm.w(30)),
-                padding: EdgeInsets.symmetric(
-                    horizontal: sm.w(16), vertical: sm.h(2)),
-                child: RoundedButton(
-                    clicker: () {
-                      funSublim();
-                    },
-                    clr: Colors.red,
-                    title: "Done"))
+            Visibility(
+              visible: getNeedSave(),
+              child: Container(
+                  margin: EdgeInsets.only(bottom: sm.w(30)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: sm.w(16), vertical: sm.h(2)),
+                  child: RoundedButton(
+                      clicker: () {
+                        funSublim();
+                      },
+                      clr: Colors.red,
+                      title: donetxt)),
+            )
           ],
         ),
       ),
@@ -288,62 +314,66 @@ class _businessInfoState extends State<businessInfo> {
   }
 
   void getPageData() async {
-    await WebService.getBusinessInfoData(context).then((value) async {
-      if (value.message == "success") {
-        await clearDataList();
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.getBusinessInfoData(context).then((value) async {
+        if (value.message == "success") {
+          await clearDataList();
 
-        var _va = value.data;
-        var _vaddV = value.ddVerbose;
-        loadedImageList = _va.photos;
-        _keyCategory.currentState.changeSelectedItem(_va.categoryName);
-        catid = _va.categoryId;
+          var _va = value.data;
+          var _vaddV = value.ddVerbose;
+          loadedImageList = _va.photos;
+          _keyCategory?.currentState?.changeSelectedItem(_va?.categoryName);
+          catid = _va.categoryId;
+          controller[0].text = _va?.categoryName;
+          selectedSubCategories = _va.subCategories;
+          for (int i = 0; i < selectedSubCategories.length; i++)
+            selectedSubCategoriesName
+                .add(selectedSubCategories[i].categoryName);
 
-        selectedSubCategories = _va.subCategories;
-        for (int i = 0; i < selectedSubCategories.length; i++)
-          selectedSubCategoriesName.add(selectedSubCategories[i].categoryName);
+          loadedImageList = _va.photos;
+          priceRange = int.parse(_va.priceRange);
+          priceRangelist.addAll(_vaddV.staticPriceRange);
+          for (int i = 0; i < _vaddV.staticPriceRange.length; i++)
+            radioChecked.add(false);
 
-        loadedImageList = _va.photos;
-        priceRange = int.parse(_va.priceRange);
-        priceRangelist.addAll(_vaddV.staticPriceRange);
-        for (int i = 0; i < _vaddV.staticPriceRange.length; i++)
-          radioChecked.add(false);
+          totalpay.addAll(_vaddV.staticPaymentMethod);
+          checked.clear();
+          for (var v in totalpay) checked.add(false);
 
-        totalpay.addAll(_vaddV.staticPaymentMethod);
-        checked.clear();
-        for (var v in totalpay) checked.add(false);
+          selectPay.addAll(_va.paymentMethod);
+          totalTag.addAll(_vaddV.tagList);
+          for (int i = 0; i < totalTag.length; i++)
+            totalTagName.add(totalTag[i].tagName);
 
-        selectPay.addAll(_va.paymentMethod);
-        totalTag.addAll(_vaddV.tagList);
-        for (int i = 0; i < totalTag.length; i++)
-          totalTagName.add(totalTag[i].tagName);
+          selectedTag.addAll(_va.tags);
+          for (int i = 0; i < selectedTag.length; i++)
+            selectedTagName.add(selectedTag[i].tagName);
 
-        selectedTag.addAll(_va.tags);
-        for (int i = 0; i < selectedTag.length; i++)
-          selectedTagName.add(selectedTag[i].tagName);
+          totalAttribute.addAll(_vaddV.attributeList);
+          for (int i = 0; i < totalAttribute.length; i++)
+            totalAttributeName.add(totalAttribute[i].attributeName);
 
-        totalAttribute.addAll(_vaddV.attributeList);
-        for (int i = 0; i < totalAttribute.length; i++)
-          totalAttributeName.add(totalAttribute[i].attributeName);
+          selectAttribute.addAll(_va.attributes);
+          // for (var _v in selectAttribute) totalAttribute.remove(_v);
+          for (int i = 0; i < selectAttribute.length; i++)
+            selectAttributeName.add(selectAttribute[i].attributeName);
+          photoData.addAll(_va.photos);
+          setState(() {});
+        }
+      });
 
-        selectAttribute.addAll(_va.attributes);
-        for (int i = 0; i < selectAttribute.length; i++)
-          selectAttributeName.add(totalAttribute[i].attributeName);
-        photoData.addAll(_va.photos);
-        setState(() {});
-      }
-    });
-
-    await WebService.getSubCat({"category_id": catid}, context).then((value) {
-      if (value.message == "success") {
-        subCategoryModel = value;
-        totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
-        for (var v in selectedSubCategories)
-          totalSubCategoriesName.remove(v.categoryName);
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.getSubCat({"category_id": catid}, context).then((value) {
+        if (value.message == "success") {
+          subCategoryModel = value;
+          totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
+          for (var v in selectedSubCategories)
+            totalSubCategoriesName.remove(v.categoryName);
+        }
+      });
   }
 
-  void funSublim() {
+  void funSublim() async {
     selectedSubCategoriesId.addAll(
         subCategoryModel.getAllSubCategoryId(selectedSubCategoriesName));
 
@@ -363,12 +393,15 @@ class _businessInfoState extends State<businessInfo> {
         "payment_method": selectPay,
         "attributes": selectAttributeId
       };
-      WebService.setBusinessInfoData(_map, context).then((value) {
-        if (value.status == "success") {
-          BotToast.showText(text: value.message);
-          Navigator.pop(context);
-        }
-      });
+      if (await Provider.of<UtilProvider>(context, listen: false)
+          .checkInternet())
+        await WebService.setBusinessInfoData(_map, context).then((value) {
+          if (value.status == "success") {
+            FocusScope.of(context).unfocus();
+            BotToast.showText(text: value.message);
+            Navigator.pop(context);
+          }
+        });
     }
   }
 
@@ -381,13 +414,15 @@ class _businessInfoState extends State<businessInfo> {
         cameraIcon: Icon(Icons.add, color: Colors.red));
     img.add(image);
 
-    await WebService.profileInfoImageUpdate(img, context).then((value) async {
-      if (value.status == "success") {
-        BotToast.showText(text: value.message);
-        photoData.clear();
-        photoData.addAll(value.data);
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.profileInfoImageUpdate(img, context).then((value) async {
+        if (value.status == "success") {
+          BotToast.showText(text: value.message);
+          photoData.clear();
+          photoData.addAll(value.data);
+        }
+      });
+
     setState(() => _image = image);
   }
 
@@ -421,5 +456,13 @@ class _businessInfoState extends State<businessInfo> {
 
     priceRangelist.clear();
     photoData.clear();
+  }
+
+  getNeedSave() => needSave;
+
+  setNeedSave(bool _val) {
+    setState(() {
+      needSave = _val;
+    });
   }
 }

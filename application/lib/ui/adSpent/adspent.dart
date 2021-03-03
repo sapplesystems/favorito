@@ -4,7 +4,6 @@ import 'package:Favorito/ui/CreateCampaign/CreateCampaign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/utils/myColors.dart';
 import '../../model/adSpentModel.dart';
 
 class adSpent extends StatefulWidget {
@@ -185,8 +184,8 @@ class _adSpentState extends State<adSpent> {
             ]))
       ]),
       Column(children: [
-        credit("Free Credit", freeCredit.toString(), "assets/icon/warning.svg"),
-        credit("Paid Credit", paidCredit.toString(), "null")
+        credit("Free Credit", '$freeCredit', "assets/icon/warning.svg"),
+        credit("Paid Credit", '$paidCredit', "null")
       ]),
     ]);
   }

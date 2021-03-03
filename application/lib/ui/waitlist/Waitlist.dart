@@ -1,7 +1,9 @@
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistModel.dart';
 import 'package:Favorito/ui/waitlist/ManualWaitList.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
@@ -23,11 +25,6 @@ class Waitlist extends StatefulWidget {
 class Waitlists extends State<Waitlist> {
   WaitlistListModel waitlistData;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   refresh() => setState(() {});
 
   @override
@@ -43,10 +40,17 @@ class Waitlists extends State<Waitlist> {
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: Text(waitlist, style: TextStyle(color: Colors.black)),
+          title: Text(waitlist,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 26,
+                  fontFamily: 'Gilroy-Bold')),
           actions: [
             IconButton(
-                icon: Icon(Icons.add_circle_outline),
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  size: 30,
+                ),
                 onPressed: () {
                   Navigator.push(
                           context,
@@ -56,7 +60,7 @@ class Waitlists extends State<Waitlist> {
                 }),
             IconButton(
                 icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
-                    height: 20),
+                    height: 26),
                 onPressed: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => WaitListSetting())))
           ],
@@ -76,7 +80,9 @@ class Waitlists extends State<Waitlist> {
                   margin:
                       EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                   child: RefreshIndicator(
-                    onRefresh: () => getPageData(),
+                    onRefresh: () async {
+                      setState(() {});
+                    },
                     child: ListView.builder(
                         itemCount: waitlistData.data == null
                             ? 0
@@ -96,14 +102,14 @@ class Waitlists extends State<Waitlist> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: sm.w(10),
+                                    width: sm.w(12),
                                     child: Text(va.noOfPerson.toString(),
                                         style: TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.w400)),
                                   ),
                                   SizedBox(
-                                    width: sm.w(45),
+                                    width: sm.w(43),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -112,8 +118,10 @@ class Waitlists extends State<Waitlist> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
-                                          child: Text(
+                                          child: AutoSizeText(
                                             va.name.toLowerCase(),
+                                            minFontSize: 22,
+                                            maxLines: 1,
                                             style: TextStyle(
                                                 fontSize: 22,
                                                 fontWeight: FontWeight.w600),
@@ -154,14 +162,46 @@ class Waitlists extends State<Waitlist> {
                                                 _callPhone('tel:${va.contact}'),
                                           ),
                                           IconButton(
-                                            iconSize: sm.w(8),
-                                            icon: Icon(
-                                                FontAwesomeIcons.trashAlt,
-                                                size: 16,
-                                                color: myRed),
-                                            onPressed: () =>
-                                                waitListDelete(va.id, index),
-                                          )
+                                              iconSize: sm.w(8),
+                                              icon: Icon(
+                                                  FontAwesomeIcons.trashAlt,
+                                                  size: 16,
+                                                  color: myRed),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  child: new AlertDialog(
+                                                    title: const Text(
+                                                        "Please confirm"),
+                                                    content: Text(
+                                                        'Are you sure you want to delete ?'),
+                                                    actions: [
+                                                      new FlatButton(
+                                                          child:
+                                                              const Text("Ok"),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            waitListDelete(
+                                                                va.id, index);
+                                                          }),
+                                                      new FlatButton(
+                                                        child: const Text(
+                                                            "Cancel"),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                      ),
+                                                      new FlatButton(
+                                                        child: const Text(''),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              })
                                         ],
                                       ),
                                       Row(
@@ -214,20 +254,15 @@ class Waitlists extends State<Waitlist> {
   showPopup(BuildContext context, Widget widget, {BuildContext popupContext}) {
     SizeManager sm = SizeManager(context);
     Navigator.push(
-      context,
-      PopupLayout(
-        top: sm.h(30),
-        left: sm.w(10),
-        right: sm.w(10),
-        bottom: sm.h(30),
-        child: PopupContent(
-          content: Scaffold(
-            resizeToAvoidBottomPadding: false,
-            body: widget,
-          ),
-        ),
-      ),
-    );
+        context,
+        PopupLayout(
+            top: sm.h(30),
+            left: sm.w(10),
+            right: sm.w(10),
+            bottom: sm.h(30),
+            child: PopupContent(
+                content: Scaffold(
+                    resizeToAvoidBottomPadding: false, body: widget))));
   }
 
   Widget _popupBodyShowDetail(WaitlistModel model, int index) {
@@ -244,32 +279,36 @@ class Waitlists extends State<Waitlist> {
       : throw 'Could not Call Phone';
 
   UpdateWaitList(String str, int id) async {
-    await WebService.funWaitlistUpdateStatus(
-            {"waitlist_id": id, "status": str}, context)
-        .then((value) {
-      print(value.message);
-      if (value.status == "success") {
-        WebService.funGetWaitlist(context).then((value) {
-          setState(() {});
-          return value;
-        });
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funWaitlistUpdateStatus(
+              {"waitlist_id": id, "status": str}, context)
+          .then((value) {
+        print(value.message);
+        if (value.status == "success") {
+          WebService.funGetWaitlist(context).then((value) {
+            setState(() {});
+            return value;
+          });
+        }
+      });
   }
 
   getPageData() async {
-    await WebService.funGetWaitlist(context).then((value) {
-      if (value.status == "succcess") {
-        setState(() {
-          waitlistData = value;
-        });
-      }
-    });
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funGetWaitlist(context).then((value) {
+        if (value.status == "succcess") {
+          setState(() {
+            waitlistData = value;
+          });
+        }
+      });
   }
 
-  waitListDelete(int id, int index) {
-    WebService.funWaitlistDelete({"waitlist_id": id}, context).then((value) {
-      setState(() => waitlistData.data.removeAt(index));
-    });
+  waitListDelete(int id, int index) async {
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.funWaitlistDelete({"waitlist_id": id}, context)
+          .then((value) {
+        setState(() => waitlistData.data.removeAt(index));
+      });
   }
 }

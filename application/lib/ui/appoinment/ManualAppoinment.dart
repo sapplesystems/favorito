@@ -288,11 +288,15 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                 clicker: () {
                   if (_formKey.currentState.validate()) {
                     if (controller[0].text == 'Select Date') {
-                      BotToast.showText(text: "Please select a date");
+                      BotToast.showText(
+                          text: "Please select a date",
+                          duration: Duration(seconds: 5));
                       return;
                     }
                     if (controller[1].text == 'Select Time') {
-                      BotToast.showText(text: "Please select a time");
+                      BotToast.showText(
+                          text: "Please select a time",
+                          duration: Duration(seconds: 5));
                       return;
                     }
                     var selectedService;
@@ -319,7 +323,9 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                     print("_map ${_map.toString()}");
                     WebService.funAppoinmentCreate(_map, context).then((value) {
                       if (value.status == "success") {
-                        BotToast.showText(text: value.message);
+                        BotToast.showText(
+                            text: value.message,
+                            duration: Duration(seconds: 5));
                         initializeDefaultValues();
                       }
                     });

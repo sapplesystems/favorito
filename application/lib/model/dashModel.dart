@@ -38,6 +38,7 @@ class DashData {
   int orders;
   int freeCredit;
   int paidCredit;
+  var ratingCount;
 
   DashData(
       {this.id,
@@ -55,7 +56,8 @@ class DashData {
       this.catalogoues,
       this.orders,
       this.freeCredit,
-      this.paidCredit});
+      this.paidCredit,
+      this.ratingCount});
 
   DashData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -74,6 +76,7 @@ class DashData {
     orders = json['orders'];
     freeCredit = json['free_credit'];
     paidCredit = json['paid_credit'];
+    ratingCount = json['rating_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -94,6 +97,7 @@ class DashData {
     data['orders'] = this.orders;
     data['free_credit'] = this.freeCredit;
     data['paid_credit'] = this.paidCredit;
+    data['rating_count'] = this.ratingCount;
     return data;
   }
 }

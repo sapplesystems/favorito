@@ -1,3 +1,4 @@
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/utils/myString.Dart';
 
@@ -15,6 +16,8 @@ class txtfieldboundry extends StatefulWidget {
   RegExp myregex;
   Function prefClick;
   String error;
+  FocusNode focusNode;
+
   txtfieldboundry(
       {this.title,
       this.security,
@@ -28,7 +31,8 @@ class txtfieldboundry extends StatefulWidget {
       this.maxLines,
       this.myOnChanged,
       this.prefClick,
-      this.error});
+      this.error,
+      this.focusNode});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -45,19 +49,20 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         decoration: InputDecoration(
             errorText: widget.error,
             labelText: widget.title,
-            labelStyle: Theme.of(context).textTheme.body2,
+            labelStyle: TextStyle(color: myGrey, fontFamily: 'Gilroy-Regular'),
             counterText: "",
             hintText: widget.hint,
-            hintStyle: Theme.of(context).textTheme.subhead,
+            hintStyle: TextStyle(color: myGrey, fontFamily: 'Gilroy-Regular'),
             fillColor: Colors.transparent,
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(4.0),
                 borderSide: BorderSide())),
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,
         style: Theme.of(context).textTheme.body1,
         maxLines: widget.maxLines,
+        focusNode: widget.focusNode,
         onChanged: widget.myOnChanged,
         enabled: widget.isEnabled,
       ),

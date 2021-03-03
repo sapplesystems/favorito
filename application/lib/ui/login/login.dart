@@ -1,14 +1,19 @@
+import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/model/loginModel.dart';
+import 'package:Favorito/network/RequestModel.dart';
+import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
-import 'package:Favorito/ui/signup/signup_a.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+
+import 'dart:convert' as convert;
 
 class Login extends StatefulWidget {
   @override
@@ -19,15 +24,11 @@ class _LoginState extends State<Login> {
   TextEditingController userCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  ProgressDialog pr;
   @override
-  // void initState() {
-  //   super.initState();
-  //   setState(() {
-  //     userCtrl.text = "rohits.shukla@sapple.co.in";
-  //     passCtrl.text = "sapple@123";
-  //   });
-  // }
+  void initState() {
+    super.initState();
+    Prefs().clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +139,15 @@ class _LoginState extends State<Login> {
             child: Padding(
               padding: EdgeInsets.only(top: sm.h(1)),
               child: InkWell(
-                onTap: () => Navigator.of(context).pushNamed('/signUpA'),
+                onTap: () {
+                  SignUpProvider?.categoryKey?.currentState
+                      ?.changeSelectedItem(null);
+                  SignUpProvider?.categoryKey1?.currentState
+                      ?.changeSelectedItem(null);
+                  SignUpProvider?.categoryKey2?.currentState
+                      ?.changeSelectedItem(null);
+                  Navigator.of(context).pushNamed('/signUpA');
+                },
                 child: Text(
                   "Sign Up",
                   style: TextStyle(
@@ -171,9 +180,16 @@ class _LoginState extends State<Login> {
         "username": userCtrl.text,
         "password": passCtrl.text
       };
-      BotToast.showLoading(allowClick: true, duration: Duration(seconds: 1));
-      WebService.funGetLogin(_map, context).then((value) {
-        if (value.status == "success") {
+      RequestModel requestModel = RequestModel();
+      requestModel.context = context;
+      requestModel.data = _map;
+      requestModel.url = serviceFunction.funLogin;
+
+      WebService.serviceCall(requestModel).then((value) {
+        loginModel _v =
+            loginModel.fromJson(convert.json.decode(value.toString()));
+        if (_v.status == "success") {
+          Prefs.setToken(_v.token.toString().trim());
           Navigator.pop(context);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => bottomNavigation()));

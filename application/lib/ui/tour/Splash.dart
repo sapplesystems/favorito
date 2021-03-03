@@ -57,6 +57,7 @@ class _SplashState extends State<Splash> {
             MaterialPageRoute(builder: (context) => bottomNavigation()));
       });
     } else {
+      Navigator.pop(context);
       Navigator.of(context).pushNamed('/login');
     }
   }

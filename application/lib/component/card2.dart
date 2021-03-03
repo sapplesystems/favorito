@@ -1,4 +1,3 @@
-import 'package:Favorito/myCss.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -6,7 +5,8 @@ import 'package:Favorito/config/SizeManager.dart';
 class card2 extends StatefulWidget {
   String ratings;
   Function function;
-  card2({this.ratings, this.function});
+  var va;
+  card2({this.ratings, this.function, this.va});
 
   @override
   _card2State createState() => _card2State();
@@ -61,7 +61,7 @@ class _card2State extends State<card2> {
               ),
               SizedBox(height: sm.h(2)),
               Text(
-                "100 Ratings",
+                "${widget.va} Ratings",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 13,

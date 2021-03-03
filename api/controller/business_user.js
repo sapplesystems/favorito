@@ -25,7 +25,7 @@ exports.getProfile = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             } else if (rows.length === 0) {
-                return res.status(403).json({ status: 'error', message: 'No recored found.',data:{}});
+                return res.status(403).json({ status: 'error', message: 'No recored found.', data: {} });
             } else {
                 var hours_drop_down_list = ['Select Hours', 'Always Open'];
                 var website = [];
@@ -155,7 +155,7 @@ exports.login = function(req, res, next) {
 
                         return res.status(200).json({ status: 'success', message: 'success', data: user_data, token: token });
                     } else {
-                        return res.status(401).json({ status: 'error', message: 'Incorrect username or password',data:{}, token: null });
+                        return res.status(401).json({ status: 'error', message: 'Incorrect username or password', data: {}, token: null });
                     }
                 });
             }

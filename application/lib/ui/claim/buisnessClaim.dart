@@ -6,6 +6,7 @@ import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/model/claimInfo.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/Regexer.dart';
+import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -14,6 +15,8 @@ import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/widgets.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
+// import 'package:flutter_config/flutter_config.dart';
 
 class BusinessClaim extends StatefulWidget {
   @override
@@ -33,12 +36,15 @@ class _BusinessClaimState extends State<BusinessClaim> {
   String otpverify = "verify";
   String emailverify = "verify";
   List<File> files = [];
+  FilePickerResult result;
+  bool needSubmit = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getClaimData();
     });
+    setNeedSubmit(false);
   }
 
   @override
@@ -84,6 +90,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                 top: sm.h(2),
               ),
               child: ListView(
+                shrinkWrap: true,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(bottom: sm.h(4)),
@@ -109,10 +116,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                   children: [
                                     txtfieldPostAction(
                                         controller: ctrlMobile,
+                                        // enalble: false,
                                         hint: "Enter business phone",
                                         title: "Phone",
-                                        keyboardSet: TextInputType.number,
                                         maxLines: 1,
+                                        readOnly: true,
                                         maxlen: 10,
                                         valid: true,
                                         sufixTxt:
@@ -126,7 +134,11 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         security: false,
                                         sufixClick: () async {
                                           if (clm?.result[0]?.isPhoneVerified ==
-                                              0) {
+                                                  0 &&
+                                              await Provider.of<UtilProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .checkInternet()) {
                                             pr.show();
                                             await WebService.funSendOtpSms(
                                                     {"mobile": ctrlMobile.text})
@@ -139,7 +151,9 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                 });
                                               }
                                               BotToast.showText(
-                                                  text: value.message);
+                                                  text: value.message,
+                                                  duration:
+                                                      Duration(seconds: 5));
                                             });
                                           }
                                         }),
@@ -149,7 +163,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                         Padding(
                                           padding: const EdgeInsets.all(12.0),
                                           child: Text(
-                                            "Enter Otp",
+                                            "Enter OTP",
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 20),
@@ -182,24 +196,32 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           errorAnimationController:
                                               errorController,
                                           onCompleted: (v) async {
-                                            pr.show();
-                                            await WebService.funClaimVerifyOtp(
-                                                    {"otp": v.toString()},
-                                                    context)
-                                                .then((value) {
-                                              pr.hide();
-                                              BotToast.showText(
-                                                  text: value.message);
-                                              if (value.status == 'success') {
-                                                sentOtp = false;
-                                                getClaimData();
-                                              } else if (value.status ==
-                                                  'fail') {
-                                                textEditingController.clear();
-                                                print(
-                                                    "value.message:${value.message}");
-                                              }
-                                            });
+                                            if (await Provider.of<UtilProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .checkInternet()) {
+                                              pr.show();
+                                              await WebService
+                                                      .funClaimVerifyOtp(
+                                                          {"otp": v.toString()},
+                                                          context)
+                                                  .then((value) {
+                                                pr.hide();
+                                                BotToast.showText(
+                                                    text: value.message,
+                                                    duration:
+                                                        Duration(seconds: 5));
+                                                if (value.status == 'success') {
+                                                  sentOtp = false;
+                                                  getClaimData();
+                                                } else if (value.status ==
+                                                    'fail') {
+                                                  textEditingController.clear();
+                                                  print(
+                                                      "value.message:${value.message}");
+                                                }
+                                              });
+                                            }
                                           },
                                           beforeTextPaste: (text) {
                                             print("Allowing to paste $text");
@@ -213,34 +235,43 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                "Did not receive OTP, ",
+                                                "Did not receive OTP ?, ",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 10,
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  // decoration:
+                                                  // TextDecoration.underline,
                                                 ),
                                               ),
                                               InkWell(
                                                 onTap: () async {
-                                                  pr.show();
-                                                  await WebService
-                                                      .funSendOtpSms({
-                                                    "mobile": ctrlMobile.text
-                                                  }).then((value) {
-                                                    pr.hide();
-                                                    if (value.status ==
-                                                        'success') {
-                                                      setState(() {
-                                                        sentOtp = true;
-                                                      });
-                                                    }
-                                                    BotToast.showText(
-                                                        text: value.message);
-                                                  });
+                                                  if (await Provider.of<
+                                                              UtilProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .checkInternet()) {
+                                                    pr.show().timeout(
+                                                        Duration(seconds: 2));
+                                                    await WebService
+                                                        .funSendOtpSms({
+                                                      "mobile": ctrlMobile.text
+                                                    }).then((value) {
+                                                      pr.hide();
+                                                      if (value.status ==
+                                                          'success') {
+                                                        setState(() {
+                                                          sentOtp = true;
+                                                        });
+                                                      }
+                                                      BotToast.showText(
+                                                          text: value.message,
+                                                          duration: Duration(
+                                                              seconds: 5));
+                                                    });
+                                                  }
                                                 },
                                                 child: Text(
-                                                  "Send Again",
+                                                  "Regenerate OTP",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: myRed,
@@ -259,6 +290,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           hint: "Enter business Email",
                                           title: "Email",
                                           maxLines: 1,
+                                          readOnly: true,
                                           myregex: emailRegex,
                                           keyboardSet:
                                               TextInputType.emailAddress,
@@ -275,46 +307,52 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                                   : Icons.check_circle,
                                           security: false,
                                           sufixClick: () async {
-                                            pr.show();
-                                            await WebService
-                                                    .funSendEmailVerifyLink(
-                                                        context)
-                                                .then((value) {
-                                              pr.hide();
-                                              BotToast.showText(
-                                                  text: value.message);
-                                              if (value.status == 'success') {
-                                                setState(() {
-                                                  emailverify = "";
+                                            if (clm?.result[0]
+                                                    ?.isEmailVerified ==
+                                                0) {
+                                              if (await Provider.of<
+                                                          UtilProvider>(context,
+                                                      listen: false)
+                                                  .checkInternet()) {
+                                                pr.show().timeout(
+                                                    Duration(seconds: 2));
+                                                await WebService
+                                                        .funSendEmailVerifyLink(
+                                                            context)
+                                                    .then((value) {
+                                                  pr.hide();
+                                                  BotToast.showText(
+                                                      text: value.message,
+                                                      duration:
+                                                          Duration(seconds: 5));
+                                                  if (value.status ==
+                                                      'success') {
+                                                    setState(() {
+                                                      emailverify = "";
+                                                    });
+                                                    getClaimData();
+                                                  }
                                                 });
-                                                getClaimData();
                                               }
-                                            });
+                                            }
                                           }),
                                     ),
                                     MyOutlineButton(
                                       title: "Upload Document",
                                       function: () async {
-                                        FilePickerResult result =
-                                            await FilePicker.platform
-                                                .pickFiles(allowMultiple: true);
+                                        result = await FilePicker.platform
+                                            .pickFiles(allowMultiple: true);
 
                                         if (result != null) {
-                                          files = result.paths
-                                              .map((path) => File(path))
+                                          setNeedSubmit(true);
+                                          files = result?.paths
+                                              ?.map((path) => File(path))
                                               .toList();
+                                          setState(() {});
                                         }
-                                        // if (result != null) {
-                                        //   List<File> files = result.paths
-                                        //       .map((path) => File(path))
-                                        //       .toList();
-                                        // }
-                                        // FilePickerResult result =
-                                        //     await FilePicker.platform.pickFiles();
-
                                         if (result != null) {
                                           PlatformFile file =
-                                              result.files.first;
+                                              result?.files?.first;
 
                                           print(file.name);
                                           print(file.bytes);
@@ -322,26 +360,87 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           print(file.extension);
                                           print(file.path);
                                         }
+                                        double d = 0;
+                                        for (int i = 0;
+                                            i < result?.files?.length;
+                                            i++) {
+                                          d = d +
+                                              double.parse(result
+                                                  ?.files[i]?.size
+                                                  .toString());
+
+                                          // if (d >
+                                          //     double.parse(FlutterConfig.get(
+                                          //         'image_max_length'))) {
+                                          //   BotToast.showText(
+                                          //       text: FlutterConfig.get(
+                                          //           'image_max_length_message'));
+                                          setState(() {
+                                            result.files.clear();
+                                          });
+                                          // }
+                                        }
                                       },
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sm.w(4)),
+                                      child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: result?.files?.length ?? 0,
+                                          itemBuilder: (_context, _index) =>
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 4.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                        result
+                                                            .files[_index].name,
+                                                        textAlign:
+                                                            TextAlign.left),
+                                                    Text(
+                                                        '${result.files[_index].size.toString()}kb',
+                                                        textAlign:
+                                                            TextAlign.right)
+                                                  ],
+                                                ),
+                                              )),
                                     ),
                                   ]))),
                     ),
                   ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: sm.w(16), vertical: sm.h(4)),
-                      child: RoundedButton(
-                          clicker: () async {
-                            pr.show();
-                            await WebService.funClaimAdd(ctrlMobile.text,
-                                    ctrlMail.text, files, context)
-                                .then((value) {
-                              pr.hide();
-                              BotToast.showText(text: value.message);
-                            });
-                          },
-                          clr: Colors.red,
-                          title: "Done"))
+                  Visibility(
+                    visible: getNeedSubmit(),
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: sm.w(16), vertical: sm.h(4)),
+                        child: RoundedButton(
+                            clicker: () async {
+                              if (await Provider.of<UtilProvider>(context,
+                                      listen: false)
+                                  .checkInternet()) {
+                                pr.show();
+                                await WebService.funClaimAdd(ctrlMobile.text,
+                                        ctrlMail.text, files, context)
+                                    .then((value) {
+                                  pr.hide();
+                                  setNeedSubmit(false);
+                                  BotToast.showText(
+                                      text: value.message,
+                                      duration: Duration(seconds: 5));
+                                  result.files.clear();
+                                  // Navigator.pop(context);
+                                });
+                              }
+                            },
+                            clr: Colors.red,
+                            title: "Submit")),
+                  )
                 ],
               ),
             ),
@@ -349,17 +448,23 @@ class _BusinessClaimState extends State<BusinessClaim> {
   }
 
   getClaimData() async {
-    pr.show();
-    await WebService.funClaimInfo(context).then((value) {
-      pr.hide();
-      if (value.status == 'success') {
-        ctrlMail.text = value?.result[0]?.businessEmail;
-        ctrlMobile.text = value?.result[0]?.businessPhone;
+    if (await Provider.of<UtilProvider>(context, listen: false)
+        .checkInternet()) {
+      pr.show();
+      await WebService.funClaimInfo(context).then((value) {
+        pr.hide();
+        if (value.status == 'success') {
+          ctrlMail.text = value?.result[0]?.businessEmail;
+          ctrlMobile.text = value?.result[0]?.businessPhone;
 
-        setState(() => clm = value);
-        if (clm?.result[0]?.isPhoneVerified == 1) otpverify = "";
-        if (clm?.result[0]?.isEmailVerified == 1) emailverify = "";
-      }
-    });
+          setState(() => clm = value);
+          if (clm?.result[0]?.isPhoneVerified == 1) otpverify = "";
+          if (clm?.result[0]?.isEmailVerified == 1) emailverify = "";
+        }
+      });
+    }
   }
+
+  setNeedSubmit(_val) => setState(() => needSubmit = _val);
+  getNeedSubmit() => needSubmit;
 }

@@ -1,5 +1,5 @@
 class PhotoData {
-  int id;
+  var id;
   String type;
   String photo;
 

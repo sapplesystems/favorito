@@ -40,4 +40,7 @@ String yourBasket = 'Your Basket';
 String customizetion = 'Customizetion';
 String bookAnAppointment = 'Book An Appointment';
 String bookTable = 'Book Table';
-// final List<MenuItemModel> bucket = [];
+
+//filtered
+String fieldIsRequired = 'field is required..';
+String invalidUsername = 'Invalid username';

@@ -1,7 +1,7 @@
 class CatalogModel {
   int id;
   String catalogTitle;
-  int catalogPrice;
+  var catalogPrice;
   String catalogDesc;
   String productUrl;
   String productId;
@@ -10,13 +10,13 @@ class CatalogModel {
 
   CatalogModel(
       {this.id,
-        this.catalogTitle,
-        this.catalogPrice,
-        this.catalogDesc,
-        this.productUrl,
-        this.productId,
-        this.photosId,
-        this.photos});
+      this.catalogTitle,
+      this.catalogPrice,
+      this.catalogDesc,
+      this.productUrl,
+      this.productId,
+      this.photosId,
+      this.photos});
 
   CatalogModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -2,21 +2,21 @@ import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
-import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
-import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
-import 'package:favorito_user/ui/home/usernameAddress.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 
+  ProgressDialog pr;
   List<String> image = ['pizza', 'table', 'callender', 'ala', 'bag', 'home'];
   List<String> imagName = [
     'Food',
@@ -29,25 +29,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String _selectedAddress = "selected Address";
-
   var _mySearchEditTextController = TextEditingController();
   AddressListModel addressData;
-  ProfileImageModel profileImage;
   SizeManager sm;
-  ProgressDialog pr;
-  @override
-  void initState() {
-    super.initState();
-    getUserImage();
-    getAddress();
-  }
+  UserAddressProvider vaTrue;
 
   @override
   Widget build(BuildContext context) {
-    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(message: 'Fetching Data, please wait');
+    vaTrue = Provider.of<UserAddressProvider>(context, listen: true);
+    if (widget.pr == null) {
+      vaTrue.getAddress();
+      vaTrue.getUserImage();
+    }
+    widget.pr = ProgressDialog(context, type: ProgressDialogType.Normal);
+    widget.pr.style(message: 'Fetching Data, please wait');
     sm = SizeManager(context);
+
     return Scaffold(
       backgroundColor: myBackGround,
       body: ListView(
@@ -57,16 +54,50 @@ class _HomeState extends State<Home> {
             margin: EdgeInsets.only(top: sm.h(2)),
             color: Colors.white,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
+                Container(
+                  width: sm.w(20),
                   padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                  child: myClipRect(profileImage: profileImage, sm: sm),
+                  child: myClipRect(),
                 ),
-                usernameAddress(
-                    addressData: addressData,
-                    selectedAddress: _selectedAddress),
-                Padding(
+                Container(
+                  width: sm.w(60),
+                  child: InkWell(onTap: () {
+                    showModalBottomSheet<void>(
+                        enableDrag: true,
+                        isScrollControlled: true,
+                        context: context,
+                        backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Container(
+                                height: sm.h(70),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  // borderRadius: BorderRadius.only(
+                                  //     topLeft: Radius.circular(30),
+                                  //     topRight: Radius.circular(30)),
+                                ),
+                                child: UserAddress());
+                          });
+                        });
+                  }, child: Consumer<UserAddressProvider>(
+                      builder: (context, data, child) {
+                    var _v = data.getSelectedAddress();
+                    return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('title', textAlign: TextAlign.start),
+                          Text(
+                              '${_v.address},\n${_v.city} ${_v.state},${_v.pincode}',
+                              textAlign: TextAlign.start)
+                        ]);
+                  })),
+                ),
+                Container(
+                  width: sm.w(12),
                   padding: EdgeInsets.only(right: sm.w(2), bottom: sm.w(4)),
                   child: IconButton(
                       icon: SvgPicture.asset(
@@ -85,8 +116,11 @@ class _HomeState extends State<Home> {
             child: EditTextComponent(
               ctrl: _mySearchEditTextController,
               hint: "Search",
+              // suffixTap: () {},
+              suffixTxt: '',
               security: false,
-              valid: true,
+              valid: false,
+              error: '',
               keyboardSet: TextInputType.text,
               prefixIcon: 'search',
               keyBoardAction: TextInputAction.search,
@@ -181,32 +215,5 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
-  }
-
-  void getAddress() async {
-    pr?.show();
-    await APIManager.getAddress(context).then((value) {
-      pr?.hide();
-      if (value.status == 'success') {
-        addressData = value;
-        for (Addresses temp in addressData.data.addresses) {
-          if (temp.defaultAddress == 1) {
-            setState(() {
-              _selectedAddress = temp.address;
-            });
-          }
-        }
-      }
-    });
-  }
-
-  void getUserImage() async {
-    pr?.show();
-    await APIManager.getUserImage(context).then((value) {
-      pr?.hide();
-      if (value.status == 'success') {
-        profileImage = value;
-      }
-    });
   }
 }

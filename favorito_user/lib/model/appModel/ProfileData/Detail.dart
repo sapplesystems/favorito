@@ -3,8 +3,8 @@ class Detail {
   String email;
   String phone;
   String postal;
-  Null profileId;
-  Null reachWhatsapp;
+  String profileId;
+  int reachWhatsapp;
   String shortDescription;
 
   Detail(

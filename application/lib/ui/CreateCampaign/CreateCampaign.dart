@@ -29,6 +29,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<TextEditingController> ctrl = List();
 
+  final _cpcKey = GlobalKey<DropdownSearchState<String>>();
   List<String> _totalCpc = [];
   var _selecteCpc;
   bool _autovalidate = false;
@@ -107,15 +108,10 @@ class _CreateCampaignState extends State<CreateCampaign> {
                               Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: DropdownSearch<String>(
-                                  validator: (_v) {
-                                    var va;
-                                    if (_v != "" && _v != null) {
-                                      va = null;
-                                    } else {
-                                      va = 'required field';
-                                    }
-                                    return va;
-                                  },
+                                  key: _cpcKey,
+                                  validator: (_v) => (_v != "" && _v != null)
+                                      ? null
+                                      : 'required field',
                                   autoValidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
@@ -195,7 +191,8 @@ class _CreateCampaignState extends State<CreateCampaign> {
           for (int i = 0; i < statusData.keys.toList().length; i++)
             statusData[(statusData.keys.toList())[i]] = false;
           statusData[widget.data.status] = true;
-          _selecteCpc = widget.data.cpc.toString();
+          _cpcKey.currentState.changeSelectedItem(widget.data.cpc.toString());
+
           for (int j = 0; j < widget.data.keyword.length; j++) {
             for (int i = 0; i < totalTag.length; i++) {
               if (widget.data.keyword[j].id == totalTag[i].id) {

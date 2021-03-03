@@ -1,36 +1,21 @@
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
-class myClipRect extends StatefulWidget {
-  const myClipRect({
-    Key key,
-    @required this.profileImage,
-    @required this.sm,
-  }) : super(key: key);
-
-  final ProfileImageModel profileImage;
-  final SizeManager sm;
-
-  @override
-  _myClipRectState createState() => _myClipRectState();
-}
-
-class _myClipRectState extends State<myClipRect> {
+class myClipRect extends StatelessWidget {
+  SizeManager sm;
   @override
   Widget build(BuildContext context) {
+    sm = SizeManager(context);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Image.network(
-        widget.profileImage == null
-            ? "https://source.unsplash.com/random/40*40"
-            : widget.profileImage.data.length == 0
-                ? "https://source.unsplash.com/random/40*40"
-                : widget.profileImage.data[0].photo,
-        height: widget.sm.h(8),
-        fit: BoxFit.cover,
-        width: widget.sm.h(8),
-      ),
-    );
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+            height: sm.h(8),
+            width: sm.h(8),
+            child: ImageMaster(
+                url: Provider.of<UserAddressProvider>(context, listen: true)
+                    .getProfileImage())));
   }
 }

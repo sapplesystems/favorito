@@ -177,7 +177,8 @@ class _BookingSettingState extends State<BookingSetting> {
     };
     print("controller[2].text:${controller[2].text}");
     await WebService.funBookingSaveSetting(_map, context).then((value) {
-      if (value.status == "success") BotToast.showText(text: value.message);
+      if (value.status == "success")
+        BotToast.showText(text: value.message, duration: Duration(seconds: 5));
     });
   }
 }

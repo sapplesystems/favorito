@@ -3,7 +3,11 @@ import 'package:Favorito/component/card1.dart';
 import 'package:Favorito/component/card2.dart';
 import 'package:Favorito/component/cart3.dart';
 import 'package:Favorito/component/rowWithTextNButton.dart';
+import 'package:Favorito/component/showPopup.dart';
+import 'package:Favorito/model/dashModel.dart';
 import 'package:Favorito/myCss.dart';
+import 'package:Favorito/network/RequestModel.dart';
+import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/checkins/checkins.dart';
@@ -16,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
-import 'package:Favorito/utils/myColors.dart';
+import 'dart:convert' as convert;
 
 class dashboard extends StatefulWidget {
   @override
@@ -25,28 +29,29 @@ class dashboard extends StatefulWidget {
 
 class _dashboardState extends State<dashboard> {
   SizeManager sm;
+  var ratingCount;
+  bool isFirst = true;
   @override
   void initState() {
     super.initState();
-    calldashBoard();
   }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+    if (isFirst) {
+      calldashBoard(context);
+      isFirst = false;
+    }
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70.0),
           child: AppBar(
             title: Padding(
-              padding: EdgeInsets.only(
-                top: sm.w(10),
-              ),
-              child: Text(
-                "Dashboard",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.title,
-              ),
+              padding: EdgeInsets.only(top: sm.w(10)),
+              child: Text("Dashboard",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.title),
             ),
             centerTitle: true,
             elevation: 0,
@@ -60,7 +65,7 @@ class _dashboardState extends State<dashboard> {
           ),
         ),
         body: RefreshIndicator(
-          onRefresh: () => calldashBoard(),
+          onRefresh: () => calldashBoard(context),
           backgroundColor: Colors.amber,
           child: Padding(
               padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
@@ -70,6 +75,7 @@ class _dashboardState extends State<dashboard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      Text("ver : 1.0 ", style: TextStyle(fontSize: 8)),
                       Text("Status : ", style: TextStyle(fontSize: 16)),
                       Text(
                           is_verified == "0"
@@ -90,37 +96,46 @@ class _dashboardState extends State<dashboard> {
                     ],
                   ),
                 ),
-                rowWithTextNButton(
-                    txt1: "Complete Your Profile",
-                    txt2: "Fill",
-                    check: is_profile_completed,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BusinessProfile()));
-                    }),
-                rowWithTextNButton(
-                    txt1: "Complete your information",
-                    txt2: "Now",
-                    check: is_information_completed,
-                    function: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => businessInfo()));
-                    }),
+                Visibility(
+                  visible: is_profile_completed == '0' ? true : false,
+                  child: rowWithTextNButton(
+                      txt1: "Complete Your Profile",
+                      txt2: "Fill",
+                      check: is_profile_completed,
+                      function: () {
+                        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BusinessProfile()))
+                            .whenComplete(() => calldashBoard(context));
+                      }),
+                ),
+                Visibility(
+                  visible: is_information_completed == '0' ? true : false,
+                  child: rowWithTextNButton(
+                      txt1: "Complete Your Information",
+                      txt2: "Now",
+                      check: is_information_completed,
+                      function: () {
+                        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => businessInfo()))
+                            .whenComplete(() => calldashBoard(context));
+                      }),
+                ),
                 Visibility(
                   visible: is_verified == "0" ? true : false,
                   child: rowWithTextNButton(
-                      txt1: "Send for verification",
+                      txt1: "Send For Verification",
                       txt2: "Verify",
                       check: is_verified,
                       function: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BusinessClaim()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BusinessClaim()))
+                            .whenComplete(() => calldashBoard(context));
                       }),
                 ),
                 Padding(
@@ -132,19 +147,22 @@ class _dashboardState extends State<dashboard> {
                           checkins: check_ins,
                           function: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => checkins()));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => checkins()))
+                                .whenComplete(() => calldashBoard(context));
                           }),
                       card2(
-                        ratings: ratings,
-                        function: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => reviewList()));
-                        },
-                      )
+                          ratings:
+                              double.parse(ratings ?? 0.0).toStringAsFixed(1),
+                          function: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => reviewList()))
+                                .whenComplete(() => calldashBoard(context));
+                          },
+                          va: ratingCount ?? '0')
                     ],
                   ),
                 ),
@@ -156,18 +174,20 @@ class _dashboardState extends State<dashboard> {
                           InkWell(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Catalogs()));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Catalogs()))
+                                    .whenComplete(() => calldashBoard(context));
                               },
                               child: card3(
                                   txt1: "Catalogoues", title: catalogoues)),
                           InkWell(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Orders()));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Orders()))
+                                    .whenComplete(() => calldashBoard(context));
                               },
                               child: card3(txt1: "Orders", title: orders))
                         ])),
@@ -178,13 +198,20 @@ class _dashboardState extends State<dashboard> {
                   )
                 ]),
                 Row(children: [
-                  credit("Free Credit", free_credit, "assets/icon/warning.svg"),
-                  credit("Paid Credit", paid_credit, "assets/icon/warning.svg")
+                  credit("Free Credit", free_credit, "assets/icon/warning.svg",
+                      true),
+                  credit("Paid Credit", paid_credit, "assets/icon/warning.svg",
+                      false)
                 ]),
-                rowCard("Advertise",
-                    "Reach new audience searching for related services", () {}),
                 rowCard(
-                    "Notifications", "Send Direct Update to Customer", () {}),
+                    "Advertise",
+                    "Reach new audience searching for related services",
+                    () => Navigator.of(context)
+                        .pushNamed('/adSpent')
+                        .whenComplete(() => calldashBoard(context))),
+                rowCard("Notifications", "Send Direct Update To Customer", () {
+                  Navigator.of(context).pushNamed('/notifications');
+                }),
               ])),
         ));
   }
@@ -196,45 +223,66 @@ class _dashboardState extends State<dashboard> {
             margin: EdgeInsets.symmetric(vertical: 12),
             decoration: bd3,
             child: ListTile(
-                title: Text(title,
+                title: Text(title ?? '',
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-                subtitle: Text(subtitle))),
+                subtitle: Text(subtitle ?? ''))),
       );
 
-  Widget credit(String title, String ammount, String ico) {
+  Widget credit(String title, String ammount, String ico, bool val) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24, top: 16),
+      padding: EdgeInsets.only(left: 12, top: 16),
       child: Row(children: [
-        Text("${title} : "),
-        Text("${ammount}  "),
-        SvgPicture.asset(
-          ico,
-          alignment: Alignment.center,
-          height: sm.h(1.4),
-        )
+        Text("${title ?? ''} : "),
+        Text("${ammount ?? ''}  "),
+        val
+            ? InkWell(
+                onTap: () {
+                  showPopup(
+                          callback: () {},
+                          ctx: context,
+                          sizesBottom: 44,
+                          sizesLeft: 20,
+                          sizesRight: 20,
+                          sizesTop: 44,
+                          sm: sm,
+                          widget: Text('Lorem dolor isit'))
+                      .show();
+                },
+                child: SvgPicture.asset(
+                  ico,
+                  alignment: Alignment.center,
+                  height: sm.h(1.4),
+                ),
+              )
+            : Container()
       ]),
     );
   }
 
-  calldashBoard() async {
-    await WebService.funGetDashBoard(context).then((value) {
-      business_id = value.businessId;
-      business_name = value.businessName;
-      business_status = value.businessStatus;
-      photoUrl = value.photo;
-      is_profile_completed = value.isProfileCompleted.toString();
-      is_information_completed = value.isInformationCompleted.toString();
-      is_phone_verified = value.isPhoneVerified.toString();
-      is_email_verified = value.isEmailVerified.toString();
-      is_verified = value.isVerified.toString();
-      check_ins = value.checkIns.toString();
-      ratings = value.ratings.toString();
-      catalogoues = value.catalogoues.toString();
-      orders = value.orders.toString();
-      free_credit = value.freeCredit.toString();
+  calldashBoard(BuildContext _context) async {
+    final RequestModel requestModel = RequestModel();
+    requestModel.context = _context;
+    requestModel.url = serviceFunction.funDash;
+    await WebService.serviceCall(requestModel).then((value) {
+      var _v = dashModel.fromJson(convert.json.decode(value?.toString()));
+      var va = _v?.data;
+      business_id = va?.businessId;
+      business_name = va?.businessName;
+      business_status = va?.businessStatus;
+      photoUrl = va?.photo;
+      is_profile_completed = va?.isProfileCompleted?.toString() ?? '';
+      is_information_completed = va?.isInformationCompleted?.toString() ?? '';
+      is_phone_verified = va?.isPhoneVerified?.toString() ?? '';
+      is_email_verified = va?.isEmailVerified?.toString() ?? '';
+      is_verified = va?.isVerified.toString() ?? '';
+      check_ins = va?.checkIns.toString() ?? '';
+      ratings = va?.ratings.toString() ?? '';
+      catalogoues = va?.catalogoues?.toString() ?? '';
+      orders = va?.orders?.toString() ?? '';
+      ratingCount = va?.ratingCount?.toString() ?? '';
       setState(() {
-        paid_credit = value.paidCredit.toString();
+        paid_credit = va?.paidCredit?.toString() ?? '';
       });
     });
   }

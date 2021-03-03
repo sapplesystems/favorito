@@ -1,11 +1,7 @@
-import 'package:Favorito/ui/appoinment/appoinment.dart';
-import 'package:Favorito/ui/appoinment/appoinmentSetting.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
-import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/dashboard/dashboard.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/menu/Menu.dart';
-import 'package:Favorito/ui/menu/item/MenuItem.dart';
 import 'package:Favorito/ui/setting/setting/setting.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';

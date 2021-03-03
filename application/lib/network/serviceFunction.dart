@@ -16,6 +16,8 @@ class serviceFunction {
   static String funGetCreateOfferDefaultData = baseUrl2 + 'offer/dd-verbose';
   static String funCreateOffer = baseUrl2 + 'offer/create';
   static String funCreateJob = baseUrl2 + 'job/create';
+  static String funEditJob = baseUrl2 + 'job/edit';
+  static String funUserPhoto = baseUrl1 + 'user/profile-photo';
   static String funContactPersonRequiredData =
       baseUrl2 + 'business-user/owner-profile';
   static String funUpdateContactPerson =
@@ -39,7 +41,6 @@ class serviceFunction {
   static String funGetOfferData = funOffer + 'list';
   static String funEditOffer = funOffer + 'edit';
   static String funGetEditJobData = baseUrl2 + 'job/detail';
-  static String funEditJob = baseUrl2 + 'job/edit';
   static String funUserProfileUpdate = baseUrl1 + 'user/profile/update';
   static String funProfileUpdatephoto = baseUrl1 + 'user/profile/update-photo';
   static String funUserProfile = baseUrl1 + 'user/profile';
@@ -57,6 +58,7 @@ class serviceFunction {
   static String funOrderList = baseUrl1 + 'order/list';
   static String funCatalogAddPhoto = baseUrl2 + 'catalog/add-photo';
   static String funCatalogEdit = baseUrl2 + 'catalog/edit';
+  static String funCatalogDetail = baseUrl2 + 'catalog/detail';
   static String funManualBooking = funBooking + 'create';
   static String funBookingSetting = funBooking + 'setting';
   static String funBookingSaveSetting = funBooking + 'save-setting';
@@ -132,4 +134,6 @@ class serviceFunction {
   static String funForgetPass = baseUrl2 + 'change-password/send-otp-email';
   static String funVerifyOtp =
       baseUrl2 + 'change-password/verify-otp-change-password';
+  static String funChangePassword =
+      baseUrl2 + 'change-password/change-password-by-old';
 }

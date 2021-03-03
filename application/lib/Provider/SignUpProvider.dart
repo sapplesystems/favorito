@@ -1,13 +1,17 @@
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
-import 'package:Favorito/ui/login/login.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class SignUpProvider extends ChangeNotifier {
+  static final categoryKey = GlobalKey<DropdownSearchState<String>>();
+  static final categoryKey1 = GlobalKey<DropdownSearchState<String>>();
+  static final categoryKey2 = GlobalKey<DropdownSearchState<String>>();
+  static bool signCler = true;
   SignUpProvider() {
     getCategory();
     getBusiness();
@@ -32,8 +36,21 @@ class SignUpProvider extends ChangeNotifier {
   List<String> busy = ["Owner", "Manager", "Employee"];
   setContext(BuildContext context) {
     this.context = context;
-    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(message: 'Please wait');
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: 'Please wait...',
+        borderRadius: 8.0,
+        backgroundColor: Colors.white,
+        progressWidget: CircularProgressIndicator(),
+        elevation: 8.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
   }
 
   int getTypeId() => _typeId; //businessTypeId
@@ -59,9 +76,7 @@ class SignUpProvider extends ChangeNotifier {
   getTnCChecked() => _tnCchecked;
 
   Future<CatListModel> getCategory() async {
-    pr.show();
     await WebService.funGetCatList({"business_type_id": _typeId}).then((value) {
-      pr.hide();
       _catdata.clear();
       _catdata.addAll(value.data);
       notifyListeners();
@@ -129,12 +144,14 @@ class SignUpProvider extends ChangeNotifier {
     };
 
     print("Request:${_map}");
-
+    pr.show().timeout(Duration(seconds: 5));
     WebService.funRegister(_map, context).then((value) {
-      // pr.hide();
+      pr.hide();
       if (value.status == 'success') {
-        BotToast.showText(text: "Registration SuccessFull!!");
-        Navigator.of(context).pushNamed('/');
+        BotToast.showText(text: value.message ?? '');
+        allClear();
+        Navigator.pop(context);
+        Navigator.pop(context);
       } else {
         BotToast.showText(text: value.message.toString());
       }
@@ -153,5 +170,27 @@ class SignUpProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  allClear() {
+    // try {
+    //   categoryKey?.currentState?.changeSelectedItem(null);
+    //   categoryKey1?.currentState?.changeSelectedItem(null);
+    //   categoryKey2?.currentState?.changeSelectedItem(null);
+    // } catch (e) {
+    //   print('Error:' + e.toString());
+    // }
+    for (int _i = 0; _i < 8; _i++) {
+      controller[_i].text = '';
+      error[_i] = null;
+    }
+    _businessName = '';
+    _checked = false;
+    _tnCchecked = false;
+    _categoryId = null;
+    _categoryName = null;
+
+    error[1] = null;
+    // categoryKey.currentState.initState();
   }
 }

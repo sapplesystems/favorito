@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BusinessHoursProvider extends ChangeNotifier {
+  String hoursTitle1 = 'Existing Slots';
+  String hoursTitle2 = 'Add New Slots';
   List<Hours> daysHours = List();
   bool _isEdit = false;
   BuildContext context;
@@ -26,6 +28,7 @@ class BusinessHoursProvider extends ChangeNotifier {
   String startTime = 'Start Time';
   String endTime = 'End Time';
   List<int> renge = [];
+  // bool
   BusinessHoursProvider() {
     for (var _d in daylist) {
       print("this is called 1");
@@ -67,7 +70,7 @@ class BusinessHoursProvider extends ChangeNotifier {
         }
       }
       notifyListeners();
-      Navigator.pop(context);
+      // Navigator.pop(context);
     });
   }
 
@@ -77,10 +80,13 @@ class BusinessHoursProvider extends ChangeNotifier {
 
   popupClosed() {
     renge.clear();
-    getData();
-    for (int i = 0; i < daysHours.length; i++) daysHours[i].selected = false;
+    for (int i = 0; i < daysHours.length; i++) {
+      daysHours[i].selected = false;
+      daysHours[i].open = false;
+    }
     startTime = 'Start Time';
     endTime = 'End Time';
+    getData();
     notifyListeners();
   }
 
@@ -118,6 +124,7 @@ class BusinessHoursProvider extends ChangeNotifier {
         e.open = false;
       });
       getData();
+      Navigator.pop(context);
     });
   }
 
@@ -182,8 +189,8 @@ class BusinessHoursProvider extends ChangeNotifier {
           print("doing off");
           daysHours[_index].open = false;
         }
-        startTime = daysHours[_index].startHours;
-        endTime = daysHours[_index].endHours;
+        startTime = daysHours[_index].startHours.trim().substring(0, 5);
+        endTime = daysHours[_index].endHours.trim().substring(0, 5);
       } else {
         daysHours[_index].selected = true;
         daysHours[_index].startHours = startTime;
@@ -196,5 +203,9 @@ class BusinessHoursProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  allClear() {
+    selecteddayList.clear();
   }
 }
