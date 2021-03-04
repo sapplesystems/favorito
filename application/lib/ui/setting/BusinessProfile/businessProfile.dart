@@ -25,7 +25,7 @@ class BusinessProfile extends StatelessWidget {
     v.setContext(context);
     if (v?.controller[1]?.text?.isEmpty) v.getProfileData(false);
     if (isFirst) {
-      v.getProfileData(true);
+      v.getProfileData(false);
       isFirst = false;
     }
     return RefreshIndicator(

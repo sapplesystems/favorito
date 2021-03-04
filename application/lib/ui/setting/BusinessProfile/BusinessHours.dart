@@ -39,7 +39,7 @@ class BusinessHours extends StatelessWidget {
                 maxHeight: 110,
                 onChanged: (value) {
                   bspFalse.controller.text = value != null ? value : "";
-                  bspTrue.notifyListeners();
+                  bspFalse.notifyListeners();
                 })),
         Visibility(
           visible: bspFalse.controller.text == "Select Hours",
