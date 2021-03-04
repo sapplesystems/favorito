@@ -4,6 +4,7 @@ import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -232,12 +233,15 @@ class BusinessProfileProvider extends ChangeNotifier {
           controller[4].text == 'Select Hours') {
         // Provider.of<BusinessHoursProvider>(context, listen: false).getData();
       }
-
       try {
         listviewController.animateTo(
             listviewController?.position?.minScrollExtent,
             curve: Curves.easeOut,
-            duration: const Duration(milliseconds: 1));
+            duration: const Duration(milliseconds: 40));
+
+        dd1?.currentState?.changeSelectedItem(va.workingHours ?? '');
+        Provider.of<BusinessHoursProvider>(context, listen: false)
+            .setController(va.workingHours);
       } catch (e) {}
       notifyListeners();
       return value;

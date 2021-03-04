@@ -81,7 +81,9 @@ class _dashboardState extends State<dashboard> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text("ver : 1.0 ", style: TextStyle(fontSize: 8)),
-                      Text("Status : ", style: TextStyle(fontSize: 16)),
+                      Text("Status : ",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
                       Text(
                           is_verified == "0"
                               ? "Offline"
@@ -94,7 +96,9 @@ class _dashboardState extends State<dashboard> {
                                   ? Colors.grey
                                   : is_verified == "1"
                                       ? Colors.green
-                                      : Colors.red)),
+                                      : Colors.red,
+                              fontFamily: 'Gilroy-Medium',
+                              fontWeight: FontWeight.w500)),
                       SizedBox(
                         width: 20,
                       )
@@ -197,17 +201,26 @@ class _dashboardState extends State<dashboard> {
                               child: card3(txt1: "Orders", title: orders))
                         ])),
                 Row(children: [
-                  Text(
-                    "Grow your Business",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      "Grow your Business",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                    ),
                   )
                 ]),
-                Row(children: [
-                  credit("Free Credit", free_credit, "assets/icon/warning.svg",
-                      true),
-                  credit("Paid Credit", paid_credit, "assets/icon/warning.svg",
-                      false)
-                ]),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        credit("Free Credit", free_credit ?? 0,
+                            "assets/icon/warning.svg", true),
+                        credit("Paid Credit", paid_credit,
+                            "assets/icon/warning.svg", false)
+                      ]),
+                ),
                 rowCard(
                     "Advertise",
                     "Reach new audience searching for related services",
@@ -229,8 +242,10 @@ class _dashboardState extends State<dashboard> {
             decoration: bd3,
             child: ListTile(
                 title: Text(title ?? '',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Gilroy-Medium')),
                 subtitle: Text(subtitle ?? ''))),
       );
 
@@ -238,8 +253,12 @@ class _dashboardState extends State<dashboard> {
     return Padding(
       padding: EdgeInsets.only(left: 12, top: 16),
       child: Row(children: [
-        Text("${title ?? ''} : "),
-        Text("${ammount ?? ''}  "),
+        Text("${title ?? ''} : ",
+            style: TextStyle(
+                fontWeight: FontWeight.w500, fontFamily: 'Gilroy-Medium')),
+        Text("${ammount ?? ''}  ",
+            style: TextStyle(
+                fontWeight: FontWeight.w500, fontFamily: 'Gilroy-Medium')),
         val
             ? InkWell(
                 onTap: () {
@@ -288,6 +307,7 @@ class _dashboardState extends State<dashboard> {
       ratingCount = va?.ratingCount?.toString() ?? '';
       setState(() {
         paid_credit = va?.paidCredit?.toString() ?? '';
+        free_credit = va?.freeCredit?.toString() ?? '';
       });
     });
   }

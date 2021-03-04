@@ -1,4 +1,5 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
+import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/network/RequestModel.dart';
@@ -24,6 +25,7 @@ class _LoginState extends State<Login> {
   TextEditingController userCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool showPass = false;
   @override
   void initState() {
     super.initState();
@@ -82,12 +84,19 @@ class _LoginState extends State<Login> {
                           ),
                           Padding(
                               padding: EdgeInsets.symmetric(vertical: sm.h(4)),
-                              child: txtfieldboundry(
+                              child: txtfieldPostAction(
                                 valid: true,
                                 maxLines: 1,
                                 title: "Password",
+                                sufixClick: () {
+                                  setState(() => showPass = !showPass);
+                                },
+                                sufixIcon: showPass
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                                 controller: passCtrl,
-                                security: true,
+                                sufixColor: myRed,
+                                security: showPass,
                               )),
                           InkWell(
                             onTap: () =>

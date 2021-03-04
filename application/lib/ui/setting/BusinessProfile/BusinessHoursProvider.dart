@@ -22,7 +22,7 @@ class BusinessHoursProvider extends ChangeNotifier {
       color: myGrey,
       border: Border.all(width: 1.0, color: myRed),
       borderRadius: BorderRadius.all(Radius.circular(5.0)));
-  TextEditingController controller = TextEditingController();
+  TextEditingController _controller = TextEditingController();
   List<String> daylist = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   Map<String, String> selecteddayList = {};
   String startTime = 'Start Time';
@@ -37,6 +37,14 @@ class BusinessHoursProvider extends ChangeNotifier {
     }
     getData();
   }
+
+  setController(String _val) {
+    _controller.text = _val;
+    notifyListeners();
+  }
+
+  getController() => _controller.text;
+
   getData() async {
     await WebService.funGetBusinessWorkingHours().then((value) {
       if (value.status == 'success') {
