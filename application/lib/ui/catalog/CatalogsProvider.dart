@@ -1,13 +1,11 @@
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:provider/provider.dart';
 
 class CatalogsProvider extends ChangeNotifier {
   BuildContext context;
@@ -32,11 +30,9 @@ class CatalogsProvider extends ChangeNotifier {
     // checkinternet();
   }
 
-  String getHint(int i) {
-    return ((i == 3) || (i == 4))
-        ? ' Enter Product ' + title[i].toString().toUpperCase()
-        : ' Enter Catalog ' + title[i].toString().toLowerCase();
-  }
+  String getHint(int i) => ((i == 3) || (i == 4))
+      ? ' Enter Product ' + title[i].toString().toUpperCase()
+      : ' Enter Catalog ' + title[i].toString().toLowerCase();
 
   setContext(BuildContext _context) {
     this.context = _context;
@@ -68,6 +64,11 @@ class CatalogsProvider extends ChangeNotifier {
 
   funSublim() async {
     if (formKey.currentState.validate()) {
+      if (selectedId == null || selectedId == '') {
+        BotToast.showText(text: "Please attach catalog image first..");
+        return;
+      }
+      print("selectedId$selectedId");
       Map _map = {
         "catalog_id": selectedId,
         "catalog_title": controller[0].text,
@@ -77,7 +78,6 @@ class CatalogsProvider extends ChangeNotifier {
         "product_id": controller[4].text
       };
       print("Image Sending id:${_map.toString()}");
-      submitBtnTxt = "Please Wait..";
 
       await WebService.catlogEdit(_map, context).then((value) {
         if (value.status == "success") {
@@ -85,7 +85,6 @@ class CatalogsProvider extends ChangeNotifier {
           BotToast.showText(
               text: value.message, duration: Duration(seconds: 5));
 
-          submitBtnTxt = "Save";
           Navigator.pop(context);
         } else
           BotToast.showText(

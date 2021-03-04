@@ -8,23 +8,15 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:provider/provider.dart';
 import '../../utils/Extentions.dart';
 
-class JobList extends StatefulWidget {
-  @override
-  _JobListState createState() => _JobListState();
-}
-
-class _JobListState extends State<JobList> {
-  JobListRequestModel _jobList = JobListRequestModel();
-
-  @override
-  void initState() {
-    getPageData();
-    super.initState();
-  }
-
+class JobList extends StatelessWidget {
+  JobProvider vaTrue;
+  JobProvider vaFalse;
+  SizeManager sm;
   @override
   Widget build(BuildContext context) {
-    SizeManager sm = SizeManager(context);
+    sm = SizeManager(context);
+    vaTrue = Provider.of<JobProvider>(context, listen: true);
+    vaFalse = Provider.of<JobProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -53,68 +45,47 @@ class _JobListState extends State<JobList> {
                         .pushNamed('/createJob', arguments: true);
                   })
             ]),
-        body: FutureBuilder<JobListRequestModel>(
-          future: WebService.funGetJobs(context),
-          builder: (BuildContext context,
-              AsyncSnapshot<JobListRequestModel> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: Text('Please wait its loading...'));
-            } else {
-              if (snapshot.hasError)
-                return Center(child: Text('Error: something went wrong..'));
-              else {
-                return
-                    // ListView(
-                    //   children: [
-                    Container(
-                  height: sm.h(100),
-                  margin:
-                      EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
-                  child: ListView.builder(
-                      itemCount:
-                          _jobList.data == null ? 0 : _jobList.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            Provider.of<JobProvider>(context, listen: false)
-                                .setSelectedJobId(_jobList.data[index].id);
-                            Navigator.of(context)
-                                .pushNamed('/createJob', arguments: false)
-                                .whenComplete(() => getPageData());
-                          },
-                          child: Card(
-                            child: Padding(
-                                padding: EdgeInsets.all(20.0),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 4.0),
-                                          child: Text(
-                                            _jobList.data[index].title
-                                                .capitalize(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Gilroy-Medium'),
-                                          )),
-                                      SvgPicture.asset(
-                                          'assets/icon/forward_arrow.svg')
-                                    ])),
-                          ),
-                        );
-                      }),
-                );
-              }
-            }
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await vaTrue.getPageData();
           },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+            child: ListView.builder(
+                itemCount: vaTrue.jobList.data == null
+                    ? 0
+                    : vaTrue.jobList.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () {
+                      Provider.of<JobProvider>(context, listen: false)
+                          .setSelectedJobId(vaTrue.jobList.data[index].id);
+                      Navigator.of(context)
+                          .pushNamed('/createJob', arguments: false);
+                    },
+                    child: Card(
+                      child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 4.0),
+                                    child: Text(
+                                      vaTrue.jobList.data[index].title
+                                          .capitalize(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Gilroy-Medium'),
+                                    )),
+                                SvgPicture.asset(
+                                    'assets/icon/forward_arrow.svg')
+                              ])),
+                    ),
+                  );
+                }),
+          ),
         ));
-  }
-
-  getPageData() async {
-    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
-      await WebService.funGetJobs(context)
-          .then((value) => setState(() => _jobList = value));
   }
 }

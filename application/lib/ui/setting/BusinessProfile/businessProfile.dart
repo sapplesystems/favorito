@@ -16,6 +16,7 @@ import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
 
 class BusinessProfile extends StatelessWidget {
+  bool isFirst = true;
   BusinessProfileProvider v;
   @override
   Widget build(BuildContext context) {
@@ -23,17 +24,22 @@ class BusinessProfile extends StatelessWidget {
     v = Provider.of<BusinessProfileProvider>(context, listen: true);
     v.setContext(context);
     if (v?.controller[1]?.text?.isEmpty) v.getProfileData(false);
-
+    if (isFirst) {
+      v.getProfileData(true);
+      isFirst = false;
+    }
     return RefreshIndicator(
       onRefresh: () async {
         v.getProfileData(true);
       },
-      child: Consumer<BusinessProfileProvider>(builder: (context, data, child) {
+      child:
+          Consumer<BusinessProfileProvider>(builder: (_context, data, child) {
         return WillPopScope(
           onWillPop: () {
             print("backpresed");
-            v.needSave(false);
+            v.getProfileData(false);
             Navigator.pop(context);
+            v.needSave(false);
           },
           child: Scaffold(
             appBar: AppBar(
@@ -43,6 +49,8 @@ class BusinessProfile extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                     v.needSave(false);
+
+                    v.getProfileData(false);
                   }),
               iconTheme: IconThemeData(color: Colors.white),
               elevation: 0,

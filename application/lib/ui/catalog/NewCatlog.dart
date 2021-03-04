@@ -131,7 +131,7 @@ class NewCatlog extends StatelessWidget {
                       clicker: () => vaTrue.funSublim(),
                       clr: Colors.red,
                       title: vaTrue.submitBtnTxt)),
-            )
+            ),
           ]),
         ),
       ),

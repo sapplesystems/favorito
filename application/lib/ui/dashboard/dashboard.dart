@@ -16,11 +16,14 @@ import 'package:Favorito/ui/order/Orders.dart';
 import 'package:Favorito/ui/review/reviewList.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
+import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
 import 'dart:convert' as convert;
+
+import 'package:provider/provider.dart';
 
 class dashboard extends StatefulWidget {
   @override
@@ -39,7 +42,9 @@ class _dashboardState extends State<dashboard> {
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+
     if (isFirst) {
+      Provider.of<SettingProvider>(context, listen: false).getProfileImage();
       calldashBoard(context);
       isFirst = false;
     }

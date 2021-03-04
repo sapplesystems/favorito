@@ -2,6 +2,7 @@ import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/job/CityList.dart';
 import 'package:Favorito/model/job/CityModelResponse.dart';
 import 'package:Favorito/model/job/CreateJobRequestModel.dart';
+import 'package:Favorito/model/job/JobListRequestModel.dart';
 import 'package:Favorito/model/job/PincodeListModel.dart';
 import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
 import 'package:Favorito/network/RequestModel.dart';
@@ -19,6 +20,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 class JobProvider extends ChangeNotifier {
+  JobListRequestModel jobList = JobListRequestModel();
   int jobId;
   bool jobDataCall = false;
   String formTitle = '';
@@ -43,9 +45,6 @@ class JobProvider extends ChangeNotifier {
     } else {
       appBarHeading = "Create Job";
     }
-
-    // else
-    // allClear();
   }
 
   List<String> title = [
@@ -89,7 +88,16 @@ class JobProvider extends ChangeNotifier {
     }
     verbose();
     initializeDefaultValues();
+    getPageData();
   }
+
+  getPageData() async {
+    await WebService.funGetJobs(context).then((value) {
+      jobList = value;
+      notifyListeners();
+    });
+  }
+
   setContext(BuildContext _context) {
     this.context = _context;
     pr = ProgressDialog(context, type: ProgressDialogType.Normal)
@@ -110,7 +118,7 @@ class JobProvider extends ChangeNotifier {
 
   void submit() async {
     if (formKey.currentState.validate()) {
-      var _requestData = CreateJobRequestModel();
+      // var _requestData = CreateJobRequestModel();
       String _va = '';
       for (var skill in selectedSkillList) {
         _va = _va + '${_va == '' ? '' : ','}' + skill.skillName;
@@ -134,16 +142,14 @@ class JobProvider extends ChangeNotifier {
       requestModel.data = _map;
       requestModel.url = serviceFunction.funCreateJob;
       requestModel.context = context;
-      if (jobId == 0 &&
-          await Provider.of<UtilProvider>(context, listen: false)
-              .checkInternet()) {
-        print("aaaanew");
+      if (jobId == 0) {
         await WebService.serviceCall(requestModel).then((value) {
           var _v =
               BaseResponseModel.fromJson(convert.json.decode(value.toString()));
           if (_v.status == 'success') {
             BotToast.showText(text: _v.message);
             allClear();
+            getPageData();
             Navigator.of(context).pop();
           }
         });
@@ -197,14 +203,13 @@ class JobProvider extends ChangeNotifier {
   }
 
   void verbose() async {
-    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
-      await WebService.funGetCreteJobDefaultData(context).then((value) {
-        // contactOptionsList.clear();
-        cityList.clear();
-        // contactOptionsList.addAll(value.data.contactVia);
-        cityList.addAll(value.data.cityList);
-        notifyListeners();
-      });
+    await WebService.funGetCreteJobDefaultData(context).then((value) {
+      // contactOptionsList.clear();
+      cityList.clear();
+      // contactOptionsList.addAll(value.data.contactVia);
+      cityList.addAll(value.data.cityList);
+      notifyListeners();
+    });
   }
 
   initializeDefaultValues() {
@@ -222,12 +227,8 @@ class JobProvider extends ChangeNotifier {
   }
 
   void getJobDataById() async {
-    // allClear();
-    // if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
     await WebService.funGetEditJobData(jobId, context).then((value) {
-      // contactOptionsList.clear();
       cityList.clear();
-      // contactOptionsList = value.verbose.contactVia;
       for (var temp in value.verbose.cityList) {
         CityList city = CityList();
         city.id = temp.id;
@@ -292,9 +293,6 @@ class JobProvider extends ChangeNotifier {
       controller[i].text = '';
     }
     selectedSkillList.clear();
-    setSelectedJobId(0);
     selectedContactOption = '';
-
-    notifyListeners();
   }
 }
