@@ -160,9 +160,9 @@ class _highlightsState extends State<highlights> {
                         padding: EdgeInsets.only(top: sm.h(1)),
                         child: txtfieldboundry(
                           valid: true,
-                          title: "Discription",
+                          title: "Description",
                           maxLines: 4,
-                          hint: "Enter Discription highlights",
+                          hint: "Enter Description highlights",
                           controller: ctrlDisc,
                           security: false,
                         ),

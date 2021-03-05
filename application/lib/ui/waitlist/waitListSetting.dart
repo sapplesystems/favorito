@@ -114,6 +114,7 @@ class WaitListSetting extends StatelessWidget {
                                                   : null,
                                               autoValidateMode: AutovalidateMode
                                                   .onUserInteraction,
+                                              enabled: false,
                                               mode: Mode.MENU,
                                               // selectedItem:
                                               //     vaTrue.controller[2].text,

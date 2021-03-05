@@ -54,17 +54,21 @@ class _reviewState extends State<review> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          // leading: IconButton(
-          //   icon: Icon(Icons.arrow_back, color: Colors.black),
-          //   onPressed: () => Navigator.of(context).pop(),
-          // ),
-          // iconTheme: IconThemeData(
-          //   color: Colors.black, //change your color here
-          // ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
           centerTitle: true,
           title: Text(
-            "Review List",
-            style: TextStyle(color: Colors.black),
+            "Review",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 26,
+                fontFamily: 'Gilroy-Bold',
+                letterSpacing: .2),
           ),
         ),
         // funReviewgetReviewReplies
@@ -78,12 +82,11 @@ class _reviewState extends State<review> {
               return ListView(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    height: sm.h(54),
-                    child: Card(
-                        child:
-                            bodyData(ctrl: ctrl, data: rm, rat: widget.rating)),
-                  ),
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      height: sm.h(54),
+                      child: Card(
+                          child: bodyData(
+                              ctrl: ctrl, data: rm, rat: widget.rating))),
 
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
