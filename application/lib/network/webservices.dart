@@ -709,10 +709,26 @@ class WebService {
   }
 
   static Future<WaitlistListModel> funGetWaitlist(BuildContext context) async {
-    if (!await Provider.of<UtilProvider>(context, listen: false)
-        .checkInternet())
+    if (!await utilProvider.checkInternet())
       return WaitlistListModel(
           status: 'fail', message: 'Please check internet connections');
+
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: true)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -720,10 +736,30 @@ class WebService {
     try {
       response = await dio.post(serviceFunction.funGetWaitlist, options: _opt);
     } on DioError catch (e) {
+      pr.hide();
       if (e.error is SocketException) {
         BotToast.showText(text: "Server not responding");
         return WaitlistListModel(
             status: 'fail', message: "Server not responding");
+      } else if (e.response.statusCode == 400) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message,
+            duration: Duration(seconds: 6));
+      } else if (e.response.statusCode == 401) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        Navigator.of(context).pushNamed('/login');
+      }
+
+      if (e.response.statusCode == 403) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
       }
     }
 
@@ -732,17 +768,62 @@ class WebService {
 
   static Future<WaitlistListModel> funCreateWaitlist(
       Map _map, BuildContext context) async {
+    if (!await utilProvider.checkInternet())
+      return WaitlistListModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: true)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    WaitlistListModel _returnData = WaitlistListModel();
+    try {
+      response = await dio.post(serviceFunction.funCreateWaitlist,
+          data: _map, options: _opt);
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return WaitlistListModel(
+            status: 'fail', message: "Server not responding");
+      } else if (e.response.statusCode == 400) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message,
+            duration: Duration(seconds: 6));
+      } else if (e.response.statusCode == 401) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        Navigator.of(context).pushNamed('/login');
+      }
 
-    response = await dio.post(serviceFunction.funCreateWaitlist,
-        data: _map, options: _opt);
-    _returnData =
-        WaitlistListModel.fromJson(convert.json.decode(response.toString()));
-    return _returnData;
+      if (e.response.statusCode == 403) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+      }
+    }
+    return WaitlistListModel.fromJson(convert.json.decode(response.toString()));
   }
 
   //********************************Booking***************************/

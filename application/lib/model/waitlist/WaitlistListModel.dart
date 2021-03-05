@@ -12,7 +12,7 @@ class WaitlistListModel {
     message = json['message'];
     if (json['data'] != null) {
       data = new List<WaitlistModel>();
-      json['data'].forEach((v) {
+      json['data']?.forEach((v) {
         data.add(new WaitlistModel.fromJson(v));
       });
     }
