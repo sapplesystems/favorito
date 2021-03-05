@@ -225,7 +225,7 @@ class _OfferState extends State<Offers> {
                                       newUserOfferInputList[index].offerTitle,
                                       style: TextStyle(
                                           fontSize: 18,
-                                          fontWeight: FontWeight.w400),
+                                          fontWeight: FontWeight.w600),
                                     ),
                                   ),
                                   Padding(

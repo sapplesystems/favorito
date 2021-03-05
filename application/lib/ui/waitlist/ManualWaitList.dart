@@ -49,9 +49,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         // centerTitle: true,
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
       ),
       body: ListView(

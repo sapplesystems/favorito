@@ -640,6 +640,7 @@ class WebService {
                 .message);
       }
     }
+    pr.hide();
     print("funGetCatalogs:${response.toString()}");
     return CatlogListModel.fromJson(convert.json.decode(response.toString()));
   }

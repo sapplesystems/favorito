@@ -166,7 +166,7 @@ class Waitlists extends State<Waitlist> {
                                               iconSize: sm.w(8),
                                               icon: Icon(
                                                   FontAwesomeIcons.trashAlt,
-                                                  size: 16,
+                                                  size: 22,
                                                   color: myRed),
                                               onPressed: () {
                                                 showDialog(builder:

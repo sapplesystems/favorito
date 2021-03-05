@@ -195,7 +195,9 @@ class CreateNotification extends StatelessWidget {
                                           selectedItem: vaTrue.selectedCountry,
                                           items: vaTrue.countryList,
                                           label: "Country",
-                                          showSearchBox: false),
+                                          showSearchBox: false,
+                                          onChanged: (value) =>
+                                              vaTrue.selectedCountry = value),
                                     ),
                                   ),
                                   Visibility(

@@ -125,6 +125,7 @@ class NotificationsProvider extends ChangeNotifier {
 
   getCountryVisible() => _countryVisible;
   setCountryVisible(bool _val) {
+    print("ddd0${getMyAreaDetails()}");
     this._countryVisible = _val;
     if (_val) {
       countryKey?.currentState?.changeSelectedItem(getMyAreaDetails() ?? '');
@@ -243,13 +244,13 @@ class NotificationsProvider extends ChangeNotifier {
   }
 
   submit() {
-    print("sss");
+    print("sss:$selectedArea:$selectedCountry");
     if (formKey.currentState.validate()) {
       int areaDetailId =
           notificationRequiredData.data.area.indexOf(selectedArea);
       print("detail is $areaDetailId");
       var areaDetail = (areaDetailId == 0)
-          ? this.selectedCountry
+          ? selectedCountry
           : (areaDetailId == 1)
               ? selectedState.state
               : (areaDetailId == 2)
