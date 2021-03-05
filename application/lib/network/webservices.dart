@@ -584,18 +584,62 @@ class WebService {
   //**************************************************Catalog*****************************************************
 
   static Future<CatlogListModel> funGetCatalogs(BuildContext context) async {
-    if (!await Provider.of<UtilProvider>(context, listen: false)
-        .checkInternet())
+    if (!await utilProvider.checkInternet())
       return CatlogListModel(
           status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     String token = await Prefs.token;
     print("token:$token");
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    try {
+      response = await dio.post(serviceFunction.funGetCatalogs,
+          data: null, options: _opt);
+      pr.hide();
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return CatlogListModel(
+            status: 'fail', message: "Server not responding");
+      } else if (e.response.statusCode == 400) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message,
+            duration: Duration(seconds: 6));
+      } else if (e.response.statusCode == 401) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        Navigator.of(context).pushNamed('/login');
+      }
 
-    response = await dio.post(serviceFunction.funGetCatalogs,
-        data: null, options: _opt);
+      if (e.response.statusCode == 403) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+      }
+    }
     print("funGetCatalogs:${response.toString()}");
     return CatlogListModel.fromJson(convert.json.decode(response.toString()));
   }

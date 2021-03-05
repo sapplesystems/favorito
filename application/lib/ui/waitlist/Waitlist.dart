@@ -36,9 +36,7 @@ class Waitlists extends State<Waitlist> {
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
+          iconTheme: IconThemeData(color: Colors.black),
           title: Text(waitlist,
               style: TextStyle(
                   color: Colors.black,
@@ -46,10 +44,7 @@ class Waitlists extends State<Waitlist> {
                   fontFamily: 'Gilroy-Bold')),
           actions: [
             IconButton(
-                icon: Icon(
-                  Icons.add_circle_outline,
-                  size: 30,
-                ),
+                icon: Icon(Icons.add_circle_outline, size: 30),
                 onPressed: () {
                   Navigator.push(
                           context,
@@ -79,8 +74,7 @@ class Waitlists extends State<Waitlist> {
                 print("aaaa3");
                 waitlistData = snapshot.data;
                 return Container(
-                  margin:
-                      EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+                  margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 4.0),
                   child: RefreshIndicator(
                     onRefresh: () async {
                       setState(() {

@@ -113,7 +113,7 @@ class NewCatlog extends StatelessWidget {
                                 },
                                 keyboardSet: i == 3
                                     ? TextInputType.emailAddress
-                                    : (i == 1 || i == 4)
+                                    : (i == 1)
                                         ? TextInputType.number
                                         : TextInputType.text,
                                 security: false,

@@ -99,6 +99,9 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                 child: MyTags(
                                   selectedList: selectedTagName,
                                   border: true,
+                                  refresh: () {
+                                    setState(() {});
+                                  },
                                   directionVeticle: false,
                                   sourceList: totalTagName,
                                   hint: "KeyWords",

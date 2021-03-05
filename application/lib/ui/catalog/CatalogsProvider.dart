@@ -54,9 +54,7 @@ class CatalogsProvider extends ChangeNotifier {
   }
 
   getCatelogList(bool _val, _context) async {
-    _val ? pr?.show() : pr?.hide();
     await WebService.funGetCatalogs(_context).then((value) {
-      _val ? pr?.hide() : pr?.show();
       catalogListdata = value;
       notifyListeners();
     });
@@ -157,7 +155,7 @@ class CatalogsProvider extends ChangeNotifier {
       controller[1].text = value.data[0].catalogPrice.toString();
       controller[2].text = value.data[0].catalogDesc;
       controller[3].text = value.data[0].productUrl;
-      controller[4].text = value.data[0].id.toString();
+      controller[4].text = value.data[0].productId;
       try {
         var v = value.data[0].photos.split(',');
         imgUrls.addAll(v);
