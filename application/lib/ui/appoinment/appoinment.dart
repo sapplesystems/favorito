@@ -308,10 +308,7 @@ class _Appoinment extends State<Appoinment> {
         right: sm.w(10),
         bottom: sm.h(30),
         child: PopupContent(
-          content: Scaffold(
-            resizeToAvoidBottomPadding: false,
-            body: widget,
-          ),
+          content: Scaffold(body: widget),
         ),
       ),
     );

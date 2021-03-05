@@ -294,7 +294,6 @@ class _Bookings extends State<Bookings> {
         bottom: sm.h(30),
         child: PopupContent(
           content: Scaffold(
-            resizeToAvoidBottomPadding: false,
             body: widget,
           ),
         ),

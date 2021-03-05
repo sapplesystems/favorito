@@ -83,7 +83,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           Padding(
-                              padding: EdgeInsets.symmetric(vertical: sm.h(4)),
+                              padding: EdgeInsets.only(top: sm.h(4)),
                               child: txtfieldPostAction(
                                 valid: true,
                                 maxLines: 1,
@@ -92,29 +92,33 @@ class _LoginState extends State<Login> {
                                   setState(() => showPass = !showPass);
                                 },
                                 sufixIcon: showPass
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 controller: passCtrl,
                                 sufixColor: myRed,
-                                security: showPass,
+                                security: !showPass,
                               )),
-                          InkWell(
-                            onTap: () =>
-                                Navigator.of(context).pushNamed('/forgetPass'),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Forgot Password?",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: myRed,
-                                    fontSize: 16,
-                                    fontFamily: "Roboto",
-                                    fontWeight: FontWeight.w400,
+                          Padding(
+                            padding: EdgeInsets.only(
+                                bottom: sm.h(4), right: sm.w(2)),
+                            child: InkWell(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed('/forgetPass'),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Forgot Password?",
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                      color: myRed,
+                                      fontSize: 16,
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],

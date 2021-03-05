@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
+import '../../utils/Extentions.dart';
 
 class Waitlist extends StatefulWidget {
   @override
@@ -119,7 +120,7 @@ class Waitlists extends State<Waitlist> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: AutoSizeText(
-                                            va.name.toLowerCase(),
+                                            va.name.toLowerCase().capitalize(),
                                             minFontSize: 22,
                                             maxLines: 1,
                                             style: TextStyle(
@@ -168,9 +169,9 @@ class Waitlists extends State<Waitlist> {
                                                   size: 16,
                                                   color: myRed),
                                               onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  child: new AlertDialog(
+                                                showDialog(builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
                                                     title: const Text(
                                                         "Please confirm"),
                                                     content: Text(
@@ -199,8 +200,8 @@ class Waitlists extends State<Waitlist> {
                                                                 context),
                                                       ),
                                                     ],
-                                                  ),
-                                                );
+                                                  );
+                                                });
                                               })
                                         ],
                                       ),
@@ -260,18 +261,15 @@ class Waitlists extends State<Waitlist> {
             left: sm.w(10),
             right: sm.w(10),
             bottom: sm.h(30),
-            child: PopupContent(
-                content: Scaffold(
-                    resizeToAvoidBottomPadding: false, body: widget))));
+            child: PopupContent(content: Scaffold(body: widget))));
   }
 
   Widget _popupBodyShowDetail(WaitlistModel model, int index) {
-    return Container(
-        child: WaitListDetail(
-            waitlistData: model,
-            action: UpdateWaitList,
-            delete: waitListDelete,
-            index: index));
+    return WaitListDetail(
+        waitlistData: model,
+        action: UpdateWaitList,
+        delete: waitListDelete,
+        index: index);
   }
 
   _callPhone(String phone) async => await canLaunch(phone)

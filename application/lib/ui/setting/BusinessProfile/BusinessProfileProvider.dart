@@ -382,27 +382,29 @@ class BusinessProfileProvider extends ChangeNotifier {
   willPop(ctx) {
     showDialog(
       context: ctx,
-      child: new AlertDialog(
-        title: const Text("Please confirm"),
-        content: Text('do you save data?'),
-        actions: [
-          new FlatButton(
-              child: const Text("Ok"),
-              onPressed: () {
-                if (formKey.currentState.validate()) prepareWebService();
-              }),
-          new FlatButton(
-            child: const Text("Cancel"),
-            onPressed: () async {
-              getProfileData(true);
-            },
-          ),
-          new FlatButton(
-            child: const Text(''),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Please confirm"),
+          content: Text('do you save data?'),
+          actions: [
+            new FlatButton(
+                child: const Text("Ok"),
+                onPressed: () {
+                  if (formKey.currentState.validate()) prepareWebService();
+                }),
+            new FlatButton(
+              child: const Text("Cancel"),
+              onPressed: () async {
+                getProfileData(true);
+              },
+            ),
+            new FlatButton(
+              child: const Text(''),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
     );
     notifyListeners();
     // v.needSave(false);

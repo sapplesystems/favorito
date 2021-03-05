@@ -80,7 +80,7 @@ class _dashboardState extends State<dashboard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("ver : 1.0 ", style: TextStyle(fontSize: 8)),
+                      Text("ver : 1.1 ", style: TextStyle(fontSize: 8)),
                       Text("Status : ",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600)),

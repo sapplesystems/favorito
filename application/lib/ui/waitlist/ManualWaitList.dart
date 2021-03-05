@@ -22,6 +22,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
   List title = ["User Name", "Contact", "Number of Persons", "Special Notes"];
   List maxlens = [50, 10, 3, 200];
   SizeManager sm;
+  bool validateForm = false;
   void initState() {
     super.initState();
     for (int i = 0; i < 6; i++) controller.add(TextEditingController());
@@ -75,7 +76,7 @@ class _ManualWaitListState extends State<ManualWaitList> {
           Builder(
               builder: (context) => Form(
                     key: _frmKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autovalidate: validateForm,
                     child: Container(
                         decoration: bd1,
                         padding: EdgeInsets.symmetric(
@@ -106,7 +107,10 @@ class _ManualWaitListState extends State<ManualWaitList> {
                   EdgeInsets.symmetric(horizontal: sm.w(16), vertical: sm.h(2)),
               child: RoundedButton(
                   clicker: () {
-                    if (_frmKey.currentState.validate()) funSublim();
+                    if (_frmKey.currentState.validate())
+                      funSublim();
+                    else
+                      setState(() => validateForm = true);
                   },
                   clr: Colors.red,
                   title: "Save"))
