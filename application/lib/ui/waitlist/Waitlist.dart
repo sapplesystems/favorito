@@ -124,8 +124,9 @@ class Waitlists extends State<Waitlist> {
                                           padding: const EdgeInsets.all(4.0),
                                           child: AutoSizeText(
                                             va.name
-                                                ?.toLowerCase()
-                                                ?.capitalize(),
+                                                    ?.toLowerCase()
+                                                    ?.capitalize() ??
+                                                '',
                                             minFontSize: 22,
                                             maxLines: 1,
                                             style: TextStyle(
@@ -145,7 +146,7 @@ class Waitlists extends State<Waitlist> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: AutoSizeText(
-                                            va?.specialNotes ?? '',
+                                            va.specialNotes ?? '',
                                             style: TextStyle(color: myGrey),
                                             maxLines: 1,
                                             minFontSize: 16,
@@ -229,13 +230,13 @@ class Waitlists extends State<Waitlist> {
                                           IconButton(
                                               iconSize: sm.w(8),
                                               icon: Icon(Icons.close,
-                                                  color: va.waitlistStatus ??
-                                                          '' == "rejected"
+                                                  color: va.waitlistStatus ==
+                                                          "rejected"
                                                       ? myGrey
                                                       : myRed),
                                               onPressed: () {
-                                                if (va.waitlistStatus ??
-                                                    '' != "rejected")
+                                                if (va.waitlistStatus !=
+                                                    "rejected")
                                                   UpdateWaitList(
                                                       "rejected", va.id ?? '');
                                               })

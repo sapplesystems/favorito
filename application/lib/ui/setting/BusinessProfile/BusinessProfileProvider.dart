@@ -188,15 +188,24 @@ class BusinessProfileProvider extends ChangeNotifier {
         setPosition(_v);
       }
       addressList?.clear();
-      if (va?.website != null)
-        for (int i = 0; i < va.website.length; i++) {
-          print("_v1:${controller.length}");
-          if (va.website[i].trim().isNotEmpty &&
-              va.website[i].characters.length > 2) {
-            controller[15 + i].text = va.website[0];
-            if (va.website.length < webSiteLength) webSiteLengthPlus();
-          }
-        }
+
+      for (int i = 0; i < va.website?.length; i++)
+        if (va?.website[i] == '') va?.website.removeAt(i);
+      webSiteLength = va.website.length;
+      print("sdsd${va.website.length}");
+      for (int i = 0; i < va.website?.length; i++) {
+        controller[15 + i].text = va.website[0];
+      }
+      notifyListeners();
+      // if (va?.website != null)
+      //   for (int i = 0; i < va.website.length; i++) {
+      //     print("_v1:${controller.length}");
+      //     if (va.website[i].trim().isNotEmpty &&
+      //         va.website[i].characters.length > 2) {
+      //       controller[15 + i].text = va.website[0];
+      //       if (va.website.length < webSiteLength) webSiteLengthPlus();
+      //     }
+      //   }
       controller[1].text = va.businessName ?? '';
 
       controller[2].text = va.businessPhone ?? '';

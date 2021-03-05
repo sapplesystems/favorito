@@ -24,8 +24,11 @@ class BusinessProfile extends StatelessWidget {
     v = Provider.of<BusinessProfileProvider>(context, listen: true);
     v.setContext(context);
     if (v?.controller[1]?.text?.isEmpty) v.getProfileData(false);
+    print("isFirst:$isFirst");
     if (isFirst) {
-      v.getProfileData(false);
+      v
+        ..getProfileData(false)
+        ..webSiteLength = 1;
       isFirst = false;
     }
     return RefreshIndicator(
@@ -37,6 +40,7 @@ class BusinessProfile extends StatelessWidget {
         return WillPopScope(
           onWillPop: () {
             print("backpresed");
+            isFirst = true;
             v.getProfileData(false);
             Navigator.pop(context);
             v.needSave(false);

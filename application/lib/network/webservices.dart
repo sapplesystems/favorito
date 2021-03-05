@@ -735,6 +735,7 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     try {
       response = await dio.post(serviceFunction.funGetWaitlist, options: _opt);
+      pr.hide();
     } on DioError catch (e) {
       pr.hide();
       if (e.error is SocketException) {
