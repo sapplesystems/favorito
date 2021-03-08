@@ -61,7 +61,12 @@ class BusinessProfile extends StatelessWidget {
             ),
             body: ListView(controller: v.listviewController, children: [
               Text("Business Profile",
-                  textAlign: TextAlign.center, style: appBarStyle),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 26,
+                      fontFamily: 'Gilroy-Bold',
+                      letterSpacing: .2)),
               Container(
                 margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
                 child: Stack(children: [

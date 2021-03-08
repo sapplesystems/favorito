@@ -28,7 +28,7 @@ class ThemeConfigurator extends StatelessWidget {
     showDialog(
       useRootNavigator: false,
       context: context,
-      child: AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text('Update Theme'),
         content: SingleChildScrollView(
           child: _ThemeConfiguratorDialog(contextContainingTheme: context),

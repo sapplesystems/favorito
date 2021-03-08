@@ -8,6 +8,8 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
+import 'package:flutter_svg/svg.dart';
+
 class highlights extends StatefulWidget {
   @override
   _highlightsState createState() => _highlightsState();
@@ -65,8 +67,8 @@ class _highlightsState extends State<highlights> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 26,
+                        fontFamily: 'Gilroy-Bold',
                         letterSpacing: 2)),
                 Container(
                   height: sm.h(20),
@@ -114,11 +116,18 @@ class _highlightsState extends State<highlights> {
                                 semanticContainer: true,
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 child: Padding(
-                                    padding: const EdgeInsets.all(18),
-                                    child: Icon(
-                                      Icons.cloud_upload_outlined,
-                                      size: 30,
-                                    )),
+                                    padding: EdgeInsets.all(sm.h(6)),
+                                    child: SvgPicture.asset(
+                                        'assets/icon/cloud.svg')
+                                    // Icon(Icons.cloud_upload_outlined, size: 30)
+                                    ),
+
+                                // Padding(
+                                //     padding: const EdgeInsets.all(18),
+                                //     child: Icon(
+                                //       Icons.cloud_upload_outlined,
+                                //       size: 30,
+                                //     )),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0)),
                                 elevation: 5,

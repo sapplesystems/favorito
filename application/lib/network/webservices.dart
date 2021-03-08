@@ -601,8 +601,8 @@ class WebService {
           progressTextStyle: TextStyle(
               color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
           messageTextStyle: TextStyle(
-              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
-      ..show();
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
+    // ..show();
 
     String token = await Prefs.token;
     print("token:$token");
@@ -612,9 +612,9 @@ class WebService {
     try {
       response = await dio.post(serviceFunction.funGetCatalogs,
           data: null, options: _opt);
-      pr.hide();
+      // pr.hide();
     } on DioError catch (e) {
-      pr.hide();
+      // pr.hide();
       if (e.error is SocketException) {
         BotToast.showText(text: "Server not responding");
         return CatlogListModel(
@@ -640,7 +640,7 @@ class WebService {
                 .message);
       }
     }
-    pr.hide();
+    // pr.hide();
     print("funGetCatalogs:${response.toString()}");
     return CatlogListModel.fromJson(convert.json.decode(response.toString()));
   }

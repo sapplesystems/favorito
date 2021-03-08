@@ -9,7 +9,7 @@ import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class MenuHomeProvider extends ChangeNotifier {
-  List<MenuItemModel> bucket = List<MenuItemModel>();
+  List<MenuItemModel> bucket = [];
   ModelOption modelOption = ModelOption();
   MenuTabModel menuTabModel = MenuTabModel();
   CatItem catItems = CatItem();
