@@ -28,7 +28,7 @@ class ForgetPassword extends StatelessWidget {
           prTrue.allClear();
         },
         child: Scaffold(
-          key: prTrue.formKey,
+          key: prTrue.scaffoldKey,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
             child: ListView(children: [
@@ -48,22 +48,20 @@ class ForgetPassword extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26))
               ]),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: EditTextComponent(
-                  ctrl: prTrue.acces[0].controller,
-                  hint: prFalse.title[0],
-                  security: false,
-                  valid: true,
-                  suffixTxt: '',
-                  myOnChanged: (_) => prTrue.onChange(0),
-                  error: prTrue.acces[0].error,
-                  myregex: emailAndMobileRegex,
-                  maxLines: 1,
-                  maxlen: 50,
-                  keyboardSet: TextInputType.emailAddress,
-                  prefixIcon: prFalse.prefix[0],
-                ),
-              ),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: EditTextComponent(
+                      ctrl: prTrue.acces[0].controller,
+                      hint: prFalse.title[0],
+                      security: false,
+                      valid: true,
+                      suffixTxt: '',
+                      myOnChanged: (_) => prTrue.onChange(0),
+                      error: prTrue.acces[0].error,
+                      myregex: emailAndMobileRegex,
+                      maxLines: 1,
+                      maxlen: 50,
+                      keyboardSet: TextInputType.emailAddress,
+                      prefixIcon: prFalse.prefix[0])),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(
                   prTrue.didNotReceive,
@@ -74,9 +72,7 @@ class ForgetPassword extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    prTrue.funSendOtpSms();
-                  },
+                  onTap: () => prTrue.funSendOtpSms(),
                   child: Text(
                     prFalse.sendOtptxt,
                     textAlign: TextAlign.center,

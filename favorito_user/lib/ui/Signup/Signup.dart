@@ -3,6 +3,7 @@ import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/Validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,6 +26,7 @@ class Signup extends StatelessWidget {
         Navigator.pop(context);
       },
       child: Scaffold(
+        key: spTrue.scaffoldKey,
         body: Container(
           height: sm.h(100),
           width: sm.w(100),
@@ -62,7 +64,16 @@ class Signup extends StatelessWidget {
                                 ctrl: spTrue.acces[i].controller,
                                 title: spTrue.title[i],
                                 hint: spTrue.title[i],
-                                myOnChanged: (_) => spFalse.onChange(i),
+                                myOnChanged: (s) {
+                                  if (i == 5) {
+                                    spTrue.acces[i].error =
+                                        Validator().validateId(s);
+                                    if (!s.toString().contains('@')) {
+                                      spTrue.acces[i].controller.text = '';
+                                    }
+                                  }
+                                  spFalse.onChange(i);
+                                },
                                 suffixTap: () => spTrue.checkIdClicked(i),
                                 suffixTxt: i == 5 ? spTrue.checkId : '',
                                 error: spTrue.acces[i].error,

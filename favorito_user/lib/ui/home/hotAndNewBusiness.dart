@@ -57,65 +57,66 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                             ),
                             elevation: 10,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Stack(
-                                  children: [
-                                    myClipRRect(
-                                        image:
-                                            newBusinessData.data[index].photo,
-                                        sm: sm),
-                                    Positioned(
-                                      top: sm.h(1),
-                                      left: sm.w(1),
-                                      child: RatingHolder(
-                                          sm: sm,
-                                          rate: newBusinessData.data[index].id
-                                              .toString()),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: sm.w(2)),
-                                  child: Text(
-                                      newBusinessData.data[index].businessName,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400)),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: sm.w(2)),
-                                  child: ServicesOfBusiness(
-                                      sm: sm,
-                                      data: newBusinessData
-                                          .data[index].subCategory),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: sm.w(2)),
-                                  child: Text(
-                                      "${newBusinessData.data[index].distance.toStringAsFixed(1)} km | ${newBusinessData.data[index].townCity}",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300)),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: sm.w(2), bottom: sm.w(2)),
-                                  child: Text(
-                                      newBusinessData
-                                          .data[index].businessStatus,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300,
-                                          color: (newBusinessData.data[index]
-                                                      .businessStatus)
-                                                  .contains('Off')
-                                              ? myGrey
-                                              : Colors.green)),
-                                ),
-                              ],
-                            ),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      myClipRRect(
+                                          image:
+                                              newBusinessData.data[index].photo,
+                                          sm: sm),
+                                      Positioned(
+                                        top: sm.h(1),
+                                        left: sm.w(1),
+                                        child: RatingHolder(
+                                            sm: sm,
+                                            rate: newBusinessData.data[index].id
+                                                .toString()),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: sm.w(2)),
+                                    child: Text(
+                                        newBusinessData
+                                            .data[index].businessName,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: sm.w(2)),
+                                    child: ServicesOfBusiness(
+                                        sm: sm,
+                                        data: newBusinessData
+                                            .data[index].subCategory),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: sm.w(2)),
+                                    child: Text(
+                                        "${newBusinessData.data[index].distance.toStringAsFixed(1)} km | ${newBusinessData.data[index].townCity}",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300)),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        left: sm.w(2), bottom: sm.w(2)),
+                                    child: Text(
+                                        newBusinessData
+                                            .data[index].businessStatus,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300,
+                                            color: (newBusinessData.data[index]
+                                                        .businessStatus)
+                                                    .contains('Off')
+                                                ? myGrey
+                                                : Colors.green)),
+                                  ),
+                                ]),
                           ),
                         ),
                       );

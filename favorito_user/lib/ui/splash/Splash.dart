@@ -42,8 +42,9 @@ class _SplashState extends State<Splash> {
 
   void decide() async {
     var token = await Prefs.token;
-    if (token != null && token != "") {
-      print("Token:$token");
+    print('tokens:$token');
+    if (token != null && token != "" && token.length > 10) {
+      print("token:$token");
       Future.delayed(Duration.zero, () {
         Navigator.pop(context);
         Navigator.push(

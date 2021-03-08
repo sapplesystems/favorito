@@ -89,10 +89,11 @@ class UserAddressProvider extends ChangeNotifier {
 
   Addresses getSelectedAddress() {
     Addresses v;
-    var addressLength = this?.addressListModel?.data?.addresses?.length??0;
+    var addressLength = this?.addressListModel?.data?.addresses?.length ?? 0;
     for (int i = 0; i < addressLength; i++) {
-      if ((this?.addressListModel?.data?.addresses[i]?.defaultAddress??0) == 1) {
-        v = this?.addressListModel?.data?.addresses[i]??'';
+      if ((this?.addressListModel?.data?.addresses[i]?.defaultAddress ?? 0) ==
+          1) {
+        v = this?.addressListModel?.data?.addresses[i] ?? '';
         break;
       }
     }

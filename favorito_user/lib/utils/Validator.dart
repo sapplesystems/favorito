@@ -77,7 +77,7 @@ class Validator {
       return 'Field is required..';
     else if (_val.trim().substring(0, 1) != '@')
       return 'Id should start from \'@';
-    else
-      return null;
+    // else
+    //   return null;
   }
 }

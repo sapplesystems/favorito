@@ -48,6 +48,7 @@ class service {
       baseUserProfile + 'business-catalog-list';
 
   static final joblist = base + 'job/list';
+  static final checkPostalCode = base + 'job/city-from-pincode';
 
   //waitlist
   static final baseUserWaitlistVerbose = baseUserWaitlist + 'waitlist-verbose';

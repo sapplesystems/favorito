@@ -12,6 +12,7 @@ import 'package:favorito_user/model/appModel/CheckAccountmodel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
+import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
 import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
@@ -45,15 +46,44 @@ class APIManager {
   static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
 
 //this is used for register new user
-  static Future<registerModel> register(Map _map) async {
+  static Future<registerModel> register(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return registerModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     print("responseData1:${_map.toString()}");
-    response = await dio.post(service.register, data: _map, options: opt);
+    String url = service.register;
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
     print("Request URL:${service.register}");
     print("responseData1:${response.toString()}");
     return registerModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<loginModel> login(Map _map,GlobalKey<ScaffoldState> formKey) async {
+  static Future<loginModel> login(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
     if (!await utilProvider.checkInternet())
       return loginModel(
           status: 'fail', message: 'Please check internet connections');
@@ -74,38 +104,14 @@ class APIManager {
               color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
       ..show();
 
-
     print("RequestData1:${_map.toString()}");
     print("Login Request Url:${service.login}");
     String url = service.login;
     try {
       response = await dio.post(url, data: _map, options: opt);
       pr.hide();
-
     } on DioError catch (e) {
-      pr.hide();
-      if (e.error is SocketException) {
-        BotToast.showText(text: "Server not responding");
-        response = null;
-      } else {
-        pr.hide();
-        if (e.response.statusCode == 401) {
-          BotToast.showText(
-              text: loginModel.fromJson(
-                  convert.json.decode(e.response.toString()))
-                  .message);
-          print("$url:401");
-          Navigator.of(formKey.currentContext).pushNamed('/login');
-        }
-
-        if (e.response.statusCode == 403) {
-          BotToast.showText(
-              text: loginModel.fromJson(
-                  convert.json.decode(e.response.toString()))
-                  .message);
-          print("$url:403");
-        }
-      }
+      ExceptionHandler(e, pr, url, formKey);
     } finally {
       pr.hide();
     }
@@ -399,6 +405,7 @@ class APIManager {
     response =
         await dio.post(service.baseUserProfileDetail, data: _map, options: opt);
     print("service.mostPopulerBusiness response: ${response.toString}");
+
     return businessProfileModel
         .fromJson(convert.jsonDecode(response.toString()));
   }
@@ -588,15 +595,45 @@ class APIManager {
   }
 
 //sendOtp
-  static Future<SendOtpModel> sendOtp(Map _map) async {
+  static Future<SendOtpModel> sendOtp(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return SendOtpModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+    String url = service.sendOtp;
     print("url : ${service.sendOtp}");
-    response = await dio.post(service.sendOtp, data: _map);
+
+    try {
+      response = await dio.post(url, data: _map);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
     print("service.userOrderCreateVerbose : ${response.toString}");
     return SendOtpModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
 //verify otp
-  static Future<BaseResponse> verifyOtp(Map _map,GlobalKey<ScaffoldState> formKey) async {
+  static Future<BaseResponse> verifyOtp(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
     if (!await utilProvider.checkInternet())
       return BaseResponse(
           status: 'fail', message: 'Please check internet connections');
@@ -619,21 +656,12 @@ class APIManager {
 
     String token = await Prefs.token;
     print("token : $token");
-
-    try{
-
-      response = await dio.post(service.verifyOtp, data: _map);
+    String url = service.verifyOtp;
+    try {
+      response = await dio.post(url, data: _map);
       pr.hide();
-
-    }on DioError catch (e) {
-      pr.hide();
-      if (e.error is SocketException) {
-        // BotToast.showText(text: "Server not responding");
-
-        formKey.currentState.showSnackBar(SnackBar(content: Text("Server not responding"),));
-        return BaseResponse(
-            status: 'fail', message: "Server not responding");
-      }
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
     } finally {
       if (pr.isShowing()) pr.hide();
     }
@@ -655,5 +683,67 @@ class APIManager {
     response = await dio.post(service.checkMobileOrEmail, data: _map);
     print("service.verifyOtp : ${response.toString}");
     return CheckAccountmodel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<PostalCodeModel> checkPostalCode(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return PostalCodeModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+    String url = service.checkPostalCode;
+    print("url : $url");
+    try {
+      response = await dio.post(url, data: _map);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
+
+    print("service.verifyOtp : ${response.toString}");
+    return PostalCodeModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static void ExceptionHandler(DioError e, pr, url, formKey) {
+    pr.hide();
+    if (e.error is SocketException) {
+      BotToast.showText(text: "Server not responding");
+      response = null;
+    } else {
+      pr.hide();
+      if (e.response.statusCode == 401) {
+        BotToast.showText(
+            text: BaseResponse.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        print("$url:401");
+        Navigator.of(formKey.currentContext).pushNamed('/login');
+      }
+
+      if (e.response.statusCode == 403) {
+        BotToast.showText(
+            text: BaseResponse.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        print("$url:403");
+      }
+    }
   }
 }

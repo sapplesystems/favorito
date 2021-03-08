@@ -37,8 +37,6 @@ class _BusinessProfileState extends State<BusinessProfile> {
     super.initState();
     print("lllllll:${widget.businessId}");
     fut = APIManager.baseUserProfileDetail({'business_id': widget.businessId});
-    // fut =
-    //     APIManager.baseUserProfileDetail({'business_id': "KIR4WQ4N7KF68EZKW"});
   }
 
   @override
@@ -55,8 +53,10 @@ class _BusinessProfileState extends State<BusinessProfile> {
               AsyncSnapshot<businessProfileModel> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(child: Text(loading));
+            if (snapshot.hasError)
+              return Center(child: Text('Something went wrong..'));
             else {
-              if (data != snapshot.data) data = snapshot.data;
+              if (data != snapshot?.data) data = snapshot.data;
               widget.attribute.clear();
               widget.attribute
                   .addAll(data.data[0].attributes.map((e) => e.attributeName));

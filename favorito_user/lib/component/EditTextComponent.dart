@@ -67,7 +67,6 @@ class _EditTextComponentState extends State<EditTextComponent> {
             widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
           ],
           decoration: InputDecoration(
-
             suffix: InkWell(
                 onTap: () => widget.suffixTap(),
                 child: Text(widget.suffixTxt ?? null)),
@@ -116,7 +115,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
             labelText: '',
             counterText: "",
             hintText: widget.hint,
-            contentPadding: EdgeInsets.only(top: -2),
+            contentPadding: EdgeInsets.only(top: -2, right: 16),
             fillColor: Colors.transparent,
             border: InputBorder.none,
           ),
