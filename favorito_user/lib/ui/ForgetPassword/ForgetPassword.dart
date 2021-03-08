@@ -14,6 +14,7 @@ class ForgetPassword extends StatelessWidget {
   SizeManager sm;
   ForgetPasswordProvider prTrue;
   ForgetPasswordProvider prFalse;
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -27,6 +28,7 @@ class ForgetPassword extends StatelessWidget {
           prTrue.allClear();
         },
         child: Scaffold(
+          key: prTrue.formKey,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
             child: ListView(children: [
@@ -53,9 +55,7 @@ class ForgetPassword extends StatelessWidget {
                   security: false,
                   valid: true,
                   suffixTxt: '',
-                  myOnChanged: (_) {
-                    prTrue.onChange(0);
-                  },
+                  myOnChanged: (_) => prTrue.onChange(0),
                   error: prTrue.acces[0].error,
                   myregex: emailAndMobileRegex,
                   maxLines: 1,
@@ -181,11 +181,9 @@ class ForgetPassword extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               horizontal: 16, vertical: 16),
                           child: Center(
-                            child: Text(
-                              "Submit",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400, color: myRed),
-                            ),
+                            child: Text("Submit",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400, color: myRed)),
                           ),
                         ),
                       ),

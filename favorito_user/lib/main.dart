@@ -8,7 +8,6 @@ import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +48,7 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.grey,
           variantColor: Colors.black38,
           depth: 8,
-          intensity: 0.65,
+          intensity: 0.65
         ),
         initialRoute: '/',
         onGenerateRoute: RouteGenerator.generateRoute,

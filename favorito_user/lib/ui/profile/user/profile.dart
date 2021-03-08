@@ -67,8 +67,7 @@ class _ProfileState extends State<Profile> {
           toolbarHeight: sm.h(5),
           backgroundColor: myBackGround,
           elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black //change your color here
-              ),
+          iconTheme: IconThemeData(color: Colors.black),
           title: Text(
             "My Profile",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),

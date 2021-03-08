@@ -11,10 +11,10 @@ class HotAndNewBusiness extends StatefulWidget {
   HotAndNewBusiness({Key key}) : super(key: key);
 
   @override
-  _hotAndNewBusinessState createState() => _hotAndNewBusinessState();
+  _HotAndNewBusinessState createState() => _HotAndNewBusinessState();
 }
 
-class _hotAndNewBusinessState extends State<HotAndNewBusiness> {
+class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
   NewBusinessModel newBusinessData;
   SizeManager sm;
 

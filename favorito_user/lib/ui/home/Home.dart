@@ -30,7 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var _mySearchEditTextController = TextEditingController();
-  AddressListModel addressData;
+  // AddressListModel addressData = AddressListModel();
   SizeManager sm;
   UserAddressProvider vaTrue;
 
@@ -85,13 +85,13 @@ class _HomeState extends State<Home> {
                         });
                   }, child: Consumer<UserAddressProvider>(
                       builder: (context, data, child) {
-                    var _v = data.getSelectedAddress();
+                    var _v = data?.getSelectedAddress();
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('title', textAlign: TextAlign.start),
                           Text(
-                              '${_v.address},\n${_v.city} ${_v.state},${_v.pincode}',
+                              '${_v?.address??''},\n${_v?.city??''} ${_v?.state??''},${_v?.pincode??''}',
                               textAlign: TextAlign.start)
                         ]);
                   })),

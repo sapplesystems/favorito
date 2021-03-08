@@ -28,14 +28,20 @@ import 'dart:convert' as convert;
 
 import 'package:favorito_user/services/function.dart';
 import 'package:favorito_user/ui/Login.dart';
+import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
+import 'package:favorito_user/utils/UtilProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class APIManager {
   static Response response;
   static Dio dio = Dio();
   service fn = service();
+
+  static UtilProvider utilProvider = UtilProvider();
+
   static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
 
 //this is used for register new user
@@ -47,13 +53,61 @@ class APIManager {
     return registerModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<loginModel> login(Map _map) async {
+  static Future<loginModel> login(Map _map,GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return loginModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
+
     print("RequestData1:${_map.toString()}");
     print("Login Request Url:${service.login}");
+    String url = service.login;
     try {
-      response = await dio.post(service.login, data: _map, options: opt);
-    } catch (e) {
-      BotToast.showText(text: e.toString());
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        response = null;
+      } else {
+        pr.hide();
+        if (e.response.statusCode == 401) {
+          BotToast.showText(
+              text: loginModel.fromJson(
+                  convert.json.decode(e.response.toString()))
+                  .message);
+          print("$url:401");
+          Navigator.of(formKey.currentContext).pushNamed('/login');
+        }
+
+        if (e.response.statusCode == 403) {
+          BotToast.showText(
+              text: loginModel.fromJson(
+                  convert.json.decode(e.response.toString()))
+                  .message);
+          print("$url:403");
+        }
+      }
+    } finally {
+      pr.hide();
     }
     print("Login Request Url:${service.login}");
     print("responseData1:${response.toString()}");
@@ -542,11 +596,47 @@ class APIManager {
   }
 
 //verify otp
-  static Future<BaseResponse> verifyOtp(Map _map) async {
+  static Future<BaseResponse> verifyOtp(Map _map,GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponse(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     String token = await Prefs.token;
     print("token : $token");
 
-    response = await dio.post(service.verifyOtp, data: _map);
+    try{
+
+      response = await dio.post(service.verifyOtp, data: _map);
+      pr.hide();
+
+    }on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        // BotToast.showText(text: "Server not responding");
+
+        formKey.currentState.showSnackBar(SnackBar(content: Text("Server not responding"),));
+        return BaseResponse(
+            status: 'fail', message: "Server not responding");
+      }
+    } finally {
+      if (pr.isShowing()) pr.hide();
+    }
     print("service.verifyOtp : ${response.toString}");
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }

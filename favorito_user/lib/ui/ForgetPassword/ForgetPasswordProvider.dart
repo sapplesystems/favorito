@@ -5,6 +5,7 @@ import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:get/get.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class ForgetPasswordProvider extends ChangeNotifier {
@@ -12,7 +13,7 @@ class ForgetPasswordProvider extends ChangeNotifier {
   BuildContext context;
   Validator validator = Validator();
   String sendOtptxt = "Send Otp";
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> formKey = GlobalKey<ScaffoldState>();
   List<Acces> acces = [];
   List<String> title = [
     'Email/Phone',
@@ -79,14 +80,13 @@ class ForgetPasswordProvider extends ChangeNotifier {
         "password": acces[2].controller.text
       };
       print("data:${_map.toString()}");
-      await APIManager.verifyOtp(_map).then((value) {
+      await APIManager.verifyOtp(_map,formKey).then((value) {
         pr.hide();
-        if (value.status == 'success') {
+        if (value.status == 'success')
           allClear();
-        } else {
-          print("value.message${value.message}");
+        else
           BotToast.showText(text: value.message);
-        }
+
       });
     }
     notifyListeners();
