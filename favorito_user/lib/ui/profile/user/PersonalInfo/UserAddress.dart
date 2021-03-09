@@ -18,10 +18,9 @@ class UserAddress extends StatelessWidget {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Saved Address',
-                    style: TextStyle(fontSize: 22, fontFamily: 'Gilroy-Bold'),
-                  ),
+                  Text('Saved Address',
+                      style:
+                          TextStyle(fontSize: 22, fontFamily: 'Gilroy-Bold')),
                   Row(children: [
                     InkWell(
                         onTap: () => vaTrue.getAddress(),
@@ -81,9 +80,9 @@ class UserAddressProvider extends ChangeNotifier {
 
   seSelectedAddress(int index) {
     for (int _i = 0; _i < this.addressListModel.data.addresses.length; _i++) {
-      this.addressListModel.data.addresses[index].defaultAddress = 0;
+      this.addressListModel.data.addresses[_i].defaultAddress =
+          (index == _i) ? 0 : 1;
     }
-    this.addressListModel.data.addresses[index].defaultAddress = 1;
     notifyListeners();
   }
 
@@ -91,14 +90,14 @@ class UserAddressProvider extends ChangeNotifier {
     Addresses v;
     var addressLength = this?.addressListModel?.data?.addresses?.length ?? 0;
     for (int i = 0; i < addressLength; i++) {
-      if ((this?.addressListModel?.data?.addresses[i]?.defaultAddress ?? 0) ==
-          1) {
+      if (this?.addressListModel?.data?.addresses[i]?.defaultAddress == 0) {
         v = this?.addressListModel?.data?.addresses[i] ?? '';
         break;
       }
     }
     notifyListeners();
-    return v;
+
+    return v ?? '';
   }
 
   getProfileImage() =>

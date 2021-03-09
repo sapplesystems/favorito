@@ -38,12 +38,12 @@ class _OverviewState extends State<OverviewTab> {
   void initState() {
     super.initState();
     fut = APIManager.baseUserProfileOverview(
-        {"business_id": widget.data.businessId});
+        {"business_id": widget?.data?.businessId});
     Attributes a = Attributes();
     a.attributeName = 'Online Menu';
     // widget.data.attributes.add(a);
-    for (int i = 0; i < widget.data.attributes.length; i++) {
-      _attribute.add(widget.data.attributes[i].attributeName);
+    for (int i = 0; i < widget?.data?.attributes?.length ?? 0; i++) {
+      _attribute.add(widget?.data?.attributes[i]?.attributeName ?? '');
     }
   }
 
@@ -61,41 +61,48 @@ class _OverviewState extends State<OverviewTab> {
             if (overviewData != snapshot.data) overviewData = snapshot.data;
             List<String> listKey = ['Phone', 'Emial', 'Website', 'Address'];
             List<String> listValue = [
-              widget.data?.phone,
-              widget.data?.businessEmail,
-              overviewData?.data[0]?.website.replaceAll('|_|', ' , '),
+              widget?.data?.phone ?? '',
+              widget?.data?.businessEmail ?? '',
+              overviewData?.data[0]?.website?.replaceAll('|_|', ' , '),
               overviewData?.data[0]?.address1 +
-                  " " +
-                  overviewData?.data[0]?.address2 +
-                  " " +
-                  overviewData?.data[0]?.address3
+                      " " +
+                      overviewData?.data[0]?.address2 ??
+                  '' + " " + overviewData?.data[0]?.address3 ??
+                  ''
             ];
             List loc = overviewData?.data[0].location.split(',');
-            _initPosition = CameraPosition(
-                target: LatLng(double.parse(loc[0]), double.parse(loc[1])),
-                zoom: 12);
-            setDestination(loc);
+            markers.add(Marker(
+                markerId: MarkerId('new Address'),
+                position: LatLng(double.parse(loc[0]), double.parse(loc[1]))));
+            // setDestination(loc);
             return Padding(
               padding: EdgeInsets.only(
-                  top: sm.h(6), bottom: sm.h(2), left: sm.w(3), right: sm.w(3)),
-              child: ListView(children: [
-                Text(shortDisc,
-                    style:
-                        TextStyle(fontSize: 15, fontFamily: 'Gilroy-Regular')),
-                myCarousel(overviewData?.data[0].businessId),
-                Text(
-                  longDisc,
-                  style: TextStyle(fontSize: 15, fontFamily: 'Gilroy-Regular'),
-                ),
-                for (int i = 0; i < listKey.length; i++)
-                  Padding(
-                    padding: EdgeInsets.only(top: sm.h(3)),
-                    child: Row(
-                      children: [
+                  top: sm.h(4), bottom: sm.h(2), left: sm.w(3), right: sm.w(3)),
+              child: Scrollbar(
+                isAlwaysShown: true,
+                showTrackOnHover: true,
+                child: ListView(children: [
+                  Text(shortDisc,
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Gilroy-Medium')),
+                  myCarousel(overviewData?.data[0]?.businessId),
+                  Text(
+                    longDisc,
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Gilroy-Medium'),
+                  ),
+                  for (int i = 0; i < listKey.length; i++)
+                    Padding(
+                      padding: EdgeInsets.only(top: sm.h(3)),
+                      child: Row(children: [
                         Expanded(
                           flex: 3,
                           child: Text(
-                            listKey[i],
+                            listKey[i] ?? '',
                             style: TextStyle(
                                 fontFamily: 'Gilroy-Regular',
                                 fontWeight: FontWeight.w600,
@@ -105,97 +112,102 @@ class _OverviewState extends State<OverviewTab> {
                         Expanded(
                           flex: 7,
                           child: Text(
-                            listValue[i],
+                            listValue[i] ?? '',
                             style: TextStyle(
                                 color:
                                     (i == 0 || i == 2) ? myRed : Colors.black,
                                 fontFamily: 'Gilroy-Regular',
                                 fontWeight: FontWeight.w500,
-                                fontSize: 18),
+                                fontSize: 16),
                           ),
                         ),
+                      ]),
+                    ),
+                  Container(
+                    height: sm.h(40),
+                    child: loc != null
+                        ? MyGoogleMap(
+                            initPosition: CameraPosition(
+                                target: LatLng(
+                                    double.parse(loc[0]), double.parse(loc[1])),
+                                zoom: 12),
+                            marker: markers)
+                        : Container(),
+                  ),
+                  Container(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        for (var _va in _attribute)
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: sm.w(2), vertical: sm.h(.5)),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 6),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[600], //   width: 1,
+                              ),
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              _va ?? '',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
                       ],
                     ),
                   ),
-                Container(
-                  height: sm.h(40),
-                  child: loc != null
-                      ? MyGoogleMap(
-                          initPosition: _initPosition, marker: markers)
-                      : Container(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (var _va in _attribute)
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: sm.w(2), vertical: sm.h(.5)),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey[600], //   width: 1,
+                  Padding(
+                    padding: EdgeInsets.only(top: sm.h(3)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            'Payment',
+                            style: TextStyle(
+                                fontFamily: 'Gilroy-Regular',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18),
                           ),
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text(
-                          _va,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: sm.h(3)),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          'Payment',
-                          style: TextStyle(
-                              fontFamily: 'Gilroy-Regular',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 7,
-                        child: Text(
-                          overviewData?.data[0]?.paymentMethod
-                              .replaceAll(',', ' , '),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Gilroy-Regular',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18),
-                        ),
-                      )
-                    ],
+                        Expanded(
+                          flex: 7,
+                          child: Text(
+                            overviewData?.data[0]?.paymentMethod
+                                ?.replaceAll(',', ' , '),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Gilroy-Regular',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: sm.h(2)),
-                  child: Row(
-                    children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: sm.h(2)),
+                    child: Row(children: [
                       Text(
                         'Most Popular',
                         style: TextStyle(
                             color: Colors.black,
                             fontFamily: 'Gilroy-Medium',
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             fontSize: 18),
                       ),
-                    ],
+                    ]),
                   ),
-                ),
-                Container(
-                  height: 200,
-                  child: MostPopular(),
-                )
-              ]),
+                  Container(
+                    height: 200,
+                    child: MostPopular(),
+                  )
+                ]),
+              ),
             );
           }
         });

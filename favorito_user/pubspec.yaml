@@ -31,6 +31,7 @@ dependencies:
   font_awesome_flutter:
   dropdown_search:
   shared_preferences:
+  image_picker_gallery_camera:  
   intl:
   dio:
   connectivity:
@@ -41,6 +42,7 @@ dependencies:
   percent_indicator:
   pin_code_fields:
   provider:
+  image_cropper:
   flutter:
     sdk: flutter
 

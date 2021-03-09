@@ -1,7 +1,6 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
@@ -38,7 +37,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     vaTrue = Provider.of<UserAddressProvider>(context, listen: true);
     if (widget.pr == null) {
-      vaTrue.getAddress();
+      // vaTrue.getAddress();
       vaTrue.getUserImage();
     }
     widget.pr = ProgressDialog(context, type: ProgressDialogType.Normal);
@@ -57,10 +56,9 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: sm.w(20),
-                  padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                  child: myClipRect(),
-                ),
+                    width: sm.w(20),
+                    padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                    child: myClipRect()),
                 Container(
                   width: sm.w(60),
                   child: InkWell(onTap: () {
@@ -74,25 +72,21 @@ class _HomeState extends State<Home> {
                               (BuildContext context, StateSetter setState) {
                             return Container(
                                 height: sm.h(70),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  // borderRadius: BorderRadius.only(
-                                  //     topLeft: Radius.circular(30),
-                                  //     topRight: Radius.circular(30)),
-                                ),
+                                decoration: BoxDecoration(color: Colors.white),
                                 child: UserAddress());
                           });
                         });
                   }, child: Consumer<UserAddressProvider>(
                       builder: (context, data, child) {
                     var _v = data?.getSelectedAddress();
+                    var defaultAdd = (_v != '')
+                        ? ('${_v?.address ?? ''},\n${_v?.city ?? ''} ${_v?.state ?? ''},${_v?.pincode ?? ''}')
+                        : '';
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('title', textAlign: TextAlign.start),
-                          Text(
-                              '${_v?.address??''},\n${_v?.city??''} ${_v?.state??''},${_v?.pincode??''}',
-                              textAlign: TextAlign.start)
+                          Text(defaultAdd, textAlign: TextAlign.start)
                         ]);
                   })),
                 ),
@@ -116,7 +110,6 @@ class _HomeState extends State<Home> {
             child: EditTextComponent(
               ctrl: _mySearchEditTextController,
               hint: "Search",
-              // suffixTap: () {},
               suffixTxt: '',
               security: false,
               valid: false,

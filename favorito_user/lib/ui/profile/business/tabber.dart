@@ -1,8 +1,8 @@
+import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/ui/profile/business/tabs/CatlogTab.dart';
 import 'package:favorito_user/ui/profile/business/tabs/JobTab.dart';
 import 'package:favorito_user/ui/profile/business/tabs/OverviewTab.dart';
-import 'package:favorito_user/ui/profile/business/tabs/ReviewTab.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -31,7 +31,7 @@ class profilePageState extends State<Tabber>
     super.initState();
     pages = [
       OverviewTab(data: widget.data),
-      CatlogTab(data: widget.data),
+      CatalogTab(data: widget.data),
       // ReviewTab(data: widget.data),
       JobTab(data: widget.data)
     ];
@@ -39,33 +39,32 @@ class profilePageState extends State<Tabber>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TabBar(
-            isScrollable: true,
-            unselectedLabelColor: Colors.black,
-            labelColor: Colors.red,
-            indicatorColor: myRed,
-            indicatorPadding: EdgeInsets.only(left: 16, right: 40),
-            tabs: [
-              for (int i = 0; i < tabs.length; i++)
-                Tab(child: Text(tabs[i], style: TextStyle(fontSize: 20))),
-            ],
-            controller: _tabController,
-            indicatorSize: TabBarIndicatorSize.tab,
-          ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                for (int i = 0; i < tabs.length; i++) pages[i],
-              ],
-              controller: _tabController,
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        TabBar(
+          isScrollable: true,
+          unselectedLabelColor: myGreyLight,
+          labelColor: Colors.red,
+          indicatorColor: myRed,
+          indicatorPadding: EdgeInsets.only(left: 16, right: 40),
+          tabs: [
+            for (int i = 0; i < tabs.length; i++)
+              Tab(
+                  child: Text(tabs[i],
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Gilroy-Regular'))),
+          ],
+          controller: _tabController,
+          indicatorSize: TabBarIndicatorSize.tab,
+        ),
+        Expanded(
+          child: TabBarView(children: [
+            for (int i = 0; i < tabs.length; i++) pages[i],
+          ], controller: _tabController),
+        ),
+      ],
     );
   }
 }

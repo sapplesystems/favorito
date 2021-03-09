@@ -1,3 +1,4 @@
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
@@ -6,17 +7,15 @@ import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:transparent_image/transparent_image.dart';
 
-// ignore: must_be_immutable
-class CatlogTab extends StatefulWidget {
+class CatalogTab extends StatefulWidget {
   BusinessProfileData data;
-  CatlogTab({this.data});
+  CatalogTab({this.data});
   @override
   _CatlogTabState createState() => _CatlogTabState();
 }
 
-class _CatlogTabState extends State<CatlogTab> {
+class _CatlogTabState extends State<CatalogTab> {
   SizeManager sm;
   var fut;
   CatlogModel catlogModel = CatlogModel();
@@ -74,15 +73,19 @@ class _CatlogTabState extends State<CatlogTab> {
                                   padding: EdgeInsets.only(left: 16.0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: FadeInImage.memoryNetwork(
-                                      placeholder: kTransparentImage,
-                                      image: catlogModel.data[index].photos ==
-                                              null
-                                          ? "https://source.unsplash.com/random/400*400"
-                                          : catlogModel.data[index].photos
-                                              .split(",")[0],
-                                      width: sm.w(20),
-                                    ),
+                                    child: ImageMaster(
+                                        url: catlogModel.data[index].photos
+                                            ?.split(',')[0]),
+
+                                    // FadeInImage.memoryNetwork(
+                                    //   placeholder: kTransparentImage,
+                                    //   image: catlogModel.data[index].photos ==
+                                    //           null
+                                    //       ? "https://source.unsplash.com/random/400*400"
+                                    //       : catlogModel.data[index].photos
+                                    //           .split(",")[0],
+                                    //   width: sm.w(20),
+                                    // ),
                                   ),
                                 )),
                                 Expanded(

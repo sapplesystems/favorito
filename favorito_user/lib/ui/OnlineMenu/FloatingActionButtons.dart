@@ -227,6 +227,7 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   body1(context) => Container(
         height: sm.h(30),
         child: Scrollbar(
+          isAlwaysShown: true,
           child: ListView.builder(
               itemCount: providerBasketTrue.getMyObjectsList().length,
               itemBuilder: (BuildContext context, int index) {

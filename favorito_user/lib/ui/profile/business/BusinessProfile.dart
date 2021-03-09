@@ -35,7 +35,6 @@ class _BusinessProfileState extends State<BusinessProfile> {
   @override
   void initState() {
     super.initState();
-    print("lllllll:${widget.businessId}");
     fut = APIManager.baseUserProfileDetail({'business_id': widget.businessId});
   }
 
@@ -44,7 +43,6 @@ class _BusinessProfileState extends State<BusinessProfile> {
     sm = SizeManager(context);
     Provider.of<AppBookProvider>(context, listen: false)
         .setBusinessId(widget.businessId);
-
     return Scaffold(
         backgroundColor: Colors.white,
         body: FutureBuilder<businessProfileModel>(
@@ -56,146 +54,126 @@ class _BusinessProfileState extends State<BusinessProfile> {
             if (snapshot.hasError)
               return Center(child: Text('Something went wrong..'));
             else {
-              if (data != snapshot?.data) data = snapshot.data;
+              if (data != snapshot?.data) data = snapshot.data ?? '';
               widget.attribute.clear();
               widget.attribute
                   .addAll(data.data[0].attributes.map((e) => e.attributeName));
 
-              return ListView(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 0),
-                    child: Stack(
-                      children: [
-                        Column(
-                          children: [
-                            headerPart(),
-                            Stack(
+              return ListView(children: [
+                Stack(children: [
+                  Column(children: [
+                    headerPart(),
+                    Stack(children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: sm.h(8), bottom: sm.h(1)),
+                        child: Center(
+                          child: Text(data?.data[0]?.businessName ?? '',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  letterSpacing: -.5,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Gilroy-Bold')),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(top: sm.h(0), left: sm.w(75.8)),
+                        child: Container(
+                          width: sm.w(18.4),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: sm.w(1), vertical: sm.w(0)),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8),
+                                  bottomRight: Radius.circular(8)),
+                              color: Colors.white),
+                          child: Center(
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              direction: Axis.vertical,
+                              spacing: -4,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    top: sm.h(12),
-                                    bottom: sm.h(2),
-                                  ),
-                                  child: Center(
-                                    child: Text(data.data[0].businessName,
+                                Center(
+                                    child: Text(
+                                        '${data?.data[0]?.totalReviews ?? 0}',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            fontSize: 28,
-                                            fontFamily: 'Gilroy-Bold')),
+                                            fontSize: 18,
+                                            fontFamily: 'Gilroy-Reguler'))),
+                                Text(
+                                  'Reviews',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: myGreyLight,
+                                    fontFamily: 'Gilroy-Reguler',
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: sm.h(0), left: sm.w(75.8)),
-                                  child: Container(
-                                    width: sm.w(18.4),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: sm.w(1), vertical: sm.w(0)),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(8),
-                                            bottomRight: Radius.circular(8)),
-                                        color: Colors.white),
-                                    child: Center(
-                                      child: Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        direction: Axis.vertical,
-                                        spacing: -4,
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              '${data?.data[0]?.totalReviews ?? 0}',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 22,
-                                                fontFamily: 'Gilroy-Reguler',
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            'Reviews',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: myGrey,
-                                              fontFamily: 'Gilroy-Reguler',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
                               ],
                             ),
-                          ],
+                          ),
                         ),
-                        smallProfile(),
-                      ],
+                      )
+                    ]),
+                  ]),
+                  smallProfile(),
+                ]),
+                followingAndFavorite(),
+                Padding(
+                  padding: EdgeInsets.only(left: sm.w(4), top: sm.h(4)),
+                  child: Text(data?.data[0]?.shortDesciption ?? "",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                  child: Text(
+                      '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
+                      style: TextStyle(
+                          color: myGrey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                      child: Text(data?.data[0]?.businessStatus ?? "",
+                          style: TextStyle(
+                              color: data?.data[0]?.businessStatus == 'Offline'
+                                  ? myRed
+                                  : Colors.green,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300)),
                     ),
-                  ),
-                  followingAndFavorite(),
-                  Padding(
-                    padding: EdgeInsets.only(left: sm.w(4), top: sm.h(4)),
-                    child: Text(data?.data[0]?.shortDesciption ?? "",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                    child: Text(
-                        '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
-                        style: TextStyle(
-                            color: myGrey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400)),
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                        child: Text(data?.data[0]?.businessStatus ?? "",
-                            style: TextStyle(
-                                color:
-                                    data?.data[0]?.businessStatus == 'Offline'
-                                        ? myRed
-                                        : Colors.green,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300)),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                        child: Text(
-                            data?.data[0]?.startHours?.convert24to12() +
-                                " - " +
-                                data?.data[0]?.endHours?.convert24to12(),
-                            style: TextStyle(
-                                color: myGrey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300)),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                    child: Text("\u{20B9} : " + data?.data[0]?.priceRange ?? "",
-                        style: TextStyle(
-                            color: myGrey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300)),
-                  ),
-                  ServicCart(),
-                  Container(
-                    height: 500,
-                    child: Tabber(data: data.data[0]),
-                  )
-                ],
-              );
+                    Padding(
+                      padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                      child: Text(
+                          data?.data[0]?.startHours?.convert24to12() +
+                              " - " +
+                              data?.data[0]?.endHours?.convert24to12(),
+                          style: TextStyle(
+                              color: myGrey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300)),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                  child: Text("\u{20B9} : " + data?.data[0]?.priceRange ?? "",
+                      style: TextStyle(
+                          color: myGrey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300)),
+                ),
+                ServicCart(),
+                Container(height: sm.h(70), child: Tabber(data: data.data[0]))
+              ]);
             }
           },
         )).safe();
@@ -210,7 +188,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
         radius: sm.w(15),
         backgroundColor: Colors.red,
         child: CircleAvatar(
-          radius: sm.w(7) * sm.w(7),
+          radius: sm.w(2) * sm.w(2.05),
           backgroundImage: NetworkImage(data?.data[0]?.photo),
           backgroundColor: Colors.red,
         ),
@@ -227,25 +205,19 @@ class _BusinessProfileState extends State<BusinessProfile> {
           Container(
             color: Colors.black.withOpacity(0.2),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.navigate_before,
-                    size: sm.w(12),
-                    color: Colors.white,
-                  ),
-                ),
-                Expanded(child: Container()),
-                Padding(
-                  padding: EdgeInsets.only(right: sm.w(2)),
-                  child: SvgPicture.asset('assets/icon/share.svg'),
-                ),
-              ],
-            ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.navigate_before,
+                          size: sm.w(12), color: Colors.white)),
+                  Expanded(child: Container()),
+                  Padding(
+                      padding: EdgeInsets.only(right: sm.w(2)),
+                      child: SvgPicture.asset('assets/icon/share.svg')),
+                ]),
           ),
           Positioned(
             top: sm.h(33.5),
@@ -255,24 +227,28 @@ class _BusinessProfileState extends State<BusinessProfile> {
               padding:
                   EdgeInsets.symmetric(horizontal: sm.w(1), vertical: sm.w(2)),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-                color: myRed,
-              ),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8)),
+                  color: myRed),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                      double.parse('${data?.data[0].avgRating ?? 0}')
-                          .toString(),
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900)),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 2.0),
+                    child: Text(
+                        double.parse('${data?.data[0].avgRating ?? 0} ')
+                            .toString(),
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Gilroy-Regular',
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900)),
+                  ),
                   Icon(
                     Icons.star,
                     color: Colors.yellow,
-                    size: sm.w(4),
+                    size: sm.w(4.5),
                   )
                 ],
               ),
@@ -285,7 +261,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(width: sm.w(8)),
+        SizedBox(width: sm.w(12)),
         FollowBtn(id: data.data[0].businessId),
         FavoriteBtn(id: data.data[0].businessId),
       ],
