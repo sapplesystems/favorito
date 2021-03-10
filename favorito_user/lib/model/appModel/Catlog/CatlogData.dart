@@ -1,7 +1,7 @@
 class CatlogData {
-  int id;
+  var id;
   String catalogTitle;
-  int catalogPrice;
+  var catalogPrice;
   String catalogDesc;
   String productUrl;
   String productId;

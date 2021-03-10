@@ -92,4 +92,7 @@ class service {
   static final checkMobileOrEmail =
       base + 'user/is-account-exist'; //this is used to create a new order
 
+  static final workingHours = base +
+      'user-business/get-business-hours'; //this is used to create a new order
+
 }

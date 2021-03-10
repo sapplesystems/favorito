@@ -9,6 +9,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
+import '../../utils/RIKeys.dart';
 
 class ForgetPassword extends StatelessWidget {
   SizeManager sm;
@@ -28,7 +29,7 @@ class ForgetPassword extends StatelessWidget {
           prTrue.allClear();
         },
         child: Scaffold(
-          key: prTrue.scaffoldKey,
+          key: RIKeys.josKeys1,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
             child: ListView(children: [

@@ -1,3 +1,4 @@
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -18,14 +19,17 @@ class _myClipRRectState extends State<myClipRRect> {
   @override
   Widget build(BuildContext context) {
     print("Image url is :${widget.image}");
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Image.network(
-        widget.image,
-        height: widget.sm.h(11),
-        fit: BoxFit.cover,
-        width: widget.sm.w(38),
-      ),
+    return SizedBox(
+      height: widget.sm.h(11),
+      width: widget.sm.w(38),
+      child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: ImageMaster(url: widget.image)
+          // height: widget.sm.h(11),
+          // fit: BoxFit.cover,
+          // width: widget.sm.w(38),
+          // ),
+          ),
     );
   }
 }

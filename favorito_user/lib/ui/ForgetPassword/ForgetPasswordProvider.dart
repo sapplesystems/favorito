@@ -7,13 +7,13 @@ import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import '../../utils/RIKeys.dart';
 
 class ForgetPasswordProvider extends ChangeNotifier {
   String didNotReceive = '';
   BuildContext context;
   Validator validator = Validator();
   String sendOtptxt = "Send Otp";
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Acces> acces = [];
   List<String> title = [
     'Email/Phone',
@@ -40,15 +40,14 @@ class ForgetPasswordProvider extends ChangeNotifier {
     if (acces[0].error == null) {
       Map _map = {"email_or_phone": acces[0].controller.text};
 
-      await APIManager.sendOtp(_map,scaffoldKey).then((value) {
-
+      await APIManager.sendOtp(_map, RIKeys.josKeys1).then((value) {
         if (value.status == 'success' &&
             value.data[0].responseStatus == 'success') {
           otpForworded = true;
           sendOtpModel = value;
           didNotReceive = 'Did not recieved Otp.';
           sendOtptxt = 'Send Again';
-        }else{
+        } else {
           BotToast.showText(text: value.message);
         }
         notifyListeners();
@@ -75,13 +74,11 @@ class ForgetPasswordProvider extends ChangeNotifier {
         "password": acces[2].controller.text
       };
       print("data:${_map.toString()}");
-      await APIManager.verifyOtp(_map,scaffoldKey).then((value) {
-
+      await APIManager.verifyOtp(_map, RIKeys.josKeys1).then((value) {
         if (value.status == 'success')
           allClear();
         else
           BotToast.showText(text: value.message);
-
       });
     }
     notifyListeners();

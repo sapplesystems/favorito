@@ -78,15 +78,12 @@ class _HomeState extends State<Home> {
                         });
                   }, child: Consumer<UserAddressProvider>(
                       builder: (context, data, child) {
-                    var _v = data?.getSelectedAddress();
-                    var defaultAdd = (_v != '')
-                        ? ('${_v?.address ?? ''},\n${_v?.city ?? ''} ${_v?.state ?? ''},${_v?.pincode ?? ''}')
-                        : '';
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('title', textAlign: TextAlign.start),
-                          Text(defaultAdd, textAlign: TextAlign.start)
+                          Text(data?.getSelectedAddress(),
+                              textAlign: TextAlign.start)
                         ]);
                   })),
                 ),

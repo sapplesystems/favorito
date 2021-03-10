@@ -86,18 +86,22 @@ class UserAddressProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Addresses getSelectedAddress() {
-    Addresses v;
+  String getSelectedAddress() {
+    Addresses _v;
+    var va;
     var addressLength = this?.addressListModel?.data?.addresses?.length ?? 0;
     for (int i = 0; i < addressLength; i++) {
       if (this?.addressListModel?.data?.addresses[i]?.defaultAddress == 0) {
-        v = this?.addressListModel?.data?.addresses[i] ?? '';
+        _v = this?.addressListModel?.data?.addresses[i] ?? '';
+        va =
+            '${_v?.address ?? ''},\n${_v?.city ?? ''} ${_v?.state ?? ''},${_v?.pincode ?? ''}';
+
         break;
       }
     }
     notifyListeners();
 
-    return v ?? '';
+    return va ?? '';
   }
 
   getProfileImage() =>

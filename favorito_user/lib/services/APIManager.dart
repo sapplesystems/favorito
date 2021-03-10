@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
@@ -719,6 +720,45 @@ class APIManager {
 
     print("service.verifyOtp : ${response.toString}");
     return PostalCodeModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<WorkingHoursModel> workingHours(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return WorkingHoursModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+            type: ProgressDialogType.Normal, isDismissible: false)
+          ..style(
+              message: 'Please wait...',
+              borderRadius: 8.0,
+              backgroundColor: Colors.white,
+              progressWidget: CircularProgressIndicator(),
+              elevation: 8.0,
+              insetAnimCurve: Curves.easeInOut,
+              progress: 0.0,
+              maxProgress: 100.0,
+              progressTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w400),
+              messageTextStyle: TextStyle(
+                  color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+        // ..show()
+        ;
+    String url = service.workingHours;
+    print("url : $url");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
+
+    print("service.verifyOtp : ${response.toString}");
+    return WorkingHoursModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
   static void ExceptionHandler(DioError e, pr, url, formKey) {

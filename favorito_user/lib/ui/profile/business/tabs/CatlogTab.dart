@@ -69,25 +69,24 @@ class _CatlogTabState extends State<CatalogTab> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                    child: Padding(
-                                  padding: EdgeInsets.only(left: 16.0),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: ImageMaster(
-                                        url: catlogModel.data[index].photos
-                                            ?.split(',')[0]),
+                                    width: sm.w(20),
+                                    height: sm.w(20),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: ImageMaster(
+                                          url: catlogModel.data[index].photos
+                                              ?.split(',')[0]),
 
-                                    // FadeInImage.memoryNetwork(
-                                    //   placeholder: kTransparentImage,
-                                    //   image: catlogModel.data[index].photos ==
-                                    //           null
-                                    //       ? "https://source.unsplash.com/random/400*400"
-                                    //       : catlogModel.data[index].photos
-                                    //           .split(",")[0],
-                                    //   width: sm.w(20),
-                                    // ),
-                                  ),
-                                )),
+                                      // FadeInImage.memoryNetwork(
+                                      //   placeholder: kTransparentImage,
+                                      //   image: catlogModel.data[index].photos ==
+                                      //           null
+                                      //       ? "https://source.unsplash.com/random/400*400"
+                                      //       : catlogModel.data[index].photos
+                                      //           .split(",")[0],
+                                      //   width: sm.w(20),
+                                      // ),
+                                    )),
                                 Expanded(
                                     flex: 3,
                                     child: Padding(

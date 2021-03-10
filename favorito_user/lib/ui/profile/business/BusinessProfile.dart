@@ -4,10 +4,12 @@ import 'package:favorito_user/component/FollowBtn.dart';
 import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/business/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
@@ -17,6 +19,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/Extentions.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../utils/RIKeys.dart';
 
 class BusinessProfile extends StatefulWidget {
   String businessId;
@@ -30,8 +33,9 @@ class BusinessProfile extends StatefulWidget {
 class _BusinessProfileState extends State<BusinessProfile> {
   SizeManager sm;
   businessProfileModel data = businessProfileModel();
+  BusinessProfileProvider vatrue;
+  bool isFirst = true;
   var fut;
-
   @override
   void initState() {
     super.initState();
@@ -43,7 +47,13 @@ class _BusinessProfileState extends State<BusinessProfile> {
     sm = SizeManager(context);
     Provider.of<AppBookProvider>(context, listen: false)
         .setBusinessId(widget.businessId);
+    vatrue = Provider.of<BusinessProfileProvider>(context, listen: true);
+    if (isFirst) {
+      vatrue.setId(widget.businessId);
+      isFirst = false;
+    }
     return Scaffold(
+        key: RIKeys.josKeys2,
         backgroundColor: Colors.white,
         body: FutureBuilder<businessProfileModel>(
           future: fut,
@@ -59,6 +69,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
               widget.attribute
                   .addAll(data.data[0].attributes.map((e) => e.attributeName));
 
+              Provider.of<BusinessProfileProvider>(context, listen: false);
               return ListView(children: [
                 Stack(children: [
                   Column(children: [
@@ -131,12 +142,17 @@ class _BusinessProfileState extends State<BusinessProfile> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                  child: Text(
-                      '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
-                      style: TextStyle(
-                          color: myGrey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400)),
+                  child: InkWell(
+                    onTap: () {
+                      vatrue.getBusinessHours();
+                    },
+                    child: Text(
+                        '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
+                        style: TextStyle(
+                            color: myGrey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400)),
+                  ),
                 ),
                 Row(
                   children: [
@@ -152,14 +168,31 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                      child: Text(
-                          data?.data[0]?.startHours?.convert24to12() +
-                              " - " +
-                              data?.data[0]?.endHours?.convert24to12(),
-                          style: TextStyle(
-                              color: myGrey,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300)),
+                      child: InkWell(
+                        onTap: () {
+                          showModalBottomSheet<void>(
+                              enableDrag: true,
+                              isScrollControlled: true,
+                              context: context,
+                              backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(builder:
+                                    (BuildContext context,
+                                        StateSetter setState) {
+                                  return Container(
+                                      height: sm.h(70),
+                                      decoration:
+                                          BoxDecoration(color: Colors.white),
+                                      child: HoursList(vatrue, sm));
+                                });
+                              });
+                        },
+                        child: Text(vatrue.getShopTime(),
+                            style: TextStyle(
+                                color: myGrey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300)),
+                      ),
                     ),
                   ],
                 ),
@@ -237,7 +270,8 @@ class _BusinessProfileState extends State<BusinessProfile> {
                   Padding(
                     padding: const EdgeInsets.only(right: 2.0),
                     child: Text(
-                        double.parse('${data?.data[0].avgRating ?? 0} ')
+                        double.parse(
+                                '${data?.data[0].avgRating.toStringAsFixed(1) ?? 0} ')
                             .toString(),
                         style: TextStyle(
                             fontSize: 20,
@@ -371,6 +405,73 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     )),
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  HoursList(BusinessProfileProvider vaTrue, SizeManager sm) {
+    List<WorkingHoursData> businessProfileProvider =
+        vaTrue.getWorkingHoursList();
+    return Container(
+      height: sm.h(70),
+      child: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(
+                    width: sm.w(20),
+                    child: Text('Day',
+                        style: TextStyle(fontFamily: 'Gilroy-Bold'))),
+                SizedBox(
+                    width: sm.w(20),
+                    child: Text('StartTime',
+                        style: TextStyle(fontFamily: 'Gilroy-Bold'))),
+                SizedBox(
+                    width: sm.w(20),
+                    child: Text('EndTime',
+                        style: TextStyle(fontFamily: 'Gilroy-Bold'))),
+              ],
+            ),
+          ),
+          Container(
+            height: sm.h(64),
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: businessProfileProvider?.length ?? 0,
+                itemBuilder: (context, index) {
+                  var v = businessProfileProvider[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: sm.w(20),
+                          child: Text(v.day,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontFamily: 'Gilroy-Regular')),
+                        ),
+                        SizedBox(
+                          width: sm.w(20),
+                          child: Text(v.startHours.trim().substring(0, 5),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontFamily: 'Gilroy-Regular')),
+                        ),
+                        SizedBox(
+                          width: sm.w(20),
+                          child: Text(v.endHours.substring(0, 5).trim(),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontFamily: 'Gilroy-Regular')),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+          ),
         ],
       ),
     );
