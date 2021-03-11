@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/Validator.dart';
@@ -14,7 +15,8 @@ class SignupProvider extends ChangeNotifier {
   ProgressDialog pr;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-  String checkId = 'verify';
+  String _checkId = 'verify';
+  String _checkIdMessage = null;
   bool uniqueId = false;
   bool uniqueMobile = false;
   bool uniqueEmail = false;
@@ -28,8 +30,8 @@ class SignupProvider extends ChangeNotifier {
     'Email',
     'Password',
     'Postal',
+    'Short discription',
     'UniquiId',
-    'Short discription'
   ];
 
   List<String> prefix = [
@@ -41,6 +43,7 @@ class SignupProvider extends ChangeNotifier {
     'name',
     'name'
   ];
+  List<Color> errorColor = [null, null, null, null, null, null, null];
 
   void decideit() async {
     String token = await Prefs.token;
@@ -117,10 +120,15 @@ class SignupProvider extends ChangeNotifier {
         if (value.data[0].isExist != 0) {
           acces[_index].error = value.message;
           uniqueId = false;
+
+          errorColor[_index] = null;
         } else {
+          _checkId = 'verified';
           uniqueId = true;
           acces[_index].error = null;
+          errorColor[_index] = myGreenDark;
         }
+        acces[_index].error = value.message;
       }
       notifyListeners();
     });
@@ -198,11 +206,12 @@ class SignupProvider extends ChangeNotifier {
         }
         break;
 
-      case 5:
+      case 6:
         {
           if (acces[_index].controller.text.length > 2)
             acces[_index].error = 'Please check availability';
 
+          errorColor[_index] = null;
           notifyListeners();
         }
         break;
@@ -251,7 +260,15 @@ class SignupProvider extends ChangeNotifier {
     uniqueEmail = false;
     newValue = false;
     newValue1 = false;
-    checkId = 'verify';
+    _checkId = 'verify';
     notifyListeners();
   }
+
+  String getCheckId() => _checkId;
+  void setCheckId(String _val) {
+    _checkId = _val;
+    notifyListeners();
+  }
+
+  String get checkIdMessage => _checkIdMessage ?? '';
 }

@@ -22,7 +22,7 @@ class service {
   static final register = baseUser2 + 'register';
   static final login = baseUser2 + 'login';
   static final businessCarousel = baseUserProfile + 'business-carousel';
-  static final getAddress = base + 'user-address/get-address';
+  static final getAddress = baseUser + 'address/get-address';
   static final getUserImage = base + 'user-profile/user-profile-photo';
   static final search = base + 'user-business/search-by-name';
   static final hotAndNewBusiness = baseBusinessDashboard + 'get-new-business';
@@ -92,7 +92,7 @@ class service {
   static final checkMobileOrEmail =
       base + 'user/is-account-exist'; //this is used to create a new order
 
-  static final workingHours = base +
-      'user-business/get-business-hours'; //this is used to create a new order
+  static final workingHours = base + 'user-business/get-business-hours';
 
+  static final changeAddress = baseUser + 'address/change-default-address';
 }

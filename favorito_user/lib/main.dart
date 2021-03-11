@@ -8,7 +8,8 @@ import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';

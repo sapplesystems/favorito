@@ -5,10 +5,11 @@ import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import '../../../../utils/RIKeys.dart';
 
 class PersonalInfoProvider extends ChangeNotifier {
   Validator validator = Validator();
-
+  String _username = '';
   List<Acces> acces = [for (int i = 0; i < 3; i++) Acces()];
   ProgressDialog pr;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -19,6 +20,11 @@ class PersonalInfoProvider extends ChangeNotifier {
   AddressListModel addressListModel = AddressListModel();
   List<String> prefix = ['name', 'postal', 'name'];
   bool newValue = false;
+  PersonalInfoProvider() {
+    getPersonalData();
+  }
+
+  String get username => _username;
   void decideit() async {
     String token = await Prefs.token;
     print("token : $token");
@@ -36,10 +42,11 @@ class PersonalInfoProvider extends ChangeNotifier {
 
   getPersonalData() async {
     Map _map = {"api_type": 'get'};
-    await APIManager.userdetail(_map).then((value) {
+    await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
       if (value.status == 'success') {
         var v = value.data.detail;
         print("ffff:${v.fullName}");
+        _username = v.fullName;
         acces[0].controller.text = v.fullName;
         acces[1].controller.text = v.postal;
         acces[2].controller.text = v.shortDescription;
@@ -58,7 +65,7 @@ class PersonalInfoProvider extends ChangeNotifier {
       'short_description': acces[2].controller.text,
       'reach_whatsapp': newValue ? 1 : 0
     };
-    await APIManager.userdetail(_map).then((value) {
+    await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
       pr.hide();
       if (value.status == 'success') getPersonalData();
     });

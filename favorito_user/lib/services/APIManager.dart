@@ -34,6 +34,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/UtilProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -44,7 +45,14 @@ class APIManager {
 
   static UtilProvider utilProvider = UtilProvider();
 
-  static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
+  static Options opt = Options(
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST,HEAD"
+      },
+      // method:  ("Access-Control-Allow-Methods": "POST, OPTIONS"),
+      contentType: Headers.formUrlEncodedContentType,
+      method: 'Post');
 
 //this is used for register new user
   static Future<registerModel> register(
@@ -382,7 +390,8 @@ class APIManager {
   }
 
 //userdetail
-  static Future<ProfileModel> userdetail(Map _map) async {
+  static Future<ProfileModel> userdetail(
+      Map _map, GlobalKey<ScaffoldState> josKeys3) async {
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
@@ -393,18 +402,45 @@ class APIManager {
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-  static Future<businessProfileModel> baseUserProfileDetail(Map _map) async {
+  static Future<businessProfileModel> baseUserProfileDetail(
+      Map _map, GlobalKey<ScaffoldState> josKeys2) async {
+    if (!await utilProvider.checkInternet())
+      return businessProfileModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(josKeys2.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
     String token = await Prefs.token;
     print('token : ${token.toString()}');
+    String url = service.baseUserProfileDetail;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print(
-        "service.baseUserProfileDetail url: ${service.baseUserProfileDetail}");
-    print("service.baseUserProfileDetail request: ${_map.toString()}");
+    print(" url: $url");
+    print("RequestData: ${_map.toString()}");
 
-    response =
-        await dio.post(service.baseUserProfileDetail, data: _map, options: opt);
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, josKeys2);
+    } finally {
+      pr.hide();
+    }
+
     print("service.mostPopulerBusiness response: ${response.toString}");
 
     return businessProfileModel
@@ -673,7 +709,8 @@ class APIManager {
 //verify otp
   static Future<CheckAccountmodel> checkId(Map _map) async {
     print("url : ${service.verifyOtp}");
-    response = await dio.post(service.checkId, data: _map);
+    opt.method = 'post';
+    response = await dio.post(service.checkId, data: _map, options: opt);
     print("service.verifyOtp : ${response.toString}");
     return CheckAccountmodel.fromJson(convert.jsonDecode(response.toString()));
   }
@@ -692,30 +729,34 @@ class APIManager {
       return PostalCodeModel(
           status: 'fail', message: 'Please check internet connections');
     final ProgressDialog pr = ProgressDialog(formKey.currentContext,
-        type: ProgressDialogType.Normal, isDismissible: false)
-      ..style(
-          message: 'Please wait...',
-          borderRadius: 8.0,
-          backgroundColor: Colors.white,
-          progressWidget: CircularProgressIndicator(),
-          elevation: 8.0,
-          insetAnimCurve: Curves.easeInOut,
-          progress: 0.0,
-          maxProgress: 100.0,
-          progressTextStyle: TextStyle(
-              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-          messageTextStyle: TextStyle(
-              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
-      ..show();
+            type: ProgressDialogType.Normal, isDismissible: false)
+          ..style(
+              message: 'Please wait...',
+              borderRadius: 8.0,
+              backgroundColor: Colors.white,
+              progressWidget: CircularProgressIndicator(),
+              elevation: 8.0,
+              insetAnimCurve: Curves.easeInOut,
+              progress: 0.0,
+              maxProgress: 100.0,
+              progressTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w400),
+              messageTextStyle: TextStyle(
+                  color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+        // ..show()
+        ;
     String url = service.checkPostalCode;
     print("url : $url");
     try {
       response = await dio.post(url, data: _map);
-      pr.hide();
+      // pr.hide();
     } on DioError catch (e) {
+      // pr.hide();
       ExceptionHandler(e, pr, url, formKey);
     } finally {
-      pr.hide();
+      // pr.hide();
     }
 
     print("service.verifyOtp : ${response.toString}");
@@ -747,6 +788,42 @@ class APIManager {
         // ..show()
         ;
     String url = service.workingHours;
+    print("url : $url");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
+
+    print("service.verifyOtp : ${response.toString}");
+    return WorkingHoursModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<WorkingHoursModel> changeAddress(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return WorkingHoursModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+    String url = service.changeAddress;
     print("url : $url");
     try {
       response = await dio.post(url, data: _map, options: opt);

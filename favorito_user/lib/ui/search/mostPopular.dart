@@ -1,3 +1,4 @@
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
@@ -52,15 +53,14 @@ class _mostPopularState extends State<MostPopular> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(12))),
                             elevation: 10,
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12)),
-                              child: Image.network(
-                                dataList[index].photo,
-                                height: sm.h(16),
-                                fit: BoxFit.cover,
-                                width: sm.w(34),
-                              ),
+                            child: SizedBox(
+                              height: sm.h(16),
+                              width: sm.w(34),
+                              child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12)),
+                                  child:
+                                      ImageMaster(url: dataList[index].photo)),
                             ),
                           ),
                         ),

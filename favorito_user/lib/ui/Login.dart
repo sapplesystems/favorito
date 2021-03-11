@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter/services.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
@@ -153,7 +152,9 @@ class _LoginState extends State<Login> {
                           child: Center(
                               child: Text("Login",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Gilroy-Light',
                                       color: myRed)))))
                 ]))));
   }

@@ -3,14 +3,17 @@ import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 
 class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
@@ -45,6 +48,7 @@ class _HomeState extends State<Home> {
     sm = SizeManager(context);
 
     return Scaffold(
+      key: RIKeys.josKeys3,
       backgroundColor: myBackGround,
       body: ListView(
         children: [
@@ -81,7 +85,15 @@ class _HomeState extends State<Home> {
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('title', textAlign: TextAlign.start),
+                          Text(
+                            Provider.of<PersonalInfoProvider>(context,
+                                    listen: true)
+                                .username,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Gilroy-Bold'),
+                          ),
                           Text(data?.getSelectedAddress(),
                               textAlign: TextAlign.start)
                         ]);

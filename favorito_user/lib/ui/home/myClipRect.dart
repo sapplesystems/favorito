@@ -1,12 +1,11 @@
 import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
-import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 
 class myClipRect extends StatelessWidget {
   SizeManager sm;

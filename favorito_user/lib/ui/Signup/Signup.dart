@@ -11,22 +11,22 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatelessWidget {
-  SignupProvider spTrue;
+  SignupProvider vaTrue;
   SignupProvider spFalse;
   SizeManager sm;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    spTrue = Provider.of<SignupProvider>(context, listen: true);
+    vaTrue = Provider.of<SignupProvider>(context, listen: true);
     spFalse = Provider.of<SignupProvider>(context, listen: false);
-    spTrue.setContext(context);
+    vaTrue.setContext(context);
     return WillPopScope(
       onWillPop: () {
-        spTrue.allClear();
+        vaTrue.allClear();
         Navigator.pop(context);
       },
       child: Scaffold(
-        key: spTrue.scaffoldKey,
+        key: vaTrue.scaffoldKey,
         body: Container(
           height: sm.h(100),
           width: sm.w(100),
@@ -55,59 +55,69 @@ class Signup extends StatelessWidget {
                     builder: (context) => Form(
                         key: spFalse.formKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: Column(children: [
-                          for (int i = 0; i < spFalse.title.length; i++)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
-                              child: EditTextComponent(
-                                ctrl: spTrue.acces[i].controller,
-                                title: spTrue.title[i],
-                                hint: spTrue.title[i],
-                                myOnChanged: (s) {
-                                  if (i == 5) {
-                                    spTrue.acces[i].error =
-                                        Validator().validateId(s);
-                                    if (!s.toString().contains('@')) {
-                                      spTrue.acces[i].controller.text = '';
-                                    }
-                                  }
-                                  spFalse.onChange(i);
-                                },
-                                suffixTap: () => spTrue.checkIdClicked(i),
-                                suffixTxt: i == 5 ? spTrue.checkId : '',
-                                error: spTrue.acces[i].error,
-                                security: i == 3 ? true : false,
-                                valid: true,
-                                maxLines: 1,
-                                formate: (i == 1 || i == 4)
-                                    ? FilteringTextInputFormatter.digitsOnly
-                                    : FilteringTextInputFormatter
-                                        .singleLineFormatter,
-                                maxlen: i == 1
-                                    ? 10
-                                    : i == 4
-                                        ? 6
-                                        : 50,
-                                keyboardSet: i == 2
-                                    ? TextInputType.emailAddress
-                                    : (i == 1 || i == 4)
-                                        ? TextInputType.phone
-                                        : TextInputType.text,
-                                prefixIcon: spTrue.prefix[i],
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (int i = 0; i < spFalse.title.length; i++)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: EditTextComponent(
+                                    ctrl: vaTrue.acces[i].controller,
+                                    title: vaTrue.title[i],
+                                    hint: vaTrue.title[i],
+                                    errorColor: vaTrue.errorColor[i],
+                                    myOnChanged: (s) {
+                                      if (i == 6) {
+                                        vaTrue.acces[i].error =
+                                            Validator().validateId(s);
+                                        if (!s.toString().contains('@')) {
+                                          vaTrue.acces[i].controller.text = '';
+                                        } else {
+                                          vaTrue.setCheckId('verify');
+                                        }
+                                      }
+                                      spFalse.onChange(i);
+                                    },
+                                    suffixTap: () => vaTrue.checkIdClicked(i),
+                                    suffixTxt:
+                                        i == 6 ? vaTrue.getCheckId() : '',
+                                    error: vaTrue.acces[i].error,
+                                    security: i == 3 ? true : false,
+                                    valid: true,
+                                    maxLines: 1,
+                                    formate: (i == 1 || i == 4)
+                                        ? FilteringTextInputFormatter.digitsOnly
+                                        : FilteringTextInputFormatter
+                                            .singleLineFormatter,
+                                    maxlen: i == 1
+                                        ? 10
+                                        : i == 4
+                                            ? 6
+                                            : 50,
+                                    keyboardSet: i == 2
+                                        ? TextInputType.emailAddress
+                                        : (i == 1 || i == 4)
+                                            ? TextInputType.phone
+                                            : TextInputType.text,
+                                    prefixIcon: vaTrue.prefix[i],
+                                  ),
+                                ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 50),
+                                child: Text(vaTrue.checkIdMessage,
+                                    style: TextStyle(color: myGreyDark)),
                               ),
-                            ),
-                          tcp(
-                            key: key,
-                            sm: sm,
-                            newValue: spTrue.newValue,
-                            newValue1: spTrue.newValue1,
-                            returnValue: (a, b) {
-                              spTrue.newValue = a;
-                              spTrue.newValue1 = b;
-                            },
-                          ),
-                        ]))),
+                              tcp(
+                                key: key,
+                                sm: sm,
+                                newValue: vaTrue.newValue,
+                                newValue1: vaTrue.newValue1,
+                                returnValue: (a, b) {
+                                  vaTrue.newValue = a;
+                                  vaTrue.newValue1 = b;
+                                },
+                              ),
+                            ]))),
               ),
               Center(
                 child: Padding(
@@ -146,7 +156,7 @@ class Signup extends StatelessWidget {
                       boxShape: NeumorphicBoxShape.roundRect(
                           BorderRadius.all(Radius.circular(24.0)))),
                   margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
-                  onPressed: () => spTrue.funSubmit(),
+                  onPressed: () => vaTrue.funSubmit(),
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: Center(
                     child: Text(
