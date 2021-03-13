@@ -179,16 +179,43 @@ class APIManager {
   }
 
   static Future<SearchBusinessListModel> search(
-      context, String searchString) async {
+      String searchString, GlobalKey<ScaffoldState> josKeys) async {
+    if (!await utilProvider.checkInternet())
+      return SearchBusinessListModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(josKeys.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     String token = await Prefs.token;
     String url = service.search;
+    print("url:$url");
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"keyword": searchString};
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, josKeys);
+    } finally {
+      pr.hide();
+    }
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
@@ -269,17 +296,40 @@ class APIManager {
   }
 
   static Future<SearchBusinessListModel> freelanceBusiness(
-      context, String searchString) async {
+      String searchString, GlobalKey<ScaffoldState> josKeys) async {
+    if (!await utilProvider.checkInternet())
+      return SearchBusinessListModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(josKeys.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
     String token = await Prefs.token;
     String url = service.freelanceBusiness;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"keyword": searchString};
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
-
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, josKeys);
+    } finally {
+      pr.hide();
+    }
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
     return SearchBusinessListModel.fromJson(
@@ -862,5 +912,26 @@ class APIManager {
         print("$url:403");
       }
     }
+  }
+
+  static Future<void> onWillPop(context) async {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new FlatButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 }

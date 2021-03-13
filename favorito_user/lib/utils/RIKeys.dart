@@ -5,5 +5,6 @@ class RIKeys {
   static final josKeys1 = GlobalKey<ScaffoldState>();
   static final josKeys2 = GlobalKey<ScaffoldState>();
   static final josKeys3 = GlobalKey<ScaffoldState>(); //home
-  static final josKeys4 = GlobalKey();
+  static final josKeys4 = GlobalKey<ScaffoldState>(); //SearchResult
+
 }

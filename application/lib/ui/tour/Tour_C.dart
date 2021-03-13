@@ -40,11 +40,8 @@ class Tour_c extends StatelessWidget {
                       top: sm.h(20),
                       left: sm.w(2),
                       right: sm.w(2),
-                      child: SvgPicture.asset(
-                        'assets/icon/img1.svg',
-                        alignment: Alignment.center,
-                        height: sm.h(30),
-                      )),
+                      child: SvgPicture.asset('assets/icon/img1.svg',
+                          alignment: Alignment.center, height: sm.h(30))),
                   Positioned(
                       top: sm.h(52),
                       left: sm.w(12),

@@ -186,7 +186,7 @@ class _NewAppointmentState extends State<NewAppointment> {
                     Padding(
                       padding: EdgeInsets.only(top: sm.h(4)),
                       child: EditTextComponent(
-                        ctrl: _myNotesEditTextController,
+                        controller: _myNotesEditTextController,
                         title: "Special Notes",
                         hint: "Enter Special Notes",
                         maxLines: 4,

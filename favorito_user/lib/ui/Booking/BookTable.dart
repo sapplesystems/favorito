@@ -126,7 +126,7 @@ class BookTable extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: sm.h(4)),
                                     child: EditTextComponent(
-                                      ctrl: _myUserNameEditTextController,
+                                      controller: _myUserNameEditTextController,
                                       title: "Name",
                                       hint: "Enter Name",
                                       maxLines: 1,
@@ -136,7 +136,7 @@ class BookTable extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: sm.h(4)),
                                     child: EditTextComponent(
-                                      ctrl: _myMobileEditTextController,
+                                      controller: _myMobileEditTextController,
                                       title: "Mobile",
                                       hint: "Enter Mobile",
                                       maxLines: 1,
@@ -146,7 +146,7 @@ class BookTable extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: sm.h(4)),
                                     child: EditTextComponent(
-                                      ctrl: _myNotesEditTextController,
+                                      controller: _myNotesEditTextController,
                                       title: "Special Notes",
                                       hint: "Enter Special Notes",
                                       maxLines: 4,

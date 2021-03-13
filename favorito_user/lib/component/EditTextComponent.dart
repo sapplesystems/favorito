@@ -2,6 +2,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/svg.dart';
 
 class EditTextComponent extends StatefulWidget {
   String title;
@@ -13,7 +14,7 @@ class EditTextComponent extends StatefulWidget {
   bool isEnabled;
   TextInputType keyboardSet;
   TextInputAction keyBoardAction;
-  TextEditingController ctrl;
+  TextEditingController controller;
   RegExp myregex;
   String prefixIcon;
   FilteringTextInputFormatter formate;
@@ -28,7 +29,7 @@ class EditTextComponent extends StatefulWidget {
       {this.title,
       this.security,
       this.hint,
-      this.ctrl,
+      this.controller,
       this.formate,
       this.maxlen,
       this.keyboardSet,
@@ -63,7 +64,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
                 BorderRadius.all(Radius.circular(30.0)))),
         child: Container(
           child: TextFormField(
-            controller: widget.ctrl,
+            controller: widget.controller,
             obscureText: widget.security,
             maxLength: widget.maxlen,
             inputFormatters: [
@@ -75,7 +76,12 @@ class _EditTextComponentState extends State<EditTextComponent> {
                   child: Text(widget.suffixTxt ?? null)),
               prefixIcon: widget.prefixIcon == 'mail'
                   ? InkWell(
-                      child: Icon(Icons.mail_outline),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                        child: SvgPicture.asset("assets/icon/enovelop.svg",
+                            fit: BoxFit.fill, height: 1, width: 1),
+                      ),
                       onTap: () {},
                     )
                   : widget.prefixIcon == 'password'
@@ -116,13 +122,13 @@ class _EditTextComponentState extends State<EditTextComponent> {
                                             )
                                           : null,
               counterText: "",
-              hintText: widget.hint ?? 'fdhjkg',
+              hintText: widget.hint ?? '',
               alignLabelWithHint: true,
               contentPadding: EdgeInsets.only(top: 14, right: 16),
               fillColor: Colors.transparent,
               border: InputBorder.none,
             ),
-            autofocus: true,
+            autofocus: false,
             keyboardType: widget.keyboardSet,
             textInputAction: widget.keyBoardAction,
             style: TextStyle(fontFamily: "Poppins"),
@@ -143,7 +149,4 @@ class _EditTextComponentState extends State<EditTextComponent> {
       )
     ]);
   }
-
-  // ignore: missing_return
-
 }

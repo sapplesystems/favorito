@@ -51,7 +51,7 @@ class ForgetPassword extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: EditTextComponent(
-                      ctrl: prTrue.acces[0].controller,
+                      controller: prTrue.acces[0].controller,
                       hint: prFalse.title[0],
                       security: false,
                       valid: true,
@@ -143,7 +143,7 @@ class ForgetPassword extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: EditTextComponent(
-                            ctrl: prTrue.acces[i].controller,
+                            controller: prTrue.acces[i].controller,
                             title: prFalse.title[i],
                             hint: prFalse.title[i],
                             security: true,

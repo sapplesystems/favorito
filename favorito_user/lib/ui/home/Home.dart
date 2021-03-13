@@ -1,6 +1,7 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
@@ -47,143 +48,147 @@ class _HomeState extends State<Home> {
     widget.pr.style(message: 'Fetching Data, please wait');
     sm = SizeManager(context);
 
-    return Scaffold(
-      key: RIKeys.josKeys3,
-      backgroundColor: myBackGround,
-      body: ListView(
-        children: [
-          Container(
-            padding: EdgeInsets.all(sm.w(4)),
-            margin: EdgeInsets.only(top: sm.h(2)),
-            color: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    width: sm.w(20),
-                    padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                    child: myClipRect()),
-                Container(
-                  width: sm.w(60),
-                  child: InkWell(onTap: () {
-                    showModalBottomSheet<void>(
-                        enableDrag: true,
-                        isScrollControlled: true,
-                        context: context,
-                        backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-                        builder: (BuildContext context) {
-                          return StatefulBuilder(builder:
-                              (BuildContext context, StateSetter setState) {
-                            return Container(
-                                height: sm.h(70),
-                                decoration: BoxDecoration(color: Colors.white),
-                                child: UserAddress());
+    return WillPopScope(
+      onWillPop: () => APIManager.onWillPop(context),
+      child: Scaffold(
+        key: RIKeys.josKeys3,
+        backgroundColor: myBackGround,
+        body: ListView(
+          children: [
+            Container(
+              padding: EdgeInsets.all(sm.w(4)),
+              margin: EdgeInsets.only(top: sm.h(2)),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      width: sm.w(20),
+                      padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                      child: myClipRect()),
+                  Container(
+                    width: sm.w(60),
+                    child: InkWell(onTap: () {
+                      showModalBottomSheet<void>(
+                          enableDrag: true,
+                          isScrollControlled: true,
+                          context: context,
+                          backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(builder:
+                                (BuildContext context, StateSetter setState) {
+                              return Container(
+                                  height: sm.h(70),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
+                                  child: UserAddress());
+                            });
                           });
-                        });
-                  }, child: Consumer<UserAddressProvider>(
-                      builder: (context, data, child) {
-                    return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            Provider.of<PersonalInfoProvider>(context,
-                                    listen: true)
-                                .username,
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Gilroy-Bold'),
-                          ),
-                          Text(data?.getSelectedAddress(),
-                              textAlign: TextAlign.start)
-                        ]);
-                  })),
-                ),
-                Container(
-                  width: sm.w(12),
-                  padding: EdgeInsets.only(right: sm.w(2), bottom: sm.w(4)),
-                  child: IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/icon/image_scanner.svg',
-                        height: sm.h(3),
-                        fit: BoxFit.fill,
-                      ),
-                      onPressed: () {}),
-                )
-              ],
-            ),
-          ),
-          Container(height: sm.h(30), child: myCarousel()),
-          Padding(
-            padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
-            child: EditTextComponent(
-              ctrl: _mySearchEditTextController,
-              hint: "Search",
-              suffixTxt: '',
-              security: false,
-              valid: false,
-              error: '',
-              keyboardSet: TextInputType.text,
-              prefixIcon: 'search',
-              keyBoardAction: TextInputAction.search,
-              atSubmit: (_val) {
-                Navigator.of(context).pushNamed('/searchResult',
-                    arguments: SearchReqData(text: _val));
-              },
-              prefClick: () {
-                Navigator.of(context).pushNamed('/searchResult',
-                    arguments:
-                        SearchReqData(text: _mySearchEditTextController.text));
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(sm.w(4)),
-            child: Wrap(
-              runSpacing: sm.h(5),
-              spacing: sm.h(5),
-              alignment: WrapAlignment.center,
-              children: [
-                for (var i = 0; i < widget.imagName.length; i++)
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/searchResult',
-                          arguments:
-                              SearchReqData(category: widget.imagName[i]));
-                    },
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Neumorphic(
-                              style: NeumorphicStyle(
-                                  shape: NeumorphicShape.convex,
-                                  depth: 8,
-                                  lightSource: LightSource.topLeft,
-                                  color: myButtonBackground,
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                    BorderRadius.all(Radius.circular(12.0)),
-                                  )),
-                              child: Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.all(sm.h(3.5)),
-                                child: SvgPicture.asset(
-                                  'assets/icon/${widget.image[i]}.svg',
-                                  height: sm.h(3.5),
-                                ),
-                              )),
-                          Padding(
-                            padding: EdgeInsets.only(top: sm.h(2.5)),
-                            child: Text(widget.imagName[i].toString(),
-                                textAlign: TextAlign.center),
-                          ),
-                        ]),
+                    }, child: Consumer<UserAddressProvider>(
+                        builder: (context, data, child) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              Provider.of<PersonalInfoProvider>(context,
+                                      listen: true)
+                                  .username,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Gilroy-Bold'),
+                            ),
+                            Text(data?.getSelectedAddress(),
+                                textAlign: TextAlign.start)
+                          ]);
+                    })),
                   ),
-              ],
+                  Container(
+                    width: sm.w(12),
+                    padding: EdgeInsets.only(right: sm.w(2), bottom: sm.w(4)),
+                    child: IconButton(
+                        icon: SvgPicture.asset(
+                          'assets/icon/image_scanner.svg',
+                          height: sm.h(3),
+                          fit: BoxFit.fill,
+                        ),
+                        onPressed: () {}),
+                  )
+                ],
+              ),
             ),
-          ),
-          header(sm, "Hot & New Business"),
-          HotAndNewBusiness(),
-        ],
+            Container(height: sm.h(30), child: myCarousel()),
+            Padding(
+              padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
+              child: EditTextComponent(
+                controller: _mySearchEditTextController,
+                hint: "Search",
+                suffixTxt: '',
+                security: false,
+                valid: false,
+                error: '',
+                keyboardSet: TextInputType.text,
+                prefixIcon: 'search',
+                keyBoardAction: TextInputAction.search,
+                atSubmit: (_val) {
+                  Navigator.of(context).pushNamed('/searchResult',
+                      arguments: SearchReqData(text: _val));
+                },
+                prefClick: () {
+                  Navigator.of(context).pushNamed('/searchResult',
+                      arguments: SearchReqData(
+                          text: _mySearchEditTextController.text));
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(sm.w(4)),
+              child: Wrap(
+                runSpacing: sm.h(5),
+                spacing: sm.h(5),
+                alignment: WrapAlignment.center,
+                children: [
+                  for (var i = 0; i < widget.imagName.length; i++)
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/searchResult',
+                            arguments:
+                                SearchReqData(category: widget.imagName[i]));
+                      },
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Neumorphic(
+                                style: NeumorphicStyle(
+                                    shape: NeumorphicShape.convex,
+                                    depth: 8,
+                                    lightSource: LightSource.topLeft,
+                                    color: myButtonBackground,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                    )),
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.all(sm.h(3.5)),
+                                  child: SvgPicture.asset(
+                                    'assets/icon/${widget.image[i]}.svg',
+                                    height: sm.h(3.5),
+                                  ),
+                                )),
+                            Padding(
+                              padding: EdgeInsets.only(top: sm.h(2.5)),
+                              child: Text(widget.imagName[i].toString(),
+                                  textAlign: TextAlign.center),
+                            ),
+                          ]),
+                    ),
+                ],
+              ),
+            ),
+            header(sm, "Hot & New Business"),
+            HotAndNewBusiness(),
+          ],
+        ),
       ),
     );
   }

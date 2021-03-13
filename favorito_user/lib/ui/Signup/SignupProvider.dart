@@ -31,7 +31,7 @@ class SignupProvider extends ChangeNotifier {
     'Password',
     'Postal',
     'Short discription',
-    'UniquiId',
+    'Unique Id',
   ];
 
   List<String> prefix = [
@@ -67,7 +67,7 @@ class SignupProvider extends ChangeNotifier {
     acces[2].error = validator.validateEmail(acces[2].controller.text);
     acces[3].error = validator.validatePassword(acces[3].controller.text);
     acces[4].error = validator.validatePin(acces[4].controller.text);
-    // acces[5].error = validator.validateId(acces[5].controller.text);
+    acces[6].error = validator.validateId(acces[6].controller.text);
 
     notifyListeners();
     print("ffff$uniqueId:${acces[0].error}");
@@ -210,7 +210,8 @@ class SignupProvider extends ChangeNotifier {
         {
           if (acces[_index].controller.text.length > 2)
             acces[_index].error = 'Please check availability';
-
+          else
+            acces[_index].error = 'Field required';
           errorColor[_index] = null;
           notifyListeners();
         }

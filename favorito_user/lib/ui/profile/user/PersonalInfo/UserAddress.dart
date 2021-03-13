@@ -24,6 +24,10 @@ class UserAddress extends StatelessWidget {
                   Row(children: [
                     InkWell(
                         onTap: () => vaTrue.getAddress(),
+                        child: Icon(Icons.add_rounded, color: Colors.black)),
+                    SizedBox(width: 10),
+                    InkWell(
+                        onTap: () => vaTrue.getAddress(),
                         child: Icon(Icons.refresh, color: Colors.black)),
                     SizedBox(width: 10),
                     InkWell(

@@ -22,8 +22,8 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    controller[0].text = "rohit.shukla@sapple.co.in";
-    controller[1].text = "Sapple@123";
+    // controller[0].text = "rohit.shukla@sapple.co.in";
+    // controller[1].text = "Sapple@123";
   }
 
   @override
@@ -31,15 +31,13 @@ class _LoginState extends State<Login> {
     SizeManager sm = SizeManager(context);
 
     return WillPopScope(
-        onWillPop: () {
-          _onWillPop();
-        },
+        onWillPop: () => APIManager.onWillPop(context),
         child: Scaffold(
             key: _scaffoldKey,
             backgroundColor: Color(0xffedf0f5),
             body: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: sm.w(10), vertical: sm.h(5)),
+                padding: EdgeInsets.only(
+                    left: sm.w(10), right: sm.w(10), top: sm.h(5)),
                 child: ListView(shrinkWrap: true, children: [
                   SvgPicture.asset('assets/icon/login_image.svg',
                       height: sm.h(30), fit: BoxFit.fill),
@@ -51,72 +49,42 @@ class _LoginState extends State<Login> {
                           letterSpacing: 1.4,
                           fontSize: 28)),
                   Builder(
-                    builder: (context) => Form(
-                      key: _formKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: Column(children: [
-                        for (int i = 0; i < title.length; i++)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: EditTextComponent(
-                              ctrl: controller[i],
-                              hint: title[i],
-                              security: i == 1 ? true : false,
-                              valid: true,
-                              suffixTap: () {},
-                              suffixTxt: '',
-                              maxLines: 1,
-                              formate: FilteringTextInputFormatter
-                                  .singleLineFormatter,
-                              maxlen: i == 1 ? 12 : 30,
-                              keyboardSet: i == 0
-                                  ? TextInputType.emailAddress
-                                  : TextInputType.text,
-                              prefixIcon: prefix[i],
-                            ),
-                          ),
-                        InkWell(
-                          onTap: () => Navigator.of(context)
-                              .pushNamed('/forgetPassword'),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'Forget password',
-                                  style: TextStyle(color: myRed),
-                                )
-                              ]),
-                        )
-                      ]),
-                    ),
-                  ),
-                  Center(
-                      child: Padding(
-                          padding: EdgeInsets.only(top: sm.h(6)),
-                          child: Text(
-                            "Dont have account yet?",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: myGrey,
-                                fontSize: 16),
-                          ))),
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: sm.h(1)),
-                      child: InkWell(
-                        onTap: () => Navigator.of(context).pushNamed('/signUp'),
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: myRed),
-                        ),
-                      ),
-                    ),
-                  ),
+                      builder: (context) => Form(
+                          key: _formKey,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          child: Column(children: [
+                            for (int i = 0; i < title.length; i++)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: EditTextComponent(
+                                  controller: controller[i],
+                                  hint: title[i],
+                                  security: i == 1 ? true : false,
+                                  valid: true,
+                                  suffixTap: () {},
+                                  suffixTxt: '',
+                                  maxLines: 1,
+                                  formate: FilteringTextInputFormatter
+                                      .singleLineFormatter,
+                                  maxlen: i == 1 ? 12 : 30,
+                                  keyboardSet: i == 0
+                                      ? TextInputType.emailAddress
+                                      : TextInputType.text,
+                                  prefixIcon: prefix[i],
+                                ),
+                              ),
+                            InkWell(
+                                onTap: () => Navigator.of(context)
+                                    .pushNamed('/forgetPassword'),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text('Forgot password ?  ',
+                                          style: TextStyle(color: myRed))
+                                    ]))
+                          ]))),
                   Padding(
-                      padding: EdgeInsets.only(top: sm.h(6)),
+                      padding: EdgeInsets.only(top: sm.h(5)),
                       child: NeumorphicButton(
                           style: NeumorphicStyle(
                               // shape: NeumorphicShape.concave,
@@ -137,9 +105,10 @@ class _LoginState extends State<Login> {
                               APIManager.login(_map, _scaffoldKey)
                                   .then((value) {
                                 if (value.status == "success") {
+                                  Prefs.setToken(value.token);
                                   Prefs.setPOSTEL(
                                       int.parse(value.data.postel ?? "201306"));
-                                  Prefs.setToken(value.token);
+
                                   print("token : ${value.token}");
                                   Navigator.pop(context);
                                   Navigator.of(context).pushNamed('/navbar');
@@ -155,28 +124,32 @@ class _LoginState extends State<Login> {
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'Gilroy-Light',
-                                      color: myRed)))))
+                                      color: myRed))))),
+                  Center(
+                      child: Padding(
+                          padding: EdgeInsets.only(top: sm.h(4)),
+                          child: Text(
+                            "Dont have account yet?",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: myGrey,
+                                fontSize: 16),
+                          ))),
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: sm.h(4)),
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pushNamed('/signUp'),
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: myRed),
+                        ),
+                      ),
+                    ),
+                  ),
                 ]))));
-  }
-
-  Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit an App'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        )) ??
-        false;
   }
 }

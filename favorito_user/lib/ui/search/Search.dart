@@ -21,55 +21,67 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    return Container(
-      height: sm.h(100),
-      decoration: BoxDecoration(color: myBackGround),
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          Padding(
-            padding:
-                EdgeInsets.only(right: sm.h(5), top: sm.h(5), left: sm.h(5)),
-            child: EditTextComponent(
-              ctrl: _mySearchEditTextController,
-              title: "Search for ...",
-              security: false,
-              valid: true,
-              prefixIcon: 'search',
-              prefClick: () {
-                Navigator.of(context).pushNamed('/searchResult',
-                    arguments:
-                        SearchReqData(text: _mySearchEditTextController.text));
-              },
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0xffF9FAFF),
+        body: ListView(
+          children: [
+            Container(
+              height: sm.h(10.8),
+              padding: EdgeInsets.only(
+                  right: sm.h(3), top: sm.h(2), left: sm.h(3), bottom: 0),
+              child: EditTextComponent(
+                controller: _mySearchEditTextController,
+                title: "Search for ...",
+                security: false,
+                maxLines: 1,
+                maxlen: 100,
+                suffixTxt: '',
+                prefixIcon: 'search',
+                prefClick: () {
+                  Navigator.of(context).pushNamed('/searchResult',
+                      arguments: SearchReqData(
+                          text: _mySearchEditTextController.text ?? ''));
+                },
+              ),
             ),
-          ),
-          header(sm, "Trending Nearby"),
-          trendingNearby(),
-          header(sm, "Hot & New Business"),
-          Container(
-            // height: sm.h(28),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: sm.h(2)),
-              child: HotAndNewBusiness(),
-            ),
-          ),
-          header(sm, "Top Rated"),
-          Container(
-            height: sm.h(35),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: sm.h(2)),
-              child: TopRated(sm: sm),
-            ),
-          ),
-          header(sm, "Most Popular"),
-          Container(
-            height: sm.h(32),
-            padding: EdgeInsets.only(bottom: sm.h(2)),
-            child: MostPopular(),
-          ),
-        ],
+            Container(
+              height: sm.h(82),
+              decoration: BoxDecoration(color: myBackGround),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  header(sm, "Trending Nearby"),
+                  trendingNearby(),
+                  header(sm, "Hot & New Business"),
+                  Container(
+                    // height: sm.h(28),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: sm.h(2)),
+                      child: HotAndNewBusiness(),
+                    ),
+                  ),
+                  header(sm, "Top Rated"),
+                  Container(
+                    height: sm.h(35),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: sm.h(2)),
+                      child: TopRated(sm: sm),
+                    ),
+                  ),
+                  header(sm, "Most Popular"),
+                  Container(
+                    height: sm.h(32),
+                    padding: EdgeInsets.only(bottom: sm.h(2)),
+                    child: MostPopular(),
+                  ),
+                ],
+              ),
+            ).safe(),
+          ],
+        ),
       ),
-    ).safe();
+    );
   }
 
   Widget header(SizeManager sm, String title) {

@@ -3,6 +3,7 @@ import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../utils/MyColors.dart';
 
@@ -31,49 +32,48 @@ class Profile extends StatefulWidget {
     "Delete Acount",
     'Logout'
   ];
-
-  List<Icon> menuIconList = [
-    Icon(Icons.edit_outlined),
-    Icon(Icons.star_outline),
-    Icon(Icons.camera_outlined),
-    Icon(Icons.check_circle_outline),
-    Icon(Icons.favorite_outline_outlined),
-    Icon(Icons.share_outlined),
-    Icon(Icons.gps_fixed_outlined),
-    Icon(Icons.add_shopping_cart_outlined),
-    Icon(Icons.child_friendly_outlined),
-    Icon(Icons.follow_the_signs_outlined),
-    Icon(Icons.follow_the_signs_outlined),
-    Icon(Icons.follow_the_signs_outlined),
-    Icon(Icons.search_outlined),
-    Icon(Icons.favorite_outline_outlined),
-    Icon(Icons.block_outlined),
-    Icon(Icons.text_format_sharp),
-    Icon(Icons.privacy_tip_outlined),
-    Icon(Icons.local_police_rounded),
-    Icon(Icons.login_outlined),
-    Icon(Icons.delete_forever_outlined),
-    Icon(Icons.power_settings_new),
-  ];
 }
 
 class _ProfileState extends State<Profile> {
+  List menuIconList = [
+    'edit',
+    'star',
+    'camera',
+    'check',
+    'favorite',
+    'refer',
+    'location',
+    'bucket',
+    'friend',
+    'follow',
+    'following',
+    'shirt',
+    'find',
+    'heart',
+    'block',
+    'term',
+    'privacy',
+    'license',
+    'changePass',
+    'delete',
+    'logout'
+  ];
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myBackGround,
-      appBar: AppBar(
-          toolbarHeight: sm.h(5),
-          backgroundColor: myBackGround,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
-          title: Text(
-            "My Profile",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
-          )),
-      body: ListView(
-        children: [
+        backgroundColor: myBackGround,
+        appBar: AppBar(
+            toolbarHeight: sm.h(5),
+            backgroundColor: myBackGround,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.black),
+            title: Text(
+              "My Profile",
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+            )),
+        body: ListView(children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
             height: sm.h(20),
@@ -140,24 +140,20 @@ class _ProfileState extends State<Profile> {
           ),
           Divider(height: 10, color: myGrey),
           Container(
-            height: sm.h(60),
-            child: ListView.builder(
-              itemCount: widget.menuTitleList.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                List<int> _ls = [7, 14, 17];
-                return !_ls.contains(index)
-                    ? menuItems(sm, index)
-                    : Column(children: [
-                        menuItems(sm, index),
-                        Divider(height: 10, color: myGrey),
-                      ]);
-              },
-            ),
-          )
-        ],
-      ),
-    );
+              height: sm.h(60),
+              child: ListView.builder(
+                  itemCount: widget.menuTitleList.length,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    List<int> _ls = [7, 14, 17];
+                    return !_ls.contains(index)
+                        ? menuItems(sm, index)
+                        : Column(children: [
+                            menuItems(sm, index),
+                            Divider(height: 10, color: myGrey)
+                          ]);
+                  }))
+        ]));
   }
 
   Widget menuItems(SizeManager sm, int identifier) {
@@ -183,7 +179,7 @@ class _ProfileState extends State<Profile> {
         padding: EdgeInsets.symmetric(horizontal: sm.w(5), vertical: sm.h(1)),
         child: Row(
           children: [
-            widget.menuIconList[identifier],
+            SvgPicture.asset('assets/icon/${menuIconList[identifier]}.svg'),
             Padding(
               padding: EdgeInsets.only(left: sm.w(4)),
               child: Text(widget.menuTitleList[identifier],

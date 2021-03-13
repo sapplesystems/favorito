@@ -52,7 +52,7 @@ class PersonalInfoProvider extends ChangeNotifier {
         acces[2].controller.text = v.shortDescription;
         newValue = v.reachWhatsapp == 1 ? true : false;
       }
-      notifyListeners();
+      // notifyListeners();
     });
   }
 
