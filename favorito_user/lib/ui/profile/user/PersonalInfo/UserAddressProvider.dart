@@ -7,6 +7,8 @@ import '../../../../utils/Extentions.dart';
 class UserAddressProvider extends ChangeNotifier {
   String _profileImage;
   AddressListModel addressListModel = AddressListModel();
+  String _city;
+  String _state;
   UserAddressProvider() {
     getAddress();
     getUserImage();
@@ -22,6 +24,8 @@ class UserAddressProvider extends ChangeNotifier {
     });
   }
 
+  String get city => _city;
+  String get state => _state;
   seSelectedAddress(int index) async {
     await APIManager.changeAddress(
         {'default_address_id': this.addressListModel.data.addresses[index].id},
@@ -42,6 +46,8 @@ class UserAddressProvider extends ChangeNotifier {
     for (int i = 0; i < addressLength; i++) {
       if (this?.addressListModel?.data?.addresses[i]?.defaultAddress == 1) {
         _v = this?.addressListModel?.data?.addresses[i] ?? '';
+        _city = _v?.city ?? '';
+        _state = _v?.state ?? '';
         va =
             '${_v?.address?.capitalize() ?? ''},${_v?.city?.capitalize() ?? ''}';
 

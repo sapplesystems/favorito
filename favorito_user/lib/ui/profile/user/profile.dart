@@ -1,9 +1,12 @@
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../../utils/MyColors.dart';
 
@@ -56,7 +59,7 @@ class _ProfileState extends State<Profile> {
     'license',
     'changePass',
     'delete',
-    'logout'
+    'delete'
   ];
   @override
   Widget build(BuildContext context) {
@@ -80,57 +83,65 @@ class _ProfileState extends State<Profile> {
             width: sm.w(100),
             child: ListView(
               children: [
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfileDetail()));
-                      },
-                      child: Container(
-                          width: sm.w(25),
-                          height: sm.w(25),
-                          decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: new NetworkImage(
-                                      "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: sm.w(2)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Jessica Saint",
+                Row(children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfileDetail()));
+                    },
+                    child: Container(
+                        width: sm.w(25),
+                        height: sm.w(25),
+                        decoration: new BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: new DecorationImage(
+                                fit: BoxFit.fill,
+                                image: new NetworkImage(
+                                    "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: sm.w(2)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            Provider.of<PersonalInfoProvider>(context,
+                                    listen: true)
+                                .username,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                          Text("9718594728",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: myGrey)),
-                          Text("Surat, Gujrat",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: myGrey))
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Gilroy-Bold')),
+                        Text(
+                            Provider.of<PersonalInfoProvider>(context,
+                                    listen: true)
+                                .phone,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: myGrey)),
+                        Text(
+                            "${Provider.of<UserAddressProvider>(context, listen: true).city},${Provider.of<UserAddressProvider>(context, listen: true).state}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                                color: myGrey))
+                      ],
+                    ),
+                  )
+                ]),
                 Padding(
                   padding: EdgeInsets.only(top: sm.h(2)),
                   child: Text(
                     "Business manager at Avadh group of companies and always open for collaborations",
                     style: TextStyle(
                       fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Gilroy-Regular',
+                      letterSpacing: 0.28,
                       color: myGrey,
                     ),
                   ),
@@ -138,7 +149,11 @@ class _ProfileState extends State<Profile> {
               ],
             ),
           ),
-          Divider(height: 10, color: myGrey),
+          Divider(
+              height: 10,
+              color: Colors.grey.shade300,
+              endIndent: sm.w(5),
+              indent: sm.w(5)),
           Container(
               height: sm.h(60),
               child: ListView.builder(
@@ -150,7 +165,11 @@ class _ProfileState extends State<Profile> {
                         ? menuItems(sm, index)
                         : Column(children: [
                             menuItems(sm, index),
-                            Divider(height: 10, color: myGrey)
+                            Divider(
+                                height: 10,
+                                color: Colors.grey.shade300,
+                                endIndent: sm.w(5),
+                                indent: sm.w(5))
                           ]);
                   }))
         ]));
@@ -176,15 +195,24 @@ class _ProfileState extends State<Profile> {
         }
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: sm.w(5), vertical: sm.h(1)),
+        padding: EdgeInsets.symmetric(horizontal: sm.w(5), vertical: sm.h(.7)),
         child: Row(
           children: [
-            SvgPicture.asset('assets/icon/${menuIconList[identifier]}.svg'),
+            SizedBox(
+                width: 14,
+                height: 13,
+                child: SvgPicture.asset(
+                  'assets/icon/${menuIconList[identifier]}.svg',
+                  fit: BoxFit.fill,
+                )),
             Padding(
               padding: EdgeInsets.only(left: sm.w(4)),
-              child: Text(widget.menuTitleList[identifier],
+              child: Text('\t\t\t' + widget.menuTitleList[identifier],
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
+                    letterSpacing: 0.40,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Gilroy-Regular',
                     color: myGrey,
                   )),
             )

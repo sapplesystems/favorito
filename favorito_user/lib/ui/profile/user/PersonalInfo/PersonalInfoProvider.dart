@@ -13,7 +13,7 @@ class PersonalInfoProvider extends ChangeNotifier {
   List<Acces> acces = [for (int i = 0; i < 3; i++) Acces()];
   ProgressDialog pr;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  String _phone;
   GlobalKey key = GlobalKey();
   bool showSubmit = false;
   List<String> title = ['Full Name', 'Postal', 'Short discription'];
@@ -25,6 +25,10 @@ class PersonalInfoProvider extends ChangeNotifier {
   }
 
   String get username => _username;
+  String get phone {
+    return '${_phone.substring(0, 2)}\t${_phone.substring(2, 6)} ${_phone.substring(6, 10)}';
+  }
+
   void decideit() async {
     String token = await Prefs.token;
     print("token : $token");
@@ -51,8 +55,9 @@ class PersonalInfoProvider extends ChangeNotifier {
         acces[1].controller.text = v.postal;
         acces[2].controller.text = v.shortDescription;
         newValue = v.reachWhatsapp == 1 ? true : false;
+        _phone = v.phone;
       }
-      // notifyListeners();
+      notifyListeners();
     });
   }
 

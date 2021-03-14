@@ -20,19 +20,14 @@ class _usernameAddressState extends State<usernameAddress> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.addressData?.data?.userName ?? 'user',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            Text(widget._selectedAddress),
-          ],
-        ),
-      ),
-    );
+        child: Container(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+          Text(widget.addressData?.data?.userName ?? 'user',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          Text(widget._selectedAddress)
+        ])));
   }
 }
