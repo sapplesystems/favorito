@@ -9,6 +9,7 @@ import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
+import 'package:favorito_user/ui/profile/user/ProfileProvider.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -31,6 +32,7 @@ void main() {
           ChangeNotifierProvider(create: (context) => SignupProvider()),
           ChangeNotifierProvider(create: (context) => PersonalInfoProvider()),
           ChangeNotifierProvider(create: (context) => UserAddressProvider()),
+          ChangeNotifierProvider(create: (context) => ProfileProvider()),
           ChangeNotifierProvider(
               create: (context) => BusinessProfileProvider()),
           // Provider(create: (context) => MenuHomeProvider()),

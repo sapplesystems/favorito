@@ -18,7 +18,8 @@ class UserAddress extends StatelessWidget {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Saved Address',
+                  // Icon(Icons.),
+                  Text('My Addresses',
                       style:
                           TextStyle(fontSize: 22, fontFamily: 'Gilroy-Bold')),
                   Row(children: [

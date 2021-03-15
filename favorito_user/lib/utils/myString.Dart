@@ -45,3 +45,4 @@ String bookTable = 'Book Table';
 String fieldIsRequired = 'field is required..';
 String invalidUsername = 'Invalid username';
 String submit = 'Submit';
+String myAddress = 'My Addresses';
