@@ -10,5 +10,6 @@ class RIKeys {
   static final josKeys6 = GlobalKey<ScaffoldState>(); //AddAddress
   static final josKeys7 = GlobalKey<FormState>(); //AddAddressForm
   static final josKeys8 = GlobalKey<ScaffoldState>(); //UserAddress
+  static final josKeys9 = GlobalKey<ScaffoldState>(); //clipRect
 
 }

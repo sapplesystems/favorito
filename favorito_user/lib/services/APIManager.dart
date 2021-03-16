@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
+import 'package:favorito_user/model/ProfilePhoto.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
@@ -969,6 +970,55 @@ class APIManager {
 
     print("service.verifyOtp : ${response.toString}");
     return WorkingHoursModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<ProfilePhoto> profileImageUpdate(
+      File file, BuildContext _context) async {
+    if (!await utilProvider.checkInternet())
+      return ProfilePhoto(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(_context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap(
+        {"photo": await MultipartFile.fromFile(file.path, filename: fileName)});
+
+    try {
+      response = await dio.post(service.profileImageUpdate,
+          data: formData, options: _opt);
+      pr.hide();
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return ProfilePhoto(status: 'fail', message: "Server not responding");
+      }
+    } finally {
+      if (pr.isShowing()) pr.hide();
+    }
+    // response = await dio.post(serviceFunction.funProfileUpdatephoto,
+    //     data: formData, options: _opt);
+
+    return ProfilePhoto.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<CityStateModel> stateList(

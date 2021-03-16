@@ -1,10 +1,17 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/Acces.dart';
+import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 
 import '../../../../utils/Extentions.dart';
 
@@ -237,6 +244,41 @@ class UserAddressProvider extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  Future<void> getImage(ImgSource source, GlobalKey<ScaffoldState> key) async {
+    File image;
+    image = await ImagePickerGC.pickImage(
+        context: key.currentContext,
+        source: source,
+        imageQuality: 10,
+        cameraIcon: Icon(Icons.add, color: Colors.red));
+
+    File croppedFile = await ImageCropper.cropImage(
+            sourcePath: image.path,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            androidUiSettings: AndroidUiSettings(
+                toolbarTitle: 'Cropper',
+                toolbarColor: myRed,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            iosUiSettings: IOSUiSettings(minimumAspectRatio: 1.0))
+        .then((value) async {
+      // image = croppedFile;
+      image = value;
+      await APIManager.profileImageUpdate(image, key.currentContext).then(
+        (value) => getUserImage(),
+      );
+    });
+
+    notifyListeners();
   }
 
   // void getAllCity(String selectedCity, key) async {

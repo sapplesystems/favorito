@@ -13,11 +13,14 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../utils/Extentions.dart';
 
 class Waitlist extends StatefulWidget {
   WaitListDataModel data;
+
   Waitlist({this.data});
+
   @override
   _WaitlistState createState() => _WaitlistState();
 }
@@ -31,6 +34,7 @@ class _WaitlistState extends State<Waitlist> {
   var fut;
   Timer t;
   double per = 0;
+
   @override
   void initState() {
     fut = APIManager.baseUserWaitlistVerbose(
@@ -71,13 +75,15 @@ class _WaitlistState extends State<Waitlist> {
                 } catch (e) {
                   print('Error 1:${e.toString()}');
                 }
-                var v = snapshot.data?.data[0];
-                // if (data != v && !waiting) {
-                data?.partiesBeforeYou = v.partiesBeforeYou;
-                data?.businessName = v.businessName;
-                data?.availableTimeSlots = v.availableTimeSlots;
-                data?.minimumWaitTime = v.minimumWaitTime ?? '00:00:00';
-                // }
+                if (snapshot.data.data.length != 0) {
+                  var v = snapshot.data?.data[0];
+                  // if (data != v && !waiting) {
+                  data?.partiesBeforeYou = v?.partiesBeforeYou;
+                  data?.businessName = v?.businessName;
+                  data?.availableTimeSlots = v?.availableTimeSlots;
+                  data?.minimumWaitTime = v?.minimumWaitTime ?? '00:00:00';
+                  // }
+                }
 
                 return Padding(
                   padding: EdgeInsets.all(sm.w(6)),
@@ -107,106 +113,96 @@ class _WaitlistState extends State<Waitlist> {
     );
   }
 
-  Widget bodyPart() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: sm.h(60),
-            width: sm.w(40),
-            padding: EdgeInsets.only(left: sm.w(2)),
-            child: ListView(
-              children: [
-                beforeU(
-                    'Availeble slot',
-                    'wclock',
-                    data?.availableTimeSlots?.convert24to12() ??
-                        data.bookedSlot),
-                SizedBox(height: sm.h(6)),
-                Visibility(
-                    visible: waiting,
-                    child: beforeU(
-                        '# in Parties', 'admin', data?.noOfPerson.toString())),
-                Visibility(visible: waiting, child: SizedBox(height: sm.h(6))),
-                beforeU('Parties Before you', 'admin',
-                    data?.partiesBeforeYou.toString()),
-                SizedBox(height: sm.h(6)),
-                waitingTime(),
-              ],
-            ),
+  Widget bodyPart() =>
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Container(
+          height: sm.h(60),
+          width: sm.w(40),
+          padding: EdgeInsets.only(left: sm.w(2)),
+          child: ListView(
+            children: [
+              beforeU('Availeble slot', 'wclock',
+                  data?.availableTimeSlots?.convert24to12() ?? data.bookedSlot),
+              SizedBox(height: sm.h(6)),
+              Visibility(
+                  visible: waiting,
+                  child: beforeU(
+                      '# in Parties', 'admin', data?.noOfPerson.toString())),
+              Visibility(visible: waiting, child: SizedBox(height: sm.h(6))),
+              beforeU('Parties Before you', 'admin',
+                  data?.partiesBeforeYou.toString()),
+              SizedBox(height: sm.h(6)),
+              waitingTime(),
+            ],
           ),
-          Container(
-            height: sm.h(60),
-            width: sm.w(28),
-            child: ListView(
-              children: [
-                for (int i = 0;
-                    i <
-                        (!waiting
-                            ? data?.partiesBeforeYou ?? 0
-                            : (data?.partiesBeforeYou + 1));
-                    i++)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: sm.h(2.4),
-                          width: sm.w(8),
-                          padding: EdgeInsets.only(
-                            left: sm.w(1.2),
-                          ),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            fit: BoxFit.fitWidth,
-                            image: AssetImage((data.userId != null &&
+        ),
+        Container(
+          height: sm.h(60),
+          width: sm.w(28),
+          child: ListView(children: [
+            for (int i = 0;
+                i <
+                    (!waiting
+                        ? data?.partiesBeforeYou ?? 0
+                        : (data?.partiesBeforeYou + 1));
+                i++)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: sm.h(2.4),
+                        width: sm.w(8),
+                        padding: EdgeInsets.only(
+                          left: sm.w(1.2),
+                        ),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                          fit: BoxFit.fitWidth,
+                          image: AssetImage((data.userId != null &&
+                                  i == data?.partiesBeforeYou)
+                              ? "assets/icon/arrowRed.png"
+                              : ''),
+                        )),
+                        child: Text(
+                          (i + 1).toString() ?? '',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: (data.userId != null &&
                                     i == data?.partiesBeforeYou)
-                                ? "assets/icon/arrowRed.png"
-                                : ''),
-                          )),
-                          child: Text(
-                            (i + 1).toString() ?? '',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: (data.userId != null &&
-                                      i == data?.partiesBeforeYou)
-                                  ? Colors.white
-                                  : myGrey,
-                              fontFamily: 'Gilroy-Bold',
-                            ),
+                                ? Colors.white
+                                : myGrey,
+                            fontFamily: 'Gilroy-Bold',
                           ),
                         ),
-                        Card(
-                          color: (data.userId != null &&
-                                  i == data?.partiesBeforeYou)
-                              ? myRed
-                              : myBackGround2,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                      Card(
+                        color:
+                            (data.userId != null && i == data?.partiesBeforeYou)
+                                ? myRed
+                                : myBackGround2,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 22),
+                          child: SvgPicture.asset(
+                            (data.userId != null && i == data?.partiesBeforeYou)
+                                ? 'assets/icon/menWhite.svg'
+                                : 'assets/icon/menBlack.svg',
+                            height: sm.h(6),
+                            fit: BoxFit.fill,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 22),
-                            child: SvgPicture.asset(
-                              (data.userId != null &&
-                                      i == data?.partiesBeforeYou)
-                                  ? 'assets/icon/menWhite.svg'
-                                  : 'assets/icon/menBlack.svg',
-                              height: sm.h(6),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-              ],
-            ),
-          ),
-        ],
-      );
+                        ),
+                      )
+                    ]),
+              )
+          ]),
+        ),
+      ]);
 
   titlePart(String name) {
     return Row(

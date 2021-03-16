@@ -1,9 +1,9 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
-import 'package:favorito_user/ui/home/myClipRect.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
@@ -13,6 +13,7 @@ import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -44,8 +45,8 @@ class _HomeState extends State<Home> {
       vaTrue.getAddress();
       vaTrue.getUserImage();
 
-      Provider.of<PersonalInfoProvider>(context,
-          listen: true).getPersonalData();
+      Provider.of<PersonalInfoProvider>(context, listen: true)
+          .getPersonalData();
       isFirst = false;
     }
     widget.pr = ProgressDialog(context, type: ProgressDialogType.Normal);
@@ -66,10 +67,25 @@ class _HomeState extends State<Home> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                      width: sm.w(20),
-                      padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                      child: myClipRect()),
+                  InkWell(
+                    onTap: () {
+                      Provider.of<UserAddressProvider>(context, listen: false)
+                          .getImage(ImgSource.Gallery, RIKeys.josKeys3);
+                    },
+                    child: Container(
+                        width: sm.w(20),
+                        padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                                height: sm.h(8),
+                                width: sm.h(8),
+                                child: ImageMaster(
+                                    url: Provider.of<UserAddressProvider>(
+                                            context,
+                                            listen: true)
+                                        .getProfileImage())))),
+                  ),
                   Container(
                     width: sm.w(60),
                     child: InkWell(onTap: () {

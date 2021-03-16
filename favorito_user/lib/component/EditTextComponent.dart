@@ -73,7 +73,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
             decoration: InputDecoration(
               suffix: InkWell(
                   onTap: () => widget.suffixTap(),
-                  child: Text(widget.suffixTxt ?? null)),
+                  child: Text(widget.suffixTxt ?? '')),
               prefixIcon: widget.prefixIcon == 'mail'
                   ? InkWell(
                       child: Padding(

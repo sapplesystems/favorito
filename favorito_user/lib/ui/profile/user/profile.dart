@@ -1,6 +1,6 @@
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/ui/profile/user/ProfileProvider.dart';
@@ -42,21 +42,19 @@ class Profile extends StatelessWidget {
                 children: [
                   Row(children: [
                     InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfileDetail()));
-                      },
-                      child: Container(
-                          width: sm.w(25),
-                          height: sm.w(25),
-                          decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: new NetworkImage(
-                                      "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfileDetail())),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Container(
+                              height: sm.h(10),
+                              width: sm.h(10),
+                              child: ImageMaster(
+                                  url: Provider.of<UserAddressProvider>(context,
+                                          listen: true)
+                                      .getProfileImage()))),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: sm.w(2)),

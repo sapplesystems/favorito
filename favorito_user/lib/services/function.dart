@@ -97,5 +97,6 @@ class service {
   static final changeAddress = baseUser + 'address/change-default-address';
   static final modifyAddress = baseUser + 'address/change-address';
   static final deleteAddress = baseUser + 'address/delete-address';
+  static final profileImageUpdate = baseUserProfile + 'set-user-profile-photo';
   static final stateList = base + 'state-city/state-list';
 }
