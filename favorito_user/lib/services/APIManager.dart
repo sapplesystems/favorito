@@ -1,5 +1,9 @@
+import 'dart:convert' as convert;
 import 'dart:io';
+
 import 'package:bot_toast/bot_toast.dart';
+import 'package:dio/dio.dart';
+import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
@@ -15,19 +19,16 @@ import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
 import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
+import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
-import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
-import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
-import 'package:dio/dio.dart';
+import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/model/otp/SendOtpModel.dart';
-import 'dart:convert' as convert;
-
 import 'package:favorito_user/services/function.dart';
 import 'package:favorito_user/ui/Login.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -364,9 +365,7 @@ class APIManager {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     print("hotAndNewBusiness Request URL:$url");
-    response = await dio
-        .post(url, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, options: opt);
 
     print("hotAndNewBusiness responseData:${response.toString()}");
     NewBusinessModel data =
@@ -888,6 +887,125 @@ class APIManager {
     return WorkingHoursModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
+  static Future<WorkingHoursModel> deleteAddress(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return WorkingHoursModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = service.deleteAddress;
+    print("url : $url");
+    print("requestData : ${_map.toString()}");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
+
+    print("service.verifyOtp : ${response.toString}");
+    return WorkingHoursModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<WorkingHoursModel> modifyAddress(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return WorkingHoursModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = service.modifyAddress;
+    print("url : $url");
+    print("requestData : ${_map.toString()}");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
+
+    print("service.verifyOtp : ${response.toString}");
+    return WorkingHoursModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<CityStateModel> stateList(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return CityStateModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+    String url = service.stateList;
+    print("url : $url");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
+    print("service.verifyOtp : ${response.toString}");
+    return CityStateModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
   static void ExceptionHandler(DioError e, pr, url, formKey) {
     pr.hide();
     if (e.error is SocketException) {
@@ -901,7 +1019,15 @@ class APIManager {
                     convert.json.decode(e.response.toString()))
                 .message);
         print("$url:401");
-        Navigator.of(formKey.currentContext).pushNamed('/login');
+        // Navigator.of(formKey.currentContext).pushNamed('/login');
+      }
+      if (e.response.statusCode == 400) {
+        BotToast.showText(
+            text: BaseResponse.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        print("$url:400");
+        // Navigator.of(formKey.currentContext).pushNamed('/login');
       }
 
       if (e.response.statusCode == 403) {

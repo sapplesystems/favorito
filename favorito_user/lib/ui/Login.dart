@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter/services.dart';
+import 'package:bot_toast/bot_toast.dart';
 
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
@@ -16,7 +17,7 @@ class _LoginState extends State<Login> {
   List controller = [for (int i = 0; i < 2; i++) TextEditingController()];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<String> title = ['Email', 'Password'];
+  List<String> title = ['Email/Phone', 'Password'];
   List<String> prefix = ['mail', 'password'];
 
   @override
@@ -40,7 +41,7 @@ class _LoginState extends State<Login> {
                     left: sm.w(10), right: sm.w(10), top: sm.h(5)),
                 child: ListView(shrinkWrap: true, children: [
                   SvgPicture.asset('assets/icon/login_image.svg',
-                      height: sm.h(30), fit: BoxFit.fill),
+                      height: sm.h(34), fit: BoxFit.fill),
                   SizedBox(height: sm.h(2)),
                   Text("Welcome Back.",
                       style: TextStyle(
@@ -112,7 +113,8 @@ class _LoginState extends State<Login> {
                                   print("token : ${value.token}");
                                   Navigator.pop(context);
                                   Navigator.of(context).pushNamed('/navbar');
-                                }
+                                } else
+                                  BotToast.showText(text: value.message);
                               });
                             }
                           },

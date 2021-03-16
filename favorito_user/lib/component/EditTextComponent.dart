@@ -109,18 +109,17 @@ class _EditTextComponentState extends State<EditTextComponent> {
                                   : widget.prefixIcon == 'postal'
                                       ? InkWell(
                                           child: Icon(Icons.location_searching),
-                                          onTap: () {
-                                            widget.prefClick();
-                                          },
-                                        )
+                                          onTap: () => widget.prefClick())
                                       : widget.prefixIcon == 'address'
                                           ? InkWell(
                                               child: Icon(Icons.home_outlined),
-                                              onTap: () {
-                                                widget.prefClick();
-                                              },
-                                            )
-                                          : null,
+                                              onTap: () => widget.prefClick())
+                                          : widget.prefixIcon == 'pincode'
+                                              ? InkWell(
+                                                  child: Icon(Icons.dialpad),
+                                                  onTap: () =>
+                                                      widget.prefClick())
+                                              : null,
               counterText: "",
               hintText: widget.hint ?? '',
               alignLabelWithHint: true,

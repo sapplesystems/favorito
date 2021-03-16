@@ -45,6 +45,6 @@ class ProfileProvider extends ChangeNotifier {
     'license',
     'changePass',
     'delete',
-    'logout2'
+    'logout'
   ];
 }

@@ -38,7 +38,7 @@ void main() {
           // Provider(create: (context) => MenuHomeProvider()),
         ],
         child: MyApp(),
-      ),
+      )
     );
   });
 }

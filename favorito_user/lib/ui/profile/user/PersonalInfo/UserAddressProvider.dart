@@ -1,22 +1,168 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/utils/Acces.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
 import '../../../../utils/Extentions.dart';
 
 class UserAddressProvider extends ChangeNotifier {
   String _profileImage;
   AddressListModel addressListModel = AddressListModel();
+  String mode = 'Add';
   String _city;
   String _state;
+  String _editId;
+  List<CityStateData> _stateList = [];
+  CityStateData _selectedState = CityStateData(id: 0, state: '');
+  List title = ['address', 'landmark.', 'pincode', 'city', 'state'];
+  List prefix = ['address', 'address', 'pincode', 'address', 'address'];
+  List<Acces> acces = [];
+  String _addresstype = 'Home';
+  List<String> fList = ["Home", "Office", "Hotel", "Others"];
+  var id;
   UserAddressProvider() {
+    for (int i = 0; i < 5; i++) acces.add(Acces());
     getAddress();
     getUserImage();
+    // getAllState();
   }
+
+  String getAddresstype() => _addresstype;
+  setAddresstype(String _va) {
+    _addresstype = _va;
+    notifyListeners();
+  }
+
+  getEditId() => _editId;
+  setEditId(String _id) {
+    _editId = _id;
+    int _va;
+    if (_id != null) {
+      for (int i = 0; i < addressListModel.data.addresses.length; i++) {
+        if (addressListModel.data.addresses[i].id.toString().trim() == _id) {
+          _va = i;
+        }
+      }
+      acces[0].controller.text = addressListModel.data.addresses[_va].address;
+      acces[1].controller.text = addressListModel.data.addresses[_va].landmark;
+      acces[2].controller.text = addressListModel.data.addresses[_va].pincode;
+      acces[3].controller.text = addressListModel.data.addresses[_va].city;
+      acces[4].controller.text = addressListModel.data.addresses[_va].state;
+      _addresstype = addressListModel.data.addresses[_va].addressType;
+      mode = 'Edit';
+    } else {
+      mode = 'Add';
+      for (var v in acces) {
+        v.controller.text = '';
+        v.error = null;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  void checkPin() async {
+    await APIManager.checkPostalCode(
+            {"pincode": acces[2].controller.text}, RIKeys.josKeys6)
+        .then((value) {
+      if (value.data.stateName == null)
+        acces[2].error = value.message;
+      else {
+        acces[2].error = null;
+        acces[3].controller.text = value.data.city;
+        acces[4].controller.text = value.data.stateName;
+      }
+      notifyListeners();
+    });
+  }
+
+  void SubmitAddress() async {
+    if (acces[0].controller.text.trim().length == 0) {
+      acces[0].error = 'field is required';
+      notifyListeners();
+      return;
+    } else {
+      acces[0].error = null;
+      notifyListeners();
+    }
+
+    if (acces[1].controller.text.trim().length == 0) {
+      acces[1].error = 'field is required';
+      notifyListeners();
+      return;
+    } else {
+      acces[1].error = null;
+      notifyListeners();
+    }
+    if (acces[2].controller.text.trim().length == 0) {
+      acces[2].error = 'field is required';
+      notifyListeners();
+      return;
+    } else if (acces[2].controller.text.trim().length != 6) {
+      acces[2].error = 'Incomplete OTP';
+      notifyListeners();
+      return;
+    } else {
+      checkPin();
+    }
+    Map _map = {
+      'city': acces[3].controller.text,
+      'state': acces[4].controller.text,
+      'pincode': acces[2].controller.text,
+      'country': 'India',
+      'landmark': acces[1].controller.text,
+      'address': acces[0].controller.text,
+      'address_type': _addresstype
+    };
+    Map _map2 = {
+      'address_id': _editId,
+      'city': acces[3].controller.text,
+      'state': acces[4].controller.text,
+      'pincode': acces[2].controller.text,
+      'country': 'India',
+      'landmark': acces[1].controller.text,
+      'address': acces[0].controller.text,
+      'address_type': _addresstype
+    };
+    await APIManager.modifyAddress(
+            mode == 'Add' ? _map : _map2, RIKeys.josKeys6)
+        .then((value) {
+      if (value.status == "success") {
+        for (var v in acces) {
+          v.controller.text = '';
+          v.error = null;
+        }
+        BotToast.showText(text: value.message);
+      } else
+        BotToast.showText(text: value.message);
+      notifyListeners();
+    });
+  }
+
+  getStateList() => _stateList;
+  CityStateData getSelectedStateIndex() {
+    // CityStateData _val;
+    // for (int i = 0; i < _stateList.length; i++) {
+    // if (_stateList[i].id == _selectedState) {
+    //   _val = _stateList[i];
+    // }
+    // }
+
+    return _selectedState;
+    // if (_selectedStateId != 0)
+    //   _stateList.where((element) => element.id == _selectedStateId);
+  }
+
+  setSelectedStateIndex(CityStateData _val) {
+    _selectedState = _val;
+    notifyListeners();
+  }
+
   getAddress() async {
-    // pr.show().timeout(Duration(seconds: 5));
     await APIManager.getAddress().then((value) {
-      // pr.hide();
       if (value.status == 'success') {
         addressListModel = value;
         notifyListeners();
@@ -24,8 +170,8 @@ class UserAddressProvider extends ChangeNotifier {
     });
   }
 
-  String get city => _city;
-  String get state => _state;
+  String get city => _city ?? '';
+  String get state => _state ?? '';
   seSelectedAddress(int index) async {
     await APIManager.changeAddress(
         {'default_address_id': this.addressListModel.data.addresses[index].id},
@@ -54,7 +200,7 @@ class UserAddressProvider extends ChangeNotifier {
         break;
       }
     }
-    notifyListeners();
+
     return va ?? '';
   }
 
@@ -70,4 +216,35 @@ class UserAddressProvider extends ChangeNotifier {
       }
     });
   }
+
+  void deleteAddress(int id) async {
+    await APIManager.deleteAddress({'address_id': id}, RIKeys.josKeys8)
+        .then((value) {
+      getAddress();
+    });
+  }
+
+  void checkIdClicked(_val) async {
+    // await Api
+  }
+
+  void getAllState() async {
+    await APIManager.stateList(null, RIKeys.josKeys3).then((value) {
+      if (value.status == 'success') {
+        try {
+          _stateList.addAll(value.data);
+        } catch (e) {}
+        notifyListeners();
+      }
+    });
+  }
+
+  // void getAllCity(String selectedCity, key) async {
+  //   await APIManager.stateList(null, key).then((value) {
+  //     if (value.status == 'success') {
+  //       _stateList.addAll(value.data);
+  //       notifyListeners();
+  //     }
+  //   });
+  // }
 }

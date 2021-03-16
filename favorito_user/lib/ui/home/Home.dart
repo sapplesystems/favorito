@@ -6,6 +6,7 @@ import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRect.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 
 class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
@@ -33,16 +33,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var _mySearchEditTextController = TextEditingController();
-  // AddressListModel addressData = AddressListModel();
   SizeManager sm;
   UserAddressProvider vaTrue;
+  bool isFirst = true;
 
   @override
   Widget build(BuildContext context) {
     vaTrue = Provider.of<UserAddressProvider>(context, listen: true);
-    if (widget.pr == null) {
-      // vaTrue.getAddress();
+    if (isFirst == true) {
+      vaTrue.getAddress();
       vaTrue.getUserImage();
+
+      Provider.of<PersonalInfoProvider>(context,
+          listen: true).getPersonalData();
+      isFirst = false;
     }
     widget.pr = ProgressDialog(context, type: ProgressDialogType.Normal);
     widget.pr.style(message: 'Fetching Data, please wait');

@@ -95,4 +95,7 @@ class service {
   static final workingHours = base + 'user-business/get-business-hours';
 
   static final changeAddress = baseUser + 'address/change-default-address';
+  static final modifyAddress = baseUser + 'address/change-address';
+  static final deleteAddress = baseUser + 'address/delete-address';
+  static final stateList = base + 'state-city/state-list';
 }

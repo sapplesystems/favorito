@@ -9,7 +9,9 @@ import 'package:favorito_user/ui/Signup/Signup.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/AddAdress.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfo.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
@@ -66,6 +68,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MenuHome());
       case '/forgetPassword':
         return MaterialPageRoute(builder: (_) => ForgetPassword());
+      case '/userAddress':
+        return MaterialPageRoute(builder: (_) => UserAddress());
+      case '/addAddress':
+        return MaterialPageRoute(builder: (_) => AddAddress());
       default:
         return _errorRoute();
     }

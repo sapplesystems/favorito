@@ -10,11 +10,13 @@ import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
 import '../../../utils/MyColors.dart';
 
 class Profile extends StatelessWidget {
   ProfileProvider vaTrue;
   ProfileProvider vaFalse;
+
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
@@ -28,7 +30,6 @@ class Profile extends StatelessWidget {
               toolbarHeight: sm.h(5),
               backgroundColor: myBackGround,
               elevation: 0,
-              iconTheme: IconThemeData(color: Colors.black),
               title: Text("My Profile",
                   style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.w400))),
@@ -118,9 +119,9 @@ class Profile extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       List<int> _ls = [7, 14, 17];
                       return !_ls.contains(index)
-                          ? menuItems(sm, index)
+                          ? menuItems(sm, index, context)
                           : Column(children: [
-                              menuItems(sm, index),
+                              menuItems(sm, index, context),
                               Divider(
                                   height: 10,
                                   color: Colors.grey.shade300,
@@ -132,7 +133,7 @@ class Profile extends StatelessWidget {
     );
   }
 
-  Widget menuItems(SizeManager sm, int identifier) {
+  Widget menuItems(SizeManager sm, int identifier, BuildContext context) {
     return InkWell(
       onTap: () {
         print('das${vaFalse.menuTitleList[identifier]}eeee');
@@ -140,8 +141,8 @@ class Profile extends StatelessWidget {
           case 'Logout':
             {
               Prefs().clear();
-              Navigator.pop(RIKeys.josKeys5.currentContext);
-              Navigator.of(RIKeys.josKeys5.currentContext).pushNamed('/login');
+              Navigator.pop(context);
+              Navigator.of(context).pushNamed('/login');
             }
             break;
           case 'Edit profile':
@@ -152,20 +153,23 @@ class Profile extends StatelessWidget {
             break;
           case 'Saved Addresses':
             {
-              showModalBottomSheet<void>(
-                  enableDrag: true,
-                  isScrollControlled: true,
-                  context: RIKeys.josKeys5.currentContext,
-                  backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-                  builder: (BuildContext context) {
-                    return StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
-                      return Container(
-                          height: sm.h(95),
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: UserAddress());
-                    });
-                  });
+              Navigator.of(RIKeys.josKeys5.currentContext)
+                  .pushNamed('/userAddress');
+
+              // showModalBottomSheet<void>(
+              //     enableDrag: true,
+              //     isScrollControlled: true,
+              //     context: RIKeys.josKeys5.currentContext,
+              //     backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+              //     builder: (BuildContext context) {
+              //       return StatefulBuilder(
+              //           builder: (BuildContext context, StateSetter setState) {
+              //         return Container(
+              //             height: sm.h(95),
+              //             decoration: BoxDecoration(color: Colors.white),
+              //             child: UserAddress());
+              //       });
+              //     });
             }
             break;
         }
@@ -177,9 +181,8 @@ class Profile extends StatelessWidget {
               width: 14,
               height: 16,
               child: SvgPicture.asset(
-                'assets/icon/${vaTrue.menuIconList[identifier]}.svg',
-                fit: BoxFit.fill,
-              )),
+                  'assets/icon/${vaTrue.menuIconList[identifier]}.svg',
+                  fit: BoxFit.fill)),
           Padding(
             padding: EdgeInsets.only(left: sm.w(4)),
             child: Text('\t\t\t' + vaTrue.menuTitleList[identifier],
