@@ -15,9 +15,9 @@ class AppBookProvider extends BaseProvider {
   String _message;
   int _isBooking;
   String _selectedTab;
-  List<BookingOrAppointmentDataModel> _data = List();
-  List<BookingOrAppointmentDataModel> newData = List();
-  List<BookingOrAppointmentDataModel> oldData = List();
+  List<BookingOrAppointmentDataModel> _data = [];
+  List<BookingOrAppointmentDataModel> newData = [];
+  List<BookingOrAppointmentDataModel> oldData = [];
   BookTableVerbose bookTableVerbose;
 
   setBusinessId(String _val) {

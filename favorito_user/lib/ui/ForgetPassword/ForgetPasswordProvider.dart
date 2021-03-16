@@ -5,14 +5,15 @@ import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:get/get.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import '../../utils/RIKeys.dart';
 
 class ForgetPasswordProvider extends ChangeNotifier {
   String didNotReceive = '';
   BuildContext context;
   Validator validator = Validator();
   String sendOtptxt = "Send Otp";
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<Acces> acces = [];
   List<String> title = [
     'Email/Phone',
@@ -25,15 +26,11 @@ class ForgetPasswordProvider extends ChangeNotifier {
   String actualOtp = null;
   bool otpForworded = false;
   bool otpVerified = false;
-  ProgressDialog pr;
   ForgetPasswordProvider() {
     for (int i = 0; i < 4; i++) acces.add(Acces());
   }
   setContext(context) {
     this.context = context;
-    pr = ProgressDialog(context,
-        isDismissible: true, type: ProgressDialogType.Normal)
-      ..style(message: 'PLease wait..');
   }
 
   funSendOtpSms() async {
@@ -41,18 +38,17 @@ class ForgetPasswordProvider extends ChangeNotifier {
     notifyListeners();
 
     if (acces[0].error == null) {
-      pr.show();
       Map _map = {"email_or_phone": acces[0].controller.text};
 
-      await APIManager.sendOtp(_map).then((value) {
-        pr.hide();
+      await APIManager.sendOtp(_map, RIKeys.josKeys1).then((value) {
         if (value.status == 'success' &&
             value.data[0].responseStatus == 'success') {
           otpForworded = true;
           sendOtpModel = value;
-
           didNotReceive = 'Did not recieved Otp.';
           sendOtptxt = 'Send Again';
+        } else {
+          BotToast.showText(text: value.message);
         }
         notifyListeners();
       });
@@ -72,21 +68,17 @@ class ForgetPasswordProvider extends ChangeNotifier {
     if (acces[1].error == null &&
         acces[2].error == null &&
         acces[3].error == null) {
-      pr.show();
       Map _map = {
         "user_id": sendOtpModel.data[0].userId,
         "otp": acces[1].controller.text,
         "password": acces[2].controller.text
       };
       print("data:${_map.toString()}");
-      await APIManager.verifyOtp(_map).then((value) {
-        pr.hide();
-        if (value.status == 'success') {
+      await APIManager.verifyOtp(_map, RIKeys.josKeys1).then((value) {
+        if (value.status == 'success')
           allClear();
-        } else {
-          print("value.message${value.message}");
+        else
           BotToast.showText(text: value.message);
-        }
       });
     }
     notifyListeners();

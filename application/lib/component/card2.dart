@@ -28,12 +28,11 @@ class _card2State extends State<card2> {
               Text(
                 "Ratings",
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-                  fontFamily: "Gilroy-Medium",
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.60,
-                ),
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontFamily: "Gilroy-Medium",
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.60),
               ),
               SizedBox(height: sm.h(2)),
               Row(

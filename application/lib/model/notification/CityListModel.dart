@@ -25,6 +25,16 @@ class CityListModel {
     }
     return data;
   }
+
+  getCityIdByName(String _name) {
+    var _va;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].city == _name) {
+        _va = data[i].id;
+      }
+    }
+    return _va;
+  }
 }
 
 class CityModel {

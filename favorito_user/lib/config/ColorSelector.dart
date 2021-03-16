@@ -33,7 +33,7 @@ class ColorSelector extends StatelessWidget {
   void _changeColor(BuildContext context) {
     showDialog(
       context: context,
-      child: AlertDialog(
+      builder: (context) => AlertDialog(
         title: Text('Pick a color!'),
         content: SingleChildScrollView(),
         actions: <Widget>[

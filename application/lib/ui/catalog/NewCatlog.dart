@@ -4,6 +4,7 @@ import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -61,16 +62,15 @@ class NewCatlog extends StatelessWidget {
                     child: Container(
                       width: sm.h(18),
                       child: Card(
-                          semanticContainer: true,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: Padding(
-                              padding: const EdgeInsets.all(18),
-                              child:
-                                  Icon(Icons.cloud_upload_outlined, size: 30)),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          elevation: 5,
-                          margin: EdgeInsets.all(10)),
+                        semanticContainer: true,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: Padding(
+                            padding: EdgeInsets.all(sm.h(6)),
+                            child: SvgPicture.asset('assets/icon/cloud.svg')
+                            // Icon(Icons.cloud_upload_outlined, size: 30)
+                            ),
+                        // margin: EdgeInsets.all(10)
+                      ),
                     )),
                 if (vaTrue.imgUrls != null)
                   for (int i = vaTrue.imgUrls.length - 1; i >= 0; i--)
@@ -113,7 +113,7 @@ class NewCatlog extends StatelessWidget {
                                 },
                                 keyboardSet: i == 3
                                     ? TextInputType.emailAddress
-                                    : (i == 1 || i == 4)
+                                    : (i == 1)
                                         ? TextInputType.number
                                         : TextInputType.text,
                                 security: false,
@@ -131,7 +131,7 @@ class NewCatlog extends StatelessWidget {
                       clicker: () => vaTrue.funSublim(),
                       clr: Colors.red,
                       title: vaTrue.submitBtnTxt)),
-            )
+            ),
           ]),
         ),
       ),

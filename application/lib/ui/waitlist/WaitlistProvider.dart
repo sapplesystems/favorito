@@ -28,7 +28,8 @@ class WaitlistProvider extends ChangeNotifier {
     '35 min',
     '40 min',
     '45 min',
-    '50 min'
+    '50 min',
+    '60 min'
   ];
   List<String> list = [
     "Sunday",
@@ -67,7 +68,7 @@ class WaitlistProvider extends ChangeNotifier {
         controller[6].text = va.announcement?.toString();
         selectedList = va.exceptDays?.split(",");
 
-        slotKey?.currentState?.changeSelectedItem('25 min');
+        slotKey?.currentState?.changeSelectedItem('60 min');
         selectedList.forEach((element) => list.remove(element));
         notifyListeners();
       }

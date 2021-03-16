@@ -9,10 +9,13 @@ import 'package:favorito_user/ui/Signup/Signup.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/AddAdress.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfo.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
 import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
+import 'package:favorito_user/ui/splash/Splash.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class RouteGenerator {
@@ -20,7 +23,7 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => BottomNavBar());
+        return MaterialPageRoute(builder: (_) => Splash());
 
       case '/signUp':
         return MaterialPageRoute(builder: (_) => Signup());
@@ -65,6 +68,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MenuHome());
       case '/forgetPassword':
         return MaterialPageRoute(builder: (_) => ForgetPassword());
+      case '/userAddress':
+        return MaterialPageRoute(builder: (_) => UserAddress());
+      case '/addAddress':
+        return MaterialPageRoute(builder: (_) => AddAddress());
       default:
         return _errorRoute();
     }

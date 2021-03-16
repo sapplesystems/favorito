@@ -57,7 +57,7 @@ class _CreateOfferState extends State<CreateOffer> {
             _myTitleEditController.text = '';
             _myDescriptionEditController.text = '';
           } else {
-            buttonTxt = "Edit Offer";
+            buttonTxt = "Update Offer";
             stateKey.currentState
                 .changeSelectedItem(widget?.offerData?.offerStatus?.trim());
             typeKey.currentState
@@ -98,7 +98,7 @@ class _CreateOfferState extends State<CreateOffer> {
               onPressed: () => Navigator.of(context).pop()),
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
-            buttonTxt,
+            buttonTxt == "Post Offer" ? "Create Offer" : "Edit Offer",
             style: TextStyle(color: Colors.black, fontFamily: 'Gilroy-Bold'),
           ),
         ),

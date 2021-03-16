@@ -79,7 +79,7 @@ class Signup_a extends StatelessWidget {
                                       key: SignUpProvider.categoryKey1,
                                       mode: Mode.MENU,
                                       validator: (v) =>
-                                          (v == null) ? "required field" : null,
+                                          (v == null) ? "Required field" : null,
                                       autoValidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       maxHeight: signUpProviderTrue
@@ -123,7 +123,7 @@ class Signup_a extends StatelessWidget {
                                           mode: Mode.MENU,
                                           // maxHeight: busy.length * 58.0,
                                           validator: (v) => (v == '')
-                                              ? "required field"
+                                              ? "Required field"
                                               : null,
                                           autoValidateMode: AutovalidateMode
                                               .onUserInteraction,

@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
+import '../../utils/Extentions.dart';
 
 class Waitlist extends StatefulWidget {
   @override
@@ -24,9 +25,7 @@ class Waitlist extends StatefulWidget {
 
 class Waitlists extends State<Waitlist> {
   WaitlistListModel waitlistData;
-
-  refresh() => setState(() {});
-
+  bool isFirst = true;
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
@@ -37,9 +36,7 @@ class Waitlists extends State<Waitlist> {
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
+          iconTheme: IconThemeData(color: Colors.black),
           title: Text(waitlist,
               style: TextStyle(
                   color: Colors.black,
@@ -47,16 +44,15 @@ class Waitlists extends State<Waitlist> {
                   fontFamily: 'Gilroy-Bold')),
           actions: [
             IconButton(
-                icon: Icon(
-                  Icons.add_circle_outline,
-                  size: 30,
-                ),
+                icon: Icon(Icons.add_circle_outline, size: 30),
                 onPressed: () {
                   Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ManualWaitList()))
-                      .whenComplete(() => getPageData());
+                      .whenComplete(() => setState(() {
+                            isFirst = true;
+                          }));
                 }),
             IconButton(
                 icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
@@ -66,22 +62,24 @@ class Waitlists extends State<Waitlist> {
           ],
         ),
         body: FutureBuilder<WaitlistListModel>(
-          future: WebService.funGetWaitlist(context),
+          future: getData(),
           builder: (BuildContext context,
               AsyncSnapshot<WaitlistListModel> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: Text('Please wait its loading...'));
             } else {
               if (snapshot.hasError)
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Center(child: Text(''));
               else {
+                print("aaaa3");
                 waitlistData = snapshot.data;
                 return Container(
-                  margin:
-                      EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+                  margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 4.0),
                   child: RefreshIndicator(
                     onRefresh: () async {
-                      setState(() {});
+                      setState(() {
+                        isFirst = true;
+                      });
                     },
                     child: ListView.builder(
                         itemCount: waitlistData.data == null
@@ -119,7 +117,10 @@ class Waitlists extends State<Waitlist> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: AutoSizeText(
-                                            va.name.toLowerCase(),
+                                            va.name
+                                                    ?.toLowerCase()
+                                                    ?.capitalize() ??
+                                                '',
                                             minFontSize: 22,
                                             maxLines: 1,
                                             style: TextStyle(
@@ -130,7 +131,7 @@ class Waitlists extends State<Waitlist> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(
-                                            "Walk-in | ${va.walkinAt}",
+                                            "Walk-in | ${va.walkinAt ?? ''}",
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w400),
@@ -139,7 +140,7 @@ class Waitlists extends State<Waitlist> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: AutoSizeText(
-                                            va?.specialNotes ?? '',
+                                            va.specialNotes ?? '',
                                             style: TextStyle(color: myGrey),
                                             maxLines: 1,
                                             minFontSize: 16,
@@ -158,19 +159,19 @@ class Waitlists extends State<Waitlist> {
                                             iconSize: sm.w(8),
                                             icon:
                                                 Icon(Icons.call, color: myRed),
-                                            onPressed: () =>
-                                                _callPhone('tel:${va.contact}'),
+                                            onPressed: () => _callPhone(
+                                                'tel:${va.contact ?? ''}'),
                                           ),
                                           IconButton(
                                               iconSize: sm.w(8),
                                               icon: Icon(
                                                   FontAwesomeIcons.trashAlt,
-                                                  size: 16,
+                                                  size: 22,
                                                   color: myRed),
                                               onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  child: new AlertDialog(
+                                                showDialog(builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
                                                     title: const Text(
                                                         "Please confirm"),
                                                     content: Text(
@@ -183,7 +184,8 @@ class Waitlists extends State<Waitlist> {
                                                             Navigator.pop(
                                                                 context);
                                                             waitListDelete(
-                                                                va.id, index);
+                                                                va.id ?? 0,
+                                                                index);
                                                           }),
                                                       new FlatButton(
                                                         child: const Text(
@@ -199,8 +201,8 @@ class Waitlists extends State<Waitlist> {
                                                                 context),
                                                       ),
                                                     ],
-                                                  ),
-                                                );
+                                                  );
+                                                });
                                               })
                                         ],
                                       ),
@@ -214,10 +216,10 @@ class Waitlists extends State<Waitlist> {
                                                       ? myGrey
                                                       : myRed),
                                               onPressed: () {
-                                                if (va.waitlistStatus !=
-                                                    "accepted")
+                                                if (va.waitlistStatus ??
+                                                    '' != "accepted")
                                                   UpdateWaitList(
-                                                      "accepted", va.id);
+                                                      "accepted", va.id ?? 0);
                                               }),
                                           IconButton(
                                               iconSize: sm.w(8),
@@ -230,7 +232,7 @@ class Waitlists extends State<Waitlist> {
                                                 if (va.waitlistStatus !=
                                                     "rejected")
                                                   UpdateWaitList(
-                                                      "rejected", va.id);
+                                                      "rejected", va.id ?? '');
                                               })
                                         ],
                                       )
@@ -260,18 +262,15 @@ class Waitlists extends State<Waitlist> {
             left: sm.w(10),
             right: sm.w(10),
             bottom: sm.h(30),
-            child: PopupContent(
-                content: Scaffold(
-                    resizeToAvoidBottomPadding: false, body: widget))));
+            child: PopupContent(content: Scaffold(body: widget))));
   }
 
   Widget _popupBodyShowDetail(WaitlistModel model, int index) {
-    return Container(
-        child: WaitListDetail(
-            waitlistData: model,
-            action: UpdateWaitList,
-            delete: waitListDelete,
-            index: index));
+    return WaitListDetail(
+        waitlistData: model,
+        action: UpdateWaitList,
+        delete: waitListDelete,
+        index: index);
   }
 
   _callPhone(String phone) async => await canLaunch(phone)
@@ -279,27 +278,14 @@ class Waitlists extends State<Waitlist> {
       : throw 'Could not Call Phone';
 
   UpdateWaitList(String str, int id) async {
+    print("aaaa1");
     if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
       await WebService.funWaitlistUpdateStatus(
               {"waitlist_id": id, "status": str}, context)
           .then((value) {
         print(value.message);
         if (value.status == "success") {
-          WebService.funGetWaitlist(context).then((value) {
-            setState(() {});
-            return value;
-          });
-        }
-      });
-  }
-
-  getPageData() async {
-    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
-      await WebService.funGetWaitlist(context).then((value) {
-        if (value.status == "succcess") {
-          setState(() {
-            waitlistData = value;
-          });
+          setState(() {});
         }
       });
   }
@@ -310,5 +296,12 @@ class Waitlists extends State<Waitlist> {
           .then((value) {
         setState(() => waitlistData.data.removeAt(index));
       });
+  }
+
+  Future<WaitlistListModel> getData() {
+    if (isFirst) {
+      isFirst = false;
+      return WebService.funGetWaitlist(context);
+    }
   }
 }

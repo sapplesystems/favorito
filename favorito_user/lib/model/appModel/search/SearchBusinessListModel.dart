@@ -28,7 +28,7 @@ class SearchBusinessListModel {
 }
 
 class SearchResultModel {
-  int id;
+  var id;
   String businessId;
   int businessTypeId;
   int businessCategoryId;

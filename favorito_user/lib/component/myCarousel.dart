@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
@@ -53,16 +54,17 @@ class _myCarouselState extends State<myCarousel> {
                               arguments: item.businessId);
                         },
                         child: Container(
+                          width: sm.h(90),
+                          height: sm.h(10),
                           margin: EdgeInsets.all(5.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              item.photo,
-                              height: sm.h(10),
-                              fit: BoxFit.cover,
-                              width: sm.h(90),
-                            ),
-                          ),
+                              borderRadius: BorderRadius.circular(12),
+                              child: ImageMaster(url: item.photo)
+                              // Image.network(
+
+                              //   fit: BoxFit.cover,
+                              // ),
+                              ),
                         ),
                       ),
                     )

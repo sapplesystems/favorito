@@ -1,6 +1,6 @@
 class Category {
-  int id;
-  int outOfStock;
+  var id;
+  var outOfStock;
   String categoryName;
 
   Category({this.id, this.categoryName});

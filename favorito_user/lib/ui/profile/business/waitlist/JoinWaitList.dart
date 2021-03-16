@@ -49,23 +49,23 @@ class _JoinWaitListState extends State<JoinWaitList> {
                   Padding(
                     padding: EdgeInsets.only(top: sm.h(3)),
                     child: EditTextComponent(
-                      ctrl: controller[1],
+                      controller: controller[1],
                       title: 'Tag people by adding @',
                       security: false,
                       valid: true,
                       maxLines: 1,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: sm.h(3)),
-                    child: EditTextComponent(
-                      ctrl: controller[2],
-                      title: 'Special notes',
-                      security: false,
-                      valid: true,
-                      maxLines: 8,
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(vertical: sm.h(3)),
+                  //   child: EditTextComponent(
+                  //     controller: controller[2],
+                  //     title: 'Special notes',
+                  //     security: false,
+                  //     valid: true,
+                  //     maxLines: 8,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -123,7 +123,7 @@ class _JoinWaitListState extends State<JoinWaitList> {
           onTap: () {
             setState(() {
               int i = int.parse(controller[0].text);
-              controller[0].text = (i > 1 ? --i : i).toString();
+              controller[0].text = (i > 1 ? --i : i).toString() ?? '';
             });
           },
           child: Card(

@@ -65,7 +65,11 @@ class _CreateCampaignState extends State<CreateCampaign> {
             ),
         title: Text(
           "Create Campaign",
-          style: barTitleStyle,
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 26,
+              fontFamily: 'Gilroy-Bold',
+              letterSpacing: .2),
         ),
       ),
       body: Container(
@@ -99,10 +103,13 @@ class _CreateCampaignState extends State<CreateCampaign> {
                                 child: MyTags(
                                   selectedList: selectedTagName,
                                   border: true,
+                                  refresh: () {
+                                    setState(() {});
+                                  },
                                   directionVeticle: false,
                                   sourceList: totalTagName,
-                                  hint: "KeyWords",
-                                  title: "KeyWords",
+                                  hint: "Keywords",
+                                  title: "Keywords",
                                 ),
                               ),
                               Padding(

@@ -33,12 +33,12 @@ class _adSpentState extends State<adSpent> {
           elevation: 0,
           title: Text("Ad Spent", style: titleStyle),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop()),
           actions: [
             IconButton(
-                icon: Icon(Icons.add_circle_outline, color: Colors.black),
+                icon: Icon(Icons.add_circle_outline,
+                    color: Colors.black, size: 30),
                 onPressed: () {
                   Navigator.push(
                           context,
@@ -84,7 +84,12 @@ class _adSpentState extends State<adSpent> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("${list[i].name}\n"),
+                                            Text("${list[i].name}\n",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontFamily: 'Gilroy-Bold',
+                                                    letterSpacing: .2)),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -105,13 +110,17 @@ class _adSpentState extends State<adSpent> {
                                                             fontSize: 16))
                                                   ],
                                                 ),
-                                                Container(),
+                                                Container(
+                                                    height: 40,
+                                                    width: 0,
+                                                    child: VerticalDivider(
+                                                        color: Colors.black)),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                        "Spent:${list[i].totalBudget}\$",
+                                                        "Spent:${list[i].totalBudget ?? 0}\$",
                                                         textAlign:
                                                             TextAlign.start,
                                                         style: TextStyle(
@@ -159,24 +168,38 @@ class _adSpentState extends State<adSpent> {
 
   Widget credit(String title, String ammount, String ico) {
     return Row(children: [
-      Text("$title : $ammount"),
-      SvgPicture.asset(
-        ico,
-        alignment: Alignment.center,
-        height: sm.h(1.4),
+      Text("$title : $ammount",
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 12,
+              fontFamily: 'Gilroy-Bold',
+              letterSpacing: .2)),
+      SizedBox(
+        width: 10,
+      ),
+      Container(
+        width: 10,
+        child: SvgPicture.asset(
+          ico,
+          alignment: Alignment.center,
+          height: sm.h(1.4),
+        ),
       )
     ]);
   }
 
   Widget topArea() {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Column(children: [
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text("Total Spent", style: TextStyle(color: Colors.grey)),
         RichText(
             text: TextSpan(
                 text: totalSpent.toString(),
                 style: TextStyle(
-                    color: Colors.black, fontSize: 28, letterSpacing: 1),
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontFamily: 'Gilroy-Bold',
+                    letterSpacing: 1),
                 children: <TextSpan>[
               TextSpan(
                   text: '\$',
@@ -184,7 +207,11 @@ class _adSpentState extends State<adSpent> {
             ]))
       ]),
       Column(children: [
-        credit("Free Credit", '$freeCredit', "assets/icon/warning.svg"),
+        credit(
+          "Free Credit",
+          '$freeCredit',
+          "assets/icon/warning.svg",
+        ),
         credit("Paid Credit", '$paidCredit', "null")
       ]),
     ]);

@@ -6,9 +6,11 @@ import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
-import 'package:flutter/material.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
+import 'package:favorito_user/ui/profile/user/ProfileProvider.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
@@ -30,10 +32,13 @@ void main() {
           ChangeNotifierProvider(create: (context) => SignupProvider()),
           ChangeNotifierProvider(create: (context) => PersonalInfoProvider()),
           ChangeNotifierProvider(create: (context) => UserAddressProvider()),
+          ChangeNotifierProvider(create: (context) => ProfileProvider()),
+          ChangeNotifierProvider(
+              create: (context) => BusinessProfileProvider()),
           // Provider(create: (context) => MenuHomeProvider()),
         ],
         child: MyApp(),
-      ),
+      )
     );
   });
 }
@@ -41,17 +46,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => NeumorphicApp(
-        debugShowCheckedModeBanner: false,
-        builder: BotToastInit(),
-        navigatorObservers: [BotToastNavigatorObserver()],
-        theme: NeumorphicThemeData(
+      debugShowCheckedModeBanner: false,
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
+      theme: NeumorphicThemeData(
           defaultTextColor: myRed,
           accentColor: Colors.grey,
           variantColor: Colors.black38,
           depth: 8,
-          intensity: 0.65,
-        ),
-        initialRoute: '/',
-        onGenerateRoute: RouteGenerator.generateRoute,
-      );
+          intensity: 0.65),
+      initialRoute: '/',
+      onGenerateRoute: RouteGenerator.generateRoute);
 }

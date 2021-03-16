@@ -11,7 +11,6 @@ import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
 
-import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/Prefs.dart';
@@ -91,6 +90,8 @@ class SettingProvider extends ChangeNotifier {
     Prefs().clear();
     Provider.of<BusinessProfileProvider>(_context, listen: false).allClear();
     Provider.of<BusinessHoursProvider>(_context, listen: false).allClear();
+    Provider.of<BusinessHoursProvider>(_context, listen: false).allClear();
+
     Navigator.pop(_context);
     Navigator.of(_context).pushNamed('/login');
   }

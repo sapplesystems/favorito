@@ -78,6 +78,7 @@ class WebService {
   static Dio dio = new Dio();
   static Options opt = Options();
 
+  static UtilProvider utilProvider = UtilProvider();
   static Future<busyListModel> funGetBusyList() async {
     busyListModel _data = busyListModel();
     print("Request URL:${serviceFunction.funBusyList}");
@@ -185,7 +186,27 @@ class WebService {
     return _returnData;
   }
 
-  static Future<photoModel> profileImageUpdate(File file) async {
+  static Future<photoModel> profileImageUpdate(
+      File file, BuildContext _context) async {
+    if (!await utilProvider.checkInternet())
+      return photoModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(_context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
     String token = await Prefs.token;
     Options _opt =
         Options(contentType: Headers.formUrlEncodedContentType, headers: {
@@ -194,13 +215,30 @@ class WebService {
     String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap(
         {"photo": await MultipartFile.fromFile(file.path, filename: fileName)});
-    response = await dio.post(serviceFunction.funProfileUpdatephoto,
-        data: formData, options: _opt);
+
+    try {
+      response = await dio.post(serviceFunction.funProfileUpdatephoto,
+          data: formData, options: _opt);
+      pr.hide();
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return photoModel(status: 'fail', message: "Server not responding");
+      }
+    } finally {
+      if (pr.isShowing()) pr.hide();
+    }
+    // response = await dio.post(serviceFunction.funProfileUpdatephoto,
+    //     data: formData, options: _opt);
 
     return photoModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<profileDataModel> getProfileData() async {
+    if (!await utilProvider.checkInternet())
+      return profileDataModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     print("token:$token");
     Options _opt =
@@ -247,30 +285,21 @@ class WebService {
   }
 
   static Future<BaseResponseModel> funCreateNotification(
-      CreateNotificationRequestModel requestData, BuildContext context) async {
+      RequestModel _requestModel, BuildContext context) async {
+    if (!await Provider.of<UtilProvider>(_requestModel.context, listen: false)
+        .checkInternet())
+      return BaseResponseModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    BaseResponseModel _returnData = BaseResponseModel();
-    Map<String, dynamic> _map = {
-      "title": requestData.title,
-      "description": requestData.description,
-      "action": requestData.selectedAction,
-      "contact": requestData.contact,
-      "audience": requestData.selectedAudience,
-      "area": requestData.selectedArea,
-      "area_detail": requestData.areaDetail,
-      "quantity": requestData.selectedQuantity
-    };
-    response = await dio.post(serviceFunction.funCreateNotification,
-        data: _map, options: _opt);
+    response = await dio.post(_requestModel.url,
+        data: _requestModel.data, options: _opt);
 
     print("Request URL:${serviceFunction.funCreateNotification}");
-    _returnData =
-        BaseResponseModel.fromJson(convert.json.decode(response.toString()));
-    print("responseData6:${_returnData.status}");
-    return _returnData;
+
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<registerModel> funRegister(
@@ -296,6 +325,9 @@ class WebService {
   // }
 
   static Future<CityListModel> funGetCities() async {
+    if (!await utilProvider.checkInternet())
+      return CityListModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -309,6 +341,9 @@ class WebService {
   }
 
   static Future<StateListModel> funGetStates() async {
+    if (!await utilProvider.checkInternet())
+      return StateListModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -335,25 +370,43 @@ class WebService {
   }
 
   static Future<JobListRequestModel> funGetJobs(BuildContext context) async {
-    if (!await Provider.of<UtilProvider>(context, listen: false)
-        .checkInternet())
+    if (!await utilProvider.checkInternet())
       return JobListRequestModel(
           status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
     print("Request URL:${serviceFunction.funGetJobs}");
     try {
       response =
           await dio.post(serviceFunction.funGetJobs, data: null, options: _opt);
+      pr.hide();
     } on DioError catch (e) {
+      pr.hide();
       if (e.error is SocketException) {
         BotToast.showText(text: "Server not responding");
         return JobListRequestModel(
             status: 'fail', message: "Server not responding");
       }
+    } finally {
+      if (pr.isShowing()) pr.hide();
     }
     return JobListRequestModel.fromJson(
         convert.json.decode(response.toString()));
@@ -361,6 +414,9 @@ class WebService {
 
   static Future<CreateJobRequiredDataModel> funGetCreteJobDefaultData(
       BuildContext context) async {
+    if (!await utilProvider.checkInternet())
+      return CreateJobRequiredDataModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -469,6 +525,9 @@ class WebService {
 
   static Future<ContactPersonRequiredDataModel> funContactPersonRequiredData(
       BuildContext context) async {
+    if (!await utilProvider.checkInternet())
+      return ContactPersonRequiredDataModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -499,6 +558,9 @@ class WebService {
   }
 
   static Future<CityModelResponse> funGetCityByPincode(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return CityModelResponse(
+          status: 'fail', message: 'Please check internet connections');
     Options _opt = Options(contentType: Headers.formUrlEncodedContentType);
     response = await dio.post(serviceFunction.funGetCityByPincode,
         data: _map, options: _opt);
@@ -522,18 +584,63 @@ class WebService {
   //**************************************************Catalog*****************************************************
 
   static Future<CatlogListModel> funGetCatalogs(BuildContext context) async {
-    if (!await Provider.of<UtilProvider>(context, listen: false)
-        .checkInternet())
+    if (!await utilProvider.checkInternet())
       return CatlogListModel(
           status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
+    // ..show();
+
     String token = await Prefs.token;
     print("token:$token");
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    try {
+      response = await dio.post(serviceFunction.funGetCatalogs,
+          data: null, options: _opt);
+      // pr.hide();
+    } on DioError catch (e) {
+      // pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return CatlogListModel(
+            status: 'fail', message: "Server not responding");
+      } else if (e.response.statusCode == 400) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message,
+            duration: Duration(seconds: 6));
+      } else if (e.response.statusCode == 401) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        Navigator.of(context).pushNamed('/login');
+      }
 
-    response = await dio.post(serviceFunction.funGetCatalogs,
-        data: null, options: _opt);
+      if (e.response.statusCode == 403) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+      }
+    }
+    // pr.hide();
     print("funGetCatalogs:${response.toString()}");
     return CatlogListModel.fromJson(convert.json.decode(response.toString()));
   }
@@ -647,21 +754,58 @@ class WebService {
   }
 
   static Future<WaitlistListModel> funGetWaitlist(BuildContext context) async {
-    if (!await Provider.of<UtilProvider>(context, listen: false)
-        .checkInternet())
+    if (!await utilProvider.checkInternet())
       return WaitlistListModel(
           status: 'fail', message: 'Please check internet connections');
+
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: true)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     try {
       response = await dio.post(serviceFunction.funGetWaitlist, options: _opt);
+      pr.hide();
     } on DioError catch (e) {
+      pr.hide();
       if (e.error is SocketException) {
         BotToast.showText(text: "Server not responding");
         return WaitlistListModel(
             status: 'fail', message: "Server not responding");
+      } else if (e.response.statusCode == 400) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message,
+            duration: Duration(seconds: 6));
+      } else if (e.response.statusCode == 401) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        Navigator.of(context).pushNamed('/login');
+      }
+
+      if (e.response.statusCode == 403) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
       }
     }
 
@@ -670,17 +814,62 @@ class WebService {
 
   static Future<WaitlistListModel> funCreateWaitlist(
       Map _map, BuildContext context) async {
+    if (!await utilProvider.checkInternet())
+      return WaitlistListModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: true)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    WaitlistListModel _returnData = WaitlistListModel();
+    try {
+      response = await dio.post(serviceFunction.funCreateWaitlist,
+          data: _map, options: _opt);
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return WaitlistListModel(
+            status: 'fail', message: "Server not responding");
+      } else if (e.response.statusCode == 400) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message,
+            duration: Duration(seconds: 6));
+      } else if (e.response.statusCode == 401) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        Navigator.of(context).pushNamed('/login');
+      }
 
-    response = await dio.post(serviceFunction.funCreateWaitlist,
-        data: _map, options: _opt);
-    _returnData =
-        WaitlistListModel.fromJson(convert.json.decode(response.toString()));
-    return _returnData;
+      if (e.response.statusCode == 403) {
+        BotToast.showText(
+            text: BaseResponseModel.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+      }
+    }
+    return WaitlistListModel.fromJson(convert.json.decode(response.toString()));
   }
 
   //********************************Booking***************************/
@@ -742,6 +931,9 @@ class WebService {
   }
 
   static Future<BusinessProfileModel> funGetBusinessProfileData() async {
+    if (!await utilProvider.checkInternet())
+      return BusinessProfileModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -818,18 +1010,47 @@ class WebService {
 
   static Future<EditJobDataModel> funGetEditJobData(
       var _jobId, BuildContext context) async {
+    if (!await utilProvider.checkInternet())
+      return EditJobDataModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    final ProgressDialog pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
     String token = await Prefs.token;
     Options _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"job_id": _jobId};
-    EditJobDataModel _returnData = EditJobDataModel();
-    response = await dio.post(serviceFunction.funGetEditJobData,
-        data: _map, options: _opt);
-    _returnData =
-        EditJobDataModel.fromJson(convert.json.decode(response.toString()));
-    print("_returnData:${_returnData.data[0].toString}");
-    return _returnData;
+    try {
+      response = await dio.post(serviceFunction.funGetEditJobData,
+          data: _map, options: _opt);
+      pr.hide();
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return EditJobDataModel(
+            status: 'fail', message: "Server not responding");
+      }
+    } finally {
+      if (pr.isShowing()) pr.hide();
+    }
+
+    return EditJobDataModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<BaseResponseModel> funEditJob(
@@ -850,6 +1071,9 @@ class WebService {
 
   //this service is used for business profile
   static Future<BaseResponseModel> funUserProfileUpdate(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponseModel(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     Options _opt = Options(contentType: Headers.jsonContentType, headers: {
       HttpHeaders.authorizationHeader: "Bearer $token",

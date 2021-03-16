@@ -1,7 +1,6 @@
 import 'dart:convert' as convert;
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
-import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
 import 'package:Favorito/model/notification/NotificationOneModel.dart';
@@ -9,6 +8,7 @@ import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
 class NotificationsProvider extends ChangeNotifier {
@@ -28,20 +28,29 @@ class NotificationsProvider extends ChangeNotifier {
   StateModel selectedState = StateModel();
   CityModel selectedCity = CityModel();
   String selectedQuantity = '';
-  bool _countryVisible;
+  bool _countryVisible = false;
   bool _stateVisible;
   bool _cityVisible = false;
   bool _pincodeVisible = false;
   bool autoValidateForm = false;
   bool validatePincode = false;
   bool _showDone = false;
-  bool get showDone => this._showDone;
-
-  set showDone(bool value) {
-    this._showDone = value;
+  bool getShowDone() => this._showDone;
+  String _myAreaDetails = '';
+  setShowDone(bool value) {
+    _showDone = (value);
+    // _showDone = (value && (_notificationId == 0));
     notifyListeners();
   }
 
+  getMyAreaDetails() => _myAreaDetails;
+  final actioncKey = GlobalKey<DropdownSearchState<String>>();
+  final audienceKey = GlobalKey<DropdownSearchState<String>>();
+  final areaKey = GlobalKey<DropdownSearchState<String>>();
+  final countryKey = GlobalKey<DropdownSearchState<String>>();
+  final cityKey = GlobalKey<DropdownSearchState<String>>();
+  final stateKey = GlobalKey<DropdownSearchState<String>>();
+  final quantityKey = GlobalKey<DropdownSearchState<String>>();
   final myTitleEditController = TextEditingController();
   final myDescriptionEditController = TextEditingController();
   final myContactEditController = TextEditingController();
@@ -60,16 +69,25 @@ class NotificationsProvider extends ChangeNotifier {
   getPincodeVisible() => _pincodeVisible ?? false;
   setPincodeVisible(bool _val) {
     this._pincodeVisible = _val;
+    myPincodeEditController.text = getMyAreaDetails() ?? '';
     notifyListeners();
   }
 
   getStateVisible() => _stateVisible ?? false;
   setStateVisible(bool _val) {
-    this._stateVisible = _val;
+    _stateVisible = _val;
+    if (_val) {
+      stateKey?.currentState
+          ?.changeSelectedItem(getMyAreaDetails().toString().trim());
+      selectedState.state = getMyAreaDetails().toString().trim();
+    }
+
     notifyListeners();
   }
 
   selectArea(String _val) {
+    this.selectedArea = _val;
+
     if (_val == 'Country') {
       setCountryVisible(true);
       setStateVisible(false);
@@ -92,19 +110,27 @@ class NotificationsProvider extends ChangeNotifier {
       setCityVisible(false);
       validatePincode = true;
     }
-
-    showDone = true;
   }
 
   getCityVisible() => _cityVisible ?? false;
   setCityVisible(bool _val) {
     this._cityVisible = _val;
+    if (_val) {
+      cityKey?.currentState?.changeSelectedItem(getMyAreaDetails() ?? '');
+      selectedCity.city = getMyAreaDetails() ?? '';
+    }
+
     notifyListeners();
   }
 
-  getCountryVisible() => _countryVisible ?? false;
+  getCountryVisible() => _countryVisible;
   setCountryVisible(bool _val) {
+    print("ddd0${getMyAreaDetails()}");
     this._countryVisible = _val;
+    if (_val) {
+      countryKey?.currentState?.changeSelectedItem(getMyAreaDetails() ?? '');
+      selectedCountry = getMyAreaDetails() ?? '';
+    }
     notifyListeners();
   }
 
@@ -117,13 +143,17 @@ class NotificationsProvider extends ChangeNotifier {
   setNotificationId(int _id) {
     print(_id);
     this._notificationId = _id;
-    notificationDetAIL();
+    notificationDetait();
   }
 
   getData() {
     WebService.funGetNotifications(_context).then((value) {
       notificationsListdata = value;
       notifyListeners();
+      setCityVisible(false);
+      setCountryVisible(false);
+      setStateVisible(false);
+      setCityVisible(false);
     });
   }
 
@@ -136,22 +166,26 @@ class NotificationsProvider extends ChangeNotifier {
   }
 
   get cityListData => cityListModel?.data;
-  notificationDetAIL() {
+  notificationDetait() {
     if (_notificationId != null) {
-      WebService.funNotificationsDetail({"id": _notificationId}, _context)
-          .then((value) {
-        notificationOneModel = value;
-        contactHintText = value.data[0].contact;
-        selectedAction = value.data[0].action;
-        selectedAudience = value.data[0].audience;
-        selectedArea = value.data[0].area;
-        selectedCountry = value.data[0].areaDetail;
-        selectedQuantity = value.data[0].quantity;
+      RequestModel requestModel = RequestModel();
+      requestModel.data = {"id": _notificationId};
+      requestModel.context = _context;
+      requestModel.url = serviceFunction.funNotificationsDetail;
 
-        setCountryVisible(false);
-        setStateVisible(false);
-        setCityVisible(false);
-        setPincodeVisible(false);
+      WebService.serviceCall(requestModel).then((_v) {
+        var value =
+            NotificationOneModel.fromJson(convert.json.decode(_v.toString()));
+        notificationOneModel = value;
+
+        _myAreaDetails = value.data[0].areaDetail;
+        actioncKey?.currentState?.changeSelectedItem(value.data[0].action);
+        audienceKey?.currentState?.changeSelectedItem(value.data[0].audience);
+        quantityKey?.currentState?.changeSelectedItem(value.data[0].quantity);
+        areaKey?.currentState?.changeSelectedItem(value.data[0].area);
+
+        selectArea(value.data[0].area);
+
         validatePincode = false;
         autoValidateForm = false;
         myTitleEditController.text = value.data[0].title;
@@ -164,7 +198,6 @@ class NotificationsProvider extends ChangeNotifier {
   }
 
   verifyPinCode(String _val) async {
-    // funValidPincode
     RequestModel requestModel = RequestModel();
     requestModel.context = _context;
     requestModel.url = serviceFunction.funGetCityByPincode;
@@ -210,63 +243,42 @@ class NotificationsProvider extends ChangeNotifier {
     await WebService.funGetCities().then((value) => cityListModel = value);
   }
 
-  changeArea(value) {
-    selectedArea = value;
-    if (value == notificationRequiredData.data.area[0]) {
-      setCountryVisible(true);
-      setStateVisible(false);
-      setCityVisible(false);
-      setPincodeVisible(false);
-    } else if (value == notificationRequiredData.data.area[1]) {
-      setCountryVisible(false);
-      setStateVisible(true);
-      setCityVisible(false);
-      setPincodeVisible(false);
-    } else if (value == notificationRequiredData.data.area[2]) {
-      setCountryVisible(false);
-      setStateVisible(true);
-
-      setCityVisible(true);
-      setPincodeVisible(false);
-    } else {
-      setCountryVisible(false);
-      setStateVisible(true);
-
-      setCityVisible(false);
-      setPincodeVisible(true);
-      validatePincode = true;
-
-      showDone = true;
-    }
-  }
-
   submit() {
+    print("sss:$selectedArea:$selectedCountry");
     if (formKey.currentState.validate()) {
-      var requestData = CreateNotificationRequestModel();
-      requestData.title = myTitleEditController.text;
-      requestData.description = myDescriptionEditController.text;
-      requestData.selectedAction = selectedAction;
-      requestData.contact = myContactEditController.text;
-      requestData.selectedAudience = selectedAudience;
-      requestData.selectedArea = selectedArea;
-      if (selectedArea == notificationRequiredData.data.area[0]) {
-        requestData.areaDetail = selectedCountry;
-      } else if (selectedArea == notificationRequiredData.data.area[1]) {
-        requestData.areaDetail = selectedState.state;
-      } else if (selectedArea == notificationRequiredData.data.area[2]) {
-        requestData.areaDetail = selectedCity.city;
-      } else if (selectedArea == notificationRequiredData.data.area[3]) {
-        requestData.areaDetail = myPincodeEditController.text;
-      }
-      requestData.selectedQuantity = selectedQuantity;
-      WebService.funCreateNotification(requestData, _context).then((value) {
+      int areaDetailId =
+          notificationRequiredData.data.area.indexOf(selectedArea);
+      print("detail is $areaDetailId");
+      var areaDetail = (areaDetailId == 0)
+          ? selectedCountry
+          : (areaDetailId == 1)
+              ? selectedState.state
+              : (areaDetailId == 2)
+                  ? selectedCity.city
+                  : myPincodeEditController.text;
+
+      Map _map = {
+        "title": this.myTitleEditController.text,
+        "description": this.myDescriptionEditController.text,
+        "action": this.selectedAction,
+        "contact": this.myContactEditController.text,
+        "audience": this.selectedAudience,
+        "area": this.selectedArea,
+        "area_detail": areaDetail,
+        "quantity": this.selectedQuantity
+      };
+      print("_map");
+      RequestModel requestModel = RequestModel();
+      requestModel.data = _map;
+      requestModel.context = _context;
+      requestModel.url = serviceFunction.funCreateNotification;
+      print(_map);
+      WebService.funCreateNotification(requestModel, _context).then((value) {
+        BotToast.showText(text: value.message);
         if (value.status == 'success') {
-          // setState(() {
-          //   initializeDefaultValues();
-          // });
-        } else {
-          BotToast.showText(text: value.message);
-        }
+          getData();
+          Navigator.pop(_context);
+        } else {}
       });
     } else {
       autoValidateForm = true;
@@ -274,6 +286,7 @@ class NotificationsProvider extends ChangeNotifier {
   }
 
   allClear() {
+    _myAreaDetails = '';
     myTitleEditController.text = '';
     myDescriptionEditController.text = '';
     myContactEditController.text = '';
@@ -282,9 +295,8 @@ class NotificationsProvider extends ChangeNotifier {
     selectedAudience = '';
     selectedArea = '';
     selectedCountry = '';
-    selectedState.state = '';
+    selectedState = StateModel();
     selectedCity.city = '';
     selectedQuantity = '';
-    notifyListeners();
   }
 }

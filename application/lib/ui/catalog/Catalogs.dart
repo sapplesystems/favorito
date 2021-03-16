@@ -1,6 +1,5 @@
 import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
-import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Favorito/config/SizeManager.dart';

@@ -102,7 +102,7 @@ class MenuHome extends StatelessWidget {
       child: Row(children: [
         Flexible(
           child: EditTextComponent(
-              ctrl: _mySearchEditTextController,
+              controller: _mySearchEditTextController,
               hint: "Search for ... ",
               security: false,
               valid: true,

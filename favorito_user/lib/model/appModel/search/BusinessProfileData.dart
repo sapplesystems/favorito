@@ -3,7 +3,7 @@ import 'package:favorito_user/model/appModel/Business/RelationModel.dart';
 import 'package:favorito_user/model/appModel/Business/Category.dart';
 
 class BusinessProfileData {
-  int id;
+  var id;
   String businessId;
   String shortDesciption;
   String priceRange;
@@ -12,17 +12,17 @@ class BusinessProfileData {
   String phone;
   String landline;
   String businessEmail;
-  int totalReviews;
+  var totalReviews;
   String startHours;
   String endHours;
-  double distance;
-  int businessCategoryId;
+  var distance;
+  var businessCategoryId;
   String businessName;
   String townCity;
   String state;
   String photo;
   String businessStatus;
-  int avgRating;
+  var avgRating;
   String address1;
   String address2;
   String address3;

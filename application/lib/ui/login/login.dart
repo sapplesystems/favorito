@@ -1,4 +1,5 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
+import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/network/RequestModel.dart';
@@ -24,6 +25,7 @@ class _LoginState extends State<Login> {
   TextEditingController userCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool showPass = false;
   @override
   void initState() {
     super.initState();
@@ -81,31 +83,42 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           Padding(
-                              padding: EdgeInsets.symmetric(vertical: sm.h(4)),
-                              child: txtfieldboundry(
+                              padding: EdgeInsets.only(top: sm.h(4)),
+                              child: txtfieldPostAction(
                                 valid: true,
                                 maxLines: 1,
                                 title: "Password",
+                                sufixClick: () {
+                                  setState(() => showPass = !showPass);
+                                },
+                                sufixIcon: showPass
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 controller: passCtrl,
-                                security: true,
+                                sufixColor: myRed,
+                                security: !showPass,
                               )),
-                          InkWell(
-                            onTap: () =>
-                                Navigator.of(context).pushNamed('/forgetPass'),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Forgot Password?",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: myRed,
-                                    fontSize: 16,
-                                    fontFamily: "Roboto",
-                                    fontWeight: FontWeight.w400,
+                          Padding(
+                            padding: EdgeInsets.only(
+                                bottom: sm.h(4), right: sm.w(2)),
+                            child: InkWell(
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed('/forgetPass'),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Forgot Password?",
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                      color: myRed,
+                                      fontSize: 16,
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],

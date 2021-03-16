@@ -22,7 +22,7 @@ class service {
   static final register = baseUser2 + 'register';
   static final login = baseUser2 + 'login';
   static final businessCarousel = baseUserProfile + 'business-carousel';
-  static final getAddress = base + 'user-address/get-address';
+  static final getAddress = baseUser + 'address/get-address';
   static final getUserImage = base + 'user-profile/user-profile-photo';
   static final search = base + 'user-business/search-by-name';
   static final hotAndNewBusiness = baseBusinessDashboard + 'get-new-business';
@@ -48,6 +48,7 @@ class service {
       baseUserProfile + 'business-catalog-list';
 
   static final joblist = base + 'job/list';
+  static final checkPostalCode = base + 'job/city-from-pincode';
 
   //waitlist
   static final baseUserWaitlistVerbose = baseUserWaitlist + 'waitlist-verbose';
@@ -91,4 +92,11 @@ class service {
   static final checkMobileOrEmail =
       base + 'user/is-account-exist'; //this is used to create a new order
 
+  static final workingHours = base + 'user-business/get-business-hours';
+
+  static final changeAddress = baseUser + 'address/change-default-address';
+  static final modifyAddress = baseUser + 'address/change-address';
+  static final deleteAddress = baseUser + 'address/delete-address';
+  static final profileImageUpdate = baseUserProfile + 'set-user-profile-photo';
+  static final stateList = base + 'state-city/state-list';
 }

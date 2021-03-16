@@ -9,11 +9,13 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
+import '../../utils/RIKeys.dart';
 
 class ForgetPassword extends StatelessWidget {
   SizeManager sm;
   ForgetPasswordProvider prTrue;
   ForgetPasswordProvider prFalse;
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -27,6 +29,7 @@ class ForgetPassword extends StatelessWidget {
           prTrue.allClear();
         },
         child: Scaffold(
+          key: RIKeys.josKeys1,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
             child: ListView(children: [
@@ -46,24 +49,20 @@ class ForgetPassword extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26))
               ]),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: EditTextComponent(
-                  ctrl: prTrue.acces[0].controller,
-                  hint: prFalse.title[0],
-                  security: false,
-                  valid: true,
-                  suffixTxt: '',
-                  myOnChanged: (_) {
-                    prTrue.onChange(0);
-                  },
-                  error: prTrue.acces[0].error,
-                  myregex: emailAndMobileRegex,
-                  maxLines: 1,
-                  maxlen: 50,
-                  keyboardSet: TextInputType.emailAddress,
-                  prefixIcon: prFalse.prefix[0],
-                ),
-              ),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: EditTextComponent(
+                      controller: prTrue.acces[0].controller,
+                      hint: prFalse.title[0],
+                      security: false,
+                      valid: true,
+                      suffixTxt: '',
+                      myOnChanged: (_) => prTrue.onChange(0),
+                      error: prTrue.acces[0].error,
+                      myregex: emailAndMobileRegex,
+                      maxLines: 1,
+                      maxlen: 50,
+                      keyboardSet: TextInputType.emailAddress,
+                      prefixIcon: prFalse.prefix[0])),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(
                   prTrue.didNotReceive,
@@ -74,9 +73,7 @@ class ForgetPassword extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    prTrue.funSendOtpSms();
-                  },
+                  onTap: () => prTrue.funSendOtpSms(),
                   child: Text(
                     prFalse.sendOtptxt,
                     textAlign: TextAlign.center,
@@ -146,7 +143,7 @@ class ForgetPassword extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: EditTextComponent(
-                            ctrl: prTrue.acces[i].controller,
+                            controller: prTrue.acces[i].controller,
                             title: prFalse.title[i],
                             hint: prFalse.title[i],
                             security: true,
@@ -181,11 +178,9 @@ class ForgetPassword extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               horizontal: 16, vertical: 16),
                           child: Center(
-                            child: Text(
-                              "Submit",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400, color: myRed),
-                            ),
+                            child: Text("Submit",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400, color: myRed)),
                           ),
                         ),
                       ),

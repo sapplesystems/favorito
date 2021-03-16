@@ -1,114 +1,176 @@
+import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
-import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
+import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 class UserAddress extends StatelessWidget {
+  SizeManager sm;
   UserAddressProvider vaTrue;
+  UserAddressProvider vaFalse;
+
   @override
   Widget build(BuildContext context) {
     vaTrue = Provider.of<UserAddressProvider>(context, listen: true);
-
-    return Consumer<UserAddressProvider>(builder: (context, data, child) {
-      return ListView(
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Saved Address',
-                    style: TextStyle(fontSize: 22, fontFamily: 'Gilroy-Bold'),
-                  ),
-                  Row(children: [
-                    InkWell(
-                        onTap: () => vaTrue.getAddress(),
-                        child: Icon(Icons.refresh, color: Colors.black)),
-                    SizedBox(width: 10),
-                    InkWell(
-                        onTap: () => Navigator.pop(context),
-                        child: Icon(Icons.close, color: Colors.black))
-                  ])
-                ]),
-          ),
-          Divider(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 0, left: 10, right: 10),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: data.addressListModel.data.addresses.length ?? 0,
-              itemBuilder: (BuildContext context, int index) {
-                Addresses da = data.addressListModel.data.addresses[index];
-                var _v = '${da.address},\n${da.city} ${da.state},${da.pincode}';
-                return InkWell(
-                  onTap: () {
-                    vaTrue.seSelectedAddress(index);
-                    Navigator.pop(context);
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [ListTile(title: Text(_v)), Divider()],
-                  ),
-                );
-              },
-            ),
-          )
-        ],
-      );
-    });
+    vaFalse = Provider.of<UserAddressProvider>(context, listen: false);
+    sm = SizeManager(context);
+    return Scaffold(
+      key: RIKeys.josKeys8,
+      backgroundColor: myBackGround,
+      body: Consumer<UserAddressProvider>(builder: (context, data, child) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 22, vertical: sm.h(2)),
+          child: ListView(physics: NeverScrollableScrollPhysics(), children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Icons.keyboard_backspace, size: 24)),
+              InkWell(
+                  onTap: () => vaTrue.getAddress(),
+                  child: Icon(Icons.refresh, color: Colors.black))
+            ]),
+            SizedBox(height: sm.h(4)),
+            Text('My Addresses',
+                style: TextStyle(fontSize: 22, fontFamily: 'Gilroy-Regular')),
+            InkWell(
+                onTap: () {
+                  data.setEditId(null);
+                  Navigator.of(context)
+                      .pushNamed('/addAddress')
+                      .whenComplete(() => vaTrue.getAddress());
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: sm.h(2)),
+                  child: Row(children: [
+                    Icon(Icons.add, size: 26, color: myRed),
+                    Text(
+                      '\tAdd Addresses',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Gilroy-Medium'),
+                    ),
+                  ]),
+                )),
+            Divider(),
+            Container(
+              height: sm.h(46),
+              width: sm.w(90),
+              child: Scrollbar(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount:
+                        data.addressListModel?.data?.addresses?.length ?? 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      Addresses da =
+                          data.addressListModel.data.addresses[index];
+                      var _v =
+                          '${da.address},\n${da.city} ${da.state},${da.pincode}'
+                              .trim();
+                      return InkWell(
+                        onTap: () {
+                          vaTrue.seSelectedAddress(index);
+                        },
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: Text(_v,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Gilroy-Regular'))),
+                                    PopupMenuButton(
+                                      onSelected: (_val) {
+                                        if (_val == 'Edit') {
+                                          data.setEditId(da.id.toString());
+                                          Navigator.of(context)
+                                              .pushNamed('/addAddress')
+                                              .whenComplete(
+                                                  () => vaTrue.getAddress());
+                                        } else if (_val == 'Delete') {
+                                          vaTrue.deleteAddress(da.id);
+                                        }
+                                        print("$_v" + ':' + "$_val");
+                                      },
+                                      child: Row(children: [
+                                        Icon(Icons.more_vert, size: 20),
+                                      ]),
+                                      itemBuilder: (BuildContext context) =>
+                                          <PopupMenuEntry<String>>[
+                                        PopupMenuItem<String>(
+                                            value: 'Edit', child: Text('Edit')),
+                                        PopupMenuItem<String>(
+                                            value: 'Delete',
+                                            child: Text('Delete'))
+                                      ],
+                                    )
+                                  ]),
+                              Divider()
+                            ]),
+                      );
+                    }),
+              ),
+            )
+          ]),
+        );
+      }),
+    );
   }
 }
 
-class UserAddressProvider extends ChangeNotifier {
-  String _profileImage;
-  AddressListModel addressListModel = AddressListModel();
-  UserAddressProvider() {
-    getAddress();
-    getUserImage();
-  }
-  getAddress() async {
-    // pr.show().timeout(Duration(seconds: 5));
-    await APIManager.getAddress().then((value) {
-      // pr.hide();
-      if (value.status == 'success') {
-        addressListModel = value;
-        notifyListeners();
-      }
-    });
-  }
+class myDropDown extends StatefulWidget {
+  List dataList;
+  int selectedIndex;
 
-  seSelectedAddress(int index) {
-    for (int _i = 0; _i < this.addressListModel.data.addresses.length; _i++) {
-      this.addressListModel.data.addresses[index].defaultAddress = 0;
-    }
-    this.addressListModel.data.addresses[index].defaultAddress = 1;
-    notifyListeners();
-  }
+  myDropDown({this.dataList, this.selectedIndex});
 
-  Addresses getSelectedAddress() {
-    Addresses v;
-    for (int i = 0; i < this.addressListModel.data.addresses.length; i++) {
-      if (this.addressListModel.data.addresses[i].defaultAddress == 1) {
-        v = this.addressListModel.data.addresses[i];
-        break;
-      }
-    }
-    notifyListeners();
-    return v;
-  }
+  @override
+  _myDropDownState createState() => _myDropDownState();
+}
 
-  getProfileImage() =>
-      _profileImage ??
-      'https://www.rameng.ca/wp-content/uploads/2014/03/placeholder.jpg';
-  void getUserImage() async {
-    await APIManager.getUserImage().then((value) {
-      if (value.status == 'success') {
-        _profileImage = value?.data[0]?.photo ??
-            'https://www.rameng.ca/wp-content/uploads/2014/03/placeholder.jpg';
-        notifyListeners();
-      }
-    });
+class _myDropDownState extends State<myDropDown> {
+  SizeManager sm;
+
+  @override
+  Widget build(BuildContext context) {
+    sm = SizeManager(context);
+    return Padding(
+        padding: EdgeInsets.only(top: sm.h(2)),
+        child: Neumorphic(
+            style: NeumorphicStyle(
+                shape: NeumorphicShape.convex,
+                depth: 8,
+                lightSource: LightSource.top,
+                color: Colors.white,
+                boxShape: NeumorphicBoxShape.roundRect(
+                    BorderRadius.all(Radius.circular(30.0)))),
+            child: DropdownButton(
+                // value: _selectedService,
+                isExpanded: true,
+                hint: Padding(
+                  padding: EdgeInsets.only(left: sm.w(14), right: sm.w(6)),
+                  child: Text("Select Service"),
+                ),
+                underline: Container(),
+                // this is the magic
+                items: widget.dataList?.map<DropdownMenuItem>((value) {
+                  return DropdownMenuItem(
+                      value: value,
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                          child: Text(value)));
+                })?.toList(),
+                onChanged: (value) {
+                  // setState(() {
+                  // _selectedService = value;
+                  // });
+                })));
   }
 }

@@ -3,8 +3,8 @@ import 'package:favorito_user/model/appModel/Menu/order/OptionsModel.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class BasketControllers extends ChangeNotifier {
-  static List<MenuItemModel> _listItem = List<MenuItemModel>();
-  static List<OptionsModel> _listOpt = List<OptionsModel>();
+  static List<MenuItemModel> _listItem = [];
+  static List<OptionsModel> _listOpt = [];
   void addItemToList(MenuItemModel _data) {
     _listItem.add(_data);
   }

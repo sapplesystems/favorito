@@ -19,7 +19,10 @@ class card3 extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: sm.h(2), left: sm.w(2)),
           child: Text(txt1,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Gilroy-Regular',
+                  fontWeight: FontWeight.w800)),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -28,7 +31,12 @@ class card3 extends StatelessWidget {
                 EdgeInsets.only(top: sm.h(2), left: sm.w(3), bottom: sm.h(2)),
             child: Text(title,
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontFamily: "Gilroy-Medium",
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.60)),
           ),
         ),
         SizedBox(height: sm.h(2))

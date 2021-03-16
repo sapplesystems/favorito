@@ -39,8 +39,9 @@ class Prefs {
       // setPasscode(''),
       // setuserId(null),
       // setrolenumber(null),
-      setPOSTEL(0),
-      setToken(''),
+
+      setToken('null'),
+      // setPOSTEL(0),
     ]);
   }
 }

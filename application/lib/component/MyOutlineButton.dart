@@ -28,8 +28,11 @@ class MyOutlineButton extends StatelessWidget {
         child: Center(
           child: Text(title,
               textAlign: TextAlign.center,
-              style:
-                  TextStyle(color: Colors.red, fontSize: 16, letterSpacing: 1)),
+              style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  letterSpacing: 1)),
         ),
       ),
     );

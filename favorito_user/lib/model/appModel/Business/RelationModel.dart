@@ -1,6 +1,6 @@
 class Relation {
-  int isRelation;
-  int relationId;
+  var isRelation;
+  var relationId;
 
   Relation({this.isRelation, this.relationId});
 

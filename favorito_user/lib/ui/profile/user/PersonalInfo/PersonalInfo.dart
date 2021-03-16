@@ -22,95 +22,93 @@ class PersonalInfo extends StatelessWidget {
     if (spFalse.acces[0].controller.text.trim().isEmpty)
       spTrue.getPersonalData();
     return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context);
-      },
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: myBackGround,
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
-            child: ListView(shrinkWrap: true, children: [
-              Padding(
-                  padding: EdgeInsets.only(top: sm.h(1)),
-                  child: SvgPicture.asset('assets/icon/signup_image.svg',
-                      height: sm.h(20), fit: BoxFit.fitHeight)),
-              Padding(
-                padding: EdgeInsets.only(top: sm.h(2)),
-                child: Text(
-                  "Hi! ${spTrue.acces[0].controller.text}",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-                ),
-              ),
-              Container(
-                child: Builder(
-                    builder: (context) => Form(
-                        key: spFalse.formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: Column(children: [
-                          for (int i = 0; i < spFalse.title.length; i++)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
-                              child: EditTextComponent(
-                                ctrl: spTrue.acces[i].controller,
-                                title: spTrue.title[i],
-                                hint: spTrue.title[i],
-                                myOnChanged: (_) {
-                                  // spFalse.onChange(i)
-                                },
-                                // suffixTap: () => spTrue.checkIdClicked(i),
-                                suffixTxt: '',
-                                error: spTrue.acces[i].error,
-                                security: false,
-                                valid: true,
-                                maxLines: 1,
-                                formate: FilteringTextInputFormatter
-                                    .singleLineFormatter,
-                                maxlen: 50,
-                                keyboardSet: i == 1
-                                    ? TextInputType.phone
-                                    : TextInputType.text,
-                                prefixIcon: spTrue.prefix[i],
-                              ),
-                            ),
-                          tcp(
-                            key: key,
-                            sm: sm,
-                            newValue: spTrue.newValue,
-                            returnValue: (a) {
-                              spTrue.newValue = a;
-                            },
-                          ),
-                        ]))),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: sm.h(4)),
-                child: NeumorphicButton(
-                  style: NeumorphicStyle(
-                      shape: NeumorphicShape.convex,
-                      depth: 4,
-                      lightSource: LightSource.topLeft,
-                      color: myButtonBackground,
-                      boxShape: NeumorphicBoxShape.roundRect(
-                          BorderRadius.all(Radius.circular(24.0)))),
-                  margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
-                  onPressed: () => spTrue.setPersonalData(),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Center(
-                    child: Text(
-                      "Submit",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, color: myRed),
-                    ),
-                  ),
-                ),
-              ),
-            ]),
-          ),
-        ),
-      ),
-    );
+        onWillPop: () {
+          Navigator.pop(context);
+        },
+        child: SafeArea(
+            child: Scaffold(
+                backgroundColor: myBackGround,
+                body: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
+                    child: ListView(shrinkWrap: true, children: [
+                      Padding(
+                          padding: EdgeInsets.only(top: sm.h(1)),
+                          child: SvgPicture.asset(
+                              'assets/icon/signup_image.svg',
+                              height: sm.h(20),
+                              fit: BoxFit.fitHeight)),
+                      Padding(
+                        padding: EdgeInsets.only(top: sm.h(2)),
+                        child: Text(
+                          "Hi! ${spTrue.acces[0].controller.text}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 28),
+                        ),
+                      ),
+                      Container(
+                        child: Builder(
+                            builder: (context) => Form(
+                                key: spFalse.formKey,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                child: Column(children: [
+                                  for (int i = 0; i < spFalse.title.length; i++)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: EditTextComponent(
+                                        controller: spTrue.acces[i].controller,
+                                        title: spTrue.title[i],
+                                        hint: spTrue.title[i],
+                                        myOnChanged: (_) {
+                                          // spFalse.onChange(i)
+                                        },
+                                        // suffixTap: () => spTrue.checkIdClicked(i),
+                                        suffixTxt: '',
+                                        error: spTrue.acces[i].error,
+                                        security: false,
+                                        valid: true,
+                                        maxLines: 1,
+                                        formate: FilteringTextInputFormatter
+                                            .singleLineFormatter,
+                                        maxlen: 50,
+                                        keyboardSet: i == 1
+                                            ? TextInputType.phone
+                                            : TextInputType.text,
+                                        prefixIcon: spTrue.prefix[i],
+                                      ),
+                                    ),
+                                  tcp(
+                                    key: key,
+                                    sm: sm,
+                                    newValue: spTrue.newValue,
+                                    returnValue: (a) {
+                                      spTrue.newValue = a;
+                                    },
+                                  ),
+                                ]))),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(top: sm.h(4)),
+                          child: NeumorphicButton(
+                              style: NeumorphicStyle(
+                                  shape: NeumorphicShape.convex,
+                                  depth: 4,
+                                  lightSource: LightSource.topLeft,
+                                  color: myButtonBackground,
+                                  boxShape: NeumorphicBoxShape.roundRect(
+                                      BorderRadius.all(Radius.circular(24.0)))),
+                              margin:
+                                  EdgeInsets.symmetric(horizontal: sm.w(10)),
+                              onPressed: () => spTrue.setPersonalData(),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: Center(
+                                  child: Text("Submit",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: myRed)))))
+                    ])))));
   }
 }
 

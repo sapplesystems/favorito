@@ -58,6 +58,7 @@ class Addresses {
   String landmark;
   String address;
   int defaultAddress;
+  String addressType;
 
   Addresses(
       {this.id,
@@ -68,7 +69,8 @@ class Addresses {
       this.country,
       this.landmark,
       this.address,
-      this.defaultAddress});
+      this.defaultAddress,
+      this.addressType});
 
   Addresses.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -80,6 +82,7 @@ class Addresses {
     landmark = json['landmark'];
     address = json['address'];
     defaultAddress = json['default_address'];
+    addressType = json['address_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -93,6 +96,7 @@ class Addresses {
     data['landmark'] = this.landmark;
     data['address'] = this.address;
     data['default_address'] = this.defaultAddress;
+    data['address_type'] = this.addressType;
     return data;
   }
 }

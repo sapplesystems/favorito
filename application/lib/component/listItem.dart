@@ -21,12 +21,12 @@ class listItems extends StatelessWidget {
             Expanded(
               flex: 2,
               child: SvgPicture.asset("assets/icon/$ico.svg",
-                  alignment: Alignment.center, height: sm.h(3)),
+                  alignment: Alignment.center, height: sm.h(2.4)),
             ),
             SizedBox(width: sm.w(2)),
             Expanded(
                 flex: 10,
-                child: Text(title.trim(), style: TextStyle(fontSize: 18)))
+                child: Text(title.trim(), style: TextStyle(fontSize: 16)))
           ],
         ),
       ),
