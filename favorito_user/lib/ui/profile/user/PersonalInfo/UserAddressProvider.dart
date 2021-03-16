@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
@@ -9,6 +10,7 @@ import 'package:favorito_user/utils/Acces.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
@@ -279,6 +281,28 @@ class UserAddressProvider extends ChangeNotifier {
     });
 
     notifyListeners();
+  }
+
+  scanQR(BuildContext context) async {
+    String qrResult;
+    String result = "";
+    try {
+      await BarcodeScanner.scan().then((_val) async {
+        qrResult = _val.rawContent;
+        Navigator.of(context)
+            .pushNamed('/businessProfile', arguments: qrResult);
+        print("qrResult:$qrResult");
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.cameraAccessDenied) {
+        result = "Camera permission was denied";
+      } else
+        result = "Unknown Error $ex";
+    } on FormatException {
+      result = "You pressed the back button before scanning anything";
+    } catch (ex) {
+      result = "Unknown Error $ex";
+    }
   }
 
   // void getAllCity(String selectedCity, key) async {

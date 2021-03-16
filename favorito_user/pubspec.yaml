@@ -43,7 +43,8 @@ dependencies:
   pin_code_fields:
   provider:
   image_cropper:
-  flutter_rating_bar:  
+  flutter_rating_bar:
+  barcode_scan:
   flutter:
     sdk: flutter
 

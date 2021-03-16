@@ -52,7 +52,6 @@ class _HomeState extends State<Home> {
     widget.pr = ProgressDialog(context, type: ProgressDialogType.Normal);
     widget.pr.style(message: 'Fetching Data, please wait');
     sm = SizeManager(context);
-
     return WillPopScope(
       onWillPop: () => APIManager.onWillPop(context),
       child: Scaffold(
@@ -132,7 +131,9 @@ class _HomeState extends State<Home> {
                           height: sm.h(3),
                           fit: BoxFit.fill,
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          vaTrue.scanQR(context);
+                        }),
                   )
                 ],
               ),
