@@ -13,7 +13,7 @@ exports.all_business_campaign = async function(req, res, next) {
             COND += " AND id='" + req.body.campaign_id + "'";
         }
 
-        var sql = "SELECT id,`name`,keyword,cpc,total_budget,impressions,clicks,status \n\
+        var sql = "SELECT id,`name`,keyword,cpc, total_spent,impressions,clicks,status \n\
         FROM business_ad_spent_campaign WHERE " + COND;
         db.query(sql, async function(err, result) {
             if (err) {
@@ -30,8 +30,10 @@ exports.all_business_campaign = async function(req, res, next) {
             }
 
             // fetching the data from the ads_spent table 
-            sql_data_ads_spent = `select total_spent,free_credits,paid_credits from business_ad_credits where business_id = '${business_id}'`
+            sql_data_ads_spent = `select (select sum(total_spent) from business_ad_spent_campaign where business_id = '${business_id}') as total_spent ,free_credits,paid_credits from business_ad_credits where business_id = '${business_id}'`
+
             result_data_ads_spent = await exports.run_query(sql_data_ads_spent)
+                // return res.send(result_data_ads_spent)
             if (result_data_ads_spent[0] && result_data_ads_spent[0].total_spent) {
                 total_spent = result_data_ads_spent[0].total_spent
             } else {

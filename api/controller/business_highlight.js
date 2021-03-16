@@ -12,11 +12,19 @@ exports.getHighlight = async function(req, res, next) {
         var photos = await fetchBusinessHighlightPhoto(business_id);
 
         var sql = "SELECT highlight_title,highlight_desc FROM business_highlights WHERE business_id='" + business_id + "'";
-        db.query(sql, function(err, result) {
+        db.query(sql, async function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            result[0].photos = photos;
+            if (result == '' || result[0] == '') {
+                return res.status(200).json({ status: 'success', message: 'No highlight is found', data: [] });
+            }
+            var photos = await fetchBusinessHighlightPhoto(business_id);
+            if (photos && photos[0]) {
+                result[0].photos = photos
+            } else {
+                result[0].photos = []
+            }
             return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
         });
     } catch (e) {

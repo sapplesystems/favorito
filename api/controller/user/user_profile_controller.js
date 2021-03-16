@@ -55,7 +55,7 @@ exports.userProfilePhoto = async function(req, res, next) {
         user_id = req.userdata.id
     }
     try {
-        var sql = "SELECT concat('" + img_path + "',photo) as photo  FROM users WHERE id = '" + user_id + "' AND deleted_at IS NULL"
+        var sql = "SELECT concat('" + img_path + "',photo) as photo  FROM users WHERE id = '" + user_id + "' AND photo != '(NULL)' AND deleted_at IS NULL "
         db.query(sql, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });

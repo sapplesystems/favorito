@@ -1,3 +1,4 @@
+const { Router } = require('express');
 var express = require('express');
 var router = express.Router();
 var BusinessNotificatonController = require('../controller/business_notification');
@@ -32,4 +33,9 @@ router.post('/add', CheckAuth, BusinessNotificatonController.add_notification);
 
 router.post('/detail', CheckAuth, BusinessNotificatonController.detail_notification);
 
+/*
+ * DELETE NOTIFICATION BY ID  
+ */
+
+router.post('/delete', CheckAuth, BusinessNotificatonController.delete_notification)
 module.exports = router;

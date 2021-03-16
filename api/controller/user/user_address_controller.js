@@ -4,7 +4,7 @@ exports.getAddress = async function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT address1, address2, address3, pincode, town_city, state_id, country_id, location FROM business_master WHERE business_id = '" + req.userdata.business_id + "'";
     } else if (req.userdata.id) {
-        var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address, IFNULL(address_type,'') as address_type FROM user_address WHERE user_id = '" + req.userdata.id + "'";
+        var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address, IFNULL(address_type,'') as address_type, deleted_at FROM user_address WHERE user_id = '" + req.userdata.id + "' and deleted_at is null";
         var sql_name = "SELECT first_name, last_name FROM users WHERE id = '" + req.userdata.id + "'"
     } else {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
@@ -41,6 +41,26 @@ exports.changeDefaultAddress = async function(req, res, next) {
             res.status(200).send({ status: 'success', message: 'update done' })
         }
     }
+}
+
+exports.deleteAddress = async(req, res) => {
+    if (!req.body.address_id) {
+        return res.status(400).json({ status: 'failed', message: 'address_id is missing' });
+    }
+
+    let set = "deleted_at=NOW() "
+    try {
+        var sql = "UPDATE user_address SET " + set + " WHERE id='" + req.body.address_id + "'";
+        update_result = await exports.executeSql(sql, res)
+        if (parseInt(update_result.affectedRows) > 0) {
+            return res.status(200).send({ status: 'success', message: 'Update done' })
+        } else {
+            return res.status(200).send({ status: 'failed', message: 'Something went wrong' })
+        }
+    } catch (error) {
+        return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+    }
+
 }
 
 exports.changeAddress = async function(req, res, next) {
@@ -155,6 +175,8 @@ exports.changeAddress = async function(req, res, next) {
 
 
 }
+
+
 
 
 exports.executeSql = function(sql, res) {

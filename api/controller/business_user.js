@@ -18,7 +18,7 @@ exports.getProfile = function(req, res, next) {
         var business_id = req.userdata.business_id;
         var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
         business_email,concat('" + img_path + "',photo) as photo, address1,address2,address3,pincode,town_city,state_id,country_id, \n\
-        location, by_appointment_only, working_hours, website,short_description,business_status \n\
+        location, by_appointment_only, working_hours, ifnull(website , '') as website ,short_description,business_status \n\
         FROM business_master WHERE  business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
 
         db.query(sql, function(err, rows, fields) {

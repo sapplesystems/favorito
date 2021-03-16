@@ -11,6 +11,9 @@ router.post('/change-default-address', CheckAuth, UserAddressController.changeDe
 
 router.post('/change-address', CheckAuth, UserAddressController.changeAddress);
 
+router.post('/delete-address', CheckAuth, UserAddressController.deleteAddress);
+
+
 
 
 module.exports = router;

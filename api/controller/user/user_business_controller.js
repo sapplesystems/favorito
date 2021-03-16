@@ -73,10 +73,25 @@ exports.searchByName = async function(req, res, next) {
             // AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id";
 
         } else {
+
+            keyword = req.body.keyword.trim()
+                // global replacement
+            keyword = `%${keyword.replace(/ /g, '%-%')}%`
+            keyword = ` b_m.business_name LIKE ${keyword.replace(/-/g," OR b_m.business_name LIKE ")}`
+            keyword = keyword.replace(/ %/g, " '%")
+            keyword = keyword.replace(/% /g, "%' ")
+            keyword = `${keyword}' `
+
+
             var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
             LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
             LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
-            WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY b_m.created_at desc";
+            WHERE b_m.is_activated='1' AND " + keyword + " AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY b_m.created_at desc";
+
+            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
+            // LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
+            // LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
+            // WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY b_m.created_at desc";
 
             // consider the day
             // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\

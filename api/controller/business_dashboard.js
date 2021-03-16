@@ -90,17 +90,27 @@ exports.getDashboardDetail = async function(req, res, next) {
 var user_pincode = (user_id) => {
     return new Promise(async(resolve, reject) => {
         try {
+            pincode_user = ''
             sql_users_address_pincode_default = `select pincode from user_address where user_id = '${user_id}}' and default_address = 1`
             result_users_address_pincode_default = await exports.run_query(sql_users_address_pincode_default)
             if (result_users_address_pincode_default != '') {
                 pincode_user = result_users_address_pincode_default[0].pincode
-            } else if (result_users_address_pincode_default == '') {
+            }
+            if (pincode_user == '') {
                 sql_users_address_pincode = `select pincode from user_address where user_id = '${user_id}}'`
                 result_users_address_pincode = await exports.run_query(sql_users_address_pincode)
-                pincode_user = result_users_address_pincode[0].pincode
-            } else {
+                if (result_users_address_pincode && result_users_address_pincode[0] && result_users_address_pincode[0].pincode) {
+                    pincode_user = result_users_address_pincode[0].pincode
+                } else {
+                    pincode_user = ''
+                }
+            }
+            if (pincode_user == '') {
                 sql_get_pincode_user = `select postal from users where id = '${user_id}'`
                 pincode_user = (await exports.run_query(sql_get_pincode_user))[0].postal
+            }
+            if (pincode_user == '' || pincode_user == null) {
+                reject('Something went wrong')
             }
             resolve(pincode_user)
         } catch (error) {

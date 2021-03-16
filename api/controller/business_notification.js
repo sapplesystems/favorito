@@ -125,3 +125,43 @@ exports.detail_notification = function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.delete_notification = async(req, res) => {
+    if (!req.body.id) {
+        return res.status(403).json({ status: 'error', message: 'Notification id not found.' });
+    }
+
+    sql_delete = `update business_notifications set deleted_at = NOW() where id = '${req.body.id}'`
+    try {
+        result_delete = await exports.run_query(sql_delete)
+        return res.status(200).json({ status: 'success', message: 'Notification deleted successfull' });
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+    }
+
+}
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+}

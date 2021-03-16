@@ -58,7 +58,7 @@ exports.getBusinessDetail = async function(req, res) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }
             if (result == '') {
-                return res.status(204).send({ status: 'success', message: 'No contect found', data: result })
+                return res.status(200).send({ status: 'success', message: 'No contect found', data: result })
             }
             result[0].avg_rating = avg_rating;
             result[0].attributes = result_attributes;

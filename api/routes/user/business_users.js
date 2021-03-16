@@ -22,6 +22,40 @@ var storage_business_profile = multer.diskStorage({
 var upload_business_profile = multer({ storage: storage_business_profile });
 /*to upload the media use multer: end here*/
 
+// code for auto hit the server
+// router.post('/auto-hit', (req, res) => {
+//     setInterval(() => {
+//         data = new Date()
+//         console.log(`Server keep up ... ${data.getHours()}:${data.getMinutes()}:${data.getSeconds()}`)
+//     }, 900000)
+//     return res.status(200).send('keeping server up....')
+// })
+
+request = require('request')
+router.get('/auto-hit-1', (req, res) => {
+    var requestLoop = setInterval(function() {
+        request({
+            url: "http://localhost:3000/api/user/auto-hit-2",
+            method: "GET",
+            timeout: 10000,
+            followRedirect: true,
+            maxRedirects: 10
+        }, function(error, response, body) {
+            if (error) {
+                console.log('error' + response.statusCode);
+                return res.status(403).send({ error: 'error in auto-hit-1 api' })
+            }
+        });
+    }, 900000);
+    return res.status(200).send('done')
+})
+
+router.get('/auto-hit-2', (req, res) => {
+    data = new Date()
+    console.log(`Auto hit ${data.getHours()}:${data.getMinutes()}:${data.getSeconds()}`)
+    return res.send('Auto hit running')
+})
+
 router.post('/register', UserRegisterController.register);
 
 router.post('/login', UserLoginController.login);
