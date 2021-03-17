@@ -138,7 +138,12 @@ class Profile extends StatelessWidget {
         switch (vaFalse.menuTitleList[identifier]) {
           case 'Logout':
             {
-              Prefs().clear();
+              try {
+                Provider.of<UserAddressProvider>(context, listen: false)
+                    .allClear();
+              } catch (e) {} finally {
+                Prefs().clear();
+              }
               Navigator.pop(context);
               Navigator.of(context).pushNamed('/login');
             }

@@ -216,6 +216,7 @@ class UserAddressProvider extends ChangeNotifier {
   getProfileImage() =>
       _profileImage ??
       'https://www.rameng.ca/wp-content/uploads/2014/03/placeholder.jpg';
+
   void getUserImage() async {
     await APIManager.getUserImage().then((value) {
       if (value.status == 'success') {
@@ -304,7 +305,9 @@ class UserAddressProvider extends ChangeNotifier {
       result = "Unknown Error $ex";
     }
   }
-
+allClear(){
+  _profileImage='';
+}
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {
   //     if (value.status == 'success') {

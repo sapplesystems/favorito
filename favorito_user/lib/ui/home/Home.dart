@@ -72,18 +72,18 @@ class _HomeState extends State<Home> {
                           .getImage(ImgSource.Gallery, RIKeys.josKeys3);
                     },
                     child: Container(
-                        width: sm.w(20),
-                        padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                                height: sm.h(8),
-                                width: sm.h(8),
-                                child: ImageMaster(
-                                    url: Provider.of<UserAddressProvider>(
-                                            context,
-                                            listen: true)
-                                        .getProfileImage())))),
+                      width: sm.w(20),
+                      padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                              height: sm.h(8),
+                              width: sm.h(8),
+                              child: ImageMaster(
+                                  url: Provider.of<UserAddressProvider>(context,
+                                          listen: true)
+                                      .getProfileImage()))),
+                    ),
                   ),
                   Container(
                     width: sm.w(60),

@@ -1,7 +1,6 @@
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/state_manager.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/RIKeys.dart';
@@ -27,11 +26,11 @@ class BusinessProfileProvider extends ChangeNotifier {
             .contains(e?.day?.toLowerCase())) {
           var amPm = int.parse(e.startHours.substring(0, 2)) < 12;
           var amPm1 = int.parse(e.endHours.substring(0, 2)) < 12;
-          _shopTiming = "${e.startHours.substring(0, 2)}" +
-              (amPm ? 'am' : 'pm') +
+          _shopTiming = "${e.startHours.substring(0, 5)}" +
+              // (amPm ? 'am' : 'pm') +
               ' - ' +
               e.endHours.substring(0, 5) +
-              (amPm1 ? 'am' : 'pm') +
+              // (amPm1 ? 'am' : 'pm') +
               '\u{25BC}';
           print("Hoursly33:${_shopTiming}");
         }

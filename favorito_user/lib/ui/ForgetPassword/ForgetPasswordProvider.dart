@@ -5,8 +5,7 @@ import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/get.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+
 import '../../utils/RIKeys.dart';
 
 class ForgetPasswordProvider extends ChangeNotifier {
@@ -90,9 +89,8 @@ class ForgetPasswordProvider extends ChangeNotifier {
         {
           if (emailRegex.hasMatch(acces[_index].controller.text))
             acces[_index].error = null;
-          else {
-            acces[_index].error = 'Invalid email';
-          }
+          else
+            acces[_index].error = 'Invalid email/phone';
           notifyListeners();
         }
         break;

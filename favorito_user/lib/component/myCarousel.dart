@@ -37,8 +37,7 @@ class _myCarouselState extends State<myCarousel> {
         else if (carouselModel != snapshot.data) {
           carouselModel = snapshot.data;
           return Container(
-            padding: EdgeInsets.only(
-                top: sm.h(6), bottom: sm.h(2), left: sm.w(3), right: sm.w(3)),
+            padding: EdgeInsets.symmetric(vertical: sm.h(2)),
             height: sm.h(30),
             child: CarouselSlider(
                 options: CarouselOptions(

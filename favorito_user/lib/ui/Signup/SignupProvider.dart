@@ -94,7 +94,7 @@ class SignupProvider extends ChangeNotifier {
           "postal_code": acces[4].controller.text,
           "profile_id": acces[6].controller.text,
           "reach_whatsapp": newValue1 ? 1 : 0,
-          "short_description": acces[6].controller.text,
+          "short_description": acces[6].controller.text
         };
         print("map:${_map.toString()}");
         await APIManager.register(_map, scaffoldKey).then((value) {
@@ -217,12 +217,6 @@ class SignupProvider extends ChangeNotifier {
             acces[_index].error = 'Please check availability';
           errorColor[_index] = null;
           notifyListeners();
-        }
-        break;
-
-      default:
-        {
-          //statements;
         }
         break;
     }

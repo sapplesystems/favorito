@@ -17,8 +17,9 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/Extentions.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../utils/Extentions.dart';
 import '../../../utils/RIKeys.dart';
 
 class BusinessProfile extends StatefulWidget {
@@ -96,10 +97,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                           padding: EdgeInsets.symmetric(
                               horizontal: sm.w(1), vertical: sm.w(0)),
                           decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1,
-                              ),
+                              border: Border.all(color: Colors.grey, width: 1),
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(8),
                                   bottomRight: Radius.circular(8)),
@@ -108,20 +106,21 @@ class _BusinessProfileState extends State<BusinessProfile> {
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               direction: Axis.vertical,
-                              spacing: -4,
+                              spacing: 0,
                               children: [
                                 Center(
-                                    child: Text(
-                                        '${data?.data[0]?.totalReviews ?? 0}',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: 'Gilroy-Reguler'))),
+                                  child: Text(
+                                      '${data?.data[0]?.totalReviews ?? 0}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: 'Gilroy-Reguler')),
+                                ),
                                 Text(
                                   'Reviews',
                                   style: TextStyle(
-                                    fontSize: 11,
-                                    color: myGreyLight,
+                                    fontSize: 14,
+                                    color: myGrey,
                                     fontFamily: 'Gilroy-Reguler',
                                   ),
                                 ),
@@ -142,19 +141,17 @@ class _BusinessProfileState extends State<BusinessProfile> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                  child: InkWell(
-                    onTap: () {
-                      vatrue.getBusinessHours();
-                    },
-                    child: Text(
-                        '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
-                        style: TextStyle(
-                            color: myGrey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400)),
-                  ),
-                ),
+                    padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                    child: InkWell(
+                        onTap: () {
+                          vatrue.getBusinessHours();
+                        },
+                        child: Text(
+                            '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
+                            style: TextStyle(
+                                color: myGrey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400)))),
                 Row(
                   children: [
                     Padding(
@@ -254,7 +251,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                 ]),
           ),
           Positioned(
-            top: sm.h(33.5),
+            bottom: 0,
             right: sm.w(6),
             child: Container(
               width: sm.w(18),
