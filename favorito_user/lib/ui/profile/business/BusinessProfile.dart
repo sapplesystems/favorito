@@ -6,81 +6,54 @@ import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
-import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
-import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/business/tabs/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../utils/Extentions.dart';
 import '../../../utils/RIKeys.dart';
 
-class BusinessProfile extends StatefulWidget {
-  String businessId;
-  BusinessProfile({this.businessId});
-  List<String> attribute = [];
-  List<String> service = [];
-  @override
-  _BusinessProfileState createState() => _BusinessProfileState();
-}
-
-class _BusinessProfileState extends State<BusinessProfile> {
+class BusinessProfile extends StatelessWidget {
   SizeManager sm;
-  businessProfileModel data = businessProfileModel();
   BusinessProfileProvider vatrue;
   bool isFirst = true;
-  var fut;
-  @override
-  void initState() {
-    super.initState();
-    fut = APIManager.baseUserProfileDetail(
-        {'business_id': widget.businessId}, RIKeys.josKeys2);
-  }
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    Provider.of<AppBookProvider>(context, listen: false)
-        .setBusinessId(widget.businessId);
     vatrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     if (isFirst) {
-      vatrue.setId(widget.businessId);
       isFirst = false;
     }
     return Scaffold(
         key: RIKeys.josKeys2,
         backgroundColor: Colors.white,
-        body: FutureBuilder<businessProfileModel>(
-          future: fut,
-          builder: (BuildContext context,
-              AsyncSnapshot<businessProfileModel> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: Text(loading));
-            if (snapshot.hasError)
-              return Center(child: Text('Something went wrong..'));
-            else {
-              if (data != snapshot?.data) data = snapshot.data ?? '';
-              widget.attribute.clear();
-              widget.attribute
-                  .addAll(data.data[0].attributes.map((e) => e.attributeName));
-
-              Provider.of<BusinessProfileProvider>(context, listen: false);
+        body: FutureBuilder<void>(
+          future: vatrue.getProfileDetail(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text('please wait...'),
+              );
+            } else if (snapshot.hasError) {
+              return Text('please wait...');
+            } else {
               return ListView(children: [
                 Stack(children: [
                   Column(children: [
-                    headerPart(),
+                    headerPart(context),
                     Stack(children: [
                       Padding(
                         padding: EdgeInsets.only(top: sm.h(8), bottom: sm.h(1)),
                         child: Center(
-                          child: Text(data?.data[0]?.businessName ?? '',
+                          child: Text(
+                              vatrue.getBusinessProfileData().businessName ??
+                                  '',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   letterSpacing: -.5,
@@ -104,28 +77,24 @@ class _BusinessProfileState extends State<BusinessProfile> {
                               color: Colors.white),
                           child: Center(
                             child: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              direction: Axis.vertical,
-                              spacing: 0,
-                              children: [
-                                Center(
-                                  child: Text(
-                                      '${data?.data[0]?.totalReviews ?? 0}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: 'Gilroy-Reguler')),
-                                ),
-                                Text(
-                                  'Reviews',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: myGrey,
-                                    fontFamily: 'Gilroy-Reguler',
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                direction: Axis.vertical,
+                                spacing: 0,
+                                children: [
+                                  Center(
+                                    child: Text(
+                                        '${vatrue.getBusinessProfileData()?.totalReviews ?? 0}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'Gilroy-Reguler')),
                                   ),
-                                ),
-                              ],
-                            ),
+                                  Text('Reviews',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: myGrey,
+                                          fontFamily: 'Gilroy-Reguler'))
+                                ]),
                           ),
                         ),
                       )
@@ -136,7 +105,8 @@ class _BusinessProfileState extends State<BusinessProfile> {
                 followingAndFavorite(),
                 Padding(
                   padding: EdgeInsets.only(left: sm.w(4), top: sm.h(4)),
-                  child: Text(data?.data[0]?.shortDesciption ?? "",
+                  child: Text(
+                      vatrue.getBusinessProfileData()?.shortDesciption ?? "",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
                 ),
@@ -147,7 +117,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                           vatrue.getBusinessHours();
                         },
                         child: Text(
-                            '${data?.data[0]?.townCity ?? ""}, ${data?.data[0]?.state ?? ""}',
+                            '${vatrue.getBusinessProfileData()?.townCity ?? ""}, ${vatrue.getBusinessProfileData()?.state ?? ""}',
                             style: TextStyle(
                                 color: myGrey,
                                 fontSize: 16,
@@ -156,9 +126,13 @@ class _BusinessProfileState extends State<BusinessProfile> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                      child: Text(data?.data[0]?.businessStatus ?? "",
+                      child: Text(
+                          vatrue.getBusinessProfileData()?.businessStatus ?? "",
                           style: TextStyle(
-                              color: data?.data[0]?.businessStatus == 'Offline'
+                              color: vatrue
+                                          .getBusinessProfileData()
+                                          ?.businessStatus ==
+                                      'Offline'
                                   ? myRed
                                   : Colors.green,
                               fontSize: 16,
@@ -196,18 +170,26 @@ class _BusinessProfileState extends State<BusinessProfile> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                  child: Text("\u{20B9} : " + data?.data[0]?.priceRange ?? "",
+                  child: Text(
+                      "\u{20B9} : " +
+                              vatrue.getBusinessProfileData()?.priceRange ??
+                          "",
                       style: TextStyle(
                           color: myGrey,
                           fontSize: 16,
                           fontWeight: FontWeight.w300)),
                 ),
-                ServicCart(),
-                Container(height: sm.h(70), child: Tabber(data: data.data[0]))
+                ServicCart(context),
+                Container(
+                    height: sm.h(70),
+                    child: Tabber(data: vatrue.getBusinessProfileData()))
               ]);
             }
           },
-        )).safe();
+        )
+        //
+
+        );
   }
 
   Widget smallProfile() {
@@ -216,23 +198,22 @@ class _BusinessProfileState extends State<BusinessProfile> {
       left: sm.w(34),
       right: sm.w(35),
       child: CircleAvatar(
-        radius: sm.w(15),
-        backgroundColor: Colors.red,
-        child: CircleAvatar(
-          radius: sm.w(2) * sm.w(2.05),
-          backgroundImage: NetworkImage(data?.data[0]?.photo),
+          radius: sm.w(15),
           backgroundColor: Colors.red,
-        ),
-      ),
+          child: CircleAvatar(
+              radius: sm.w(2) * sm.w(2.05),
+              backgroundImage:
+                  NetworkImage(vatrue.getBusinessProfileData()?.photo),
+              backgroundColor: Colors.red)),
     );
   }
 
-  Widget headerPart() => Stack(
+  Widget headerPart(BuildContext context) => Stack(
         children: [
           Container(
               height: sm.h(38),
               width: sm.w(100),
-              child: ImageMaster(url: data?.data[0]?.photo)),
+              child: ImageMaster(url: vatrue.getBusinessProfileData()?.photo)),
           Container(
             color: Colors.black.withOpacity(0.2),
             child: Row(
@@ -240,6 +221,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                 children: [
                   InkWell(
                       onTap: () {
+                        vatrue.allClear();
                         Navigator.pop(context);
                       },
                       child: Icon(Icons.navigate_before,
@@ -269,7 +251,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     padding: const EdgeInsets.only(right: 2.0),
                     child: Text(
                         double.parse(
-                                '${data?.data[0].avgRating.toStringAsFixed(1) ?? 0} ')
+                                '${vatrue?.getBusinessProfileData()?.avgRating.toStringAsFixed(1) ?? 0} ')
                             .toString(),
                         style: TextStyle(
                             fontSize: 20,
@@ -290,17 +272,14 @@ class _BusinessProfileState extends State<BusinessProfile> {
       );
 
   followingAndFavorite() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(width: sm.w(12)),
-        FollowBtn(id: data.data[0].businessId),
-        FavoriteBtn(id: data.data[0].businessId),
-      ],
-    );
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      SizedBox(width: sm.w(12)),
+      FollowBtn(id: vatrue.getBusinessProfileData().businessId),
+      FavoriteBtn(id: vatrue.getBusinessProfileData().businessId)
+    ]);
   }
 
-  ServicCart() {
+  ServicCart(BuildContext context) {
     BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
     List<String> service = [
       'Call Now',
@@ -312,7 +291,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
       //         : null),
       // (widget.attribute.contains('Waitlist') ? 'Waitlist' : null),
     ];
-    service.addAll(widget.attribute);
+    service.addAll(vatrue?.attribute);
     List<IconData> serviceIcons = [
       Icons.call_outlined,
       FontAwesomeIcons.comment,
@@ -336,7 +315,7 @@ class _BusinessProfileState extends State<BusinessProfile> {
 
                 switch (_v) {
                   case 'Call Now':
-                    launch("tel://${data.data[0].phone}");
+                    launch("tel://${vatrue.getBusinessProfileData().phone}");
                     break;
 
                   case 'Chat':
@@ -344,7 +323,8 @@ class _BusinessProfileState extends State<BusinessProfile> {
                     break;
                   case 'Booking':
                     {
-                      badm.businessId = data.data[0].businessId;
+                      badm.businessId =
+                          vatrue.getBusinessProfileData().businessId;
                       badm.isBooking = 0;
                       Navigator.of(context).pushNamed(
                           '/bookingOrAppointmentList',
@@ -363,8 +343,9 @@ class _BusinessProfileState extends State<BusinessProfile> {
                   case 'Waitlist':
                     {
                       WaitListDataModel wdm = WaitListDataModel();
-                      wdm.businessId = data.data[0].businessId;
-                      wdm.contact = data.data[0].phone;
+                      wdm.businessId =
+                          vatrue.getBusinessProfileData().businessId;
+                      wdm.contact = vatrue.getBusinessProfileData().phone;
                       Navigator.of(context)
                           .pushNamed('/waitlist', arguments: wdm);
                     }
@@ -372,8 +353,9 @@ class _BusinessProfileState extends State<BusinessProfile> {
                   case 'Online Menu':
                     {
                       Provider.of<MenuHomeProvider>(context, listen: false)
-                          .setBusinessIdName(data.data[0].businessId,
-                              data.data[0].businessName);
+                          .setBusinessIdName(
+                              vatrue.getBusinessProfileData().businessId,
+                              vatrue.getBusinessProfileData().businessName);
                       Navigator.of(context).pushNamed('/menuHome');
                     }
                 }

@@ -1,13 +1,13 @@
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 
-class businessProfileModel {
+class BusinessProfileModel {
   String status;
   String message;
   List<BusinessProfileData> data;
 
-  businessProfileModel({this.status, this.message, this.data});
+  BusinessProfileModel({this.status, this.message, this.data});
 
-  businessProfileModel.fromJson(Map<String, dynamic> json) {
+  BusinessProfileModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {

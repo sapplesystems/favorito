@@ -14,13 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 
-  ProgressDialog pr;
   List<String> image = ['pizza', 'table', 'callender', 'ala', 'bag', 'home'];
   List<String> imagName = [
     'Food',
@@ -49,8 +47,6 @@ class _HomeState extends State<Home> {
           .getPersonalData();
       isFirst = false;
     }
-    widget.pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    widget.pr.style(message: 'Fetching Data, please wait');
     sm = SizeManager(context);
     return WillPopScope(
       onWillPop: () => APIManager.onWillPop(context),

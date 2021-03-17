@@ -1,4 +1,5 @@
 import 'package:favorito_user/model/WorkingHoursModel.dart';
+import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
@@ -6,8 +7,9 @@ import 'package:intl/intl.dart';
 import '../../../utils/RIKeys.dart';
 
 class BusinessProfileProvider extends ChangeNotifier {
-  String businessId;
+  String _businessId;
   WorkingHoursModel workingHoursModel = WorkingHoursModel();
+  BusinessProfileModel _businessProfileData = BusinessProfileModel();
   List<String> attribute = [];
   List<String> service = [];
   String _shopTiming = '';
@@ -15,8 +17,8 @@ class BusinessProfileProvider extends ChangeNotifier {
     getBusinessHours();
   }
   void getBusinessHours() async {
-    print("HourslyId:$businessId");
-    await APIManager.workingHours({'business_id': businessId}, RIKeys.josKeys2)
+    print("HourslyId:$_businessId");
+    await APIManager.workingHours({'business_id': _businessId}, RIKeys.josKeys2)
         .then((value) {
       workingHoursModel = value;
       value.data.forEach((e) {
@@ -44,12 +46,29 @@ class BusinessProfileProvider extends ChangeNotifier {
     return _shopTiming ?? "ddd";
   }
 
-  setId(String id) {
-    businessId = id;
+  setBusinessId(String _id) {
+    _businessId = _id;
+    getProfileDetail();
     getBusinessHours();
   }
 
-  getId() => businessId;
+  String getBusinessId() => _businessId;
 
   List<WorkingHoursData> getWorkingHoursList() => workingHoursModel.data;
+  getBusinessProfileData() => _businessProfileData?.data[0];
+  Future<void> getProfileDetail() async {
+    await APIManager.baseUserProfileDetail(
+            {'business_id': _businessId}, RIKeys.josKeys2)
+        .then((value) {
+      _businessProfileData = value;
+      attribute.clear();
+      attribute.addAll(value.data[0]?.attributes?.map((e) => e.attributeName));
+
+      // notifyListeners();
+    });
+  }
+
+  allClear() {
+    _businessProfileData = BusinessProfileModel();
+  }
 }

@@ -6,6 +6,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/Acces.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../utils/Extentions.dart';
 
@@ -290,8 +292,12 @@ class UserAddressProvider extends ChangeNotifier {
     try {
       await BarcodeScanner.scan().then((_val) async {
         qrResult = _val.rawContent;
-        Navigator.of(context)
-            .pushNamed('/businessProfile', arguments: qrResult);
+
+        Provider.of<BusinessProfileProvider>(context, listen: false)
+            .setBusinessId(qrResult);
+        Navigator.of(context).pushNamed('/businessProfile'
+            // , arguments: qrResult
+            );
         print("qrResult:$qrResult");
       });
     } on PlatformException catch (ex) {
@@ -305,9 +311,10 @@ class UserAddressProvider extends ChangeNotifier {
       result = "Unknown Error $ex";
     }
   }
-allClear(){
-  _profileImage='';
-}
+
+  allClear() {
+    _profileImage = '';
+  }
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {
   //     if (value.status == 'success') {

@@ -57,7 +57,7 @@ class _WaitlistState extends State<Waitlist> {
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(message: 'Fetching Data, please wait');
+    pr.style(message: 'Fetching Data, please wait.');
 
     return SafeArea(
       child: Scaffold(

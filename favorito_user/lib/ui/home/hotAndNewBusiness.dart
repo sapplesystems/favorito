@@ -4,8 +4,10 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/RatingHolder.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRRect.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
 class HotAndNewBusiness extends StatefulWidget {
   HotAndNewBusiness({Key key}) : super(key: key);
@@ -46,9 +48,14 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                         padding: const EdgeInsets.all(8.0),
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushNamed('/businessProfile',
-                                arguments:
+                            Provider.of<BusinessProfileProvider>(context,
+                                    listen: false)
+                                .setBusinessId(
                                     newBusinessData.data[index].businessId);
+                            Navigator.of(context).pushNamed('/businessProfile'
+                                // ,arguments:
+                                //     newBusinessData.data[index].businessId
+                                );
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(

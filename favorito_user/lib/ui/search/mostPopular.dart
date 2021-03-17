@@ -4,9 +4,11 @@ import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
 class MostPopular extends StatefulWidget {
   @override
@@ -45,8 +47,12 @@ class _mostPopularState extends State<MostPopular> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.of(context).pushNamed('/businessProfile',
-                                arguments: dataList[index].businessId);
+                            Provider.of<BusinessProfileProvider>(context,
+                                    listen: false)
+                                .setBusinessId(dataList[index].businessId);
+                            Navigator.of(context).pushNamed('/businessProfile'
+                                // ,arguments: dataList[index].businessId
+                                );
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(

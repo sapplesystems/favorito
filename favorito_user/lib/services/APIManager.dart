@@ -446,10 +446,10 @@ class APIManager {
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-  static Future<businessProfileModel> baseUserProfileDetail(
+  static Future<BusinessProfileModel> baseUserProfileDetail(
       Map _map, GlobalKey<ScaffoldState> josKeys2) async {
     if (!await utilProvider.checkInternet())
-      return businessProfileModel(
+      return BusinessProfileModel(
           status: 'fail', message: 'Please check internet connections');
     final ProgressDialog pr = ProgressDialog(josKeys2.currentContext,
         type: ProgressDialogType.Normal, isDismissible: false)
@@ -487,8 +487,8 @@ class APIManager {
 
     print("service.mostPopulerBusiness response: ${response.toString}");
 
-    return businessProfileModel
-        .fromJson(convert.jsonDecode(response.toString()));
+    return BusinessProfileModel.fromJson(
+        convert.jsonDecode(response.toString()));
   }
 
   static Future<CatlogModel> baseUserProfileBusinessCatalogList(
