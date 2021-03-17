@@ -10,7 +10,7 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
-import 'package:favorito_user/ui/profile/business/tabber.dart';
+import 'package:favorito_user/ui/profile/business/tabs/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
