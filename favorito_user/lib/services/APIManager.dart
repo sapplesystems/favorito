@@ -47,14 +47,8 @@ class APIManager {
 
   static UtilProvider utilProvider = UtilProvider();
 
-  static Options opt = Options(
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST,HEAD"
-      },
-      // method:  ("Access-Control-Allow-Methods": "POST, OPTIONS"),
-      contentType: Headers.formUrlEncodedContentType,
-      method: 'Post');
+  static Options opt =
+      Options(contentType: Headers.formUrlEncodedContentType, method: 'Post');
 
 //this is used for register new user
   static Future<registerModel> register(
@@ -88,8 +82,8 @@ class APIManager {
     } finally {
       pr.hide();
     }
-    print("Request URL:${service.register}");
-    print("responseData1:${response.toString()}");
+    print("Request URL:$url");
+    print("responseData$url:${response.toString()}");
     return registerModel.fromJson(convert.json.decode(response.toString()));
   }
 

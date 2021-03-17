@@ -30,7 +30,7 @@ class SignupProvider extends ChangeNotifier {
     'Email',
     'Password',
     'Postal',
-    'Short discription',
+    'Short description',
     'Unique Id',
   ];
 
@@ -92,7 +92,7 @@ class SignupProvider extends ChangeNotifier {
           "email": acces[2].controller.text,
           "password": acces[3].controller.text,
           "postal_code": acces[4].controller.text,
-          "profile_id": acces[5].controller.text,
+          "profile_id": acces[6].controller.text,
           "reach_whatsapp": newValue1 ? 1 : 0,
           "short_description": acces[6].controller.text,
         };
@@ -174,13 +174,12 @@ class SignupProvider extends ChangeNotifier {
       case 3:
         {
           if (passwordRegex.hasMatch(acces[_index].controller.text))
-            acces[_index].error = null;
+            acces[3].error = null;
           else {
             acces[_index].error =
                 validator.validatePassword(acces[_index].controller.text);
-
-            notifyListeners();
           }
+          notifyListeners();
         }
         break;
 
@@ -189,14 +188,14 @@ class SignupProvider extends ChangeNotifier {
           if ((acces[_index].controller.text.isEmpty))
             acces[_index].error = 'Field required';
           else {
-            if (acces[4].controller.text.length == 6) {
+            if (acces[_index].controller.text.length == 6) {
               await APIManager.checkPostalCode(
-                      {"pincode": acces[4].controller.text}, scaffoldKey)
+                      {"pincode": acces[_index].controller.text}, scaffoldKey)
                   .then((value) {
                 if (value.data.stateName == null)
                   acces[_index].error = value.message;
                 else {
-                  Prefs.setPOSTEL(int.parse(acces[5].controller.text));
+                  Prefs.setPOSTEL(int.parse(acces[_index].controller.text));
                   acces[_index].error = null;
                 }
               });
@@ -208,10 +207,14 @@ class SignupProvider extends ChangeNotifier {
 
       case 6:
         {
+          if (!acces[_index].controller.text.toString().contains('@')) {
+            acces[_index].error =
+                Validator().validateId(acces[_index].controller.text);
+            acces[_index].controller.text = '';
+          } else
+            setCheckId('verify');
           if (acces[_index].controller.text.length > 2)
             acces[_index].error = 'Please check availability';
-          else
-            acces[_index].error = 'Field required';
           errorColor[_index] = null;
           notifyListeners();
         }

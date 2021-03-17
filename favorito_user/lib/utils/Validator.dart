@@ -23,7 +23,7 @@ class Validator {
     if (_val?.isEmpty)
       return 'Field is required..';
     else if (!passwordRegex.hasMatch(_val ?? ''))
-      return 'Minimum eight characters, atleast one letter and one number one special character';
+      return 'Minimum eight characters, atleast one capilat letter and one number one special character';
     else
       return null;
   }
