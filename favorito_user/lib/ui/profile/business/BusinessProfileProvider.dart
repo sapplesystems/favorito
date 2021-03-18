@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
+import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 
@@ -13,11 +17,23 @@ class BusinessProfileProvider extends ChangeNotifier {
   List<String> attribute = [];
   List<String> service = [];
   String _shopTiming = '';
+  Timer t;
+  double per = 0;
+  String btnTxt = waitingJoin;
+  List<TextEditingController> controller = [];
+
+  bool waiting = false;
+
+  WaitListDataModel _waitListDataModel = WaitListDataModel();
+
   BusinessProfileProvider() {
-    getBusinessHours();
+    for (int i = 0; i < 3; i++) controller.add(TextEditingController());
+    controller[0].text = '1';
   }
+  getWaitListData()=>_waitListDataModel;
   void getBusinessHours() async {
     print("HourslyId:$_businessId");
+
     await APIManager.workingHours({'business_id': _businessId}, RIKeys.josKeys2)
         .then((value) {
       workingHoursModel = value;
@@ -48,14 +64,18 @@ class BusinessProfileProvider extends ChangeNotifier {
 
   setBusinessId(String _id) {
     _businessId = _id;
+    // abc();
     getProfileDetail();
     getBusinessHours();
+    getWaitList(false);
   }
 
   String getBusinessId() => _businessId;
 
   List<WorkingHoursData> getWorkingHoursList() => workingHoursModel.data;
+
   getBusinessProfileData() => _businessProfileData?.data[0];
+
   Future<void> getProfileDetail() async {
     await APIManager.baseUserProfileDetail(
             {'business_id': _businessId}, RIKeys.josKeys2)
@@ -63,12 +83,86 @@ class BusinessProfileProvider extends ChangeNotifier {
       _businessProfileData = value;
       attribute.clear();
       attribute.addAll(value.data[0]?.attributes?.map((e) => e.attributeName));
-
-      // notifyListeners();
     });
   }
 
-  allClear() {
-    _businessProfileData = BusinessProfileModel();
+  // t.cancel();
+  void abc() {
+    t = Timer.periodic(new Duration(seconds: 10), (timer) {
+      getWaitList(false);
+    });
+  }
+
+  Future<void> waitlistVerbose() async {
+    await APIManager.baseUserWaitlistVerbose({'business_id': _businessId})
+        .then((value) {
+      _waitListDataModel = value.data[0];
+      print("slot:${_waitListDataModel.availableTimeSlots}");
+    });
+  }
+
+  getWaitList(bool val) async {
+    await APIManager.baseUserWaitlistGet({'business_id': _businessId})
+        .then((value) {
+      try {
+        if (!value.data.isEmpty) {
+          _waitListDataModel?.createdAt = value.data[0].createdAt;
+          waiting = true;
+          _waitListDataModel?.waitlistId = value.data[0].waitlistId;
+          _waitListDataModel?.userId = value.data[0].userId;
+          _waitListDataModel.updatedAt = value.data[0].updatedAt;
+          _waitListDataModel?.waitlistStatus = value.data[0].waitlistStatus;
+          _waitListDataModel?.noOfPerson = value.data[0].noOfPerson;
+          _waitListDataModel?.partiesBeforeYou = value.data[0].partiesBeforeYou;
+          DateTime now = new DateTime.now();
+          try {
+            var difference = now
+                .difference((DateTime.parse(_waitListDataModel.updatedAt)))
+                .inMinutes;
+            var _min =
+                int.parse(_waitListDataModel?.minimumWaitTime?.split(':')[1]);
+            if (_min > difference)
+              per = ((((_min - difference) * 100) / _min) / 100);
+            else
+              per = 0.0;
+          } catch (e) {
+            print('Error:${e.toString()}');
+            per = 0.0;
+          }
+          btnTxt = _waitListDataModel?.waitlistStatus == 'rejected'
+              ? waitingCanceled
+              : (_waitListDataModel?.waitlistStatus == 'pending')
+                  ? waitingCancel
+                  : (_waitListDataModel?.waitlistStatus == 'accepted')
+                      ? 'waiting'
+                      : waitingJoin;
+        }
+      } catch (e) {
+        print('Error: $e');
+        waiting = false;
+      }
+      notifyListeners();
+    });
+  }
+
+  void cancelWaitList() async {
+    await APIManager.baseUserWaitlistCancel(
+        {'waitlist_id': _waitListDataModel?.waitlistId}).then((value) {});
+  }
+
+  void setWaitList(context) async {
+    Map _map = {
+      'no_of_person': controller[0].text,
+      'name': controller[1].text,
+      'special_notes': controller[2].text,
+      'business_id': _businessId
+    };
+
+    await APIManager.baseUserWaitlistSet(_map).then((value) async {
+      if (value.status == 'success') {
+        // await data.fun1(true);
+        Navigator.pop(context);
+      }
+    });
   }
 }

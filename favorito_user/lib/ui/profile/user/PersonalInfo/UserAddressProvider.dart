@@ -292,12 +292,10 @@ class UserAddressProvider extends ChangeNotifier {
     try {
       await BarcodeScanner.scan().then((_val) async {
         qrResult = _val.rawContent;
-
+        if (qrResult.length < 6) return;
         Provider.of<BusinessProfileProvider>(context, listen: false)
             .setBusinessId(qrResult);
-        Navigator.of(context).pushNamed('/businessProfile'
-            // , arguments: qrResult
-            );
+        Navigator.of(context).pushNamed('/businessProfile');
         print("qrResult:$qrResult");
       });
     } on PlatformException catch (ex) {

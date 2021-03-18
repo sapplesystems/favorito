@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(top: sm.h(8)),
-                            child: txtfieldboundry(
+                            child: txtfieldPostAction(
                               valid: true,
                               title: "Email/Phone",
                               controller: userCtrl,

@@ -123,6 +123,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
               counterText: "",
               hintText: widget.hint ?? '',
               alignLabelWithHint: true,
+              hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
               contentPadding: EdgeInsets.only(top: 14, right: 16),
               fillColor: Colors.transparent,
               border: InputBorder.none,

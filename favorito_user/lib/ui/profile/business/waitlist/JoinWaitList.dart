@@ -1,11 +1,11 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
-import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 class JoinWaitList extends StatefulWidget {
   WaitListDataModel data;
@@ -15,24 +15,15 @@ class JoinWaitList extends StatefulWidget {
 }
 
 class _JoinWaitListState extends State<JoinWaitList> {
-  List<TextEditingController> controller = [];
   SizeManager sm;
-
-  ProgressDialog pr;
-  @override
-  void initState() {
-    super.initState();
-    for (int i = 0; i < 3; i++) {
-      controller.add(TextEditingController());
-    }
-    controller[0].text = '1';
-  }
+  BusinessProfileProvider vaTrue;
+  BusinessProfileProvider vaFalse;
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(message: 'Please wait...');
+    vaTrue = Provider.of<BusinessProfileProvider>(context, listen: true);
+    vaFalse = Provider.of<BusinessProfileProvider>(context, listen: false);
     return SafeArea(
         child: Scaffold(
       backgroundColor: Color(0xfff9faff),
@@ -43,48 +34,33 @@ class _JoinWaitListState extends State<JoinWaitList> {
             WaitListHeader(title: 'Join Waitlist'),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
-              child: Column(
-                children: [
-                  counterAddRemove(),
-                  Padding(
-                    padding: EdgeInsets.only(top: sm.h(3)),
-                    child: EditTextComponent(
-                      controller: controller[1],
-                      title: 'Tag people by adding @',
-                      security: false,
-                      valid: true,
-                      maxLines: 1,
-                    ),
+              child: Column(children: [
+                counterAddRemove(),
+                Padding(
+                  padding: EdgeInsets.only(top: sm.h(3)),
+                  child: EditTextComponent(
+                    controller: vaFalse.controller[1],
+                    title: 'Tag people by adding @',
+                    security: false,
+                    valid: true,
+                    maxLines: 1,
                   ),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(vertical: sm.h(3)),
-                  //   child: EditTextComponent(
-                  //     controller: controller[2],
-                  //     title: 'Special notes',
-                  //     security: false,
-                  //     valid: true,
-                  //     maxLines: 8,
-                  //   ),
-                  // ),
-                ],
-              ),
+                ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(vertical: sm.h(3)),
+                //   child: EditTextComponent(
+                //     controller: controller[2],
+                //     title: 'Special notes',
+                //     security: false,
+                //     valid: true,
+                //     maxLines: 8,
+                //   ),
+                // ),
+              ]),
             ),
             InkWell(
               onTap: () async {
-                if (!pr.isShowing()) pr.show();
-                Map _map = {
-                  'no_of_person': controller[0].text,
-                  'name': controller[1].text,
-                  'special_notes': controller[2].text,
-                  'business_id': widget.data.businessId
-                };
-                await APIManager.baseUserWaitlistSet(_map).then((value) async {
-                  if (pr.isShowing()) pr.hide();
-                  if (value.status == 'success') {
-                    await widget.data.fun1(true);
-                    Navigator.pop(context);
-                  }
-                });
+                vaTrue.setWaitList(context);
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: sm.w(24)),
@@ -122,8 +98,8 @@ class _JoinWaitListState extends State<JoinWaitList> {
         InkWell(
           onTap: () {
             setState(() {
-              int i = int.parse(controller[0].text);
-              controller[0].text = (i > 1 ? --i : i).toString() ?? '';
+              int i = int.parse(vaTrue.controller[0].text);
+              vaTrue.controller[0].text = (i > 1 ? --i : i).toString() ?? '';
             });
           },
           child: Card(
@@ -153,7 +129,7 @@ class _JoinWaitListState extends State<JoinWaitList> {
             padding:
                 EdgeInsets.symmetric(horizontal: sm.w(10), vertical: sm.w(5)),
             child: Text(
-              controller[0].text,
+              vaTrue.controller[0].text,
               style: TextStyle(color: Color(0xff686868)),
               textAlign: TextAlign.center,
             ),
@@ -162,8 +138,8 @@ class _JoinWaitListState extends State<JoinWaitList> {
         InkWell(
           onTap: () {
             setState(() {
-              int i = int.parse(controller[0].text);
-              controller[0].text = (++i).toString();
+              int i = int.parse(vaTrue.controller[0].text);
+              vaTrue.controller[0].text = (++i).toString();
             });
           },
           child: Card(

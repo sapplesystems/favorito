@@ -4,8 +4,8 @@ import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class PersonalInfo extends StatelessWidget {
@@ -136,7 +136,7 @@ class _tcpState extends State<tcp> {
         children: [
           t_c(
             isChecked: widget.newValue,
-            title: "Reach me on watsapp",
+            title: "Reach me on whatsapp",
             function: (vv) {
               setState(() {
                 widget.newValue = vv;

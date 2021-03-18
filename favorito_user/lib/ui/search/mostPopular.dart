@@ -41,7 +41,7 @@ class _mostPopularState extends State<MostPopular> {
                 itemCount: dataList?.length ?? 0,
                 itemBuilder: (BuildContext contect, int index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -58,7 +58,7 @@ class _mostPopularState extends State<MostPopular> {
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(12))),
-                            elevation: 10,
+                            // elevation: 10,
                             child: SizedBox(
                               height: sm.h(16),
                               width: sm.w(34),
@@ -71,7 +71,8 @@ class _mostPopularState extends State<MostPopular> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 4.0),
                           child: Text(dataList[index].businessName,
                               style: TextStyle(
                                   fontSize: 16,

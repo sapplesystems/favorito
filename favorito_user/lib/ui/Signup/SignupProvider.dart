@@ -70,12 +70,6 @@ class SignupProvider extends ChangeNotifier {
     acces[6].error = validator.validateId(acces[6].controller.text);
 
     notifyListeners();
-    print("ffff$uniqueId:${acces[0].error}");
-    print("ffff$uniqueId:${acces[1].error}");
-    print("ffff$uniqueId:${acces[2].error}");
-    print("ffff$uniqueId:${acces[3].error}");
-    print("ffff$uniqueId:${acces[4].error}");
-    print("ffff$uniqueId:${acces[5].error}");
     if (acces[0].error == null &&
         acces[1].error == null &&
         acces[2].error == null &&

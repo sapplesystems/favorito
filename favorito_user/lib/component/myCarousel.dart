@@ -21,16 +21,10 @@ class _myCarouselState extends State<myCarousel> {
   SizeManager sm;
 
   @override
-  void initState() {
-    super.initState();
-    fut = APIManager.carousel(context, {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return FutureBuilder<CarouselModel>(
-      future: APIManager.carousel(context, {'business_id': widget.id}),
+      future: APIManager.carousel({'business_id': widget.id}),
       builder: (BuildContext context, AsyncSnapshot<CarouselModel> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: Text(loading));

@@ -125,7 +125,7 @@ class APIManager {
     return loginModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<CarouselModel> carousel(context, [map]) async {
+  static Future<CarouselModel> carousel(map) async {
     String token = await Prefs.token;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -452,21 +452,24 @@ class APIManager {
       return BusinessProfileModel(
           status: 'fail', message: 'Please check internet connections');
     final ProgressDialog pr = ProgressDialog(josKeys2.currentContext,
-        type: ProgressDialogType.Normal, isDismissible: false)
-      ..style(
-          message: 'Please wait...',
-          borderRadius: 8.0,
-          backgroundColor: Colors.white,
-          progressWidget: CircularProgressIndicator(),
-          elevation: 8.0,
-          insetAnimCurve: Curves.easeInOut,
-          progress: 0.0,
-          maxProgress: 100.0,
-          progressTextStyle: TextStyle(
-              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-          messageTextStyle: TextStyle(
-              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
-      ..show();
+            type: ProgressDialogType.Normal, isDismissible: false)
+          ..style(
+              message: 'Please wait...',
+              borderRadius: 8.0,
+              backgroundColor: Colors.white,
+              progressWidget: CircularProgressIndicator(),
+              elevation: 8.0,
+              insetAnimCurve: Curves.easeInOut,
+              progress: 0.0,
+              maxProgress: 100.0,
+              progressTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w400),
+              messageTextStyle: TextStyle(
+                  color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+        // ..show()
+        ;
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     String url = service.baseUserProfileDetail;
@@ -478,11 +481,11 @@ class APIManager {
 
     try {
       response = await dio.post(url, data: _map, options: opt);
-      pr.hide();
+      // pr.hide();
     } on DioError catch (e) {
       ExceptionHandler(e, pr, url, josKeys2);
     } finally {
-      pr.hide();
+      // pr.hide();
     }
 
     print("service.mostPopulerBusiness response: ${response.toString}");

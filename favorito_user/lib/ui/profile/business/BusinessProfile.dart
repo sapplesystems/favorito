@@ -16,6 +16,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../utils/Extentions.dart';
 import '../../../utils/RIKeys.dart';
 
 class BusinessProfile extends StatelessWidget {
@@ -63,10 +64,9 @@ class BusinessProfile extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding:
-                            EdgeInsets.only(top: sm.h(0), left: sm.w(75.8)),
+                        padding: EdgeInsets.only(top: sm.h(0), left: sm.w(76)),
                         child: Container(
-                          width: sm.w(18.4),
+                          width: sm.w(18),
                           padding: EdgeInsets.symmetric(
                               horizontal: sm.w(1), vertical: sm.w(0)),
                           decoration: BoxDecoration(
@@ -89,9 +89,9 @@ class BusinessProfile extends StatelessWidget {
                                             fontSize: 20,
                                             fontFamily: 'Gilroy-Reguler')),
                                   ),
-                                  Text('Reviews',
+                                  Text('Reviews'.toUpperCase(),
                                       style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           color: myGrey,
                                           fontFamily: 'Gilroy-Reguler'))
                                 ]),
@@ -127,43 +127,58 @@ class BusinessProfile extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                       child: Text(
-                          vatrue.getBusinessProfileData()?.businessStatus ?? "",
+                          vatrue
+                                  .getBusinessProfileData()
+                                  ?.businessStatus
+                                  .toString()
+                                  .capitalize() ??
+                              "",
                           style: TextStyle(
                               color: vatrue
                                           .getBusinessProfileData()
-                                          ?.businessStatus ==
-                                      'Offline'
+                                          .businessStatus
+                                          .toString()
+                                          .toLowerCase() ==
+                                      'offline'
                                   ? myRed
                                   : Colors.green,
                               fontSize: 16,
                               fontWeight: FontWeight.w300)),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                      child: InkWell(
-                        onTap: () {
-                          showModalBottomSheet<void>(
-                              enableDrag: true,
-                              isScrollControlled: true,
-                              context: context,
-                              backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(builder:
-                                    (BuildContext context,
-                                        StateSetter setState) {
-                                  return Container(
-                                      height: sm.h(70),
-                                      decoration:
-                                          BoxDecoration(color: Colors.white),
-                                      child: HoursList(vatrue, sm));
+                    Visibility(
+                      visible: vatrue
+                              .getBusinessProfileData()
+                              .businessStatus
+                              .toString()
+                              .toLowerCase() ==
+                          'online',
+                      child: Padding(
+                        padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                        child: InkWell(
+                          onTap: () {
+                            showModalBottomSheet<void>(
+                                enableDrag: true,
+                                isScrollControlled: true,
+                                context: context,
+                                backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter setState) {
+                                    return Container(
+                                        height: sm.h(70),
+                                        decoration:
+                                            BoxDecoration(color: Colors.white),
+                                        child: HoursList(vatrue, sm));
+                                  });
                                 });
-                              });
-                        },
-                        child: Text(vatrue.getShopTime(),
-                            style: TextStyle(
-                                color: myGrey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300)),
+                          },
+                          child: Text(vatrue.getShopTime(),
+                              style: TextStyle(
+                                  color: myGrey,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300)),
+                        ),
                       ),
                     ),
                   ],
@@ -194,18 +209,17 @@ class BusinessProfile extends StatelessWidget {
 
   Widget smallProfile() {
     return Positioned(
-      top: sm.h(30),
-      left: sm.w(34),
-      right: sm.w(35),
-      child: CircleAvatar(
-          radius: sm.w(15),
-          backgroundColor: Colors.red,
-          child: CircleAvatar(
-              radius: sm.w(2) * sm.w(2.05),
-              backgroundImage:
-                  NetworkImage(vatrue.getBusinessProfileData()?.photo),
-              backgroundColor: Colors.red)),
-    );
+        top: sm.h(30),
+        left: sm.w(34),
+        right: sm.w(35),
+        child: CircleAvatar(
+            radius: sm.w(15),
+            backgroundColor: Colors.red,
+            child: CircleAvatar(
+                radius: sm.w(2) * sm.w(2.05),
+                backgroundImage:
+                    NetworkImage(vatrue.getBusinessProfileData()?.photo),
+                backgroundColor: Colors.red)));
   }
 
   Widget headerPart(BuildContext context) => Stack(
@@ -221,7 +235,6 @@ class BusinessProfile extends StatelessWidget {
                 children: [
                   InkWell(
                       onTap: () {
-                        vatrue.allClear();
                         Navigator.pop(context);
                       },
                       child: Icon(Icons.navigate_before,
@@ -244,28 +257,26 @@ class BusinessProfile extends StatelessWidget {
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8)),
                   color: myRed),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 2.0),
-                    child: Text(
-                        double.parse(
-                                '${vatrue?.getBusinessProfileData()?.avgRating.toStringAsFixed(1) ?? 0} ')
-                            .toString(),
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'Gilroy-Regular',
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900)),
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                    size: sm.w(4.5),
-                  )
-                ],
-              ),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 2.0),
+                  child: Text(
+                      double.parse(
+                              '${vatrue?.getBusinessProfileData()?.avgRating.toStringAsFixed(1) ?? 0} ')
+                          .toString(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: 'Gilroy-Regular',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900)),
+                ),
+                Icon(
+                  Icons.star,
+                  color: Colors.yellow,
+                  size: sm.w(4.4),
+                )
+              ]),
             ),
           ),
         ],
@@ -371,16 +382,11 @@ class BusinessProfile extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(serviceIcons[i], color: myRed),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: Text(service[i] ?? "",
-                              style: TextStyle(fontSize: 12)),
-                        )
+                        Icon(serviceIcons[i], color: myRed),
+                        SizedBox(height: sm.h(.6)),
+                        Text(service[i] ?? "", style: TextStyle(fontSize: 12)),
                       ],
                     )),
               ),

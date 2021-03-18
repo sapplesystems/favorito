@@ -6,6 +6,7 @@ import 'package:favorito_user/component/PopupLayout.dart';
 import 'package:favorito_user/component/RoundButtonRightIcon.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/SearchFilterList.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
@@ -13,9 +14,9 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SearchResult extends StatefulWidget {
   SearchReqData data;
@@ -42,7 +43,7 @@ class _SearchResultState extends State<SearchResult> {
     // selectedFilters.add("Cafe");
 
     //_mySearchEditTextController.text = widget.searchedText;
-    var txt = widget.data.category;
+    var txt = widget.data.text;
 
     print("selecred : $txt");
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -57,7 +58,7 @@ class _SearchResultState extends State<SearchResult> {
             servicesIs = APIManager.bookTableBusiness(context, txt ?? '');
             break;
           }
-        case ('Book An\nAppoinent'):
+        case ('Book An\nAppointment'):
           {
             servicesIs = APIManager.appointmentBusiness(context, txt ?? '');
             break;
@@ -105,17 +106,16 @@ class _SearchResultState extends State<SearchResult> {
       child: Scaffold(
         key: RIKeys.josKeys4,
         backgroundColor: myBackGround,
-        body: ListView(
-          children: [
-            SizedBox(
-              height: sm.h(10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: sm.w(5), right: sm.w(5), top: sm.h(1)),
-                      child: EditTextComponent(
+        body: ListView(children: [
+          SizedBox(
+            height: sm.h(10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: sm.w(5), right: sm.w(5), top: sm.h(1)),
+                    child: EditTextComponent(
                         controller: _mySearchEditTextController,
                         title: "Search",
                         suffixTxt: '',
@@ -126,75 +126,67 @@ class _SearchResultState extends State<SearchResult> {
                         maxlen: 100,
                         prefixIcon: 'search',
                         prefClick: () =>
-                            search(_mySearchEditTextController.text),
-                      ),
-                    ),
+                            search(_mySearchEditTextController.text)),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(right: sm.w(5), bottom: sm.h(2)),
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        elevation: 10,
-                        child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: InkWell(
-                              onTap: () => showPopup(sm, context,
-                                  _popupBody(sm), 'Select Filters'),
-                              child: SvgPicture.asset('assets/icon/filter.svg',
-                                  height: sm.h(2), fit: BoxFit.fitHeight),
-                            ))),
-                  ),
-                ],
-              ),
-            ),
-            Visibility(
-              visible: selectedFilters.length > 0,
-              child: Container(
-                margin: EdgeInsets.only(left: sm.w(2), right: sm.w(2)),
-                height: sm.h(7),
-                width: sm.w(100),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    for (var i = 0; i < selectedFilters.length; i++)
-                      RoundButtonRightIcon(
-                          borderColor: myRed,
-                          title: selectedFilters[i],
-                          clr: myRed,
-                          icon: Icons.close,
-                          function: () => setState(() {
-                                for (var temp in allFilters) {
-                                  if (temp.filter == selectedFilters[i]) {
-                                    temp.selected = false;
-                                  }
-                                }
-                                selectedFilters.removeAt(i);
-                              }))
-                  ],
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.only(right: sm.w(5), bottom: sm.h(2)),
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      elevation: 10,
+                      child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: InkWell(
+                            onTap: () => showPopup(
+                                sm, context, _popupBody(sm), 'Select Filters'),
+                            child: SvgPicture.asset('assets/icon/filter.svg',
+                                height: sm.h(2), fit: BoxFit.fitHeight),
+                          ))),
+                ),
+              ],
             ),
-            Container(
-              height: selectedFilters.length > 0 ? sm.h(80) : sm.h(85),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  if (searchResult != null && searchResult.data != null)
-                    for (var i = 0; i < searchResult.data.length; i++)
-                      searchResultChild(sm, searchResult.data[i], 1),
-                ],
-              ),
+          ),
+          Visibility(
+            visible: selectedFilters.length > 0,
+            child: Container(
+              margin: EdgeInsets.only(left: sm.w(2), right: sm.w(2)),
+              height: sm.h(7),
+              width: sm.w(100),
+              child: ListView(scrollDirection: Axis.horizontal, children: [
+                for (var i = 0; i < selectedFilters.length; i++)
+                  RoundButtonRightIcon(
+                      borderColor: myRed,
+                      title: selectedFilters[i],
+                      clr: myRed,
+                      icon: Icons.close,
+                      function: () => setState(() {
+                            for (var temp in allFilters) {
+                              if (temp.filter == selectedFilters[i]) {
+                                temp.selected = false;
+                              }
+                            }
+                            selectedFilters.removeAt(i);
+                          }))
+              ]),
             ),
-          ],
-        ),
+          ),
+          Container(
+            height: selectedFilters.length > 0 ? sm.h(83) : sm.h(85),
+            child: ListView(shrinkWrap: true, children: [
+              if (searchResult != null && searchResult.data != null)
+                for (var i = 0; i < searchResult.data.length; i++)
+                  searchResultChild(sm, searchResult.data[i], 1),
+            ]),
+          ),
+        ]),
       ),
     );
   }
 
   Widget searchResultChild(
-      SizeManager sm, SearchResultModel result, int identifier) {
+      SizeManager sm, BusinessProfileData result, int identifier) {
     print("eeee:${result.avgRating}");
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -205,76 +197,93 @@ class _SearchResultState extends State<SearchResult> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      height: sm.h(18),
-                      width: sm.w(28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: SizedBox(
+                      height: sm.h(16),
+                      width: sm.h(16),
                       child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(12)),
-                          child: ImageMaster(
-                              url: result.photo ??
-                                  'https://i1.wp.com/belmontbec.com/wp-content/themes/oldnevia2/images/shop-01.jpg'))),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                        child: Text(result.businessName,
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w400)),
-                      ),
-                      Padding(
+                          child: ImageMaster(url: result?.photo ?? ''))),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
                           padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                          child: Text(result.countryId ?? "",
+                          child: Text(result.businessName,
                               style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w300))),
-                      Padding(
+                                  fontSize: 20, fontWeight: FontWeight.w400)),
+                        ),
+                        // Padding(
+                        // padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                        // child: Text(result.countryId ?? "",
+                        //     style: TextStyle(
+                        //         fontSize: 14, fontWeight: FontWeight.w300))),
+                        // Padding(
+                        //     padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                        //     child: Text(result.avgRating ?? "",
+                        //         style: TextStyle(
+                        //             fontSize: 14, fontWeight: FontWeight.w300))),
+                        Padding(
+                            padding:
+                                EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                            child: RatingBarIndicator(
+                                rating:
+                                    double.parse(result.avgRating.toString()),
+                                itemBuilder: (context, index) =>
+                                    Icon(Icons.star, color: myRed),
+                                itemCount: 5,
+                                itemSize: 12.0,
+                                direction: Axis.horizontal)),
+                        Padding(
                           padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                          child: Text(result.avgRating ?? "",
+                          child: Text(
+                              "${((double.parse(result?.distance?.toString() ?? '0.0')) / 1.6)?.toStringAsFixed(1)} km | ${result?.townCity ?? ''}",
                               style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w300))),
-                      Padding(
+                                  fontSize: 12, fontWeight: FontWeight.w300)),
+                        ),
+                        Padding(
                           padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                          child: RatingBarIndicator(
-                              rating: double.parse(result.avgRating),
-                              itemBuilder: (context, index) =>
-                                  Icon(Icons.star, color: myRed),
-                              itemCount: 5,
-                              itemSize: 12.0,
-                              direction: Axis.horizontal)),
-                      Padding(
-                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                        child: Text("1.2 km | ${result.townCity}",
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w300)),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                        child: Text(result.businessStatus,
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.green)),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                        child: Text("Opens | 12:00  Closes | 09:00",
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w300)),
-                      ),
-                    ],
+                          child: Text(result?.businessStatus ?? '',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  color:
+                                      result?.businessStatus?.toLowerCase() ==
+                                              'offline'
+                                          ? myRed
+                                          : Colors.green)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                          child: Text(
+                              "Opens | ${result?.startHours?.toString()?.substring(0, 5) ?? '00:00'}  Closes | ${result?.endHours?.toString()?.substring(0, 5) ?? "00:00"}",
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w300)),
+                        ),
+                      ]),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: myRedLight0),
+                    margin: EdgeInsets.only(top: sm.h(5), right: sm.h(0)),
+                    child: IconButton(
+                        icon: Icon(Icons.call_outlined, color: myRed),
+                        onPressed: () => launch("tel://${result.phone}")),
                   ),
-                  IconButton(
-                      icon: Icon(Icons.call_outlined, color: myRed),
-                      onPressed: () {})
-                ],
-              ),
+                )
+              ],
             ),
             Padding(
               padding: EdgeInsets.all(sm.h(2)),

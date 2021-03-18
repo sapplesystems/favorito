@@ -23,7 +23,7 @@ class Validator {
     if (_val?.isEmpty)
       return 'Field is required..';
     else if (!passwordRegex.hasMatch(_val ?? ''))
-      return 'Minimum eight characters, atleast one capilat letter and one number one special character';
+      return 'Minimum eight characters, atleast one capital letter, one number and one special character';
     else
       return null;
   }
@@ -76,7 +76,7 @@ class Validator {
     if (_val?.isEmpty)
       return 'Field is required..';
     else if (_val.trim().substring(0, 1) != '@')
-      return 'Id should start from \'@';
+      return 'Id should start from @';
     // else
     //   return null;
   }

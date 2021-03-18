@@ -2,11 +2,10 @@ import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-import 'package:favorito_user/utils/Validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatelessWidget {
@@ -34,13 +33,11 @@ class Signup extends StatelessWidget {
                     decoration: BoxDecoration(color: myBackGround),
                     child: ListView(shrinkWrap: true, children: [
                       Padding(
-                        padding: EdgeInsets.only(top: sm.h(1)),
-                        child: SvgPicture.asset(
-                          'assets/icon/signup_image.svg',
-                          height: sm.h(20),
-                          fit: BoxFit.fitHeight,
-                        ),
-                      ),
+                          padding: EdgeInsets.only(top: sm.h(1)),
+                          child: SvgPicture.asset(
+                              'assets/icon/signup_image.svg',
+                              height: sm.h(20),
+                              fit: BoxFit.fitHeight)),
                       Padding(
                         padding: EdgeInsets.only(top: sm.h(2)),
                         child: Text(

@@ -59,7 +59,7 @@ class _OverviewState extends State<OverviewTab> {
             return Center(child: Text(loading));
           else {
             if (overviewData != snapshot.data) overviewData = snapshot.data;
-            List<String> listKey = ['Phone', 'Emial', 'Website', 'Address'];
+            List<String> listKey = ['Phone', 'Email', 'Website', 'Address'];
             List<String> listValue = [
               widget?.data?.phone ?? '',
               widget?.data?.businessEmail ?? '',
@@ -76,28 +76,34 @@ class _OverviewState extends State<OverviewTab> {
                 position: LatLng(double.parse(loc[0]), double.parse(loc[1]))));
             // setDestination(loc);
             return Padding(
-              padding: EdgeInsets.only(
-                  top: sm.h(4), bottom: sm.h(2), left: sm.w(3), right: sm.w(3)),
+              padding: EdgeInsets.only(top: sm.h(4), bottom: sm.h(2)),
               child: Scrollbar(
                 isAlwaysShown: true,
                 showTrackOnHover: true,
                 child: ListView(children: [
-                  Text(shortDisc,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
+                    child: Text(shortDisc,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Gilroy-Medium')),
+                  ),
+                  myCarousel(overviewData?.data[0]?.businessId),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
+                    child: Text(
+                      longDisc,
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          fontFamily: 'Gilroy-Medium')),
-                  myCarousel(overviewData?.data[0]?.businessId),
-                  Text(
-                    longDisc,
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Gilroy-Medium'),
+                          fontFamily: 'Gilroy-Medium'),
+                    ),
                   ),
                   for (int i = 0; i < listKey.length; i++)
                     Padding(
-                      padding: EdgeInsets.only(top: sm.h(3)),
+                      padding: EdgeInsets.only(
+                          top: sm.h(3), left: sm.h(2), right: sm.h(2)),
                       child: Row(children: [
                         Expanded(
                           flex: 3,
@@ -124,6 +130,7 @@ class _OverviewState extends State<OverviewTab> {
                       ]),
                     ),
                   Container(
+                    padding: EdgeInsets.all(sm.h(2)),
                     height: sm.h(40),
                     child: loc != null
                         ? MyGoogleMap(
@@ -161,7 +168,7 @@ class _OverviewState extends State<OverviewTab> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: sm.h(3)),
+                    padding: EdgeInsets.all(sm.h(2)),
                     child: Row(
                       children: [
                         Expanded(
@@ -193,7 +200,7 @@ class _OverviewState extends State<OverviewTab> {
                     padding: EdgeInsets.only(top: sm.h(2)),
                     child: Row(children: [
                       Text(
-                        'Most Popular',
+                        '\t\t\tSponsored',
                         style: TextStyle(
                             color: Colors.black,
                             fontFamily: 'Gilroy-Medium',
@@ -203,7 +210,7 @@ class _OverviewState extends State<OverviewTab> {
                     ]),
                   ),
                   Container(
-                    height: 200,
+                    height: 215,
                     child: MostPopular(),
                   )
                 ]),

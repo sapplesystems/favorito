@@ -39,7 +39,7 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                   "newBusinessData?.data?.length:${newBusinessData?.data?.length}");
               return Container(
                 padding: EdgeInsets.only(bottom: sm.h(2)),
-                height: sm.h(27),
+                height: sm.h(25),
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: newBusinessData?.data?.length,
@@ -66,24 +66,22 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  Stack(
-                                    children: [
-                                      myClipRRect(
-                                          image:
-                                              newBusinessData.data[index].photo,
-                                          sm: sm),
-                                      Positioned(
-                                        top: sm.h(1),
-                                        left: sm.w(1),
-                                        child: RatingHolder(
-                                            sm: sm,
-                                            rate: newBusinessData.data[index].id
-                                                .toString()),
-                                      ),
-                                    ],
-                                  ),
+                                  Stack(children: [
+                                    myClipRRect(
+                                        image:
+                                            newBusinessData.data[index].photo,
+                                        sm: sm),
+                                    Positioned(
+                                      top: sm.h(1),
+                                      left: sm.w(1),
+                                      child: RatingHolder(
+                                          sm: sm,
+                                          rate: newBusinessData.data[index].id
+                                              .toString()),
+                                    ),
+                                  ]),
                                   Padding(
                                     padding: EdgeInsets.only(left: sm.w(2)),
                                     child: Text(

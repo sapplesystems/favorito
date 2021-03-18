@@ -1,15 +1,15 @@
 class WaitListDataModel {
-  int partiesBeforeYou;
+  var partiesBeforeYou;
   String businessName;
   String availableTimeSlots;
   String minimumWaitTime;
-  int waitlistId;
+  var waitlistId;
   String createdAt;
   String updatedAt;
-  int userId;
+  var userId;
   String waitlistStatus;
   String bookedSlot;
-  int noOfPerson;
+  var noOfPerson;
   String businessId;
   String contact;
   Function fun1;

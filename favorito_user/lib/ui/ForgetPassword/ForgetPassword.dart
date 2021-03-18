@@ -9,6 +9,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
+
 import '../../utils/RIKeys.dart';
 
 class ForgetPassword extends StatelessWidget {
@@ -45,11 +46,11 @@ class ForgetPassword extends StatelessWidget {
                 ),
               ),
               Row(children: [
-                Text("Forget password.",
+                Text("Forgot password.",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26))
               ]),
               Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 14.0),
                   child: EditTextComponent(
                       controller: prTrue.acces[0].controller,
                       hint: prFalse.title[0],
@@ -72,12 +73,12 @@ class ForgetPassword extends StatelessWidget {
                     decoration: TextDecoration.underline,
                   ),
                 ),
-                InkWell(
-                  onTap: () => prTrue.funSendOtpSms(),
+                FlatButton(
+                  onPressed: () => prTrue.funSendOtpSms(),
                   child: Text(
                     prFalse.sendOtptxt,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: myRed, fontSize: 12),
+                    style: TextStyle(color: myRed, fontSize: 16),
                   ),
                 ),
               ]),
@@ -93,7 +94,7 @@ class ForgetPassword extends StatelessWidget {
                       Padding(
                           padding:
                               EdgeInsets.only(top: sm.h(3), bottom: sm.h(1)),
-                          child: Text("Enter Otp",
+                          child: Text("Enter OTP",
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 20))),
