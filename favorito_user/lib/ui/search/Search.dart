@@ -2,13 +2,13 @@ import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
-import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/search/TopRated.dart';
 import 'package:favorito_user/ui/search/TrendingNearby.dart';
 import 'package:favorito_user/ui/search/mostPopular.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
 import '../../utils/Extentions.dart';
 
 class Search extends StatefulWidget {
@@ -38,6 +38,12 @@ class _SearchState extends State<Search> {
                 maxlen: 100,
                 suffixTxt: '',
                 prefixIcon: 'search',
+                keyBoardAction: TextInputAction.search,
+                atSubmit: (_val) {
+                  Navigator.of(context).pushNamed('/searchResult',
+                      arguments: SearchReqData(
+                          text: _mySearchEditTextController.text ?? ''));
+                },
                 prefClick: () {
                   Navigator.of(context).pushNamed('/searchResult',
                       arguments: SearchReqData(
@@ -55,7 +61,7 @@ class _SearchState extends State<Search> {
                   trendingNearby(),
                   header(sm, "Hot & New Business"),
                   Container(
-                    // height: sm.h(28),
+                    height: sm.h(28),
                     child: Padding(
                       padding: EdgeInsets.only(bottom: sm.h(2)),
                       child: HotAndNewBusiness(),

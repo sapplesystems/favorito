@@ -86,9 +86,9 @@ class SignupProvider extends ChangeNotifier {
           "email": acces[2].controller.text,
           "password": acces[3].controller.text,
           "postal_code": acces[4].controller.text,
+          "short_description": acces[5].controller.text,
           "profile_id": acces[6].controller.text,
-          "reach_whatsapp": newValue1 ? 1 : 0,
-          "short_description": acces[6].controller.text
+          "reach_whatsapp": newValue1 ? 1 : 0
         };
         print("map:${_map.toString()}");
         await APIManager.register(_map, scaffoldKey).then((value) {

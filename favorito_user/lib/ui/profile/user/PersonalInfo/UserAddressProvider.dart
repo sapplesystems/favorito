@@ -312,6 +312,10 @@ class UserAddressProvider extends ChangeNotifier {
 
   allClear() {
     _profileImage = '';
+    // acces.forEach((e) =>
+    //   e = Acces()
+    // );
+    setAddresstype('Home');
   }
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {

@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 class AddAddress extends StatelessWidget {
   UserAddressProvider vaTrue;
   UserAddressProvider vaFalse;
+  bool isFirst = true;
   SizeManager sm;
   GlobalKey<FormState> key = GlobalKey();
 
@@ -19,15 +20,18 @@ class AddAddress extends StatelessWidget {
     vaTrue = Provider.of<UserAddressProvider>(context, listen: true);
     vaFalse = Provider.of<UserAddressProvider>(context, listen: false);
     sm = SizeManager(context);
+    if (isFirst) {
+      vaTrue.allClear();
+      isFirst = false;
+    }
     print("address page create");
     return Scaffold(
         key: RIKeys.josKeys6,
         backgroundColor: myBackGround,
         appBar: AppBar(
-          title: Text('${vaTrue.mode} Address'),
-          elevation: 0,
-          backgroundColor: myBackGround,
-        ),
+            title: Text('${vaTrue.mode} Address'),
+            elevation: 0,
+            backgroundColor: myBackGround),
         body: Padding(
           padding: EdgeInsets.all(20),
           child: ListView(children: [

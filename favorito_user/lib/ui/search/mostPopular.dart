@@ -73,7 +73,13 @@ class _mostPopularState extends State<MostPopular> {
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, top: 4.0),
-                          child: Text(dataList[index].businessName,
+                          child: Text(
+                              dataList[index].businessName.length <= 12
+                                  ? dataList[index].businessName
+                                  : dataList[index]
+                                          .businessName
+                                          .substring(0, 12) +
+                                      '..',
                               style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Gilroy-Regular',

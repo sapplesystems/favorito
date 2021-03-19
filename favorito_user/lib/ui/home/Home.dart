@@ -59,78 +59,78 @@ class _HomeState extends State<Home> {
             margin: EdgeInsets.only(top: sm.h(2)),
             color: Colors.white,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Provider.of<UserAddressProvider>(context, listen: false)
-                        .getImage(ImgSource.Gallery, RIKeys.josKeys3);
-                  },
-                  child: Container(
-                    width: sm.w(20),
-                    padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                            height: sm.h(8),
-                            width: sm.h(8),
-                            child: ImageMaster(
-                                url: Provider.of<UserAddressProvider>(context,
-                                        listen: true)
-                                    .getProfileImage()))),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Provider.of<UserAddressProvider>(context, listen: false)
+                          .getImage(ImgSource.Gallery, RIKeys.josKeys3);
+                    },
+                    child: Container(
+                      width: sm.w(20),
+                      padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                              height: sm.h(8),
+                              width: sm.h(8),
+                              child: ImageMaster(
+                                  url: Provider.of<UserAddressProvider>(context,
+                                          listen: true)
+                                      .getProfileImage()))),
+                    ),
                   ),
-                ),
-                Container(
-                  width: sm.w(60),
-                  child: InkWell(onTap: () {
-                    showModalBottomSheet<void>(
-                        enableDrag: true,
-                        isScrollControlled: true,
-                        context: context,
-                        backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-                        builder: (BuildContext context) {
-                          return StatefulBuilder(builder:
-                              (BuildContext context, StateSetter setState) {
-                            return Container(
-                                height: sm.h(70),
-                                decoration: BoxDecoration(color: Colors.white),
-                                child: UserAddress());
+                  Container(
+                    width: sm.w(60),
+                    child: InkWell(onTap: () {
+                      showModalBottomSheet<void>(
+                          enableDrag: true,
+                          isScrollControlled: true,
+                          context: context,
+                          backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(builder:
+                                (BuildContext context, StateSetter setState) {
+                              return Container(
+                                  height: sm.h(70),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
+                                  child: UserAddress());
+                            });
                           });
-                        });
-                  }, child: Consumer<UserAddressProvider>(
-                      builder: (context, data, child) {
-                    return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            Provider.of<PersonalInfoProvider>(context,
-                                    listen: true)
-                                .username,
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Gilroy-Bold'),
-                          ),
-                          Text(data?.getSelectedAddress(),
-                              textAlign: TextAlign.start)
-                        ]);
-                  })),
-                ),
-                Container(
-                  width: sm.w(12),
-                  alignment: Alignment.center,
-                  child: IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/icon/image_scanner.svg',
-                        height: sm.h(3),
-                        fit: BoxFit.fill,
-                      ),
-                      onPressed: () {
-                        vaTrue.scanQR(context);
-                      }),
-                )
-              ],
-            ),
+                    }, child: Consumer<UserAddressProvider>(
+                        builder: (context, data, child) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              Provider.of<PersonalInfoProvider>(context,
+                                      listen: true)
+                                  .username,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Gilroy-Bold'),
+                            ),
+                            Text(data?.getSelectedAddress(),
+                                textAlign: TextAlign.start)
+                          ]);
+                    })),
+                  ),
+                  Container(
+                    width: sm.w(12),
+                    alignment: Alignment.center,
+                    child: IconButton(
+                        icon: SvgPicture.asset(
+                          'assets/icon/image_scanner.svg',
+                          height: sm.h(3),
+                          fit: BoxFit.fill,
+                        ),
+                        onPressed: () {
+                          vaTrue.scanQR(context);
+                        }),
+                  )
+                ]),
           ),
           Container(height: sm.h(30), child: myCarousel()),
           Padding(

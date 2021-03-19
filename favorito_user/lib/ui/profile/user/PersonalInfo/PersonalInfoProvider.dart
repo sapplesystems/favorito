@@ -5,6 +5,7 @@ import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+
 import '../../../../utils/RIKeys.dart';
 
 class PersonalInfoProvider extends ChangeNotifier {
@@ -61,18 +62,37 @@ class PersonalInfoProvider extends ChangeNotifier {
     });
   }
 
-  setPersonalData() async {
-    pr.show().timeout(Duration(seconds: 5));
-    Map _map = {
-      "api_type": 'set',
-      'full_name': acces[0].controller.text,
-      'postal_code': acces[1].controller.text,
-      'short_description': acces[2].controller.text,
-      'reach_whatsapp': newValue ? 1 : 0
-    };
-    await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
-      pr.hide();
-      if (value.status == 'success') getPersonalData();
+  void checkPin(int _index, GlobalKey key) async {
+    await APIManager.checkPostalCode(
+            {"pincode": acces[_index].controller.text}, key)
+        .then((value) {
+      if (value.data.stateName == null)
+        acces[_index].error = value.message;
+      else {
+        Prefs.setPOSTEL(int.parse(acces[_index].controller.text));
+        acces[_index].error = null;
+      }
     });
+    notifyListeners();
+  }
+
+  setPersonalData() async {
+    if (acces[1].controller.text.length < 6) {
+      acces[1].error = 'Invalid postal code';
+      notifyListeners();
+    } else {
+      pr.show().timeout(Duration(seconds: 5));
+      Map _map = {
+        "api_type": 'set',
+        'full_name': acces[0].controller.text,
+        'postal_code': acces[1].controller.text,
+        'short_description': acces[2].controller.text,
+        'reach_whatsapp': newValue ? 1 : 0
+      };
+      await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
+        pr.hide();
+        if (value.status == 'success') getPersonalData();
+      });
+    }
   }
 }

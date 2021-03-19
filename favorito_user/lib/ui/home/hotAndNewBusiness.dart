@@ -44,8 +44,8 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                     scrollDirection: Axis.horizontal,
                     itemCount: newBusinessData?.data?.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: InkWell(
                           onTap: () {
                             Provider.of<BusinessProfileProvider>(context,
@@ -62,7 +62,7 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(12)),
                             ),
-                            elevation: 10,
+                            elevation: 50,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -82,11 +82,13 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                                               .toString()),
                                     ),
                                   ]),
-                                  Padding(
+                                  Container(
+                                    width: sm.w(36),
                                     padding: EdgeInsets.only(left: sm.w(2)),
                                     child: Text(
                                         newBusinessData
                                             .data[index].businessName,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w400)),

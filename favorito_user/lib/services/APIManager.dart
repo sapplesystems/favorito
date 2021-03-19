@@ -227,9 +227,7 @@ class APIManager {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"keyword": searchString};
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
