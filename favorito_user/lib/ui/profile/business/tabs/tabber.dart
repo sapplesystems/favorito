@@ -1,4 +1,3 @@
-import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/ui/profile/business/tabs/CatlogTab.dart';
 import 'package:favorito_user/ui/profile/business/tabs/JobTab.dart';
@@ -33,7 +32,7 @@ class profilePageState extends State<Tabber>
       OverviewTab(data: widget.data),
       CatalogTab(data: widget.data),
       // ReviewTab(data: widget.data),
-      JobTab(data: widget.data)
+      JobTab()
     ];
   }
 

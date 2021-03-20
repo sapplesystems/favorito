@@ -45,8 +45,12 @@ extension StringExtension on String {
     var txt = '';
     var rawTxt = this.split(' ');
     for (int i = 0; i < rawTxt.length; i++) {
-      txt = txt + ' ' + (rawTxt[i])[0].toUpperCase() + (rawTxt[i]).substring(1);
+      txt = txt ??
+          '' + ' ' + (rawTxt[i])[0]?.toUpperCase() ??
+          '' + (rawTxt[i])?.substring(1) ??
+          '';
     }
+    print("Capital txt:${txt.trim()}");
     return txt.trim();
   }
 

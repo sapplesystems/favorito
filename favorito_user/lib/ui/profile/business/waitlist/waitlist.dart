@@ -14,63 +14,56 @@ class Waitlist extends StatelessWidget {
   SizeManager sm;
   BusinessProfileProvider vaTrue;
   BusinessProfileProvider vaFalse;
+  bool isFirst = true;
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     vaTrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     vaFalse = Provider.of<BusinessProfileProvider>(context, listen: false);
+    if (isFirst) {
+      vaTrue.waitlistVerbose();
+      isFirst = false;
+    }
     return SafeArea(
       child: Scaffold(
           backgroundColor: myBackGround,
-          body: FutureBuilder<void>(
-            future: vaTrue.waitlistVerbose(),
-            builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return Center(child: Text(loading));
-              else {
-                // try {
-                // if (snapshot.data.data.isEmpty)
-                //   return Center(child: Text(snapshot.data.message ?? ''));
-                // } catch (e) {
-                //   print('Error 1:${e.toString()}');
-                // }
-                // if (snapshot.data.data.length != 0) {
-                //   var v = snapshot.data?.data[0];
-                //   // if (data != v && !waiting) {
-                //   data?.partiesBeforeYou = v?.partiesBeforeYou;
-                //   data?.businessName = v?.businessName;
-                //   data?.availableTimeSlots = v?.availableTimeSlots;
-                //   data?.minimumWaitTime = v?.minimumWaitTime ?? '00:00:00';
-                // }
-                // }
-
-                return Padding(
-                  padding: EdgeInsets.all(sm.w(6)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WaitListHeader(
+          body: Padding(
+              padding: EdgeInsets.all(sm.w(6)),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    WaitListHeader(
                         title: waitingList,
-                        preFunction: () {
-                          // getWaitList(true);
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Padding(
+                        preFunction: () => Navigator.pop(context)),
+                    Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: sm.w(8), horizontal: sm.w(2.5)),
-                        child: titlePart(
-                            vaTrue.getWaitListData()?.businessName ?? ''),
-                      ),
-                      bodyPart(),
-                      footer(context)
-                    ],
-                  ),
-                );
-              }
-            },
-          )),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: sm.h(.4)),
+                                    Text(currentWaitlistAt,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Gilroy-Regular')),
+                                    Text(
+                                        vaTrue
+                                                .getWaitListData()
+                                                ?.businessName ??
+                                            '',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'Gilroy-Bold')),
+                                  ]),
+                              SvgPicture.asset('assets/icon/cutlery.svg')
+                            ])),
+                    bodyPart(),
+                    footer(context)
+                  ]))),
     );
   }
 
@@ -182,75 +175,45 @@ class Waitlist extends StatelessWidget {
         ),
       ]);
 
-  titlePart(String name) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          children: [
-            SizedBox(height: sm.h(.4)),
-            Text(
-              currentWaitlistAt ?? '',
-              style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
-            ),
-            Text(
-              name ?? '',
-              style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Bold'),
-            ),
-          ],
-        ),
-        SvgPicture.asset('assets/icon/cutlery.svg'),
-      ],
-    );
-  }
-
   Widget footer(context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Card(
-          color: myBackGround,
-          elevation: 6,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32.0)),
-          ),
-          child: InkWell(
-            onTap: () {
-              if (vaTrue.btnTxt == waitingJoin) {
-                // widget?.data?.fun1 = getWaitList;
-                Navigator.of(context).pushNamed('/joinWaitList',
-                    arguments: vaTrue.getWaitListData());
-              } else if (vaTrue.btnTxt == waitingCancel) {
-                vaTrue.cancelWaitList();
-              } else if (vaTrue.btnTxt == waitingCancel) {}
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20.0, right: 12, top: 16, bottom: 16),
-                  child: Icon(
-                    Icons.add_circle_outline,
-                    color: myRed,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 12.0, right: 30, bottom: 16, top: 16),
-                  child: Text(
-                    vaTrue.btnTxt,
-                    style: TextStyle(
-                        color: Color(0xffdd2626),
-                        fontSize: 18,
-                        letterSpacing: 0.36,
-                        fontFamily: 'Gilroy-Light'),
-                  ),
-                )
-              ],
+            color: myBackGround,
+            elevation: 6,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0)),
             ),
-          ),
-        ),
+            child: InkWell(
+                onTap: () {
+                  if (vaTrue.btnTxt == waitingJoin) {
+                    // widget?.data?.fun1 = getWaitList;
+                    Navigator.of(context).pushNamed('/joinWaitList',
+                        arguments: vaTrue.getWaitListData());
+                  } else if (vaTrue.btnTxt == waitingCancel) {
+                    vaTrue.cancelWaitList();
+                  } else if (vaTrue.btnTxt == waitingCancel) {}
+                },
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0, right: 12, top: 16, bottom: 16),
+                          child: Icon(Icons.add_circle_outline, color: myRed)),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 30, bottom: 16, top: 16),
+                          child: Text(
+                            vaTrue.btnTxt,
+                            style: TextStyle(
+                                color: Color(0xffdd2626),
+                                fontSize: 18,
+                                letterSpacing: 0.36,
+                                fontFamily: 'Gilroy-Light'),
+                          ))
+                    ]))),
         InkWell(
           onTap: () {
             launch("tel://${vaTrue.getWaitListData().contact}");
@@ -305,14 +268,12 @@ class Waitlist extends StatelessWidget {
 
   waitingTime() {
     print("data.waitlistStatus:${vaTrue.getWaitListData()?.waitlistStatus}");
-    var _wait = vaTrue.getWaitListData()?.minimumWaitTime ?? "00:33";
+    var _wait = vaTrue.getWaitListData()?.minimumWaitTime ?? "00:00";
 
     return Column(
       children: [
-        Text(
-          'Waiting time',
-          style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
-        ),
+        Text('Waiting time',
+            style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular')),
         (vaTrue.waiting &&
                 vaTrue.getWaitListData()?.waitlistStatus == 'accepted')
             ? CirculerProgress(

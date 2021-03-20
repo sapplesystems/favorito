@@ -525,7 +525,7 @@ class APIManager {
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
+        // contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print(
         "service.baseUserWaitlistVerbose : ${service.baseUserWaitlistVerbose}");

@@ -56,7 +56,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SearchResult(data: args));
 
       case '/joinWaitList':
-        return MaterialPageRoute(builder: (_) => JoinWaitList(data: args));
+        return MaterialPageRoute(builder: (_) => JoinWaitList());
 
       case '/bookTable':
         return MaterialPageRoute(builder: (_) => BookTable());

@@ -29,6 +29,7 @@ class BusinessProfile extends StatelessWidget {
     sm = SizeManager(context);
     vatrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     if (isFirst) {
+      vatrue.allClear();
       isFirst = false;
     }
     return Scaffold(
