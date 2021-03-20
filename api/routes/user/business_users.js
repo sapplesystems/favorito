@@ -60,6 +60,13 @@ router.post('/register', UserRegisterController.register);
 
 router.post('/login', UserLoginController.login);
 
+// send login otp 
+router.post('/send-login-otp', UserLoginController.sendLoginOtp);
+
+// verify login otp
+router.post('/send-login-otp', UserLoginController.verifyLoginOtp);
+
+
 router.post('/is-profile-exist', UserRegisterController.isProfileExist);
 
 // end-point- /api/user/is-account-exist

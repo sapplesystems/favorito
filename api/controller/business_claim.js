@@ -156,18 +156,19 @@ exports.verifyEmailLink = async function(req, res, next) {
     try {
         var sql = "UPDATE business_master SET is_email_verified='1' WHERE business_id='" + verified_data.business_id + "'";
         var result = await exports.run_query(sql)
-        var sql_is_phone_verify = `SELECT is_phone_verified from business_master where business_id = '${verified_data.business_id}'`
-        var result_is_phone_verify = await exports.run_query(sql_is_phone_verify)
-        if (result_is_phone_verify[0].is_phone_verified) {
-            var sql_update_is_verify = `UPDATE business_master set is_verified = 1 where business_id = '${verified_data.business_id}'`
-            var result_update_is_verify = await exports.run_query(sql_update_is_verify)
-        }
-        sql_check_all_verified = `SELECT is_verified,is_information_completed,is_profile_completed from business_master where business_id='${verified_data.business_id}'`
-        result_check_all_verified = await exports.run_query(sql_check_all_verified)
-        if (result_check_all_verified[0].is_verified && result_check_all_verified[0].is_information_completed && result_check_all_verified[0].is_profile_completed) {
-            sql_update_is_activated = `UPDATE business_master set is_activated = 1 where business_id = '${verified_data.business_id}'`
-            result_update_is_activated = await exports.run_query(sql_update_is_activated)
-        }
+
+        // var sql_is_phone_verify = `SELECT is_phone_verified from business_master where business_id = '${verified_data.business_id}'`
+        // var result_is_phone_verify = await exports.run_query(sql_is_phone_verify)
+        // if (result_is_phone_verify[0].is_phone_verified) {
+        //     var sql_update_is_verify = `UPDATE business_master set is_verified = 1 where business_id = '${verified_data.business_id}'`
+        //     var result_update_is_verify = await exports.run_query(sql_update_is_verify)
+        // }
+        // sql_check_all_verified = `SELECT is_verified,is_information_completed,is_profile_completed from business_master where business_id='${verified_data.business_id}'`
+        // result_check_all_verified = await exports.run_query(sql_check_all_verified)
+        // if (result_check_all_verified[0].is_verified && result_check_all_verified[0].is_information_completed && result_check_all_verified[0].is_profile_completed) {
+        //     sql_update_is_activated = `UPDATE business_master set is_activated = 1 where business_id = '${verified_data.business_id}'`
+        //     result_update_is_activated = await exports.run_query(sql_update_is_activated)
+        // }
         return res.status(301).redirect("https://www.sapple.co.in")
 
     } catch (error) {
@@ -207,18 +208,19 @@ exports.verifyOtp = async function(req, res, next) {
             if (req.body.otp == otp_from_db[0].phone_otp) {
                 var sql = "UPDATE business_master SET is_phone_verified='1' WHERE business_id='" + req.userdata.business_id + "'";
                 var result = await exports.run_query(sql)
-                var sql_check_is_email_verified = `SELECT is_email_verified from business_master where business_id = '${req.userdata.business_id}'`
-                var result_check_is_email_verified = await exports.run_query(sql_check_is_email_verified)
-                if (result_check_is_email_verified[0].is_email_verified == '1') {
-                    sql_update_is_verified = `UPDATE business_master set is_verified = 1 where business_id = '${req.userdata.business_id}'`
-                    result_update_is_verified = await exports.run_query(sql_update_is_verified)
-                }
-                let sql_check_all_verified = `SELECT is_verified, is_information_completed, is_profile_completed from business_master where business_id = '${ req.userdata.business_id}'`
-                let result_check_all_verified = await exports.run_query(sql_check_all_verified)
-                if (result_check_all_verified[0].is_verified && result_check_all_verified[0].is_information_completed && result_check_all_verified[0].is_profile_completed) {
-                    sql_update_is_activated = `UPDATE business_master set is_activated = 1 where business_id = '${req.userdata.business_id}'`
-                    result_update_is_activated = await exports.run_query(sql_update_is_activated)
-                }
+
+                // var sql_check_is_email_verified = `SELECT is_email_verified from business_master where business_id = '${req.userdata.business_id}'`
+                // var result_check_is_email_verified = await exports.run_query(sql_check_is_email_verified)
+                // if (result_check_is_email_verified[0].is_email_verified == '1') {
+                //     sql_update_is_verified = `UPDATE business_master set is_verified = 1 where business_id = '${req.userdata.business_id}'`
+                //     result_update_is_verified = await exports.run_query(sql_update_is_verified)
+                // }
+                // let sql_check_all_verified = `SELECT is_verified, is_information_completed, is_profile_completed from business_master where business_id = '${ req.userdata.business_id}'`
+                // let result_check_all_verified = await exports.run_query(sql_check_all_verified)
+                // if (result_check_all_verified[0].is_verified && result_check_all_verified[0].is_information_completed && result_check_all_verified[0].is_profile_completed) {
+                //     sql_update_is_activated = `UPDATE business_master set is_activated = 1 where business_id = '${req.userdata.business_id}'`
+                //     result_update_is_activated = await exports.run_query(sql_update_is_activated)
+                // }
                 return res.status(200).send({ status: 'success', message: 'phone is verified' })
             } else {
                 return res.status(200).json({ status: 'fail', message: 'OTP is incorrect' })

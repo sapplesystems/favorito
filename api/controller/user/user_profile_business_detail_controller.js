@@ -37,6 +37,7 @@ exports.getBusinessDetail = async function(req, res) {
         try {
             sql_count_rating = "SELECT AVG(rating) as count FROM business_ratings WHERE business_id = '" + business_id + "'"
             result_count_rating = await exports.run_query(sql_count_rating)
+
             sql_attributes = `SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attributes_master as b_a_m ON b_a_m.id = b_a.attributes_id WHERE b_a.business_id= '${business_id}'`
             result_attributes = await exports.run_query(sql_attributes)
 
@@ -53,19 +54,43 @@ exports.getBusinessDetail = async function(req, res) {
         }
         var sql = "SELECT b_m.id, b_m.business_id,IFNULL(b_m.short_description,'') as short_desciption,IFNULL(b_i.price_range ,0) AS price_range, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations AS b_i LEFT JOIN business_hours as b_h ON  b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
 
-        db.query(sql, function(err, result) {
-            if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
-            }
-            if (result == '') {
-                return res.status(200).send({ status: 'success', message: 'No contect found', data: result })
-            }
-            result[0].avg_rating = avg_rating;
-            result[0].attributes = result_attributes;
-            result[0].relation = result_relation;
+        result = await exports.run_query(sql)
+        if (result == '') {
+            return res.status(200).send({ status: 'success', message: 'No contect found', data: result })
+        }
 
-            return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
-        })
+        // checking the online or offline
+
+        var d = new Date();
+        var weekday = new Array(7);
+        weekday[0] = "Sunday";
+        weekday[1] = "Monday";
+        weekday[2] = "Tuesday";
+        weekday[3] = "Wednesday";
+        weekday[4] = "Thursday";
+        weekday[5] = "Friday";
+        weekday[6] = "Saturday";
+        var day = weekday[d.getDay()].substring(0, 3);
+
+        sql_hour = `select day,start_hours,end_hours from business_hours where business_id = '${business_id}' AND day = '${day}'AND start_hours < NOW() AND end_hours > NOW()`
+        result_hour = await exports.run_query(sql_hour)
+        if (result[0].business_status == 'online' || result[0].business_status == 'Online') {
+            if (result_hour == '') {
+                result[0].start_hours = null
+                result[0].end_hours = null
+                result[0].business_status = 'offline'
+            } else {
+                result[0].start_hours = result_hour[0].start_hours
+                result[0].end_hours = result_hour[0].end_hours
+                result[0].business_status = 'online'
+
+            }
+        }
+        result[0].avg_rating = avg_rating;
+        result[0].attributes = result_attributes;
+        result[0].relation = result_relation;
+        return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
+
     } catch (error) {
         res.status(500).json({ status: 'error', message: 'Something went wrong.' })
     }

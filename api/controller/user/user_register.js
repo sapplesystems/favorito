@@ -125,7 +125,7 @@ exports.isProfileExist = async(req, res, next) => {
         sql_check = `SELECT COUNT(id) AS count FROM users WHERE profile_id = '${req.body.profile_id}'`
         result_sql_check = await exports.run_query(sql_check)
         if (result_sql_check[0].count > 0) {
-            return res.status(200).json({ status: 'success', message: 'This profile id is already exist, please use another one', data: [{ is_exist: 1 }] });
+            return res.status(200).json({ status: 'success', message: 'This unique id is already exist, please use another one', data: [{ is_exist: 1 }] });
         } else {
             return res.status(200).json({ status: 'success', message: 'Available', data: [{ is_exist: 0 }] });
         }
@@ -364,7 +364,6 @@ exports.getOtpFromDb = function(id) {
         })
     })
 }
-
 
 exports.run_query = (sql, param = false) => {
     if (param == false) {

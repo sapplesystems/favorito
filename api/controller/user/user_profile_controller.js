@@ -8,6 +8,7 @@ exports.businessCarouselList = async function(req, res, next) {
 
 exports.getCaruoselData = async function(req, res) {
     try {
+
         var business_id = null
         if (req.body.business_id != null && req.body.business_id != '' && req.body.business_id != undefined) {
             business_id = req.body.business_id
@@ -16,9 +17,9 @@ exports.getCaruoselData = async function(req, res) {
         }
 
         if (business_id != null) {
-            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m  ON b_u.business_id = b_m.business_id  WHERE type = "Photo" AND b_u.business_id = "' + business_id + '"'
+            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m  ON b_u.business_id = b_m.business_id  WHERE type = "Photo" AND b_u.business_id = "' + business_id + '" AND b_m.is_verified = 1'
         } else {
-            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m ON b_u.business_id = b_m.business_id WHERE type = "Photo" GROUP BY business_id LIMIT 20'
+            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m ON b_u.business_id = b_m.business_id WHERE type = "Photo" AND b_m.is_verified = 1 GROUP BY business_id LIMIT 20'
         }
 
         db.query(sql, function(err, result) {
