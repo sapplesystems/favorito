@@ -5,19 +5,18 @@ import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/get.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+
 import '../../utils/RIKeys.dart';
 
 class ForgetPasswordProvider extends ChangeNotifier {
   String didNotReceive = '';
   BuildContext context;
   Validator validator = Validator();
-  String sendOtptxt = "Send Otp";
+  String sendOtptxt = "Send OTP";
   List<Acces> acces = [];
   List<String> title = [
     'Email/Phone',
-    'Enter Otp',
+    'Enter OTP',
     'New password',
     'Confirm password'
   ];
@@ -90,9 +89,8 @@ class ForgetPasswordProvider extends ChangeNotifier {
         {
           if (emailRegex.hasMatch(acces[_index].controller.text))
             acces[_index].error = null;
-          else {
-            acces[_index].error = 'Invalid email';
-          }
+          else
+            acces[_index].error = 'Invalid email/phone';
           notifyListeners();
         }
         break;
@@ -149,7 +147,7 @@ class ForgetPasswordProvider extends ChangeNotifier {
     }
     otpForworded = false;
     didNotReceive = '';
-    sendOtptxt = 'Send Otp';
+    sendOtptxt = 'Send OTP';
     Navigator.of(context).pushNamed('/');
   }
 }

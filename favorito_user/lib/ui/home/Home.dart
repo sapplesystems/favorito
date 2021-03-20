@@ -14,18 +14,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 
-  ProgressDialog pr;
   List<String> image = ['pizza', 'table', 'callender', 'ala', 'bag', 'home'];
   List<String> imagName = [
     'Food',
     'Book A Table',
-    'Book An\nAppoinent',
+    'Book An\nAppointment',
     'Doctor',
     'Jobs',
     'Freelancers'
@@ -49,21 +47,18 @@ class _HomeState extends State<Home> {
           .getPersonalData();
       isFirst = false;
     }
-    widget.pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    widget.pr.style(message: 'Fetching Data, please wait');
     sm = SizeManager(context);
     return WillPopScope(
       onWillPop: () => APIManager.onWillPop(context),
       child: Scaffold(
         key: RIKeys.josKeys3,
         backgroundColor: myBackGround,
-        body: ListView(
-          children: [
-            Container(
-              padding: EdgeInsets.all(sm.w(4)),
-              margin: EdgeInsets.only(top: sm.h(2)),
-              color: Colors.white,
-              child: Row(
+        body: ListView(children: [
+          Container(
+            padding: EdgeInsets.all(sm.w(4)),
+            margin: EdgeInsets.only(top: sm.h(2)),
+            color: Colors.white,
+            child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
@@ -72,18 +67,18 @@ class _HomeState extends State<Home> {
                           .getImage(ImgSource.Gallery, RIKeys.josKeys3);
                     },
                     child: Container(
-                        width: sm.w(20),
-                        padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                                height: sm.h(8),
-                                width: sm.h(8),
-                                child: ImageMaster(
-                                    url: Provider.of<UserAddressProvider>(
-                                            context,
-                                            listen: true)
-                                        .getProfileImage())))),
+                      width: sm.w(20),
+                      padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                              height: sm.h(8),
+                              width: sm.h(8),
+                              child: ImageMaster(
+                                  url: Provider.of<UserAddressProvider>(context,
+                                          listen: true)
+                                      .getProfileImage()))),
+                    ),
                   ),
                   Container(
                     width: sm.w(60),
@@ -124,7 +119,7 @@ class _HomeState extends State<Home> {
                   ),
                   Container(
                     width: sm.w(12),
-                    padding: EdgeInsets.only(right: sm.w(2), bottom: sm.w(4)),
+                    alignment: Alignment.center,
                     child: IconButton(
                         icon: SvgPicture.asset(
                           'assets/icon/image_scanner.svg',
@@ -135,81 +130,79 @@ class _HomeState extends State<Home> {
                           vaTrue.scanQR(context);
                         }),
                   )
-                ],
-              ),
+                ]),
+          ),
+          Container(height: sm.h(30), child: myCarousel()),
+          Padding(
+            padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
+            child: EditTextComponent(
+              controller: _mySearchEditTextController,
+              hint: "Search",
+              suffixTxt: '',
+              security: false,
+              valid: false,
+              error: '',
+              keyboardSet: TextInputType.text,
+              prefixIcon: 'search',
+              keyBoardAction: TextInputAction.search,
+              atSubmit: (_val) {
+                Navigator.of(context).pushNamed('/searchResult',
+                    arguments: SearchReqData(text: _val));
+              },
+              prefClick: () {
+                Navigator.of(context).pushNamed('/searchResult',
+                    arguments:
+                        SearchReqData(text: _mySearchEditTextController.text));
+              },
             ),
-            Container(height: sm.h(30), child: myCarousel()),
-            Padding(
-              padding: EdgeInsets.only(left: sm.w(5), right: sm.w(5)),
-              child: EditTextComponent(
-                controller: _mySearchEditTextController,
-                hint: "Search",
-                suffixTxt: '',
-                security: false,
-                valid: false,
-                error: '',
-                keyboardSet: TextInputType.text,
-                prefixIcon: 'search',
-                keyBoardAction: TextInputAction.search,
-                atSubmit: (_val) {
-                  Navigator.of(context).pushNamed('/searchResult',
-                      arguments: SearchReqData(text: _val));
-                },
-                prefClick: () {
-                  Navigator.of(context).pushNamed('/searchResult',
-                      arguments: SearchReqData(
-                          text: _mySearchEditTextController.text));
-                },
-              ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(sm.w(4)),
+            child: Wrap(
+              runSpacing: sm.h(5),
+              spacing: sm.h(5),
+              alignment: WrapAlignment.center,
+              children: [
+                for (var i = 0; i < widget.imagName.length; i++)
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/searchResult',
+                          arguments:
+                              SearchReqData(category: widget.imagName[i]));
+                    },
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Neumorphic(
+                              style: NeumorphicStyle(
+                                  shape: NeumorphicShape.convex,
+                                  depth: 8,
+                                  lightSource: LightSource.topLeft,
+                                  color: myButtonBackground,
+                                  boxShape: NeumorphicBoxShape.roundRect(
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                  )),
+                              child: Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.all(sm.h(3.5)),
+                                child: SvgPicture.asset(
+                                  'assets/icon/${widget.image[i]}.svg',
+                                  height: sm.h(3.5),
+                                ),
+                              )),
+                          Padding(
+                            padding: EdgeInsets.only(top: sm.h(2.5)),
+                            child: Text(widget.imagName[i].toString(),
+                                textAlign: TextAlign.center),
+                          ),
+                        ]),
+                  ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.all(sm.w(4)),
-              child: Wrap(
-                runSpacing: sm.h(5),
-                spacing: sm.h(5),
-                alignment: WrapAlignment.center,
-                children: [
-                  for (var i = 0; i < widget.imagName.length; i++)
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/searchResult',
-                            arguments:
-                                SearchReqData(category: widget.imagName[i]));
-                      },
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Neumorphic(
-                                style: NeumorphicStyle(
-                                    shape: NeumorphicShape.convex,
-                                    depth: 8,
-                                    lightSource: LightSource.topLeft,
-                                    color: myButtonBackground,
-                                    boxShape: NeumorphicBoxShape.roundRect(
-                                      BorderRadius.all(Radius.circular(12.0)),
-                                    )),
-                                child: Container(
-                                  color: Colors.white,
-                                  padding: EdgeInsets.all(sm.h(3.5)),
-                                  child: SvgPicture.asset(
-                                    'assets/icon/${widget.image[i]}.svg',
-                                    height: sm.h(3.5),
-                                  ),
-                                )),
-                            Padding(
-                              padding: EdgeInsets.only(top: sm.h(2.5)),
-                              child: Text(widget.imagName[i].toString(),
-                                  textAlign: TextAlign.center),
-                            ),
-                          ]),
-                    ),
-                ],
-              ),
-            ),
-            header(sm, "Hot & New Business"),
-            HotAndNewBusiness(),
-          ],
-        ),
+          ),
+          header(sm, "Hot & New Business"),
+          HotAndNewBusiness(),
+        ]),
       ),
     );
   }

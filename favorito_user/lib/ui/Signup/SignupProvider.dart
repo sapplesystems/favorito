@@ -30,7 +30,7 @@ class SignupProvider extends ChangeNotifier {
     'Email',
     'Password',
     'Postal',
-    'Short discription',
+    'Short description',
     'Unique Id',
   ];
 
@@ -70,12 +70,6 @@ class SignupProvider extends ChangeNotifier {
     acces[6].error = validator.validateId(acces[6].controller.text);
 
     notifyListeners();
-    print("ffff$uniqueId:${acces[0].error}");
-    print("ffff$uniqueId:${acces[1].error}");
-    print("ffff$uniqueId:${acces[2].error}");
-    print("ffff$uniqueId:${acces[3].error}");
-    print("ffff$uniqueId:${acces[4].error}");
-    print("ffff$uniqueId:${acces[5].error}");
     if (acces[0].error == null &&
         acces[1].error == null &&
         acces[2].error == null &&
@@ -92,9 +86,9 @@ class SignupProvider extends ChangeNotifier {
           "email": acces[2].controller.text,
           "password": acces[3].controller.text,
           "postal_code": acces[4].controller.text,
-          "profile_id": acces[5].controller.text,
-          "reach_whatsapp": newValue1 ? 1 : 0,
-          "short_description": acces[6].controller.text,
+          "short_description": acces[5].controller.text,
+          "profile_id": acces[6].controller.text,
+          "reach_whatsapp": newValue1 ? 1 : 0
         };
         print("map:${_map.toString()}");
         await APIManager.register(_map, scaffoldKey).then((value) {
@@ -174,13 +168,12 @@ class SignupProvider extends ChangeNotifier {
       case 3:
         {
           if (passwordRegex.hasMatch(acces[_index].controller.text))
-            acces[_index].error = null;
+            acces[3].error = null;
           else {
             acces[_index].error =
                 validator.validatePassword(acces[_index].controller.text);
-
-            notifyListeners();
           }
+          notifyListeners();
         }
         break;
 
@@ -189,14 +182,14 @@ class SignupProvider extends ChangeNotifier {
           if ((acces[_index].controller.text.isEmpty))
             acces[_index].error = 'Field required';
           else {
-            if (acces[4].controller.text.length == 6) {
+            if (acces[_index].controller.text.length == 6) {
               await APIManager.checkPostalCode(
-                      {"pincode": acces[4].controller.text}, scaffoldKey)
+                      {"pincode": acces[_index].controller.text}, scaffoldKey)
                   .then((value) {
                 if (value.data.stateName == null)
                   acces[_index].error = value.message;
                 else {
-                  Prefs.setPOSTEL(int.parse(acces[5].controller.text));
+                  Prefs.setPOSTEL(int.parse(acces[_index].controller.text));
                   acces[_index].error = null;
                 }
               });
@@ -208,18 +201,16 @@ class SignupProvider extends ChangeNotifier {
 
       case 6:
         {
+          if (!acces[_index].controller.text.toString().contains('@')) {
+            acces[_index].error =
+                Validator().validateId(acces[_index].controller.text);
+            acces[_index].controller.text = '';
+          } else
+            setCheckId('verify');
           if (acces[_index].controller.text.length > 2)
             acces[_index].error = 'Please check availability';
-          else
-            acces[_index].error = 'Field required';
           errorColor[_index] = null;
           notifyListeners();
-        }
-        break;
-
-      default:
-        {
-          //statements;
         }
         break;
     }

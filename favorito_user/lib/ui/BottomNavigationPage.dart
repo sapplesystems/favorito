@@ -1,11 +1,9 @@
 import 'package:favorito_user/Providers/BookTableProvider.dart';
-import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
+import 'package:favorito_user/ui/chat/Chat.dart';
 import 'package:favorito_user/ui/home/Home.dart';
 import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:favorito_user/ui/search/Search.dart';
-import 'package:favorito_user/ui/chat/Chat.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
@@ -54,46 +52,24 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: FFNavigationBar(
-        theme: FFNavigationBarTheme(
-          barBackgroundColor: Colors.white,
-          selectedItemBorderColor: myBackGround,
-          selectedItemBackgroundColor: myBackGround,
-          selectedItemIconColor: Colors.black,
-          selectedItemLabelColor: Colors.red,
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        selectedIndex: _selectedIndex,
-        onSelectTab: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        items: [
-          FFNavigationBarItem(
-            iconData: Icons.home,
-            label: 'Home',
-          ),
-          FFNavigationBarItem(
-            iconData: Icons.search,
-            label: 'Search',
-          ),
-          FFNavigationBarItem(
-            iconData: Icons.list,
-            label: 'Bookings',
-          ),
-          FFNavigationBarItem(
-            iconData: Icons.chat,
-            label: 'Chat',
-          ),
-          FFNavigationBarItem(
-            iconData: Icons.person,
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
+        bottomNavigationBar: FFNavigationBar(
+            theme: FFNavigationBarTheme(
+                barBackgroundColor: Colors.white,
+                selectedItemBorderColor: myBackGround,
+                selectedItemBackgroundColor: myBackGround,
+                selectedItemIconColor: Colors.black,
+                selectedItemLabelColor: Colors.red),
+            selectedIndex: _selectedIndex,
+            onSelectTab: (index) => setState(() => _selectedIndex = index),
+            items: [
+              FFNavigationBarItem(iconData: Icons.home, label: 'Home'),
+              FFNavigationBarItem(iconData: Icons.search, label: 'Search'),
+              FFNavigationBarItem(iconData: Icons.list, label: 'Bookings'),
+              FFNavigationBarItem(iconData: Icons.chat, label: 'Chat'),
+              FFNavigationBarItem(iconData: Icons.person, label: 'Profile')
+            ]));
   }
 }

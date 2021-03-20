@@ -4,9 +4,11 @@ import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
 class MostPopular extends StatefulWidget {
   @override
@@ -39,20 +41,24 @@ class _mostPopularState extends State<MostPopular> {
                 itemCount: dataList?.length ?? 0,
                 itemBuilder: (BuildContext contect, int index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.of(context).pushNamed('/businessProfile',
-                                arguments: dataList[index].businessId);
+                            Provider.of<BusinessProfileProvider>(context,
+                                    listen: false)
+                                .setBusinessId(dataList[index].businessId);
+                            Navigator.of(context).pushNamed('/businessProfile'
+                                // ,arguments: dataList[index].businessId
+                                );
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(12))),
-                            elevation: 10,
+                            // elevation: 10,
                             child: SizedBox(
                               height: sm.h(16),
                               width: sm.w(34),
@@ -65,8 +71,15 @@ class _mostPopularState extends State<MostPopular> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(dataList[index].businessName,
+                          padding: const EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 4.0),
+                          child: Text(
+                              dataList[index].businessName.length <= 12
+                                  ? dataList[index].businessName
+                                  : dataList[index]
+                                          .businessName
+                                          .substring(0, 12) +
+                                      '..',
                               style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: 'Gilroy-Regular',

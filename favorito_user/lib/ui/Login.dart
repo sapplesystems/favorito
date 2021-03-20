@@ -1,13 +1,13 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter/services.dart';
-import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
@@ -130,28 +130,22 @@ class _LoginState extends State<Login> {
                   Center(
                       child: Padding(
                           padding: EdgeInsets.only(top: sm.h(4)),
-                          child: Text(
-                            "Dont have account yet?",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: myGrey,
-                                fontSize: 16),
-                          ))),
+                          child: Text("Dont have account yet?",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  color: myGrey,
+                                  fontSize: 16)))),
                   Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: sm.h(4)),
-                      child: InkWell(
-                        onTap: () => Navigator.of(context).pushNamed('/signUp'),
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: myRed),
-                        ),
-                      ),
-                    ),
-                  ),
+                      child: Padding(
+                          padding: EdgeInsets.only(bottom: sm.h(4)),
+                          child: InkWell(
+                              onTap: () =>
+                                  Navigator.of(context).pushNamed('/signUp'),
+                              child: Text("Sign Up",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: myRed)))))
                 ]))));
   }
 }

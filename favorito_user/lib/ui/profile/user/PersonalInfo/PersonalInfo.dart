@@ -2,16 +2,18 @@ import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class PersonalInfo extends StatelessWidget {
   PersonalInfoProvider spTrue;
   PersonalInfoProvider spFalse;
   SizeManager sm;
+  bool isFirst = true;
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +21,16 @@ class PersonalInfo extends StatelessWidget {
     spTrue = Provider.of<PersonalInfoProvider>(context, listen: true);
     spFalse = Provider.of<PersonalInfoProvider>(context, listen: false);
     spTrue.setContext(context);
-    if (spFalse.acces[0].controller.text.trim().isEmpty)
+    if (isFirst) {
       spTrue.getPersonalData();
+      isFirst = false;
+    }
     return WillPopScope(
         onWillPop: () {
           Navigator.pop(context);
         },
         child: SafeArea(
+            key: RIKeys.josKeys10,
             child: Scaffold(
                 backgroundColor: myBackGround,
                 body: Padding(
@@ -60,18 +65,25 @@ class PersonalInfo extends StatelessWidget {
                                         controller: spTrue.acces[i].controller,
                                         title: spTrue.title[i],
                                         hint: spTrue.title[i],
-                                        myOnChanged: (_) {
-                                          // spFalse.onChange(i)
+                                        myOnChanged: (val) {
+                                          if (i == 1 && val.length == 6) {
+                                            print("its:$i,$val");
+                                            spTrue.checkPin(
+                                                i, RIKeys.josKeys10);
+                                          }
+                                          if (i == 1) spTrue.notifyListeners();
                                         },
                                         // suffixTap: () => spTrue.checkIdClicked(i),
                                         suffixTxt: '',
                                         error: spTrue.acces[i].error,
                                         security: false,
+
                                         valid: true,
                                         maxLines: 1,
                                         formate: FilteringTextInputFormatter
                                             .singleLineFormatter,
-                                        maxlen: 50,
+                                        maxlen: i == 1 ? 6 : 50,
+
                                         keyboardSet: i == 1
                                             ? TextInputType.phone
                                             : TextInputType.text,
@@ -88,26 +100,33 @@ class PersonalInfo extends StatelessWidget {
                                   ),
                                 ]))),
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(top: sm.h(4)),
-                          child: NeumorphicButton(
-                              style: NeumorphicStyle(
-                                  shape: NeumorphicShape.convex,
-                                  depth: 4,
-                                  lightSource: LightSource.topLeft,
-                                  color: myButtonBackground,
-                                  boxShape: NeumorphicBoxShape.roundRect(
-                                      BorderRadius.all(Radius.circular(24.0)))),
-                              margin:
-                                  EdgeInsets.symmetric(horizontal: sm.w(10)),
-                              onPressed: () => spTrue.setPersonalData(),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                              child: Center(
-                                  child: Text("Submit",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: myRed)))))
+                      Visibility(
+                        visible:
+                            (spTrue.acces[1].controller.text.length == 6) &&
+                                (spTrue.acces[1].error == null) &&
+                                (spTrue.acces[0].controller.text.length > 1),
+                        child: Padding(
+                            padding: EdgeInsets.only(top: sm.h(4)),
+                            child: NeumorphicButton(
+                                style: NeumorphicStyle(
+                                    shape: NeumorphicShape.convex,
+                                    depth: 4,
+                                    lightSource: LightSource.topLeft,
+                                    color: myButtonBackground,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.all(
+                                            Radius.circular(24.0)))),
+                                margin:
+                                    EdgeInsets.symmetric(horizontal: sm.w(10)),
+                                onPressed: () => spTrue.setPersonalData(),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 16),
+                                child: Center(
+                                    child: Text("Submit",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: myRed))))),
+                      )
                     ])))));
   }
 }
@@ -136,7 +155,7 @@ class _tcpState extends State<tcp> {
         children: [
           t_c(
             isChecked: widget.newValue,
-            title: "Reach me on watsapp",
+            title: "Reach me on whatsapp",
             function: (vv) {
               setState(() {
                 widget.newValue = vv;

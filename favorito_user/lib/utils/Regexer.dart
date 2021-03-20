@@ -8,7 +8,7 @@ Pattern _emailPattern =
 Pattern _emailAndMobilePattern =
     r'^[6-9]{1}\d{9}|(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 Pattern _passwordPattern =
-    r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$';
+    r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$';
 
 RegExp mobileRegex = RegExp(_mobilePattern);
 RegExp otpRegex = RegExp(_otpPattern);

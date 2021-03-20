@@ -7,7 +7,7 @@ class ProfileProvider extends ChangeNotifier {
     "Photos added with reviews",
     "Check-ins",
     "Favourites",
-    "Refer fiend/place",
+    "Refer friend/place",
     'Saved Addresses',
     "Orders",
     "Friends",

@@ -49,7 +49,7 @@ class _txtfieldPostActionState extends State<txtfieldPostAction> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.all(8),
       child: TextFormField(
         enabled: widget.enalble ?? true,
         controller: widget.controller,

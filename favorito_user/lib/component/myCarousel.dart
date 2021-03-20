@@ -3,8 +3,10 @@ import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
 class myCarousel extends StatefulWidget {
   String id;
@@ -19,16 +21,10 @@ class _myCarouselState extends State<myCarousel> {
   SizeManager sm;
 
   @override
-  void initState() {
-    super.initState();
-    fut = APIManager.carousel(context, {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return FutureBuilder<CarouselModel>(
-      future: APIManager.carousel(context, {'business_id': widget.id}),
+      future: APIManager.carousel({'business_id': widget.id}),
       builder: (BuildContext context, AsyncSnapshot<CarouselModel> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: Text(loading));
@@ -37,8 +33,7 @@ class _myCarouselState extends State<myCarousel> {
         else if (carouselModel != snapshot.data) {
           carouselModel = snapshot.data;
           return Container(
-            padding: EdgeInsets.only(
-                top: sm.h(6), bottom: sm.h(2), left: sm.w(3), right: sm.w(3)),
+            padding: EdgeInsets.symmetric(vertical: sm.h(2)),
             height: sm.h(30),
             child: CarouselSlider(
                 options: CarouselOptions(
@@ -50,8 +45,12 @@ class _myCarouselState extends State<myCarousel> {
                     .map(
                       (item) => InkWell(
                         onTap: () {
-                          Navigator.of(context).pushNamed('/businessProfile',
-                              arguments: item.businessId);
+                          Provider.of<BusinessProfileProvider>(context,
+                                  listen: false)
+                              .setBusinessId(item.businessId);
+                          Navigator.of(context).pushNamed('/businessProfile'
+                              // ,arguments: item.businessId
+                              );
                         },
                         child: Container(
                           width: sm.h(90),

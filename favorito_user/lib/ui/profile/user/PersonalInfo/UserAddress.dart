@@ -46,7 +46,7 @@ class UserAddress extends StatelessWidget {
                   child: Row(children: [
                     Icon(Icons.add, size: 26, color: myRed),
                     Text(
-                      '\tAdd Addresses',
+                      '\tAdd Address',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -80,6 +80,23 @@ class UserAddress extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                    IconButton(
+                                        icon: Icon(
+                                          da.addressType.toLowerCase() == 'home'
+                                              ? Icons.home
+                                              : da.addressType.toLowerCase() ==
+                                                      'office'
+                                                  ? Icons.work_outline
+                                                  : da.addressType
+                                                              .toLowerCase() ==
+                                                          'hotel'
+                                                      ? Icons.location_city
+                                                      : Icons.person_pin_circle,
+                                          color: da.defaultAddress == 1
+                                              ? myRed
+                                              : null,
+                                        ),
+                                        onPressed: () {}),
                                     Expanded(
                                         child: Text(_v,
                                             style: TextStyle(

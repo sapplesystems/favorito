@@ -42,16 +42,15 @@ class signup_b extends StatelessWidget {
             "Sign Up",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-              fontFamily: "Gilroy-Bold",
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1,
-            ),
+                color: Colors.black,
+                fontSize: 24,
+                fontFamily: "Gilroy-Bold",
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1),
           ),
           Container(
             color: myBackGround,
-            height: sm.h(98),
+            height: sm.w(180),
             child: Stack(
               children: [
                 Positioned(

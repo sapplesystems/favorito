@@ -4,8 +4,10 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/RatingHolder.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRRect.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
 class HotAndNewBusiness extends StatefulWidget {
   HotAndNewBusiness({Key key}) : super(key: key);
@@ -37,51 +39,56 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                   "newBusinessData?.data?.length:${newBusinessData?.data?.length}");
               return Container(
                 padding: EdgeInsets.only(bottom: sm.h(2)),
-                height: sm.h(27),
+                height: sm.h(25),
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: newBusinessData?.data?.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushNamed('/businessProfile',
-                                arguments:
+                            Provider.of<BusinessProfileProvider>(context,
+                                    listen: false)
+                                .setBusinessId(
                                     newBusinessData.data[index].businessId);
+                            Navigator.of(context).pushNamed('/businessProfile'
+                                // ,arguments:
+                                //     newBusinessData.data[index].businessId
+                                );
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(12)),
                             ),
-                            elevation: 10,
+                            elevation: 50,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  Stack(
-                                    children: [
-                                      myClipRRect(
-                                          image:
-                                              newBusinessData.data[index].photo,
-                                          sm: sm),
-                                      Positioned(
-                                        top: sm.h(1),
-                                        left: sm.w(1),
-                                        child: RatingHolder(
-                                            sm: sm,
-                                            rate: newBusinessData.data[index].id
-                                                .toString()),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
+                                  Stack(children: [
+                                    myClipRRect(
+                                        image:
+                                            newBusinessData.data[index].photo,
+                                        sm: sm),
+                                    Positioned(
+                                      top: sm.h(1),
+                                      left: sm.w(1),
+                                      child: RatingHolder(
+                                          sm: sm,
+                                          rate: newBusinessData.data[index].id
+                                              .toString()),
+                                    ),
+                                  ]),
+                                  Container(
+                                    width: sm.w(36),
                                     padding: EdgeInsets.only(left: sm.w(2)),
                                     child: Text(
                                         newBusinessData
                                             .data[index].businessName,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w400)),

@@ -5,6 +5,7 @@ Color myBackGround2 = Color(0xffecf5ff);
 Color myButtonBackground = Color(0xffE5E5E5);
 Color myEditTextBackground = Colors.white;
 Color myRed = Color(0xffdd2626);
+Color myRedLight0 = Color(0x2DF1D5D5);
 Color myRedLight1 = Color(0x42ff7979);
 Color myRedDark1 = Color(0xffdd2626);
 Color myGrey = Color(0xff9996a3);

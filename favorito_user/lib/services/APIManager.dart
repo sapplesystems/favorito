@@ -47,14 +47,8 @@ class APIManager {
 
   static UtilProvider utilProvider = UtilProvider();
 
-  static Options opt = Options(
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST,HEAD"
-      },
-      // method:  ("Access-Control-Allow-Methods": "POST, OPTIONS"),
-      contentType: Headers.formUrlEncodedContentType,
-      method: 'Post');
+  static Options opt =
+      Options(contentType: Headers.formUrlEncodedContentType, method: 'Post');
 
 //this is used for register new user
   static Future<registerModel> register(
@@ -88,8 +82,8 @@ class APIManager {
     } finally {
       pr.hide();
     }
-    print("Request URL:${service.register}");
-    print("responseData1:${response.toString()}");
+    print("Request URL:$url");
+    print("responseData$url:${response.toString()}");
     return registerModel.fromJson(convert.json.decode(response.toString()));
   }
 
@@ -131,7 +125,7 @@ class APIManager {
     return loginModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<CarouselModel> carousel(context, [map]) async {
+  static Future<CarouselModel> carousel(map) async {
     String token = await Prefs.token;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -233,9 +227,7 @@ class APIManager {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     Map<String, dynamic> _map = {"keyword": searchString};
-    response = await dio
-        .post(url, data: _map, options: opt)
-        .catchError((onError) => onErrorCall(onError, context));
+    response = await dio.post(url, data: _map, options: opt);
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
@@ -452,27 +444,30 @@ class APIManager {
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-  static Future<businessProfileModel> baseUserProfileDetail(
+  static Future<BusinessProfileModel> baseUserProfileDetail(
       Map _map, GlobalKey<ScaffoldState> josKeys2) async {
     if (!await utilProvider.checkInternet())
-      return businessProfileModel(
+      return BusinessProfileModel(
           status: 'fail', message: 'Please check internet connections');
     final ProgressDialog pr = ProgressDialog(josKeys2.currentContext,
-        type: ProgressDialogType.Normal, isDismissible: false)
-      ..style(
-          message: 'Please wait...',
-          borderRadius: 8.0,
-          backgroundColor: Colors.white,
-          progressWidget: CircularProgressIndicator(),
-          elevation: 8.0,
-          insetAnimCurve: Curves.easeInOut,
-          progress: 0.0,
-          maxProgress: 100.0,
-          progressTextStyle: TextStyle(
-              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-          messageTextStyle: TextStyle(
-              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
-      ..show();
+            type: ProgressDialogType.Normal, isDismissible: false)
+          ..style(
+              message: 'Please wait...',
+              borderRadius: 8.0,
+              backgroundColor: Colors.white,
+              progressWidget: CircularProgressIndicator(),
+              elevation: 8.0,
+              insetAnimCurve: Curves.easeInOut,
+              progress: 0.0,
+              maxProgress: 100.0,
+              progressTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w400),
+              messageTextStyle: TextStyle(
+                  color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+        // ..show()
+        ;
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     String url = service.baseUserProfileDetail;
@@ -484,17 +479,17 @@ class APIManager {
 
     try {
       response = await dio.post(url, data: _map, options: opt);
-      pr.hide();
+      // pr.hide();
     } on DioError catch (e) {
       ExceptionHandler(e, pr, url, josKeys2);
     } finally {
-      pr.hide();
+      // pr.hide();
     }
 
     print("service.mostPopulerBusiness response: ${response.toString}");
 
-    return businessProfileModel
-        .fromJson(convert.jsonDecode(response.toString()));
+    return BusinessProfileModel.fromJson(
+        convert.jsonDecode(response.toString()));
   }
 
   static Future<CatlogModel> baseUserProfileBusinessCatalogList(

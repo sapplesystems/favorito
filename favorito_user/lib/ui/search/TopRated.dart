@@ -3,8 +3,12 @@ import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/TrendingBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
+import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
+
 import '../../utils/MyString.dart';
 
 class TopRated extends StatefulWidget {
@@ -42,8 +46,10 @@ class _TopRatedState extends State<TopRated> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.of(context).pushNamed('/businessProfile',
-                                arguments: data[index].businessId);
+                            Provider.of<BusinessProfileProvider>(context,
+                                    listen: false)
+                                .setBusinessId(data[index].businessId);
+                            Navigator.of(context).pushNamed('/businessProfile');
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
@@ -64,7 +70,13 @@ class _TopRatedState extends State<TopRated> {
                         Padding(
                           padding: EdgeInsets.only(
                               left: widget.sm.w(2), top: widget.sm.h(1)),
-                          child: Text(data[index].businessName,
+                          child: Text(
+                              data[index].businessName.length <= 12
+                                  ? data[index].businessName
+                                  : data[index].businessName.substring(0, 12) +
+                                      '..',
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w400)),
                         ),
