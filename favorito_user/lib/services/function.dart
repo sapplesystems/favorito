@@ -99,4 +99,6 @@ class service {
   static final deleteAddress = baseUser + 'address/delete-address';
   static final profileImageUpdate = baseUserProfile + 'set-user-profile-photo';
   static final stateList = base + 'state-city/state-list';
+  static final sendLoginotp = base + 'user/send-login-otp';
+  static final verifyLogin = base + 'user/verify-login-otp';
 }

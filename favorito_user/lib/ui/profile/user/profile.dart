@@ -1,5 +1,6 @@
 import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
@@ -22,113 +23,117 @@ class Profile extends StatelessWidget {
     SizeManager sm = SizeManager(context);
     vaTrue = Provider.of<ProfileProvider>(context, listen: true);
     vaFalse = Provider.of<ProfileProvider>(context, listen: false);
-    return SafeArea(
-      child: Scaffold(
-          key: RIKeys.josKeys5,
-          backgroundColor: myBackGround,
-          appBar: AppBar(
-              toolbarHeight: sm.h(5),
-              backgroundColor: myBackGround,
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              title: Text("My Profile",
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w400))),
-          body: ListView(children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
-              height: sm.h(20),
-              width: sm.w(100),
-              child: ListView(
-                children: [
-                  Row(children: [
-                    InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileDetail())),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Container(
-                              height: sm.h(10),
-                              width: sm.h(10),
-                              child: ImageMaster(
-                                  url: Provider.of<UserAddressProvider>(context,
-                                          listen: true)
-                                      .getProfileImage()))),
-                    ),
+    return WillPopScope(
+      onWillPop: () => APIManager.onWillPop(context),
+      child: SafeArea(
+        child: Scaffold(
+            key: RIKeys.josKeys5,
+            backgroundColor: myBackGround,
+            appBar: AppBar(
+                toolbarHeight: sm.h(5),
+                backgroundColor: myBackGround,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                title: Text("My Profile",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w400))),
+            body: ListView(children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
+                height: sm.h(20),
+                width: sm.w(100),
+                child: ListView(
+                  children: [
+                    Row(children: [
+                      InkWell(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileDetail())),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Container(
+                                height: sm.h(10),
+                                width: sm.h(10),
+                                child: ImageMaster(
+                                    url: Provider.of<UserAddressProvider>(
+                                            context,
+                                            listen: true)
+                                        .getProfileImage()))),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: sm.w(2)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                Provider.of<PersonalInfoProvider>(context,
+                                        listen: true)
+                                    .username,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Gilroy-Bold')),
+                            Text(
+                                Provider.of<PersonalInfoProvider>(context,
+                                        listen: true)
+                                    .phone,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: myGrey)),
+                            Text(
+                                "${Provider.of<UserAddressProvider>(context, listen: true).city},${Provider.of<UserAddressProvider>(context, listen: true).state}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    color: myGrey))
+                          ],
+                        ),
+                      )
+                    ]),
                     Padding(
-                      padding: EdgeInsets.only(left: sm.w(2)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              Provider.of<PersonalInfoProvider>(context,
-                                      listen: true)
-                                  .username,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Gilroy-Bold')),
-                          Text(
-                              Provider.of<PersonalInfoProvider>(context,
-                                      listen: true)
-                                  .phone,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: myGrey)),
-                          Text(
-                              "${Provider.of<UserAddressProvider>(context, listen: true).city},${Provider.of<UserAddressProvider>(context, listen: true).state}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                  color: myGrey))
-                        ],
+                      padding: EdgeInsets.only(top: sm.h(2)),
+                      child: Text(
+                        "Business manager at Avadh group of companies and always open for collaborations",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Gilroy-Regular',
+                          letterSpacing: 0.28,
+                          color: myGrey,
+                        ),
                       ),
                     )
-                  ]),
-                  Padding(
-                    padding: EdgeInsets.only(top: sm.h(2)),
-                    child: Text(
-                      "Business manager at Avadh group of companies and always open for collaborations",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Gilroy-Regular',
-                        letterSpacing: 0.28,
-                        color: myGrey,
-                      ),
-                    ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
-            Divider(
-                height: 10,
-                color: Colors.grey.shade300,
-                endIndent: sm.w(5),
-                indent: sm.w(5)),
-            Container(
-                height: sm.h(60),
-                child: ListView.builder(
-                    itemCount: vaFalse.menuTitleList.length,
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      List<int> _ls = [7, 14, 17];
-                      return !_ls.contains(index)
-                          ? menuItems(sm, index, context)
-                          : Column(children: [
-                              menuItems(sm, index, context),
-                              Divider(
-                                  height: 10,
-                                  color: Colors.grey.shade300,
-                                  endIndent: sm.w(5),
-                                  indent: sm.w(5))
-                            ]);
-                    }))
-          ])),
+              Divider(
+                  height: 10,
+                  color: Colors.grey.shade300,
+                  endIndent: sm.w(5),
+                  indent: sm.w(5)),
+              Container(
+                  height: sm.h(60),
+                  child: ListView.builder(
+                      itemCount: vaFalse.menuTitleList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        List<int> _ls = [7, 14, 17];
+                        return !_ls.contains(index)
+                            ? menuItems(sm, index, context)
+                            : Column(children: [
+                                menuItems(sm, index, context),
+                                Divider(
+                                    height: 10,
+                                    color: Colors.grey.shade300,
+                                    endIndent: sm.w(5),
+                                    indent: sm.w(5))
+                              ]);
+                      }))
+            ])),
+      ),
     );
   }
 

@@ -317,6 +317,10 @@ class UserAddressProvider extends ChangeNotifier {
     // );
     setAddresstype('Home');
   }
+
+  onWillPop(context) {
+    this.onWillPop(context);
+  }
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {
   //     if (value.status == 'success') {

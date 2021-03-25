@@ -74,14 +74,14 @@ class Signup extends StatelessWidget {
                                             },
                                             suffixTap: () =>
                                                 vaTrue.checkIdClicked(i),
-                                            suffixTxt: i == 6
+                                            suffixTxt: i == 3
                                                 ? vaTrue.getCheckId()
                                                 : '',
                                             error: vaTrue.acces[i].error,
-                                            security: i == 3 ? true : false,
+                                            security: false,
                                             valid: true,
                                             maxLines: 1,
-                                            formate: (i == 1 || i == 4)
+                                            formate: (i == 1 || i == 2)
                                                 ? FilteringTextInputFormatter
                                                     .digitsOnly
                                                 : FilteringTextInputFormatter
@@ -91,9 +91,9 @@ class Signup extends StatelessWidget {
                                                 : i == 4
                                                     ? 6
                                                     : 50,
-                                            keyboardSet: i == 2
+                                            keyboardSet: i == 3
                                                 ? TextInputType.emailAddress
-                                                : (i == 1 || i == 4)
+                                                : (i == 1 || i == 2)
                                                     ? TextInputType.phone
                                                     : TextInputType.text,
                                             prefixIcon: vaTrue.prefix[i],

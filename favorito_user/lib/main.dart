@@ -3,6 +3,7 @@ import 'package:favorito_user/Providers/BookTableProvider.dart';
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
+import 'package:favorito_user/ui/Login/LoginController.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
@@ -21,25 +22,23 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
-          ChangeNotifierProvider(create: (context) => BasketControllers()),
-          ChangeNotifierProvider(create: (context) => OptController()),
-          ChangeNotifierProvider(create: (context) => AppBookProvider()),
-          ChangeNotifierProvider(create: (context) => ForgetPasswordProvider()),
-          ChangeNotifierProvider(create: (context) => SignupProvider()),
-          ChangeNotifierProvider(create: (context) => PersonalInfoProvider()),
-          ChangeNotifierProvider(create: (context) => UserAddressProvider()),
-          ChangeNotifierProvider(create: (context) => ProfileProvider()),
-          ChangeNotifierProvider(
-              create: (context) => BusinessProfileProvider()),
-          // Provider(create: (context) => MenuHomeProvider()),
-        ],
-        child: MyApp(),
-      )
-    );
+    runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
+        ChangeNotifierProvider(create: (context) => BasketControllers()),
+        ChangeNotifierProvider(create: (context) => OptController()),
+        ChangeNotifierProvider(create: (context) => AppBookProvider()),
+        ChangeNotifierProvider(create: (context) => ForgetPasswordProvider()),
+        ChangeNotifierProvider(create: (context) => SignupProvider()),
+        ChangeNotifierProvider(create: (context) => PersonalInfoProvider()),
+        ChangeNotifierProvider(create: (context) => UserAddressProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => LoginProvider()),
+        ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
+        // Provider(create: (context) => MenuHomeProvider()),
+      ],
+      child: MyApp(),
+    ));
   });
 }
 

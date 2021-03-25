@@ -13,4 +13,8 @@ class RIKeys {
   static final josKeys9 = GlobalKey<ScaffoldState>(); //clipRect
   static final josKeys10 = GlobalKey<ScaffoldState>(); //PersonalInfo
 
+  static final josKeys11 = GlobalKey<ScaffoldState>(); //login
+  static final josKeys12 = GlobalKey<FormState>(); //AddAddressForm
+  static final josKeys13 =
+      GlobalKey<ScaffoldState>(); //PinCodeVerificationScreen
 }

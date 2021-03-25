@@ -244,7 +244,7 @@ class Waitlist extends StatelessWidget {
             _title,
             style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
           ),
-        ],
+        ]
       ),
       Row(
         children: [

@@ -1,9 +1,10 @@
 import 'package:favorito_user/component/Following.dart';
+import 'package:favorito_user/component/PinCodeVerificationScreen.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/ForgetPassword/forgetPassword.dart';
-import 'package:favorito_user/ui/Login.dart';
+import 'package:favorito_user/ui/Login/Login.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHome.dart';
 import 'package:favorito_user/ui/Signup/Signup.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
@@ -71,6 +72,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => UserAddress());
       case '/addAddress':
         return MaterialPageRoute(builder: (_) => AddAddress());
+      case '/pinCodeVerificationScreen':
+        return MaterialPageRoute(builder: (_) => PinCodeVerificationScreen());
       default:
         return _errorRoute();
     }

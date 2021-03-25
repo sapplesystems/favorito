@@ -1,3 +1,4 @@
+import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/Prefs.dart';
@@ -8,7 +9,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 
 import '../../../../utils/RIKeys.dart';
 
-class PersonalInfoProvider extends ChangeNotifier {
+class PersonalInfoProvider extends BaseProvider {
   Validator validator = Validator();
   String _username = '';
   List<Acces> acces = [for (int i = 0; i < 3; i++) Acces()];
@@ -23,6 +24,9 @@ class PersonalInfoProvider extends ChangeNotifier {
   bool newValue = false;
   PersonalInfoProvider() {
     getPersonalData();
+  }
+  void onWillPop(context) {
+    this.onWillPop(context);
   }
 
   String get username => _username;
