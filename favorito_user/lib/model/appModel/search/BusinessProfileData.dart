@@ -1,6 +1,6 @@
 import 'package:favorito_user/model/appModel/Business/AttributesModel.dart';
-import 'package:favorito_user/model/appModel/Business/RelationModel.dart';
 import 'package:favorito_user/model/appModel/Business/Category.dart';
+import 'package:favorito_user/model/appModel/Business/RelationModel.dart';
 
 class BusinessProfileData {
   var id;

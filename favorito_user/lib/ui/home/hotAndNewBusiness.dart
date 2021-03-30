@@ -103,7 +103,7 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                                   Padding(
                                     padding: EdgeInsets.only(left: sm.w(2)),
                                     child: Text(
-                                        "${newBusinessData.data[index].distance.toStringAsFixed(1)} km | ${newBusinessData.data[index].townCity}",
+                                        "${newBusinessData?.data[index]?.distance?.toStringAsFixed(1) ?? '00'} km | ${newBusinessData.data[index].townCity ?? ''}",
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w300)),

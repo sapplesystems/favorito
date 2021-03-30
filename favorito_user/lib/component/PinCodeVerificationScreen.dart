@@ -236,41 +236,35 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                             color: myRed))),
               ),
             ),
-
             Padding(
               padding:
                   EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(4)),
-              child: Row(
-                children: [
-                  Expanded(child: Divider()),
-                  Text('  OR  ',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: myGrey,
-                          fontSize: 16)),
-                  Expanded(child: Divider())
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Login using ",
+              child: Row(children: [
+                Expanded(child: Divider()),
+                Text('  OR  ',
                     style: TextStyle(
-                        fontWeight: FontWeight.w300,
+                        fontWeight: FontWeight.w400,
                         color: myGrey,
                         fontSize: 16)),
-                InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/login');
-                    },
-                    child: Text("Password",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: myRed)))
-              ],
+                Expanded(child: Divider())
+              ]),
             ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text("Login using ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: myGrey,
+                      fontSize: 16)),
+              InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/login');
+                  },
+                  child: Text("Password",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: myRed)))
+            ]),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               // Flexible(
               //     child: TextButton(

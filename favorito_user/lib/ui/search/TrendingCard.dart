@@ -45,24 +45,21 @@ class TrendingCard extends StatelessWidget {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
                   ServicesOfBusiness(sm: sm, data: data.subCategory),
                   Padding(
-                    padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xfffff6ea),
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      width: sm.w(18),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: sm.h(1)),
-                        child: RatingHolder(
-                            sm: sm, rate: data.avgRating.toString()),
-                      ),
-                    ),
-                  ),
+                      padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xfffff6ea),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          width: sm.w(18),
+                          child: Padding(
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: sm.h(1)),
+                              child: RatingHolder(
+                                  sm: sm, rate: data.avgRating.toString())))),
                   SizedBox(height: sm.h(1)),
                   Text(
-                      '${data.distance.toStringAsFixed(1)} km | ' +
-                          data.townCity,
+                      "${data.distance?.toStringAsFixed(1) ?? ''} ${data.townCity != null ? '| ' + data.townCity : ''}",
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w300,

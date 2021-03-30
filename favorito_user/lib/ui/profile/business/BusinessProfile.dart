@@ -6,7 +6,6 @@ import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
-import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/business/tabs/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -118,7 +117,7 @@ class BusinessProfile extends StatelessWidget {
                           vatrue.getBusinessHours();
                         },
                         child: Text(
-                            '${vatrue.getBusinessProfileData()?.townCity ?? ""}, ${vatrue.getBusinessProfileData()?.state ?? ""}',
+                            '${vatrue.getBusinessProfileData()?.townCity ?? ""} ${vatrue.getBusinessProfileData()?.state ?? ""}',
                             style: TextStyle(
                                 color: myGrey,
                                 fontSize: 16,
@@ -128,12 +127,8 @@ class BusinessProfile extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                       child: Text(
-                          vatrue
-                                  .getBusinessProfileData()
-                                  ?.businessStatus
-                                  .toString()
-                                  .capitalize() ??
-                              "",
+                          "${vatrue.getBusinessProfileData()?.businessStatus}"
+                              .capitalize(),
                           style: TextStyle(
                               color: vatrue
                                           .getBusinessProfileData()
@@ -314,13 +309,13 @@ class BusinessProfile extends StatelessWidget {
       Icons.calendar_today,
       Icons.alarm
     ];
-    for (int i = 0; i < service.length; i++) service.remove(null);
+    for (int i = 0; i < service?.length; i++) service.remove(null);
     return Container(
       height: sm.w(21),
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          for (int i = 0; i < service.length; i++)
+          for (int i = 0; i < service?.length; i++)
             InkWell(
               onTap: () {
                 String _v = service[i];
@@ -354,12 +349,10 @@ class BusinessProfile extends StatelessWidget {
                     break;
                   case 'Waitlist':
                     {
-                      WaitListDataModel wdm = WaitListDataModel();
-                      wdm.businessId =
-                          vatrue.getBusinessProfileData().businessId;
-                      wdm.contact = vatrue.getBusinessProfileData().phone;
-                      Navigator.of(context)
-                          .pushNamed('/waitlist', arguments: wdm);
+                      Provider.of<BusinessProfileProvider>(context,
+                              listen: false)
+                          .waitlistVerbose(context);
+                      Navigator.of(context).pushNamed('/waitlist');
                     }
                     break;
                   case 'Online Menu':

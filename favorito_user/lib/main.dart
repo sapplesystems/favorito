@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/Providers/BookTableProvider.dart';
 import 'package:favorito_user/Providers/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
@@ -10,8 +11,6 @@ import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
-import 'package:favorito_user/ui/profile/user/ProfileProvider.dart';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +23,7 @@ void main() {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => BaseProvider()),
         ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
         ChangeNotifierProvider(create: (context) => BasketControllers()),
         ChangeNotifierProvider(create: (context) => OptController()),
@@ -32,7 +32,6 @@ void main() {
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => PersonalInfoProvider()),
         ChangeNotifierProvider(create: (context) => UserAddressProvider()),
-        ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
         // Provider(create: (context) => MenuHomeProvider()),

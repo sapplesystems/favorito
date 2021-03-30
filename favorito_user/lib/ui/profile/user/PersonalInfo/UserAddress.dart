@@ -67,7 +67,7 @@ class UserAddress extends StatelessWidget {
                       Addresses da =
                           data.addressListModel.data.addresses[index];
                       var _v =
-                          '${da.address},\n${da.city} ${da.state},${da.pincode}'
+                          '${da.addressType}\n${da.address},\n${da.city} ${da.state},${da.pincode}'
                               .trim();
                       return InkWell(
                         onTap: () {

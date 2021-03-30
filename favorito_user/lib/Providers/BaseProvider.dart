@@ -2,6 +2,62 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class BaseProvider extends ChangeNotifier {
+  String businessId;
+  String _userEmail;
+
+  String getUserEmail() => _userEmail;
+
+  setUserEmail(String value) {
+    print("ddfff$value");
+    _userEmail = value;
+  }
+
+  List<String> menuTitleList = [
+    "Edit profile",
+    "Reviews",
+    "Photos added with reviews",
+    "Check-ins",
+    "Favourites",
+    "Refer friend/place",
+    'Saved Addresses',
+    "Orders",
+    "Friends",
+    "Followers",
+    "Following",
+    "Following Business",
+    "Find friend by name",
+    "Liked posts",
+    "Blocked users",
+    "Terms of services",
+    "Privacy policy",
+    "Licenses",
+    'Change login details',
+    "Delete Account",
+    'Logout'
+  ];
+  List menuIconList = [
+    'edit',
+    'star',
+    'camera',
+    'check',
+    'favorite',
+    'refer',
+    'location',
+    'bucket',
+    'friend',
+    'follow',
+    'following',
+    'shirt',
+    'find',
+    'heart',
+    'block',
+    'term',
+    'privacy',
+    'license',
+    'changePass',
+    'delete',
+    'logout'
+  ];
   snackBar(String message, GlobalKey key) {
     return ScaffoldMessenger.of(key.currentContext).showSnackBar(
       SnackBar(content: Text(message), duration: Duration(seconds: 2)),

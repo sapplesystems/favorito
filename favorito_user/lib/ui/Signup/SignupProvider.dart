@@ -131,17 +131,6 @@ class SignupProvider extends ChangeNotifier {
         }
         break;
 
-      // case 2:
-      //   {
-      //     if (emailRegex.hasMatch(acces[_index].controller.text))
-      //       CheckEmail(_index);
-      //     else {
-      //       acces[_index].error = null;
-      //       notifyListeners();
-      //     }
-      //   }
-      //   break;
-
       // case 3:
       //   {
       //     if (passwordRegex.hasMatch(acces[_index].controller.text))
@@ -206,20 +195,6 @@ class SignupProvider extends ChangeNotifier {
         uniqueMobile = false;
     });
   }
-
-  // void CheckEmail(int _index) async {
-  //   String _text = acces[_index].controller.text;
-  //   await APIManager.checkMobileOrEmail({'api_type': 'email', 'email': _text})
-  //       .then((value) {
-  //     if (value.status == 'success') {
-  //       uniqueEmail = true;
-  //       print(value.message);
-  //       acces[_index].error = value.data[0].isExist == 1 ? value.message : null;
-  //       notifyListeners();
-  //     } else
-  //       uniqueEmail = false;
-  //   });
-  // }
 
   allClear() {
     for (int i = 0; i < acces.length; i++) acces[i] = Acces();

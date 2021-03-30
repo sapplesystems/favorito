@@ -64,11 +64,7 @@ class _OverviewState extends State<OverviewTab> {
               widget?.data?.phone ?? '',
               widget?.data?.businessEmail ?? '',
               overviewData?.data[0]?.website?.replaceAll('|_|', ' , '),
-              overviewData?.data[0]?.address1 +
-                      " " +
-                      overviewData?.data[0]?.address2 ??
-                  '' + " " + overviewData?.data[0]?.address3 ??
-                  ''
+              "${overviewData?.data[0]?.address1 ?? ''} ${overviewData?.data[0]?.address2 ?? ''} ${overviewData?.data[0]?.address3 ?? ''}"
             ];
             List loc = overviewData?.data[0].location.split(',');
             markers.add(Marker(

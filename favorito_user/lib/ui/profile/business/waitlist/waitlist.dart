@@ -5,6 +5,7 @@ import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -14,19 +15,14 @@ class Waitlist extends StatelessWidget {
   SizeManager sm;
   BusinessProfileProvider vaTrue;
   BusinessProfileProvider vaFalse;
-  bool isFirst = true;
-
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     vaTrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     vaFalse = Provider.of<BusinessProfileProvider>(context, listen: false);
-    if (isFirst) {
-      vaTrue.waitlistVerbose();
-      isFirst = false;
-    }
     return SafeArea(
       child: Scaffold(
+          key: RIKeys.josKeys18,
           backgroundColor: myBackGround,
           body: Padding(
               padding: EdgeInsets.all(sm.w(6)),
@@ -34,7 +30,7 @@ class Waitlist extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     WaitListHeader(
-                        title: waitingList,
+                        title: vaTrue.getWaitListData()?.businessName ?? '',
                         preFunction: () => Navigator.pop(context)),
                     Padding(
                         padding: EdgeInsets.symmetric(
@@ -238,14 +234,12 @@ class Waitlist extends StatelessWidget {
 
   Widget beforeU(String _title, String _icon, String _val) {
     return Column(children: [
-      Row(
-        children: [
-          Text(
-            _title,
-            style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
-          ),
-        ]
-      ),
+      Row(children: [
+        Text(
+          _title,
+          style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
+        ),
+      ]),
       Row(
         children: [
           SvgPicture.asset(
@@ -268,7 +262,7 @@ class Waitlist extends StatelessWidget {
 
   waitingTime() {
     print("data.waitlistStatus:${vaTrue.getWaitListData()?.waitlistStatus}");
-    var _wait = vaTrue.getWaitListData()?.minimumWaitTime ?? "00:00";
+    var _wait = vaTrue.getWaitListData()?.minimumWaitTime ?? "00";
 
     return Column(
       children: [
@@ -277,7 +271,9 @@ class Waitlist extends StatelessWidget {
         (vaTrue.waiting &&
                 vaTrue.getWaitListData()?.waitlistStatus == 'accepted')
             ? CirculerProgress(
-                minutTxt: '\t${_wait.split(':')[1]}', per: vaTrue.per)
+                // minutTxt: '\t${_wait.split(':')[1]}', per: vaTrue.per
+                minutTxt: _wait,
+                per: vaTrue.per)
             : Row(children: [
                 SvgPicture.asset(
                   'assets/icon/clock.svg',
@@ -285,7 +281,8 @@ class Waitlist extends StatelessWidget {
                   width: sm.w(4),
                   fit: BoxFit.fill,
                 ),
-                minut20(myMinut: '\t${_wait.split(':')[1]}')
+                // minut20(myMinut: '\t${_wait.split(':')[1]}')
+                minut20(myMinut: _wait)
               ]),
       ],
     );

@@ -101,4 +101,6 @@ class service {
   static final stateList = base + 'state-city/state-list';
   static final sendLoginotp = base + 'user/send-login-otp';
   static final verifyLogin = base + 'user/verify-login-otp';
+  static final emailRegister = base + 'user/email-register';
+  static final changePassword = base + 'user/set-password';
 }

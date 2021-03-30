@@ -1,11 +1,8 @@
-import 'package:bot_toast/bot_toast.dart';
-import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/Login/LoginController.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -50,7 +47,11 @@ class _LoginState extends State<Login> {
                           key: _formKey,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(children: [
-                            for (int i = 0; i < vaTrue.title.length; i++)
+                            for (int i = 0;
+                                i <
+                                    (vaTrue.title.length -
+                                        (vaTrue.getIsPass() ? 0 : 1));
+                                i++)
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: EditTextComponent(
@@ -70,15 +71,18 @@ class _LoginState extends State<Login> {
                                   prefixIcon: vaTrue.prefix[i],
                                 ),
                               ),
-                            InkWell(
-                                onTap: () => Navigator.of(context)
-                                    .pushNamed('/forgetPassword'),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text('Forgot password ?  ',
-                                          style: TextStyle(color: myRed))
-                                    ]))
+                            Visibility(
+                              visible: vaTrue.getIsPass(),
+                              child: InkWell(
+                                  onTap: () => Navigator.of(context)
+                                      .pushNamed('/forgetPassword'),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text('Forgot password ?  ',
+                                            style: TextStyle(color: myRed))
+                                      ])),
+                            )
                           ]))),
                   Padding(
                       padding: EdgeInsets.only(top: sm.h(5)),
@@ -94,39 +98,12 @@ class _LoginState extends State<Login> {
                                 BorderRadius.all(Radius.circular(24.0)))),
                         margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                         onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            if (vaTrue.controller[0].text.trim().length == 0) {
-                              BaseProvider().snackBar(
-                                  'Email/Phone required!!', _scaffoldKey);
-                              return;
-                            }
-                            if (vaTrue.controller[1].text.trim().length == 0) {
-                              BaseProvider().snackBar(
-                                  'Password required!!', _scaffoldKey);
-                              return;
-                            }
-                            Map _map = {
-                              "username": vaTrue.controller[0].text,
-                              "password": vaTrue.controller[1].text
-                            };
-                            APIManager.login(_map, _scaffoldKey).then((value) {
-                              if (value.status == "success") {
-                                Prefs.setToken(value.token);
-                                Prefs.setPOSTEL(
-                                    int.parse(value.data.postel ?? "201306"));
-
-                                print("token : ${value.token}");
-                                Navigator.pop(context);
-                                Navigator.of(context).pushNamed('/navbar');
-                              } else
-                                BotToast.showText(text: value.message);
-                            });
-                          }
+                          vaTrue.funSubmit(_formKey, _scaffoldKey);
                         },
                         padding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         child: Center(
-                            child: Text("Login",
+                            child: Text(vaTrue.getIsPass() ? 'Login' : 'Next',
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
@@ -157,15 +134,9 @@ class _LoginState extends State<Login> {
                               fontSize: 16)),
                       InkWell(
                           onTap: () {
-                            if (vaTrue.controller[0].text.trim().length == 0) {
-                              BaseProvider().snackBar(
-                                  'Email/Phone  required!!', _scaffoldKey);
-                              return;
-                            }
-                            Navigator.of(context)
-                                .pushNamed('/pinCodeVerificationScreen');
+                            vaTrue.setIsPass(!vaTrue.getIsPass());
                           },
-                          child: Text(" OTP",
+                          child: Text(vaTrue.getIsPass() ? 'OTP' : 'Password',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,

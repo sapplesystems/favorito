@@ -112,7 +112,8 @@ class _HomeState extends State<Home> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Gilroy-Bold'),
                             ),
-                            Text(data?.getSelectedAddress(),
+                            Text(
+                                "${data?.getSelectedAddress()}  ${data?.getSelectedAddress().length > 1 ? '\u{25bc}' : ''}",
                                 textAlign: TextAlign.start)
                           ]);
                     })),

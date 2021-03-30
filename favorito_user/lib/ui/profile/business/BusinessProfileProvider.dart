@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
@@ -11,7 +12,7 @@ import 'package:intl/intl.dart';
 
 import '../../../utils/RIKeys.dart';
 
-class BusinessProfileProvider extends ChangeNotifier {
+class BusinessProfileProvider extends BaseProvider {
   String _businessId;
   WaitListDataModel _waitListDataModel = WaitListDataModel();
 
@@ -31,7 +32,10 @@ class BusinessProfileProvider extends ChangeNotifier {
     for (int i = 0; i < 3; i++) controller.add(TextEditingController());
     controller[0].text = '1';
   }
-  getWaitListData() => _waitListDataModel;
+  WaitListDataModel getWaitListData() {
+    print('abc${_waitListDataModel.businessName}');
+    return _waitListDataModel;
+  }
 
   void getBusinessHours() async {
     print("HourslyId:$_businessId");
@@ -97,14 +101,26 @@ class BusinessProfileProvider extends ChangeNotifier {
     });
   }
 
-  waitlistVerbose() async {
+  waitlistVerbose(context) async {
     print("va1:${_businessId}");
     await APIManager.baseUserWaitlistVerbose({'business_id': _businessId})
         .then((value) {
-      if (value.status == 'success') {
-        _waitListDataModel = value.data[0];
-      }
-      notifyListeners();
+      try {
+        if (value.status == 'success') {
+          if (value.data.isEmpty) {
+            this.snackBar(value.message, RIKeys.josKeys2);
+          } else {
+            this.snackBar(value.message, RIKeys.josKeys2);
+            _waitListDataModel.businessName = value.data[0].businessName;
+            _waitListDataModel.partiesBeforeYou =
+                value.data[0].partiesBeforeYou;
+            _waitListDataModel.availableTimeSlots =
+                value.data[0].availableTimeSlots;
+            _waitListDataModel.minimumWaitTime = value.data[0].minimumWaitTime;
+            notifyListeners();
+          }
+        }
+      } catch (e) {}
     });
   }
 
@@ -157,6 +173,7 @@ class BusinessProfileProvider extends ChangeNotifier {
   }
 
   void cancelWaitList() async {
+    print("cleared all data");
     await APIManager.baseUserWaitlistCancel(
         {'waitlist_id': _waitListDataModel?.waitlistId}).then((value) {});
   }

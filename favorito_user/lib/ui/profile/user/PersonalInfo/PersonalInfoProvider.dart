@@ -31,7 +31,7 @@ class PersonalInfoProvider extends BaseProvider {
 
   String get username => _username;
   String get phone {
-    return '${_phone?.substring(0, 2) ?? ''}\t${_phone.substring(2, 6)} ${_phone.substring(6, 10)}';
+    return '${_phone?.substring(0, 2) ?? ''}\t${_phone?.substring(2, 6)} ${_phone?.substring(6, 10)}';
   }
 
   void decideit() async {
