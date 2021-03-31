@@ -34,6 +34,9 @@ router.post('/user-all-photo', CheckAuth, UserProfileController.userAllPhoto);
 router.post('/user-favourite-business', CheckAuth, UserProfileController.userFavouriteBusiness);
 router.post('/user-get-badges', CheckAuth, UserProfileController.userGetBadges);
 
+// get name address profile_id and photo by type name mobile profile_id
+router.post('/user-detail-by-typing', CheckAuth, UserProfileController.userDetailByTyping);
+
 // Relation apis
 router.post('/user-business-relation', CheckAuth, UserProfileController.userBusinessRelation);
 // end relation by relation_id

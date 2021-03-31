@@ -58,13 +58,17 @@ router.get('/auto-hit-2', (req, res) => {
 
 router.post('/register', UserRegisterController.register);
 
+router.post('/email-register', CheckAuth, UserRegisterController.registerEmail);
+
+router.post('/set-password', CheckAuth, UserRegisterController.setPassword);
+
 router.post('/login', UserLoginController.login);
 
 // send login otp 
 router.post('/send-login-otp', UserLoginController.sendLoginOtp);
 
 // verify login otp
-router.post('/send-login-otp', UserLoginController.verifyLoginOtp);
+router.post('/verify-login-otp', UserLoginController.verifyLoginOtp);
 
 
 router.post('/is-profile-exist', UserRegisterController.isProfileExist);

@@ -1,6 +1,7 @@
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
-var fs = require('fs')
+var fs = require('fs');
+const { get } = require('../../routes/user/user_profile_route');
 
 exports.businessCarouselList = async function(req, res, next) {
     await exports.getCaruoselData(req, res)
@@ -436,6 +437,21 @@ exports.userDetail = async(req, res, next) => {
         return res.status(400).send({ status: 'failed', message: 'api_type is missing' })
     }
 
+}
+
+exports.userDetailByTyping = async(req, res) => {
+    if (!req.body.keyword) {
+        return res.status(400).send({ status: 'failed', message: 'keyword is missing' })
+    } else {
+        var keyword = req.body.keyword
+    }
+    try {
+        getDetail = `select u_a.user_id,u.id,full_name,phone,profile_id,u_a.city,u_a.state from users as u left join user_address as u_a on u_a.user_id = u.id where full_name like '%${keyword}%' or phone like '%${keyword}%' or profile_id like '%${keyword}%'`
+        resultDetail = await exports.run_query(getDetail)
+        return res.status(200).send({ status: 'success', message: 'success', data: resultDetail })
+    } catch (error) {
+        return res.status(500).send({ status: 'failed', message: 'Something went wrong', error })
+    }
 }
 
 exports.run_query = (sql, param = false) => {
