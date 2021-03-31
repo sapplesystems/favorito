@@ -62,4 +62,7 @@ class WaitListDataModel {
     data['contact'] = this.contact;
     return data;
   }
+
+  String toString() =>
+      'Data is :{partiesBeforeYou:${this.partiesBeforeYou},businessName:$businessName,availableTimeSlots:$availableTimeSlots,minimumWaitTime:$minimumWaitTime}';
 }

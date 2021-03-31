@@ -1,3 +1,4 @@
+import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +26,7 @@ class EditTextComponent extends StatefulWidget {
   String error;
   Color errorColor;
   String suffixTxt;
+
   EditTextComponent(
       {this.title,
       this.security,
@@ -51,8 +53,10 @@ class EditTextComponent extends StatefulWidget {
 }
 
 class _EditTextComponentState extends State<EditTextComponent> {
+  SizeManager sm;
   @override
   Widget build(BuildContext context) {
+    sm = SizeManager(context);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Neumorphic(
         style: NeumorphicStyle(
@@ -77,11 +81,10 @@ class _EditTextComponentState extends State<EditTextComponent> {
               prefixIcon: widget.prefixIcon == 'mail'
                   ? InkWell(
                       child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                        child: SvgPicture.asset("assets/icon/enovelop.svg",
-                            fit: BoxFit.fill, height: 1, width: 1),
-                      ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 16),
+                          child: SvgPicture.asset("assets/icon/enovelop.svg",
+                              fit: BoxFit.fill, height: 1, width: 1)),
                       onTap: () {},
                     )
                   : widget.prefixIcon == 'password'
@@ -91,24 +94,31 @@ class _EditTextComponentState extends State<EditTextComponent> {
                         )
                       : widget.prefixIcon == 'name'
                           ? InkWell(
-                              child: Icon(Icons.contacts),
+                              child: Container(
+                                  margin: EdgeInsets.all(sm.h(1.9)),
+                                  child: SvgPicture.asset(
+                                      'assets/icon/fullname.svg')),
                               onTap: () {},
                             )
                           : widget.prefixIcon == 'phone'
                               ? InkWell(
-                                  child: Icon(Icons.phone),
+                                  child: Container(
+                                      margin: EdgeInsets.all(sm.h(1.9)),
+                                      child: SvgPicture.asset(
+                                          'assets/icon/phone.svg')),
                                   onTap: () {},
                                 )
                               : widget.prefixIcon == 'search'
                                   ? InkWell(
                                       child: Icon(Icons.search),
-                                      onTap: () {
-                                        widget.prefClick();
-                                      },
+                                      onTap: () => widget.prefClick(),
                                     )
                                   : widget.prefixIcon == 'postal'
                                       ? InkWell(
-                                          child: Icon(Icons.location_searching),
+                                          child: Container(
+                                              margin: EdgeInsets.all(sm.h(1.9)),
+                                              child: SvgPicture.asset(
+                                                  'assets/icon/location.svg')),
                                           onTap: () => widget.prefClick())
                                       : widget.prefixIcon == 'address'
                                           ? InkWell(

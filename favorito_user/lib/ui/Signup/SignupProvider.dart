@@ -24,25 +24,9 @@ class SignupProvider extends ChangeNotifier {
   bool newValue1 = false;
   GlobalKey key = GlobalKey();
 
-  List<String> title = [
-    'Full Name',
-    'Phone',
-    'Email',
-    'Password',
-    'Postal',
-    'Short description',
-    'Unique Id',
-  ];
+  List<String> title = ['Full Name', 'Phone', 'Postal', 'Unique Id'];
 
-  List<String> prefix = [
-    'name',
-    'phone',
-    'mail',
-    'password',
-    'postal',
-    'name',
-    'name'
-  ];
+  List<String> prefix = ['name', 'phone', 'postal', 'name'];
   List<Color> errorColor = [null, null, null, null, null, null, null];
 
   void decideit() async {
@@ -64,30 +48,22 @@ class SignupProvider extends ChangeNotifier {
     print("$newValue");
     acces[0].error = validator.validateFullName(acces[0].controller.text);
     acces[1].error = validator.validateMobile(acces[1].controller.text);
-    acces[2].error = validator.validateEmail(acces[2].controller.text);
-    acces[3].error = validator.validatePassword(acces[3].controller.text);
-    acces[4].error = validator.validatePin(acces[4].controller.text);
-    acces[6].error = validator.validateId(acces[6].controller.text);
+    acces[2].error = validator.validatePin(acces[2].controller.text);
+    acces[3].error = validator.validateId(acces[3].controller.text);
 
     notifyListeners();
     if (acces[0].error == null &&
         acces[1].error == null &&
         acces[2].error == null &&
         acces[3].error == null &&
-        acces[4].error == null &&
-        acces[5].error == null &&
         uniqueId &&
-        uniqueMobile &&
-        uniqueEmail) {
+        uniqueMobile) {
       if (newValue) {
         Map _map = {
           "full_name": acces[0].controller.text,
           "phone": acces[1].controller.text,
-          "email": acces[2].controller.text,
-          "password": acces[3].controller.text,
-          "postal_code": acces[4].controller.text,
-          "short_description": acces[5].controller.text,
-          "profile_id": acces[6].controller.text,
+          "postal_code": acces[2].controller.text,
+          "profile_id": acces[3].controller.text,
           "reach_whatsapp": newValue1 ? 1 : 0
         };
         print("map:${_map.toString()}");
@@ -108,7 +84,8 @@ class SignupProvider extends ChangeNotifier {
 
   checkIdClicked(int _index) async {
     print("dddddprofile_id: ${acces[_index].controller.text}");
-    await APIManager.checkId({"profile_id": acces[_index].controller.text})
+    await APIManager.checkId(
+            {"profile_id": acces[_index].controller.text}, scaffoldKey)
         .then((value) {
       if (value.status == 'success') {
         if (value.data[0].isExist != 0) {
@@ -154,30 +131,19 @@ class SignupProvider extends ChangeNotifier {
         }
         break;
 
+      // case 3:
+      //   {
+      //     if (passwordRegex.hasMatch(acces[_index].controller.text))
+      //       acces[3].error = null;
+      //     else {
+      //       acces[_index].error =
+      //           validator.validatePassword(acces[_index].controller.text);
+      //     }
+      //     notifyListeners();
+      //   }
+      //   break;
+
       case 2:
-        {
-          if (emailRegex.hasMatch(acces[_index].controller.text))
-            CheckEmail(_index);
-          else {
-            acces[_index].error = null;
-            notifyListeners();
-          }
-        }
-        break;
-
-      case 3:
-        {
-          if (passwordRegex.hasMatch(acces[_index].controller.text))
-            acces[3].error = null;
-          else {
-            acces[_index].error =
-                validator.validatePassword(acces[_index].controller.text);
-          }
-          notifyListeners();
-        }
-        break;
-
-      case 4:
         {
           if ((acces[_index].controller.text.isEmpty))
             acces[_index].error = 'Field required';
@@ -199,7 +165,7 @@ class SignupProvider extends ChangeNotifier {
         }
         break;
 
-      case 6:
+      case 3:
         {
           if (!acces[_index].controller.text.toString().contains('@')) {
             acces[_index].error =
@@ -227,20 +193,6 @@ class SignupProvider extends ChangeNotifier {
         notifyListeners();
       } else
         uniqueMobile = false;
-    });
-  }
-
-  void CheckEmail(int _index) async {
-    String _text = acces[_index].controller.text;
-    await APIManager.checkMobileOrEmail({'api_type': 'email', 'email': _text})
-        .then((value) {
-      if (value.status == 'success') {
-        uniqueEmail = true;
-        print(value.message);
-        acces[_index].error = value.data[0].isExist == 1 ? value.message : null;
-        notifyListeners();
-      } else
-        uniqueEmail = false;
     });
   }
 

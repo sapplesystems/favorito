@@ -11,7 +11,7 @@ class WaitListBaseModel {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<WaitListDataModel>();
+      data = [];
       json['data'].forEach((v) {
         data.add(new WaitListDataModel.fromJson(v));
       });

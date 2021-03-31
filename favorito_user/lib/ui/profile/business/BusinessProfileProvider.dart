@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
+import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -10,8 +12,10 @@ import 'package:intl/intl.dart';
 
 import '../../../utils/RIKeys.dart';
 
-class BusinessProfileProvider extends ChangeNotifier {
+class BusinessProfileProvider extends BaseProvider {
   String _businessId;
+  WaitListDataModel _waitListDataModel = WaitListDataModel();
+
   WorkingHoursModel workingHoursModel = WorkingHoursModel();
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   List<String> attribute = [];
@@ -21,16 +25,18 @@ class BusinessProfileProvider extends ChangeNotifier {
   double per = 0;
   String btnTxt = waitingJoin;
   List<TextEditingController> controller = [];
-
+  JobListModel jobListModel = JobListModel();
   bool waiting = false;
-
-  WaitListDataModel _waitListDataModel = WaitListDataModel();
 
   BusinessProfileProvider() {
     for (int i = 0; i < 3; i++) controller.add(TextEditingController());
     controller[0].text = '1';
   }
-  getWaitListData()=>_waitListDataModel;
+  WaitListDataModel getWaitListData() {
+    print('abc${_waitListDataModel.businessName}');
+    return _waitListDataModel;
+  }
+
   void getBusinessHours() async {
     print("HourslyId:$_businessId");
 
@@ -67,7 +73,8 @@ class BusinessProfileProvider extends ChangeNotifier {
     // abc();
     getProfileDetail();
     getBusinessHours();
-    getWaitList(false);
+
+    getJobList();
   }
 
   String getBusinessId() => _businessId;
@@ -84,6 +91,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       attribute.clear();
       attribute.addAll(value.data[0]?.attributes?.map((e) => e.attributeName));
     });
+    getWaitList(false);
   }
 
   // t.cancel();
@@ -93,31 +101,49 @@ class BusinessProfileProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> waitlistVerbose() async {
+  waitlistVerbose(context) async {
+    print("va1:${_businessId}");
     await APIManager.baseUserWaitlistVerbose({'business_id': _businessId})
         .then((value) {
-      _waitListDataModel = value.data[0];
-      print("slot:${_waitListDataModel.availableTimeSlots}");
+      try {
+        if (value.status == 'success') {
+          if (value.data.isEmpty) {
+            this.snackBar(value.message, RIKeys.josKeys2);
+          } else {
+            this.snackBar(value.message, RIKeys.josKeys2);
+            _waitListDataModel.businessName = value.data[0].businessName;
+            _waitListDataModel.partiesBeforeYou =
+                value.data[0].partiesBeforeYou;
+            _waitListDataModel.availableTimeSlots =
+                value.data[0].availableTimeSlots;
+            _waitListDataModel.minimumWaitTime = value.data[0].minimumWaitTime;
+            notifyListeners();
+          }
+        }
+      } catch (e) {}
     });
+  }
+
+  funAdd(bool _val) {
+    int i = int.parse(controller[0].text);
+    controller[0].text = (_val ? ++i : --i).toString();
+    notifyListeners();
   }
 
   getWaitList(bool val) async {
     await APIManager.baseUserWaitlistGet({'business_id': _businessId})
         .then((value) {
-      try {
-        if (!value.data.isEmpty) {
-          _waitListDataModel?.createdAt = value.data[0].createdAt;
+      if (value.status == 'success') {
+        if (value.data.length == 0) {
+          btnTxt = waitingJoin;
+          return;
+        }
+        try {
+          // _waitListDataModel = value?.data[0];
           waiting = true;
-          _waitListDataModel?.waitlistId = value.data[0].waitlistId;
-          _waitListDataModel?.userId = value.data[0].userId;
-          _waitListDataModel.updatedAt = value.data[0].updatedAt;
-          _waitListDataModel?.waitlistStatus = value.data[0].waitlistStatus;
-          _waitListDataModel?.noOfPerson = value.data[0].noOfPerson;
-          _waitListDataModel?.partiesBeforeYou = value.data[0].partiesBeforeYou;
-          DateTime now = new DateTime.now();
           try {
-            var difference = now
-                .difference((DateTime.parse(_waitListDataModel.updatedAt)))
+            var difference = DateTime.now()
+                .difference((DateTime.parse(_waitListDataModel?.updatedAt)))
                 .inMinutes;
             var _min =
                 int.parse(_waitListDataModel?.minimumWaitTime?.split(':')[1]);
@@ -129,6 +155,7 @@ class BusinessProfileProvider extends ChangeNotifier {
             print('Error:${e.toString()}');
             per = 0.0;
           }
+          print("aaaaa${_waitListDataModel?.waitlistStatus}");
           btnTxt = _waitListDataModel?.waitlistStatus == 'rejected'
               ? waitingCanceled
               : (_waitListDataModel?.waitlistStatus == 'pending')
@@ -136,16 +163,17 @@ class BusinessProfileProvider extends ChangeNotifier {
                   : (_waitListDataModel?.waitlistStatus == 'accepted')
                       ? 'waiting'
                       : waitingJoin;
+        } catch (e) {
+          print('Error: $e');
+          waiting = false;
         }
-      } catch (e) {
-        print('Error: $e');
-        waiting = false;
       }
       notifyListeners();
     });
   }
 
   void cancelWaitList() async {
+    print("cleared all data");
     await APIManager.baseUserWaitlistCancel(
         {'waitlist_id': _waitListDataModel?.waitlistId}).then((value) {});
   }
@@ -164,5 +192,17 @@ class BusinessProfileProvider extends ChangeNotifier {
         Navigator.pop(context);
       }
     });
+  }
+
+  void getJobList() async {
+    await APIManager.joblist({'business_id': _businessId}).then((value) {
+      jobListModel = value;
+      print("joblistlength${value.data.length}");
+      notifyListeners();
+    });
+  }
+
+  allClear() {
+    _waitListDataModel = WaitListDataModel();
   }
 }

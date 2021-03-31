@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Color myBackGround = Color(0xfff9faff);
+Color myBackGround = Color(0xffedf0f5);
 Color myBackGround2 = Color(0xffecf5ff);
 Color myButtonBackground = Color(0xffE5E5E5);
 Color myEditTextBackground = Colors.white;

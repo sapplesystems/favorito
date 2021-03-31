@@ -1,9 +1,10 @@
+import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
-import 'package:favorito_user/ui/profile/user/ProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
@@ -14,33 +15,34 @@ import 'package:provider/provider.dart';
 import '../../../utils/MyColors.dart';
 
 class Profile extends StatelessWidget {
-  ProfileProvider vaTrue;
-  ProfileProvider vaFalse;
+  BaseProvider vaTrue;
+  BaseProvider vaFalse;
 
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    vaTrue = Provider.of<ProfileProvider>(context, listen: true);
-    vaFalse = Provider.of<ProfileProvider>(context, listen: false);
-    return SafeArea(
-      child: Scaffold(
-          key: RIKeys.josKeys5,
-          backgroundColor: myBackGround,
-          appBar: AppBar(
-              toolbarHeight: sm.h(5),
-              backgroundColor: myBackGround,
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              title: Text("My Profile",
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w400))),
-          body: ListView(children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
-              height: sm.h(20),
-              width: sm.w(100),
-              child: ListView(
-                children: [
+    vaTrue = Provider.of<BaseProvider>(context, listen: true);
+    vaFalse = Provider.of<BaseProvider>(context, listen: false);
+    return WillPopScope(
+      onWillPop: () => APIManager.onWillPop(context),
+      child: SafeArea(
+        child: Scaffold(
+            key: RIKeys.josKeys5,
+            backgroundColor: myBackGround,
+            appBar: AppBar(
+                toolbarHeight: sm.h(5),
+                backgroundColor: myBackGround,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                title: Text("My Profile",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w400))),
+            body: ListView(children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
+                height: sm.h(20),
+                width: sm.w(100),
+                child: ListView(children: [
                   Row(children: [
                     InkWell(
                       onTap: () => Navigator.push(
@@ -94,41 +96,40 @@ class Profile extends StatelessWidget {
                     child: Text(
                       "Business manager at Avadh group of companies and always open for collaborations",
                       style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Gilroy-Regular',
-                        letterSpacing: 0.28,
-                        color: myGrey,
-                      ),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Gilroy-Regular',
+                          letterSpacing: 0.28,
+                          color: myGrey),
                     ),
                   )
-                ],
+                ]),
               ),
-            ),
-            Divider(
-                height: 10,
-                color: Colors.grey.shade300,
-                endIndent: sm.w(5),
-                indent: sm.w(5)),
-            Container(
-                height: sm.h(60),
-                child: ListView.builder(
-                    itemCount: vaFalse.menuTitleList.length,
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      List<int> _ls = [7, 14, 17];
-                      return !_ls.contains(index)
-                          ? menuItems(sm, index, context)
-                          : Column(children: [
-                              menuItems(sm, index, context),
-                              Divider(
-                                  height: 10,
-                                  color: Colors.grey.shade300,
-                                  endIndent: sm.w(5),
-                                  indent: sm.w(5))
-                            ]);
-                    }))
-          ])),
+              Divider(
+                  height: 10,
+                  color: Colors.grey.shade300,
+                  endIndent: sm.w(5),
+                  indent: sm.w(5)),
+              Container(
+                  height: sm.h(60),
+                  child: ListView.builder(
+                      itemCount: vaTrue.menuTitleList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        List<int> _ls = [7, 14, 17];
+                        return !_ls.contains(index)
+                            ? menuItems(sm, index, context)
+                            : Column(children: [
+                                menuItems(sm, index, context),
+                                Divider(
+                                    height: 10,
+                                    color: Colors.grey.shade300,
+                                    endIndent: sm.w(5),
+                                    indent: sm.w(5))
+                              ]);
+                      }))
+            ])),
+      ),
     );
   }
 
@@ -150,31 +151,17 @@ class Profile extends StatelessWidget {
             }
             break;
           case 'Edit profile':
-            {
-              Navigator.of(RIKeys.josKeys5.currentContext)
-                  .pushNamed('/personalInfo');
-            }
+            Navigator.of(RIKeys.josKeys5.currentContext)
+                .pushNamed('/personalInfo');
             break;
-          case 'Saved Addresses':
-            {
-              Navigator.of(RIKeys.josKeys5.currentContext)
-                  .pushNamed('/userAddress');
 
-              // showModalBottomSheet<void>(
-              //     enableDrag: true,
-              //     isScrollControlled: true,
-              //     context: RIKeys.josKeys5.currentContext,
-              //     backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-              //     builder: (BuildContext context) {
-              //       return StatefulBuilder(
-              //           builder: (BuildContext context, StateSetter setState) {
-              //         return Container(
-              //             height: sm.h(95),
-              //             decoration: BoxDecoration(color: Colors.white),
-              //             child: UserAddress());
-              //       });
-              //     });
-            }
+          case 'Saved Addresses':
+            Navigator.of(RIKeys.josKeys5.currentContext)
+                .pushNamed('/userAddress');
+            break;
+
+          case 'Change login details':
+            Navigator.of(context).pushNamed('/loginDetail');
             break;
         }
       },
@@ -191,12 +178,11 @@ class Profile extends StatelessWidget {
             padding: EdgeInsets.only(left: sm.w(4)),
             child: Text('\t\t\t' + vaTrue.menuTitleList[identifier],
                 style: TextStyle(
-                  fontSize: 15,
-                  letterSpacing: 0.40,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Gilroy-Regular',
-                  color: myGrey,
-                )),
+                    fontSize: 15,
+                    letterSpacing: 0.40,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Gilroy-Regular',
+                    color: myGrey)),
           )
         ]),
       ),

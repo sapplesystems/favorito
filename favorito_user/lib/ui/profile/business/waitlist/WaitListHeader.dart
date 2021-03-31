@@ -15,33 +15,19 @@ class _WaitListHeaderState extends State<WaitListHeader> {
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        InkWell(
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      InkWell(
           onTap: () => widget.preFunction(),
-          child: Icon(
-            Icons.navigate_before,
-            size: sm.w(12),
-            color: Colors.black,
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: sm.h(0.4)),
-            child: Text(widget.title,
-                style: TextStyle(fontSize: 20, fontFamily: 'Gilroy-Reguler')),
-          ),
-        ),
-        // InkWell(
-        //   onTap: () => widget.postfunction(),
-        //   child: Icon(
-        //     Icons.cached,
-        //     size: sm.w(8),
-        //     color: Colors.black,
-        //   ),
-        // ),
-      ],
-    );
+          child:
+              Icon(Icons.navigate_before, size: sm.w(12), color: Colors.black)),
+      Padding(
+          padding: EdgeInsets.only(top: sm.h(0.2)),
+          child: Text(widget.title,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Gilroy-Reguler')))
+    ]);
   }
 }

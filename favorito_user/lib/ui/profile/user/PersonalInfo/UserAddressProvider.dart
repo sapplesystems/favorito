@@ -205,8 +205,8 @@ class UserAddressProvider extends ChangeNotifier {
         _v = this?.addressListModel?.data?.addresses[i] ?? '';
         _city = _v?.city ?? '';
         _state = _v?.state ?? '';
-        va =
-            '${_v?.address?.capitalize() ?? ''},${_v?.city?.capitalize() ?? ''}';
+        va = '${_v?.address?.capitalize() ?? ''},'
+            '${_v?.city?.capitalize() ?? ''}';
 
         break;
       }
@@ -316,6 +316,10 @@ class UserAddressProvider extends ChangeNotifier {
     //   e = Acces()
     // );
     setAddresstype('Home');
+  }
+
+  onWillPop(context) {
+    this.onWillPop(context);
   }
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {
