@@ -18,8 +18,10 @@ exports.all_business_waitlist = async function(req, res, next) {
         if (slots === false) {
             return res.status(400).json({ status: 'failed', message: 'Please save the wailist settings before accepting waitlist', data: [] });
         }
-        var sql = "SELECT id,`name`,contact,no_of_person,special_notes,waitlist_status, DATE_FORMAT(created_at, '%d %b') as waitlist_date, \n\
-        DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
+        var sql = "SELECT b_w.id,b_w.name, u.full_name as booked_by,b_w.contact,b_w.no_of_person,b_w.special_notes,b_w.waitlist_status, DATE_FORMAT(b_w.created_at, '%d %b') as waitlist_date, \n\
+        DATE_FORMAT(b_w.created_at, '%H:%i') AS walkin_at FROM business_waitlist as b_w left join users u on b_w.user_id = u.id WHERE b_w.business_id='" + business_id + "' AND b_w.deleted_at IS NULL";
+        // var sql = "SELECT id,`name`,contact,no_of_person,special_notes,waitlist_status, DATE_FORMAT(created_at, '%d %b') as waitlist_date, \n\
+        // DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
         let result = await exports.run_query(sql)
         for (let r = 0; r < result.length; r++) {
             for (let i = 0; i < slots.length; i++) {
