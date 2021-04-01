@@ -19,7 +19,7 @@ exports.getProfile = function(req, res, next) {
         var sql = "SELECT id,business_id,business_name,postal_code,business_phone,landline,reach_whatsapp, \n\
         business_email,concat('" + img_path + "',photo) as photo, address1,address2,address3,pincode,town_city,state_id,country_id, \n\
         location, by_appointment_only, working_hours, ifnull(website , '') as website ,short_description,business_status \n\
-        FROM business_master WHERE  business_id='" + business_id + "' and is_activated=1 and deleted_at is null";
+        FROM business_master WHERE  business_id='" + business_id + "' and deleted_at is null";
 
         db.query(sql, function(err, rows, fields) {
             if (err) {
@@ -29,11 +29,15 @@ exports.getProfile = function(req, res, next) {
             } else {
                 var hours_drop_down_list = ['Select Hours', 'Always Open'];
                 var website = [];
-                if (rows[0]['website'] != '' && rows[0]['website'] != null && rows[0]['website'] != 'undefined') {
+                if (rows[0]['website'] != '' && rows[0]['website'] != 'undefined') {
                     var x = rows[0]['website'];
                     website = x.split('|_|');
                     rows[0]['website'] = website;
                 }
+                if (rows[0]['website'] == null || rows[0]['website'] == '') {
+                    rows[0]['website'] = ' ';
+                }
+
                 if (rows[0]['working_hours'] === 'Select Hours') {
                     var q2 = "select `day`,start_hours,end_hours from business_hours \n\
                                 where business_id='" + business_id + "' and deleted_at is null";

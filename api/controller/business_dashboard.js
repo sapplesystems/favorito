@@ -7,11 +7,10 @@ const options = {
     apiKey: process.env.GOOGLE_MAP_API, // for Mapquest, OpenCage, Google Premier
 };
 const geocoder = NodeGeocoder(options);
-
 exports.getDashboardDetail = async function(req, res, next) {
     try {
         var business_id = req.userdata.business_id;
-        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` WHERE business_id='" + business_id + "' AND is_activated='1' AND deleted_at IS NULL";
+        var sql = "SELECT id, business_id, business_name, CONCAT('" + img_path + "', photo) as photo, business_status, is_profile_completed, is_information_completed, is_phone_verified, is_email_verified, is_verified FROM `business_master` WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
         try {
             sql_data_ads_spent = `select free_credits,paid_credits from business_ad_credits where business_id = '${business_id}'`
             result_data_ads_spent = await exports.run_query(sql_data_ads_spent)
@@ -167,7 +166,7 @@ exports.trendingNearby = async function(req, res, next) {
         ,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status \n\
         FROM business_master AS b_m \n\
         LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-        WHERE b_m.is_verified='1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
+        WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
         AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id  ORDER BY distance is null,distance LIMIT ${limit} OFFSET ${offset}`;
         }
@@ -267,7 +266,7 @@ exports.newBusiness = async function(req, res, next) {
         ,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status \n\
         FROM business_master AS b_m \n\
         LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-        WHERE b_m.is_verified='1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
+        WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
         AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id  ORDER BY distance IS NULL , distance,b_m.created_at LIMIT ${limit} OFFSET ${offset}`;
         }
@@ -339,7 +338,7 @@ exports.topRated = async function(req, res, next) {
         ,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status \n\
         FROM business_master AS b_m \n\
         LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-        WHERE b_m.is_verified='1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
+        WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
         AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id ORDER BY avg_rating DESC, distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
         }
@@ -409,7 +408,7 @@ exports.mostPopular = async function(req, res, next) {
         ,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status \n\
         FROM business_master AS b_m \n\
         LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-        WHERE b_m.is_verified='1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
+        WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
         AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id ORDER BY avg_rating DESC, distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
         }
@@ -460,7 +459,7 @@ exports.sponsored = async function(req, res, next) {
          b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id,b_m.pincode as pincode, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status \n\
          FROM `business_master` AS b_m \n\
          LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
-         WHERE b_m.is_verified='1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
+         WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL \n\
          AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() \n\
         GROUP BY b_m.business_id LIMIT " + limit + " OFFSET " + offset + " ";
         result_master = await exports.run_query(sql)
@@ -514,7 +513,7 @@ exports.getBusinessByAppointment = async function(req, res, next) {
 
         var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
         SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
-           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
+           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -569,7 +568,7 @@ exports.getBusinessByFreelancer = async function(req, res, next) {
         var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,  \n\
         SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
            POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM 
-        business_master  AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id  ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
+        business_master  AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_m.by_appointment_only = 1 AND b_m.business_type_id = 2 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id  ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -623,7 +622,7 @@ exports.getBusinessByBookTable = async(req, res, next) => {
         SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
            POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
            ,business_category_id,b_m.by_appointment_only as appointment_only, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo,b_m.business_type_id, b_m.business_status FROM
-        business_master  AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.by_appointment_only = 0 AND b_m.business_type_id = 1 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
+        business_master  AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_m.by_appointment_only = 0 AND b_m.business_type_id = 1 AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -685,7 +684,7 @@ exports.getBusinessByJob = async function(req, res, next) {
         var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
         SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
            POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
-           ,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
+           ,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -747,7 +746,7 @@ exports.getBusinessByFood = async(req, res, next) => {
         var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,\n\
         SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
            POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
-           ,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
+           ,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
 
         result_master = await exports.run_query(sql)
         var final_data = []
@@ -810,7 +809,7 @@ exports.getBusinessByDoctor = async(req, res, next) => {
             var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
             SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
                POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
-               ,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null , distance LIMIT ${limit} OFFSET ${offset}`;
+               ,business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND business_category_id  RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null , distance LIMIT ${limit} OFFSET ${offset}`;
 
             result_master = await exports.run_query(sql)
             var final_data = []

@@ -206,13 +206,13 @@ exports.updateProfile = async function(req, res, next) {
         var result = await exports.run_query(sql)
 
         //  checking all the things are verified
-        let sql_is_all_verified = ` SELECT is_verified, is_profile_completed, is_information_completed from business_master where business_id = '${business_id}'`
+        // let sql_is_all_verified = ` SELECT is_verified, is_profile_completed, is_information_completed from business_master where business_id = '${business_id}'`
 
-        let result_is_all_verified = await exports.run_query(sql_is_all_verified)
-        if (result_is_all_verified[0].is_verified && result_is_all_verified[0].is_profile_completed && result_is_all_verified[0].is_information_completed) {
-            sql_update_is_active = `update business_master set is_activated = 1 where business_id = '${business_id}'`
-            result_update_is_active = await exports.run_query(sql_update_is_active)
-        }
+        // let result_is_all_verified = await exports.run_query(sql_is_all_verified)
+        // if (result_is_all_verified[0].is_verified && result_is_all_verified[0].is_profile_completed && result_is_all_verified[0].is_information_completed) {
+        //     sql_update_is_active = `update business_master set is_activated = 1 where business_id = '${business_id}'`
+        //     result_update_is_active = await exports.run_query(sql_update_is_active)
+        // }
         return res.status(200).json({ status: 'success', message: 'Business user profile updated successfully.' });
 
     } catch (e) {

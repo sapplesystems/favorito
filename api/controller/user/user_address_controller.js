@@ -4,12 +4,18 @@ exports.getAddress = async function(req, res, next) {
     if (req.userdata.business_id) {
         var sql = "SELECT address1, address2, address3, pincode, town_city, state_id, country_id, location FROM business_master WHERE business_id = '" + req.userdata.business_id + "'";
     } else if (req.userdata.id) {
+        var sql_count_for_default = `select count(id) as count , id from user_address where user_id = '${req.userdata.id}' and deleted_at is null`
         var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address, IFNULL(address_type,'') as address_type, deleted_at FROM user_address WHERE user_id = '" + req.userdata.id + "' and deleted_at is null";
         var sql_name = "SELECT first_name, last_name FROM users WHERE id = '" + req.userdata.id + "'"
     } else {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
     }
     try {
+        result_count = await exports.executeSql(sql_count_for_default, res)
+        if (result_count[0].count == 1) {
+            sql_update_address = `update user_address set updated_at = now(), default_address = 1 where id = '${result_count[0].id}'`
+            result_udpate_address = await exports.executeSql(sql_update_address, res)
+        }
         var user_name
         db.query(sql_name, function(err, result) {
             if (result != '' && result != undefined && result != null) {

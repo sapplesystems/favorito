@@ -167,14 +167,16 @@ exports.listAllMenu = async function(req, res, next) {
 
         sql_attributes = `SELECT GROUP_CONCAT(attributes_id) as attributes from business_attributes where business_id  = '${business_id}'`;
         result_attributes = await exports.run_query(sql_attributes)
-        attributes = result_attributes[0].attributes.split(',')
         business_online_store_or_menu = 0;
-        for (let i = 0; i < attributes.length; i++) {
-            if (attributes[i] == '4') {
-                business_online_store_or_menu = 4
-            }
-            if (attributes[i] == '3') {
-                business_online_store_or_menu = 3
+        if (result_attributes && result_attributes[0] && result_attributes[0].attributes) {
+            attributes = result_attributes[0].attributes.split(',')
+            for (let i = 0; i < attributes.length; i++) {
+                if (attributes[i] == '4') {
+                    business_online_store_or_menu = 4
+                }
+                if (attributes[i] == '3') {
+                    business_online_store_or_menu = 3
+                }
             }
         }
 
@@ -200,7 +202,7 @@ exports.listAllMenu = async function(req, res, next) {
             return res.status(200).json({ status: 'success', message: 'sucsess', business_type: business_online_store_or_menu, data: data });
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', e });
     }
 };
 
@@ -603,6 +605,9 @@ exports.getSetting = function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
+            if (result == '') {
+                return res.status(200).json({ status: 'success', message: 'success', data: {} });
+            }
             return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
         });
     } catch (e) {
@@ -693,35 +698,73 @@ exports.updateMenuSetting = function(req, res, next) {
 
 exports.changeMenuAcceptOrderStatus = async(req, res, next) => {
     var business_id = req.userdata.business_id;
-
-    // checking if every checks are ok then it will allow to change the status of the menu accepting status .
-    let sql_if_all_verified = `select is_email_verified,is_phone_verified, is_information_completed,is_profile_completed from business_master where business_id = '${business_id}'`
-    let result_if_all_verified = await exports.run_query(sql_if_all_verified)
-    if (result_if_all_verified[0].is_phone_verified && result_if_all_verified[0].is_email_verified && result_if_all_verified[0].is_information_completed && result_if_all_verified[0].is_profile_completed) {
-        var update_columns = " updated_at=now() ";
-
-        if (req.body.accepting_order != '' && req.body.accepting_order != 'undefined' && req.body.accepting_order != null) {
-            update_columns += ", accepting_order='" + req.body.accepting_order + "' ";
+    // check if accept order offline then no checks.
+    if (req.body.accepting_order != '' && req.body.accepting_order != 'undefined' && req.body.accepting_order != null) {
+        if (req.body.accepting_order == 0) {
+            try {
+                var sql_update_order_accept_status = "update business_menu_setting set updated_at=now(), accepting_order = 0 where business_id='" + business_id + "'";
+                result_update_order_accept_status = await exports.run_query(sql_update_order_accept_status)
+                var sql_update_business_status = "update business_master set updated_at=now() , business_status = 'offline' where business_id='" + business_id + "'";
+                var result_update_business_status = await exports.run_query(sql_update_business_status)
+                return res.status(200).json({ status: 'success', message: 'Accepting order status updated' });
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+            }
         } else {
-            return res.status(400).json({ status: 'error', message: 'accepting_order is missing' });
-        }
-
-        try {
-            var sql_update_order_accept_status = "update business_menu_setting set " + update_columns + " where business_id='" + business_id + "'";
-            result_sql_update_order_accept_status = await exports.run_query(sql_update_order_accept_status)
-
-            // update is_verified from the business_master table if the accepting_order is off and on
-            sql_update_is_verified_business_master = `update business_master set is_verified = '${req.body.accepting_order}' where business_id = '${business_id}'`
-            result_update_is_verified_business_master = await exports.run_query(sql_update_is_verified_business_master)
-
-            return res.status(200).json({ status: 'success', message: 'Accepting order status updated' });
-        } catch (error) {
-            return res.status(500).json({ status: 'error', message: 'Something went wrong' });
+            try {
+                // check if the is_verified and is_activated is on then it will change the business_status from master and accept order in the business_menu
+                sql_check_business_master = `select is_activated, is_verified from business_master where business_id = '${business_id}'`
+                result_check_business_master = await exports.run_query(sql_check_business_master)
+                if (result_check_business_master && result_check_business_master[0].is_activated == 1 && result_check_business_master[0].is_verified == 1) {
+                    var sql_update_order_accept_status = "update business_menu_setting set updated_at=now(), accepting_order = 1 where business_id='" + business_id + "'";
+                    result_update_order_accept_status = await exports.run_query(sql_update_order_accept_status)
+                    var sql_update_order_accept_status = "update business_master set updated_at=now() , business_status = 'online' where business_id='" + business_id + "'";
+                    var result_update_order_accept_status = await exports.run_query(sql_update_order_accept_status)
+                    return res.status(200).json({ status: 'success', message: 'Accepting order status updated' });
+                } else {
+                    return res.status(500).json({ status: 'failed', message: 'Business is not verified or not activated' });
+                }
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+            }
         }
     } else {
-        return res.status(200).json({ status: 'Failed', message: 'First complete your profile, information, and verification in order to change the status' });
+        return res.status(400).json({ status: 'error', message: 'accepting_order is missing' });
     }
 }
+
+// older code 
+// exports.changeMenuAcceptOrderStatus = async(req, res, next) => {
+//     var business_id = req.userdata.business_id;
+
+//     // checking if every checks are ok then it will allow to change the status of the menu accepting status .
+//     let sql_if_all_verified = `select is_email_verified,is_phone_verified, is_information_completed,is_profile_completed from business_master where business_id = '${business_id}'`
+//     let result_if_all_verified = await exports.run_query(sql_if_all_verified)
+//     if (result_if_all_verified[0].is_phone_verified && result_if_all_verified[0].is_email_verified && result_if_all_verified[0].is_information_completed && result_if_all_verified[0].is_profile_completed) {
+//         var update_columns = " updated_at=now() ";
+
+//         if (req.body.accepting_order != '' && req.body.accepting_order != 'undefined' && req.body.accepting_order != null) {
+//             update_columns += ", accepting_order='" + req.body.accepting_order + "' ";
+//         } else {
+//             return res.status(400).json({ status: 'error', message: 'accepting_order is missing' });
+//         }
+
+//         try {
+//             var sql_update_order_accept_status = "update business_menu_setting set " + update_columns + " where business_id='" + business_id + "'";
+//             result_sql_update_order_accept_status = await exports.run_query(sql_update_order_accept_status)
+
+//             // update is_verified from the business_master table if the accepting_order is off and on
+//             sql_update_is_verified_business_master = `update business_master set is_verified = '${req.body.accepting_order}' where business_id = '${business_id}'`
+//             result_update_is_verified_business_master = await exports.run_query(sql_update_is_verified_business_master)
+
+//             return res.status(200).json({ status: 'success', message: 'Accepting order status updated' });
+//         } catch (error) {
+//             return res.status(500).json({ status: 'error', message: 'Something went wrong' });
+//         }
+//     } else {
+//         return res.status(200).json({ status: 'Failed', message: 'First complete your profile, information, and verification in order to change the status' });
+//     }
+// }
 
 /**
  * Delete menu item photo

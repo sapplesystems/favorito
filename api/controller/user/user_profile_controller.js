@@ -1,6 +1,7 @@
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
-var fs = require('fs')
+var fs = require('fs');
+const { get } = require('../../routes/user/user_profile_route');
 
 exports.businessCarouselList = async function(req, res, next) {
     await exports.getCaruoselData(req, res)
@@ -8,6 +9,7 @@ exports.businessCarouselList = async function(req, res, next) {
 
 exports.getCaruoselData = async function(req, res) {
     try {
+
         var business_id = null
         if (req.body.business_id != null && req.body.business_id != '' && req.body.business_id != undefined) {
             business_id = req.body.business_id
@@ -16,9 +18,9 @@ exports.getCaruoselData = async function(req, res) {
         }
 
         if (business_id != null) {
-            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m  ON b_u.business_id = b_m.business_id  WHERE type = "Photo" AND b_u.business_id = "' + business_id + '"'
+            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m  ON b_u.business_id = b_m.business_id  WHERE type = "Photo" AND b_u.business_id = "' + business_id + '" AND b_m.is_verified = 1'
         } else {
-            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m ON b_u.business_id = b_m.business_id WHERE type = "Photo" GROUP BY business_id LIMIT 20'
+            var sql = 'SELECT b_u.id, b_u.business_id, CONCAT("' + img_path + '",b_u.asset_url) as photo FROM business_uploads as b_u JOIN business_master as b_m ON b_u.business_id = b_m.business_id WHERE type = "Photo" AND b_m.is_verified = 1 GROUP BY business_id LIMIT 20'
         }
 
         db.query(sql, function(err, result) {
@@ -435,6 +437,21 @@ exports.userDetail = async(req, res, next) => {
         return res.status(400).send({ status: 'failed', message: 'api_type is missing' })
     }
 
+}
+
+exports.userDetailByTyping = async(req, res) => {
+    if (!req.body.keyword) {
+        return res.status(400).send({ status: 'failed', message: 'keyword is missing' })
+    } else {
+        var keyword = req.body.keyword
+    }
+    try {
+        getDetail = `select u_a.user_id,u.id,full_name,phone,profile_id,u_a.city,u_a.state from users as u left join user_address as u_a on u_a.user_id = u.id where full_name like '%${keyword}%' or phone like '%${keyword}%' or profile_id like '%${keyword}%'`
+        resultDetail = await exports.run_query(getDetail)
+        return res.status(200).send({ status: 'success', message: 'success', data: resultDetail })
+    } catch (error) {
+        return res.status(500).send({ status: 'failed', message: 'Something went wrong', error })
+    }
 }
 
 exports.run_query = (sql, param = false) => {
