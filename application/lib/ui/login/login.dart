@@ -37,25 +37,17 @@ class _LoginState extends State<Login> {
     return Scaffold(
         body: ListView(children: [
       Padding(
-        padding: EdgeInsets.only(top: sm.h(6)),
-        child: Text(
-          "Log in",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontFamily: "Gilroy-Bold",
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1,
-          ),
-        ),
-      ),
+          padding: EdgeInsets.only(top: sm.h(6)),
+          child: Text("Log in",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 28,
+                  fontFamily: "Gilroy-Bold",
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1))),
       Container(
-        margin: EdgeInsets.only(
-          left: 16.0,
-          right: 16.0,
-          bottom: 32.0
-        ),
+        margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
         child: Stack(children: [
           Card(
             margin: EdgeInsets.only(top: sm.h(10)),
@@ -85,9 +77,8 @@ class _LoginState extends State<Login> {
                             valid: true,
                             maxLines: 1,
                             title: "Password",
-                            sufixClick: () {
-                              setState(() => showPass = !showPass);
-                            },
+                            sufixClick: () =>
+                                setState(() => showPass = !showPass),
                             sufixIcon: showPass
                                 ? Icons.visibility
                                 : Icons.visibility_off,

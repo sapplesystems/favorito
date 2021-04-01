@@ -134,7 +134,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
               hintText: widget.hint ?? '',
               alignLabelWithHint: true,
               hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
-              contentPadding: EdgeInsets.only(top: 14, right: 16),
+              contentPadding: EdgeInsets.only(top: 14, right: 16, left: 16),
               fillColor: Colors.transparent,
               border: InputBorder.none,
             ),

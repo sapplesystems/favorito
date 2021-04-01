@@ -127,15 +127,15 @@ class _LoginState extends State<Login> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Login using ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              color: myGrey,
-                              fontSize: 16)),
+                      Text(
+                        "Login using ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            color: myGrey,
+                            fontSize: 16),
+                      ),
                       InkWell(
-                          onTap: () {
-                            vaTrue.setIsPass(!vaTrue.getIsPass());
-                          },
+                          onTap: () => vaTrue.setIsPass(!vaTrue.getIsPass()),
                           child: Text(vaTrue.getIsPass() ? 'OTP' : 'Password',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,

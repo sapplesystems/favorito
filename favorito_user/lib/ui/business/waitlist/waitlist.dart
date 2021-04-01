@@ -1,8 +1,8 @@
 import 'package:favorito_user/component/CirculerProgress.dart';
 import 'package:favorito_user/component/Minut20.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
-import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
@@ -15,11 +15,16 @@ class Waitlist extends StatelessWidget {
   SizeManager sm;
   BusinessProfileProvider vaTrue;
   BusinessProfileProvider vaFalse;
+  bool isFirst = true;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     vaTrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     vaFalse = Provider.of<BusinessProfileProvider>(context, listen: false);
+    if (isFirst) {
+      // vaTrue.allClear();
+    }
+    print("noOfPerson:${vaTrue.getWaitListData()?.noOfPerson}");
     return SafeArea(
       child: Scaffold(
           key: RIKeys.josKeys18,
@@ -66,32 +71,38 @@ class Waitlist extends StatelessWidget {
   Widget bodyPart() =>
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
-          height: sm.h(60),
-          width: sm.w(40),
-          padding: EdgeInsets.only(left: sm.w(2)),
-          child: ListView(
-            children: [
-              beforeU(
-                  'Availeble slot',
-                  'wclock',
-                  vaTrue.getWaitListData()?.availableTimeSlots
-                      // ?.convert24to12()
-                      ??
-                      vaTrue.getWaitListData()?.bookedSlot),
-              SizedBox(height: sm.h(6)),
-              Visibility(
-                  visible: vaTrue.waiting,
-                  child: beforeU('# in Parties', 'admin',
-                      vaTrue.getWaitListData()?.noOfPerson.toString())),
-              Visibility(
-                  visible: vaTrue.waiting, child: SizedBox(height: sm.h(6))),
-              beforeU('Parties Before you', 'admin',
-                  vaTrue.getWaitListData()?.partiesBeforeYou.toString()),
-              SizedBox(height: sm.h(6)),
-              waitingTime(),
-            ],
-          ),
-        ),
+            height: sm.h(60),
+            width: sm.w(40),
+            padding: EdgeInsets.only(left: sm.w(2)),
+            child: ListView(
+              children: [
+                beforeU(
+                    'Availeble slot',
+                    'wclock',
+                    vaTrue.getWaitListData()?.availableTimeSlots
+                        // ?.convert24to12()
+                        ??
+                        vaTrue.getWaitListData()?.bookedSlot ??
+                        '0'),
+                SizedBox(height: sm.h(6)),
+                Visibility(
+                    visible: vaTrue.waiting,
+                    child: beforeU(
+                        '# in Parties',
+                        'admin',
+                        vaTrue.getWaitListData()?.noOfPerson?.toString() ??
+                            '0')),
+                Visibility(
+                    visible: vaTrue.waiting, child: SizedBox(height: sm.h(6))),
+                beforeU(
+                    'Parties Before you',
+                    'admin',
+                    vaTrue.getWaitListData()?.partiesBeforeYou?.toString() ??
+                        '0'),
+                SizedBox(height: sm.h(6)),
+                waitingTime(),
+              ],
+            )),
         Container(
           height: sm.h(60),
           width: sm.w(28),
@@ -100,7 +111,8 @@ class Waitlist extends StatelessWidget {
                 i <
                     (!vaTrue.waiting
                         ? vaTrue.getWaitListData()?.partiesBeforeYou ?? 0
-                        : (vaTrue.getWaitListData()?.partiesBeforeYou + 1));
+                        : (vaTrue.getWaitListData()?.partiesBeforeYou ??
+                            0 + 1));
                 i++)
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 6),

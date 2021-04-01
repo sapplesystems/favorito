@@ -3,7 +3,7 @@ import 'package:favorito_user/component/PopupContent.dart';
 import 'package:favorito_user/component/PopupLayout.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/Booking/BookAppChild.dart';
-import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
+import 'package:favorito_user/ui/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';

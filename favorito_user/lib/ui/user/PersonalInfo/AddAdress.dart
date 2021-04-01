@@ -1,7 +1,7 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/component/SingleSelectionChips.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/services.dart';

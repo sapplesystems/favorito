@@ -10,16 +10,16 @@ import 'package:favorito_user/ui/Login/Login.dart';
 import 'package:favorito_user/ui/Login/LoginDetail.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHome.dart';
 import 'package:favorito_user/ui/Signup/Signup.dart';
-import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
-import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
-import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/AddAdress.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfo.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
-import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
-import 'package:favorito_user/ui/profile/user/profile.dart';
+import 'package:favorito_user/ui/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/business/waitlist/JoinWaitList.dart';
+import 'package:favorito_user/ui/business/waitlist/waitlist.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/splash/Splash.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/AddAdress.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfo.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/UserAddress.dart';
+import 'package:favorito_user/ui/user/ProfileDetail.dart';
+import 'package:favorito_user/ui/user/profile.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class RouteGenerator {

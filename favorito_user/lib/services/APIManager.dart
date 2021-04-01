@@ -521,18 +521,29 @@ class APIManager {
   }
 
   //WaitList
-  static Future<WaitListBaseModel> baseUserWaitlistVerbose(Map _map) async {
+  static Future<WaitListBaseModel> baseUserWaitlistVerbose(
+      Map _map, GlobalKey<ScaffoldState> _key) async {
+    if (!await utilProvider.checkInternet())
+      return WaitListBaseModel(
+          status: 'fail', message: 'Please check internet connections');
+
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
+        // contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print(
         "service.baseUserWaitlistVerbose : ${service.baseUserWaitlistVerbose}");
+    String url = service.baseUserWaitlistVerbose;
+    try {
+      response = await dio.post(url, data: _map, options: opt);
 
-    response = await dio.post(service.baseUserWaitlistVerbose,
-        data: _map, options: opt);
+      print("service.baseUserWaitlistVerbose : ${response.toString}");
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, url, _key);
+    }
     print("service.baseUserWaitlistVerbose : ${response.toString}");
+    print("aaaaaa" + response.statusMessage.toString());
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
@@ -564,17 +575,29 @@ class APIManager {
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-  static Future<WaitListBaseModel> baseUserWaitlistCancel(Map _map) async {
+  static Future<WaitListBaseModel> baseUserWaitlistCancel(
+      Map _map, GlobalKey _key) async {
+    if (!await utilProvider.checkInternet())
+      return WaitListBaseModel(
+          status: 'fail', message: 'Please check internet connections');
+
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserWaitlistCancel : ${service.baseUserWaitlistCancel}");
+    String url = service.baseUserWaitlistCancel;
+    print("$url : $url");
+    print("RequestData12 : ${_map.toString()}");
 
-    response = await dio.post(service.baseUserWaitlistCancel,
-        data: _map, options: opt);
-    print("service.baseUserWaitlistCancel : ${response.toString}");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      print("service.baseUserWaitlistVerbose : ${response.toString}");
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, url, _key);
+    }
+
+    print("$url : ${response.toString}");
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
@@ -1211,18 +1234,26 @@ class APIManager {
   }
 
   static void ExceptionHandler(DioError e, pr, url, formKey) {
-    pr.hide();
+    pr?.hide();
     if (e.error is SocketException) {
       BotToast.showText(text: "Server not responding");
       response = null;
     } else {
-      pr.hide();
       if (e.response.statusCode == 401) {
         BotToast.showText(
             text: BaseResponse.fromJson(
                     convert.json.decode(e.response.toString()))
                 .message);
         print("$url:401");
+        // Navigator.of(formKey.currentContext).pushNamed('/login');
+      }
+
+      if (e.response.statusCode == 500) {
+        BotToast.showText(
+            text: BaseResponse.fromJson(
+                    convert.json.decode(e.response.toString()))
+                .message);
+        print("$url:500");
         // Navigator.of(formKey.currentContext).pushNamed('/login');
       }
       if (e.response.statusCode == 400) {

@@ -6,17 +6,17 @@ import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
-import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
-import 'package:favorito_user/ui/profile/business/tabs/tabber.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/business/tabs/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../utils/Extentions.dart';
 import '../../../utils/RIKeys.dart';
+import '../../utils/MyString.dart';
 
 class BusinessProfile extends StatelessWidget {
   SizeManager sm;
@@ -28,179 +28,184 @@ class BusinessProfile extends StatelessWidget {
     sm = SizeManager(context);
     vatrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     if (isFirst) {
-      vatrue.allClear();
+      vatrue.setIsProgress(true);
+      vatrue.getProfileDetail();
       isFirst = false;
     }
-    return Scaffold(
-        key: RIKeys.josKeys2,
-        backgroundColor: Colors.white,
-        body: FutureBuilder<void>(
-          future: vatrue.getProfileDetail(),
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Text('please wait...'),
-              );
-            } else if (snapshot.hasError) {
-              return Text('please wait...');
-            } else {
-              return ListView(children: [
-                Stack(children: [
-                  Column(children: [
-                    headerPart(context),
-                    Stack(children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: sm.h(8), bottom: sm.h(1)),
-                        child: Center(
-                          child: Text(
-                              vatrue.getBusinessProfileData().businessName ??
-                                  '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  letterSpacing: -.5,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Gilroy-Bold')),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: sm.h(0), left: sm.w(76)),
-                        child: Container(
-                          width: sm.w(18),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: sm.w(1), vertical: sm.w(0)),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: 1),
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8),
-                                  bottomRight: Radius.circular(8)),
-                              color: Colors.white),
+    return WillPopScope(
+      onWillPop: () {
+        vatrue.allClear();
+        Navigator.pop(context);
+        return null;
+      },
+      child: Scaffold(
+          key: RIKeys.josKeys2,
+          backgroundColor: Colors.white,
+          body: vatrue.getIsProgress()
+              ? Center(
+                  child: CircularProgressIndicator(semanticsLabel: pleaseWait))
+              : ListView(children: [
+                  Stack(children: [
+                    Column(children: [
+                      headerPart(context),
+                      Stack(children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: sm.h(8), bottom: sm.h(1)),
                           child: Center(
-                            child: Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                direction: Axis.vertical,
-                                spacing: 0,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                        '${vatrue.getBusinessProfileData()?.totalReviews ?? 0}',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'Gilroy-Reguler')),
-                                  ),
-                                  Text('Reviews'.toUpperCase(),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: myGrey,
-                                          fontFamily: 'Gilroy-Reguler'))
-                                ]),
+                            child: Text(
+                                vatrue.getBusinessProfileData().businessName ??
+                                    '',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    letterSpacing: -.5,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Gilroy-Bold')),
                           ),
                         ),
-                      )
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: sm.h(0), left: sm.w(76)),
+                          child: Container(
+                            width: sm.w(18),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: sm.w(1), vertical: sm.w(0)),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.grey, width: 1),
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(8),
+                                    bottomRight: Radius.circular(8)),
+                                color: Colors.white),
+                            child: Center(
+                              child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  direction: Axis.vertical,
+                                  spacing: 0,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                          '${vatrue.getBusinessProfileData()?.totalReviews ?? 0}',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: 'Gilroy-Reguler')),
+                                    ),
+                                    Text('Reviews'.toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: myGrey,
+                                            fontFamily: 'Gilroy-Reguler'))
+                                  ]),
+                            ),
+                          ),
+                        )
+                      ]),
                     ]),
+                    smallProfile(),
                   ]),
-                  smallProfile(),
-                ]),
-                followingAndFavorite(),
-                Padding(
-                  padding: EdgeInsets.only(left: sm.w(4), top: sm.h(4)),
-                  child: Text(
-                      vatrue.getBusinessProfileData()?.shortDesciption ?? "",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                    child: InkWell(
-                        onTap: () {
-                          vatrue.getBusinessHours();
-                        },
-                        child: Text(
-                            '${vatrue.getBusinessProfileData()?.townCity ?? ""} ${vatrue.getBusinessProfileData()?.state ?? ""}',
-                            style: TextStyle(
-                                color: myGrey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400)))),
-                Row(
-                  children: [
-                    Padding(
+                  followingAndFavorite(),
+                  Padding(
+                    padding: EdgeInsets.only(left: sm.w(4), top: sm.h(4)),
+                    child: Text(
+                        vatrue.getBusinessProfileData()?.shortDesciption ?? "",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400)),
+                  ),
+                  Padding(
                       padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                      child: Text(
-                          "${vatrue.getBusinessProfileData()?.businessStatus}"
-                              .capitalize(),
-                          style: TextStyle(
-                              color: vatrue
-                                          .getBusinessProfileData()
-                                          .businessStatus
-                                          .toString()
-                                          .toLowerCase() ==
-                                      'offline'
-                                  ? myRed
-                                  : Colors.green,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300)),
-                    ),
-                    Visibility(
-                      visible: vatrue
-                              .getBusinessProfileData()
-                              .businessStatus
-                              .toString()
-                              .toLowerCase() ==
-                          'online',
-                      child: Padding(
-                        padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                        child: InkWell(
+                      child: InkWell(
                           onTap: () {
-                            showModalBottomSheet<void>(
-                                enableDrag: true,
-                                isScrollControlled: true,
-                                context: context,
-                                backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-                                builder: (BuildContext context) {
-                                  return StatefulBuilder(builder:
-                                      (BuildContext context,
-                                          StateSetter setState) {
-                                    return Container(
-                                        height: sm.h(70),
-                                        decoration:
-                                            BoxDecoration(color: Colors.white),
-                                        child: HoursList(vatrue, sm));
-                                  });
-                                });
+                            vatrue.getBusinessHours();
                           },
-                          child: Text(vatrue.getShopTime(),
+                          child: Text(
+                              '${vatrue.getBusinessProfileData()?.townCity ?? ""} ${vatrue.getBusinessProfileData()?.state ?? ""}',
                               style: TextStyle(
                                   color: myGrey,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w300)),
+                                  fontWeight: FontWeight.w400)))),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                        child: Text(
+                            "${vatrue.getBusinessProfileData()?.businessStatus}"
+                                .capitalize(),
+                            style: TextStyle(
+                                color: vatrue
+                                            .getBusinessProfileData()
+                                            .businessStatus
+                                            .toString()
+                                            .toLowerCase() ==
+                                        'offline'
+                                    ? myRed
+                                    : Colors.green,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300)),
+                      ),
+                      Visibility(
+                        visible: vatrue
+                                .getBusinessProfileData()
+                                .businessStatus
+                                .toString()
+                                .toLowerCase() ==
+                            'online',
+                        child: Padding(
+                          padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                          child: InkWell(
+                            onTap: () {
+                              showModalBottomSheet<void>(
+                                  enableDrag: true,
+                                  isScrollControlled: true,
+                                  context: context,
+                                  backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(builder:
+                                        (BuildContext context,
+                                            StateSetter setState) {
+                                      return Container(
+                                          height: sm.h(70),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white),
+                                          child: HoursList(vatrue, sm));
+                                    });
+                                  });
+                            },
+                            child: Text(vatrue.getShopTime(),
+                                style: TextStyle(
+                                    color: myGrey,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300)),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
-                  child: Text(
-                      "\u{20B9} : " +
-                              vatrue.getBusinessProfileData()?.priceRange ??
-                          "",
-                      style: TextStyle(
-                          color: myGrey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300)),
-                ),
-                ServicCart(context),
-                Container(
-                    height: sm.h(70),
-                    child: Tabber(data: vatrue.getBusinessProfileData()))
-              ]);
-            }
-          },
-        )
-        //
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
+                    child: Text(
+                        "\u{20B9} : " +
+                                vatrue.getBusinessProfileData()?.priceRange ??
+                            "",
+                        style: TextStyle(
+                            color: myGrey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300)),
+                  ),
+                  ServicCart(context),
+                  Container(
+                      height: sm.h(70),
+                      child: Tabber(data: vatrue.getBusinessProfileData()))
+                ])
+          // ;
+          // }
+          //   },
+          // )
+          //
 
-        );
+          ),
+    );
   }
 
   Widget smallProfile() {
