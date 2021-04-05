@@ -225,7 +225,7 @@ class BusinessProfileProvider extends BaseProvider {
         }
       }
     });
-    recall();
+    // recall();
   }
 
   void cancelWaitList() async {
@@ -279,11 +279,11 @@ class BusinessProfileProvider extends BaseProvider {
     } catch (e) {}
   }
 
-  recall() {
-    time = new Timer(Duration(seconds: 4), () {
-      getWaitList();
-    });
-  }
+  // recall() {
+  //   time = new Timer(Duration(seconds: 40), () {
+  //     getWaitList();
+  //   });
+  // }
 }
 
 // per = (((100 * (waitTime - now.difference(startTime).inMinutes)) /

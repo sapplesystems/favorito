@@ -35,12 +35,7 @@ class Waitlist extends StatelessWidget {
         child: Scaffold(
             key: RIKeys.josKeys18,
             backgroundColor: myBackGround,
-            body:
-                // vaTrue.getIsProgress()
-                //     ? Center(
-                //         child: CircularProgressIndicator(semanticsLabel: pleaseWait))
-                //     :
-                RefreshIndicator(
+            body: RefreshIndicator(
               onRefresh: () async {
                 vaTrue.getWaitList();
               },
