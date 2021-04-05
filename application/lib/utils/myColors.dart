@@ -5,3 +5,5 @@ Color myRed = Color(0xffDD2626);
 Color myGrey = Color(0xff9996a3);
 Color myRedLight = Color(0x56dd2525);
 Color myGreen = Color(0xff1dd100);
+Color myGreen2 = Color(0xFF18700B);
+Color myOrange = Color(0xFFF57F17);

@@ -22,22 +22,19 @@ class _ProfileDetailState extends State<ProfileDetail> {
     return Scaffold(
       backgroundColor: myButtonBackground,
       appBar: AppBar(
-        toolbarHeight: sm.h(5),
-        backgroundColor: myAppBarBackground,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black //change your color here
-            ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.favorite_outline_outlined, color: Colors.black),
-            onPressed: () {},
-          )
-        ],
-      ),
+          toolbarHeight: sm.h(5),
+          backgroundColor: myAppBarBackground,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop()),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.favorite_outline_outlined, color: Colors.black),
+              onPressed: () {},
+            )
+          ]),
       body: ListView(
         children: [
           Container(

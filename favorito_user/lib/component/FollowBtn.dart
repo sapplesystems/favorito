@@ -15,15 +15,19 @@ class FollowBtn extends StatefulWidget {
 class _FollowBtnState extends State<FollowBtn> {
   Relation relation = Relation();
   String btnTxt;
+  var fut;
+
+  @override
+  void initState() {
+    super.initState();
+    fut = APIManager.businessRelationGet(
+        {'api_type': 'get', 'business_id': widget.id, 'relation_type': '3'});
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<RelationBase>(
-        future: APIManager.businessRelationGet({
-          'api_type': 'get',
-          'business_id': widget.id,
-          'relation_type': '3'
-        }),
+        future: fut,
         builder: (BuildContext context, AsyncSnapshot<RelationBase> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Container();

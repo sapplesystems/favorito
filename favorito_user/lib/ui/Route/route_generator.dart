@@ -27,13 +27,12 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
+        return MaterialPageRoute(builder: (_) => BottomNavBar());
+      case '/splash':
         return MaterialPageRoute(builder: (_) => Splash());
 
       case '/signUp':
         return MaterialPageRoute(builder: (_) => Signup());
-
-      case '/navbar':
-        return MaterialPageRoute(builder: (_) => BottomNavBar());
 
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
@@ -92,7 +91,12 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Error'),
+          title: Text('Error',
+              style: TextStyle(
+                  fontFamily: 'Gilroy-Reguler',
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: .4,
+                  fontSize: 20)),
         ),
         body: Center(
           child: Text('Something Went Wrong'),

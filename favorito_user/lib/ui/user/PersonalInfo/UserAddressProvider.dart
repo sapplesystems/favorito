@@ -16,8 +16,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../utils/Extentions.dart';
+import '../../../utils/Extentions.dart';
 
 class UserAddressProvider extends ChangeNotifier {
   String _profileImage;

@@ -228,6 +228,8 @@ exports.searchByName = async function(req, res, next) {
     }
 };
 
+
+
 exports.run_query = (sql, param = false) => {
     if (param == false) {
         return new Promise((resolve, reject) => {

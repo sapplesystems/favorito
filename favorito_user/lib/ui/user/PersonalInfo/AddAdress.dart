@@ -29,7 +29,12 @@ class AddAddress extends StatelessWidget {
         key: RIKeys.josKeys6,
         backgroundColor: myBackGround,
         appBar: AppBar(
-            title: Text('${vaTrue.mode} Address'),
+            title: Text('${vaTrue.mode} Address',
+                style: TextStyle(
+                    fontFamily: 'Gilroy-Reguler',
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: .4,
+                    fontSize: 20)),
             elevation: 0,
             backgroundColor: myBackGround),
         body: Padding(

@@ -18,8 +18,10 @@ exports.all_business_waitlist = async function(req, res, next) {
         if (slots === false) {
             return res.status(400).json({ status: 'failed', message: 'Please save the wailist settings before accepting waitlist', data: [] });
         }
-        var sql = "SELECT id,`name`,contact,no_of_person,special_notes,waitlist_status, DATE_FORMAT(created_at, '%d %b') as waitlist_date, \n\
-        DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
+        var sql = "SELECT b_w.id,b_w.name, u.full_name as booked_by,b_w.contact,b_w.no_of_person,b_w.special_notes,b_w.waitlist_status, DATE_FORMAT(b_w.created_at, '%d %b') as waitlist_date, \n\
+        DATE_FORMAT(b_w.created_at, '%H:%i') AS walkin_at FROM business_waitlist as b_w left join users u on b_w.user_id = u.id WHERE b_w.business_id='" + business_id + "' AND b_w.deleted_at IS NULL";
+        // var sql = "SELECT id,`name`,contact,no_of_person,special_notes,waitlist_status, DATE_FORMAT(created_at, '%d %b') as waitlist_date, \n\
+        // DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
         let result = await exports.run_query(sql)
         for (let r = 0; r < result.length; r++) {
             for (let i = 0; i < slots.length; i++) {
@@ -51,7 +53,7 @@ var getSlots = async(business_id) => {
         sql_get_slot_setting = `SELECT start_time,end_time , slot_length,booking_per_slot,minium_wait_time FROM business_waitlist_setting \n\
                 WHERE business_id = '${business_id}'`
         result_get_slot_setting = await exports.run_query(sql_get_slot_setting)
-            // console.log(result_get_slot_setting)
+        console.log(result_get_slot_setting)
         if (result_get_slot_setting && result_get_slot_setting[0].start_time == null && result_get_slot_setting[0].end_time == null && result_get_slot_setting[0].slot_length == 0) {
             return resolve(false)
         }
@@ -73,7 +75,6 @@ var getSlots = async(business_id) => {
         for (let index = 0; index < array_slots.length - 1; index++) {
             final_arr_slots.push([array_slots[index], array_slots[index + 1]])
         }
-        // console.log(final_arr_slots);
         resolve(final_arr_slots)
     })
 }
@@ -187,12 +188,12 @@ exports.save_setting = function(req, res, next) {
         }
 
         var sql = "UPDATE business_waitlist_setting SET " + update_column + " WHERE business_id='" + business_id + "'";
-
         db.query(sql, function(err, result) {
-            if (err) {
+            if(result.affectedRows>0){
+                return res.status(200).json({ status: 'success', message: 'Waitlist settings saved successfully.' });
+            }else{
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'Waitlist settings saved successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

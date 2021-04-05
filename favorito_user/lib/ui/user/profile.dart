@@ -12,7 +12,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/MyColors.dart';
+import '../../utils/MyColors.dart';
 
 class Profile extends StatelessWidget {
   BaseProvider vaTrue;
@@ -36,7 +36,10 @@ class Profile extends StatelessWidget {
                 automaticallyImplyLeading: false,
                 title: Text("My Profile",
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w400))),
+                        fontFamily: 'Gilroy-Reguler',
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: .4,
+                        fontSize: 20))),
             body: ListView(children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: sm.w(5)),

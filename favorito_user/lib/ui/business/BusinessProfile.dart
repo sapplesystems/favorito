@@ -14,8 +14,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../utils/Extentions.dart';
-import '../../../utils/RIKeys.dart';
+
+import 'package:favorito_user/utils/Extentions.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import '../../utils/MyString.dart';
 
 class BusinessProfile extends StatelessWidget {

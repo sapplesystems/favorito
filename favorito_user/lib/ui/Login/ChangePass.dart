@@ -27,7 +27,12 @@ class ChangePass extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: myBackGround,
-        title: Text('Change Password'),
+        title: Text('Change Password',
+            style: TextStyle(
+                fontFamily: 'Gilroy-Reguler',
+                fontWeight: FontWeight.w600,
+                letterSpacing: .4,
+                fontSize: 20)),
       ),
       backgroundColor: myBackGround,
       body: ListView(children: [

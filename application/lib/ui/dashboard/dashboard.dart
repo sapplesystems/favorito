@@ -61,12 +61,9 @@ class _dashboardState extends State<dashboard> {
             centerTitle: true,
             elevation: 0,
             leading: IconButton(
-              icon: Icon(null, color: Colors.black),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            iconTheme: IconThemeData(
-              color: Colors.white, //change your color here
-            ),
+                icon: Icon(null, color: Colors.black),
+                onPressed: () => Navigator.of(context).pop()),
+            iconTheme: IconThemeData(color: Colors.white),
           ),
         ),
         body: RefreshIndicator(
@@ -80,7 +77,7 @@ class _dashboardState extends State<dashboard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("ver : 1.1 ", style: TextStyle(fontSize: 8)),
+                      Text("ver : 1.2 ", style: TextStyle(fontSize: 8)),
                       Text("Status : ",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600)),

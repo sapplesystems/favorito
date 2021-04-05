@@ -8,9 +8,9 @@ import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/MyString.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
-import '../../../utils/RIKeys.dart';
 
 class BusinessProfileProvider extends BaseProvider {
   String _businessId;
@@ -21,15 +21,23 @@ class BusinessProfileProvider extends BaseProvider {
   List<String> attribute = [];
   List<String> service = [];
   String _shopTiming = '';
-  Timer t;
-  double per = 0;
+  bool timerTime = false;
+  double per = 0.3;
   String btnTxt = waitingJoin;
   List<TextEditingController> controller = [];
   JobListModel jobListModel = JobListModel();
-  bool waiting = false;
+  bool isWaiting = false;
+  Timer time;
+  int remainTime;
+  bool _getWaitlistDone = false;
   bool getIsProgress() => _isProgress;
   setIsProgress(bool _val) {
     _isProgress = true;
+  }
+
+  bool getWaitlistDone() => _getWaitlistDone;
+  setWaitlistDone(bool _val) {
+    _getWaitlistDone = _val;
   }
 
   BusinessProfileProvider() {
@@ -37,7 +45,6 @@ class BusinessProfileProvider extends BaseProvider {
     controller[0].text = '1';
   }
   WaitListDataModel getWaitListData() {
-    print('abc${_waitListDataModel.businessName}');
     return _waitListDataModel;
   }
 
@@ -74,8 +81,8 @@ class BusinessProfileProvider extends BaseProvider {
 
   setBusinessId(String _id) {
     _businessId = _id;
-    // abc();
-    // getProfileDetail();
+
+    getProfileDetail();
     getBusinessHours();
 
     getJobList();
@@ -105,64 +112,109 @@ class BusinessProfileProvider extends BaseProvider {
     });
   }
 
-  // t.cancel();
-  void abc() {
-    t = Timer.periodic(new Duration(seconds: 10), (timer) {
-      getWaitList(false);
-    });
-  }
-
   waitlistVerbose(context) async {
+    _isProgress = true;
     print("va1:${_businessId}");
     await APIManager.baseUserWaitlistVerbose(
             {'business_id': _businessId}, RIKeys.josKeys2)
         .then((value) {
+      _isProgress = false;
       try {
         if (value.status == 'success') {
           if (value.data.isEmpty) {
+            print('rohit');
             this.snackBar(value.message, RIKeys.josKeys2);
+            Navigator.pop(context);
           } else {
-            this.snackBar(value.message, RIKeys.josKeys2);
-            print("noOfPerson:${value.data[0].noOfPerson}");
-
             _waitListDataModel.businessName = value.data[0].businessName;
             _waitListDataModel.partiesBeforeYou =
                 value.data[0].partiesBeforeYou;
             _waitListDataModel.availableTimeSlots =
                 value.data[0].availableTimeSlots;
             _waitListDataModel.minimumWaitTime = value.data[0].minimumWaitTime;
+            _waitListDataModel.slotLength = value.data[0].slotLength;
             notifyListeners();
           }
         } else
           Navigator.pop(context);
       } catch (e) {} finally {
-        getWaitList(false);
+        getWaitList();
       }
     });
   }
 
   funAdd(bool _val) {
     int i = int.parse(controller[0].text);
-    controller[0].text = (_val ? ++i : --i).toString();
+    controller[0].text = (_val
+            ? ++i
+            : int.parse(controller[0].text) > 1
+                ? --i
+                : controller[0].text)
+        .toString();
     notifyListeners();
   }
 
-  getWaitList(bool val) async {
-    waiting = false;
-    // btnTxt = waitingJoin;
+  void getWaitList() async {
+    _isProgress = true;
     await APIManager.baseUserWaitlistGet({'business_id': _businessId})
         .then((value) {
+      setWaitlistDone(true);
+      _isProgress = false;
       if (value.status == 'success') {
         if (value.data == null) {
+          isWaiting = false;
           btnTxt = waitingJoin;
+          notifyListeners();
           return;
         }
-        if (value.data.length == 1) {
-          waiting = true;
+        if (value.data.length > 0) {
+          isWaiting = true;
           _waitListDataModel.noOfPerson = value.data[0].noOfPerson;
+          _waitListDataModel.availableTimeSlots = value.data[0].bookedSlot;
           _waitListDataModel.waitlistId = value.data[0].waitlistId;
+          _waitListDataModel.partiesBeforeYou = value.data[0].partiesBeforeYou;
+          _waitListDataModel.updatedAt = value.data[0].updatedAt;
+          _waitListDataModel.waitlistStatus = value.data[0].waitlistStatus;
+          try {
+            DateTime now = DateTime.now();
+            DateTime updated = DateTime.parse(_waitListDataModel?.updatedAt);
 
-          print("abcd:${_waitListDataModel?.waitlistStatus}");
+            String slot = _waitListDataModel?.availableTimeSlots;
+            List d = updated.toString().split(' ');
+            DateTime properSlot = DateTime.parse("${d[0]} $slot:00");
+            DateTime startTime = properSlot == updated
+                ? properSlot
+                : properSlot.difference(updated).isNegative
+                    ? updated
+                    : properSlot;
+            print("sss4 : $startTime");
+            if (now.isAfter(startTime.add(Duration(
+                minutes: int.parse(_waitListDataModel.minimumWaitTime))))) {
+              per = 0.0;
+              remainTime = 0;
+            } else {
+              timerTime = now.isAfter(startTime);
+              print("sss4 : $timerTime");
+              int waitTime = int.parse(_waitListDataModel.minimumWaitTime);
+
+              int s = now.difference(startTime).inMinutes;
+
+              if (timerTime) {
+                print("sss3 : $timerTime"); //to remaining wait time
+                print("ssss1$s");
+                print("ssss2$waitTime");
+                var temp = s / waitTime;
+                per = 1 - temp;
+                remainTime = waitTime - s - 1;
+              }
+              print("ssss3$per");
+            }
+          } catch (e) {
+            per = 0.1;
+            print("Errors:${e.toString()}");
+          } finally {
+            notifyListeners();
+          }
           btnTxt = value?.data[0].waitlistStatus == 'rejected'
               ? waitingCanceled
               : (value?.data[0]?.waitlistStatus == 'pending')
@@ -170,24 +222,10 @@ class BusinessProfileProvider extends BaseProvider {
                   : (value?.data[0]?.waitlistStatus == 'accepted')
                       ? 'waiting'
                       : waitingJoin;
-          try {
-            var difference = DateTime.now()
-                .difference((DateTime.parse(_waitListDataModel?.updatedAt)))
-                .inMinutes;
-            var _min =
-                int.parse(_waitListDataModel?.minimumWaitTime?.split(':')[1]);
-            if (_min > difference)
-              per = ((((_min - difference) * 100) / _min) / 100);
-            else
-              per = 0.0;
-          } catch (e) {
-            print('Error:${e.toString()}');
-            per = 0.0;
-          }
         }
       }
-      notifyListeners();
     });
+    recall();
   }
 
   void cancelWaitList() async {
@@ -195,6 +233,7 @@ class BusinessProfileProvider extends BaseProvider {
     await APIManager.baseUserWaitlistCancel(
             {'waitlist_id': _waitListDataModel?.waitlistId}, RIKeys.josKeys2)
         .then((value) {
+      isWaiting = false;
       if (value.status == 'success') {
         btnTxt = waitingJoin;
         Navigator.pop(RIKeys.josKeys2.currentContext);
@@ -207,13 +246,13 @@ class BusinessProfileProvider extends BaseProvider {
       'no_of_person': controller[0].text,
       'name': controller[1].text,
       'special_notes': controller[2].text,
-      'business_id': _businessId
+      'business_id': _businessId,
+      'slot': _waitListDataModel.availableTimeSlots
     };
 
     await APIManager.baseUserWaitlistSet(_map).then((value) async {
       if (value.status == 'success') {
-        getWaitList(false);
-        // await data.fun1(true);
+        // getWaitList();
         Navigator.pop(context);
       }
     });
@@ -229,5 +268,29 @@ class BusinessProfileProvider extends BaseProvider {
 
   void allClear() {
     _waitListDataModel = WaitListDataModel();
+    time.cancel();
+  }
+
+  joinWaitlistClear() {
+    try {
+      controller[0].text = '1';
+      controller[1].text = '';
+      controller[2].text = '';
+    } catch (e) {}
+  }
+
+  recall() {
+    time = new Timer(Duration(seconds: 4), () {
+      getWaitList();
+    });
   }
 }
+
+// per = (((100 * (waitTime - now.difference(startTime).inMinutes)) /
+//     waitTime));
+// per = double.parse(
+//     ((((100 * (waitTime - now.difference(startTime).inMinutes)) /
+//                     waitTime) /
+//                 (waitTime - now.difference(startTime).inMinutes)) /
+//             10)
+//         .toStringAsFixed(1));

@@ -434,12 +434,21 @@ class APIManager {
 //userdetail
   static Future<ProfileModel> userdetail(
       Map _map, GlobalKey<ScaffoldState> josKeys3) async {
+    if (!await utilProvider.checkInternet())
+      return ProfileModel(
+          status: 'fail', message: 'Please check internet connections');
+
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    response = await dio.post(service.userdetail, data: _map, options: opt);
+    String url = service.userdetail;
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, url, josKeys3);
+    }
     print("service.mostPopulerBusiness : ${response.toString}");
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
   }
@@ -572,6 +581,7 @@ class APIManager {
     response =
         await dio.post(service.baseUserWaitlistGet, data: _map, options: opt);
     print("service.baseUserWaitlistGet : ${response.toString}");
+    print("token : $token");
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
@@ -1240,12 +1250,12 @@ class APIManager {
       response = null;
     } else {
       if (e.response.statusCode == 401) {
-        BotToast.showText(
-            text: BaseResponse.fromJson(
-                    convert.json.decode(e.response.toString()))
-                .message);
-        print("$url:401");
-        // Navigator.of(formKey.currentContext).pushNamed('/login');
+        // BotToast.showText(
+        //     text: BaseResponse.fromJson(
+        //             convert.json.decode(e.response.toString()))
+        //         .message);
+        // print("$url:401");
+        Navigator.of(formKey.currentContext).pushNamed('/login');
       }
 
       if (e.response.statusCode == 500) {

@@ -251,8 +251,9 @@ class BusinessProfileProvider extends ChangeNotifier {
         dd1?.currentState?.changeSelectedItem(va.workingHours ?? '');
         Provider.of<BusinessHoursProvider>(context, listen: false)
             .setController(va.workingHours);
-      } catch (e) {}
-      notifyListeners();
+      } catch (e) {} finally {
+        notifyListeners();
+      }
       return value;
     });
   }

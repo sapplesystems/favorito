@@ -92,7 +92,12 @@ class MenuHome extends StatelessWidget {
     return AppBar(
         backgroundColor: myBackGround,
         elevation: 0,
-        title: Text('Menu', style: TextStyle(fontFamily: 'Gilroy-Medium')));
+        title: Text('Menu',
+            style: TextStyle(
+                fontFamily: 'Gilroy-Reguler',
+                fontWeight: FontWeight.w600,
+                letterSpacing: .4,
+                fontSize: 20)));
   }
 
   search(vaFalse, vaTrue) {

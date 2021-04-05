@@ -31,15 +31,12 @@ import 'package:Favorito/model/job/EditJobDataModel.dart';
 import 'package:Favorito/model/job/JobListRequestModel.dart';
 import 'package:Favorito/model/job/PincodeListModel.dart';
 import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
-import 'package:Favorito/model/dashModel.dart';
-import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItem.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItemModel.dart';
 import 'package:Favorito/model/menu/MenuSettingModel.dart';
 import 'package:Favorito/model/menu/MenuVerbose.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
-import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
 import 'package:Favorito/model/busyListModel.dart';
@@ -1606,7 +1603,28 @@ class WebService {
   }
 
   //resetPassword
-  static Future<verifyOtpModel> funChangePassword(Map _map) async {
+  static Future<verifyOtpModel> funChangePassword(
+      Map _map, BuildContext _context) async {
+    if (!await utilProvider.checkInternet())
+      return verifyOtpModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(_context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     print("map:${_map}");
     String token = await Prefs.token;
     opt = Options(
@@ -1614,7 +1632,17 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
 
     String url = serviceFunction.funChangePassword;
-    response = await dio.post(url, data: _map, options: opt);
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return verifyOtpModel(status: 'fail', message: "Server not responding");
+      }
+    } finally {
+      if (pr.isShowing()) pr.hide();
+    }
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
   }
 

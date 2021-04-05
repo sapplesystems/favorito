@@ -33,6 +33,7 @@ router.post('/add', CheckAuth, BusinessNotificatonController.add_notification);
 
 router.post('/detail', CheckAuth, BusinessNotificatonController.detail_notification);
 
+
 /*
  * DELETE NOTIFICATION BY ID  
  */

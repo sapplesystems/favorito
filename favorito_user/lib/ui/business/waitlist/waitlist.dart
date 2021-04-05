@@ -22,150 +22,164 @@ class Waitlist extends StatelessWidget {
     vaTrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     vaFalse = Provider.of<BusinessProfileProvider>(context, listen: false);
     if (isFirst) {
-      // vaTrue.allClear();
+      vaTrue.setWaitlistDone(false);
+      isFirst = false;
     }
     print("noOfPerson:${vaTrue.getWaitListData()?.noOfPerson}");
-    return SafeArea(
-      child: Scaffold(
-          key: RIKeys.josKeys18,
-          backgroundColor: myBackGround,
-          body: Padding(
-              padding: EdgeInsets.all(sm.w(6)),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    WaitListHeader(
-                        title: vaTrue.getWaitListData()?.businessName ?? '',
-                        preFunction: () => Navigator.pop(context)),
-                    Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: sm.w(8), horizontal: sm.w(2.5)),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: sm.h(.4)),
-                                    Text(currentWaitlistAt,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontFamily: 'Gilroy-Regular')),
-                                    Text(
-                                        vaTrue
-                                                .getWaitListData()
-                                                ?.businessName ??
-                                            '',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'Gilroy-Bold')),
-                                  ]),
-                              SvgPicture.asset('assets/icon/cutlery.svg')
-                            ])),
-                    bodyPart(),
-                    footer(context)
-                  ]))),
+    return WillPopScope(
+      onWillPop: () {
+        vaTrue.allClear();
+        Navigator.pop(context);
+      },
+      child: SafeArea(
+        child: Scaffold(
+            key: RIKeys.josKeys18,
+            backgroundColor: myBackGround,
+            body:
+                // vaTrue.getIsProgress()
+                //     ? Center(
+                //         child: CircularProgressIndicator(semanticsLabel: pleaseWait))
+                //     :
+                RefreshIndicator(
+              onRefresh: () async {
+                vaTrue.getWaitList();
+              },
+              child: vaTrue.getWaitlistDone()
+                  ? Padding(
+                      padding: EdgeInsets.all(sm.w(6)),
+                      child: ListView(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WaitListHeader(
+                                title: 'Waiting List',
+                                preFunction: () => Navigator.pop(context)),
+                            Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: sm.w(8), horizontal: sm.w(2.5)),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: sm.h(.4)),
+                                            Text(currentWaitlistAt,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontFamily:
+                                                        'Gilroy-Regular')),
+                                            Text(
+                                                vaTrue
+                                                        .getWaitListData()
+                                                        ?.businessName ??
+                                                    '',
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'Gilroy-Bold')),
+                                          ]),
+                                      SvgPicture.asset(
+                                          'assets/icon/cutlery.svg')
+                                    ])),
+                            bodyPart(),
+                            footer(context)
+                          ]))
+                  : Center(
+                      child: CircularProgressIndicator(
+                          semanticsLabel: pleaseWait)),
+            )),
+      ),
     );
   }
 
-  Widget bodyPart() =>
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Container(
-            height: sm.h(60),
-            width: sm.w(40),
-            padding: EdgeInsets.only(left: sm.w(2)),
-            child: ListView(
-              children: [
-                beforeU(
-                    'Availeble slot',
-                    'wclock',
-                    vaTrue.getWaitListData()?.availableTimeSlots
-                        // ?.convert24to12()
-                        ??
-                        vaTrue.getWaitListData()?.bookedSlot ??
-                        '0'),
-                SizedBox(height: sm.h(6)),
-                Visibility(
-                    visible: vaTrue.waiting,
-                    child: beforeU(
-                        '# in Parties',
-                        'admin',
-                        vaTrue.getWaitListData()?.noOfPerson?.toString() ??
-                            '0')),
-                Visibility(
-                    visible: vaTrue.waiting, child: SizedBox(height: sm.h(6))),
-                beforeU(
-                    'Parties Before you',
-                    'admin',
-                    vaTrue.getWaitListData()?.partiesBeforeYou?.toString() ??
-                        '0'),
-                SizedBox(height: sm.h(6)),
-                waitingTime(),
-              ],
-            )),
-        Container(
+  Widget bodyPart() {
+    print("dddd${vaTrue.getWaitListData()?.partiesBeforeYou}");
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Container(
           height: sm.h(60),
-          width: sm.w(28),
-          child: ListView(children: [
-            for (int i = 0;
-                i <
-                    (!vaTrue.waiting
-                        ? vaTrue.getWaitListData()?.partiesBeforeYou ?? 0
-                        : (vaTrue.getWaitListData()?.partiesBeforeYou ??
-                            0 + 1));
-                i++)
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 6),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: sm.h(2.4),
-                        width: sm.w(8),
-                        padding: EdgeInsets.only(
-                          left: sm.w(1.2),
-                        ),
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          fit: BoxFit.fitWidth,
-                          image: AssetImage(
-                              (vaTrue.getWaitListData()?.userId != null &&
-                                      i ==
-                                          vaTrue
-                                              .getWaitListData()
-                                              ?.partiesBeforeYou)
-                                  ? "assets/icon/arrowRed.png"
-                                  : ''),
-                        )),
-                        child: Text(
-                          (i + 1).toString() ?? '',
-                          style: TextStyle(
+          width: sm.w(40),
+          padding: EdgeInsets.only(left: sm.w(2)),
+          child: ListView(
+            children: [
+              beforeU(
+                  'Available slot',
+                  'wclock',
+                  vaTrue.getWaitListData()?.availableTimeSlots
+                      // ?.convert24to12()
+                      ??
+                      vaTrue.getWaitListData()?.bookedSlot ??
+                      '0'),
+              SizedBox(height: sm.h(6)),
+              Visibility(
+                  visible: vaTrue.isWaiting,
+                  child: beforeU('# in Parties', 'admin',
+                      vaTrue.getWaitListData()?.noOfPerson?.toString() ?? '0')),
+              Visibility(
+                  visible: vaTrue.isWaiting, child: SizedBox(height: sm.h(6))),
+              beforeU(
+                  'Parties Before you',
+                  'admin',
+                  vaTrue.getWaitListData()?.partiesBeforeYou?.toString() ??
+                      '0'),
+              SizedBox(height: sm.h(6)),
+              waitingTime(),
+            ],
+          )),
+      Container(
+        height: sm.h(60),
+        width: sm.w(28),
+        child: ListView(children: [
+          for (int i = 0;
+              i <
+                  (vaTrue.getWaitListData()?.partiesBeforeYou ?? 0) +
+                      (vaTrue.isWaiting ? 1 : 0);
+              i++)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: sm.h(2.4),
+                      width: sm.w(8),
+                      padding: EdgeInsets.only(left: sm.w(1.2)),
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        fit: BoxFit.fitWidth,
+                        image: AssetImage((vaTrue.isWaiting &&
+                                i == vaTrue.getWaitListData()?.partiesBeforeYou)
+                            ? "assets/icon/arrowRed.png"
+                            : ''),
+                      )),
+                      child: Text(
+                        (i + 1).toString(),
+                        style: TextStyle(
                             fontSize: 16,
-                            color: (vaTrue.getWaitListData()?.userId != null &&
+                            color: (vaTrue.isWaiting &&
                                     i ==
                                         vaTrue
                                             .getWaitListData()
                                             ?.partiesBeforeYou)
                                 ? Colors.white
                                 : myGrey,
-                            fontFamily: 'Gilroy-Bold',
-                          ),
-                        ),
+                            fontFamily: 'Gilroy-Bold'),
                       ),
-                      Card(
-                        color: (vaTrue.getWaitListData()?.userId != null &&
-                                i == vaTrue.getWaitListData()?.partiesBeforeYou)
-                            ? myRed
-                            : myBackGround2,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 22),
-                          child: SvgPicture.asset(
-                            (vaTrue.getWaitListData()?.userId != null &&
+                    ),
+                    Card(
+                      color: (vaTrue.isWaiting &&
+                              i == vaTrue.getWaitListData()?.partiesBeforeYou)
+                          ? myRed
+                          : myBackGround2,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 22),
+                        child: SvgPicture.asset(
+                            (vaTrue.isWaiting &&
                                     i ==
                                         vaTrue
                                             .getWaitListData()
@@ -173,15 +187,15 @@ class Waitlist extends StatelessWidget {
                                 ? 'assets/icon/menWhite.svg'
                                 : 'assets/icon/menBlack.svg',
                             height: sm.h(6),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      )
-                    ]),
-              )
-          ]),
-        ),
-      ]);
+                            fit: BoxFit.fill),
+                      ),
+                    )
+                  ]),
+            )
+        ]),
+      ),
+    ]);
+  }
 
   Widget footer(context) {
     return Row(
@@ -197,8 +211,13 @@ class Waitlist extends StatelessWidget {
                 onTap: () {
                   if (vaTrue.btnTxt == waitingJoin) {
                     // widget?.data?.fun1 = getWaitList;
-                    Navigator.of(context).pushNamed('/joinWaitList',
-                        arguments: vaTrue.getWaitListData());
+                    vaTrue.joinWaitlistClear();
+                    Navigator.of(context)
+                        .pushNamed('/joinWaitList',
+                            arguments: vaTrue.getWaitListData())
+                        .whenComplete(() {
+                      vaTrue.getWaitList();
+                    });
                   } else if (vaTrue.btnTxt == waitingCancel) {
                     vaTrue.cancelWaitList();
                   } else if (vaTrue.btnTxt == waitingCancel) {}
@@ -224,7 +243,7 @@ class Waitlist extends StatelessWidget {
                     ]))),
         InkWell(
           onTap: () {
-            launch("tel://${vaTrue.getWaitListData().contact}");
+            launch("tel://${vaTrue.getBusinessProfileData().phone}");
           },
           child: Card(
               color: myBackGround,
@@ -275,25 +294,21 @@ class Waitlist extends StatelessWidget {
   waitingTime() {
     print("data.waitlistStatus:${vaTrue.getWaitListData()?.waitlistStatus}");
     var _wait = vaTrue.getWaitListData()?.minimumWaitTime ?? "00";
-
+    print("asd${vaTrue.getWaitListData()?.waitlistStatus}");
     return Column(
       children: [
         Text('Waiting time',
             style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular')),
-        (vaTrue.waiting &&
+        (vaTrue.isWaiting &&
+                vaTrue.timerTime &&
                 vaTrue.getWaitListData()?.waitlistStatus == 'accepted')
             ? CirculerProgress(
-                // minutTxt: '\t${_wait.split(':')[1]}', per: vaTrue.per
                 minutTxt: _wait,
-                per: vaTrue.per)
+                v: vaTrue.per,
+                waitTime: vaTrue.remainTime.toString())
             : Row(children: [
-                SvgPicture.asset(
-                  'assets/icon/clock.svg',
-                  height: sm.h(7),
-                  width: sm.w(4),
-                  fit: BoxFit.fill,
-                ),
-                // minut20(myMinut: '\t${_wait.split(':')[1]}')
+                SvgPicture.asset('assets/icon/clock.svg',
+                    height: sm.h(7), width: sm.w(4), fit: BoxFit.fill),
                 minut20(myMinut: _wait)
               ]),
       ],

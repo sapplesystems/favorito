@@ -7,13 +7,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 class JoinWaitList extends StatelessWidget {
-//   WaitListDataModel data;
-//   JoinWaitList({this.data});
-//   @override
-//   _JoinWaitListState createState() => _JoinWaitListState();
-// }
-//
-// class _JoinWaitListState extends State<JoinWaitList> {
   SizeManager sm;
   BusinessProfileProvider vaTrue;
   BusinessProfileProvider vaFalse;
@@ -29,17 +22,35 @@ class JoinWaitList extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(children: [
-          WaitListHeader(title: 'Join Waitlist'),
+          WaitListHeader(
+            title: 'Join Waitlist',
+            preFunction: () => Navigator.of(context).pop(),
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
             child: Column(children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text(
+                    'Slot Time : ${vaTrue.getWaitListData().availableTimeSlots}',
+                    style:
+                        TextStyle(fontFamily: 'Gilroy-Regular', fontSize: 16)),
+                Text('Duration : ${vaTrue.getWaitListData().slotLength}',
+                    style:
+                        TextStyle(fontFamily: 'Gilroy-Regular', fontSize: 16)),
+              ]),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Enter number of people',
+                    style:
+                        TextStyle(fontFamily: 'Gilroy-Regular', fontSize: 16)),
+              ),
               counterAddRemove(),
               Padding(
                   padding: EdgeInsets.only(top: sm.h(3)),
                   child: EditTextComponent(
                       prefixIcon: 'name',
+                      hint: 'Tag people by adding @',
                       controller: vaFalse.controller[1],
-                      title: 'Tag people by adding @',
                       security: false,
                       valid: true,
                       maxLines: 1)),
@@ -47,7 +58,7 @@ class JoinWaitList extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: sm.h(3)),
                   child: EditTextComponent(
                       controller: vaFalse.controller[2],
-                      title: 'Special notes',
+                      hint: '          Special notes',
                       security: false,
                       valid: true,
                       maxLines: 8))
@@ -87,42 +98,29 @@ class JoinWaitList extends StatelessWidget {
   counterAddRemove() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       InkWell(
-        onTap: () {
-          int i = int.parse(vaTrue.controller[0].text);
-          vaTrue.controller[0].text = (i > 1 ? --i : i).toString() ?? '';
-          // notify
-        },
+        onTap: () => vaTrue.funAdd(false),
         child: Card(
           color: myBackGround,
           elevation: 12,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
           child: Padding(
-            padding: EdgeInsets.all(sm.w(4)),
-            child: Icon(
-              Icons.remove,
-              color: myRed,
-            ),
-          ),
+              padding: EdgeInsets.all(sm.w(4)),
+              child: Icon(Icons.remove, color: myRed)),
         ),
       ),
       Neumorphic(
         margin: EdgeInsets.symmetric(horizontal: sm.h(2)),
         style: NeumorphicStyle(
             depth: -10,
-            boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.circular(28),
-            ),
+            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(28)),
             color: Colors.white60),
         child: Padding(
           padding:
               EdgeInsets.symmetric(horizontal: sm.w(10), vertical: sm.w(5)),
-          child: Text(
-            vaTrue.controller[0].text,
-            style: TextStyle(color: Color(0xff686868)),
-            textAlign: TextAlign.center,
-          ),
+          child: Text(vaTrue.controller[0].text,
+              style: TextStyle(color: Color(0xff686868)),
+              textAlign: TextAlign.center),
         ),
       ),
       InkWell(

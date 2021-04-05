@@ -34,11 +34,11 @@ class _MyTagsState extends State<MyTags> {
           child: DropdownSearch<String>(
               validator: (_v) {
                 var va;
-                if (widget.selectedList.length > 0) {
-                  va = null;
-                } else {
-                  va = 'required field';
-                }
+                // if (widget.selectedList.length > 0) {
+                va = null;
+                // } else {
+                //   va = 'required field';
+                // }
                 return va;
               },
               autoValidateMode: AutovalidateMode.onUserInteraction,

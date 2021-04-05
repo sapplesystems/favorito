@@ -1,11 +1,12 @@
+import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'dart:io';
 
-class ResetPassProvider extends ChangeNotifier {
+class ResetPassProvider extends BaseProvider {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   IconData iconData = Icons.visibility;
   IconData iconData2 = Icons.visibility_off;
@@ -78,17 +79,15 @@ class ResetPassProvider extends ChangeNotifier {
   }
 
   funSubmit(context) async {
-    pr.show().timeout(Duration(seconds: 10));
     await WebService.funChangePassword({
       "old_password": controller[0].text,
       "new_password": controller[1].text,
       "confirm_password": controller[2].text
-    }).then((value) {
-      pr.hide();
+    }, context)
+        .then((value) {
+      this.snackBar(value.message, RIKeys.josKeys1);
       if (value.status == 'success') {
-        BotToast.showText(text: value.message);
         clear();
-        sleep(Duration(seconds: 5));
         Navigator.pop(context);
       } else
         BotToast.showText(text: value.message);

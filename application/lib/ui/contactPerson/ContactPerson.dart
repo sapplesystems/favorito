@@ -4,6 +4,7 @@ import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/ui/ResetPass/ResetPass.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class ContactPerson extends StatelessWidget {
 
     sm = SizeManager(context);
     return Scaffold(
+        key: RIKeys.josKeys1,
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(

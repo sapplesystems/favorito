@@ -7,7 +7,7 @@ import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-import '../../../../utils/RIKeys.dart';
+import '../../../utils/RIKeys.dart';
 
 class PersonalInfoProvider extends BaseProvider {
   Validator validator = Validator();
