@@ -1,3 +1,4 @@
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 
 class PopupContent extends StatefulWidget {
@@ -19,8 +20,6 @@ class _PopupContentState extends State<PopupContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: widget.content,
-    );
+    return Scaffold(body: widget.content);
   }
 }

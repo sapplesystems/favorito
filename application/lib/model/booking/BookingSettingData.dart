@@ -4,7 +4,7 @@ class BookingSettingData {
   int advanceBookingStartDays;
   int advanceBookingEndDays;
   int advanceBookingHours;
-  int slotLength;
+  var slotLength;
   int bookingPerSlot;
   int bookingPerDay;
   String announcement;

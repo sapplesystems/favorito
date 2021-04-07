@@ -27,7 +27,7 @@ class BusinessProfileProvider extends BaseProvider {
   List<TextEditingController> controller = [];
   JobListModel jobListModel = JobListModel();
   bool isWaiting = false;
-  Timer time;
+
   int remainTime;
   bool _getWaitlistDone = false;
   bool getIsProgress() => _isProgress;
@@ -268,7 +268,6 @@ class BusinessProfileProvider extends BaseProvider {
 
   void allClear() {
     _waitListDataModel = WaitListDataModel();
-    time.cancel();
   }
 
   joinWaitlistClear() {
@@ -278,12 +277,6 @@ class BusinessProfileProvider extends BaseProvider {
       controller[2].text = '';
     } catch (e) {}
   }
-
-  // recall() {
-  //   time = new Timer(Duration(seconds: 40), () {
-  //     getWaitList();
-  //   });
-  // }
 }
 
 // per = (((100 * (waitTime - now.difference(startTime).inMinutes)) /

@@ -42,13 +42,9 @@ class BookTable extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<BookTableVerbose> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(
-              child: Text("Please Wait"),
-            );
+            return Center(child: Text("Please Wait"));
           else if (snapshot.hasError)
-            return Center(
-              child: Text('SomeThing went wrong'),
-            );
+            return Center(child: Text('SomeThing went wrong'));
           else
             Consumer<AppBookProvider>(builder: (context, _data, child) {});
           return RefreshIndicator(
@@ -63,22 +59,18 @@ class BookTable extends StatelessWidget {
                     decoration: BoxDecoration(color: myBackGround),
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            IconButton(
-                                color: Colors.black,
-                                iconSize: 45,
-                                icon: Icon(Icons.keyboard_arrow_left),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                }),
-                            Text(
-                              "Book Table", //bookTable change this
+                        Row(children: [
+                          IconButton(
+                              color: Colors.black,
+                              iconSize: 45,
+                              icon: Icon(Icons.keyboard_arrow_left),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }),
+                          Text("Book Table", //bookTable change this
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w400),
-                            ),
-                          ],
-                        ),
+                                  fontSize: 20, fontWeight: FontWeight.w400))
+                        ]),
                         Expanded(
                           child: Container(
                               margin: EdgeInsets.symmetric(horizontal: sm.w(8)),

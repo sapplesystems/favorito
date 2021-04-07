@@ -47,6 +47,15 @@ extension StringExtension on String {
     return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 
+  String capitalizeManner() {
+    if (this.isEmpty || this.trim().length == 0) return this;
+    return this
+        .trim()
+        .split(' ')
+        .map((word) => (word.substring(0, 1).toUpperCase()) + word.substring(1))
+        .join(' ');
+  }
+
   String convert24to12() {
     int hh = int.parse(this.substring(0, 2));
     String turn = 12 > hh ? 'am' : 'pm';

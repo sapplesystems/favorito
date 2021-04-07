@@ -2,7 +2,6 @@ import 'package:Favorito/model/booking/SlotData.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:Favorito/utils/dateformate.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
 import '../../component/roundedButton.dart';

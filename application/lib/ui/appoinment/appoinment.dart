@@ -118,7 +118,7 @@ class _Appoinment extends State<Appoinment> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: blm.slots[index].slotData.length <
-                                          blm.count_per_slot
+                                          blm.perSlot
                                       ? myRed
                                       : myGrey,
                                   borderRadius: BorderRadius.only(
@@ -139,7 +139,7 @@ class _Appoinment extends State<Appoinment> {
                                         color: Colors.white,
                                         backgroundColor:
                                             blm.slots[index].slotData.length <
-                                                    blm.count_per_slot
+                                                    blm.perSlot
                                                 ? myRed
                                                 : myGrey,
                                       ),

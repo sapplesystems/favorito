@@ -12,3 +12,6 @@ final DateFormat dateFormat4 = DateFormat('dd MMM');
 
 final DateFormat dateFormat5 =
     DateFormat('dd MMM yyyy'); // something like 2013-04-20
+final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+final DateFormat dateFormat6 = DateFormat('d MMM'); //12 Apr

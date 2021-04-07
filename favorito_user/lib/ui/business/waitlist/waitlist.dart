@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:favorito_user/component/CirculerProgress.dart';
 import 'package:favorito_user/component/Minut20.dart';
 import 'package:favorito_user/config/SizeManager.dart';
@@ -16,18 +18,21 @@ class Waitlist extends StatelessWidget {
   BusinessProfileProvider vaTrue;
   BusinessProfileProvider vaFalse;
   bool isFirst = true;
+  Timer time;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     vaTrue = Provider.of<BusinessProfileProvider>(context, listen: true);
     vaFalse = Provider.of<BusinessProfileProvider>(context, listen: false);
     if (isFirst) {
+      recall();
       vaTrue.setWaitlistDone(false);
       isFirst = false;
     }
     print("noOfPerson:${vaTrue.getWaitListData()?.noOfPerson}");
     return WillPopScope(
       onWillPop: () {
+        time.cancel();
         vaTrue.allClear();
         Navigator.pop(context);
       },
@@ -266,23 +271,21 @@ class Waitlist extends StatelessWidget {
           style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
         ),
       ]),
-      Row(
-        children: [
-          SvgPicture.asset(
-            'assets/icon/$_icon.svg',
-            height: sm.h(2),
-            width: sm.w(2),
-            fit: BoxFit.fill,
-          ),
-          Text(
-            ' $_val',
-            style: TextStyle(
-                fontSize: 18,
-                fontFamily: 'Gilroy-medium',
-                fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
+      Row(children: [
+        SvgPicture.asset(
+          'assets/icon/$_icon.svg',
+          height: sm.h(2),
+          width: sm.w(2),
+          fit: BoxFit.fill,
+        ),
+        Text(
+          ' $_val',
+          style: TextStyle(
+              fontSize: 18,
+              fontFamily: 'Gilroy-medium',
+              fontWeight: FontWeight.w600),
+        ),
+      ]),
     ]);
   }
 
@@ -308,5 +311,12 @@ class Waitlist extends StatelessWidget {
               ]),
       ],
     );
+  }
+
+  recall() {
+    time = new Timer.periodic(Duration(seconds: 10), (timer) {
+      timer.cancel();
+      vaTrue.getWaitList();
+    });
   }
 }
