@@ -45,13 +45,20 @@ class BokingDetail extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(heading,
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey))),
+                Row(
+                  children: [
+                    InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Icon(Icons.arrow_back)),
+                    Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(heading,
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey))),
+                  ],
+                ),
                 // InkWell(
                 //     onTap: () {
                 //       _showDialog(context, waitlistData, heading);
@@ -109,10 +116,7 @@ class BokingDetail extends StatelessWidget {
                   //   ),
                   // ),
                   InkWell(
-                    onTap: () {
-                      // action("rejected", waitlistData.id);
-                      Navigator.pop(context);
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: CircleAvatar(
                       maxRadius: sm.h(3),
                       backgroundColor: myRed,
@@ -122,7 +126,7 @@ class BokingDetail extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      action(true, waitlistData.id);
+                      delete(waitlistData.id);
                       Navigator.pop(context);
                     },
                     child: CircleAvatar(

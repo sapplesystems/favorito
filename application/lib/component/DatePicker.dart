@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:outline_gradient_button/outline_gradient_button.dart';
 import 'package:intl/intl.dart';
 
 import '../config/SizeManager.dart';
@@ -43,13 +41,13 @@ class _DatePicker extends State<DatePicker> {
               onTap: () => _selectDate(context),
               child: SizedBox(
                 width: sm.w(40),
-                child: OutlineGradientButton(
-                  child: Center(child: Text(widget.selectedDateText)),
-                  gradient: LinearGradient(colors: [Colors.red, Colors.red]),
-                  strokeWidth: 1,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  radius: Radius.circular(8),
-                ),
+                // child: OutlineGradientButton(
+                //   child: Center(child: Text(widget.selectedDateText)),
+                //   gradient: LinearGradient(colors: [myGrey, myGrey]),
+                //   strokeWidth: 1,
+                //   padding: EdgeInsets.symmetric(vertical: 12),
+                //   radius: Radius.circular(8),
+                // ),
               )))
     ]);
   }

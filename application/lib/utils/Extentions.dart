@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:progress_dialog/progress_dialog.dart';
-
 extension CustomExtention on Widget {
   Widget center() => Center(child: this);
 
@@ -61,6 +59,12 @@ extension StringExtension on String {
     String turn = 12 > hh ? 'am' : 'pm';
     print("HH:${hh.toString()}${turn.toLowerCase()}");
     return "${hh > 12 ? hh - 12 : hh} $turn";
+  }
+}
+
+extension TimeOfDayExtension on TimeOfDay {
+  TimeOfDay addHour(int hour) {
+    return this.replacing(hour: this.hour + hour, minute: this.minute);
   }
 }
 

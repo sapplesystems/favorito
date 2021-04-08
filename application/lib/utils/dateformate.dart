@@ -15,3 +15,4 @@ final DateFormat dateFormat5 =
 final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
 final DateFormat dateFormat6 = DateFormat('d MMM'); //12 Apr
+final DateFormat dateFormat7 = DateFormat('d MMM yy'); //12 Apr

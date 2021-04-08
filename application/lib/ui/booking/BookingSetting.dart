@@ -2,6 +2,7 @@ import 'package:Favorito/component/fromTo.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
@@ -34,10 +35,7 @@ class BookingSetting extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
-          bookingSetting,
-          style: TextStyle(color: Colors.black),
-        ),
+        title: Text(bookingSetting, style: titleStyle),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -45,7 +43,7 @@ class BookingSetting extends StatelessWidget {
         },
         child: Builder(
           builder: (context) => Form(
-            key: vaTrue.key,
+            key: RIKeys.josKeys5,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4.0),
@@ -70,14 +68,14 @@ class BookingSetting extends StatelessWidget {
                                           onTap: () =>
                                               vaTrue.dateTimePicker(true),
                                           child: fromTo(
-                                              txt: vaTrue.startTime,
+                                              txt: vaTrue.getStartTime(),
                                               clr: myRed,
                                               txtClr: Colors.black)),
                                       InkWell(
                                           onTap: () =>
                                               vaTrue.dateTimePicker(false),
                                           child: fromTo(
-                                              txt: vaTrue.endTime,
+                                              txt: vaTrue.getEndTime(),
                                               clr: myRed,
                                               txtClr: Colors.black))
                                     ]),
@@ -193,7 +191,7 @@ class BookingSetting extends StatelessWidget {
                           ? Center(child: CircularProgressIndicator())
                           : RoundedButton(
                               clicker: () {
-                                if (vaTrue.key.currentState.validate())
+                                if (RIKeys.josKeys5.currentState.validate())
                                   vaTrue.funSublim();
                               },
                               clr: Colors.red,

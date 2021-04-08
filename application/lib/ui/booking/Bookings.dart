@@ -1,4 +1,3 @@
-import 'package:Favorito/component/DatePicker.dart';
 import 'package:Favorito/component/PopupContent.dart';
 import 'package:Favorito/component/PopupLayout.dart';
 import 'package:Favorito/model/booking/SlotData.dart';
@@ -7,6 +6,7 @@ import 'package:Favorito/ui/booking/BokingDetail.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/booking/BookingSetting.dart';
 import 'package:Favorito/ui/booking/ManualBooking.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -21,34 +21,42 @@ class Bookings extends StatelessWidget {
   BookingProvider vaTrue;
   BookingProvider vafalse;
   SizeManager sm;
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     vaTrue = Provider.of<BookingProvider>(context, listen: true);
     vafalse = Provider.of<BookingProvider>(context, listen: false);
+    print(
+        'dcdc${dateFormat1.format(vaTrue.getInitialDate().subtract(Duration(days: 1)))}');
+    print('dcdc${dateFormat1.format(DateTime.now())}');
     return Scaffold(
-        key: vaTrue.key,
+        key: RIKeys.josKeys6,
         appBar: AppBar(
             elevation: 0,
-            leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: myBackGround),
-                onPressed: null),
             iconTheme: IconThemeData(color: Colors.black),
+            centerTitle: true,
             title: Text("Bookings", style: titleStyle),
             actions: [
-              IconButton(
-                icon: Icon(Icons.add_circle_outline, size: 34),
-                onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ManualBooking()))
-                    .whenComplete(() => vaTrue.getBookingData()),
+              Visibility(
+                visible: vaTrue.getTotalBookingDays() > 0,
+                child: IconButton(
+                  icon: Icon(Icons.add_circle_outline, size: 34),
+                  onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ManualBooking()))
+                      .whenComplete(() => vaTrue.getBookingData()),
+                ),
               ),
               IconButton(
                 icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
                     alignment: Alignment.center),
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => BookingSetting())),
+                onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BookingSetting()))
+                    .whenComplete(() => vaTrue.getPageData()),
               )
             ]),
         body: vaTrue.blm.slots == null
@@ -58,15 +66,42 @@ class Bookings extends StatelessWidget {
                   vaTrue.getBookingData();
                 },
                 child: ListView(shrinkWrap: true, children: [
-                  Container(
-                      width: sm.w(20),
-                      padding: EdgeInsets.symmetric(horizontal: sm.w(30)),
-                      child: DatePicker(
-                        selectedDateText: 'Today',
-                        selectedDate: vaTrue.getSelectedDateText(),
-                        onChanged: ((value) =>
-                            vaTrue.setSelectedDateText(value)),
-                      )),
+                  InkWell(
+                    onTap: () {
+                      showDatePicker(
+                              context: context,
+                              initialDate:
+                                  vaTrue.getInitialDate() ?? DateTime.now(),
+                              firstDate:
+                                  DateTime.now().subtract(Duration(days: 90)),
+                              lastDate: DateTime.now().add(Duration(days: 10)))
+                          .then((_val) {
+                        vaTrue.setInitialDate(dateFormat1.format(_val));
+                      });
+                    },
+                    child: Container(
+                        width: sm.w(20),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: myGreyLight2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        margin: EdgeInsets.symmetric(horizontal: sm.w(36)),
+                        padding: EdgeInsets.symmetric(vertical: sm.h(.8)),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                  dateFormat1.format(vaTrue.getInitialDate()) ==
+                                          dateFormat1.format(DateTime.now())
+                                      ? 'Today'
+                                      : dateFormat6.format(
+                                              vaTrue.getInitialDate()) ??
+                                          'Select',
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center),
+                              SvgPicture.asset('assets/icon/triangle_down.svg')
+                            ])),
+                  ),
                   Container(
                     height: sm.h(30),
                     padding: EdgeInsets.only(top: 10),
@@ -78,19 +113,27 @@ class Bookings extends StatelessWidget {
                           crossAxisSpacing: sm.w(3),
                           mainAxisSpacing: sm.h(0)),
                       itemBuilder: (BuildContext context, int index) {
+                        int _selected = 0;
                         return InkWell(
-                          onTap: () => vaTrue.setSelectedSlot(index),
+                          onTap: () {
+                            print('dfdf$index');
+                            vaTrue.setSelectedSlotIndex(index);
+                            vaTrue.setSelectedSlot(index);
+                          },
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: vaTrue.blm.slots[index].slotData
-                                                .length <
-                                            vaTrue.blm.perSlot
-                                        ? myRed
-                                        : myGrey,
+                                    color:
+
+                                        // vaTrue.blm.slots[index].slotData
+                                        //             .length <
+                                        //         vaTrue.blm.perSlot
+                                        vaTrue.getSelectedSlotIndex() == index
+                                            ? myGrey
+                                            : myRed,
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(10.0),
                                         topRight: Radius.circular(10.0)),
@@ -103,16 +146,22 @@ class Bookings extends StatelessWidget {
                                       child: Text(
                                           "${vaTrue.blm?.slots[index]?.slotStart ?? '00:00'}-${vaTrue.blm?.slots[index]?.slotEnd ?? '00:00'}",
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Gilroy-Regular',
-                                              backgroundColor: vaTrue
-                                                          .blm
-                                                          .slots[index]
-                                                          .slotData
-                                                          .length <
-                                                      vaTrue.blm.perSlot
-                                                  ? myRed
-                                                  : myGrey)),
+                                            color: Colors.white,
+                                            fontFamily: 'Gilroy-Regular',
+                                            backgroundColor:
+                                                vaTrue.getSelectedSlotIndex() ==
+                                                        index
+                                                    ? myGrey
+                                                    : myRed,
+                                            // vaTrue
+                                            //             .blm
+                                            //             .slots[index]
+                                            //             .slotData
+                                            //             .length <
+                                            //         vaTrue.blm.perSlot
+                                            //     ? myRed
+                                            //     : myGrey
+                                          )),
                                     ),
                                   ),
                                 ),
@@ -167,7 +216,7 @@ class Bookings extends StatelessWidget {
                                   .slotData[_index];
 
                               var vv =
-                                  "${dateFormat6.format(vaTrue.getSelectedDateText())} | ${vaTrue?.blm?.slots[vaTrue.getSelectedSlot()].slotStart?.substring(0, 5)} - ${vaTrue.blm?.slots[vaTrue.getSelectedSlot()].slotEnd.substring(0, 5)} | ${va?.noOfPerson} ${(va?.noOfPerson ?? 0) > 1 ? 'persons' : 'person'}";
+                                  "${dateFormat6.format(vaTrue.getInitialDate())} | ${vaTrue?.blm?.slots[vaTrue.getSelectedSlot()].slotStart?.substring(0, 5)} - ${vaTrue.blm?.slots[vaTrue.getSelectedSlot()].slotEnd.substring(0, 5)} | ${va?.noOfPerson} ${(va?.noOfPerson ?? 0) > 1 ? 'persons' : 'person'}";
                               return Card(
                                   borderOnForeground: true,
                                   child: InkWell(
@@ -269,12 +318,12 @@ class Bookings extends StatelessWidget {
   Widget _popupBody(SlotData model, String _vv) => BokingDetail(
       action: () {
         // Navigator.push(
-        //     vaTrue.key.currentContext,
+        //         vaTrue.key.currentContext,
         //         MaterialPageRoute(
         //             builder: (context) => ManualBooking(data: model)))
         //     .whenComplete(() => vaTrue.getBookingData());
       },
-      delete: vaTrue.actionOnBooking,
+      delete: vaTrue.deleteBooking,
       waitlistData: model,
       heading: _vv,
       isSmall: false);

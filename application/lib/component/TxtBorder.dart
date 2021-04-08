@@ -11,12 +11,8 @@ class TxtBorder extends StatelessWidget {
       width: w,
       padding: EdgeInsets.only(top: 3),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          color: bosrderColor,
-          width: 1,
-        ),
-      ),
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: bosrderColor, width: 1)),
       child: Text(
         txt,
         textAlign: TextAlign.center,

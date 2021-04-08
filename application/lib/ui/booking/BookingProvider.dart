@@ -13,20 +13,28 @@ class BookingProvider extends BaseProvider {
     "Advance Booking(Days)",
     "Advance Booking(Hours)",
     "Slot Length (in minuts)",
-    "Booking Per Slot",
-    "Booking Per Day",
+    "Booking/Slot",
+    "Booking/Day",
     "Announcement"
   ];
+  int _totalBookingDays = 0;
+  int _totalBookingHours = 0;
   List<User> _userInputList = [];
   DateTime _initialDate = DateTime.now();
   String _selectedDateText = 'Select Date';
-  DateTime getSelectedDateText() => _initialDate;
-  setSelectedDateText(String _v) {
-    // DateTime today =
-    //     DateTime(initialDate.year, initialDate.month, initialDate.day);
-    // if (_v == today) {}
+  int _selectedSlotIndex = 0;
+
+  DateTime getInitialDate() => _initialDate;
+  setInitialDate(String _v) {
     _initialDate = DateTime.parse(_v);
-    print("initialDate:$_initialDate");
+    getBookingData();
+    notifyListeners();
+  }
+
+  getSelectedSlotIndex() => _selectedSlotIndex;
+  setSelectedSlotIndex(int _i) {
+    _selectedSlotIndex = _i;
+    notifyListeners();
   }
 
   int _selectedSlot = 0;
@@ -34,19 +42,44 @@ class BookingProvider extends BaseProvider {
   bookingListModel blm = bookingListModel();
   bool _isProgress = false;
   bool _done = false;
-  String startTime = "00:00";
-  String endTime = "00:00";
+  String _startTime = "00:00";
+  String _endTime = "00:00";
+
+  getStartTime() => _startTime;
+  setStartTime(String _val) {
+    _startTime = _val;
+    notifyListeners();
+  }
+
+  getEndTime() => _endTime;
+  setEndTime(String _val) {
+    _endTime = _val;
+    notifyListeners();
+  }
 
   MaterialLocalizations localizations;
   List<TextEditingController> controller = [];
   bookingSettingModel bs;
-  GlobalKey<FormState> key = GlobalKey();
   BookingProvider() {
     for (int i = 0; i < 6; i++) {
       controller.add(TextEditingController());
       controller[i].text = (i != 5 && i != 2) ? "0" : '';
     }
+
+    RIKeys.josKeys3.currentState.changeSelectedItem(slot[3]);
     getBookingData();
+    getPageData();
+  }
+  getTotalBookingDays() => _totalBookingDays;
+  setTotalBookingDays(int _i) {
+    _totalBookingDays = _i;
+    notifyListeners();
+  }
+
+  getTotalBookingHours() => _totalBookingHours;
+  setTotalBookingHours(int _i) {
+    _totalBookingHours = _i;
+    notifyListeners();
   }
 
   bool getIsProgress() => _isProgress;
@@ -69,8 +102,8 @@ class BookingProvider extends BaseProvider {
 
   void funSublim() async {
     Map _map = {
-      "start_time": startTime,
-      "end_time": endTime,
+      "start_time": _startTime,
+      "end_time": _endTime,
       "advance_booking_start_days": '0',
       "advance_booking_end_days": controller[0].text,
       "advance_booking_hours": controller[1].text,
@@ -81,14 +114,14 @@ class BookingProvider extends BaseProvider {
     };
     _isProgress = true;
     notifyListeners();
-    await WebService.funBookingSaveSetting(_map, key.currentContext)
+    await WebService.funBookingSaveSetting(_map, RIKeys.josKeys5.currentContext)
         .then((value) {
       _isProgress = false;
 
       notifyListeners();
       if (value.status == "success") {
         setDone(false);
-        this.snackBar(value.message, key);
+        this.snackBar(value.message, RIKeys.josKeys5);
       }
     });
   }
@@ -97,10 +130,12 @@ class BookingProvider extends BaseProvider {
     await WebService.funBookingSetting().then((value) {
       if (value.status == "success") {
         bs = value;
-        startTime = bs.data[0]?.startTime.substring(0, 5) ?? '';
-        endTime = bs.data[0]?.endTime.substring(0, 5) ?? '';
+        _totalBookingDays = bs.data[0]?.advanceBookingEndDays ?? 0;
+        setStartTime(bs.data[0]?.startTime?.substring(0, 5) ?? '');
+        setEndTime(bs.data[0]?.endTime?.substring(0, 5) ?? '');
         controller[0].text = bs.data[0]?.advanceBookingEndDays?.toString();
         controller[1].text = bs.data[0]?.advanceBookingHours?.toString();
+        setTotalBookingHours(bs.data[0]?.advanceBookingHours ?? 0);
         controller[2].text = bs.data[0]?.slotLength?.toString() ?? '60';
         controller[3].text = bs.data[0]?.bookingPerSlot?.toString();
         controller[4].text = bs.data[0]?.bookingPerDay?.toString();
@@ -125,9 +160,9 @@ class BookingProvider extends BaseProvider {
   }
 
   dateTimePicker(bool _val) {
-    localizations = MaterialLocalizations.of(key.currentContext);
+    localizations = MaterialLocalizations.of(RIKeys.josKeys5.currentContext);
     showTimePicker(
-      context: key.currentContext,
+      context: RIKeys.josKeys5.currentContext,
       initialTime: TimeOfDay.now(),
       builder: (BuildContext ctx, Widget child) {
         return MediaQuery(
@@ -138,9 +173,9 @@ class BookingProvider extends BaseProvider {
       var _va =
           localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
       if (_val)
-        startTime = _va;
+        setStartTime(_va);
       else
-        endTime = _va;
+        setEndTime(_va);
       setDone(true);
     });
   }
@@ -156,9 +191,10 @@ class BookingProvider extends BaseProvider {
     });
   }
 
-  void actionOnBooking(bool isDelete, int id) async {
-    await WebService.actionBooking(
-            {'booking_id': id}, key.currentContext, isDelete)
+  void deleteBooking(int id) async {
+    print('fffff');
+    await WebService.deleteBooking(
+            {'booking_id': id}, RIKeys.josKeys5.currentContext)
         .then((value) {
       if (value.status == "success") {
         getBookingData();

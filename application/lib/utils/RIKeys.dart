@@ -11,4 +11,6 @@ class RIKeys {
   static final josKeys3 =
       GlobalKey<DropdownSearchState<String>>(); //booking setting page slot key
   static final josKeys4 = GlobalKey<ScaffoldState>(); //booking popup
+  static final josKeys5 = GlobalKey<FormState>(); //BookingSetting
+  static final josKeys6 = GlobalKey<ScaffoldState>(); //Bookings
 }

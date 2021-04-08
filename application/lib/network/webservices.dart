@@ -1649,8 +1649,8 @@ class WebService {
   }
 
   //resetPassword
-  static Future<BaseResponseModel> actionBooking(
-      Map _map, BuildContext _context, bool isDelete) async {
+  static Future<BaseResponseModel> deleteBooking(
+      Map _map, BuildContext _context) async {
     if (!await utilProvider.checkInternet())
       return BaseResponseModel(
           status: 'fail', message: 'Please check internet connections');
@@ -1677,9 +1677,7 @@ class WebService {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
 
-    String url = isDelete
-        ? serviceFunction.deleteBooking
-        : serviceFunction.acceptBooking;
+    String url = serviceFunction.deleteBooking;
     try {
       response = await dio.post(url, data: _map, options: opt);
     } on DioError catch (e) {
