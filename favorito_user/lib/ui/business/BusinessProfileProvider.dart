@@ -13,7 +13,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 
 class BusinessProfileProvider extends BaseProvider {
-  String _businessId;
   WaitListDataModel _waitListDataModel = WaitListDataModel();
   bool _isProgress = true;
   WorkingHoursModel workingHoursModel = WorkingHoursModel();
@@ -40,7 +39,7 @@ class BusinessProfileProvider extends BaseProvider {
     _getWaitlistDone = _val;
   }
 
-  BusinessProfileProvider() {
+  BusinessProfileProvider() : super() {
     for (int i = 0; i < 3; i++) controller.add(TextEditingController());
     controller[0].text = '1';
   }
@@ -49,9 +48,10 @@ class BusinessProfileProvider extends BaseProvider {
   }
 
   void getBusinessHours() async {
-    print("HourslyId:$_businessId");
+    print("HourslyId:${this.getBusinessId()}");
 
-    await APIManager.workingHours({'business_id': _businessId}, RIKeys.josKeys2)
+    await APIManager.workingHours(
+            {'business_id': this.getBusinessId()}, RIKeys.josKeys2)
         .then((value) {
       workingHoursModel = value;
       value.data.forEach((e) {
@@ -79,16 +79,11 @@ class BusinessProfileProvider extends BaseProvider {
     return _shopTiming ?? "ddd";
   }
 
-  setBusinessId(String _id) {
-    _businessId = _id;
-
+  refresh() {
     getProfileDetail();
     getBusinessHours();
-
     getJobList();
   }
-
-  String getBusinessId() => _businessId;
 
   List<WorkingHoursData> getWorkingHoursList() => workingHoursModel.data;
 
@@ -96,7 +91,7 @@ class BusinessProfileProvider extends BaseProvider {
 
   Future<void> getProfileDetail() async {
     await APIManager.baseUserProfileDetail(
-            {'business_id': _businessId}, RIKeys.josKeys2)
+            {'business_id': this.getBusinessId()}, RIKeys.josKeys2)
         .then((value) {
       try {
         _isProgress = false;
@@ -114,9 +109,9 @@ class BusinessProfileProvider extends BaseProvider {
 
   waitlistVerbose(context) async {
     _isProgress = true;
-    print("va1:${_businessId}");
+    print("va1:${this.getBusinessId()}");
     await APIManager.baseUserWaitlistVerbose(
-            {'business_id': _businessId}, RIKeys.josKeys2)
+            {'business_id': this.getBusinessId()}, RIKeys.josKeys2)
         .then((value) {
       _isProgress = false;
       try {
@@ -156,7 +151,7 @@ class BusinessProfileProvider extends BaseProvider {
 
   void getWaitList() async {
     _isProgress = true;
-    await APIManager.baseUserWaitlistGet({'business_id': _businessId})
+    await APIManager.baseUserWaitlistGet({'business_id': this.getBusinessId()})
         .then((value) {
       setWaitlistDone(true);
       _isProgress = false;
@@ -246,7 +241,7 @@ class BusinessProfileProvider extends BaseProvider {
       'no_of_person': controller[0].text,
       'name': controller[1].text,
       'special_notes': controller[2].text,
-      'business_id': _businessId,
+      'business_id': this.getBusinessId(),
       'slot': _waitListDataModel.availableTimeSlots
     };
 
@@ -259,7 +254,8 @@ class BusinessProfileProvider extends BaseProvider {
   }
 
   void getJobList() async {
-    await APIManager.joblist({'business_id': _businessId}).then((value) {
+    await APIManager.joblist({'business_id': this.getBusinessId()})
+        .then((value) {
       jobListModel = value;
       print("joblistlength${value.data.length}");
       notifyListeners();

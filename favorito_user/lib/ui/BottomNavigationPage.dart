@@ -1,4 +1,4 @@
-import 'package:favorito_user/Providers/BookTableProvider.dart';
+import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/chat/Chat.dart';
 import 'package:favorito_user/ui/home/Home.dart';

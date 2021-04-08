@@ -85,7 +85,8 @@ class Bookings extends StatelessWidget {
                             border: Border.all(color: myGreyLight2),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
-                        margin: EdgeInsets.symmetric(horizontal: sm.w(36)),
+                        margin: EdgeInsets.only(
+                            left: sm.w(36), right: sm.w(36), top: sm.w(6)),
                         padding: EdgeInsets.symmetric(vertical: sm.h(.8)),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

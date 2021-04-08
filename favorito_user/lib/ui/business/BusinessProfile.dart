@@ -1,5 +1,4 @@
-import 'package:favorito_user/Providers/BookTableProvider.dart';
-import 'package:favorito_user/Providers/MenuHomeProvider.dart';
+import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/FollowBtn.dart';
 import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/component/favoriteBtn.dart';
@@ -265,7 +264,7 @@ class BusinessProfile extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 2.0),
                   child: Text(
                       double.parse(
-                              '${vatrue?.getBusinessProfileData()?.avgRating.toStringAsFixed(1) ?? 0} ')
+                              '${vatrue?.getBusinessProfileData()?.avgRating?.toStringAsFixed(1) ?? 0} ')
                           .toString(),
                       style: TextStyle(
                           fontSize: 20,
@@ -287,8 +286,8 @@ class BusinessProfile extends StatelessWidget {
   followingAndFavorite() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       SizedBox(width: sm.w(12)),
-      FollowBtn(id: vatrue.getBusinessProfileData().businessId),
-      FavoriteBtn(id: vatrue.getBusinessProfileData().businessId)
+      FollowBtn(id: vatrue.getBusinessId()),
+      FavoriteBtn(id: vatrue.getBusinessId())
     ]);
   }
 
@@ -336,12 +335,7 @@ class BusinessProfile extends StatelessWidget {
                     break;
                   case 'Booking':
                     {
-                      badm.businessId =
-                          vatrue.getBusinessProfileData().businessId;
-                      badm.isBooking = 0;
-                      Navigator.of(context).pushNamed(
-                          '/bookingOrAppointmentList',
-                          arguments: badm);
+                      Navigator.of(context).pushNamed('/bookTable');
                     }
                     break;
                   case 'Appointment':
@@ -363,10 +357,6 @@ class BusinessProfile extends StatelessWidget {
                     break;
                   case 'Online Menu':
                     {
-                      Provider.of<MenuHomeProvider>(context, listen: false)
-                          .setBusinessIdName(
-                              vatrue.getBusinessProfileData().businessId,
-                              vatrue.getBusinessProfileData().businessName);
                       Navigator.of(context).pushNamed('/menuHome');
                     }
                 }

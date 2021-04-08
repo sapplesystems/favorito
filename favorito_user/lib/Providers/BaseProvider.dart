@@ -1,8 +1,9 @@
+import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class BaseProvider extends ChangeNotifier {
-  String businessId;
+  String _businessId;
   String _userEmail;
 
   String getUserEmail() => _userEmail;
@@ -11,6 +12,16 @@ class BaseProvider extends ChangeNotifier {
     print("ddfff$value");
     _userEmail = value;
   }
+
+  setBusinessId(String _val) {
+    print('setting:${_val ?? null}');
+    // Prefs.setToken(value.token);
+    _businessId = _val;
+    notifyListeners();
+  }
+
+// await Prefs.token
+  String getBusinessId() => _businessId;
 
   List<String> menuTitleList = [
     "Edit profile",

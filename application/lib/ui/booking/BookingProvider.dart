@@ -10,11 +10,11 @@ class BookingProvider extends BaseProvider {
   List<String> titleList = [""];
   List<String> slot = ['15 min', '30 min', '45 min', '60 min'];
   List<String> title = [
-    "Advance Booking(Days)",
-    "Advance Booking(Hours)",
-    "Slot Length (in minuts)",
-    "Booking/Slot",
-    "Booking/Day",
+    "Advance Booking (Days)",
+    "Advance Booking (Hours)",
+    "Slot Length (in minutes)",
+    "Bookings/Slot",
+    "Bookings/Day",
     "Announcement"
   ];
   int _totalBookingDays = 0;
@@ -148,7 +148,9 @@ class BookingProvider extends BaseProvider {
   }
 
   addition(int _i) {
-    controller[_i].text = (int.parse(controller[_i].text) + 1).toString();
+    if (int.parse(controller[_i].text) < 8) {
+      controller[_i].text = (int.parse(controller[_i].text) + 1).toString();
+    }
     setDone(true);
   }
 

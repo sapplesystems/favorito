@@ -22,7 +22,7 @@ class PersonalInfoProvider extends BaseProvider {
   AddressListModel addressListModel = AddressListModel();
   List<String> prefix = ['name', 'postal', 'name'];
   bool newValue = false;
-  PersonalInfoProvider() {
+  PersonalInfoProvider() : super() {
     getPersonalData();
   }
   void onWillPop(context) {
@@ -50,6 +50,7 @@ class PersonalInfoProvider extends BaseProvider {
   }
 
   getPersonalData() async {
+    print('service:${this.getBusinessId()}');
     Map _map = {"api_type": 'get'};
     await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
       if (value.status == 'success') {

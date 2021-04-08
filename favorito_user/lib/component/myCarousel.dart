@@ -46,11 +46,10 @@ class _myCarouselState extends State<myCarousel> {
                       (item) => InkWell(
                         onTap: () {
                           Provider.of<BusinessProfileProvider>(context,
-                                  listen: false)
-                              .setBusinessId(item.businessId);
-                          Navigator.of(context).pushNamed('/businessProfile'
-                              // ,arguments: item.businessId
-                              );
+                              listen: false)
+                            ..setBusinessId(item.businessId)
+                            ..refresh();
+                          Navigator.of(context).pushNamed('/businessProfile');
                         },
                         child: Container(
                           width: sm.h(90),

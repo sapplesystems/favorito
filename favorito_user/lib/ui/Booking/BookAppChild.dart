@@ -1,8 +1,7 @@
-import 'package:favorito_user/Providers/BookTableProvider.dart';
+import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/PopupContent.dart';
 import 'package:favorito_user/component/PopupLayout.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:provider/provider.dart';
@@ -15,28 +14,27 @@ class BookAppChild extends StatelessWidget {
   SizeManager sm;
   BookingOrAppointmentListModel source = BookingOrAppointmentListModel();
 
-  var appBookProviderTrue;
-  var appBookProviderFalse;
+  AppBookProvider vaTrue;
+  AppBookProvider vaFalse;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    appBookProviderTrue = Provider.of<AppBookProvider>(context, listen: true);
-    appBookProviderFalse = Provider.of<AppBookProvider>(context, listen: false);
+    vaTrue = Provider.of<AppBookProvider>(context, listen: true);
+    vaFalse = Provider.of<AppBookProvider>(context, listen: false);
 
     return RefreshIndicator(
       onRefresh: () async {
-        appBookProviderTrue.getrefreshedData();
+        vaTrue.getrefreshedData();
       },
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(
-                Icons.add_circle,
-                size: 30,
-                color: Colors.transparent,
-              ),
+              Visibility(
+                  visible: vaTrue.getCanAdd,
+                  child: Icon(Icons.add_circle,
+                      size: 30, color: Colors.transparent)),
               Container(
                 height: sm.h(10),
                 padding: EdgeInsets.symmetric(vertical: sm.h(2)),
@@ -46,27 +44,24 @@ class BookAppChild extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0))),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () => appBookProviderFalse.setSelectedTab('New'),
-                        child: newHistory('New'),
-                      ),
-                      InkWell(
-                        onTap: () =>
-                            appBookProviderFalse.setSelectedTab('History'),
-                        child: newHistory('History'),
-                      ),
-                    ],
-                  ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () => vaTrue.setSelectedTab('New'),
+                          child: newHistory('New'),
+                        ),
+                        InkWell(
+                          onTap: () => vaTrue.setSelectedTab('History'),
+                          child: newHistory('History'),
+                        ),
+                      ]),
                 ),
               ),
-              InkWell(
-                onTap: () => Navigator.of(context).pushNamed('/bookTable'),
-                child: Icon(
-                  Icons.add_circle,
-                  size: 30,
-                  color: myRed,
+              Visibility(
+                visible: vaTrue.getCanAdd,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pushNamed('/bookTable'),
+                  child: Icon(Icons.add_circle, size: 30, color: myRed),
                 ),
               ),
             ],
@@ -75,12 +70,9 @@ class BookAppChild extends StatelessWidget {
             builder: (context, _data, child) {
               var da = _data.getPageData();
               return Container(
-                height:
-                    sm.h(appBookProviderFalse.getIsBooking() == 2 ? 71 : 78),
+                height: sm.h(vaTrue.getIsBooking() == 2 ? 71 : 78),
                 child: da.length == 0
-                    ? Center(
-                        child: Text(
-                            appBookProviderFalse.getMessage() ?? 'No Data '))
+                    ? Center(child: Text(vaTrue.getMessage() ?? 'No Data '))
                     : ListView.builder(
                         itemCount: da.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -250,9 +242,7 @@ class BookAppChild extends StatelessWidget {
       child: Text(title,
           style: TextStyle(
               fontSize: 14.0,
-              color: appBookProviderFalse.getSelectedTab() == title
-                  ? myRed
-                  : myGrey)),
+              color: vaFalse.getSelectedTab() == title ? myRed : myGrey)),
     );
   }
 }

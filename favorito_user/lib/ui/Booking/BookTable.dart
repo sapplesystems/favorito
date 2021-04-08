@@ -1,64 +1,47 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:favorito_user/Providers/BookTableProvider.dart';
+import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
-import 'package:favorito_user/model/appModel/SlotListModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class BookTable extends StatelessWidget {
-  var _myUserNameEditTextController = TextEditingController();
-  // var _noOfPeopleEditTextController = TextEditingController();
-  var _myMobileEditTextController = TextEditingController();
-  var _myNotesEditTextController = TextEditingController();
-  List<TextEditingController> controller = [
-    TextEditingController(),
-    TextEditingController()
-  ];
-
   SizeManager sm;
-  String _selectedOccasion;
-
-  String _selectedDateText;
-
-  DateTime _initialDate;
-
-  List<SlotListModel> slotList = [];
-
-  var appBookProviderTrue;
-  var appBookProviderFalse;
+  AppBookProvider vaTrue;
+  AppBookProvider vaFalse;
+  var fut;
+  int isFirst = 0;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    appBookProviderTrue = Provider.of<AppBookProvider>(context, listen: true);
-    appBookProviderFalse = Provider.of<AppBookProvider>(context, listen: false);
-
+    vaTrue = Provider.of<AppBookProvider>(context, listen: true);
+    vaFalse = Provider.of<AppBookProvider>(context, listen: false);
+    if (isFirst < 3) {
+      fut = vaTrue.baseUserBookingVerbose();
+      isFirst++;
+    }
     return Scaffold(
       body: FutureBuilder(
-        future: appBookProviderTrue.baseUserBookingVerbose(),
-        builder:
-            (BuildContext context, AsyncSnapshot<BookTableVerbose> snapshot) {
+        future: fut,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: Text("Please Wait"));
-          else if (snapshot.hasError)
-            return Center(child: Text('SomeThing went wrong'));
           else
-            Consumer<AppBookProvider>(builder: (context, _data, child) {});
-          return RefreshIndicator(
-            onRefresh: () async {
-              appBookProviderTrue.baseUserBookingVerbose();
-            },
-            child: SafeArea(
-              child: Scaffold(
-                body:
-                    Consumer<AppBookProvider>(builder: (context, _data, child) {
-                  return Container(
-                    decoration: BoxDecoration(color: myBackGround),
-                    child: Column(
-                      children: [
+            // Consumer<bool>(builder: (context, _data, child) {});
+            return RefreshIndicator(
+              onRefresh: () async {
+                vaTrue.baseUserBookingVerbose();
+              },
+              child: SafeArea(
+                child: Scaffold(
+                  body: Consumer<AppBookProvider>(
+                      builder: (context, _data, child) {
+                    return Container(
+                      decoration: BoxDecoration(color: myBackGround),
+                      child: Column(children: [
                         Row(children: [
                           IconButton(
                               color: Colors.black,
@@ -90,10 +73,6 @@ class BookTable extends StatelessWidget {
                                   ),
                                   Padding(
                                       padding: EdgeInsets.only(top: sm.h(2)),
-                                      child: counterAddRemove()),
-
-                                  Padding(
-                                      padding: EdgeInsets.only(top: sm.h(2)),
                                       child: Row(
                                         children: [
                                           Text(_data.bookTableVerbose?.data
@@ -101,6 +80,12 @@ class BookTable extends StatelessWidget {
                                               "")
                                         ],
                                       )),
+                                  Padding(
+                                      padding: EdgeInsets.only(top: sm.h(2)),
+                                      child: counterAddRemove()),
+
+                                  Divider(height: sm.h(6)),
+                                  Text('Date', style: TextStyle(color: myGrey)),
                                   // Padding(
                                   //   padding: EdgeInsets.only(top: sm.h(3)),
                                   //   child: Center(
@@ -118,7 +103,7 @@ class BookTable extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: sm.h(4)),
                                     child: EditTextComponent(
-                                      controller: _myUserNameEditTextController,
+                                      controller: vaTrue.controller[0],
                                       title: "Name",
                                       hint: "Enter Name",
                                       maxLines: 1,
@@ -128,7 +113,7 @@ class BookTable extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: sm.h(4)),
                                     child: EditTextComponent(
-                                      controller: _myMobileEditTextController,
+                                      controller: vaTrue.controller[1],
                                       title: "Mobile",
                                       hint: "Enter Mobile",
                                       maxLines: 1,
@@ -138,7 +123,7 @@ class BookTable extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(top: sm.h(4)),
                                     child: EditTextComponent(
-                                      controller: _myNotesEditTextController,
+                                      controller: vaTrue.controller[2],
                                       title: "Special Notes",
                                       hint: "Enter Special Notes",
                                       maxLines: 4,
@@ -181,13 +166,12 @@ class BookTable extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                }),
+                      ]),
+                    );
+                  }),
+                ),
               ),
-            ),
-          );
+            );
         },
       ),
     );
@@ -203,10 +187,10 @@ class BookTable extends StatelessWidget {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            for (var temp in slotList)
+            for (var temp in vaTrue.slotList)
               InkWell(
                 onTap: () {
-                  for (var temp in slotList) {
+                  for (var temp in vaTrue.slotList) {
                     temp.selected = false;
                   }
                   temp.selected = true;
@@ -258,7 +242,7 @@ class BookTable extends StatelessWidget {
             margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
             child: DropdownButton<String>(
               isExpanded: true,
-              value: _selectedOccasion,
+              value: vaTrue.selectedOccasion,
 
               hint: Padding(
                 padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
@@ -272,15 +256,13 @@ class BookTable extends StatelessWidget {
                 'Occasion 4'
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
-                  value: value,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                    child: Text(value),
-                  ),
-                );
+                    value: value,
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                        child: Text(value)));
               }).toList(),
               onChanged: (String value) {
-                _selectedOccasion = value;
+                vaTrue.selectedOccasion = value;
               },
             ),
           ),
@@ -293,55 +275,45 @@ class BookTable extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          Icons.person_outline,
-          size: 60,
-          color: Colors.grey,
-        ),
+        SvgPicture.asset('assets/icon/man_book_table.svg'),
         Container(
-          margin: EdgeInsets.only(right: sm.w(16)),
+          margin: EdgeInsets.symmetric(horizontal: sm.w(4)),
           width: sm.w(22),
           child: Neumorphic(
             style: NeumorphicStyle(
                 depth: -10,
                 boxShape:
-                    NeumorphicBoxShape.roundRect(BorderRadius.circular(28)),
+                    NeumorphicBoxShape.roundRect(BorderRadius.circular(24)),
                 color: Colors.white60),
             child: Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: sm.w(4), vertical: sm.w(5)),
-              child: Consumer<AppBookProvider>(
-                builder: (context, data, child) {
-                  return Text(
-                    '${appBookProviderTrue.getParticipent()}',
+              child: Consumer<AppBookProvider>(builder: (context, data, child) {
+                return Text('${vaTrue.getParticipent()}',
                     style: TextStyle(color: Color(0xff686868)),
-                    textAlign: TextAlign.center,
-                  );
-                },
+                    textAlign: TextAlign.center);
+              }),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: sm.w(8)),
+          child: InkWell(
+            onTap: () => vaTrue.changeParticipent(false),
+            child: Card(
+              color: myBackGround,
+              elevation: 12,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
+              child: Padding(
+                padding: EdgeInsets.all(sm.w(4)),
+                child: Icon(Icons.remove, color: myRed, size: 16),
               ),
             ),
           ),
         ),
         InkWell(
-          onTap: () => appBookProviderTrue.changeParticipent(false),
-          child: Card(
-            color: myBackGround,
-            elevation: 12,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(sm.w(4)),
-              child: Icon(
-                Icons.remove,
-                color: myRed,
-                size: 16,
-              ),
-            ),
-          ),
-        ),
-        InkWell(
-          onTap: () => appBookProviderTrue.changeParticipent(true),
+          onTap: () => vaTrue.changeParticipent(true),
           child: Card(
             color: myBackGround,
             elevation: 12,

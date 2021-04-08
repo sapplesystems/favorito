@@ -1,10 +1,12 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/booking/SlotData.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:Favorito/utils/dateformate.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
@@ -25,7 +27,7 @@ class ManualBooking extends StatefulWidget {
 class _ManualBooking extends State<ManualBooking> {
   SizeManager sm;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool needvalidate = false;
   String _selectedDateText = '';
   String _selectedTimeText = '';
 
@@ -80,7 +82,7 @@ class _ManualBooking extends State<ManualBooking> {
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Manual Booking", style: TextStyle(color: Colors.black)),
+          title: Text("Manual Booking", style: titleStyle),
         ),
         body: ListView(children: [
           Padding(
@@ -89,43 +91,54 @@ class _ManualBooking extends State<ManualBooking> {
               child: Builder(
                 builder: (context) => Form(
                   key: _formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  autovalidate: needvalidate,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 28),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                SizedBox(
-                                  width: sm.w(40),
-                                  child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                            child: InkWell(
-                                                onTap: () => showDate(),
-                                                child: SizedBox(
-                                                  width: sm.w(40),
-                                                  child: OutlineGradientButton(
-                                                    child: Center(
-                                                        child: Text(
-                                                            _selectedDateText)),
-                                                    gradient: LinearGradient(
-                                                        colors: [
-                                                          Colors.red,
-                                                          Colors.red
-                                                        ]),
-                                                    strokeWidth: 1,
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 12),
-                                                    radius: Radius.circular(8),
-                                                  ),
-                                                )))
-                                      ]),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: SizedBox(
+                                    width: sm.w(36),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Expanded(
+                                              child: InkWell(
+                                                  onTap: () => showDate(),
+                                                  child: SizedBox(
+                                                    width: sm.w(40),
+                                                    child:
+                                                        OutlineGradientButton(
+                                                      child: Center(
+                                                          child: Text(
+                                                              _selectedDateText,
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600))),
+                                                      gradient: LinearGradient(
+                                                          colors: [
+                                                            myGrey,
+                                                            myGrey
+                                                          ]),
+                                                      strokeWidth: 1,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 12),
+                                                      radius:
+                                                          Radius.circular(8),
+                                                    ),
+                                                  )))
+                                        ]),
+                                  ),
                                 ),
                                 SizedBox(
                                     width: sm.w(40),
@@ -134,29 +147,35 @@ class _ManualBooking extends State<ManualBooking> {
                                           print('');
                                           showTime();
                                         },
-                                        child: SizedBox(
-                                          width: sm.h(40),
-                                          child: OutlineGradientButton(
-                                            child: Center(
-                                                child: Text(_selectedTimeText)),
-                                            gradient: LinearGradient(colors: [
-                                              Colors.red,
-                                              Colors.red
-                                            ]),
-                                            strokeWidth: 1,
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 12),
-                                            radius: Radius.circular(8),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: SizedBox(
+                                            width: sm.h(40),
+                                            child: OutlineGradientButton(
+                                              child: Center(
+                                                  child: Text(_selectedTimeText,
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight
+                                                              .w600))),
+                                              gradient: LinearGradient(
+                                                  colors: [myGrey, myGrey]),
+                                              strokeWidth: 1,
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 12),
+                                              radius: Radius.circular(8),
+                                            ),
                                           ),
                                         ))),
                               ]),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: txtfieldboundry(
                             controller: _myNameEditController,
-                            title: "Name",
+                            title: "Enter User Name",
                             security: false,
+                            hint: 'User Name',
                             maxlen: 20,
                             valid: true,
                           ),
@@ -165,7 +184,8 @@ class _ManualBooking extends State<ManualBooking> {
                           padding: const EdgeInsets.all(16.0),
                           child: txtfieldboundry(
                             controller: _myContactEditController,
-                            title: "Contact",
+                            title: "Enter Contact",
+                            hint: 'Contact',
                             security: false,
                             maxlen: 10,
                             myregex: mobileRegex,
@@ -177,9 +197,10 @@ class _ManualBooking extends State<ManualBooking> {
                           padding: const EdgeInsets.all(16.0),
                           child: txtfieldboundry(
                               controller: _myNoOfPersonEditController,
-                              title: "Number of People",
+                              title: "Enter Number of Persons",
                               keyboardSet: TextInputType.number,
                               security: false,
+                              hint: "Number of Persons",
                               maxlen: 3,
                               valid: true),
                         ),
@@ -187,8 +208,9 @@ class _ManualBooking extends State<ManualBooking> {
                           padding: const EdgeInsets.all(16.0),
                           child: txtfieldboundry(
                               controller: _myNotesEditController,
-                              title: "Special Notes",
+                              title: "Enter Special Notes()",
                               security: false,
+                              hint: "Special Notes(Max. 80 Character Only)",
                               maxlen: 80,
                               maxLines: 5,
                               valid: false),
@@ -249,12 +271,17 @@ class _ManualBooking extends State<ManualBooking> {
                             : WebService.funBookingEdit(_map).then((value) {
                                 setState(() {
                                   serviceCall = false;
+                                  Navigator.pop(context);
                                 });
                                 BotToast.showText(
                                     text: value.message,
                                     duration: Duration(seconds: 5));
                                 initializeDefaultValues();
                               });
+                      } else {
+                        setState(() {
+                          needvalidate = true;
+                        });
                       }
                     },
                     clr: Colors.red,

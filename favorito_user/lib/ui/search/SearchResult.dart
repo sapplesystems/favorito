@@ -127,11 +127,10 @@ class _SearchResultState extends State<SearchResult> {
                       clr: myRed,
                       icon: Icons.close,
                       function: () => setState(() {
-                            for (var temp in allFilters) {
-                              if (temp.filter == selectedFilters[i]) {
+                            for (var temp in allFilters)
+                              if (temp.filter == selectedFilters[i])
                                 temp.selected = false;
-                              }
-                            }
+
                             selectedFilters.removeAt(i);
                           }))
               ]),

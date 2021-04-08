@@ -136,7 +136,7 @@ class APIManager {
       response =
           await dio.post(service.businessCarousel, data: map, options: opt);
     } catch (e) {
-      BotToast.showText(text: e.toString());
+      // BotToast.showText(text: e.toString());
     }
     print("Request URL:${service.businessCarousel}");
     print("responseData1:${response.toString()}");
@@ -1250,11 +1250,6 @@ class APIManager {
       response = null;
     } else {
       if (e.response.statusCode == 401) {
-        // BotToast.showText(
-        //     text: BaseResponse.fromJson(
-        //             convert.json.decode(e.response.toString()))
-        //         .message);
-        // print("$url:401");
         Navigator.of(formKey.currentContext).pushNamed('/login');
       }
 

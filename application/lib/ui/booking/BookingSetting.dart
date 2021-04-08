@@ -125,6 +125,7 @@ class BookingSetting extends StatelessWidget {
                                   selectedItem: vaTrue.controller[2].text,
                                   items: vaTrue.slot,
                                   label: vaTrue.title[2],
+                                  enabled: false,
                                   hint: "Please Select Slot",
                                   showSearchBox: false,
                                   onChanged: (value) {
