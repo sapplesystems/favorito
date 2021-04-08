@@ -24,7 +24,7 @@ class BookingProvider extends BaseProvider {
   String _selectedDateText = 'Select Date';
   int _selectedSlotIndex = 0;
 
-  DateTime getInitialDate() => _initialDate;
+  DateTime getInitialDate() => _initialDate ?? DateTime.now();
   setInitialDate(String _v) {
     _initialDate = DateTime.parse(_v);
     getBookingData();
@@ -66,7 +66,7 @@ class BookingProvider extends BaseProvider {
       controller[i].text = (i != 5 && i != 2) ? "0" : '';
     }
 
-    RIKeys.josKeys3.currentState.changeSelectedItem(slot[3]);
+    RIKeys?.josKeys3?.currentState?.changeSelectedItem(slot[3]);
     getBookingData();
     getPageData();
   }
@@ -192,10 +192,7 @@ class BookingProvider extends BaseProvider {
   }
 
   void deleteBooking(int id) async {
-    print('fffff');
-    await WebService.deleteBooking(
-            {'booking_id': id}, RIKeys.josKeys5.currentContext)
-        .then((value) {
+    await WebService.deleteBooking({'booking_id': id}).then((value) {
       if (value.status == "success") {
         getBookingData();
       }

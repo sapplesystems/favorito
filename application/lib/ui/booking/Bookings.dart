@@ -191,8 +191,15 @@ class Bookings extends StatelessWidget {
                     ),
                   ),
                   Container(
+                    height: vaTrue.blm.slots.length < 4 ? sm.h(50) : null,
                     padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                    decoration: round31,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(34),
+                        topRight: Radius.circular(34),
+                      ),
+                    ),
                     child: Column(
                       children: [
                         Padding(

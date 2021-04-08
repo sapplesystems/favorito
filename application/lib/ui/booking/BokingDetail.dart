@@ -39,14 +39,13 @@ class BokingDetail extends StatelessWidget {
       color: Colors.white,
       padding: EdgeInsets.all(8.0),
       child: Scrollbar(
-        child: Column(children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
             height: sm.h(4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
                     InkWell(
                         onTap: () => Navigator.pop(context),
                         child: Icon(Icons.arrow_back)),
@@ -57,20 +56,14 @@ class BokingDetail extends StatelessWidget {
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey))),
-                  ],
-                ),
-                // InkWell(
-                //     onTap: () {
-                //       _showDialog(context, waitlistData, heading);
-                //     },
-                //     child: Icon(Icons.open_in_full))
-              ],
-            ),
+                  ]),
+                ]),
           ),
           Container(
               height: sm.h(6),
               padding: const EdgeInsets.all(4.0),
               child: Text(waitlistData?.name.capitalizeManner() ?? '',
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: 20,
                       fontFamily: 'Gilroy-Regular',
@@ -130,11 +123,10 @@ class BokingDetail extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     child: CircleAvatar(
-                      maxRadius: sm.h(3),
-                      backgroundColor: myRed,
-                      child:
-                          Icon(Icons.close, size: sm.w(7), color: Colors.white),
-                    ),
+                        maxRadius: sm.h(3),
+                        backgroundColor: myRed,
+                        child: Icon(Icons.close,
+                            size: sm.w(7), color: Colors.white)),
                   ),
                 ]),
           ),
