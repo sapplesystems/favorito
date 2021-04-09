@@ -13,5 +13,5 @@ final DateFormat dateFormat4 = DateFormat('dd MMM'); // something like 12 Jan
 final DateFormat dateFormat5 =
     DateFormat('dd MMMM yyyy'); // something like 12 January 2021
 
-final DateFormat dateFormat6 =
-    DateFormat('dd MMMM yyyy jm'); // something like 8:00 am
+final DateFormat dateFormat6 = DateFormat('dd MMMM yyyy jm');
+final DateFormat dateFormat7 = DateFormat('MM/dd'); // something like 8:00 am

@@ -5,12 +5,12 @@ import 'package:favorito_user/model/appModel/SlotListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
 
-class AppBookProvider extends BusinessProfileProvider {
+class AppBookProvider extends BaseProvider {
   AppBookProvider() : super() {
     _selectedTab = 'History';
     getrefreshedData();
-    baseUserBookingVerbose();
   }
   bool canAdd;
   get getCanAdd => this.canAdd;
@@ -18,6 +18,12 @@ class AppBookProvider extends BusinessProfileProvider {
   set setCanAdd(bool canAdd) {
     this.canAdd = canAdd;
     notifyListeners();
+  }
+
+  bool _isVerboseCall = true;
+  bool getIsVerboseCall() => _isVerboseCall;
+  setIsVerboseCall(bool _val) {
+    _isVerboseCall = _val;
   }
 
   // var _myUserNameEditTextController = TextEditingController();
@@ -44,9 +50,9 @@ class AppBookProvider extends BusinessProfileProvider {
   List<BookingOrAppointmentDataModel> newData = [];
   List<BookingOrAppointmentDataModel> oldData = [];
   BookTableVerbose _bookTableVerbose;
-  BookTableVerbose get bookTableVerbose => this._bookTableVerbose;
+  BookTableVerbose getBookTableVerbose() => this._bookTableVerbose;
 
-  set bookTableVerbose(BookTableVerbose value) {
+  setBookTableVerbose(BookTableVerbose value) {
     this._bookTableVerbose = value;
     notifyListeners();
   }
@@ -112,16 +118,20 @@ class AppBookProvider extends BusinessProfileProvider {
     });
   }
 
-  Future<bool> baseUserBookingVerbose() async {
-    print("2servicess are called:${this.getBusinessId()}");
-    await APIManager.baseUserBookingVerbose(
-        {"business_id": this.getBusinessId() ?? null}).then((value) {
+  bookingVerbose(context) async {
+    print(
+        "2servicess are called:${Provider.of<BusinessProfileProvider>(context, listen: false).getBusinessId()}");
+    await APIManager.baseUserBookingVerbose({
+      "business_id":
+          Provider.of<BusinessProfileProvider>(context, listen: false)
+                  .getBusinessId() ??
+              null
+    }).then((value) {
+      setIsVerboseCall(false);
       _message = value.message;
       if (value.status == 'success') {
-        bookTableVerbose = value;
-        return true;
-      } else
-        return false;
+        setBookTableVerbose(value);
+      }
     });
   }
 }

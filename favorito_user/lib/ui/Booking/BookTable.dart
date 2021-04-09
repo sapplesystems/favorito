@@ -1,149 +1,364 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/component/CirculerProgress.dart';
 import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
+import 'package:favorito_user/utils/dateformate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import '../../utils/Extentions.dart';
 
 class BookTable extends StatelessWidget {
   SizeManager sm;
   AppBookProvider vaTrue;
-  AppBookProvider vaFalse;
   var fut;
-  int isFirst = 0;
+  bool isFirst = true;
+  int selection = 0;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     vaTrue = Provider.of<AppBookProvider>(context, listen: true);
-    vaFalse = Provider.of<AppBookProvider>(context, listen: false);
-    if (isFirst < 3) {
-      fut = vaTrue.baseUserBookingVerbose();
-      isFirst++;
+    if (isFirst) {
+      fut = vaTrue
+        ..setIsVerboseCall(true)
+        ..bookingVerbose(context);
+      isFirst = false;
     }
     return Scaffold(
-      body: FutureBuilder(
-        future: fut,
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: Text("Please Wait"));
-          else
-            // Consumer<bool>(builder: (context, _data, child) {});
-            return RefreshIndicator(
-              onRefresh: () async {
-                vaTrue.baseUserBookingVerbose();
-              },
-              child: SafeArea(
-                child: Scaffold(
-                  body: Consumer<AppBookProvider>(
-                      builder: (context, _data, child) {
-                    return Container(
-                      decoration: BoxDecoration(color: myBackGround),
-                      child: Column(children: [
-                        Row(children: [
-                          IconButton(
-                              color: Colors.black,
-                              iconSize: 45,
-                              icon: Icon(Icons.keyboard_arrow_left),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              }),
-                          Text("Book Table", //bookTable change this
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w400))
-                        ]),
-                        Expanded(
-                          child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: sm.w(8)),
-                              decoration: BoxDecoration(color: myBackGround),
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      _data.bookTableVerbose?.data
-                                              ?.businessName ??
-                                          "",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          decoration: TextDecoration.underline),
+        backgroundColor: myBackGround,
+        body: vaTrue.getIsVerboseCall()
+            ? Center(
+                child: CircularProgressIndicator(
+                    backgroundColor: myRed,
+                    valueColor: AlwaysStoppedAnimation(myGrey),
+                    strokeWidth: 4),
+              )
+            : RefreshIndicator(
+                onRefresh: () async {
+                  // vaTrue.baseUserBookingVerbose();
+                },
+                child: SafeArea(
+                  child: Scaffold(
+                    backgroundColor: myBackGround,
+                    appBar: AppBar(
+                      backgroundColor: myBackGround,
+                      elevation: 0,
+                      leading: IconButton(
+                          color: Colors.black,
+                          iconSize: 45,
+                          icon: Icon(Icons.keyboard_arrow_left),
+                          onPressed: () => Navigator.of(context).pop()),
+                      title: Text("Book Table",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w400)),
+                    ),
+                    key: RIKeys.josKeys19,
+                    body: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Text(
+                            vaTrue
+                                    .getBookTableVerbose()
+                                    ?.data
+                                    ?.businessName
+                                    ?.capitalize() ??
+                                "",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18)),
+                        Padding(
+                            padding:
+                                EdgeInsets.only(top: sm.h(2), left: sm.w(6)),
+                            child: Row(children: [
+                              Text('How many guests?',
+                                  style: TextStyle(color: myGrey))
+                            ])),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: sm.h(3), left: sm.w(6), right: sm.w(6)),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SvgPicture.asset(
+                                    'assets/icon/man_book_table.svg'),
+                                Container(
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: sm.w(4)),
+                                  width: sm.w(22),
+                                  child: Neumorphic(
+                                    style: NeumorphicStyle(
+                                        depth: -10,
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                            BorderRadius.circular(24)),
+                                        color: myBackGround),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sm.w(4),
+                                          vertical: sm.w(5)),
+                                      child: Consumer<AppBookProvider>(
+                                          builder: (context, data, child) {
+                                        return Text(
+                                            '${vaTrue.getParticipent()}',
+                                            style: TextStyle(
+                                                color: Color(0xff686868)),
+                                            textAlign: TextAlign.center);
+                                      }),
                                     ),
                                   ),
-                                  Padding(
-                                      padding: EdgeInsets.only(top: sm.h(2)),
-                                      child: Row(
-                                        children: [
-                                          Text(_data.bookTableVerbose?.data
-                                                  ?.businessName ??
-                                              "")
-                                        ],
-                                      )),
-                                  Padding(
-                                      padding: EdgeInsets.only(top: sm.h(2)),
-                                      child: counterAddRemove()),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: sm.w(8)),
+                                  child: InkWell(
+                                    onTap: () =>
+                                        vaTrue.changeParticipent(false),
+                                    child: Card(
+                                      color: myBackGround,
+                                      elevation: 12,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0))),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(sm.w(4)),
+                                        child: Icon(Icons.remove,
+                                            color: myRed, size: 16),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () => vaTrue.changeParticipent(true),
+                                  child: Card(
+                                    color: myBackGround,
+                                    elevation: 12,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(sm.w(4)),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: myRed,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
+                            child: Divider(height: sm.h(6))),
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
+                            child:
+                                Text('Date', style: TextStyle(color: myGrey))),
+                        Container(
+                          height: 90,
+                          child: ListView(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                for (int i = 0;
+                                    i <
+                                        vaTrue
+                                            .getBookTableVerbose()
+                                            ?.data
+                                            ?.availableDates
+                                            ?.length;
+                                    i++)
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            selection = i;
+                                            vaTrue.notifyListeners();
+                                            print('ffffff$i');
+                                          },
+                                          child: Card(
+                                            color: myBackGround,
+                                            elevation: 12,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0)),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: sm.w(4),
+                                                  horizontal: sm.w(6)),
+                                              child: Text(
+                                                "${vaTrue.getBookTableVerbose()?.data?.availableDates[i].day} (${dateFormat7.format(DateTime.parse(vaTrue.getBookTableVerbose()?.data?.availableDates[i].date))})",
+                                                style: TextStyle(
+                                                    color: selection == i
+                                                        ? myRed
+                                                        : myGrey),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
+                              ]),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                bottom: 10.0, left: sm.w(6), right: sm.w(6)),
+                            child: Divider()),
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
+                            child:
+                                Text('Time', style: TextStyle(color: myGrey))),
+                        Container(
+                          height: 100,
+                          child: ListView(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                for (int i = 0;
+                                    i <
+                                        vaTrue
+                                            .getBookTableVerbose()
+                                            ?.data
+                                            ?.availableDates
+                                            ?.length;
+                                    i++)
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            selection = i;
+                                            vaTrue.notifyListeners();
+                                            print('ffffff$i');
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Card(
+                                              color: myBackGround,
+                                              elevation: 12,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(40)),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 20,
+                                                    horizontal: 8),
+                                                child: Text(
+                                                  "${vaTrue.getBookTableVerbose()?.data?.slots[i].startTime.substring(0, 5)} ",
+                                                  style: TextStyle(
+                                                      color: selection == i
+                                                          ? myRed
+                                                          : myGrey),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
+                              ]),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
+                            child: Divider()),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                top: 8.0, left: sm.w(6), right: sm.w(6)),
+                            child: Text('Occation',
+                                style: TextStyle(color: myGrey))),
+                        Padding(
+                          padding: EdgeInsets.only(top: sm.h(2)),
+                          child: Center(
+                            child: SizedBox(
+                              child: Neumorphic(
+                                style: NeumorphicStyle(
+                                    shape: NeumorphicShape.convex,
+                                    color: myBackGround,
+                                    depth: 8,
+                                    lightSource: LightSource.top,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.all(
+                                            Radius.circular(8.0)))),
+                                margin:
+                                    EdgeInsets.symmetric(horizontal: sm.w(10)),
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  value: vaTrue.selectedOccasion,
 
-                                  Divider(height: sm.h(6)),
-                                  Text('Date', style: TextStyle(color: myGrey)),
-                                  // Padding(
-                                  //   padding: EdgeInsets.only(top: sm.h(3)),
-                                  //   child: Center(
-                                  //     child: DatePicker(
-                                  //       selectedDateText: _selectedDateText,
-                                  //       selectedDate: _initialDate,
-                                  //       onChanged: ((value) {
-                                  //         _selectedDateText = value;
-                                  //       }),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  mySlotSelector(),
-                                  myOccasionDropDown(),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: sm.h(4)),
-                                    child: EditTextComponent(
-                                      controller: vaTrue.controller[0],
-                                      title: "Name",
-                                      hint: "Enter Name",
-                                      maxLines: 1,
-                                      security: false,
-                                    ),
+                                  hint: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: sm.w(2)),
+                                    child: Text("Select Occasion"),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: sm.h(4)),
-                                    child: EditTextComponent(
-                                      controller: vaTrue.controller[1],
-                                      title: "Mobile",
-                                      hint: "Enter Mobile",
-                                      maxLines: 1,
-                                      security: false,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: sm.h(4)),
-                                    child: EditTextComponent(
-                                      controller: vaTrue.controller[2],
-                                      title: "Special Notes",
-                                      hint: "Enter Special Notes",
-                                      maxLines: 4,
-                                      security: false,
-                                    ),
-                                  ),
-                                ],
-                              )),
+                                  underline: Container(), // this is the magic
+                                  items: <String>[
+                                    'Occasion 1',
+                                    'Occasion 2',
+                                    'Occasion 3',
+                                    'Occasion 4'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: sm.w(2)),
+                                            child: Text(value)));
+                                  }).toList(),
+                                  onChanged: (String value) =>
+                                      vaTrue.selectedOccasion = value,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                top: sm.h(4), left: sm.w(6), right: sm.w(6)),
+                            child: EditTextComponent(
+                                controller: vaTrue.controller[0],
+                                title: "Name",
+                                hint: "Enter Name",
+                                maxLines: 1,
+                                security: false)),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: sm.h(4), left: sm.w(6), right: sm.w(6)),
+                          child: EditTextComponent(
+                            controller: vaTrue.controller[1],
+                            title: "Mobile",
+                            hint: "Enter Mobile",
+                            maxLines: 1,
+                            security: false,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: sm.h(4), left: sm.w(6), right: sm.w(6)),
+                          child: EditTextComponent(
+                              controller: vaTrue.controller[2],
+                              title: "Special Notes",
+                              hint: "Enter Special Notes",
+                              maxLines: 4,
+                              security: false),
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding:
-                                EdgeInsets.only(top: sm.h(4), bottom: sm.h(2)),
+                            padding: EdgeInsets.symmetric(
+                                vertical: sm.h(4), horizontal: sm.h(10)),
                             child: NeumorphicButton(
                               style: NeumorphicStyle(
                                   shape: NeumorphicShape.convex,
                                   depth: 4,
                                   lightSource: LightSource.topLeft,
-                                  color: myButtonBackground,
+                                  color: myBackGround,
                                   boxShape: NeumorphicBoxShape.roundRect(
                                       BorderRadius.all(Radius.circular(24.0)))),
                               margin:
@@ -154,7 +369,7 @@ class BookTable extends StatelessWidget {
                                 Navigator.of(context).pop();
                               },
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
+                                  horizontal: 14, vertical: 16),
                               child: Center(
                                 child: Text(
                                   "Done",
@@ -166,171 +381,55 @@ class BookTable extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ]),
-                    );
-                  }),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            );
-        },
-      ),
-    );
+              ));
   }
 
-  Widget mySlotSelector() {
-    return Padding(
-      padding: EdgeInsets.only(top: sm.h(2)),
-      child: Container(
-        width: sm.w(100),
-        height: sm.h(10),
-        decoration: BoxDecoration(color: Colors.transparent),
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            for (var temp in vaTrue.slotList)
-              InkWell(
-                onTap: () {
-                  for (var temp in vaTrue.slotList) {
-                    temp.selected = false;
-                  }
-                  temp.selected = true;
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      right: sm.w(1), top: sm.h(2), bottom: sm.h(2)),
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                        shape: NeumorphicShape.convex,
-                        depth: 8,
-                        lightSource: LightSource.top,
-                        color: Colors.white,
-                        boxShape: NeumorphicBoxShape.roundRect(
-                            BorderRadius.all(Radius.circular(8.0)))),
-                    margin: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
-                        child: Text(temp.slot,
-                            style: TextStyle(
-                                color: temp.selected
-                                    ? Colors.green
-                                    : Colors.grey)),
-                      ),
+  Widget mySlotSelector(_data) {
+    return Container(
+      width: sm.w(100),
+      height: sm.h(8),
+      decoration: BoxDecoration(color: Colors.transparent),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (var temp in _data.slotList)
+            InkWell(
+              onTap: () {
+                for (var temp in _data.slotList) {
+                  temp.selected = false;
+                }
+                temp.selected = true;
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                    right: sm.w(1), top: sm.h(2), bottom: sm.h(2)),
+                child: Neumorphic(
+                  style: NeumorphicStyle(
+                      shape: NeumorphicShape.convex,
+                      depth: 8,
+                      lightSource: LightSource.top,
+                      color: Colors.white,
+                      boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.all(Radius.circular(8.0)))),
+                  margin: EdgeInsets.symmetric(horizontal: sm.w(2)),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                      child: Text(temp.slot,
+                          style: TextStyle(
+                              color:
+                                  temp.selected ? Colors.green : Colors.grey)),
                     ),
                   ),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
-    );
-  }
-
-  Widget myOccasionDropDown() {
-    return Padding(
-      padding: EdgeInsets.only(top: sm.h(2)),
-      child: Center(
-        child: SizedBox(
-          child: Neumorphic(
-            style: NeumorphicStyle(
-                shape: NeumorphicShape.convex,
-                depth: 8,
-                lightSource: LightSource.top,
-                color: Colors.white,
-                boxShape: NeumorphicBoxShape.roundRect(
-                    BorderRadius.all(Radius.circular(8.0)))),
-            margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: vaTrue.selectedOccasion,
-
-              hint: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                child: Text("Select Occasion"),
-              ),
-              underline: Container(), // this is the magic
-              items: <String>[
-                'Occasion 1',
-                'Occasion 2',
-                'Occasion 3',
-                'Occasion 4'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                    value: value,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                        child: Text(value)));
-              }).toList(),
-              onChanged: (String value) {
-                vaTrue.selectedOccasion = value;
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  counterAddRemove() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset('assets/icon/man_book_table.svg'),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: sm.w(4)),
-          width: sm.w(22),
-          child: Neumorphic(
-            style: NeumorphicStyle(
-                depth: -10,
-                boxShape:
-                    NeumorphicBoxShape.roundRect(BorderRadius.circular(24)),
-                color: Colors.white60),
-            child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: sm.w(4), vertical: sm.w(5)),
-              child: Consumer<AppBookProvider>(builder: (context, data, child) {
-                return Text('${vaTrue.getParticipent()}',
-                    style: TextStyle(color: Color(0xff686868)),
-                    textAlign: TextAlign.center);
-              }),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: sm.w(8)),
-          child: InkWell(
-            onTap: () => vaTrue.changeParticipent(false),
-            child: Card(
-              color: myBackGround,
-              elevation: 12,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
-              child: Padding(
-                padding: EdgeInsets.all(sm.w(4)),
-                child: Icon(Icons.remove, color: myRed, size: 16),
-              ),
-            ),
-          ),
-        ),
-        InkWell(
-          onTap: () => vaTrue.changeParticipent(true),
-          child: Card(
-            color: myBackGround,
-            elevation: 12,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(sm.w(4)),
-              child: Icon(
-                Icons.add,
-                color: myRed,
-                size: 16,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

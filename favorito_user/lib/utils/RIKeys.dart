@@ -22,4 +22,5 @@ class RIKeys {
   static final josKeys16 = GlobalKey<ScaffoldState>(); //UpdateEmail
   static final josKeys17 = GlobalKey<ScaffoldState>(); //UpdateEmail
   static final josKeys18 = GlobalKey<ScaffoldState>(); //Waitlist
+  static final josKeys19 = GlobalKey<ScaffoldState>(); //BookTable
 }
