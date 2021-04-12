@@ -260,7 +260,7 @@ class Bookings extends StatelessWidget {
                                         ),
                                         ListTile(
                                           title: Text(
-                                            va.name,
+                                            va.name??'',
                                             style: TextStyle(
                                                 fontSize: 20,
                                                 fontFamily: 'Gilroy-Regular',
@@ -269,7 +269,7 @@ class Bookings extends StatelessWidget {
                                           subtitle: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 12),
-                                            child: AutoSizeText(va.specialNotes,
+                                            child: AutoSizeText(va.specialNotes??'',
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     color: Colors.black),
@@ -293,7 +293,7 @@ class Bookings extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                      ],
+                                      ]
                                     ),
                                   ));
                             }),
@@ -306,9 +306,9 @@ class Bookings extends StatelessWidget {
 
   showPopup(BuildContext context, va, Widget widget,
       {BuildContext popupContext}) {
-    double i = va.specialNotes.length <= 500
+    double i = (va?.specialNotes?.length??0) <= 500
         ? 30
-        : ((va.specialNotes.length > 500) && (va.specialNotes.length <= 1000))
+        : (((va?.specialNotes?.length??0) > 500) && ((va?.specialNotes?.length??0) <= 1000))
             ? 20
             : 12;
     print('sss$i');

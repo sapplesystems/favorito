@@ -29,10 +29,10 @@ class BokingDetail extends StatelessWidget {
     sm = SizeManager(context);
     vaTrue = Provider.of<BookingProvider>(context, listen: true);
     vafalse = Provider.of<BookingProvider>(context, listen: false);
-    double i = waitlistData.specialNotes.length <= 500
+    double i = (waitlistData?.specialNotes?.length??0) <= 500
         ? 10
-        : ((waitlistData.specialNotes.length > 500) &&
-                (waitlistData.specialNotes.length <= 1000))
+        : (((waitlistData?.specialNotes?.length??0) > 500) &&
+                ((waitlistData?.specialNotes?.length??0) <= 1000))
             ? 25
             : 40;
     return Container(
@@ -62,7 +62,7 @@ class BokingDetail extends StatelessWidget {
           Container(
               height: sm.h(6),
               padding: const EdgeInsets.all(4.0),
-              child: Text(waitlistData?.name.capitalizeManner() ?? '',
+              child: Text(waitlistData?.name?.capitalizeManner() ?? '',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: 20,
@@ -75,7 +75,7 @@ class BokingDetail extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               // heightght: sm.h(40),
-              child: Text(waitlistData.specialNotes,
+              child: Text(waitlistData?.specialNotes??'',
                   style: TextStyle(
                       fontSize: 13,
                       fontFamily: 'Gilroy-Regular',

@@ -671,6 +671,32 @@ class APIManager {
     return BookTableVerbose.fromJson(convert.jsonDecode(response.toString()));
   }
 
+
+  //baseUserBookingCreate
+  // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
+  static Future<BaseResponse> baseUserBookingCreate(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponse(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserBookingCreate;
+    print('Resuest data : ${_map.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("baseUserBookingCreate : $url");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      BotToast.showText(
+          text:
+              BaseResponse.fromJson(convert.json.decode(e.response.toString()))
+                  .message);
+    }
+    print("baseUserBookingCreate response : ${response.toString}");
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
   //Menu
   static Future<MenuTabModel> menuTabGet(Map _map) async {
     String token = await Prefs.token;

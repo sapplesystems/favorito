@@ -48,12 +48,14 @@ class EditTextComponent extends StatefulWidget {
       this.suffixTap,
       this.error,
       this.errorColor});
+
   @override
   _EditTextComponentState createState() => _EditTextComponentState();
 }
 
 class _EditTextComponentState extends State<EditTextComponent> {
   SizeManager sm;
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -74,68 +76,71 @@ class _EditTextComponentState extends State<EditTextComponent> {
             widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
           ],
           decoration: InputDecoration(
-            suffix: InkWell(
-                onTap: () => widget.suffixTap(),
-                child: Text(widget.suffixTxt ?? '')),
-            prefixIcon: widget.prefixIcon == 'mail'
-                ? InkWell(
-                    child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                        child: SvgPicture.asset("assets/icon/enovelop.svg",
-                            fit: BoxFit.fill, height: 1, width: 1)),
-                    onTap: () {},
-                  )
-                : widget.prefixIcon == 'password'
-                    ? InkWell(
-                        child: Icon(Icons.lock_outline),
-                        onTap: () {},
-                      )
-                    : widget.prefixIcon == 'name'
-                        ? InkWell(
-                            child: Container(
-                                margin: EdgeInsets.all(sm.h(1.9)),
-                                child: SvgPicture.asset(
-                                    'assets/icon/fullname.svg')),
-                            onTap: () {},
-                          )
-                        : widget.prefixIcon == 'phone'
-                            ? InkWell(
-                                child: Container(
-                                    margin: EdgeInsets.all(sm.h(1.9)),
-                                    child: SvgPicture.asset(
-                                        'assets/icon/phone.svg')),
-                                onTap: () {},
-                              )
-                            : widget.prefixIcon == 'search'
-                                ? InkWell(
-                                    child: Icon(Icons.search),
-                                    onTap: () => widget.prefClick(),
-                                  )
-                                : widget.prefixIcon == 'postal'
-                                    ? InkWell(
-                                        child: Container(
-                                            margin: EdgeInsets.all(sm.h(1.9)),
-                                            child: SvgPicture.asset(
-                                                'assets/icon/location.svg')),
-                                        onTap: () => widget.prefClick())
-                                    : widget.prefixIcon == 'address'
-                                        ? InkWell(
-                                            child: Icon(Icons.home_outlined),
-                                            onTap: () => widget.prefClick())
-                                        : widget.prefixIcon == 'pincode'
-                                            ? InkWell(
-                                                child: Icon(Icons.dialpad),
-                                                onTap: () => widget.prefClick())
-                                            : null,
-            counterText: "",
-            hintText: widget.hint ?? '',
-            alignLabelWithHint: true,
-            hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
-            contentPadding: EdgeInsets.only(top: 14, right: 16, left: 16),
-            fillColor: Colors.transparent,
-            border: InputBorder.none,
-          ),
+              suffix: InkWell(
+                  onTap: () => widget.suffixTap(),
+                  child: Text(widget.suffixTxt ?? '')),
+              prefixIcon: widget.prefixIcon == 'mail'
+                  ? InkWell(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 16),
+                          child: SvgPicture.asset("assets/icon/enovelop.svg",
+                              fit: BoxFit.fill, height: 1, width: 1)),
+                      onTap: () {},
+                    )
+                  : widget.prefixIcon == 'password'
+                      ? InkWell(
+                          child: Icon(Icons.lock_outline),
+                          onTap: () {},
+                        )
+                      : widget.prefixIcon == 'name'
+                          ? InkWell(
+                              child: Container(
+                                  margin: EdgeInsets.all(sm.h(1.9)),
+                                  child: SvgPicture.asset(
+                                      'assets/icon/fullname.svg')),
+                              onTap: () {},
+                            )
+                          : widget.prefixIcon == 'phone'
+                              ? InkWell(
+                                  child: Container(
+                                      margin: EdgeInsets.all(sm.h(1.9)),
+                                      child: SvgPicture.asset(
+                                          'assets/icon/phone.svg')),
+                                  onTap: () {},
+                                )
+                              : widget.prefixIcon == 'search'
+                                  ? InkWell(
+                                      child: Icon(Icons.search),
+                                      onTap: () => widget.prefClick(),
+                                    )
+                                  : widget.prefixIcon == 'postal'
+                                      ? InkWell(
+                                          child: Container(
+                                              margin: EdgeInsets.all(sm.h(1.9)),
+                                              child: SvgPicture.asset(
+                                                  'assets/icon/location.svg')),
+                                          onTap: () => widget.prefClick())
+                                      : widget.prefixIcon == 'address'
+                                          ? InkWell(
+                                              child: Icon(Icons.home_outlined),
+                                              onTap: () => widget.prefClick())
+                                          : widget.prefixIcon == 'pincode'
+                                              ? InkWell(
+                                                  child: Icon(Icons.dialpad),
+                                                  onTap: () =>
+                                                      widget.prefClick())
+                                              : null,
+              counterText: "",
+              hintText: widget.hint ?? '',
+              alignLabelWithHint: true,
+              hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
+              contentPadding: EdgeInsets.only(
+                  top: (widget.maxLines ?? 1) > 1 ? 14 : 0,
+                  right: 16,
+                  left: 16),
+              fillColor: Colors.transparent,
+              border: InputBorder.none),
           autofocus: false,
           keyboardType: widget.keyboardSet,
           textInputAction: widget.keyBoardAction,
