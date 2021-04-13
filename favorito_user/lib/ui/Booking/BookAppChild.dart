@@ -24,53 +24,36 @@ class BookAppChild extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        // vaTrue.getrefreshedData();
+        print('BookingList Called');
+        vaTrue.CallServiceForData(context);
       },
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Visibility(
-                  visible: vaTrue.getCanAdd,
-                  child: Icon(Icons.add_circle,
-                      size: 30, color: Colors.transparent)),
-              Container(
-                height: sm.h(10),
-                padding: EdgeInsets.symmetric(vertical: sm.h(2)),
-                width: sm.w(45),
-                child: Card(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () => vaTrue.setSelectedTab('New'),
-                          child: newHistory('New'),
-                        ),
-                        InkWell(
-                          onTap: () => vaTrue.setSelectedTab('History'),
-                          child: newHistory('History'),
-                        ),
-                      ]),
-                ),
-              ),
-              Visibility(
-                visible: vaTrue.getCanAdd,
-                child: InkWell(
-                  onTap: () => Navigator.of(context).pushNamed('/bookTable'),
-                  child: Icon(Icons.add_circle, size: 30, color: myRed),
-                ),
-              ),
-            ],
+          SizedBox(
+            width: sm.w(45),
+            child: Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () => vaTrue.setSelectedTab('New'),
+                      child: newHistory('New'),
+                    ),
+                    InkWell(
+                      onTap: () => vaTrue.setSelectedTab('History'),
+                      child: newHistory('History'),
+                    ),
+                  ]),
+            ),
           ),
           Consumer<AppBookProvider>(
             builder: (context, _data, child) {
               var da = _data.getPageData();
               return Container(
-                height: sm.h(vaTrue.getIsBooking() == 2 ? 71 : 78),
+                height: sm.h(73),
                 child: da.length == 0
                     ? Center(child: Text(vaTrue.getMessage() ?? 'No Data '))
                     : ListView.builder(

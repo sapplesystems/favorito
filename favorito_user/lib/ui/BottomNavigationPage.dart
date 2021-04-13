@@ -21,7 +21,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   void initState() {
-    Provider.of<AppBookProvider>(context, listen: false).setIsBooking(2);
     _widgetOptions = <Widget>[
       Home(),
       Search(),

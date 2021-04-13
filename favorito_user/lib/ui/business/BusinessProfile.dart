@@ -343,8 +343,6 @@ class BusinessProfile extends StatelessWidget {
                     break;
                   case 'Appointment':
                     {
-                      Provider.of<AppBookProvider>(context, listen: false)
-                          .setIsBooking(1);
                       Navigator.of(context).pushNamed(
                           '/bookingOrAppointmentList',
                           arguments: badm);

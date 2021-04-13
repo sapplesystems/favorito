@@ -628,9 +628,30 @@ class APIManager {
 
   //booking
   static Future<BookingOrAppointmentListModel> baseUserBookingList(
-      Map _map, int isBooking) async {
+      Map _map, bool isBooking,GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return BookingOrAppointmentListModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     String token = await Prefs.token;
-    String url = isBooking == 0
+    String url = isBooking
         ? service.baseUserBookingList
         : service.baseUserAppointmentList;
 
@@ -638,10 +659,17 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserBookingList : $url");
 
-    response = await dio.post(url, data: _map, options: opt);
-    print("service.baseUserBookingList : ${response.toString}");
+    print("service.baseUserBookingList : $url");
+try{
+
+  response = await dio.post(url, data: _map, options: opt);
+  pr.hide();
+}on DioError catch (e) {
+  ExceptionHandler(e, pr, url, formKey);
+} finally {
+  pr.hide();
+}
     return BookingOrAppointmentListModel.fromJson(
         convert.jsonDecode(response.toString()));
   }
@@ -670,7 +698,6 @@ class APIManager {
     print("baseUserBookingVerbose response : ${response.toString}");
     return BookTableVerbose.fromJson(convert.jsonDecode(response.toString()));
   }
-
 
   //baseUserBookingCreate
   // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
