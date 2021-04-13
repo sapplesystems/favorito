@@ -106,7 +106,7 @@ class BookingProvider extends BaseProvider {
       "end_time": _endTime,
       "advance_booking_start_days": '0',
       "advance_booking_end_days": controller[0].text,
-      "advance_booking_hours": controller[1].text,
+      "advance_booking_hours": int.parse(controller[1].text)*60,
       "slot_length": controller[2].text,
       "booking_per_slot": controller[3].text,
       "booking_per_day": controller[4].text,
@@ -130,11 +130,15 @@ class BookingProvider extends BaseProvider {
     await WebService.funBookingSetting().then((value) {
       if (value.status == "success") {
         bs = value;
+        String  _a ='1'; 
+        if(bs.data[0]?.advanceBookingHours!=null){
+          _a = (bs.data[0].advanceBookingHours/60).toString().substring(0,1);
+        }
         _totalBookingDays = bs.data[0]?.advanceBookingEndDays ?? 0;
         setStartTime(bs.data[0]?.startTime?.substring(0, 5) ?? '');
         setEndTime(bs.data[0]?.endTime?.substring(0, 5) ?? '');
         controller[0].text = bs.data[0]?.advanceBookingEndDays?.toString();
-        controller[1].text = bs.data[0]?.advanceBookingHours?.toString();
+        controller[1].text = _a ;
         setTotalBookingHours(bs.data[0]?.advanceBookingHours ?? 0);
         controller[2].text = bs.data[0]?.slotLength?.toString() ?? '60';
         controller[3].text = bs.data[0]?.bookingPerSlot?.toString();

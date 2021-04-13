@@ -33,7 +33,8 @@ class BookTable extends StatelessWidget {
     }
     return Scaffold(
         backgroundColor: myBackGround,
-        body: vaTrue.getIsVerboseCall()
+        body:
+        vaTrue.getIsVerboseCall()
             ? Center(
                 child: CircularProgressIndicator(
                     backgroundColor: myRed,

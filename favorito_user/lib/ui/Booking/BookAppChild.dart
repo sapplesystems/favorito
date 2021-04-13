@@ -24,7 +24,7 @@ class BookAppChild extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        vaTrue.getrefreshedData(context);
+        // vaTrue.getrefreshedData();
       },
       child: Column(
         children: [

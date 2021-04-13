@@ -33,7 +33,9 @@ class BookingOrAppointmentParent extends StatelessWidget {
                 EdgeInsets.only(top: sm.w(1), left: sm.w(3), right: sm.w(3)),
             child: Column(children: [
               WaitListHeader(
-                title: Provider.of<AppBookProvider>(context, listen: true)
+                title:
+
+                Provider.of<AppBookProvider>(context, listen: true)
                             .getIsBooking() ==
                         0
                     ? bookings

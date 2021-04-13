@@ -14,7 +14,10 @@ class AppBookProvider extends BaseProvider {
   AppBookProvider() : super() {
     _selectedTab = 'History';
     // getrefreshedData();
+
   }
+  List<String> appBookingHeaderList= ['Appointments', 'Booking'];
+  String _appBookingHeader ='Appointments';
   bool _submitCalled =false;
   List<String> _occasionNameList = [];
   List<Occasion> _occasionList = [];
@@ -32,7 +35,7 @@ class AppBookProvider extends BaseProvider {
 
   int _participent = 1;
   String _message;
-  int _isBooking;
+  int _isBook;
   String _selectedTab;
   get getCanAdd => this.canAdd;
 
@@ -42,11 +45,16 @@ class AppBookProvider extends BaseProvider {
   }
 
   bool _isVerboseCall = true;
-
+String getAppBookingHeader()=>_appBookingHeader;
+void setAppBookingHeader(String _name){
+  _appBookingHeader = _name;
+  notifyListeners();
+}
   bool getIsVerboseCall() => _isVerboseCall;
 
   setIsVerboseCall(bool _val) {
     _isVerboseCall = _val;
+    notifyListeners();
   }
 getSubmitCalled()=>_submitCalled;
 setSubmitCalled(bool _val){
@@ -124,14 +132,14 @@ setSubmitCalled(bool _val){
 
   setIsBooking(int _val) {
     //this will used to confirm thiis bookking or appoinment , here 0 is booking , i is appoinment and 2 is for all
-    _isBooking = _val;
+    _isBook = _val;
   }
 
-  int getIsBooking() => _isBooking;
+  int getIsBooking() => _isBook;
 
   setPageData() {
     _data.clear();
-    _data.addAll(_selectedTab == 'New' ? newData : oldData);
+    _data.addAll(_selectedTab != 'New' ? newData : oldData);
     notifyListeners();
   }
 
@@ -193,18 +201,19 @@ Map _map ={'no_of_person':_participent,
         acces[2].error='';
 
         setSubmitCalled(false);
+        Navigator.pop(context);
       }
     });
   }
 
   getMessage() => _message;
 
-  getrefreshedData(context) async {
+  baseUserBookingList(context) async {
     print("1servicess are called:${this.getBusinessId()}");
     await APIManager.baseUserBookingList(
             {"business_id": Provider.of<BusinessProfileProvider>(context, listen: false)
                 .getBusinessId() ??
-                ''}, _isBooking)
+                ''}, _isBook)
         .then((value) {
       _message = value.message;
       if (value.status == 'success') {
@@ -227,15 +236,28 @@ Map _map ={'no_of_person':_participent,
               '',
       "date": _selectedDate
     }).then((value) {
-      setIsVerboseCall(false);
       _message = value.message;
 
       if (value.status == 'success') {
-        _selectedTime = getBookTableVerbose()?.data?.slots[0].startTime;
+        _selectedTime = value.data?.slots[0]?.startTime;
         _selectedOccasion="Select Occasion";
         setBookTableVerbose(value);
 
       }
+
+      setIsVerboseCall(false);
     });
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Appointments':{
+        setAppBookingHeader('Appointments');
+        break;
+      }      case 'Booking':{
+      setAppBookingHeader('Booking');
+      break;
+    }
+     }
   }
 }
