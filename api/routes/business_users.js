@@ -52,6 +52,8 @@ router.post('/login', UserController.login);
 
 router.post('/profile', CheckAuth, UserController.getProfile);
 
+router.post('/business-website', CheckAuth, UserController.getBusinessWebsite);
+
 router.post('/profile/update', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfile);
 
 // updating the working hour

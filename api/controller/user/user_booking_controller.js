@@ -46,16 +46,14 @@ exports.getBookingVerbose = async(req, res, next) => {
         return res.status(400).send({ status: 'error', message: 'Business id is missing' });
     }
     business_id = req.body.business_id
-    var sql_booking_setting = "SELECT start_time,end_time,slot_length,booking_per_slot,advance_booking_end_days,advance_booking_start_days FROM business_booking_setting WHERE business_id='" + business_id + "'";
+    var sql_booking_setting = "SELECT start_time,end_time,slot_length,booking_per_slot,advance_booking_end_days,advance_booking_hours,advance_booking_start_days FROM business_booking_setting WHERE business_id='" + business_id + "'";
     var sql_occasion = 'SELECT * FROM occasion_master'
     var sql_business_name = `SELECT business_name FROM business_master WHERE business_id = '${business_id}'`
     try {
         var result_business_name = await exports.run_query(sql_business_name)
         result_occasion = await exports.run_query(sql_occasion)
         result_booking_setting = await exports.run_query(sql_booking_setting)
-        if (result_booking_setting[0].slot_length > 24) {
-            return res.status(200).send({ status: 'success', message: 'Slot length in business booking setting should be less than 24 hour' });
-        }
+
         available_dates = []
         for (let j = 0; j < result_booking_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
@@ -66,17 +64,27 @@ exports.getBookingVerbose = async(req, res, next) => {
 
         // if req has date then slot is according to the date or it will return today dates
 
+        advance_booking_time = null
         if (req.body.date) {
             date = req.body.date
         } else {
             date = today_date
         }
-
-        if (result_booking_setting[0].start_time == null || result_booking_setting[0].end_time == null) {
-            return res.status(500).send({ status: 'error', message: 'Start time or end time of business is not set' });
+        // check if the date required is today date then set the advance booking time if not then keep the ad null
+        let requiredDate = moment(date)
+        let isToday = false
+        if (requiredDate.isSame(today_date, 'day')) {
+            advance_booking_time = result_booking_setting[0].advance_booking_hours
+            isToday = true
         }
 
-        slots_data = await exports.createSlotWithDate(result_booking_setting, date)
+
+        if (result_booking_setting[0].start_time == null || result_booking_setting[0].end_time == null) {
+            return res.status(500).send({ status: 'error', message: 'Booking not available' });
+        }
+
+        // console.log(advance_booking_time)
+        slots_data = await exports.createSlotWithDate(result_booking_setting, date, advance_booking_time, isToday)
 
         slot_with_detail = new Promise(async(resolve, reject) => {
             available_slot = []
@@ -85,8 +93,8 @@ exports.getBookingVerbose = async(req, res, next) => {
                 const slot = slots_data.slots[i];
 
                 count_loop++;
-                const time_1 = `${slot.slot[0]}:00:00`
-                const time_2 = `${slot.slot[1]}:00:00`
+                const time_1 = `${slot.slot[0]}:00`
+                const time_2 = `${slot.slot[1]}:00`
                 const start_slot = `${date} ${time_1}`
                 const end_slot = `${date} ${time_2}`
 
@@ -189,7 +197,7 @@ exports.setBookTable = async function(req, res, next) {
                     if (error) {
                         return res.status(500).send({ status: "failed", message: "Something went wrong", error: error })
                     } else {
-                        return res.status(200).send({ status: "success", message: "Table is booked" })
+                        return res.status(200).send({ status: "success", message: "Booking successfull" })
                     }
                 })
             } else {
@@ -343,7 +351,7 @@ exports.getBookTable = async function(req, res, next) {
         return res.status(400).json({ status: 'failed', message: 'user_id is missing' });
     }
 
-    var sql = "SELECT b_b.id, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, IFNULL(AVG(b_r.rating),0) as avg_rating,b_m.business_phone,b_b.special_notes as special_notes, b_b.business_id,b_b.no_of_person,b_b.booking_status as status,DATE_FORMAT(b_b.created_datetime , '%Y%m%d%h%i%s') as time,DATE_FORMAT(b_b.created_datetime , '%Y-%m-%d %h:%i:%s') AS created_datetime\n\
+    var sql = "SELECT b_b.id,b_b.name as name, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, IFNULL(AVG(b_r.rating),0) as avg_rating,b_m.business_phone,b_b.special_notes as special_notes, b_b.business_id,b_b.no_of_person,b_b.booking_status as status,DATE_FORMAT(b_b.created_datetime , '%Y%m%d%H%i%s') as time,DATE_FORMAT(b_b.created_datetime , '%Y-%m-%d %H:%i:%s') AS created_datetime\n\
     FROM business_booking AS b_b \n\
     JOIN business_master AS b_m \n\
     LEFT JOIN business_ratings AS b_r \n\
@@ -357,30 +365,29 @@ exports.getBookTable = async function(req, res, next) {
         }
         var sql_booking_setting = "SELECT slot_length FROM business_booking_setting WHERE business_id='" + result[0].business_id + "'";
         final_data = []
-        async.eachSeries(result, async function(data, callback) {
+
+        for (let i = 0; i < result.length; i++) {
             var result_booking_setting = await exports.run_query(sql_booking_setting)
-            db.query(`SELECT reviews FROM business_reviews WHERE user_id = '${data.user_id}' AND business_id = '${data.business_id}' LIMIT 1`, function(error, results1) {
-                if (error) {
-                    return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
-                }
-                if (results1 && results1[0] && results1[0].reviews) {
-                    data.review = results1[0].reviews
-                } else {
-                    data.review = ''
-                }
-                data.slot_length = result_booking_setting[0].slot_length
-                    // data.slot_date = moment(data.created_datetime).format('Do MMMM')
-                    // data.slot_start_time = `${data.created_datetime.substring(11, 13)}:00`
-                    // data.slot_end_time = `${(parseInt(data.created_datetime.substring(11, 13))+parseInt(result_booking_setting[0].slot_length))}:00`
-                final_data.push(data)
-                return
-            });
-        }, function(err, results) {
-            if (final_data == '') {
-                return res.status(200).send({ status: 'success', message: 'Data not found', data: final_data })
+            sql1 = `SELECT reviews FROM business_reviews WHERE user_id = '${result[i].user_id}' AND business_id = '${result[i].business_id}' LIMIT 1`
+
+            sql_business_detail = `select business_name,business_phone from business_master where business_id = '${result[i].business_id}'`
+            result_business_detail = await exports.run_query(sql_business_detail)
+
+            results1 = await exports.run_query(sql1)
+            if (results1 && results1[0] && results1[0].reviews) {
+                result[i].review = results1[0].reviews
+            } else {
+                result[i].review = ''
             }
-            return res.status(200).send({ status: 'success', message: 'Success', data: final_data })
-        });
+            result[i].slot_length = result_booking_setting[0].slot_length
+            result[i].business_name = result_business_detail[0].business_name
+            result[i].business_phone = result_business_detail[0].business_phone
+            final_data.push(result[i])
+        }
+        if (final_data == '') {
+            return res.status(200).send({ status: 'success', message: 'Data not found', data: final_data })
+        }
+        return res.status(200).send({ status: 'success', message: 'Success', data: final_data })
     } catch (error) {
         return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
     }
@@ -484,45 +491,55 @@ getDayNameByDate = (date = false) => {
 //     })
 // }
 
-exports.createSlotWithDate = async(result_booking_setting, date) => {
+exports.createSlotWithDate = async(result_booking_setting, date, advance_booking_hours, isToday) => {
     return new Promise(async(resolve, reject) => {
         // create object with date and slots of that date
         temp_slot_detail = {}
         date_1 = moment(date).format('YYYY-MM-DD');
         // creating slot 
-        const get_slot = await exports.createSlots(result_booking_setting[0].start_time, result_booking_setting[0].end_time, result_booking_setting[0].slot_length)
+        const get_slot = await exports.createSlots(result_booking_setting[0].start_time, result_booking_setting[0].end_time, result_booking_setting[0].slot_length, advance_booking_hours, isToday)
         temp_slot_detail.date = date_1
         temp_slot_detail.slots = get_slot
         resolve(temp_slot_detail)
     })
-
-    // return new Promise(async(resolve, reject) => {
-    //         // create object with date and slots of that date
-    //     for (let i = 0; i < result_booking_setting[0].advance_booking_end_days; i++) {
-    //         temp_slot_detail = {}
-    //         var date = moment().add(i, 'd').toDate();
-    //         date = moment(date).format('YYYY-MM-DD');
-    //         // creating slot 
-    //         const get_slot = await exports.createSlots(result_booking_setting[0].start_time, result_booking_setting[0].end_time, result_booking_setting[0].slot_length)
-    //         temp_slot_detail.date = date
-    //         temp_slot_detail.slots = get_slot
-    //         final_data_slots.push(temp_slot_detail)
-    //     }
-    //     resolve(final_data_slots)
-    // })
 }
 
-exports.createSlots = function(starttime, endtime, interval) {
+exports.createSlots = function(starttime, endtime, interval, advance_booking_hours, isToday) {
     return new Promise((resolve, reject) => {
         array_slots = []
         start_time = starttime
         end_time = endtime
-        for (let i = parseInt(start_time.substring(0, 2)); i < parseInt(end_time.substring(0, 2)) - interval; i = i + interval) {
-            array_slots.push({ slot: [i, i + interval] })
+        current_time = moment()
+        if (isToday && moment(`${moment(current_time)}`).isAfter(moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)) && moment(`${moment(current_time)}`).isBefore(moment(`${moment(current_time).format('YYYY-MM-DD')} ${end_time}`))) {
+            start_time = current_time.format('HH:mm:ss')
+        }
+        start_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)
+        if (advance_booking_hours) {
+            start_time = moment(start_time, 'HH:mm').add(advance_booking_hours, 'minutes')
+        }
+        end_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${end_time}`)
+        while (start_time.isBefore(end_time)) {
+            // adding the minutes
+            array_slots.push({
+                slot: [start_time.format('HH:mm'), moment(start_time, 'HH:mm').add(interval, 'minutes').format('HH:mm')]
+            })
+            start_time = moment(start_time, 'HH:mm').add(interval, 'minutes')
         }
         resolve(array_slots)
     })
 }
+
+// exports.createSlots = function(starttime, endtime, interval) {
+//     return new Promise((resolve, reject) => {
+//         array_slots = []
+//         start_time = starttime
+//         end_time = endtime
+//         for (let i = parseInt(start_time.substring(0, 2)); i < parseInt(end_time.substring(0, 2)) - interval; i = i + interval) {
+//             array_slots.push({ slot: [i, i + interval] })
+//         }
+//         resolve(array_slots)
+//     })
+// }
 
 
 function newstarttime(datetime, minutes) {

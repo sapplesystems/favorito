@@ -302,11 +302,7 @@ exports.get_waitlist = async function(req, res, next) {
         // AND created_at >= '${time_1}'
         // AND created_at < '${time_2}'`
 
-<<<<<<< HEAD
-        console.log(`time_1 ${time_1}`)
-        console.log(`time_1 ${time_2}`)
-=======
->>>>>>> 2b1018260711469a47bd8e2890f8684d64acc577
+
 
         sql_count_total_waitlist = `SELECT id, user_id, DATE_FORMAT(created_at ,"%Y-%m-%d %H:%i:%s") as created_at, DATE_FORMAT(created_at_2,"%Y-%m-%d %H:%i:%s") as created_at_2, @curRank := @curRank + 1 AS rank FROM business_waitlist p, (SELECT @curRank := 0) r \n\
         WHERE business_id = '${req.body.business_id}' \n\
@@ -314,7 +310,6 @@ exports.get_waitlist = async function(req, res, next) {
         AND created_at >= '${time_1}'
         AND created_at < '${time_2}'
         AND waitlist_status != 'rejected'
-<<<<<<< HEAD
         ORDER BY  created_at_2`
 
         // sql_count_total_waitlist = `SELECT id, user_id, DATE_FORMAT(created_at ,"%Y-%m-%d %H:%i:%s") as created_at, DATE_FORMAT(created_at_2,"%Y-%m-%d %H:%i:%s") as created_at_2, @curRank := @curRank + 1 AS rank FROM business_waitlist p, (SELECT @curRank := 0) r \n\
@@ -324,13 +319,9 @@ exports.get_waitlist = async function(req, res, next) {
         // AND created_at < '${time_2}'
         // AND waitlist_status != 'rejected'
         // ORDER BY  created_at_2`
-=======
-        ORDER BY created_at_2`
->>>>>>> 2b1018260711469a47bd8e2890f8684d64acc577
+
 
         result_count_total_waitlist = await exports.run_query(sql_count_total_waitlist)
-            // return res.send(result_count_total_waitlist)
-            // console.log(result_count_total_waitlist)
         position = 0
         result_count_total_waitlist.map(element => {
             if (element.user_id == req.userdata.id) {
@@ -528,7 +519,6 @@ exports.business_waitlist_verbose = async function(req, res, next) {
                 // AND waitlist_status != 'rejected'`
 
                 result_count_total_waitlist = await exports.run_query(sql_count_total_waitlist)
-                console.log(result_count_total_waitlist)
                 if (result_count_total_waitlist[0].count < result_get_slot_setting[0].booking_per_slot) {
                     parties_before = result_count_total_waitlist[0].count
                     vacant_time_slot = time_1.substring(11, 16)
@@ -670,11 +660,11 @@ exports.set_waitlist = async function(req, res, next) {
 
     if (req.body.slot != '' && req.body.slot != null && req.body.slot != undefined) {
         slot_time = moment(new Date(), 'HHmmss').format('YYYY-MM-DD HH:mm:ss')
-<<<<<<< HEAD
-        time_slot_final = slot_time.substring(0, 11) + req.body.slot + ':00';
-=======
+
+        // time_slot_final = slot_time.substring(0, 11) + req.body.slot + ':00';
+
         time_slot_final = slot_time.substring(0, 11) + req.body.slot + slot_time.substring(16);
->>>>>>> 2b1018260711469a47bd8e2890f8684d64acc577
+
         data_to_insert.created_at = time_slot_final
     }
     // return res.send(time_slot_final)

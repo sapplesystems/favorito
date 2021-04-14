@@ -169,6 +169,31 @@ exports.login = function(req, res, next) {
     }
 };
 
+exports.getBusinessWebsite = async(req, res) => {
+    try {
+        var business_id = req.userdata.business_id;
+        sqlGetWebsite = `select ifnull(website, '') as website from business_master where business_id = '${business_id}'`
+        resultGetWebsite = await exports.run_query(sqlGetWebsite)
+        var website = [];
+        if (resultGetWebsite[0]['website'] != '' && resultGetWebsite[0]['website'] != 'undefined') {
+            var x = resultGetWebsite[0]['website'];
+            website_array_split = x.split('|_|');
+            for (let i = 0; i < website_array_split.length; i++) {
+                const element = website_array_split[i];
+                if (element != '' && element != null) {
+                    website.push(element)
+                }
+            }
+            resultGetWebsite[0]['website'] = website;
+        }
+        if (resultGetWebsite[0]['website'] == null || resultGetWebsite[0]['website'] == '') {
+            resultGetWebsite[0]['website'] = ' ';
+        }
+        return res.status(200).json({ status: 'success', message: 'success', data: website });
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+}
 
 /**
  * FETCH BUSINESS USER PROFILE INFORMATION (BUSINESS USER) START HERE

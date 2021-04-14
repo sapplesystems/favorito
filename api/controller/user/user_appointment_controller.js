@@ -17,17 +17,12 @@ exports.getVerboseAppointment = async(req, res, next) => {
         var result_business_name = await exports.run_query(sql_business_name)
         var result_get_all_service = await exports.run_query(sql_get_all_service)
         var result_appointment_setting = await exports.run_query(sql_booking_setting)
-        if (result_appointment_setting[0].slot_length > 24) {
-            return res.status(200).send({ status: 'success', message: 'Slot length in business booking setting should be less than 24 hour' });
-        }
-
         available_dates = []
         for (let j = 0; j < result_appointment_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
             available_dates.push({ date: moment(date).format('YYYY-MM-DD'), day: getDayNameByDate(moment(date).format('YYYY-MM-DD')) })
         }
         today_date = moment().format('YYYY-MM-DD')
-
 
         // if req has date then slot is according to the date or it will return today dates
 
@@ -50,8 +45,8 @@ exports.getVerboseAppointment = async(req, res, next) => {
                 const slot = slots_data.slots[i];
 
                 count_loop++;
-                const time_1 = `${slot.slot[0]}:00:00`
-                const time_2 = `${slot.slot[1]}:00:00`
+                const time_1 = `${slot.slot[0]}:00`
+                const time_2 = `${slot.slot[1]}:00`
                 const start_slot = `${date} ${time_1}`
                 const end_slot = `${date} ${time_2}`
 
@@ -137,14 +132,35 @@ exports.createSlotWithDate = async(result_appointment_setting, date) => {
 exports.createSlots = function(starttime, endtime, interval) {
     return new Promise((resolve, reject) => {
         array_slots = []
+
         start_time = starttime
         end_time = endtime
-        for (let i = parseInt(start_time.substring(0, 2)); i < parseInt(end_time.substring(0, 2)) - interval; i = i + interval) {
-            array_slots.push({ slot: [i, i + interval] })
+        current_time = moment()
+        start_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)
+        end_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${end_time}`)
+        while (start_time.isBefore(end_time)) {
+            // adding the minutes
+            array_slots.push({
+                slot: [start_time.format('HH:mm'), moment(start_time, 'HH:mm').add(interval, 'minutes').format('HH:mm')]
+            })
+            start_time = moment(start_time, 'HH:mm').add(interval, 'minutes')
         }
         resolve(array_slots)
     })
 }
+
+// exports.createSlots = function(starttime, endtime, interval) {
+//     return new Promise((resolve, reject) => {
+//         array_slots = []
+//         start_time = starttime
+//         end_time = endtime
+//         for (let i = parseInt(start_time.substring(0, 2)); i < parseInt(end_time.substring(0, 2)) - interval; i = i + interval) {
+//             array_slots.push({ slot: [i, i + interval] })
+//         }
+//         console.log(array_slots)
+//         resolve(array_slots)
+//     })
+// }
 
 exports.getPersonByServiceId = async(req, res) => {
     if (!req.body.service_id) {

@@ -176,8 +176,6 @@ exports.create_manual_booking = function(req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Contact not found.' });
         } else if (req.body.no_of_person == '' || req.body.no_of_person == 'undefined' || req.body.no_of_person == null) {
             return res.status(403).json({ status: 'error', message: 'Number of person not found.' });
-        } else if (req.body.special_notes == '' || req.body.special_notes == 'undefined' || req.body.special_notes == null) {
-            return res.status(403).json({ status: 'error', message: 'Special notes not found.' });
         } else if (req.body.created_date == '' || req.body.created_date == 'undefined' || req.body.created_date == null) {
             return res.status(403).json({ status: 'error', message: 'Date not found.' });
         } else if (req.body.created_time == '' || req.body.created_time == 'undefined' || req.body.created_time == null) {
@@ -379,9 +377,9 @@ function addMinutes(time, minutes) {
 }
 
 function newstarttime(datetime, minutes) {
-    // var date = new Date(new Date(datetime).getTime() + minutes * 60000);
+    var date = new Date(new Date(datetime).getTime() + minutes * 60000);
     // converting the time in the hour
-    var date = new Date(new Date(datetime).getTime() + minutes * 3600 * 1000);
+    // var date = new Date(new Date(datetime).getTime() + minutes * 3600 * 1000);
     var tempTime = ((date.getFullYear().toString().length == 1) ? '0' + date.getFullYear() : date.getFullYear()) + '-' + (((date.getMonth() + 1).toString().length == 1) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-' + ((date.getDate().toString().length == 1) ? '0' + date.getDate() : date.getDate()) + ' ' + ((date.getHours().toString().length == 1) ? '0' + date.getHours() : date.getHours()) + ':' +
         ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
         ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
