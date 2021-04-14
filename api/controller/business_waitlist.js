@@ -18,24 +18,30 @@ exports.all_business_waitlist = async function(req, res, next) {
         if (slots === false) {
             return res.status(400).json({ status: 'failed', message: 'Please save the wailist settings before accepting waitlist', data: [] });
         }
+
+        var sql_slot_length = `select slot_length from business_waitlist_setting where business_id = '${business_id}'`
+        var result_slot_length = await exports.run_query(sql_slot_length)
         var sql = "SELECT b_w.id,b_w.name, u.full_name as booked_by,b_w.contact,b_w.no_of_person,b_w.special_notes,b_w.waitlist_status, DATE_FORMAT(b_w.created_at, '%d %b') as waitlist_date, \n\
         DATE_FORMAT(b_w.created_at, '%H:%i') AS walkin_at FROM business_waitlist as b_w left join users u on b_w.user_id = u.id WHERE b_w.business_id='" + business_id + "' AND b_w.deleted_at IS NULL";
         // var sql = "SELECT id,`name`,contact,no_of_person,special_notes,waitlist_status, DATE_FORMAT(created_at, '%d %b') as waitlist_date, \n\
         // DATE_FORMAT(created_at, '%H:%i') AS walkin_at FROM business_waitlist WHERE business_id='" + business_id + "' AND deleted_at IS NULL";
         let result = await exports.run_query(sql)
-        for (let r = 0; r < result.length; r++) {
-            for (let i = 0; i < slots.length; i++) {
-                // console.log(slots[i][0].substring(11, 15))
-                var beginningTime = moment(slots[i][0].substring(11, 15), 'hh:mm');
-                var endTime = moment(slots[i][1].substring(11, 15), 'hh:mm');
-                var waitlist_book_time = moment(result[r].walkin_at, 'hh:mm')
-                if ((beginningTime.isBefore(waitlist_book_time) && waitlist_book_time.isBefore(endTime)) || waitlist_book_time.isSame(endTime)) {
-                    // slots[i][0].substring(slots[i][0].length - 1, slots[i][0].length)
-                    // result[r].slots = slots[i][0].substring(slots[i][0].length - 1, slots[i][0].length)
-                    // console.log([slots[i][0].substring(10, 16), slots[i][1].substring(10, 16)])
-                    result[r].slots = [slots[i][0].substring(10, 16), slots[i][1].substring(10, 16)]
-                }
-            }
+            // for (let r = 0; r < result.length; r++) {
+            //     for (let i = 0; i < slots.length; i++) {
+            //         // console.log(slots[i][0].substring(11, 15))
+            //         var beginningTime = moment(slots[i][0].substring(11, 15), 'hh:mm');
+            //         var endTime = moment(slots[i][1].substring(11, 15), 'hh:mm');
+            //         var waitlist_book_time = moment(result[r].walkin_at, 'hh:mm')
+            //         if ((beginningTime.isBefore(waitlist_book_time) && waitlist_book_time.isBefore(endTime)) || waitlist_book_time.isSame(endTime)) {
+            //             // slots[i][0].substring(slots[i][0].length - 1, slots[i][0].length)
+            //             // result[r].slots = slots[i][0].substring(slots[i][0].length - 1, slots[i][0].length)
+            //             // console.log([slots[i][0].substring(10, 16), slots[i][1].substring(10, 16)])
+            //             result[r].slots = [slots[i][0].substring(10, 16), slots[i][1].substring(10, 16)]
+            //         }
+            //     }
+            // }
+        for (let slot_i = 0; slot_i < result.length; slot_i++) {
+            result[slot_i].slot_length = result_slot_length[0].slot_length;
         }
         if (result.length > 0) {
             return res.status(200).json({ status: 'success', message: 'success', data: result });

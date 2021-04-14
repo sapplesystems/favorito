@@ -302,6 +302,8 @@ exports.get_waitlist = async function(req, res, next) {
         // AND created_at >= '${time_1}'
         // AND created_at < '${time_2}'`
 
+        console.log(`time_1 ${time_1}`)
+        console.log(`time_1 ${time_2}`)
 
         sql_count_total_waitlist = `SELECT id, user_id, DATE_FORMAT(created_at ,"%Y-%m-%d %H:%i:%s") as created_at, DATE_FORMAT(created_at_2,"%Y-%m-%d %H:%i:%s") as created_at_2, @curRank := @curRank + 1 AS rank FROM business_waitlist p, (SELECT @curRank := 0) r \n\
         WHERE business_id = '${req.body.business_id}' \n\
@@ -309,11 +311,17 @@ exports.get_waitlist = async function(req, res, next) {
         AND created_at >= '${time_1}'
         AND created_at < '${time_2}'
         AND waitlist_status != 'rejected'
-        ORDER BY created_at_2`
+        ORDER BY  created_at_2`
+
+        // sql_count_total_waitlist = `SELECT id, user_id, DATE_FORMAT(created_at ,"%Y-%m-%d %H:%i:%s") as created_at, DATE_FORMAT(created_at_2,"%Y-%m-%d %H:%i:%s") as created_at_2, @curRank := @curRank + 1 AS rank FROM business_waitlist p, (SELECT @curRank := 0) r \n\
+        // WHERE business_id = '${req.body.business_id}' \n\
+        // AND deleted_at IS NULL \n\
+        // AND created_at >= '${time_1}'
+        // AND created_at < '${time_2}'
+        // AND waitlist_status != 'rejected'
+        // ORDER BY  created_at_2`
 
         result_count_total_waitlist = await exports.run_query(sql_count_total_waitlist)
-            // return res.send(result_count_total_waitlist)
-            // console.log(result_count_total_waitlist)
         position = 0
         result_count_total_waitlist.map(element => {
             if (element.user_id == req.userdata.id) {
@@ -321,7 +329,6 @@ exports.get_waitlist = async function(req, res, next) {
             }
         });
 
-        // return res.send({ position, result_count_total_waitlist })
         result_business_name = await exports.run_query(sql_business_detail)
         data = []
         data_object = {}
@@ -342,6 +349,7 @@ exports.get_waitlist = async function(req, res, next) {
         data_object.booked_by = result_user_name[0].full_name
         data_object.minimum_wait_time = result_business_waitlist_setting[0].minium_wait_time
         data_object.duration_updated_and_created = duration
+            // data_object.parties_before_you = position
         if (position == 0) {
             data_object.parties_before_you = position
         } else {
@@ -413,12 +421,17 @@ exports.business_waitlist_verbose = async function(req, res, next) {
                 sql_count_total_waitlist = `SELECT COUNT(business_id) as count FROM business_waitlist \n\
                 WHERE business_id = '${business_id}' \n\
                 AND deleted_at IS NULL \n\
-                AND created_at > '${time_1}'
-                AND created_at < '${time_2}'
+                AND created_at = '${time_1}'
                 AND waitlist_status != 'rejected'`
 
+                // sql_count_total_waitlist = `SELECT COUNT(business_id) as count FROM business_waitlist \n\
+                // WHERE business_id = '${business_id}' \n\
+                // AND deleted_at IS NULL \n\
+                // AND created_at > '${time_1}'
+                // AND created_at < '${time_2}'
+                // AND waitlist_status != 'rejected'`
+
                 result_count_total_waitlist = await exports.run_query(sql_count_total_waitlist)
-                console.log(result_count_total_waitlist)
                 if (result_count_total_waitlist[0].count < result_get_slot_setting[0].booking_per_slot) {
                     parties_before = result_count_total_waitlist[0].count
                     vacant_time_slot = time_1.substring(11, 16)
@@ -488,7 +501,7 @@ exports.set_waitlist = async function(req, res, next) {
 
     if (req.body.slot != '' && req.body.slot != null && req.body.slot != undefined) {
         slot_time = moment(new Date(), 'HHmmss').format('YYYY-MM-DD HH:mm:ss')
-        time_slot_final = slot_time.substring(0, 11) + req.body.slot + slot_time.substring(16);
+        time_slot_final = slot_time.substring(0, 11) + req.body.slot + ':00';
         data_to_insert.created_at = time_slot_final
     }
     // return res.send(time_slot_final)

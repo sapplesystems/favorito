@@ -681,14 +681,15 @@ exports.listAllAppointment = async function(req, res, next) {
                             var sql3 = "SELECT start_hours,end_hours FROM `business_hours` WHERE `business_id` ='" + business_id + "' AND `day`='" + today_day + "'";
                             db.query(sql3, async function(err, result2) {
                                 if (result2.length > 0) {
-                                    var slots = await exports.getBookingSlots(business_id, today_date, result2[0].start_hours, result2[0].end_hours, slot_lenght);
+                                    var slots = await exports.getAppointmentSlots(business_id, today_date, result2[0].start_hours, result2[0].end_hours, slot_lenght);
                                     return res.status(200).json({ status: 'success', message: 'success', count_per_slot: count_per_slot, slot_lenght: slot_lenght, starttime: result2[0].start_hours, endtime: result2[0].end_hours, slots: slots });
                                 } else {
                                     return res.status(200).json({ status: 'success', message: 'success', count_per_slot: count_per_slot, slot_lenght: slot_lenght, starttime: '00:00:00', endtime: '00:00:00', slots: [] });
                                 }
                             });
                         } else {
-                            var slots = await exports.getBookingSlots(business_id, today_date, '00:00:00', '23:59:59', slot_lenght);
+                            var slots = await exports.getAppointmentSlots(business_id, today_date, '00:00:00', '23:59:59', slot_lenght);
+
                             return res.status(200).json({ status: 'success', message: 'success', count_per_slot: count_per_slot, slot_lenght: slot_lenght, starttime: '00:00:00', endtime: '23:59:59', slots: slots });
                         }
                     }
@@ -733,8 +734,8 @@ exports.getAppointmentSlots = async function(business_id, date, starttime, endti
                 var timestart = startdate_time;
                 startdate_time = newstarttime(startdate_time, interval);
                 var timeend = startdate_time;
-
                 var timeslotarray = await timeslotdata(business_id, timestart, timeend);
+
                 if (timeslotarray != 'undefined' && timeslotarray != null && timeslotarray != '') {
                     var startDate = new Date(new Date(timestart).getTime());
                     var endDate = new Date(new Date(timeend).getTime());
@@ -807,7 +808,7 @@ function addMinutes(time, minutes) {
 function newstarttime(datetime, minutes) {
     // var date = new Date(new Date(datetime).getTime() + minutes * 60000);
     // change the minute wise slot into the hour wise
-    var date = new Date(new Date(datetime).getTime() + minutes * 3600 * 1000);
+    var date = new Date(new Date(datetime).getTime() + minutes * 60000);
     var tempTime = ((date.getFullYear().toString().length == 1) ? '0' + date.getFullYear() : date.getFullYear()) + '-' + (((date.getMonth() + 1).toString().length == 1) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-' + ((date.getDate().toString().length == 1) ? '0' + date.getDate() : date.getDate()) + ' ' + ((date.getHours().toString().length == 1) ? '0' + date.getHours() : date.getHours()) + ':' +
         ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
         ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
