@@ -57,6 +57,7 @@ import 'package:Favorito/model/review/ReviewModel.dart';
 import 'package:Favorito/model/review/ReviewintroModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
+import 'package:Favorito/model/websiteModel.dart';
 import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/utils/Prefs.dart';
@@ -1991,6 +1992,20 @@ class WebService {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
       return ProfileImage.fromJson(convert.json.decode(response.toString()));
+    }
+  }
+  static Future<websiteModel> websitesList() async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.websitesList;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return websiteModel.fromJson(convert.json.decode(response.toString()));
     }
   }
 

@@ -23,15 +23,14 @@ class BusinessProfileProvider extends ChangeNotifier {
   CameraPosition _initPosition;
   Completer<GoogleMapController> GMapcontroller = Completer();
   Set<Marker> _marker = {};
-  List<TextEditingController> controller = List();
-
+  List<TextEditingController> controller = [];
   ScrollController listviewController = ScrollController();
-  List<FocusNode> focusnode = List();
-  List<String> error = List();
+  List<FocusNode> focusnode =[];
+  List<String> error = [];
   bool firstTime = true;
   ProgressDialog pr;
   int addressLength = 1;
-  int webSiteLength = 1;
+  List<String> websiteList = [];
   List<String> cityList = ["Please Select ..."];
   List<CityModel> _cityModel = [];
   List<String> stateList = ["Please Select ..."];
@@ -65,11 +64,12 @@ class BusinessProfileProvider extends ChangeNotifier {
 
   BusinessProfileProvider() {
     _getCurrentLocation();
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < 15; i++) {
       controller.add(TextEditingController());
       focusnode.add(FocusNode());
       error.add(null);
     }
+    getWebSiteList();
     getProfileData(false);
     getBusinessProfileData();
     _cityWebData();
@@ -101,20 +101,15 @@ class BusinessProfileProvider extends ChangeNotifier {
   }
 
   prepareWebService() async {
-    var website = '';
-    for (int _i = 0; _i < webSiteLength; _i++) {
-      if (controller[_i + 15].text.isEmpty) {
-      } else {
-        website = controller[_i + 15].text?.trim() + "," + website;
+    websiteList.clear();
+    for (int _i = 15; _i < controller.length; _i++) {
+      if(controller[_i].text!=null){
+        websiteList.add(controller[_i].text.trim());
       }
     }
     List<Map> lst = List();
 
     controller[5].text = lst.toString();
-    // if (_controller[4].text == "Select Hours" && lst.length == 0) {
-    //   BotToast.showText(text: "Please select time stols!!");
-    //   return;
-    // }
     addressList.clear();
     for (int i = 0; i < addressLength; i++)
       addressList.add(controller[i + 6].text);
@@ -129,6 +124,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       BotToast.showText(text: 'To continue turn on location services!');
       return;
     }
+    print("asas:${websiteList?.toString()?.trim()}");
     Map<String, dynamic> map = {
       "business_name": controller[1].text,
       "landline": controller[3].text,
@@ -140,7 +136,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       "country_id": '1',
       "location": positions ?? "",
       "working_hours": dd1.currentState.getSelectedItem,
-      "website": website?.contains(',') ? website.trim()?.split(",") : null,
+      "website": websiteList,
       "business_email": controller[13].text,
       "short_description": controller[14].text,
       "photo": "${controller[0].text}",
@@ -299,7 +295,6 @@ class BusinessProfileProvider extends ChangeNotifier {
   }
 
   void webSiteLengthPlus() {
-    webSiteLength++;
     controller.add(TextEditingController());
     notifyListeners();
   }
@@ -308,6 +303,26 @@ class BusinessProfileProvider extends ChangeNotifier {
     await WebService.funGetBusinessProfileData().then((value) {
       _businessProfileData = value;
       notifyListeners();
+    });
+  }
+
+  getWebSiteList()async{
+    await WebService.websitesList().then((value) {
+   try{
+      if((value?.data?.length??0)>0){
+        websiteList.clear();
+        websiteList.addAll(value.data);
+        for(int _i=0;_i<websiteList.length;_i++){
+          print("fdfdf:${websiteList[_i]}");
+          controller.add(TextEditingController());
+          controller[controller.length-1].text=websiteList[_i];
+        }
+        notifyListeners();
+      }
+        }catch(e){
+      print("Website Error:${e.toString()}");
+    }
+
     });
   }
 
@@ -367,7 +382,7 @@ class BusinessProfileProvider extends ChangeNotifier {
   allClear() {
     BusinessProfileModel _temp = BusinessProfileModel();
     _businessProfileData = _temp;
-    webSiteLength = 1;
+
     controller.forEach((e) {
       e.text = '';
     });
