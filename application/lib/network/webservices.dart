@@ -1,8 +1,11 @@
+import 'dart:convert' as convert;
 import 'dart:io';
+
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
+import 'package:Favorito/model/TagModel.dart';
 import 'package:Favorito/model/VerifyOtp.dart';
 import 'package:Favorito/model/adSpentModel.dart';
 import 'package:Favorito/model/appoinment/RestrictionModel.dart';
@@ -14,8 +17,9 @@ import 'package:Favorito/model/booking/bookingListModel.dart';
 import 'package:Favorito/model/booking/bookingSettingModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/business/HoursModel.dart';
-import 'package:Favorito/model/businessInfoImage.dart';
 import 'package:Favorito/model/businessInfo/businessInfoModel.dart';
+import 'package:Favorito/model/businessInfoImage.dart';
+import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogDetailModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
@@ -31,18 +35,14 @@ import 'package:Favorito/model/job/EditJobDataModel.dart';
 import 'package:Favorito/model/job/JobListRequestModel.dart';
 import 'package:Favorito/model/job/PincodeListModel.dart';
 import 'package:Favorito/model/job/SkillListRequiredDataModel.dart';
-import 'package:Favorito/model/dashModel.dart';
-import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItem.dart';
 import 'package:Favorito/model/menu/MenuItem/MenuItemModel.dart';
 import 'package:Favorito/model/menu/MenuSettingModel.dart';
 import 'package:Favorito/model/menu/MenuVerbose.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
-import 'package:Favorito/model/notification/CreateNotificationRequestModel.dart';
 import 'package:Favorito/model/notification/CreateNotificationRequiredDataModel.dart';
 import 'package:Favorito/model/notification/NotificationListRequestModel.dart';
-import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/model/notification/NotificationOneModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequestModel.dart';
 import 'package:Favorito/model/offer/CreateOfferRequiredDataModel.dart';
@@ -55,7 +55,6 @@ import 'package:Favorito/model/registerModel.dart';
 import 'package:Favorito/model/review/ReviewListModel.dart';
 import 'package:Favorito/model/review/ReviewModel.dart';
 import 'package:Favorito/model/review/ReviewintroModel.dart';
-import 'package:Favorito/model/TagModel.dart';
 import 'package:Favorito/model/waitlist/WaitlistListModel.dart';
 import 'package:Favorito/model/waitlist/waitListSettingModel.dart';
 import 'package:Favorito/network/RequestModel.dart';
@@ -64,11 +63,10 @@ import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/utils/UtilProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
-import 'package:connectivity/connectivity.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -908,10 +906,11 @@ class WebService {
         .fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<bookingListModel> funBookingList() async {
+  static Future<bookingListModel> funBookingList(Map _map) async {
     String token = await Prefs.token;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(serviceFunction.funBookingList, options: opt);
+    response = await dio.post(serviceFunction.funBookingList,
+        options: opt, data: _map);
     return bookingListModel.fromJson(convert.json.decode(response.toString()));
   }
 
@@ -1606,7 +1605,28 @@ class WebService {
   }
 
   //resetPassword
-  static Future<verifyOtpModel> funChangePassword(Map _map) async {
+  static Future<verifyOtpModel> funChangePassword(
+      Map _map, BuildContext _context) async {
+    if (!await utilProvider.checkInternet())
+      return verifyOtpModel(
+          status: 'fail', message: 'Please check internet connections');
+    final ProgressDialog pr = ProgressDialog(_context,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     print("map:${_map}");
     String token = await Prefs.token;
     opt = Options(
@@ -1614,8 +1634,43 @@ class WebService {
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
 
     String url = serviceFunction.funChangePassword;
-    response = await dio.post(url, data: _map, options: opt);
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      pr.hide();
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return verifyOtpModel(status: 'fail', message: "Server not responding");
+      }
+    } finally {
+      if (pr.isShowing()) pr.hide();
+    }
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  //resetPassword
+  static Future<BaseResponseModel> deleteBooking(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponseModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    print("map:${_map}");
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = serviceFunction.deleteBooking;
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        return BaseResponseModel(
+            status: 'fail', message: "Server not responding");
+      }
+    }
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<BaseResponseModel> funClaimVerifyOtp(

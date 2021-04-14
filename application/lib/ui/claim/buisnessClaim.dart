@@ -170,6 +170,7 @@ class _BusinessClaimState extends State<BusinessClaim> {
                                           ),
                                         ),
                                         PinCodeTextField(
+                                          onChanged: (d) {},
                                           length: 5,
                                           controller: textEditingController,
                                           obscureText: true,

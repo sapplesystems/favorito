@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -22,4 +23,10 @@ class RIKeys {
   static final josKeys16 = GlobalKey<ScaffoldState>(); //UpdateEmail
   static final josKeys17 = GlobalKey<ScaffoldState>(); //UpdateEmail
   static final josKeys18 = GlobalKey<ScaffoldState>(); //Waitlist
+  static final josKeys19 = GlobalKey<ScaffoldState>(); //BookTable
+  static final josKeys20 = GlobalKey<FormState>(); //BookTableForm
+  static final josKeys21 =
+  GlobalKey<DropdownSearchState<String>>();
+  //BookTable
+  static final josKeys22 = GlobalKey<ScaffoldState>(); //Booking&appoinmnet list
 }

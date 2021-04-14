@@ -17,8 +17,10 @@ class Prefs {
   static Future<int> get postal => SharedPrefUtils.getInt(POSTEL);
   static Future setPOSTEL(int value) => SharedPrefUtils.setInt(POSTEL, value);
 
-  // static Future<String> get name => SharedPrefUtils.getString(NAME);
-  // static Future setName(String value) => SharedPrefUtils.setString(NAME , value);
+  static Future<String> get businessId =>
+      SharedPrefUtils.getString(BUSINESS_ID);
+  static Future setName(String value) =>
+      SharedPrefUtils.setString(BUSINESS_ID, value);
 
   // static Future<int> get rolenumber => SharedPrefUtils.getInt(ROLENUMBER);
   // static Future setrolenumber(int value) => SharedPrefUtils.setInt(ROLENUMBER, value);

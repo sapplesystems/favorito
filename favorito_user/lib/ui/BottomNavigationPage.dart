@@ -1,9 +1,9 @@
-import 'package:favorito_user/Providers/BookTableProvider.dart';
+import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/chat/Chat.dart';
 import 'package:favorito_user/ui/home/Home.dart';
-import 'package:favorito_user/ui/profile/user/profile.dart';
 import 'package:favorito_user/ui/search/Search.dart';
+import 'package:favorito_user/ui/user/profile.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
@@ -21,7 +21,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   void initState() {
-    Provider.of<AppBookProvider>(context, listen: false).setIsBooking(2);
     _widgetOptions = <Widget>[
       Home(),
       Search(),

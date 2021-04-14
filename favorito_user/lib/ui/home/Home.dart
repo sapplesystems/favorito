@@ -4,10 +4,10 @@ import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfoProvider.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/UserAddress.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +114,12 @@ class _HomeState extends State<Home> {
                             ),
                             Text(
                                 "${data?.getSelectedAddress()}  ${data?.getSelectedAddress().length > 1 ? '\u{25bc}' : ''}",
-                                textAlign: TextAlign.start)
+                                textAlign: TextAlign.start),
+                            Text(
+                              'v1.0',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 8),
+                            )
                           ]);
                     })),
                   ),

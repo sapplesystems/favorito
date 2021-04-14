@@ -59,7 +59,7 @@ var getSlots = async(business_id) => {
         sql_get_slot_setting = `SELECT start_time,end_time , slot_length,booking_per_slot,minium_wait_time FROM business_waitlist_setting \n\
                 WHERE business_id = '${business_id}'`
         result_get_slot_setting = await exports.run_query(sql_get_slot_setting)
-            // console.log(result_get_slot_setting)
+        console.log(result_get_slot_setting)
         if (result_get_slot_setting && result_get_slot_setting[0].start_time == null && result_get_slot_setting[0].end_time == null && result_get_slot_setting[0].slot_length == 0) {
             return resolve(false)
         }
@@ -81,7 +81,6 @@ var getSlots = async(business_id) => {
         for (let index = 0; index < array_slots.length - 1; index++) {
             final_arr_slots.push([array_slots[index], array_slots[index + 1]])
         }
-        // console.log(final_arr_slots);
         resolve(final_arr_slots)
     })
 }
@@ -195,12 +194,12 @@ exports.save_setting = function(req, res, next) {
         }
 
         var sql = "UPDATE business_waitlist_setting SET " + update_column + " WHERE business_id='" + business_id + "'";
-
         db.query(sql, function(err, result) {
-            if (err) {
+            if(result.affectedRows>0){
+                return res.status(200).json({ status: 'success', message: 'Waitlist settings saved successfully.' });
+            }else{
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'Waitlist settings saved successfully.' });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });

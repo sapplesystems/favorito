@@ -65,7 +65,7 @@ class LoginProvider extends BaseProvider {
 
         print("token : ${value.token}");
         Navigator.pop(RIKeys.josKeys13.currentContext);
-        Navigator.of(RIKeys.josKeys13.currentContext).pushNamed('/navbar');
+        Navigator.of(RIKeys.josKeys13.currentContext).pushNamed('/');
       }
     });
   }
@@ -189,7 +189,7 @@ class LoginProvider extends BaseProvider {
 
             print("token : ${value.token}");
             Navigator.pop(_scKey.currentContext);
-            Navigator.of(_scKey.currentContext).pushNamed('/navbar');
+            Navigator.of(_scKey.currentContext).pushNamed('/');
           } else
             this.snackBar(value.message, key);
         });

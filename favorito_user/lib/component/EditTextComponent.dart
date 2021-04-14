@@ -48,12 +48,14 @@ class EditTextComponent extends StatefulWidget {
       this.suffixTap,
       this.error,
       this.errorColor});
+
   @override
   _EditTextComponentState createState() => _EditTextComponentState();
 }
 
 class _EditTextComponentState extends State<EditTextComponent> {
   SizeManager sm;
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -63,18 +65,17 @@ class _EditTextComponentState extends State<EditTextComponent> {
             shape: NeumorphicShape.convex,
             depth: -8,
             lightSource: LightSource.topLeft,
-            color: myEditTextBackground,
+            color: myBackGround,
             boxShape: NeumorphicBoxShape.roundRect(
                 BorderRadius.all(Radius.circular(30.0)))),
-        child: Container(
-          child: TextFormField(
-            controller: widget.controller,
-            obscureText: widget.security,
-            maxLength: widget.maxlen,
-            inputFormatters: [
-              widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
-            ],
-            decoration: InputDecoration(
+        child: TextFormField(
+          controller: widget.controller,
+          obscureText: widget.security,
+          maxLength: widget.maxlen,
+          inputFormatters: [
+            widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
+          ],
+          decoration: InputDecoration(
               suffix: InkWell(
                   onTap: () => widget.suffixTap(),
                   child: Text(widget.suffixTxt ?? '')),
@@ -134,19 +135,20 @@ class _EditTextComponentState extends State<EditTextComponent> {
               hintText: widget.hint ?? '',
               alignLabelWithHint: true,
               hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
-              contentPadding: EdgeInsets.only(top: 14, right: 16),
+              contentPadding: EdgeInsets.only(
+                  top: (widget.maxLines ?? 1) > 1 ? 14 : 0,
+                  right: 16,
+                  left: 16),
               fillColor: Colors.transparent,
-              border: InputBorder.none,
-            ),
-            autofocus: false,
-            keyboardType: widget.keyboardSet,
-            textInputAction: widget.keyBoardAction,
-            style: TextStyle(fontFamily: "Poppins"),
-            maxLines: widget.maxLines ?? 1,
-            onChanged: widget.myOnChanged,
-            enabled: widget.isEnabled,
-            onFieldSubmitted: widget.atSubmit,
-          ),
+              border: InputBorder.none),
+          autofocus: false,
+          keyboardType: widget.keyboardSet,
+          textInputAction: widget.keyBoardAction,
+          style: TextStyle(fontFamily: "Poppins"),
+          maxLines: widget.maxLines ?? 1,
+          onChanged: widget.myOnChanged,
+          enabled: widget.isEnabled,
+          onFieldSubmitted: widget.atSubmit,
         ),
       ),
       Padding(

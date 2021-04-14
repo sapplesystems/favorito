@@ -5,7 +5,7 @@ class BookingOrAppointmentDataModel {
   String businessName;
   String businessPhone;
   String status;
-  int avgRating;
+  var avgRating;
   int noOfPerson;
   String review;
   String occasion;

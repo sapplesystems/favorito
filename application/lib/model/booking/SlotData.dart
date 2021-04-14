@@ -8,8 +8,6 @@ class SlotData {
   String specialNotes;
   String createdDate;
   String createdTime;
-  String startTime;
-  String endTime;
 
   SlotData(
       {this.id,
@@ -20,9 +18,7 @@ class SlotData {
       this.noOfPerson,
       this.specialNotes,
       this.createdDate,
-      this.createdTime,
-      this.startTime,
-      this.endTime});
+      this.createdTime});
 
   SlotData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -34,8 +30,6 @@ class SlotData {
     specialNotes = json['special_notes'];
     createdDate = json['created_date'];
     createdTime = json['created_time'];
-    startTime = json['start_time'];
-    endTime = json['end_time'];
   }
 
   Map<String, dynamic> toJson() {
@@ -49,8 +43,6 @@ class SlotData {
     data['special_notes'] = this.specialNotes;
     data['created_date'] = this.createdDate;
     data['created_time'] = this.createdTime;
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
     return data;
   }
 }

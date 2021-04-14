@@ -38,7 +38,8 @@ class WaitlistProvider extends ChangeNotifier {
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday"
+    'Saturday',
+    'Always Open'
   ];
   needSave(bool _val) {
     _done = _val;

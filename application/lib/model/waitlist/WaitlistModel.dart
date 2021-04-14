@@ -7,6 +7,7 @@ class WaitlistModel {
   String waitlistStatus;
   String waitlistDate;
   String walkinAt;
+  String bookedBy;
 
   WaitlistModel(
       {this.id,
@@ -16,7 +17,8 @@ class WaitlistModel {
       this.specialNotes,
       this.waitlistStatus,
       this.waitlistDate,
-      this.walkinAt});
+      this.walkinAt,
+      this.bookedBy});
 
   WaitlistModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -27,6 +29,7 @@ class WaitlistModel {
     waitlistStatus = json['waitlist_status'];
     waitlistDate = json['waitlist_date'];
     walkinAt = json['walkin_at'];
+    bookedBy = json['booked_by'];
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +42,7 @@ class WaitlistModel {
     data['waitlist_status'] = this.waitlistStatus;
     data['waitlist_date'] = this.waitlistDate;
     data['walkin_at'] = this.walkinAt;
+    data['booked_by'] = this.bookedBy;
     return data;
   }
 }

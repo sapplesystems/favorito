@@ -65,6 +65,7 @@ class service {
   //booking
   static final baseUserBookingList = baseUserBooking + 'get-book-table';
   static final baseUserBookingVerbose = baseUserBooking + 'get-booking-verbose';
+  static final baseUserBookingCreate = baseUserBooking + 'set-book-table';
 
   //appoinment
   static final baseUserAppointmentList =
@@ -103,4 +104,6 @@ class service {
   static final verifyLogin = base + 'user/verify-login-otp';
   static final emailRegister = base + 'user/email-register';
   static final changePassword = base + 'user/set-password';
+
+
 }

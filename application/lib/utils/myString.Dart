@@ -28,7 +28,7 @@ String waitlist = "Waitlist";
 String appoinmentSettingtxt = "Appoinment Setting";
 String donetxt = "Done";
 
-String bookingSetting = "Booking Setting";
+String bookingSetting = "Booking Settings";
 String loading = "Loading...";
 String wentWrong = "Something went wrong..";
 String businessInformation = "Business Information";

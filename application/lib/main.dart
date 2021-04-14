@@ -1,6 +1,7 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
+import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
@@ -42,6 +43,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => JobProvider()),
       ChangeNotifierProvider(create: (context) => NotificationsProvider()),
       ChangeNotifierProvider(create: (context) => UtilProvider()),
+      ChangeNotifierProvider(create: (context) => BookingProvider()),
     ], child: MyApp()));
   });
 }
@@ -56,19 +58,18 @@ class MyApp extends StatelessWidget {
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       theme: ThemeData(
+        fontFamily: 'Gilroy-Regular',
         textTheme: TextTheme(
           title: TextStyle(
               fontSize: 28, color: Colors.black, fontFamily: 'Gilroy-Bold'),
-          // subhead: TextStyle(fontSize: 14, color: myGrey),
           body1: TextStyle(fontSize: 16, color: Colors.black),
-          body2: TextStyle(fontSize: 18, color: Colors.black),
+          body2: TextStyle(fontSize: 18, color: Colors.black)
         ),
-        fontFamily: 'Gilroy-Regular',
         primaryColor: myRed,
         accentColor: myRedLight,
         appBarTheme: AppBarTheme(
           color: myBackGround,
-          elevation: 0,
+          elevation: 0
         ),
         cardTheme: CardTheme(shape: roundedRectangleBorder, elevation: 2),
         iconTheme: IconThemeData(color: Colors.red),
@@ -76,7 +77,7 @@ class MyApp extends StatelessWidget {
         bottomAppBarColor: myBackGround,
         bottomAppBarTheme: BottomAppBarTheme(color: myBackGround),
         primarySwatch: Colors.red,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        visualDensity: VisualDensity.adaptivePlatformDensity
       ),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,

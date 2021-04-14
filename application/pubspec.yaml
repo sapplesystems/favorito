@@ -61,6 +61,7 @@ dependencies:
   connectivity:
   image_cropper:
   google_maps_place_picker:
+  time_picker_widget:
   http:
   
   

@@ -9,7 +9,7 @@ import 'package:favorito_user/model/appModel/SearchFilterList.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
@@ -127,11 +127,10 @@ class _SearchResultState extends State<SearchResult> {
                       clr: myRed,
                       icon: Icons.close,
                       function: () => setState(() {
-                            for (var temp in allFilters) {
-                              if (temp.filter == selectedFilters[i]) {
+                            for (var temp in allFilters)
+                              if (temp.filter == selectedFilters[i])
                                 temp.selected = false;
-                              }
-                            }
+
                             selectedFilters.removeAt(i);
                           }))
               ]),

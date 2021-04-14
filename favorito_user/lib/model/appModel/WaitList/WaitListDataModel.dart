@@ -13,6 +13,7 @@ class WaitListDataModel {
   String businessId;
   String contact;
   Function fun1;
+  var slotLength;
   WaitListDataModel(
       {this.partiesBeforeYou,
       this.businessName,
@@ -27,6 +28,7 @@ class WaitListDataModel {
       this.noOfPerson,
       this.businessId,
       this.contact,
+      this.slotLength,
       this.fun1});
 
   WaitListDataModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,7 @@ class WaitListDataModel {
     bookedSlot = json['booked_slot'];
     noOfPerson = json['no_of_person'];
     businessId = json['business_id'];
+    slotLength = json['slot_length'];
     contact = json['contact'];
   }
 
@@ -59,6 +62,7 @@ class WaitListDataModel {
     data['booked_slot'] = this.bookedSlot;
     data['no_of_person'] = this.noOfPerson;
     data['business_id'] = this.businessId;
+    data['slot_length'] = this.slotLength;
     data['contact'] = this.contact;
     return data;
   }

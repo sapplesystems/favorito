@@ -136,7 +136,7 @@ class APIManager {
       response =
           await dio.post(service.businessCarousel, data: map, options: opt);
     } catch (e) {
-      BotToast.showText(text: e.toString());
+      // BotToast.showText(text: e.toString());
     }
     print("Request URL:${service.businessCarousel}");
     print("responseData1:${response.toString()}");
@@ -434,12 +434,21 @@ class APIManager {
 //userdetail
   static Future<ProfileModel> userdetail(
       Map _map, GlobalKey<ScaffoldState> josKeys3) async {
+    if (!await utilProvider.checkInternet())
+      return ProfileModel(
+          status: 'fail', message: 'Please check internet connections');
+
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    response = await dio.post(service.userdetail, data: _map, options: opt);
+    String url = service.userdetail;
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, url, josKeys3);
+    }
     print("service.mostPopulerBusiness : ${response.toString}");
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
   }
@@ -521,18 +530,29 @@ class APIManager {
   }
 
   //WaitList
-  static Future<WaitListBaseModel> baseUserWaitlistVerbose(Map _map) async {
+  static Future<WaitListBaseModel> baseUserWaitlistVerbose(
+      Map _map, GlobalKey<ScaffoldState> _key) async {
+    if (!await utilProvider.checkInternet())
+      return WaitListBaseModel(
+          status: 'fail', message: 'Please check internet connections');
+
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
-        contentType: Headers.formUrlEncodedContentType,
+        // contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print(
         "service.baseUserWaitlistVerbose : ${service.baseUserWaitlistVerbose}");
+    String url = service.baseUserWaitlistVerbose;
+    try {
+      response = await dio.post(url, data: _map, options: opt);
 
-    response = await dio.post(service.baseUserWaitlistVerbose,
-        data: _map, options: opt);
+      print("service.baseUserWaitlistVerbose : ${response.toString}");
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, url, _key);
+    }
     print("service.baseUserWaitlistVerbose : ${response.toString}");
+    print("aaaaaa" + response.statusMessage.toString());
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
@@ -561,20 +581,33 @@ class APIManager {
     response =
         await dio.post(service.baseUserWaitlistGet, data: _map, options: opt);
     print("service.baseUserWaitlistGet : ${response.toString}");
+    print("token : $token");
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-  static Future<WaitListBaseModel> baseUserWaitlistCancel(Map _map) async {
+  static Future<WaitListBaseModel> baseUserWaitlistCancel(
+      Map _map, GlobalKey _key) async {
+    if (!await utilProvider.checkInternet())
+      return WaitListBaseModel(
+          status: 'fail', message: 'Please check internet connections');
+
     String token = await Prefs.token;
     print('token : ${token.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserWaitlistCancel : ${service.baseUserWaitlistCancel}");
+    String url = service.baseUserWaitlistCancel;
+    print("$url : $url");
+    print("RequestData12 : ${_map.toString()}");
 
-    response = await dio.post(service.baseUserWaitlistCancel,
-        data: _map, options: opt);
-    print("service.baseUserWaitlistCancel : ${response.toString}");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+      print("service.baseUserWaitlistVerbose : ${response.toString}");
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, url, _key);
+    }
+
+    print("$url : ${response.toString}");
     return WaitListBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
@@ -595,9 +628,30 @@ class APIManager {
 
   //booking
   static Future<BookingOrAppointmentListModel> baseUserBookingList(
-      Map _map, int isBooking) async {
+      Map _map, bool isBooking,GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return BookingOrAppointmentListModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
+        type: ProgressDialogType.Normal, isDismissible: false)
+      ..style(
+          message: 'Please wait...',
+          borderRadius: 8.0,
+          backgroundColor: Colors.white,
+          progressWidget: CircularProgressIndicator(),
+          elevation: 8.0,
+          insetAnimCurve: Curves.easeInOut,
+          progress: 0.0,
+          maxProgress: 100.0,
+          progressTextStyle: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+          messageTextStyle: TextStyle(
+              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
+      ..show();
+
     String token = await Prefs.token;
-    String url = isBooking == 0
+    String url = isBooking
         ? service.baseUserBookingList
         : service.baseUserAppointmentList;
 
@@ -605,10 +659,17 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserBookingList : $url");
 
-    response = await dio.post(url, data: _map, options: opt);
-    print("service.baseUserBookingList : ${response.toString}");
+    print("service.baseUserBookingList : $url");
+try{
+
+  response = await dio.post(url, data: _map, options: opt);
+  pr.hide();
+}on DioError catch (e) {
+  ExceptionHandler(e, pr, url, formKey);
+} finally {
+  pr.hide();
+}
     return BookingOrAppointmentListModel.fromJson(
         convert.jsonDecode(response.toString()));
   }
@@ -616,6 +677,9 @@ class APIManager {
   //getTableVerboseData
   // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
   static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BookTableVerbose(
+          status: 'fail', message: 'Please check internet connections');
     String token = await Prefs.token;
     String url = service.baseUserBookingVerbose;
     print('Resuest data : ${_map.toString()}');
@@ -623,10 +687,41 @@ class APIManager {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print("baseUserBookingVerbose : $url");
-
-    response = await dio.post(url, data: _map, options: opt);
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      BotToast.showText(
+          text:
+              BaseResponse.fromJson(convert.json.decode(e.response.toString()))
+                  .message);
+    }
     print("baseUserBookingVerbose response : ${response.toString}");
     return BookTableVerbose.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //baseUserBookingCreate
+  // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
+  static Future<BaseResponse> baseUserBookingCreate(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponse(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserBookingCreate;
+    print('Resuest data : ${_map.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("baseUserBookingCreate : $url");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      BotToast.showText(
+          text:
+              BaseResponse.fromJson(convert.json.decode(e.response.toString()))
+                  .message);
+    }
+    print("baseUserBookingCreate response : ${response.toString}");
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
 
   //Menu
@@ -1211,18 +1306,21 @@ class APIManager {
   }
 
   static void ExceptionHandler(DioError e, pr, url, formKey) {
-    pr.hide();
+    pr?.hide();
     if (e.error is SocketException) {
       BotToast.showText(text: "Server not responding");
       response = null;
     } else {
-      pr.hide();
       if (e.response.statusCode == 401) {
+        Navigator.of(formKey.currentContext).pushNamed('/login');
+      }
+
+      if (e.response.statusCode == 500) {
         BotToast.showText(
             text: BaseResponse.fromJson(
                     convert.json.decode(e.response.toString()))
                 .message);
-        print("$url:401");
+        print("$url:500");
         // Navigator.of(formKey.currentContext).pushNamed('/login');
       }
       if (e.response.statusCode == 400) {

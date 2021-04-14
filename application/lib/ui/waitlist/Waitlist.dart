@@ -26,16 +26,17 @@ class Waitlist extends StatefulWidget {
 class Waitlists extends State<Waitlist> {
   WaitlistListModel waitlistData;
   bool isFirst = true;
+  GlobalKey<ScaffoldState> key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
+        key: key,
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop()),
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(waitlist,
               style: TextStyle(
@@ -71,7 +72,6 @@ class Waitlists extends State<Waitlist> {
               if (snapshot.hasError)
                 return Center(child: Text(''));
               else {
-                print("aaaa3");
                 waitlistData = snapshot.data;
                 return Container(
                   margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 4.0),
@@ -109,103 +109,132 @@ class Waitlists extends State<Waitlist> {
                                   SizedBox(
                                     width: sm.w(43),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: AutoSizeText(
-                                            va.name
-                                                    ?.toLowerCase()
-                                                    ?.capitalize() ??
-                                                '',
-                                            minFontSize: 22,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.w600),
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: AutoSizeText(
+                                              va.bookedBy
+                                                      ?.toLowerCase()
+                                                      ?.capitalize() ??
+                                                  '',
+                                              minFontSize: 22,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(
-                                            "Walk-in | ${va.walkinAt ?? ''}",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400),
+                                          Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Text(
+                                              "Walk-in | ${va.walkinAt ?? ''}",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: AutoSizeText(
-                                            va.specialNotes ?? '',
-                                            style: TextStyle(color: myGrey),
-                                            maxLines: 1,
-                                            minFontSize: 16,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: AutoSizeText(
+                                              va.specialNotes ?? '',
+                                              style: TextStyle(color: myGrey),
+                                              maxLines: 1,
+                                              minFontSize: 16,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          )
+                                        ]),
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Row(
-                                        children: [
-                                          IconButton(
+                                      Row(children: [
+                                        IconButton(
+                                          iconSize: sm.w(8),
+                                          icon: SvgPicture.asset(
+                                              'assets/icon/call.svg',
+                                              height: sm.w(7)),
+                                          onPressed: () => _callPhone(
+                                              'tel:${va.contact ?? ''}'),
+                                        ),
+                                        IconButton(
                                             iconSize: sm.w(8),
-                                            icon:
-                                                Icon(Icons.call, color: myRed),
-                                            onPressed: () => _callPhone(
-                                                'tel:${va.contact ?? ''}'),
-                                          ),
-                                          IconButton(
-                                              iconSize: sm.w(8),
-                                              icon: Icon(
-                                                  FontAwesomeIcons.trashAlt,
-                                                  size: 22,
-                                                  color: myRed),
-                                              onPressed: () {
-                                                showDialog(builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: const Text(
-                                                        "Please confirm"),
-                                                    content: Text(
-                                                        'Are you sure you want to delete ?'),
-                                                    actions: [
-                                                      new FlatButton(
-                                                          child:
-                                                              const Text("Ok"),
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            waitListDelete(
-                                                                va.id ?? 0,
-                                                                index);
-                                                          }),
-                                                      new FlatButton(
-                                                        child: const Text(
-                                                            "Cancel"),
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                                context),
+                                            icon: SvgPicture.asset(
+                                                'assets/icon/delete.svg',
+                                                height: sm.w(6)),
+                                            onPressed: () {
+                                              showModalBottomSheet<void>(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Container(
+                                                      height: 100,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            '\t\t\t\t\tAre you sure you want to delete ?',
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'Gilroy-Medium'),
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              TextButton(
+                                                                  child: Text(
+                                                                      "Ok",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              myRed,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontFamily:
+                                                                              'Gilroy-Medium')),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    waitListDelete(
+                                                                        va.id ??
+                                                                            0,
+                                                                        index);
+                                                                  }),
+                                                              InkWell(
+                                                                child: Text(
+                                                                  "Cancel",
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          myRed,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontFamily:
+                                                                          'Gilroy-Medium'),
+                                                                ),
+                                                                onTap: () =>
+                                                                    Navigator.pop(
+                                                                        context),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
                                                       ),
-                                                      new FlatButton(
-                                                        child: const Text(''),
-                                                        onPressed: () =>
-                                                            Navigator.pop(
-                                                                context),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                              })
-                                        ],
-                                      ),
+                                                    );
+                                                  });
+                                            })
+                                      ]),
                                       Row(
                                         children: [
                                           IconButton(
@@ -216,8 +245,11 @@ class Waitlists extends State<Waitlist> {
                                                       ? myGrey
                                                       : myRed),
                                               onPressed: () {
-                                                if (va.waitlistStatus ??
-                                                    '' != "accepted")
+                                                print(
+                                                    "aaaaa${va?.waitlistStatus ?? "d"}");
+
+                                                if (va.waitlistStatus !=
+                                                    "accepted")
                                                   UpdateWaitList(
                                                       "accepted", va.id ?? 0);
                                               }),
@@ -285,6 +317,7 @@ class Waitlists extends State<Waitlist> {
           .then((value) {
         print(value.message);
         if (value.status == "success") {
+          isFirst = true;
           setState(() {});
         }
       });

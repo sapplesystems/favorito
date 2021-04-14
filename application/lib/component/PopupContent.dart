@@ -19,8 +19,6 @@ class _PopupContentState extends State<PopupContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: widget.content,
-    );
+    return Scaffold(body: widget.content);
   }
 }

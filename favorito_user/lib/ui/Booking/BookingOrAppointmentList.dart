@@ -1,47 +1,65 @@
-import 'package:favorito_user/Providers/BookTableProvider.dart';
+import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/PopupContent.dart';
 import 'package:favorito_user/component/PopupLayout.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/Booking/BookAppChild.dart';
-import 'package:favorito_user/ui/profile/business/waitlist/WaitListHeader.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import '../../utils/MyColors.dart';
 import '../../utils/Extentions.dart';
+import '../../utils/myString.dart';
 
 class BookingOrAppointmentParent extends StatelessWidget {
   SizeManager sm;
+  bool isFirst = true;
+  AppBookProvider vaTrue;
+  AppBookProvider vaFalse;
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    return Scaffold(
-        backgroundColor: myBackGround,
-        body: Padding(
-          padding: EdgeInsets.only(top: sm.w(1), left: sm.w(3), right: sm.w(3)),
-          child: Column(
-            children: [
-              WaitListHeader(
-                title: Provider.of<AppBookProvider>(context, listen: true)
-                            .getIsBooking() ==
-                        0
-                    ? 'Bookings'
-                    : Provider.of<AppBookProvider>(context, listen: true)
-                                .getIsBooking() ==
-                            1
-                        ? "Appointments"
-                        : "Bookings & Appointments",
-                preFunction: () {
-                  if (Provider.of<AppBookProvider>(context, listen: true)
-                          .getIsBooking() !=
-                      2) Navigator.pop(context);
+    vaTrue = Provider.of<AppBookProvider>(context, listen: true);
+    vaFalse = Provider.of<AppBookProvider>(context, listen: false);
+    if (isFirst){
+      vaTrue.CallServiceForData(context);
+      isFirst = false;
+    }
+    return WillPopScope(
+      onWillPop: () => APIManager.onWillPop(context),
+      child: Scaffold(
+        key:RIKeys.josKeys22 ,
+          backgroundColor: myBackGround,
+          appBar: AppBar(
+            backgroundColor: myBackGround,
+            elevation: 0,
+            title: Text(vaTrue.getAppBookingHeader()),
+            actions: <Widget>[
+              InkWell(child:
+              Icon(Icons.refresh),onTap: (){
+                print('BookingList Called');
+                vaTrue.CallServiceForData(context);
+              }),
+              PopupMenuButton<String>(
+                onSelected: vaTrue.handleClick,
+                itemBuilder: (BuildContext context) {
+                  return vaTrue.appBookingHeaderList
+                      .map((String choice) => PopupMenuItem<String>(
+                          value: choice, child: Text(choice)))
+                      .toList();
                 },
               ),
-              Container(child: BookAppChild())
             ],
           ),
-        )).safe();
+          body: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: sm.w(3)),
+            child: BookAppChild(),
+          )).safe(),
+    );
   }
 
   showPopup(BuildContext context, Widget widget, String title,

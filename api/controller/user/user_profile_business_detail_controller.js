@@ -37,7 +37,6 @@ exports.getBusinessDetail = async function(req, res) {
         try {
             sql_count_rating = "SELECT AVG(rating) as count FROM business_ratings WHERE business_id = '" + business_id + "'"
             result_count_rating = await exports.run_query(sql_count_rating)
-
             sql_attributes = `SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attributes_master as b_a_m ON b_a_m.id = b_a.attributes_id WHERE b_a.business_id= '${business_id}'`
             result_attributes = await exports.run_query(sql_attributes)
 
@@ -95,6 +94,7 @@ exports.getBusinessDetail = async function(req, res) {
         res.status(500).json({ status: 'error', message: 'Something went wrong.' })
     }
 }
+
 
 // Detail of the overview of the business
 exports.getBusinessOverview = async function(req, res) {

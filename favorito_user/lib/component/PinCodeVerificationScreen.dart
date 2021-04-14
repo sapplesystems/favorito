@@ -257,6 +257,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                       fontSize: 16)),
               InkWell(
                   onTap: () {
+                    vaTrue.setIsPass(true);
                     Navigator.of(context).pushNamed('/login');
                   },
                   child: Text("Password",

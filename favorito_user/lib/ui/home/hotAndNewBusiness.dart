@@ -1,10 +1,10 @@
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Business/NewBusinessModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/home/RatingHolder.dart';
 import 'package:favorito_user/ui/home/ServicesOfBusiness.dart';
 import 'package:favorito_user/ui/home/myClipRRect.dart';
-import 'package:favorito_user/ui/profile/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';

@@ -3,20 +3,20 @@ import 'package:Favorito/model/booking/Slots.dart';
 class bookingListModel {
   String status;
   String message;
+  int perSlot;
   int slotLenght;
   String starttime;
   String endtime;
   List<Slots> slots;
-  int count_per_slot;
 
   bookingListModel(
       {this.status,
       this.message,
+      this.perSlot,
       this.slotLenght,
       this.starttime,
       this.endtime,
-      this.slots,
-      this.count_per_slot});
+      this.slots});
 
   bookingListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -30,7 +30,7 @@ class bookingListModel {
         slots.add(new Slots.fromJson(v));
       });
     }
-    count_per_slot = json['count_per_slot'];
+    perSlot = json['count_per_slot'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,7 +43,7 @@ class bookingListModel {
     if (this.slots != null) {
       data['slots'] = this.slots.map((v) => v.toJson()).toList();
     }
-    data['count_per_slot'] = this.count_per_slot;
+    data['count_per_slot'] = this.perSlot;
     return data;
   }
 }

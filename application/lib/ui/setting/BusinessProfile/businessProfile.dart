@@ -7,7 +7,6 @@ import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart
 import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/utils/myString.Dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -26,9 +25,8 @@ class BusinessProfile extends StatelessWidget {
     if (v?.controller[1]?.text?.isEmpty) v.getProfileData(false);
     print("isFirst:$isFirst");
     if (isFirst) {
-      v
-        ..getProfileData(false)
-        ..webSiteLength = 1;
+      v.getProfileData(false);
+      v.webSiteLength = 1;
       isFirst = false;
     }
     return RefreshIndicator(
@@ -39,6 +37,7 @@ class BusinessProfile extends StatelessWidget {
           Consumer<BusinessProfileProvider>(builder: (_context, data, child) {
         return WillPopScope(
           onWillPop: () {
+            isFirst = true;
             print("backpresed");
             isFirst = true;
             v.getProfileData(false);

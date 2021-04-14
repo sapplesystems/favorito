@@ -765,7 +765,6 @@ exports.changeMenuAcceptOrderStatus = async(req, res, next) => {
 //         return res.status(200).json({ status: 'Failed', message: 'First complete your profile, information, and verification in order to change the status' });
 //     }
 // }
-
 /**
  * Delete menu item photo
  */

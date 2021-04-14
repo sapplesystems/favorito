@@ -10,16 +10,16 @@ import 'package:favorito_user/ui/Login/Login.dart';
 import 'package:favorito_user/ui/Login/LoginDetail.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHome.dart';
 import 'package:favorito_user/ui/Signup/Signup.dart';
-import 'package:favorito_user/ui/profile/business/BusinessProfile.dart';
-import 'package:favorito_user/ui/profile/business/waitlist/JoinWaitList.dart';
-import 'package:favorito_user/ui/profile/business/waitlist/waitlist.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/AddAdress.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/PersonalInfo.dart';
-import 'package:favorito_user/ui/profile/user/PersonalInfo/UserAddress.dart';
-import 'package:favorito_user/ui/profile/user/ProfileDetail.dart';
-import 'package:favorito_user/ui/profile/user/profile.dart';
+import 'package:favorito_user/ui/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/business/waitlist/JoinWaitList.dart';
+import 'package:favorito_user/ui/business/waitlist/waitlist.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/splash/Splash.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/AddAdress.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfo.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/UserAddress.dart';
+import 'package:favorito_user/ui/user/ProfileDetail.dart';
+import 'package:favorito_user/ui/user/profile.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class RouteGenerator {
@@ -27,13 +27,12 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
+        return MaterialPageRoute(builder: (_) => BottomNavBar());
+      case '/splash':
         return MaterialPageRoute(builder: (_) => Splash());
 
       case '/signUp':
         return MaterialPageRoute(builder: (_) => Signup());
-
-      case '/navbar':
-        return MaterialPageRoute(builder: (_) => BottomNavBar());
 
       case '/login':
         return MaterialPageRoute(builder: (_) => Login());
@@ -92,7 +91,12 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Error'),
+          title: Text('Error',
+              style: TextStyle(
+                  fontFamily: 'Gilroy-Reguler',
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: .4,
+                  fontSize: 20)),
         ),
         body: Center(
           child: Text('Something Went Wrong'),

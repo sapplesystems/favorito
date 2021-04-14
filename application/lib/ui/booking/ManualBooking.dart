@@ -1,15 +1,20 @@
+import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/booking/SlotData.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
+import 'package:provider/provider.dart';
+import 'package:time_picker_widget/time_picker_widget.dart';
+
 import '../../component/roundedButton.dart';
 import '../../component/txtfieldboundry.dart';
-import 'package:Favorito/component/roundedButton.dart';
-import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:bot_toast/bot_toast.dart';
 import '../../config/SizeManager.dart';
 
 class ManualBooking extends StatefulWidget {
@@ -22,7 +27,7 @@ class ManualBooking extends StatefulWidget {
 class _ManualBooking extends State<ManualBooking> {
   SizeManager sm;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool needvalidate = false;
   String _selectedDateText = '';
   String _selectedTimeText = '';
 
@@ -31,7 +36,7 @@ class _ManualBooking extends State<ManualBooking> {
   final _myNoOfPersonEditController = TextEditingController();
   final _myNotesEditController = TextEditingController();
   MaterialLocalizations localizations;
-
+  bool serviceCall = false;
   TimeOfDay _intitialTime;
 
   DateTime _initialDate;
@@ -77,184 +82,228 @@ class _ManualBooking extends State<ManualBooking> {
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Manual Booking", style: TextStyle(color: Colors.black)),
+          title: Text("Manual Booking", style: titleStyle),
         ),
         body: ListView(children: [
           Padding(
-              padding: EdgeInsets.all(8),
-              child: Card(
-                  child: Builder(
-                      builder: (context) => Form(
-                          key: _formKey,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            padding: EdgeInsets.all(8),
+            child: Card(
+              child: Builder(
+                builder: (context) => Form(
+                  key: _formKey,
+                  autovalidate: needvalidate,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 28),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        SizedBox(
-                                          width: sm.w(40),
-                                          child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: <Widget>[
-                                                Expanded(
-                                                    child: InkWell(
-                                                        onTap: () => showDate(),
-                                                        child: SizedBox(
-                                                          width: sm.w(40),
-                                                          child:
-                                                              OutlineGradientButton(
-                                                            child: Center(
-                                                                child: Text(
-                                                                    _selectedDateText)),
-                                                            gradient:
-                                                                LinearGradient(
-                                                                    colors: [
-                                                                  Colors.red,
-                                                                  Colors.red
-                                                                ]),
-                                                            strokeWidth: 1,
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    vertical:
-                                                                        12),
-                                                            radius:
-                                                                Radius.circular(
-                                                                    8),
-                                                          ),
-                                                        )))
-                                              ]),
-                                        ),
-                                        SizedBox(
-                                            width: sm.w(40),
-                                            child: InkWell(
-                                                onTap: () {
-                                                  showTime();
-                                                },
-                                                child: SizedBox(
-                                                  width: sm.h(40),
-                                                  child: OutlineGradientButton(
-                                                    child: Center(
-                                                        child: Text(
-                                                            _selectedTimeText)),
-                                                    gradient: LinearGradient(
-                                                        colors: [
-                                                          Colors.red,
-                                                          Colors.red
-                                                        ]),
-                                                    strokeWidth: 1,
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 12),
-                                                    radius: Radius.circular(8),
-                                                  ),
-                                                ))),
-                                      ]),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    controller: _myNameEditController,
-                                    title: "Name",
-                                    security: false,
-                                    valid: true,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: SizedBox(
+                                    width: sm.w(36),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Expanded(
+                                              child: InkWell(
+                                                  onTap: () => showDate(),
+                                                  child: SizedBox(
+                                                    width: sm.w(40),
+                                                    child:
+                                                        OutlineGradientButton(
+                                                      child: Center(
+                                                          child: Text(
+                                                              _selectedDateText,
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600))),
+                                                      gradient: LinearGradient(
+                                                          colors: [
+                                                            myGrey,
+                                                            myGrey
+                                                          ]),
+                                                      strokeWidth: 1,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 12),
+                                                      radius:
+                                                          Radius.circular(8),
+                                                    ),
+                                                  )))
+                                        ]),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    controller: _myContactEditController,
-                                    title: "Contact",
-                                    security: false,
-                                    maxlen: 10,
-                                    myregex: mobileRegex,
-                                    keyboardSet: TextInputType.number,
-                                    valid: true,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    controller: _myNoOfPersonEditController,
-                                    title: "Number of People",
-                                    keyboardSet: TextInputType.number,
-                                    security: false,
-                                    valid: true,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: txtfieldboundry(
-                                    controller: _myNotesEditController,
-                                    title: "Special Notes",
-                                    security: false,
-                                    maxLines: 5,
-                                    valid: true,
-                                  ),
-                                ),
-                              ]))))),
+                                SizedBox(
+                                    width: sm.w(40),
+                                    child: InkWell(
+                                        onTap: () {
+                                          print('');
+                                          showTime();
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: SizedBox(
+                                            width: sm.h(40),
+                                            child: OutlineGradientButton(
+                                              child: Center(
+                                                  child: Text(_selectedTimeText,
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight
+                                                              .w600))),
+                                              gradient: LinearGradient(
+                                                  colors: [myGrey, myGrey]),
+                                              strokeWidth: 1,
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 12),
+                                              radius: Radius.circular(8),
+                                            ),
+                                          ),
+                                        ))),
+                              ]),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: txtfieldboundry(
+                            controller: _myNameEditController,
+                            title: "Enter User Name",
+                            security: false,
+                            hint: 'User Name',
+                            maxlen: 20,
+                            valid: true,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: txtfieldboundry(
+                            controller: _myContactEditController,
+                            title: "Enter Contact",
+                            hint: 'Contact',
+                            security: false,
+                            maxlen: 10,
+                            myregex: mobileRegex,
+                            keyboardSet: TextInputType.number,
+                            valid: true,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: txtfieldboundry(
+                              controller: _myNoOfPersonEditController,
+                              title: "Enter Number of Persons",
+                              keyboardSet: TextInputType.number,
+                              security: false,
+                              hint: "Number of Persons",
+                              maxlen: 3,
+                              valid: true),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: txtfieldboundry(
+                              controller: _myNotesEditController,
+                              title: "Enter Special Notes()",
+                              security: false,
+                              hint: "Special Notes(Max. 80 Character Only)",
+                              maxlen: 80,
+                              maxLines: 5,
+                              valid: false),
+                        ),
+                      ]),
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(15), vertical: 16.0),
-            child: RoundedButton(
-              clicker: () {
-                if (_formKey.currentState.validate()) {
-                  if (_selectedDateText == 'Select Date') {
-                    BotToast.showText(
-                        text: "Please select a date",
-                        duration: Duration(seconds: 5));
-                    return;
-                  }
-                  if (_selectedTimeText == 'Select Time') {
-                    BotToast.showText(
-                        text: "Please select a time",
-                        duration: Duration(seconds: 5));
-                    return;
-                  }
-
-                  Map<String, dynamic> _map = {
-                    "booking_id": widget.data == null ? "" : widget.data.id,
-                    "name": _myNameEditController.text,
-                    "contact": _myContactEditController.text,
-                    "no_of_person": _myNoOfPersonEditController.text,
-                    "special_notes": _myNotesEditController.text,
-                    "created_date": _selectedDateText,
-                    "created_time": _selectedTimeText
-                  };
-                  print("map:${_map.toString()}");
-                  widget.data == null
-                      ? WebService.funCreateManualBooking(_map, context)
-                          .then((value) {
+            child: serviceCall
+                ? Center(child: CircularProgressIndicator())
+                : RoundedButton(
+                    clicker: () {
+                      if (_formKey.currentState.validate()) {
+                        if (_selectedDateText == 'Select Date') {
                           BotToast.showText(
-                              text: value.message,
+                              text: "Please select a date",
                               duration: Duration(seconds: 5));
-                          initializeDefaultValues();
-                        })
-                      : WebService.funBookingEdit(_map).then((value) {
+                          return;
+                        }
+                        if (_selectedTimeText == 'Select Time') {
                           BotToast.showText(
-                              text: value.message,
+                              text: "Please select a time",
                               duration: Duration(seconds: 5));
-                          initializeDefaultValues();
+                          return;
+                        }
+                        print(
+                            "_selectedDateText:$_selectedDateText : $_selectedTimeText");
+                        Map<String, dynamic> _map = {
+                          "booking_id":
+                              widget.data == null ? "" : widget.data.id,
+                          "name": _myNameEditController.text,
+                          "contact": _myContactEditController.text,
+                          "no_of_person": _myNoOfPersonEditController.text,
+                          "special_notes": _myNotesEditController.text,
+                          "created_date": _selectedDateText,
+                          "created_time":
+                              _selectedTimeText.replaceAll('PM', '00')
+                        };
+                        print(_map.toString());
+                        print("map:${_map.toString()}");
+                        setState(() {
+                          serviceCall = true;
                         });
-                }
-              },
-              clr: Colors.red,
-              title: widget.data == null ? "Save" : "Update",
-            ),
+                        widget.data == null
+                            ? WebService.funCreateManualBooking(_map, context)
+                                .then((value) {
+                                setState(() {
+                                  serviceCall = false;
+                                });
+                                BotToast.showText(
+                                    text: value.message,
+                                    duration: Duration(seconds: 5));
+                                initializeDefaultValues();
+                              })
+                            : WebService.funBookingEdit(_map).then((value) {
+                                setState(() {
+                                  serviceCall = false;
+                                  Navigator.pop(context);
+                                });
+                                BotToast.showText(
+                                    text: value.message,
+                                    duration: Duration(seconds: 5));
+                                initializeDefaultValues();
+                              });
+                      } else {
+                        setState(() {
+                          needvalidate = true;
+                        });
+                      }
+                    },
+                    clr: Colors.red,
+                    title: widget.data == null ? "Save" : "Update",
+                  ),
           ),
         ]));
   }
 
   showDate() {
+    BookingProvider va = Provider.of<BookingProvider>(context, listen: false);
+    var a = '${dateFormat1.format(DateTime.now())} ${va.getEndTime()}:00';
+    DateTime aa = DateTime.parse(a);
+    bool b = DateTime.now().isAfter(aa);
     showDatePicker(
             context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2020),
-            lastDate: DateTime(2022))
+            initialDate: DateTime.now().add(Duration(days: b ? 1 : 0)),
+            firstDate: DateTime.now().add(Duration(days: b ? 1 : 0)),
+            lastDate: DateTime.now().add(Duration(
+                days: Provider.of<BookingProvider>(context, listen: false)
+                        .getTotalBookingDays() -
+                    1)))
         .then((_val) {
       setState(() {
         _selectedDateText = dateFormat1.format(_val);
@@ -263,21 +312,50 @@ class _ManualBooking extends State<ManualBooking> {
   }
 
   showTime() {
-    showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      builder: (BuildContext context, Widget child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child,
-        );
-      },
-    ).then((value) {
-      setState(() {
-        _selectedTimeText =
-            localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
-      });
-      print("picked $_selectedTimeText");
-    });
+    BookingProvider va = Provider.of<BookingProvider>(context, listen: false);
+    int h = va.getTotalBookingHours();
+    var a = '$_selectedDateText ${va.getStartTime()}:00';
+    DateTime aa = DateTime.parse(a);
+    bool b = DateTime.now().isAfter(aa);
+    DateTime bb = DateTime.parse('$_selectedDateText ${va.getEndTime()}:00');
+    bool isToday = ((dateFormat1.format(DateTime.parse(_selectedDateText))) ==
+        dateFormat1.format(DateTime.now()));
+
+    bool timeOff = DateTime.now().isAfter(bb);
+    if (timeOff) {
+      BotToast.showText(text: 'Booking Time Off');
+      return;
+    }
+    var startTime;
+
+    if (isToday) {
+      if (b) {
+        startTime = DateTime.now().hour + h;
+      } else {
+        startTime = aa.hour + h;
+      }
+    } else {
+      startTime = aa.hour;
+    }
+
+    var endTime = bb.hour;
+    print('startTime:$b   :  $startTime');
+    if (_selectedDateText == 'Select Date')
+      BotToast.showText(text: 'Please selecet Date');
+    var _a = MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true);
+    print('hours:$h'
+        // now:$now c:$c '
+        ' isToday$isToday  startTime:${va.getStartTime()} endTime:${va.getEndTime()}');
+    showCustomTimePicker(
+        context: context,
+        onFailValidation: (context) => print('Unavailable selection'),
+        initialTime: TimeOfDay(hour: startTime, minute: 0),
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(data: _a, child: child);
+        },
+        selectableTimePredicate: (time) =>
+            ((time.hour >= startTime) && (time.hour < endTime))).then((time) =>
+        setState(() => _selectedTimeText =
+            localizations.formatTimeOfDay(time, alwaysUse24HourFormat: true)));
   }
 }

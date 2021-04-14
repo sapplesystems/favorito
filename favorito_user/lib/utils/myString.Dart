@@ -1,8 +1,6 @@
-//shared prefrence
-import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
-
 String TOKEN = "TOKEN";
 String POSTEL = "POSTEL";
+String BUSINESS_ID = "BUSINESS_ID";
 String welcometxt = "Welcome to Favorito";
 String business_id = "";
 String business_name = "";
@@ -29,7 +27,7 @@ String appoinmentSettingtxt = "Appoinment Setting";
 String donetxt = "Done";
 String loading = 'Loading...';
 String wentWrong = 'Some thing went wrong.';
-String dataNotAvailable = 'Data Not Availeble ..';
+String dataNotAvailable = 'Data Not Available ..';
 String bookingSetting = 'Booking Setting';
 String waitingList = 'Waiting List';
 String waitingJoin = 'Join waitlist';
@@ -41,8 +39,10 @@ String customizetion = 'Customizetion';
 String bookAnAppointment = 'Book An Appointment';
 String bookTable = 'Book Table';
 
-//filtered
 String fieldIsRequired = 'field is required..';
 String invalidUsername = 'Invalid username';
 String submit = 'Submit';
 String myAddress = 'My Addresses';
+String pleaseWait = 'please wait..';
+String bookings = 'Bookings';
+String appointments = 'Appointments';
