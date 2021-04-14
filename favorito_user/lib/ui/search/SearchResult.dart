@@ -157,7 +157,11 @@ class _SearchResultState extends State<SearchResult> {
       child: InkWell(
         onTap: () {
           Provider.of<BusinessProfileProvider>(context, listen: false)
-              .setBusinessId(result.businessId);
+              ..setBusinessId(result.businessId)
+          ..refresh()
+              ;
+
+
           Navigator.of(context).pushNamed('/businessProfile');
         },
         child: Card(

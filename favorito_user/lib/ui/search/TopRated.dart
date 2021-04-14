@@ -48,7 +48,8 @@ class _TopRatedState extends State<TopRated> {
                           onTap: () {
                             Provider.of<BusinessProfileProvider>(context,
                                     listen: false)
-                                .setBusinessId(data[index].businessId);
+                                ..setBusinessId(data[index].businessId)
+                            ..refresh();
                             Navigator.of(context).pushNamed('/businessProfile');
                           },
                           child: Card(

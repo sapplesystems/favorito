@@ -63,7 +63,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
       Neumorphic(
         style: NeumorphicStyle(
             shape: NeumorphicShape.convex,
-            depth: -8,
+            depth: -48,
             lightSource: LightSource.topLeft,
             color: myBackGround,
             boxShape: NeumorphicBoxShape.roundRect(
@@ -136,7 +136,7 @@ class _EditTextComponentState extends State<EditTextComponent> {
               alignLabelWithHint: true,
               hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
               contentPadding: EdgeInsets.only(
-                  top: (widget.maxLines ?? 1) > 1 ? 14 : 0,
+                  top: (widget.maxLines ?? 1) > 1 ? 14 : 14,
                   right: 16,
                   left: 16),
               fillColor: Colors.transparent,

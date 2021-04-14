@@ -23,7 +23,8 @@ void main() {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => BaseProvider()),
+        // Provider(create: (context) => BaseProvider()),
+        Provider(create: (context) => BaseProvider()),
         ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
         ChangeNotifierProvider(create: (context) => BasketControllers()),
         ChangeNotifierProvider(create: (context) => OptController()),
@@ -34,7 +35,6 @@ void main() {
         ChangeNotifierProvider(create: (context) => UserAddressProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
-        // Provider(create: (context) => MenuHomeProvider()),
       ],
       child: MyApp(),
     ));

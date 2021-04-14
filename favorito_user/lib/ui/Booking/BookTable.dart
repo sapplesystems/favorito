@@ -4,6 +4,7 @@ import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
+import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/dateformate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -323,6 +324,8 @@ class BookTable extends StatelessWidget {
                                           valid: true,
                                           hint: "Enter Name",
                                           maxLines: 1,
+                                          maxlen:26,
+                                          prefixIcon: 'name',
                                           error: vaTrue.acces[0].error,
                                           security: false)),
                                   Padding(
@@ -336,6 +339,9 @@ class BookTable extends StatelessWidget {
                                         hint: "Enter Mobile",
                                         maxLines: 1,
                                         maxlen: 10,
+                                        myregex: emailAndMobileRegex,
+                                        prefixIcon: 'phone',
+
                                         keyboardSet: TextInputType.phone,
                                         error: vaTrue.acces[1].error,
                                         valid: true,
@@ -349,6 +355,7 @@ class BookTable extends StatelessWidget {
                                     child: EditTextComponent(
                                         controller: vaTrue.acces[2].controller,
                                         title: "Special Notes",
+                                        maxlen:200,
                                         hint: "Enter Special Notes",
                                         error: vaTrue.acces[2].error,
                                         maxLines: 8,

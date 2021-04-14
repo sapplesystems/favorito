@@ -189,13 +189,13 @@ class BusinessProfileProvider extends ChangeNotifier {
       }
       addressList?.clear();
 
-      for (int i = 0; i < va.website?.length; i++)
-        if (va?.website[i] == '') va?.website.removeAt(i);
-      webSiteLength = va.website.length;
-      print("sdsd${va.website.length}");
-      for (int i = 0; i < va.website?.length; i++) {
-        controller[15 + i].text = va.website[0];
-      }
+      // for (int i = 0; i < va.website?.length; i++)
+      //   if (va?.website[i] == '') va?.website.removeAt(i);
+      // webSiteLength = va.website.length;
+      // print("sdsd${va.website.length}");
+      // for (int i = 0; i < va.website?.length; i++) {
+      //   controller[15 + i].text = va.website[0];
+      // }
       notifyListeners();
       // if (va?.website != null)
       //   for (int i = 0; i < va.website.length; i++) {

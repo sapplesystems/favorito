@@ -90,6 +90,8 @@ class BookingProvider extends BaseProvider {
 
   int getSelectedSlot() => _selectedSlot;
   void setSelectedSlot(int _val) {
+    print("dddd:$_val");
+    // _selectedSlot = _val>0?(_val-1):0;
     _selectedSlot = _val;
     notifyListeners();
   }
@@ -145,7 +147,10 @@ class BookingProvider extends BaseProvider {
         controller[4].text = bs.data[0]?.bookingPerDay?.toString();
         controller[5].text = bs.data[0]?.announcement ?? '';
         RIKeys?.josKeys3?.currentState?.changeSelectedItem(
-            slot[slot.indexOf('${controller[2].text} min')]);
+            slot[slot.indexOf(
+              '60 min'
+              // '${controller[2].text} min'
+              )]);
         notifyListeners();
       }
     });

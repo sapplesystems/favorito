@@ -27,9 +27,6 @@ class Bookings extends StatelessWidget {
     sm = SizeManager(context);
     vaTrue = Provider.of<BookingProvider>(context, listen: true);
     vafalse = Provider.of<BookingProvider>(context, listen: false);
-    print(
-        'dcdc${dateFormat1.format(vaTrue.getInitialDate().subtract(Duration(days: 1)))}');
-    print('dcdc${dateFormat1.format(DateTime.now())}');
     return Scaffold(
         key: RIKeys.josKeys6,
         appBar: AppBar(
@@ -192,7 +189,7 @@ class Bookings extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    height: vaTrue.blm.slots.length < 4 ? sm.h(50) : null,
+                    height: vaTrue.blm.slots.length  <2 ? sm.h(48) : null,
                     padding: EdgeInsets.only(left: 20.0, right: 20.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -202,8 +199,11 @@ class Bookings extends StatelessWidget {
                       ),
                     ),
                     child: Column(
+
+                      // shrinkWrap: true,
                       children: [
                         Padding(
+
                           padding: EdgeInsets.symmetric(vertical: 16),
                           child: Text("User Details",
                               textAlign: TextAlign.center,
@@ -231,16 +231,17 @@ class Bookings extends StatelessWidget {
                                     onTap: () => showPopup(
                                         context, va, _popupBody(va, vv)),
                                     child: Column(
-                                      children: [
-                                        ListTile(
-                                          title: Text(
-                                            vv,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey),
-                                          ),
-                                          trailing: InkWell(
+
+                                        children: [
+                                      ListTile(
+                                        title: Text(
+                                          vv,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.grey),
+                                        ),
+                                        trailing: InkWell(
                                             onTap: () {
                                               Navigator.push(
                                                       context,
@@ -251,50 +252,45 @@ class Bookings extends StatelessWidget {
                                                   .whenComplete(() =>
                                                       vaTrue.getBookingData());
                                             },
+                                            child: Icon(Icons.edit,
+                                                color: myRed, size: 20)),
+                                      ),
+                                      ListTile(
+                                        title: Text(
+                                          va.name ?? '',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: 'Gilroy-Regular',
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                        subtitle: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12),
+                                          child: AutoSizeText(
+                                              va.specialNotes ?? '',
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                              overflow: TextOverflow.ellipsis,
+                                              minFontSize: 12,
+                                              maxFontSize: 14),
+                                        ),
+                                        trailing: InkWell(
+                                          onTap: () =>
+                                              launch("tel://${va.contact}"),
+                                          child: Container(
+                                            decoration: bd1Red,
+                                            padding: EdgeInsets.all(6),
+                                            margin: EdgeInsets.only(right: 10),
                                             child: Icon(
-                                              Icons.edit,
-                                              color: myRed,
-                                              size: 20,
+                                              Icons.call,
+                                              color: Colors.white,
+                                              size: 26,
                                             ),
                                           ),
                                         ),
-                                        ListTile(
-                                          title: Text(
-                                            va.name??'',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontFamily: 'Gilroy-Regular',
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                          subtitle: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 12),
-                                            child: AutoSizeText(va.specialNotes??'',
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                                overflow: TextOverflow.ellipsis,
-                                                minFontSize: 12,
-                                                maxFontSize: 14),
-                                          ),
-                                          trailing: InkWell(
-                                            onTap: () =>
-                                                launch("tel://${va.contact}"),
-                                            child: Container(
-                                              decoration: bd1Red,
-                                              padding: EdgeInsets.all(6),
-                                              margin:
-                                                  EdgeInsets.only(right: 10),
-                                              child: Icon(
-                                                Icons.call,
-                                                color: Colors.white,
-                                                size: 26,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ]
-                                    ),
+                                      ),
+                                    ]),
                                   ));
                             }),
                       ],
@@ -306,9 +302,10 @@ class Bookings extends StatelessWidget {
 
   showPopup(BuildContext context, va, Widget widget,
       {BuildContext popupContext}) {
-    double i = (va?.specialNotes?.length??0) <= 500
+    double i = (va?.specialNotes?.length ?? 0) <= 500
         ? 30
-        : (((va?.specialNotes?.length??0) > 500) && ((va?.specialNotes?.length??0) <= 1000))
+        : (((va?.specialNotes?.length ?? 0) > 500) &&
+                ((va?.specialNotes?.length ?? 0) <= 1000))
             ? 20
             : 12;
     print('sss$i');

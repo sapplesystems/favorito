@@ -15,6 +15,7 @@ class AppBookProvider extends BaseProvider {
     _selectedTab = 'New';
     // getrefreshedData();
   }
+  bool _isProcessing = false;
 
   List<String> appBookingHeaderList = ['Appointments', 'Booking'];
   String _appBookingHeader = 'Booking';
@@ -80,7 +81,7 @@ class AppBookProvider extends BaseProvider {
 
   getSelectTime() => _selectedTimeIndex;
 
-  List<BookingOrAppointmentDataModel> _data = [];
+  // List<BookingOrAppointmentDataModel> _data = [];
   List<BookingOrAppointmentDataModel> _appbookData = [];
   List<BookingOrAppointmentDataModel> _bookData = [];
 
@@ -113,7 +114,6 @@ class AppBookProvider extends BaseProvider {
 
   set selectedOccasion(String value) {
     this._selectedOccasion = value;
-    // _selectedOccutionId =
     for (int _i = 0; _i < _occasionList.length; _i++) {
       if (value.toLowerCase().trim() ==
           _occasionList[_i].occasion.toLowerCase().trim()) {
@@ -141,19 +141,19 @@ class AppBookProvider extends BaseProvider {
 
   bool getIsBooking() => _isBook;
 
-  setPageData() {
-    _data.clear();
-    _data.addAll(_selectedTab == 'History' ?oldData  : newData);
-    notifyListeners();
-  }
+  // setPageData() {
+  //   _data.clear();
+  //   _data.addAll(_selectedTab == 'History' ?oldData  : newData);
+  //   notifyListeners();
+  // }
 
-  getPageData() => _data;
+  getPageData() => _selectedTab == 'History' ?oldData  : newData;
 
   String getSelectedTab() => _selectedTab;
 
   void setSelectedTab(String _val) {
     _selectedTab = _val;
-    setPageData();
+    // setPageData();
     notifyListeners();
   }
 
@@ -206,6 +206,7 @@ class AppBookProvider extends BaseProvider {
         acces[2].error = '';
 
         setSubmitCalled(false);
+        CallServiceForData(context);
         Navigator.pop(context);
       }
     });
@@ -224,6 +225,7 @@ class AppBookProvider extends BaseProvider {
         .then((value) {
       _message = value.message;
       if (value.status == 'success') {
+        _appbookData.clear();
         _appbookData.addAll(value.data);
         handleClick('Appointments');
       }
@@ -231,27 +233,35 @@ class AppBookProvider extends BaseProvider {
   }
 
   BookingList(context) async {
-    print('BookingList Called');
-    print("1servicess are called:${this.getBusinessId()}");
+    _isProcessing = true;
     await APIManager.baseUserBookingList({
-      "business_id":
-          Provider.of<BusinessProfileProvider>(context, listen: false)
-                  .getBusinessId() ??
-              ''
+      // "business_id":
+      //     Provider.of<BusinessProfileProvider>(context, listen: false)
+      //             .getBusinessId() ??
+      //         ''
     }, _isBook,RIKeys.josKeys22)
         .then((value) {
       _message = value.message;
       if (value.status == 'success') {
+
+        print("app:book1:${_bookData.length}");
+        _bookData.clear();
+
+        print("app:book1:${_bookData.length}");
         _bookData.addAll(value.data);
+
+        print("app:book1:${_bookData.length}");
         handleClick('Booking');
       }
     });
+    notifyListeners();
   }
   CallServiceForData(context){
     if(_isBook)
       BookingList(context);
     else
       AppoointmentList(context);
+
   }
   bookingVerbose(context) async {
     await APIManager.baseUserBookingVerbose({
@@ -290,18 +300,26 @@ class AppBookProvider extends BaseProvider {
         }
       case 'Booking':
         {
-          print("app:book${_bookData.length}");
+          print("app:book1:${_bookData.length}");
           setIsBooking(true);
           setAppBookingHeader('Booking');
           newData.clear();
           oldData.clear();
-          for (int _i = 0; _i <_bookData.length; _i++)
-            DateTime.parse(_bookData[_i].createdDatetime).isAfter(DateTime.now())
-                ? newData.add(_bookData[_i])
-                : oldData.add(_bookData[_i]);
-          break;
+          for (int _i = 0; _i <_bookData.length; _i++){
+            // int _abc = DateTime.parse(_bookData[_i].createdDatetime).compareTo(DateTime.now());
+            int _abc = DateTime.parse(_bookData[_i].createdDatetime).difference(DateTime.now()).inMinutes;
+           print("_abc:$_abc");
+           print("_abcd:${_bookData[_i].createdDatetime}");
+            if(_abc>0){
+              newData.add(_bookData[_i]);
+            }else{
+              oldData.add(_bookData[_i]);
+            }
+          }
+                 break;
         }
     }
     notifyListeners();
+    // setPageData();
   }
 }
