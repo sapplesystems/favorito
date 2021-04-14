@@ -17,16 +17,18 @@ import 'package:provider/provider.dart';
 class BusinessProfile extends StatelessWidget {
   bool isFirst = true;
   BusinessProfileProvider v;
+
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     v = Provider.of<BusinessProfileProvider>(context, listen: true);
     v.setContext(context);
-    if (v?.controller[1]?.text?.isEmpty) v.getProfileData(false);
+    if (v?.controller[1]?.text?.isEmpty) {
+      v..getProfileData(false);
+    }
     print("isFirst:$isFirst");
     if (isFirst) {
       v.getProfileData(false);
-      v.webSiteLength = 1;
       isFirst = false;
     }
     return RefreshIndicator(
@@ -36,9 +38,7 @@ class BusinessProfile extends StatelessWidget {
       child:
           Consumer<BusinessProfileProvider>(builder: (_context, data, child) {
         return WillPopScope(
-          onWillPop: () {
-            isFirst = true;
-            print("backpresed");
+          onWillPop: () async{
             isFirst = true;
             v.getProfileData(false);
             Navigator.pop(context);
@@ -204,7 +204,7 @@ class BusinessProfile extends StatelessWidget {
                                   security: false,
                                   valid: true,
                                   maxlen: 6,
-                                  isEnabled: false,
+                                  isEnabled: true,
                                   error: v.error[9],
                                   keyboardSet: TextInputType.number,
                                   hint: "Enter Pincode",
@@ -303,27 +303,29 @@ class BusinessProfile extends StatelessWidget {
                                 maxLines: 3,
                                 valid: true,
                                 security: false,
-                                myOnChanged: (_) {
-                                  v.needSave(true);
-                                },
+                                myOnChanged: (_) => v.needSave(true),
                                 hint: "Enter Description",
                               ),
-                              for (int i = 0; i < data.webSiteLength; i++)
-                                txtfieldPostAction(
-                                    controller: data.controller[15 + i],
-                                    hint: "Enter Website ",
-                                    title: "Website ",
-                                    maxLines: 1,
-                                    valid: false,
-                                    myOnChanged: (_) {
-                                      v.needSave(true);
-                                    },
-                                    sufixColor: myRed,
-                                    sufixTxt: "Add Line",
-                                    security: false,
-                                    sufixClick: () {
-                                      data.webSiteLengthPlus();
-                                    }),
+                              // if ((data.websiteList?.length ?? 0) > 0)
+                                for (int i = 15;
+                                    i < data.controller?.length ;
+                                    i++)
+                              txtfieldPostAction(
+                                  controller: data.controller[i],
+                                  hint: "Enter Website ",
+                                  title: "Website ",
+                                  maxLines: 1,
+                                  valid: false,
+                                  myOnChanged: (_) {
+                                    v.needSave(true);
+                                  },
+                                  sufixColor: myRed,
+                                  sufixTxt: "Add Line",
+                                  security: false,
+                                  sufixClick: () {
+                                    data.webSiteLengthPlus();
+                                  }),
+
                             ]),
                           )),
                     ),

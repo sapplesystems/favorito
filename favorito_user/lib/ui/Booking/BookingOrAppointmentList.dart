@@ -24,25 +24,23 @@ class BookingOrAppointmentParent extends StatelessWidget {
     sm = SizeManager(context);
     vaTrue = Provider.of<AppBookProvider>(context, listen: true);
     vaFalse = Provider.of<AppBookProvider>(context, listen: false);
-    if (isFirst){
+    if (isFirst) {
       vaTrue.CallServiceForData(context);
       isFirst = false;
     }
     return WillPopScope(
       onWillPop: () => APIManager.onWillPop(context),
       child: Scaffold(
-        key:RIKeys.josKeys22 ,
+          key: RIKeys.josKeys22,
           backgroundColor: myBackGround,
           appBar: AppBar(
             backgroundColor: myBackGround,
             elevation: 0,
             title: Text(vaTrue.getAppBookingHeader()),
             actions: <Widget>[
-              InkWell(child:
-              Icon(Icons.refresh),onTap: (){
-                print('BookingList Called');
-                vaTrue.CallServiceForData(context);
-              }),
+              InkWell(
+                  child: Icon(Icons.refresh),
+                  onTap: () => vaTrue.CallServiceForData(context)),
               PopupMenuButton<String>(
                 onSelected: vaTrue.handleClick,
                 itemBuilder: (BuildContext context) {
@@ -55,8 +53,7 @@ class BookingOrAppointmentParent extends StatelessWidget {
             ],
           ),
           body: Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: sm.w(3)),
+            padding: EdgeInsets.symmetric(horizontal: sm.w(3)),
             child: BookAppChild(),
           )).safe(),
     );

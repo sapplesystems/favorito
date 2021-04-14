@@ -59,6 +59,8 @@ class BookAppChild extends StatelessWidget {
                     : ListView.builder(
                         itemCount: da.length,
                         itemBuilder: (BuildContext context, int index) {
+                          print("name is :${
+                              da[index].businessName}");
                           return InkWell(
                             onTap: () => {
                               // showPopup(context, NewAppointment(1, data), 'Appointment')
@@ -66,10 +68,9 @@ class BookAppChild extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(top: sm.h(1)),
                               child: Card(
-                                elevation: 5,
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(16.0)),
+                                      BorderRadius.all(Radius.circular(12.0)),
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.all(sm.w(4)),
@@ -97,18 +98,18 @@ class BookAppChild extends StatelessWidget {
                                                         fontFamily:
                                                             'GilRoy-Bold'),
                                                   ),
-                                                  Icon(
-                                                    da[index].status ==
-                                                            'pending'
-                                                        ? Icons.hourglass_full
-                                                        : da[index].status ==
-                                                                'accepted'
-                                                            ? Icons.check_circle
-                                                            : Icons
-                                                                .check_circle,
-                                                    color: myRed,
-                                                    size: sm.w(6),
-                                                  )
+                                                  // Icon(
+                                                  //   da[index].status ==
+                                                  //           'pending'
+                                                  //       ? Icons.hourglass_full
+                                                  //       : da[index].status ==
+                                                  //               'accepted'
+                                                  //           ? Icons.check_circle
+                                                  //           : Icons
+                                                  //               .check_circle,
+                                                  //   color: myRed,
+                                                  //   size: sm.w(6),
+                                                  // )
                                                   // Iconizer(
                                                   //     val: data
                                                   //         .getPageData()[index]
@@ -121,19 +122,34 @@ class BookAppChild extends StatelessWidget {
                                                   top: 2.0),
                                               child: Text(
                                                 DateFormat(
-                                                        'dd MMMM yyyy | h:mm a')
+                                                    'dd MMMM yyyy | h:mm a')
                                                     .format(DateTime.parse(
-                                                        da[index]
-                                                            .createdDatetime)),
+                                                    da[index]
+                                                        .createdDatetime)),
                                                 style: TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 12,
                                                     fontWeight:
-                                                        FontWeight.w400),
+                                                    FontWeight.w400),
+                                              ),
+                                            ),Visibility(
+                                              visible: da[index]
+                                                  .name!=null,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 2.0),
+                                                child: Text(
+                                                      da[index]
+                                                          .name,
+                                                  style: TextStyle(
+                                                      fontSize: 12,color:myGrey,
+                                                      fontWeight:
+                                                      FontWeight.w400),
+                                                ),
                                               ),
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  top: 2.0),
+                                                  top: 4.0),
                                               child: Visibility(
                                                 visible: da[index]
                                                         ?.specialNotes
@@ -142,7 +158,7 @@ class BookAppChild extends StatelessWidget {
                                                 child: Text(
                                                   "${da[index].specialNotes}",
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 13,color: myGrey,
                                                       fontWeight:
                                                           FontWeight.w400),
                                                 ),

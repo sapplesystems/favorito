@@ -1,6 +1,7 @@
 class BookingOrAppointmentDataModel {
   int id;
   int userId;
+  String name;
   String businessId;
   String businessName;
   String businessPhone;
@@ -20,6 +21,7 @@ class BookingOrAppointmentDataModel {
   BookingOrAppointmentDataModel(
       {this.id,
       this.userId,
+        this.name,
       this.businessId,
       this.businessName,
       this.businessPhone,
@@ -39,6 +41,7 @@ class BookingOrAppointmentDataModel {
   BookingOrAppointmentDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
+    name = json['name'];
     businessId = json['business_id'];
     businessName = json['business_name'];
     businessPhone = json['business_phone'];
@@ -59,6 +62,7 @@ class BookingOrAppointmentDataModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['user_id'] = this.userId;
+    data['name'] = this.name;
     data['business_id'] = this.businessId;
     data['business_name'] = this.businessName;
     data['business_phone'] = this.businessPhone;

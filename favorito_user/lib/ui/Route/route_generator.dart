@@ -2,6 +2,7 @@ import 'package:favorito_user/component/Following.dart';
 import 'package:favorito_user/component/PinCodeVerificationScreen.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
+import 'package:favorito_user/ui/Booking/NewAppointment.dart';
 import 'package:favorito_user/ui/BottomNavigationPage.dart';
 import 'package:favorito_user/ui/ForgetPassword/forgetPassword.dart';
 import 'package:favorito_user/ui/Login/ChangePass.dart';
@@ -82,6 +83,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => UpdateEmail());
       case '/changePass':
         return MaterialPageRoute(builder: (_) => ChangePass());
+      case '/bookAppointment':
+        return MaterialPageRoute(builder: (_) => BookAppointment());
       default:
         return _errorRoute();
     }

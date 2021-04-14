@@ -9,6 +9,7 @@ import 'package:favorito_user/model/appModel/SearchFilterList.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/Booking/NewAppointment.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -34,6 +35,7 @@ class _SearchResultState extends State<SearchResult> {
   List<ServiceFilterList> allFilters = [];
   SearchBusinessListModel searchResult;
   var servicesIs;
+
   @override
   void initState() {
     ServiceFilterList filter1 = ServiceFilterList("Restro", false);
@@ -88,28 +90,32 @@ class _SearchResultState extends State<SearchResult> {
                           maxLines: 1,
                           maxlen: 100,
                           keyBoardAction: TextInputAction.search,
-                          atSubmit: (_val) => executeSearch(SearchReqData(
-                              text: _mySearchEditTextController.text)),
+                          atSubmit: (_val) =>
+                              executeSearch(SearchReqData(
+                                  text: _mySearchEditTextController.text)),
                           prefixIcon: 'search',
-                          prefClick: () => executeSearch(SearchReqData(
-                              text: _mySearchEditTextController.text)))),
+                          prefClick: () =>
+                              executeSearch(SearchReqData(
+                                  text: _mySearchEditTextController.text)))),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(right: sm.w(5), bottom: sm.h(2)),
-                  child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                      elevation: 10,
-                      child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: InkWell(
-                            onTap: () => showPopup(
-                                sm, context, _popupBody(sm), 'Select Filters'),
-                            child: SvgPicture.asset('assets/icon/filter.svg',
-                                height: sm.h(2), fit: BoxFit.fitHeight),
-                          ))),
-                ),
+                //Don't remove it is filter part for search
+
+                // Padding(
+                //   padding: EdgeInsets.only(right: sm.w(5), bottom: sm.h(2)),
+                //   child: Card(
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(8)),
+                //       ),
+                //       elevation: 10,
+                //       child: Padding(
+                //           padding: const EdgeInsets.all(12.0),
+                //           child: InkWell(
+                //             onTap: () => showPopup(
+                //                 sm, context, _popupBody(sm), 'Select Filters'),
+                //             child: SvgPicture.asset('assets/icon/filter.svg',
+                //                 height: sm.h(2), fit: BoxFit.fitHeight),
+                //           ))),
+                // ),
               ],
             ),
           ),
@@ -126,7 +132,8 @@ class _SearchResultState extends State<SearchResult> {
                       title: selectedFilters[i],
                       clr: myRed,
                       icon: Icons.close,
-                      function: () => setState(() {
+                      function: () =>
+                          setState(() {
                             for (var temp in allFilters)
                               if (temp.filter == selectedFilters[i])
                                 temp.selected = false;
@@ -138,26 +145,46 @@ class _SearchResultState extends State<SearchResult> {
           ),
           Container(
             height: selectedFilters.length > 0 ? sm.h(83) : sm.h(85),
-            child: ListView(shrinkWrap: true, children: [
-              if (searchResult != null && searchResult.data != null)
-                for (var i = 0; i < searchResult.data.length; i++)
-                  searchResultChild(sm, searchResult.data[i], 1),
-            ]),
+            child: (searchResult?.data != null)
+                ? ListView.builder(
+                shrinkWrap: true,
+                itemCount: searchResult.data?.length ?? 0,
+                itemBuilder: (context, _index) {
+                  return searchResultChild(
+                      sm, searchResult.data[_index]);
+                })
+                : Center(
+                child: Container(
+                  child: Text('Search result not found'),
+                )),
           ),
         ]),
       ),
     );
   }
 
-  Widget searchResultChild(
-      SizeManager sm, BusinessProfileData result, int identifier) {
-    print("eeee:${result.avgRating}");
+  Widget searchResultChild(SizeManager sm, BusinessProfileData result) {
+    int identifier=0;
+
+    String btnTxt;
+    for (var _v in result?.attributes) {
+      if(_v.attributeName.trim() == 'Booking'){
+        identifier = 0;
+        btnTxt ='Book A Table';
+      }else{
+        identifier = 1;
+        btnTxt ='Book An Appointment';
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
           Provider.of<BusinessProfileProvider>(context, listen: false)
-              .setBusinessId(result.businessId);
+            ..setBusinessId(result.businessId)
+            ..refresh(1);
+
           Navigator.of(context).pushNamed('/businessProfile');
         },
         child: Card(
@@ -168,98 +195,108 @@ class _SearchResultState extends State<SearchResult> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: SizedBox(
-                        height: sm.h(16),
-                        width: sm.h(16),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            child: ImageMaster(url: result?.photo ?? ''))),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                            child: Text(result.businessName,
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w400)),
-                          ),
-                          // Padding(
-                          // padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                          // child: Text(result.countryId ?? "",
-                          //     style: TextStyle(
-                          //         fontSize: 14, fontWeight: FontWeight.w300))),
-                          // Padding(
-                          //     padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                          //     child: Text(result.avgRating ?? "",
-                          //         style: TextStyle(
-                          //             fontSize: 14, fontWeight: FontWeight.w300))),
-                          Padding(
-                              padding:
-                                  EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                              child: RatingBarIndicator(
-                                  rating:
-                                      double.parse(result.avgRating.toString()),
-                                  itemBuilder: (context, index) =>
-                                      Icon(Icons.star, color: myRed),
-                                  itemCount: 5,
-                                  itemSize: 12.0,
-                                  direction: Axis.horizontal)),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                            child: Text(
-                                "${((double.parse(result?.distance?.toString() ?? '0.0')) / 1.6)?.toStringAsFixed(1)} km | ${result?.townCity ?? ''}",
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w300)),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                            child: Text(result?.businessStatus ?? '',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                    color:
-                                        result?.businessStatus?.toLowerCase() ==
-                                                'offline'
-                                            ? myRed
-                                            : Colors.green)),
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                            child: Text(
-                                "Opens | ${result?.startHours?.toString()?.substring(0, 5) ?? '00:00'}  Closes | ${result?.endHours?.toString()?.substring(0, 5) ?? "00:00"}",
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w300)),
-                          ),
-                        ]),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: myRedLight0),
-                      margin: EdgeInsets.only(top: sm.h(5), right: sm.h(0)),
-                      child: IconButton(
-                          icon: Icon(Icons.call_outlined, color: myRed),
-                          onPressed: () => launch("tel://${result.phone}")),
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: SizedBox(
+                          height: sm.h(16),
+                          width: sm.h(16),
+                          child: ClipRRect(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(12)),
+                              child: ImageMaster(url: result?.photo ?? ''))),
                     ),
-                  )
-                ],
-              ),
-              Padding(
+                    Expanded(
+                      flex: 4,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                              EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                              child: Text(result.businessName,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400)),
+                            ),
+                            // Padding(
+                            // padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                            // child: Text(result.countryId ?? "",
+                            //     style: TextStyle(
+                            //         fontSize: 14, fontWeight: FontWeight.w300))),
+                            // Padding(
+                            //     padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                            //     child: Text(result.avgRating ?? "",
+                            //         style: TextStyle(
+                            //             fontSize: 14, fontWeight: FontWeight.w300))),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    left: sm.w(2), top: sm.h(1)),
+                                child: RatingBarIndicator(
+                                    rating: double.parse(
+                                        result.avgRating.toString()),
+                                    itemBuilder: (context, index) =>
+                                        Icon(Icons.star, color: myRed),
+                                    itemCount: 5,
+                                    itemSize: 12.0,
+                                    direction: Axis.horizontal)),
+                            Padding(
+                              padding:
+                              EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                              child: Text(
+                                  "${((double.parse(
+                                      result?.distance?.toString() ?? '0.0')) /
+                                      1.6)?.toStringAsFixed(1)} km | ${result
+                                      ?.townCity ?? ''}",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w300)),
+                            ),
+                            Padding(
+                              padding:
+                              EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                              child: Text(result?.businessStatus ?? '',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w300,
+                                      color: result?.businessStatus
+                                          ?.toLowerCase() ==
+                                          'offline'
+                                          ? myRed
+                                          : Colors.green)),
+                            ),
+                            Padding(
+                              padding:
+                              EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                              child: Text(
+                                  "Opens | ${result?.startHours?.toString()
+                                      ?.substring(0, 5) ??
+                                      '00:00'}  Closes | ${result?.endHours
+                                      ?.toString()?.substring(0, 5) ??
+                                      "00:00"}",
+                                  style: TextStyle(
+                                      fontSize: sm.w(2.8),
+                                      fontWeight: FontWeight.w300)),
+                            ),
+                          ]),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: myRedLight0),
+                        margin: EdgeInsets.only(top: sm.h(5), right: sm.h(0)),
+                        child: IconButton(
+                            icon: Icon(Icons.call_outlined, color: myRed),
+                            onPressed: () => launch("tel://${result.phone}")),
+                      ),
+                    )
+                  ]),
+              btnTxt != null
+                  ? Padding(
                 padding: EdgeInsets.all(sm.h(2)),
                 child: NeumorphicButton(
                   style: NeumorphicStyle(
@@ -268,36 +305,42 @@ class _SearchResultState extends State<SearchResult> {
                       lightSource: LightSource.topLeft,
                       color: myRed,
                       boxShape: NeumorphicBoxShape.roundRect(
-                          BorderRadius.all(Radius.circular(24.0)))),
-                  margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
+                          BorderRadius.all(Radius.circular(26.0)))),
+                  margin: EdgeInsets.symmetric(horizontal: sm.w(4)),
                   onPressed: () {
-                    // identifier == 1
-                    //     ? Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //             builder: (context) => NewAppointment(0, null)))
-                    // : Navigator.push(
-                    //     context,
-                    // MaterialPageRoute(
-                    //     builder: (context) => BookTable(businessid: '0')));
+                    print("tulluidentifier:$identifier");
+                    Provider.of<BusinessProfileProvider>(context,
+                        listen: false)
+                      ..setBusinessId(result.businessId)
+                      ..refresh(identifier == 1?4:2);
+                    if(identifier == 1){
+                      print("aaaaaaa1");
+                      Navigator.of(context)
+                          .pushNamed('/bookAppointment');
+                    }else{
+                      print("aaaaaaa2");
+                      Navigator.of(context).pushNamed('/bookTable');
+                    }
                   },
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Center(
-                    child: identifier == 1
-                        ? Text(
-                            "Book An Appointment", //bookAnAppointment
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: SvgPicture.asset('assets/icon/callenders.svg'),
+                        ),
+                        Text(
+                            btnTxt, //bookAnAppointment
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          )
-                        : Text(
-                            "Book A Table",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400, color: myRed),
-                          ),
-                  ),
+                                color: Colors.white)
+                        )
+                      ]),
                 ),
-              ),
+              )
+                  : SizedBox(),
             ],
           ),
         ),

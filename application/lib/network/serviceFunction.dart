@@ -138,4 +138,5 @@ class serviceFunction {
       baseUrl2 + 'change-password/change-password-by-old';
   static String deleteBooking = baseUrl2 + 'business-booking/delete';
   static String acceptBooking = baseUrl2 + 'business-booking/accept';
+  static String websitesList = baseUrl1 + 'user/business-website';
 }

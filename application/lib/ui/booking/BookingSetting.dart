@@ -59,7 +59,7 @@ class BookingSetting extends StatelessWidget {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(color: Colors.grey)),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                padding: EdgeInsets.symmetric(horizontal: 22.0),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -68,14 +68,14 @@ class BookingSetting extends StatelessWidget {
                                           onTap: () =>
                                               vaTrue.dateTimePicker(true),
                                           child: fromTo(
-                                              txt: vaTrue.getStartTime(),
+                                              txt: vaTrue.getStartTime()??'00:00',
                                               clr: myRed,
                                               txtClr: Colors.black)),
                                       InkWell(
                                           onTap: () =>
                                               vaTrue.dateTimePicker(false),
                                           child: fromTo(
-                                              txt: vaTrue.getEndTime(),
+                                              txt: vaTrue.getEndTime()??'00:00',
                                               clr: myRed,
                                               txtClr: Colors.black))
                                     ]),

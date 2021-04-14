@@ -16,13 +16,11 @@ import '../../utils/MyColors.dart';
 
 class Profile extends StatelessWidget {
   BaseProvider vaTrue;
-  BaseProvider vaFalse;
 
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    vaTrue = Provider.of<BaseProvider>(context, listen: true);
-    vaFalse = Provider.of<BaseProvider>(context, listen: false);
+    vaTrue = Provider.of<BaseProvider>(context,listen: false);
     return WillPopScope(
       onWillPop: () => APIManager.onWillPop(context),
       child: SafeArea(
@@ -139,8 +137,8 @@ class Profile extends StatelessWidget {
   Widget menuItems(SizeManager sm, int identifier, BuildContext context) {
     return InkWell(
       onTap: () {
-        print('das${vaFalse.menuTitleList[identifier]}eeee');
-        switch (vaFalse.menuTitleList[identifier]) {
+        print('das${vaTrue.menuTitleList[identifier]}eeee');
+        switch (vaTrue.menuTitleList[identifier]) {
           case 'Logout':
             {
               try {

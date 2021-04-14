@@ -59,8 +59,12 @@ class PersonalInfo extends StatelessWidget {
                                 child: Column(children: [
                                   for (int i = 0; i < spFalse.title.length; i++)
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
+                                      padding: EdgeInsets.only(
+                                          top: sm.h(4),
+                                          left: sm.w(6),
+                                          right: sm.w(6)),
+                                      // padding: const EdgeInsets.symmetric(
+                                      //     vertical: 4.0),
                                       child: EditTextComponent(
                                         controller: spTrue.acces[i].controller,
                                         title: spTrue.title[i],
@@ -77,7 +81,6 @@ class PersonalInfo extends StatelessWidget {
                                         suffixTxt: '',
                                         error: spTrue.acces[i].error,
                                         security: false,
-
                                         valid: true,
                                         maxLines: 1,
                                         formate: FilteringTextInputFormatter

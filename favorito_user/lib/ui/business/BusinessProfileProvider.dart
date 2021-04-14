@@ -29,12 +29,15 @@ class BusinessProfileProvider extends BaseProvider {
 
   int remainTime;
   bool _getWaitlistDone = false;
+
   bool getIsProgress() => _isProgress;
+
   setIsProgress(bool _val) {
     _isProgress = true;
   }
 
   bool getWaitlistDone() => _getWaitlistDone;
+
   setWaitlistDone(bool _val) {
     _getWaitlistDone = _val;
   }
@@ -43,6 +46,7 @@ class BusinessProfileProvider extends BaseProvider {
     for (int i = 0; i < 3; i++) controller.add(TextEditingController());
     controller[0].text = '1';
   }
+
   WaitListDataModel getWaitListData() {
     return _waitListDataModel;
   }
@@ -79,10 +83,32 @@ class BusinessProfileProvider extends BaseProvider {
     return _shopTiming ?? "ddd";
   }
 
-  refresh() {
-    getProfileDetail();
-    getBusinessHours();
-    getJobList();
+  refresh(int _i) {
+    switch (_i) {
+      case 1:
+        {
+          print("tullu:1");
+          getProfileDetail();
+          getBusinessHours();
+          getJobList();
+          break;
+        }
+
+      case 2:{
+        print("tullu:2");
+        getBusinessHours();
+        break;
+      }
+
+      case 3:{
+        print("tullu:3");
+        getBusinessHours();
+        break;
+      }
+      case 4:
+        // callhere appointment verbose
+        break;
+    }
   }
 
   List<WorkingHoursData> getWorkingHoursList() => workingHoursModel.data;

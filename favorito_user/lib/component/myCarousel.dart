@@ -48,7 +48,7 @@ class _myCarouselState extends State<myCarousel> {
                           Provider.of<BusinessProfileProvider>(context,
                               listen: false)
                             ..setBusinessId(item.businessId)
-                            ..refresh();
+                            ..refresh(1);
                           Navigator.of(context).pushNamed('/businessProfile');
                         },
                         child: Container(
