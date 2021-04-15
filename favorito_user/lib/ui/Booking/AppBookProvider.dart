@@ -28,7 +28,7 @@ class AppBookProvider extends BaseProvider {
   int _selectedTimeIndex = 0;
   String _selectedDate = dateFormat1.format(DateTime.now());
   String _selectedTime = ' ';
-
+  List<Slots> _slots;
 
   List<Acces> acces = [for (int i = 0; i < 5; i++) Acces()];
 
@@ -92,13 +92,18 @@ class AppBookProvider extends BaseProvider {
   BookTableVerbose getBookTableVerbose() => this._bookTableVerbose;
 
   setBookTableVerbose(BookTableVerbose value) {
+    // this._bookTableVerbose.data.slots.clear();
     this._bookTableVerbose = value;
+    // this._bookTableVerbose.data.slots=value.data.slots;
+
     _occasionList.clear();
     _occasionList.add(Occasion(id: 0, occasion: "Select Occasion"));
-
     _occasionList.addAll(value.data.occasion);
+    // setTimeSlot(_bookTableVerbose.data.slots);
     notifyListeners();
   }
+
+
 
   changeParticipent(bool _val) {
     if (_val)

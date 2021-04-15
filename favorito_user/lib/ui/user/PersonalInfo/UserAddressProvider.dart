@@ -294,7 +294,7 @@ class UserAddressProvider extends ChangeNotifier {
         if (qrResult.length < 6) return;
         Provider.of<BusinessProfileProvider>(context, listen: false)
             ..setBusinessId(qrResult)
-        ..refresh();
+        ..refresh(1);
         Navigator.of(context).pushNamed('/businessProfile');
         print("qrResult:$qrResult");
       });

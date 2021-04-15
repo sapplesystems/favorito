@@ -49,7 +49,7 @@ class _TopRatedState extends State<TopRated> {
                             Provider.of<BusinessProfileProvider>(context,
                                     listen: false)
                                 ..setBusinessId(data[index].businessId)
-                            ..refresh();
+                            ..refresh(1);
                             Navigator.of(context).pushNamed('/businessProfile');
                           },
                           child: Card(

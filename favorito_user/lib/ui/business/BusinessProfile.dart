@@ -337,7 +337,7 @@ class BusinessProfile extends StatelessWidget {
                       print("sdf1");
                       Provider.of<AppBookProvider>(context, listen: false)
                           .bookingVerbose(context);
-                      print("sdf2");
+                      print("sdf4");
                       Navigator.of(context).pushNamed('/bookTable');
                     }
                     break;

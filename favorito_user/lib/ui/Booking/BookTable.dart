@@ -27,6 +27,8 @@ class BookTable extends StatelessWidget {
     sm = SizeManager(context);
     vaTrue = Provider.of<AppBookProvider>(context, listen: true);
     if (isFirst) {
+
+      print("sdf3");
       fut = vaTrue
         ..setIsVerboseCall(true)
         ..bookingVerbose(context);

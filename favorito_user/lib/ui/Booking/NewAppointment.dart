@@ -1,27 +1,15 @@
-import 'package:bot_toast/bot_toast.dart';
-import 'package:favorito_user/component/DatePicker.dart';
+
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentListModel.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:intl/intl.dart';
 
-class NewAppointment extends StatefulWidget {
-  int identifier;
-  List<BookingOrAppointmentListModel> data;
+class BookAppointment extends StatelessWidget {
 
-  NewAppointment(this.identifier, this.data);
-
-  _NewAppointmentState createState() => _NewAppointmentState();
-}
-
-class _NewAppointmentState extends State<NewAppointment> {
-  bool _autoValidateForm = false;
   var _myNotesEditTextController = TextEditingController();
-
+  bool isFirst = true;
   String _selectedService;
   String _selectedServicePerson;
 
@@ -31,73 +19,31 @@ class _NewAppointmentState extends State<NewAppointment> {
 
   List<SlotListModel> slotList = [];
 
-  initializeDefaultValues() {
-    _autoValidateForm = false;
 
-    _initialDate = DateTime.now();
-    _selectedDateText = DateFormat('dd/MM/yyyy').format(_initialDate);
-
-    SlotListModel slot1 = SlotListModel("12:00", false);
-    SlotListModel slot2 = SlotListModel("13:00", false);
-    SlotListModel slot3 = SlotListModel("13:30", false);
-    SlotListModel slot4 = SlotListModel("14:30", false);
-    SlotListModel slot5 = SlotListModel("15:00", false);
-
-    slotList.add(slot1);
-    slotList.add(slot2);
-    slotList.add(slot3);
-    slotList.add(slot4);
-    slotList.add(slot5);
-
-    if (widget.identifier == 0) {
-      _myNotesEditTextController.text = "";
-      _selectedDateText = "";
-      _selectedService = "";
-      _selectedServicePerson = "";
-    } else {
-      _myNotesEditTextController.text = "widget.data.notes";
-      _selectedDateText = "widget.data.date";
-      _selectedService = "widget.data.serviceName";
-      _selectedServicePerson = "widget.data.servicePersonName";
-      for (var temp in slotList) {
-        if (temp.slot == "widget.data.slot") {
-          temp.selected = true;
-          break;
-        }
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    initializeDefaultValues();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    if (isFirst) {
+    }
     return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(color: myBackGround),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                    iconSize: 45,
-                    color: Colors.black,
-                    icon: Icon(Icons.keyboard_arrow_left),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    }),
-                Text(
-                  widget.identifier == 0 ? "New Appointment" : "Appointment",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(color: myBackGround),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Row(children: [
+              IconButton(
+                  iconSize: 45,
+                  color: Colors.black,
+                  icon: Icon(Icons.keyboard_arrow_left),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              Text(
+                "Appointment",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+              ),
+            ]),
             Expanded(
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: sm.w(8)),
@@ -106,9 +52,7 @@ class _NewAppointmentState extends State<NewAppointment> {
                   children: [
                     Center(
                       child: Text(
-                        widget.identifier == 0
-                            ? "Avadh Group"
-                            : "widget.data.businessName",
+                        'data.businessName',
                         style: TextStyle(
                             fontSize: 18, decoration: TextDecoration.underline),
                       ),
@@ -116,16 +60,25 @@ class _NewAppointmentState extends State<NewAppointment> {
                     myServiceDropDown(sm),
                     myServicePersonDropDown(sm),
                     Padding(
-                      padding: EdgeInsets.only(top: sm.h(3)),
+                      padding: EdgeInsets.symmetric(vertical: sm.h(3)),
                       child: Center(
-                        child: DatePicker(
-                          selectedDateText: _selectedDateText,
-                          selectedDate: _initialDate,
-                          onChanged: ((value) {
-                            _selectedDateText = value;
-                          }),
+                          child: Neumorphic(
+                        style: NeumorphicStyle(
+                          shape: NeumorphicShape.convex,
+                          depth: 18,
+                          lightSource: LightSource.top,
+                          color: Colors.white,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                              BorderRadius.all(Radius.circular(10.0))),
                         ),
-                      ),
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                            child: Text('selectedDateText',
+                                style: TextStyle(
+                                    fontSize: sm.h(2),
+                                    color: Colors.grey[600]))),
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                      )),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: sm.h(2)),
@@ -139,12 +92,12 @@ class _NewAppointmentState extends State<NewAppointment> {
                             for (var temp in slotList)
                               InkWell(
                                 onTap: () {
-                                  setState(() {
-                                    for (var temp in slotList) {
-                                      temp.selected = false;
-                                    }
-                                    temp.selected = true;
-                                  });
+                                  for (var temp in slotList) {
+                                    temp.selected = false;
+                                  }
+                                  temp.selected = true;
+
+                                  //setState();
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.only(
@@ -189,44 +142,51 @@ class _NewAppointmentState extends State<NewAppointment> {
                         controller: _myNotesEditTextController,
                         title: "Special Notes",
                         hint: "Enter Special Notes",
-                        maxLines: 4,
+                        maxLines: 8,
                         security: false,
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: sm.h(4), horizontal: sm.w(8)),
+                      child:
+                      // vaTrue.getSubmitCalled()?Center(
+                      //   child: CircularProgressIndicator(
+                      //       backgroundColor: myRed,
+                      //       valueColor: AlwaysStoppedAnimation(myGrey),
+                      //       strokeWidth: 4),
+                      // ):
+                      NeumorphicButton(
+                        style: NeumorphicStyle(
+                            shape: NeumorphicShape.convex,
+                            depth: 4,
+                            lightSource: LightSource.topLeft,
+                            color: myBackGround,
+                            boxShape: NeumorphicBoxShape.roundRect(
+                                BorderRadius.all(Radius.circular(24.0)))),
+                        margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
+                        onPressed: () {
+                          // vaTrue.funSubmitBooking(context);
+
+                        }
+                          ,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 16),
+                        child: Center(
+                          child: Text("Done",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: myRed)),
+                        ),
+                      ),
+                    ),
+
                   ],
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: sm.h(4), bottom: sm.h(2)),
-                child: NeumorphicButton(
-                  style: NeumorphicStyle(
-                      shape: NeumorphicShape.convex,
-                      depth: 4,
-                      lightSource: LightSource.topLeft,
-                      color: myButtonBackground,
-                      boxShape: NeumorphicBoxShape.roundRect(
-                          BorderRadius.all(Radius.circular(24.0)))),
-                  margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
-                  onPressed: () {
-                    BotToast.showText(text: "Appointment sheduled");
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Center(
-                    child: Text(
-                      "Done",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, color: myRed),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+
+          ]),
         ),
       ),
     );
@@ -251,7 +211,8 @@ class _NewAppointmentState extends State<NewAppointment> {
             padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
             child: Text("Select Service"),
           ),
-          underline: Container(), // this is the magic
+          underline: Container(),
+          // this is the magic
           items: <String>[
             'Service 1',
             'Service 2',
@@ -268,9 +229,8 @@ class _NewAppointmentState extends State<NewAppointment> {
             );
           }).toList(),
           onChanged: (String value) {
-            setState(() {
-              _selectedService = value;
-            });
+            _selectedService = value;
+            //setState();
           },
         ),
       ),
@@ -296,7 +256,8 @@ class _NewAppointmentState extends State<NewAppointment> {
             padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
             child: Text("Select Service Person"),
           ),
-          underline: Container(), // this is the magic
+          underline: Container(),
+          // this is the magic
           items: <String>['Ramesh', 'Rohit', 'Mansij', 'Rohan', 'Gautam']
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
@@ -308,9 +269,9 @@ class _NewAppointmentState extends State<NewAppointment> {
             );
           }).toList(),
           onChanged: (String value) {
-            setState(() {
-              _selectedServicePerson = value;
-            });
+            _selectedServicePerson = value;
+            // setState(() {
+            // });
           },
         ),
       ),

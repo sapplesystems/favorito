@@ -42,8 +42,8 @@ class BookingProvider extends BaseProvider {
   bookingListModel blm = bookingListModel();
   bool _isProgress = false;
   bool _done = false;
-  String _startTime = "00:00";
-  String _endTime = "00:00";
+  String _startTime;
+  String _endTime;
 
   getStartTime() => _startTime;
   setStartTime(String _val) {
@@ -151,7 +151,7 @@ class BookingProvider extends BaseProvider {
               '60 min'
               // '${controller[2].text} min'
               )]);
-        notifyListeners();
+              setDone(false);
       }
     });
   }
@@ -159,15 +159,20 @@ class BookingProvider extends BaseProvider {
   addition(int _i) {
     if (int.parse(controller[_i].text) < 8) {
       controller[_i].text = (int.parse(controller[_i].text) + 1).toString();
-    }
     setDone(true);
+    }
+    
   }
 
   subTraction(int _i) {
     int a = int.parse(controller[_i].text);
-    a = a > 0 ? a - 1 : a;
+    
+     if(a > 1){
+      a = a - 1;
     controller[_i].text = a.toString();
-    setDone(true);
+    setDone(true); 
+     }
+    
   }
 
   dateTimePicker(bool _val) {
