@@ -45,20 +45,17 @@ class _Appoinment extends State<Appoinment> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          iconTheme: IconThemeData(color: Colors.black //change your color here
-              ),
-          title: Text("Appoinment", style: TextStyle(color: Colors.black)),
+          leading:null,
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text("Appoinment", style: titleStyle),
+          centerTitle: true,
           actions: [
-            IconButton(
-              icon: Icon(
+            InkWell(
+              child: Icon(
                 Icons.add_circle_outline,
-                size: 34,
+                size: 36
               ),
-              onPressed: () {
+              onTap: () {
                 Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -78,7 +75,7 @@ class _Appoinment extends State<Appoinment> {
                         builder: (context) => appoinmentSetting()));
               },
             )
-          ],
+          ]
         ),
         body: blm.slots == null
             ? Center(child: Text('Please wait its loading...'))

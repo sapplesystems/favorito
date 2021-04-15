@@ -252,6 +252,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       }
       return value;
     });
+    getWebSiteList();
   }
 
   void pinCaller(String _val) async {
@@ -311,12 +312,18 @@ class BusinessProfileProvider extends ChangeNotifier {
    try{
       if((value?.data?.length??0)>0){
         websiteList.clear();
-        websiteList.addAll(value.data);
+        websiteList.addAll(value.data??[' ']);
+        if(websiteList.length==0)websiteList.add(' ');
         for(int _i=0;_i<websiteList.length;_i++){
           print("fdfdf:${websiteList[_i]}");
           controller.add(TextEditingController());
           controller[controller.length-1].text=websiteList[_i];
         }
+      }else{
+        if(controller.length<16){
+          controller.add(TextEditingController());
+        }
+        
         notifyListeners();
       }
         }catch(e){

@@ -1,3 +1,4 @@
+import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/menu/Category.dart';
 import 'package:Favorito/model/menu/MenuBaseModel.dart';
@@ -47,99 +48,104 @@ class _MenuState extends State<Menu> {
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
             color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
-    return Scaffold(
-      body: FutureBuilder<MenuBaseModel>(
-        future: WebService.funMenuList(context),
-        builder: (BuildContext context, AsyncSnapshot<MenuBaseModel> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: Text(loading));
-          else if (snapshot.hasError)
-            return Center(child: Text("Something went wrong.."));
-          else {
-            _dataMap.clear();
-            for (var key in snapshot.data.data)
-              _dataMap[key.categoryName ??
-                  '' + '|' + key.categoryId.toString() ??
-                  '' + '|' + key.outOfStock.toString() ??
-                  ''] = key.items;
-            return RefreshIndicator(
-              onRefresh: () async {
-                setState(() {});
-              },
-              child: Scaffold(
-                appBar: AppBar(
-                  elevation: 0,
-                  title: Text(
-                    snapshot.data.businessType == 3
-                        ? "Menu"
-                        : snapshot.data.businessType == 4
-                            ? "Online Store"
-                            : "",
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.add_circle_outline,
-                        size: sm.w(8.8),
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NewMenuItem(
-                                    showVeg: snapshot.data.businessType == 3)));
-                      },
+    return WillPopScope(
+      onWillPop: (){
+        BaseProvider.onWillPop(context);
+        },
+          child: Scaffold(
+        body: FutureBuilder<MenuBaseModel>(
+          future: WebService.funMenuList(context),
+          builder: (BuildContext context, AsyncSnapshot<MenuBaseModel> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(child: Text(loading));
+            else if (snapshot.hasError)
+              return Center(child: Text("Something went wrong.."));
+            else {
+              _dataMap.clear();
+              for (var key in snapshot.data.data)
+                _dataMap[key.categoryName ??
+                    '' + '|' + key.categoryId.toString() ??
+                    '' + '|' + key.outOfStock.toString() ??
+                    ''] = key.items;
+              return RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {});
+                },
+                child: Scaffold(
+                  appBar: AppBar(
+                    elevation: 0,
+                    title: Text(
+                      snapshot.data.businessType == 3
+                          ? "Menu"
+                          : snapshot.data.businessType == 4
+                              ? "Online Store"
+                              : "",
+                      style: Theme.of(context).textTheme.title,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(right: sm.w(2)),
-                      child: IconButton(
-                          icon: SvgPicture.asset(
-                              'assets/icon/settingWaitlist.svg',
-                              height: sm.w(7.8)),
-                          onPressed: () => Navigator.push(
+                    actions: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.add_circle_outline,
+                          size: sm.w(8.8),
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MenuSetting()))),
-                    )
-                  ],
-                ),
-                body: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: [
+                                  builder: (context) => NewMenuItem(
+                                      showVeg: snapshot.data.businessType == 3)));
+                        },
+                      ),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: TextField(
-                            controller: _mySearchEditController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "Search ",
-                                enabled: false,
-                                suffixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.grey,
-                                ))),
-                      ),
-                      Container(
-                        height: sm.h(70),
-                        padding: const EdgeInsets.only(
-                            left: 16.0, right: 16, bottom: 16, top: 0),
-                        child: ListView(
-                          // shrinkWrap: true,
-                          children: <Widget>[
-                            Column(children: [
-                              for (var key in _dataMap.keys)
-                                _header(key, _dataMap[key], snapshot.data)
-                            ]),
-                          ],
+                        padding: EdgeInsets.only(right: sm.w(2)),
+                        child: IconButton(
+                            icon: SvgPicture.asset(
+                                'assets/icon/settingWaitlist.svg',
+                                height: sm.w(7.8)),
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuSetting()))),
+                      )
+                    ],
+                  ),
+                  body: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TextField(
+                              controller: _mySearchEditController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: "Search ",
+                                  enabled: false,
+                                  suffixIcon: Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                  ))),
                         ),
-                      ),
-                    ]),
-              ),
-            );
-          }
-        },
+                        Container(
+                          height: sm.h(70),
+                          padding: const EdgeInsets.only(
+                              left: 16.0, right: 16, bottom: 16, top: 0),
+                          child: ListView(
+                            // shrinkWrap: true,
+                            children: <Widget>[
+                              Column(children: [
+                                for (var key in _dataMap.keys)
+                                  _header(key, _dataMap[key], snapshot.data)
+                              ]),
+                            ],
+                          ),
+                        ),
+                      ]),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
