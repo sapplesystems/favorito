@@ -3,6 +3,91 @@ var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 var moment = require('moment');
 var today = new Date();
 
+
+
+exports.verboseService = async(req, res) => {
+    if (!req.body.business_id) {
+        return res.status(400).send({ status: 'error', message: 'Business id is missing' });
+    } else {
+        business_id = req.body.business_id
+    }
+    try {
+        sqlGetService = `select id, service_name from business_appointment_service where business_id = '${business_id}' and is_active = 1`
+        resultGetService = await exports.run_query(sqlGetService)
+
+        sqlGetSetting = `select booking_per_slot, advance_booking_start_days, advance_booking_hours from business_appointment_setting where business_id = '${business_id}'`
+
+        resultGetSetting = await exports.run_query(sqlGetSetting)
+
+        return res.status(200).send({ status: 'success', message: 'success', data: [{ service: resultGetService, setting: resultGetSetting }] });
+    } catch (error) {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong', error });
+    }
+}
+
+exports.getPersonByServiceId = async(req, res) => {
+    if (!req.body.business_id) {
+        return res.status(400).send({ status: 'error', message: 'Business id is missing' });
+    } else {
+        business_id = req.body.business_id
+    }
+
+    if (!req.body.service_id) {
+        return res.status(400).json({ status: 'failed', message: 'service_id is missing' });
+    } else {
+        var service_id = req.body.service_id
+    }
+
+    var sql_get_person_by_service = `SELECT id, business_id, person_name FROM business_appointment_person WHERE service_id = ${service_id} and business_id = '${business_id}' and is_active = 1`
+
+    try {
+        var result_get_persons = await exports.run_query(sql_get_person_by_service)
+        if (result_get_persons == '') {
+            return res.status(200).json({ status: 'success', message: 'There is no person by this service id' });
+        }
+        return res.status(200).json({ status: 'success', message: 'success', data: result_get_persons });
+    } catch (error) {
+        return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+    }
+}
+
+exports.restrictedPersonDateTime = async(req, res) => {
+    if (!req.body.business_id) {
+        return res.status(400).send({ status: 'error', message: 'Business id is missing' });
+    } else {
+        business_id = req.body.business_id
+    }
+    if (!req.body.person_id) {
+        return res.status(400).send({ status: 'error', message: 'Person id is missing' });
+    } else {
+        person_id = req.body.person_id
+    }
+    try {
+        // get restricted date 
+        sqlGetRestrictedDateTime = `select DATE_FORMAT( start_datetime, '%Y-%m-%d') as start_datetime,DATE_FORMAT( end_datetime, '%Y-%m-%d') as end_datetime from business_appointment_restriction where business_id = '${business_id}' and person_id = '${person_id}'`
+        resultGetRestrictedDateTime = await exports.run_query(sqlGetRestrictedDateTime)
+
+        var sql_booking_setting = "SELECT start_time,end_time,slot_length,booking_per_slot,advance_booking_end_days,booking_per_day,advance_booking_start_days FROM business_appointment_setting WHERE business_id='" + business_id + "'";
+        var result_appointment_setting = await exports.run_query(sql_booking_setting)
+        restrictedDates = []
+        for (let j = 0; j < result_appointment_setting[0].advance_booking_end_days; j++) {
+            date = moment().add(j, 'd').toDate()
+
+            // sqlCountAppointment = `select count(*) as count from business_appointment where business_id = '${business_id}'`
+            // resultCountAppointment = 
+
+            // if (result_appointment_setting[0].booking_per_day) {
+
+            // }
+            restrictedDates.push({ date: moment(date).format('YYYY-MM-DD') })
+        }
+
+        return res.status(200).send({ status: 'success', message: 'success', data: [{ restrictedDateTime: resultGetRestrictedDateTime, restrictedDates: restrictedDates }] });
+    } catch (error) {
+        return res.status(500).send({ status: 'error', message: 'Something went wrong', error });
+    }
+}
+
 // get verbose appointment function 
 exports.getVerboseAppointment = async(req, res, next) => {
     if (!req.body.business_id) {
@@ -162,25 +247,6 @@ exports.createSlots = function(starttime, endtime, interval) {
 //     })
 // }
 
-exports.getPersonByServiceId = async(req, res) => {
-    if (!req.body.service_id) {
-        return res.status(400).json({ status: 'failed', message: 'service_id is missing' });
-    } else {
-        var service_id = req.body.service_id
-    }
-
-    var sql_get_person_by_service = `SELECT id, business_id, person_name FROM business_appointment_person WHERE service_id = ${service_id}`
-
-    try {
-        var result_get_persons = await exports.run_query(sql_get_person_by_service)
-        if (result_get_persons == '') {
-            return res.status(200).json({ status: 'success', message: 'There is no person by this service id' });
-        }
-        return res.status(200).json({ status: 'success', message: 'success', data: result_get_persons });
-    } catch (error) {
-        return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
-    }
-}
 
 // setting and updating the appointment booking booked by the user
 exports.setBookingAppointment = async function(req, res, next) {

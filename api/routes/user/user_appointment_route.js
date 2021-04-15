@@ -5,6 +5,14 @@ var CheckAuth = require('../../middleware/auth');
 var UserAppointmentController = require('../../controller/user/user_appointment_controller');
 
 // route for get booking for user from user_id
+
+router.post('/verbose-service', CheckAuth, UserAppointmentController.verboseService);
+
+// get all person by service id 
+router.post('/get-person-by-service', CheckAuth, UserAppointmentController.getPersonByServiceId);
+
+router.post('/restricted-datetime-person', CheckAuth, UserAppointmentController.restrictedPersonDateTime);
+
 // requre user_id
 router.post('/set-appointment', CheckAuth, UserAppointmentController.setAppointment);
 // router.post('/get-all-appointment', CheckAuth, UserAppointmentController.allAppointments);
@@ -12,11 +20,7 @@ router.post('/set-appointment', CheckAuth, UserAppointmentController.setAppointm
 // get verbose of appointment
 router.post('/get-appointment-verbose', CheckAuth, UserAppointmentController.getVerboseAppointment);
 
-// get all person by service id 
-router.post('/get-person-by-service', CheckAuth, UserAppointmentController.getPersonByServiceId);
 
-// get all person by service id 
-router.post('/get-person-by-service', CheckAuth, UserAppointmentController.getPersonByServiceId);
 
 router.post('/get-booking-appointment', CheckAuth, UserAppointmentController.getBookingAppointment);
 

@@ -87,7 +87,6 @@ exports.getBookingVerbose = async(req, res, next) => {
             isToday = true
         }
 
-
         if (result_booking_setting[0].start_time == null || result_booking_setting[0].end_time == null) {
             return res.status(500).send({ status: 'error', message: 'Booking not available' });
         }
