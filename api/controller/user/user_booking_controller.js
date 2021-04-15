@@ -46,18 +46,26 @@ exports.getBookingVerbose = async(req, res, next) => {
         return res.status(400).send({ status: 'error', message: 'Business id is missing' });
     }
     business_id = req.body.business_id
-    var sql_booking_setting = "SELECT start_time,end_time,slot_length,booking_per_slot,advance_booking_end_days,advance_booking_hours,advance_booking_start_days FROM business_booking_setting WHERE business_id='" + business_id + "'";
+    var sql_booking_setting = "SELECT business_id,start_time,end_time,slot_length,booking_per_slot,booking_per_day, advance_booking_end_days,advance_booking_hours,advance_booking_start_days FROM business_booking_setting WHERE business_id='" + business_id + "'";
     var sql_occasion = 'SELECT * FROM occasion_master'
     var sql_business_name = `SELECT business_name FROM business_master WHERE business_id = '${business_id}'`
     try {
         var result_business_name = await exports.run_query(sql_business_name)
         result_occasion = await exports.run_query(sql_occasion)
         result_booking_setting = await exports.run_query(sql_booking_setting)
-
         available_dates = []
         for (let j = 0; j < result_booking_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
-            available_dates.push({ date: moment(date).format('YYYY-MM-DD'), day: getDayNameByDate(moment(date).format('YYYY-MM-DD')) })
+
+            // checking the count from the date.
+
+            sqlCheckCountDate = `select count(*) as count from business_booking where business_id = '${business_id}' and date(created_datetime) = '${moment(date).format('YYYY-MM-DD')}' and deleted_at is null`
+
+            resultCheckCountDate = await exports.run_query(sqlCheckCountDate)
+            console.log(resultCheckCountDate)
+            if (resultCheckCountDate[0].count < result_booking_setting[0].booking_per_day) {
+                available_dates.push({ date: moment(date).format('YYYY-MM-DD'), day: getDayNameByDate(moment(date).format('YYYY-MM-DD')) })
+            }
         }
 
         today_date = moment().format('YYYY-MM-DD')
@@ -68,7 +76,8 @@ exports.getBookingVerbose = async(req, res, next) => {
         if (req.body.date) {
             date = req.body.date
         } else {
-            date = today_date
+            date = available_dates[0].date
+                // date = today_date
         }
         // check if the date required is today date then set the advance booking time if not then keep the ad null
         let requiredDate = moment(date)
@@ -77,7 +86,6 @@ exports.getBookingVerbose = async(req, res, next) => {
             advance_booking_time = result_booking_setting[0].advance_booking_hours
             isToday = true
         }
-
 
         if (result_booking_setting[0].start_time == null || result_booking_setting[0].end_time == null) {
             return res.status(500).send({ status: 'error', message: 'Booking not available' });
@@ -497,22 +505,21 @@ exports.createSlotWithDate = async(result_booking_setting, date, advance_booking
         temp_slot_detail = {}
         date_1 = moment(date).format('YYYY-MM-DD');
         // creating slot 
-        const get_slot = await exports.createSlots(result_booking_setting[0].start_time, result_booking_setting[0].end_time, result_booking_setting[0].slot_length, advance_booking_hours, isToday)
+        const get_slot = await exports.createSlots(result_booking_setting[0].start_time, result_booking_setting[0].end_time, result_booking_setting[0].slot_length, advance_booking_hours, isToday, result_booking_setting, date_1)
         temp_slot_detail.date = date_1
         temp_slot_detail.slots = get_slot
         resolve(temp_slot_detail)
     })
 }
 
-exports.createSlots = function(starttime, endtime, interval, advance_booking_hours, isToday) {
-    return new Promise((resolve, reject) => {
+exports.createSlots = async function(starttime, endtime, interval, advance_booking_hours, isToday, result_booking_setting, data_1) {
+    return new Promise(async(resolve, reject) => {
         array_slots = []
+        array_slots_final = []
         start_time = starttime
         end_time = endtime
         current_time = moment()
-        if (isToday && moment(`${moment(current_time)}`).isAfter(moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)) && moment(`${moment(current_time)}`).isBefore(moment(`${moment(current_time).format('YYYY-MM-DD')} ${end_time}`))) {
-            start_time = current_time.format('HH:mm:ss')
-        }
+
         start_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)
         if (advance_booking_hours) {
             start_time = moment(start_time, 'HH:mm').add(advance_booking_hours, 'minutes')
@@ -525,21 +532,39 @@ exports.createSlots = function(starttime, endtime, interval, advance_booking_hou
             })
             start_time = moment(start_time, 'HH:mm').add(interval, 'minutes')
         }
-        resolve(array_slots)
+
+        if (isToday) {
+            for (let i = 0; i < array_slots.length; i++) {
+                current_time = moment()
+                const slot = array_slots[i];
+                start_slot_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${slot.slot[0]}`)
+
+                // getting the count between the slot by substracting the 1 minute to manage the duplicate data
+
+                // start time slot
+                s_slot = `${date_1} ${slot.slot[0]}`
+
+                // end time slot
+                e_slot = moment(`${date_1} ${slot.slot[1]}`).subtract(1, 'minutes').format('YYYY-MM-DD HH:mm:ss')
+
+                sqlGetCountBookedSlot = `select count(*) as count from business_booking where business_id = '${result_booking_setting[0].business_id}' and created_datetime between '${s_slot}' and '${e_slot}' and deleted_at is null`
+
+                resultGetCountBookedSlot = await exports.run_query(sqlGetCountBookedSlot)
+
+                // select query to get the slot lenght
+                if (current_time.isBefore(start_slot_time) && result_booking_setting[0].booking_per_slot > resultGetCountBookedSlot[0].count) {
+                    array_slots_final.push(slot)
+                }
+            }
+        } else {
+            // select query to get the slot lenght
+            array_slots_final = [...array_slots]
+
+        }
+
+        resolve(array_slots_final)
     })
 }
-
-// exports.createSlots = function(starttime, endtime, interval) {
-//     return new Promise((resolve, reject) => {
-//         array_slots = []
-//         start_time = starttime
-//         end_time = endtime
-//         for (let i = parseInt(start_time.substring(0, 2)); i < parseInt(end_time.substring(0, 2)) - interval; i = i + interval) {
-//             array_slots.push({ slot: [i, i + interval] })
-//         }
-//         resolve(array_slots)
-//     })
-// }
 
 
 function newstarttime(datetime, minutes) {
