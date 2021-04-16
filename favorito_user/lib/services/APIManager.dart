@@ -34,6 +34,7 @@ import 'package:favorito_user/services/function.dart';
 import 'package:favorito_user/ui/Login/Login.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:favorito_user/utils/UtilProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -676,7 +677,7 @@ try{
 
   //getTableVerboseData
   // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
-  static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
+  static Future<BookTableVerbose> baseUserBookingVerbose(Map _map,context) async {
     if (!await utilProvider.checkInternet())
       return BookTableVerbose(
           status: 'fail', message: 'Please check internet connections');
@@ -694,6 +695,7 @@ try{
           text:
               BaseResponse.fromJson(convert.json.decode(e.response.toString()))
                   .message);
+      Navigator.pop(context);
     }
     print("baseUserBookingVerbose response : ${response.toString}");
     return BookTableVerbose.fromJson(convert.jsonDecode(response.toString()));

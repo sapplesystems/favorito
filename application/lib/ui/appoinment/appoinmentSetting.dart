@@ -7,15 +7,16 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/appoinment/PersonList.dart';
 import 'package:Favorito/model/appoinment/RestrictionOnlyModel.dart';
 import 'package:Favorito/model/appoinment/SettingData.dart';
-import 'package:Favorito/model/appoinment/appointmentServiceOnlyModel.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 
 class appoinmentSetting extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class appoinmentSetting extends StatefulWidget {
 }
 
 class _appoinmentSettingState extends State<appoinmentSetting> {
+  AppoinmentProvider vaTrue;
   List title = [
     "Waitlist Manager",
     "Anouncement",
@@ -50,11 +52,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
   bool personsDD = false;
   SizeManager sm;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  List<String> abc = ["Name", "Mobile", "Email"];
-  List<Data> servicesList;
-  List<String> servicesString = List();
-  List<PersonList> _personList;
-  List<String> _personListTxt = List();
+  
   SettingData _settingData = SettingData();
   List<RestrictionOnlyModel> _restrictionList;
   List<String> _restrictedServicesTxt = List();
@@ -63,6 +61,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
   List<String> selectedList = [];
   List<TextEditingController> controller = [];
   bool _autoValidateForm = false;
+  bool isFirst = true;
   ProgressDialog pr;
   MaterialLocalizations localizations;
   void initState() {
@@ -72,7 +71,6 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     for (int i = 0; i < 16; i++) controller.add(TextEditingController());
     initilizevalues();
     getSettingdata();
-    getPerson();
   }
 
   @override
@@ -93,7 +91,11 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
           messageTextStyle: TextStyle(
               color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
     sm = SizeManager(context);
-
+vaTrue = Provider.of<AppoinmentProvider>(context,listen: true);
+    if(isFirst){
+    vaTrue.getPersonCall(context);
+    isFirst = false;
+    }
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xfffff4f4),
@@ -109,20 +111,6 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             "Appoinment Setting",
             style: TextStyle(color: Colors.black),
           ),
-          actions: [
-            // IconButton(
-            //   icon: Padding(
-            //     padding: const EdgeInsets.only(right: 20.0),
-            //     child: Icon(Icons.refresh),
-            //   ),
-            //   onPressed: ()async {
-
-            //    await getRestriction();
-            //    await getPerson();
-            //    getService(true);
-            //   },
-            // )
-          ],
         ),
         body: Builder(
           builder: (ctx) => Container(
@@ -169,12 +157,12 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                         Column(
                           children: [
                             addNewLabel("Services", labelClicked),
-                            Divider(color: myGrey, height: 2),
-                            if (servicesList != null)
-                              for (int i = 0; i < servicesList?.length; i++)
+                            Divider(color: myGrey, height: 20),
+                            if (vaTrue.servicesList != null)
+                              for (int i = 0; i < vaTrue.servicesList?.length; i++)
                                 //
                                 my_ServiceSwitch(
-                                  datalist: servicesList,
+                                  datalist: vaTrue.servicesList,
                                   i: i,
                                   function: changeit,
                                   identity: "s",
@@ -185,11 +173,11 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                           children: [
                             addNewLabel("Person", labelClicked),
                             Divider(color: myGrey, height: 2),
-                            if (_personList != null)
-                              for (int i = 0; i < _personList?.length; i++)
+                            if (vaTrue.getPerson() != null)
+                              for (int i = 0; i < vaTrue.getPerson()?.length; i++)
                                 //
                                 my_ServiceSwitch(
-                                  datalist: _personList,
+                                  datalist: vaTrue.getPerson(),
                                   i: i,
                                   function: changeit,
                                   identity: "p",
@@ -384,6 +372,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
                     children: [
                       InkWell(
                           onTap: () {
+                            print("asd1");
                             showPopup(context, _popupBody3(_va),
                                 top: 8, bottom: 8);
                           },
@@ -418,13 +407,16 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     switch (_txt) {
       case "Services":
         {
+          print("asd2");
+
           showPopup(context, _popupBody1());
           break;
         }
 
       case "Person":
         {
-          showPopup(context, _popupBody2(), top: 10, bottom: 10);
+          Navigator.pushNamed(context, '/addPerson').whenComplete(() => vaTrue.getPersonCall(context));
+          // showPopup(context, _popupBody2(), top: 10, bottom: 10);
           break;
         }
       case "Restrictions":
@@ -435,24 +427,34 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     }
   }
 
-  Widget _popupBody1() {
-    return Container(
-      child: Column(children: [
-        Center(
-            child: ListTile(
-                title: Text("+Services",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: myRed)),
-                trailing: IconButton(
-                  icon: Icon(Icons.close, color: myRed),
-                  onPressed: () {
-                    controller[6].text = "";
-                    Navigator.pop(context);
-                  },
-                ),
-                leading: Icon(Icons.close, color: Colors.transparent))),
+  Widget _popupBody1() =>
+    Container(
+      color: Colors.blue,
+      height: 200,
+      child: ListView(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_back, color: myRed),
+              onPressed: () {
+                controller[6].text = "";
+                Navigator.pop(context);
+              },
+            ),
+Text("Add Services",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: myRed)),
+                    IconButton(
+              icon: Icon(Icons.close, color: myRed),
+              onPressed: () {
+                controller[6].text = "";
+                Navigator.pop(context);
+              },
+            ),
+        ]),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 8),
           child: txtfieldboundry(
@@ -482,76 +484,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
         )
       ]),
     );
-  }
-
-  Widget _popupBody2() {
-    return Column(children: [
-      Center(
-          child: ListTile(
-              title: Text("+Person",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16, color: myRed)),
-              trailing: IconButton(
-                icon: Icon(Icons.close, color: myRed),
-                onPressed: () {
-                  controller[6].text = "";
-                  Navigator.pop(context);
-                },
-              ),
-              leading: Icon(Icons.close, color: Colors.transparent))),
-      myDropDown(controller[7], "Services", servicesString),
-      for (int i = 0; i < 3; i++)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: txtfieldboundry(
-              controller: controller[8 + i],
-              title: abc[i],
-              maxlen: i == 1
-                  ? 10
-                  : i == 2
-                      ? 56
-                      : 25,
-              keyboardSet: i == 1
-                  ? TextInputType.number
-                  : i == 2
-                      ? TextInputType.emailAddress
-                      : TextInputType.name,
-              security: false,
-              valid: true),
-        ),
-      MyOutlineButton(
-        title: "Submit",
-        function: () {
-          int _serviceId;
-          for (var _va in servicesList) {
-            if (_va.serviceName == controller[7].text) {
-              _serviceId = _va.id;
-            }
-          }
-
-          Map _map = {
-            "person_name": controller[8].text,
-            "service_id": _serviceId,
-            "person_mobile": controller[9].text,
-            "person_email": controller[10].text
-          };
-          if (controller[7].text != null && controller[7].text != "") {
-            pr?.show();
-            WebService.funAppoinmentSavePerson(_map, context).then((value) {
-              pr?.hide();
-              if (value.status == "success") {
-                getPerson();
-                BotToast.showText(
-                    text: value.message, duration: Duration(seconds: 5));
-                Navigator.pop(context);
-                for (int i = 7; i < 11; i++) controller[i].text = "";
-              }
-            });
-          }
-        },
-      )
-    ]);
-  }
+  
 
   String selectedOption;
   Widget _popupBody3(RestrictionOnlyModel _data) {
@@ -582,7 +515,7 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
         child: Column(children: [
           Center(
               child: ListTile(
-                  title: Text("+Restriction",
+                  title: Text("+ Restriction",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -674,10 +607,10 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
           ),
           Visibility(
               visible: servicesDD,
-              child: myDropDown(controller[11], "Services", servicesString)),
+              child: myDropDown(controller[11], "Services", vaTrue.servicesString)),
           Visibility(
               visible: personsDD,
-              child: myDropDown(controller[12], "Person", _personListTxt)),
+              child: myDropDown(controller[12], "Person", vaTrue.personListTxt)),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: InkWell(
@@ -757,12 +690,12 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
             function: () {
               int _serviceId;
               int _personId;
-              for (var _va in servicesList) {
+              for (var _va in vaTrue.servicesList) {
                 if (_va.serviceName == controller[11].text) {
                   _serviceId = _va.id;
                 }
               }
-              for (var _va in _personList) {
+              for (var _va in vaTrue.getPerson()) {
                 if (_va.personName == controller[12].text) {
                   _personId = _va.id;
                 }
@@ -796,10 +729,6 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     });
   }
 
-  // service_id:2
-  // person_id:2
-  // start_datetime:2020-10-03 10:00
-  // end_datetime:2020-10-13 20:00
   showPopup(BuildContext context, Widget widget,
       {BuildContext popupContext,
       double left,
@@ -810,16 +739,17 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     Navigator.push(
       context,
       PopupLayout(
-        top: sm.h(top ?? 20),
+        top: sm.h(top ?? 4),
         left: sm.w(left ?? 10),
         right: sm.w(right ?? 10),
-        bottom: sm.h(bottom ?? 20),
+        bottom: sm.h(bottom ?? 40),
         child: PopupContent(
           content: Scaffold(body: widget),
         ),
       ),
     );
   }
+ 
 
   void initilizevalues() {
     controller[0].text = "0";
@@ -870,26 +800,15 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
     await WebService.funAppoinmentService(context).then((_value) {
       if (_val) pr?.hide();
       if (_value.status == "success") {
-        servicesList = _value.data;
-        servicesString.clear();
-        for (var _va in servicesList) servicesString.add(_va.serviceName ?? "");
+        vaTrue.servicesList = _value.data;
+        vaTrue.servicesString.clear();
+        for (var _va in vaTrue.servicesList) vaTrue.servicesString.add(_va.serviceName ?? "");
       }
     });
     setState(() {});
   }
 
-  void getPerson() async {
-    pr?.show();
-    await WebService.funAppoinmentPerson(context).then((_value) {
-      pr?.hide();
-      if (_value.status == "success") {
-        _personList = _value.data;
-        _personListTxt.clear();
-        for (var _va in _personList) _personListTxt.add(_va.personName ?? "");
-        setState(() => controller[12].text = "");
-      }
-    });
-  }
+  
 
   getRestriction() async {
     pr?.show();
@@ -935,12 +854,12 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
   changeit(int i, bool val, String identifire) {
     if (identifire == "p") {
       setState(() {
-        _personList[i].isActive = val ? 0 : 1;
+        vaTrue.getPerson()[i].isActive = val ? 0 : 1;
       });
       pr?.show();
       var _va = {
-        "person_id": _personList[i].id,
-        "is_active": _personList[i].isActive
+        "person_id": vaTrue.getPerson()[i].id,
+        "is_active": vaTrue.getPerson()[i].isActive
       };
       WebService.funAppoinmentServicePersonOnOff(_va, false, context)
           .then((value) {
@@ -954,11 +873,11 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
 
     if (identifire == "s") {
       setState(() {
-        servicesList[i].isActive = val ? 0 : 1;
+        vaTrue.servicesList[i].isActive = val ? 0 : 1;
       });
       var _va = {
-        "service_id": servicesList[i].id,
-        "is_active": servicesList[i].isActive
+        "service_id": vaTrue.servicesList[i].id,
+        "is_active": vaTrue.servicesList[i].isActive
       };
       print("data:$_va");
       pr?.show();
@@ -990,6 +909,16 @@ class _appoinmentSettingState extends State<appoinmentSetting> {
       }
     });
   }
+
+  void showBottom(Widget popupBody3) {
+       showModalBottomSheet<void>(
+       context: context,
+       builder:(BuildContext context) =>popupBody3
+        );
+                                           
+  }
+
+
 }
 
 class my_ServiceSwitch extends StatelessWidget {
@@ -1025,4 +954,7 @@ class my_ServiceSwitch extends StatelessWidget {
       ],
     );
   }
+
+
+  
 }

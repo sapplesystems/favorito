@@ -52,7 +52,6 @@ class BusinessProfile extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                     v.needSave(false);
-
                     v.getProfileData(false);
                   }),
               iconTheme: IconThemeData(color: Colors.white),
@@ -209,8 +208,8 @@ class BusinessProfile extends StatelessWidget {
                                   keyboardSet: TextInputType.number,
                                   hint: "Enter Pincode",
                                   myOnChanged: (_val) {
-                                    data.pinCaller(_val);
-                                    v.needSave(true);
+                                    data.pinCaller(_val,true);
+                                    
                                   }),
                               Padding(
                                 padding: EdgeInsets.all(8.0),

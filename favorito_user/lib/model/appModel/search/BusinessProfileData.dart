@@ -82,7 +82,7 @@ class BusinessProfileData {
     businessName = json['business_name'];
     townCity = json['town_city'];
     state = json['state'];
-    photo = json['photo'];
+    photo = json['photo']??'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png';
     address1 = json['address1'];
     address2 = json['address2'];
     address3 = json['address3'];

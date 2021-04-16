@@ -54,7 +54,6 @@ class AppBookProvider extends BaseProvider {
 
   setIsVerboseCall(bool _val) {
     _isVerboseCall = _val;
-    notifyListeners();
   }
 
   getSubmitCalled() => _submitCalled;
@@ -70,6 +69,8 @@ class AppBookProvider extends BaseProvider {
     bookingVerbose(context);
     notifyListeners();
   }
+
+
 
   getSelectDate() => _selectedDateIndex;
 
@@ -275,7 +276,7 @@ class AppBookProvider extends BaseProvider {
                   .getBusinessId() ??
               '',
       "date": _selectedDate
-    }).then((value) {
+    },context).then((value) {
       _message = value.message;
       if (value.status == 'success') {
         _selectedTime = value.data?.slots[0]?.startTime;

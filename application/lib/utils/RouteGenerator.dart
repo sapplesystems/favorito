@@ -1,5 +1,6 @@
 import 'package:Favorito/component/NetworkImages.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
+import 'package:Favorito/ui/appoinment/AddPerson.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
@@ -40,6 +41,9 @@ class RouteGenerator {
 
       case '/adSpent':
         return MaterialPageRoute(builder: (_) => adSpent());
+     
+      case '/addPerson':
+        return MaterialPageRoute(builder: (_) => AddPerson());
 
       case '/networkImages':
         return MaterialPageRoute(

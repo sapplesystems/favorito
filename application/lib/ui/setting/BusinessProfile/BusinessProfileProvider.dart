@@ -228,7 +228,7 @@ class BusinessProfileProvider extends ChangeNotifier {
 
       dd1?.currentState?.changeSelectedItem(va?.workingHours ?? "");
 
-      pinCaller(va.postalCode);
+      pinCaller(va.postalCode,false);
       controller[13].text = va.businessEmail;
       controller[14].text = va.shortDescription;
 
@@ -255,7 +255,7 @@ class BusinessProfileProvider extends ChangeNotifier {
     getWebSiteList();
   }
 
-  void pinCaller(String _val) async {
+  void pinCaller(String _val,bool _val1) async {
     if (_val?.length == 6) {
       await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
         if (value.data.city == null) {
@@ -273,8 +273,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       controller[11].text = "";
       error[9] = null;
     }
-    notifyListeners();
-    needSave(false);
+    needSave(_val1);
   }
 
   setContext(BuildContext context) {

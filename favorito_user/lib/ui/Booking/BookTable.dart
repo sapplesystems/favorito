@@ -27,8 +27,6 @@ class BookTable extends StatelessWidget {
     sm = SizeManager(context);
     vaTrue = Provider.of<AppBookProvider>(context, listen: true);
     if (isFirst) {
-
-      print("sdf3");
       fut = vaTrue
         ..setIsVerboseCall(true)
         ..bookingVerbose(context);
@@ -36,8 +34,7 @@ class BookTable extends StatelessWidget {
     }
     return Scaffold(
         backgroundColor: myBackGround,
-        body:
-        vaTrue.getIsVerboseCall()
+        body: vaTrue.getIsVerboseCall()
             ? Center(
                 child: CircularProgressIndicator(
                     backgroundColor: myRed,
@@ -202,8 +199,7 @@ class BookTable extends StatelessWidget {
                           child: Divider(height: sm.h(6))),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
-                          child: Text('Time', style: TextStyle(color: myGrey))),
-                      Container(
+                          child: Text('Time', style: TextStyle(color: myGrey)))   ,                   Container(
                         height: 100,
                         child: ListView(
                             shrinkWrap: true,
@@ -276,14 +272,11 @@ class BookTable extends StatelessWidget {
                               child: DropdownButton<String>(
                                   isExpanded: true,
                                   value: vaTrue.selectedOccasion,
-
                                   hint: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: sm.w(2)),
-                                    child: Text("Select Occasion")
-                                  ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sm.w(2)),
+                                      child: Text("Select Occasion")),
                                   underline: Container(),
-
                                   items: vaTrue
                                       .getOccasionList()
                                       .map<DropdownMenuItem<String>>(
@@ -306,11 +299,10 @@ class BookTable extends StatelessWidget {
                           child: Divider(height: sm.h(6))),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
-                          child: Text('Detail', style: TextStyle(color: myGrey))),
-
+                          child:
+                              Text('Detail', style: TextStyle(color: myGrey))),
                       Builder(
                           builder: (context) => Form(
-                                // key: RIKeys.josKeys20,
                                 key: _formKey,
                                 autovalidate: _FormValidate,
                                 child: Column(children: [
@@ -326,7 +318,7 @@ class BookTable extends StatelessWidget {
                                           valid: true,
                                           hint: "Enter Name",
                                           maxLines: 1,
-                                          maxlen:26,
+                                          maxlen: 26,
                                           prefixIcon: 'name',
                                           error: vaTrue.acces[0].error,
                                           security: false)),
@@ -343,7 +335,6 @@ class BookTable extends StatelessWidget {
                                         maxlen: 10,
                                         myregex: emailAndMobileRegex,
                                         prefixIcon: 'phone',
-
                                         keyboardSet: TextInputType.phone,
                                         error: vaTrue.acces[1].error,
                                         valid: true,
@@ -357,7 +348,7 @@ class BookTable extends StatelessWidget {
                                     child: EditTextComponent(
                                         controller: vaTrue.acces[2].controller,
                                         title: "Special Notes",
-                                        maxlen:200,
+                                        maxlen: 200,
                                         hint: "Enter Special Notes",
                                         error: vaTrue.acces[2].error,
                                         maxLines: 8,
@@ -368,34 +359,35 @@ class BookTable extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: sm.h(4), horizontal: sm.h(10)),
-                        child:
-vaTrue.getSubmitCalled()?Center(
-  child: CircularProgressIndicator(
-      backgroundColor: myRed,
-      valueColor: AlwaysStoppedAnimation(myGrey),
-      strokeWidth: 4),
-):
-                        NeumorphicButton(
-                          style: NeumorphicStyle(
-                              shape: NeumorphicShape.convex,
-                              depth: 4,
-                              lightSource: LightSource.topLeft,
-                              color: myBackGround,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                  BorderRadius.all(Radius.circular(24.0)))),
-                          margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
-                          onPressed: () =>
-                            vaTrue.funSubmitBooking(context)
-                          ,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 16),
-                          child: Center(
-                            child: Text("Done",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: myRed)),
-                          ),
-                        ),
+                        child: vaTrue.getSubmitCalled()
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                    backgroundColor: myRed,
+                                    valueColor: AlwaysStoppedAnimation(myGrey),
+                                    strokeWidth: 4),
+                              )
+                            : NeumorphicButton(
+                                style: NeumorphicStyle(
+                                    shape: NeumorphicShape.convex,
+                                    depth: 4,
+                                    lightSource: LightSource.topLeft,
+                                    color: myBackGround,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.all(
+                                            Radius.circular(24.0)))),
+                                margin:
+                                    EdgeInsets.symmetric(horizontal: sm.w(10)),
+                                onPressed: () =>
+                                    vaTrue.funSubmitBooking(context),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 16),
+                                child: Center(
+                                  child: Text("Done",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: myRed)),
+                                ),
+                              ),
                       ),
                     ]),
                   ),

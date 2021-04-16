@@ -13,4 +13,6 @@ class RIKeys {
   static final josKeys4 = GlobalKey<ScaffoldState>(); //booking popup
   static final josKeys5 = GlobalKey<FormState>(); //BookingSetting
   static final josKeys6 = GlobalKey<ScaffoldState>(); //Bookings
+  static final josKeys7 = GlobalKey<ScaffoldState>(); //Bookings
+  static final josKeys8 = GlobalKey<FormState>(); //appointment add person
 }
