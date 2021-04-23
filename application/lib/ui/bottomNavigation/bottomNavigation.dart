@@ -1,3 +1,4 @@
+import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
@@ -36,6 +37,9 @@ class _bottomNavigationState extends State<bottomNavigation> {
     if(index==1){
 Provider.of<BookingProvider>(context, listen: false).getBookingData();
     }
+    // else if(index==2){
+    //   Provider.of<AppoinmentProvider>(context, listen: false).getAppointmentCall();
+    // }
     setState(() => _selectedIndex = index);
   }
 

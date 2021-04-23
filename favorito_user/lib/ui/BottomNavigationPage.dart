@@ -1,4 +1,3 @@
-import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
 import 'package:favorito_user/ui/chat/Chat.dart';
 import 'package:favorito_user/ui/home/Home.dart';
@@ -8,7 +7,6 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override

@@ -10,6 +10,8 @@ import 'package:Favorito/model/VerifyOtp.dart';
 import 'package:Favorito/model/adSpentModel.dart';
 import 'package:Favorito/model/appoinment/RestrictionModel.dart';
 import 'package:Favorito/model/appoinment/appoinmentSeviceModel.dart';
+import 'package:Favorito/model/appoinment/appointListModel.dart';
+import 'package:Favorito/model/appoinment/appointmentModel.dart';
 import 'package:Favorito/model/appoinment/appointmentServiceOnlyModel.dart';
 import 'package:Favorito/model/appoinment/appointmentSettingModel.dart';
 import 'package:Favorito/model/appoinment/personModel.dart';
@@ -1299,7 +1301,7 @@ class WebService {
   //***********************************************appointment*****************************/
 
   static Future<appointmentSettingModel> funAppoinmentSetting(
-      BuildContext context) async {
+    ) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentSetting;
     opt = Options(
@@ -1316,7 +1318,7 @@ class WebService {
   }
 
   static Future<RestrictionModel> funAppoinmentRestriction(
-      BuildContext context) async {
+      ) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentRestriction;
     opt = Options(
@@ -1347,13 +1349,14 @@ class WebService {
       return BaseResponseModel.fromJson(
           convert.json.decode(response.toString()));
     }
+     return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
   }
 
   static Future<BaseResponseModel> funAppoinmentServicePersonOnOff(
       //true for services false for person
       Map _map,
-      bool isService,
-      BuildContext context) async {
+      bool isService) async {
     String token = await Prefs.token;
     String url = isService
         ? serviceFunction.funAppoinmentServiceOnOff
@@ -1372,7 +1375,7 @@ class WebService {
   }
 
   static Future<BaseResponseModel> funAppoinmentSaveService(
-      Map _map, BuildContext context) async {
+      Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentSaveService;
     opt = Options(
@@ -1425,7 +1428,7 @@ class WebService {
   }
 
   //to get person
-  static Future<PersonModel> funAppoinmentPerson(BuildContext context) async {
+  static Future<PersonModel> funAppoinmentPerson() async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentPerson;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1439,8 +1442,7 @@ class WebService {
   }
 
   //to get all services
-  static Future<appointmentServiceOnlyModel> funAppoinmentService(
-      BuildContext context) async {
+  static Future<appointmentServiceOnlyModel> funAppoinmentService() async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentService;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1459,7 +1461,7 @@ class WebService {
   }
 
   static Future<BaseResponseModel> funAppoinmentSaveSetting(
-      Map _map, BuildContext context) async {
+      Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentSaveSetting;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1474,9 +1476,9 @@ class WebService {
   }
 
   static Future<BaseResponseModel> funAppoinmentCreate(
-      Map _map, BuildContext context) async {
+      Map _map,isnew) async {
     String token = await Prefs.token;
-    String url = serviceFunction.funAppoinmentCreate;
+    String url = isnew?serviceFunction.funAppoinmentCreate:serviceFunction.funAppoinmentEdit;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(url, data: _map, options: opt);
 
@@ -1488,17 +1490,17 @@ class WebService {
     }
   }
 
-  static Future<appoinmentSeviceModel> funAppoinmentDetail(
-      BuildContext context) async {
+  static Future<appointmentModel> funAppoinmentDetail(
+      Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentDetail;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(url, options: opt);
+    response = await dio.post(url,data:_map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return appoinmentSeviceModel
+      return appointmentModel
           .fromJson(convert.json.decode(response.toString()));
     }
   }
@@ -1518,13 +1520,12 @@ class WebService {
     }
   }
 
-  static Future<bookingListModel> funAppoinmentList(
-      BuildContext context) async {
+  static Future<bookingListModel> funAppoinmentList(Map _map) async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funAppoinmentList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(url, options: opt);
+    response = await dio.post(url,data:_map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");

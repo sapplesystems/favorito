@@ -24,6 +24,10 @@ router.post('/save-person', CheckAuth, BusinessAppointmentController.savePerson)
  */
 router.post('/save-service', CheckAuth, BusinessAppointmentController.saveService);
 
+
+// SAVE MULTI RESTRICTION 
+router.post('/save-multi-restriction', CheckAuth, BusinessAppointmentController.saveMultiRestriction);
+
 /**
  * SAVE RESTRICTION
  */

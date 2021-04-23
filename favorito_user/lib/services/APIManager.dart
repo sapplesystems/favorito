@@ -23,6 +23,7 @@ import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
+import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
@@ -230,7 +231,7 @@ class APIManager {
     Map<String, dynamic> _map = {"keyword": searchString};
     response = await dio.post(url, data: _map, options: opt);
 
-    print("Request URL:$url.toString()");
+    print("Request URL:$url");
     print("responseData1:${response.toString()}");
     return SearchBusinessListModel.fromJson(
         convert.json.decode(response.toString()));
@@ -674,6 +675,28 @@ try{
     return BookingOrAppointmentListModel.fromJson(
         convert.jsonDecode(response.toString()));
   }
+
+
+  // baseUserAppointmentVerboseService
+  static Future<AppSerModel> baseUserAppointmentVerboseService(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return AppSerModel(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentVerboseService;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserBookingList : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: 'baseUserAppointmentVerboseService:${e.toString}');
+    }
+    return AppSerModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
 
   //getTableVerboseData
   // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {

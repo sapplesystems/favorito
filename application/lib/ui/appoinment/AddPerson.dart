@@ -1,10 +1,10 @@
 import 'package:Favorito/component/MyOutlineButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/Regexer.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,11 +12,17 @@ import 'package:provider/provider.dart';
 class AddPerson extends StatelessWidget {
   AppoinmentProvider vaTrue;
   bool _needValidate = false;
+  bool isFirst = true;
 SizeManager sm;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-;    vaTrue = Provider.of<AppoinmentProvider>(context,listen: true);
+   vaTrue = Provider.of<AppoinmentProvider>(context,listen: true);
+    if(isFirst){
+      vaTrue.cleanAllPerson();
+      vaTrue.refresh();
+      isFirst = false;
+    }
     return   Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -24,11 +30,9 @@ SizeManager sm;
 vaTrue.controller[0].text = "";
                 Navigator.pop(context);
           },
-          child: Icon(Icons.arrow_back,color: myRed,)),
+          child: Icon(Icons.arrow_back,color: Colors.black,)),
         centerTitle: true,
-title: Text('Person',style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 22, color: myRed)),
-
+title: Text('Person',style: titleStyle),
       ),
       body: Padding(
         padding:  EdgeInsets.symmetric(horizontal: sm.w(4)),
@@ -75,9 +79,10 @@ title: Text('Person',style: TextStyle(
                          ))
                       ),
             ),
-             MyOutlineButton(
+             vaTrue.getLoading()?Center(child: CircularProgressIndicator()): MyOutlineButton(
                       title: "Submit",
                       function: (){
+                        vaTrue.controller[0].text=vaTrue.controller[0].text.trim();
                         if(RIKeys.josKeys8.currentState.validate()){
 vaTrue.funAddPerson(context);
                         }else{

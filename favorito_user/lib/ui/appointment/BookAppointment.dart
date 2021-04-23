@@ -2,20 +2,20 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
+import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:provider/provider.dart';
+import '../../utils/Extentions.dart';
 
 class BookAppointment extends StatelessWidget {
 
-  var _myNotesEditTextController = TextEditingController();
   bool isFirst = true;
-  String _selectedService;
-  String _selectedServicePerson;
+  BusinessProfileProvider vaTrue1 ;
+  AppointmentProvider vaTrue;
 
-  String _selectedDateText = '';
-
-  DateTime _initialDate;
 
   List<SlotListModel> slotList = [];
 
@@ -24,7 +24,11 @@ class BookAppointment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    vaTrue = Provider.of<AppointmentProvider>(context, listen: true);
+    vaTrue1 = Provider.of<BusinessProfileProvider>(context, listen: true);
     if (isFirst) {
+      // vaTrue.baseUserAppointmentVerboseService();
+      isFirst =false;
     }
     return SafeArea(
       child: Scaffold(
@@ -52,7 +56,7 @@ class BookAppointment extends StatelessWidget {
                   children: [
                     Center(
                       child: Text(
-                        'data.businessName',
+                        vaTrue1.getBusinessProfileData()?.businessName??"",
                         style: TextStyle(
                             fontSize: 18, decoration: TextDecoration.underline),
                       ),
@@ -97,7 +101,7 @@ class BookAppointment extends StatelessWidget {
                                   }
                                   temp.selected = true;
 
-                                  //setState();
+                                
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.only(
@@ -132,18 +136,18 @@ class BookAppointment extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                          ],
+                          ]
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: sm.h(4)),
                       child: EditTextComponent(
-                        controller: _myNotesEditTextController,
+                        controller: vaTrue.myNotesEditTextController,
                         title: "Special Notes",
                         hint: "Enter Special Notes",
                         maxLines: 8,
-                        security: false,
+                        security: false
                       ),
                     ),
                     Padding(
@@ -205,7 +209,7 @@ class BookAppointment extends StatelessWidget {
                 BorderRadius.all(Radius.circular(8.0)))),
         margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
         child: DropdownButton<String>(
-          value: _selectedService,
+          value: vaTrue.getSelectedService(),
           isExpanded: true,
           hint: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
@@ -213,24 +217,17 @@ class BookAppointment extends StatelessWidget {
           ),
           underline: Container(),
           // this is the magic
-          items: <String>[
-            'Service 1',
-            'Service 2',
-            'Service 3',
-            'Service 4',
-            'Haircut'
-          ].map<DropdownMenuItem<String>>((String value) {
+          items:vaTrue.getServicesNameList().map<DropdownMenuItem<String>>((String _va) {
             return DropdownMenuItem<String>(
-              value: value,
+              value: _va,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                child: Text(value),
+                child: Text(_va),
               ),
             );
-          }).toList(),
+          })?.toList(),
           onChanged: (String value) {
-            _selectedService = value;
-            //setState();
+            vaTrue.setSelectedService(value);
           },
         ),
       ),
@@ -251,7 +248,7 @@ class BookAppointment extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
         child: DropdownButton<String>(
           isExpanded: true,
-          value: _selectedServicePerson,
+          value: vaTrue.getSelectedServicePerson(),
           hint: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
             child: Text("Select Service Person"),
@@ -269,9 +266,7 @@ class BookAppointment extends StatelessWidget {
             );
           }).toList(),
           onChanged: (String value) {
-            _selectedServicePerson = value;
-            // setState(() {
-            // });
+            vaTrue.setSelectedServicePerson(value);
           },
         ),
       ),

@@ -90,8 +90,6 @@ class BookingProvider extends BaseProvider {
 
   int getSelectedSlot() => _selectedSlot;
   void setSelectedSlot(int _val) {
-    print("dddd:$_val");
-    // _selectedSlot = _val>0?(_val-1):0;
     _selectedSlot = _val;
     notifyListeners();
   }

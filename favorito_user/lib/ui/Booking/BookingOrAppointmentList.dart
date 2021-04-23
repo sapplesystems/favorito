@@ -11,7 +11,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import '../../utils/MyColors.dart';
 import '../../utils/Extentions.dart';
-import '../../utils/myString.dart';
 
 class BookingOrAppointmentParent extends StatelessWidget {
   SizeManager sm;

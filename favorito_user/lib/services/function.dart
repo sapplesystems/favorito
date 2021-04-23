@@ -71,7 +71,9 @@ class service {
   static final baseUserAppointmentList =
       baseUserAppointment + 'get-booking-appointment';
 
-  //appoinment
+  static final baseUserAppointmentVerboseService =
+      baseUserAppointment + 'verbose-service';
+
   static final menuTabGet = userBusinessMenu + 'get-category';
   static final menuTabItemGet =
       userBusinessMenu + 'get-category-item'; //this is based on previous

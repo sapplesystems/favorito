@@ -9,7 +9,6 @@ import 'package:favorito_user/model/appModel/SearchFilterList.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/Booking/NewAppointment.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -46,7 +45,7 @@ class _SearchResultState extends State<SearchResult> {
     // selectedFilters.add("Restro");
     // selectedFilters.add("Cafe");
 
-    //_mySearchEditTextController.text = widget.searchedText;
+    // _mySearchEditTextController.text = widget.searchedText;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       executeSearch(widget?.data);
@@ -167,15 +166,15 @@ class _SearchResultState extends State<SearchResult> {
     int identifier=0;
 
     String btnTxt;
-    for (var _v in result?.attributes) {
-      if(_v.attributeName.trim() == 'Booking'){
-        identifier = 0;
-        btnTxt ='Book A Table';
-      }else{
-        identifier = 1;
-        btnTxt ='Book An Appointment';
-      }
-    }
+    // for (var _v in result?.attributes) {
+    //   if(_v.attributeName.trim() == 'Booking'){
+    //     identifier = 0;
+    //     btnTxt ='Book A Table';
+    //   }else{
+    //     identifier = 1;
+    //     btnTxt ='Book An Appointment';
+    //   }
+    // }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -375,6 +374,7 @@ class _SearchResultState extends State<SearchResult> {
   }
 
   void executeSearch(SearchReqData data) {
+    print("asd:${data?.category}");
     switch (data?.category?.toLowerCase()?.trim()) {
       case ('food'):
         {

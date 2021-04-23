@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
@@ -29,7 +28,8 @@ class BookTable extends StatelessWidget {
     if (isFirst) {
       fut = vaTrue
         ..setIsVerboseCall(true)
-        ..bookingVerbose(context);
+        ..bookingVerbose(context)
+        ..setMyDetail(context);
       isFirst = false;
     }
     return Scaffold(

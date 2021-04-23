@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
                                 "${data?.getSelectedAddress()}  ${data?.getSelectedAddress().length > 1 ? '\u{25bc}' : ''}",
                                 textAlign: TextAlign.start),
                             Text(
-                              'v1.0',
+                              'v1.3',
                               textAlign: TextAlign.start,
                               style: TextStyle(fontSize: 8),
                             )

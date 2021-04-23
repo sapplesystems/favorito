@@ -18,6 +18,7 @@ class ContactPerson extends StatelessWidget {
 
   ContactPersonProvider cpTrue;
   ContactPersonProvider cpFalse;
+
   @override
   Widget build(BuildContext context) {
     cpTrue = Provider.of<ContactPersonProvider>(context, listen: true);

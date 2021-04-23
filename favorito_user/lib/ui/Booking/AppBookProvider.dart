@@ -4,6 +4,7 @@ import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppoi
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/utils/Acces.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:favorito_user/utils/dateformate.dart';
@@ -282,11 +283,17 @@ class AppBookProvider extends BaseProvider {
         _selectedTime = value.data?.slots[0]?.startTime;
         _selectedOccasion = "Select Occasion";
         setBookTableVerbose(value);
-      }
+        }
       setIsVerboseCall(false);
     });
-  }
 
+  }
+void setMyDetail(context){
+acces[0].controller.text = Provider.of<PersonalInfoProvider>(context,listen: false)?.profileModel?.data?.detail?.fullName??'';
+        acces[1].controller.text = Provider.of<PersonalInfoProvider>(context,listen: false)?.profileModel?.data?.detail?.phone??'';
+      notifyListeners();
+      
+}
   void handleClick(String value) {
     switch (value) {
       case 'Appointments':

@@ -1,6 +1,9 @@
 import 'package:Favorito/component/NetworkImages.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/appoinment/AddPerson.dart';
+import 'package:Favorito/ui/appoinment/AddRestriction.dart';
+import 'package:Favorito/ui/appoinment/AddServices.dart';
+import 'package:Favorito/ui/appoinment/ManualAppoinment.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
@@ -44,6 +47,15 @@ class RouteGenerator {
      
       case '/addPerson':
         return MaterialPageRoute(builder: (_) => AddPerson());
+     
+      case '/addServices':
+        return MaterialPageRoute(builder: (_) => AddServices());
+
+      case '/AddRestriction':
+        return MaterialPageRoute(builder: (_) => AddRestriction());
+
+      case '/manualAppoinment':
+        return MaterialPageRoute(builder: (_) => ManualAppoinment());
 
       case '/networkImages':
         return MaterialPageRoute(

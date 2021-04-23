@@ -1,5 +1,6 @@
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/PageViews/PageViews.dart';
+import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
@@ -91,6 +92,7 @@ class SettingProvider extends ChangeNotifier {
     Provider.of<BusinessProfileProvider>(_context, listen: false).allClear();
     Provider.of<BusinessHoursProvider>(_context, listen: false).allClear();
     Provider.of<BusinessHoursProvider>(_context, listen: false).allClear();
+    Provider.of<AppoinmentProvider>(_context, listen: false).logout();
 
     Navigator.pop(_context);
     Navigator.of(_context).pushNamed('/login');

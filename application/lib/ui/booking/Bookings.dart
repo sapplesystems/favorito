@@ -128,7 +128,6 @@ isFirst = false;
                           int _selected = 0;
                           return InkWell(
                             onTap: () {
-                              print('dfdf$index');
                               vaTrue.setSelectedSlotIndex(index);
                               vaTrue.setSelectedSlot(index);
                             },
@@ -139,10 +138,6 @@ isFirst = false;
                                   Container(
                                     decoration: BoxDecoration(
                                       color:
-
-                                          // vaTrue.blm.slots[index].slotData
-                                          //             .length <
-                                          //         vaTrue.blm.perSlot
                                           vaTrue.getSelectedSlotIndex() == index
                                               ? myGrey
                                               : myRed,
@@ -164,15 +159,7 @@ isFirst = false;
                                                   vaTrue.getSelectedSlotIndex() ==
                                                           index
                                                       ? myGrey
-                                                      : myRed,
-                                              // vaTrue
-                                              //             .blm
-                                              //             .slots[index]
-                                              //             .slotData
-                                              //             .length <
-                                              //         vaTrue.blm.perSlot
-                                              //     ? myRed
-                                              //     : myGrey
+                                                      : myRed
                                             )),
                                       ),
                                     ),
