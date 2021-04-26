@@ -17,6 +17,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 import 'utils/MyColors.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,10 +45,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) => NeumorphicApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: kReleaseMode?false:true,
       builder: BotToastInit(),
+    
       navigatorObservers: [BotToastNavigatorObserver()],
       theme: NeumorphicThemeData(
           defaultTextColor: myRed,

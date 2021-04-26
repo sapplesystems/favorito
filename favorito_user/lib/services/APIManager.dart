@@ -24,6 +24,7 @@ import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
+import 'package:favorito_user/model/appModel/appointment/PersonListModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
@@ -694,6 +695,27 @@ try{
       BotToast.showText(text: 'baseUserAppointmentVerboseService:${e.toString}');
     }
     return AppSerModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+
+  // baseUserAppointmentPersonByServiceid
+  static Future<PersonListModel> baseUserAppointmentPersonByServiceid(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return PersonListModel(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentPersonByServiceid;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("Url: : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: 'baseUserAppointmentPersonByServiceid:${e.toString}');
+    }
+    return PersonListModel.fromJson(
         convert.jsonDecode(response.toString()));
   }
 

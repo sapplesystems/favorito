@@ -5,12 +5,12 @@ import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:favorito_user/utils/Regexer.dart';
 import 'package:favorito_user/utils/Validator.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-
+import 'package:flutter/foundation.dart';
 class LoginProvider extends BaseProvider {
   List controller = [];
   String _errorEmail;
   List _errorPass = [null, null];
-  bool _isPass = false;
+  bool _isPass =kReleaseMode? false:true;
   bool _showSubmit = false;
   List<String> title = ['Email/Phone', 'Password'];
   List<String> prefix = ['mail', 'password'];
@@ -40,6 +40,10 @@ class LoginProvider extends BaseProvider {
 
   LoginProvider() : super() {
     controller = [for (int i = 0; i < 3; i++) TextEditingController()];
+  if(!kReleaseMode){
+    controller[0].text = '7772022626';
+    controller[1].text = 'Sapple@123';
+  }
   }
   void sendLoginOtp(GlobalKey<ScaffoldState> key) async {
     await APIManager.sendLoginotp({'username': controller[0].text}, key)

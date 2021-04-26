@@ -74,6 +74,9 @@ class service {
   static final baseUserAppointmentVerboseService =
       baseUserAppointment + 'verbose-service';
 
+  static final baseUserAppointmentPersonByServiceid =
+      baseUserAppointment + 'get-person-by-service';
+
   static final menuTabGet = userBusinessMenu + 'get-category';
   static final menuTabItemGet =
       userBusinessMenu + 'get-category-item'; //this is based on previous
