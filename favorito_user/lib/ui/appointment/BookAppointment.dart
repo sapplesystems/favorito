@@ -77,7 +77,7 @@ class BookAppointment extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
         child: DropdownButton<Person>(
           isExpanded: true,
-          value: data.personList[data.selectesPersonId??0],
+          value: data.personList[data.selectedPersonSet()],
           hint: Padding(
               padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
               child: Text("Select Service Person"),

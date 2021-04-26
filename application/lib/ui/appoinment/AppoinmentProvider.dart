@@ -16,7 +16,7 @@ class AppoinmentProvider extends ChangeNotifier {
   ];
   bool _loading = false;
   List<String> personListTxt = [];
-  List<PersonList> _personList;
+  List<PersonList> _personList=[];
   List<String> servicesString = [];
   List<Data> _servicesList = [];
   bool _servicesDD = false;
@@ -42,9 +42,9 @@ class AppoinmentProvider extends ChangeNotifier {
   DateTime _initialDate = DateTime.now();
 int _selectedAppointmentId =0;
   AppoinmentProvider() {
+    getPersonCall();
     getAllService();
     getRestriction();
-    getPersonCall();
     getSettingdata();
     RIKeys?.josKeys11?.currentState?.changeSelectedItem("60 min");
   }
@@ -119,7 +119,8 @@ int _selectedAppointmentId =0;
   void getPersonCall() async {
     await WebService.funAppoinmentPerson().then((_value) {
       if (_value.status == "success") {
-        setPerson(_value.data);
+      _personList.clear();
+        _personList.addAll(_value.data);
         personListTxt.clear();
         for (var _va in _personList) personListTxt.add(_va.personName ?? "");
         controller[1].text = "";
@@ -128,13 +129,10 @@ int _selectedAppointmentId =0;
     });
   }
 
-  List<PersonList> getPerson() => _personList;
-
-  setPerson(List _val) {
-    _personList.clear();
-    _personList = _val;
-    notifyListeners();
-  }
+  List<PersonList> getPerson() {
+    print('llll${_personList?.length}');
+    return _personList;
+  } 
 
 getPersonNameById(int _id){
   String _name;

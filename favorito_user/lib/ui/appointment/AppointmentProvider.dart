@@ -17,10 +17,10 @@ class AppointmentProvider extends ChangeNotifier{
   String _selectedService ;
   int _selectedServiceId ;
 List<SettingModel> settingList =[];
-
+Person selectedPerson = Person();
 List<Person> personList =[Person(id:0,personName: 'No data')];
 List<String> _personNameList =[];
-int selectesPersonId;
+int selectesPersonId=0;
 Person selectesPersonName;
 
   AppSerModel getAppSerModel()=>_appSerModel;
@@ -44,7 +44,7 @@ List<ServiceModel> getServicesList()=>_servicesList;
     for(int _i=0;_i<_servicesList.length;_i++){
       if(_selectedService == _servicesList[_i].serviceName){
         _selectedServiceId = _servicesList[_i].id;
-    
+    selectesPersonId =0;
     //services are selected now call person as per services
     baseUserAppointmentPersonByServiceid(context);
       }
@@ -87,16 +87,26 @@ if(value.status == 'success'){
 //personlist gettter setter
 List<String> getPersonNameList()=>_personNameList;
 List<Person> getPersonList()=>personList;
-int setSelectedServicePerson(Person _val){
+setSelectedServicePerson(Person _val){
+  selectedPerson =_val;
   for(int _i=0;_i<personList.length;_i++){
    if(_val.personName == personList[_i].personName){
      selectesPersonId = personList[_i].id;
      selectesPersonName = personList[_i];
+     
    }else{
      selectesPersonName = Person();
    }
   }
-  return selectesPersonId;
+  notifyListeners();
+}
+
+int selectedPersonSet(){
+  int _v=0;
+  if(selectesPersonId!=0){
+ _v=personList.indexWhere((element) => element.id==selectesPersonId);
+  }
+  return _v;
 }
 
 getBusinessId(context)=>Provider.of<BusinessProfileProvider>(context, listen: false).getBusinessId();
