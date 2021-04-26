@@ -535,7 +535,7 @@ cleanAllPerson(){
 
   changeit(int i, bool val, String identifire) async {
     if (identifire == "p") {
-      getPerson()[i].isActive = val ? 0 : 1;
+      getPerson()[i].isActive = val ? 1 : 0;
       var _va = {
         "person_id": getPerson()[i].id,
         "is_active": getPerson()[i].isActive

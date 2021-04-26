@@ -25,6 +25,7 @@ import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
 import 'package:favorito_user/model/appModel/appointment/PersonListModel.dart';
+import 'package:favorito_user/model/appModel/appointment/SlotModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
@@ -720,8 +721,48 @@ try{
   }
 
 
-  //getTableVerboseData
-  // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
+  // baseUserAppointmentSlots
+  static Future<SlotModel> baseUserAppointmentSlots(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return SlotModel(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentSlots;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("Url: : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: '$url:${e.toString}');
+    }
+    return SlotModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+
+  // create appointment
+  static Future<BaseResponse> baseUserAppointmentCreate(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponse(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentCreate;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("Url: : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: '$url:${e.toString}');
+    }
+    return BaseResponse.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+  //getTableVerboseData --table booking
   static Future<BookTableVerbose> baseUserBookingVerbose(Map _map,context) async {
     if (!await utilProvider.checkInternet())
       return BookTableVerbose(

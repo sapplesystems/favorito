@@ -1,3 +1,6 @@
+import 'package:favorito_user/model/appModel/appointment/Occasion.dart';
+import 'package:favorito_user/model/appModel/appointment/Slots.dart';
+
 class BookTableVerbose {
   String status;
   String message;
@@ -39,20 +42,20 @@ class Data {
   Data.fromJson(Map<String, dynamic> json) {
     businessName = json['business_name'];
     if (json['available_dates'] != null) {
-      availableDates = new List<AvailableDates>();
+      availableDates =[];
       json['available_dates'].forEach((v) {
         availableDates.add(new AvailableDates.fromJson(v));
       });
     }
     date = json['date'];
     if (json['slots'] != null) {
-      slots = new List<Slots>();
+      slots = [];
       json['slots'].forEach((v) {
         slots.add(new Slots.fromJson(v));
       });
     }
     if (json['occasion'] != null) {
-      occasion = new List<Occasion>();
+      occasion = [];
       json['occasion'].forEach((v) {
         occasion.add(new Occasion.fromJson(v));
       });
@@ -96,40 +99,5 @@ class AvailableDates {
   }
 }
 
-class Slots {
-  String startTime;
-  String endTime;
 
-  Slots({this.startTime, this.endTime});
 
-  Slots.fromJson(Map<String, dynamic> json) {
-    startTime = json['start_time'];
-    endTime = json['end_time'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
-    return data;
-  }
-}
-
-class Occasion {
-  int id;
-  String occasion;
-
-  Occasion({this.id, this.occasion});
-
-  Occasion.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    occasion = json['occasion'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['occasion'] = this.occasion;
-    return data;
-  }
-}

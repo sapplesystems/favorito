@@ -77,6 +77,13 @@ class service {
   static final baseUserAppointmentPersonByServiceid =
       baseUserAppointment + 'get-person-by-service';
 
+  static final baseUserAppointmentSlots =
+      baseUserAppointment + 'get-appointment-slot';
+
+  static final baseUserAppointmentCreate =
+      baseUserAppointment + 'set-appointment';
+
+      
   static final menuTabGet = userBusinessMenu + 'get-category';
   static final menuTabItemGet =
       userBusinessMenu + 'get-category-item'; //this is based on previous

@@ -2,6 +2,8 @@ import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
+import 'package:favorito_user/model/appModel/appointment/Occasion.dart';
+import 'package:favorito_user/model/appModel/appointment/Slots.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';

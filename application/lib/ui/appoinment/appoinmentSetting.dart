@@ -440,7 +440,7 @@ class my_ServiceSwitch extends StatelessWidget {
             identity == "s" ? datalist[i].serviceName : datalist[i].personName),
         Switch(
           onChanged: (val) => function(i, val, identity),
-          value: datalist[i].isActive == 0,
+          value: datalist[i].isActive == 1,
           activeColor: myRed,
           activeTrackColor: myRedLight,
           inactiveThumbColor: Colors.white,
