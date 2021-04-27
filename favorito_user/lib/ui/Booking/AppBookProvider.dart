@@ -2,8 +2,11 @@ import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/model/appModel/SlotListModel.dart';
+import 'package:favorito_user/model/appModel/appointment/Occasion.dart';
+import 'package:favorito_user/model/appModel/appointment/Slots.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/utils/Acces.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:favorito_user/utils/dateformate.dart';
@@ -54,7 +57,6 @@ class AppBookProvider extends BaseProvider {
 
   setIsVerboseCall(bool _val) {
     _isVerboseCall = _val;
-    notifyListeners();
   }
 
   getSubmitCalled() => _submitCalled;
@@ -70,6 +72,8 @@ class AppBookProvider extends BaseProvider {
     bookingVerbose(context);
     notifyListeners();
   }
+
+
 
   getSelectDate() => _selectedDateIndex;
 
@@ -275,17 +279,23 @@ class AppBookProvider extends BaseProvider {
                   .getBusinessId() ??
               '',
       "date": _selectedDate
-    }).then((value) {
+    },context).then((value) {
       _message = value.message;
       if (value.status == 'success') {
         _selectedTime = value.data?.slots[0]?.startTime;
         _selectedOccasion = "Select Occasion";
         setBookTableVerbose(value);
-      }
+        }
       setIsVerboseCall(false);
     });
-  }
 
+  }
+void setMyDetail(context){
+acces[0].controller.text = Provider.of<PersonalInfoProvider>(context,listen: false)?.profileModel?.data?.detail?.fullName??'';
+        acces[1].controller.text = Provider.of<PersonalInfoProvider>(context,listen: false)?.profileModel?.data?.detail?.phone??'';
+      notifyListeners();
+      
+}
   void handleClick(String value) {
     switch (value) {
       case 'Appointments':

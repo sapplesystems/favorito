@@ -1,5 +1,6 @@
 import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
+import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/Validator.dart';
@@ -22,6 +23,7 @@ class PersonalInfoProvider extends BaseProvider {
   AddressListModel addressListModel = AddressListModel();
   List<String> prefix = ['name', 'postal', 'name'];
   bool newValue = false;
+  ProfileModel profileModel = ProfileModel();
   PersonalInfoProvider() : super() {
     getPersonalData();
   }
@@ -54,8 +56,8 @@ class PersonalInfoProvider extends BaseProvider {
     Map _map = {"api_type": 'get'};
     await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
       if (value.status == 'success') {
+        profileModel.data = value.data;
         var v = value.data.detail;
-        print("ffff:${v.fullName}");
         _username = v.fullName;
         acces[0].controller.text = v.fullName;
         acces[1].controller.text = v.postal;

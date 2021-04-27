@@ -23,6 +23,9 @@ import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
+import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
+import 'package:favorito_user/model/appModel/appointment/PersonListModel.dart';
+import 'package:favorito_user/model/appModel/appointment/SlotModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
@@ -34,6 +37,7 @@ import 'package:favorito_user/services/function.dart';
 import 'package:favorito_user/ui/Login/Login.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:favorito_user/utils/UtilProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -229,7 +233,7 @@ class APIManager {
     Map<String, dynamic> _map = {"keyword": searchString};
     response = await dio.post(url, data: _map, options: opt);
 
-    print("Request URL:$url.toString()");
+    print("Request URL:$url");
     print("responseData1:${response.toString()}");
     return SearchBusinessListModel.fromJson(
         convert.json.decode(response.toString()));
@@ -674,9 +678,92 @@ try{
         convert.jsonDecode(response.toString()));
   }
 
-  //getTableVerboseData
-  // static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
-  static Future<BookTableVerbose> baseUserBookingVerbose(Map _map) async {
+
+  // baseUserAppointmentVerboseService
+  static Future<AppSerModel> baseUserAppointmentVerboseService(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return AppSerModel(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentVerboseService;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserBookingList : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: 'baseUserAppointmentVerboseService:${e.toString}');
+    }
+    return AppSerModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+
+  // baseUserAppointmentPersonByServiceid
+  static Future<PersonListModel> baseUserAppointmentPersonByServiceid(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return PersonListModel(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentPersonByServiceid;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("Url: : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: 'baseUserAppointmentPersonByServiceid:${e.toString}');
+    }
+    return PersonListModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+
+  // baseUserAppointmentSlots
+  static Future<SlotModel> baseUserAppointmentSlots(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return SlotModel(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentSlots;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("Url: : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: '$url:${e.toString}');
+    }
+    return SlotModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+
+  // create appointment
+  static Future<BaseResponse> baseUserAppointmentCreate(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponse(
+          status: 'fail', message: 'Please check internet connections');
+    String token = await Prefs.token;
+    String url = service.baseUserAppointmentCreate;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("Url: : $url");
+    try{
+      response = await dio.post(url,data:_map, options: opt);
+    }on DioError catch (e) {
+      BotToast.showText(text: '$url:${e.toString}');
+    }
+    return BaseResponse.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+  //getTableVerboseData --table booking
+  static Future<BookTableVerbose> baseUserBookingVerbose(Map _map,context) async {
     if (!await utilProvider.checkInternet())
       return BookTableVerbose(
           status: 'fail', message: 'Please check internet connections');
@@ -694,6 +781,7 @@ try{
           text:
               BaseResponse.fromJson(convert.json.decode(e.response.toString()))
                   .message);
+      Navigator.pop(context);
     }
     print("baseUserBookingVerbose response : ${response.toString}");
     return BookTableVerbose.fromJson(convert.jsonDecode(response.toString()));

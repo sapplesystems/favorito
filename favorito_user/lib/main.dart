@@ -8,6 +8,7 @@ import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
 import 'package:favorito_user/ui/Login/LoginController.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
+import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 import 'utils/MyColors.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +26,7 @@ void main() {
     runApp(MultiProvider(
       providers: [
         // Provider(create: (context) => BaseProvider()),
-        Provider(create: (context) => BaseProvider()),
+        ChangeNotifierProvider(create: (context) => BaseProvider()),
         ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
         ChangeNotifierProvider(create: (context) => BasketControllers()),
         ChangeNotifierProvider(create: (context) => OptController()),
@@ -35,6 +37,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => UserAddressProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
+        ChangeNotifierProvider(create: (context) => AppointmentProvider()),
       ],
       child: MyApp(),
     ));
@@ -42,10 +45,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) => NeumorphicApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: kReleaseMode?false:true,
       builder: BotToastInit(),
+    
       navigatorObservers: [BotToastNavigatorObserver()],
       theme: NeumorphicThemeData(
           defaultTextColor: myRed,

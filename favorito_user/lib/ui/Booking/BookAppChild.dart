@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
-import '../../utils/myString.dart';
+import '../../utils/Extentions.dart';
 
 class BookAppChild extends StatelessWidget {
   SizeManager sm;
@@ -90,14 +90,17 @@ class BookAppChild extends StatelessWidget {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    da[index].businessName
-                                                    // .capitalize()
-                                                    ,
+                                                    da[index]?.businessName?.toString()?.capitalize()
+                                                  ,
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontFamily:
                                                             'GilRoy-Bold'),
                                                   ),
+                                                   Text("\t\t(${da[index]?.status})",style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontFamily:
+                                                            'GilRoy-Medium')),
                                                   // Icon(
                                                   //   da[index].status ==
                                                   //           'pending'

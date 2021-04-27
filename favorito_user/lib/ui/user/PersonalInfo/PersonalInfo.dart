@@ -50,59 +50,57 @@ class PersonalInfo extends StatelessWidget {
                               fontWeight: FontWeight.bold, fontSize: 28),
                         ),
                       ),
-                      Container(
-                        child: Builder(
-                            builder: (context) => Form(
-                                key: spFalse.formKey,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                child: Column(children: [
-                                  for (int i = 0; i < spFalse.title.length; i++)
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: sm.h(4),
-                                          left: sm.w(6),
-                                          right: sm.w(6)),
-                                      // padding: const EdgeInsets.symmetric(
-                                      //     vertical: 4.0),
-                                      child: EditTextComponent(
-                                        controller: spTrue.acces[i].controller,
-                                        title: spTrue.title[i],
-                                        hint: spTrue.title[i],
-                                        myOnChanged: (val) {
-                                          if (i == 1 && val.length == 6) {
-                                            print("its:$i,$val");
-                                            spTrue.checkPin(
-                                                i, RIKeys.josKeys10);
-                                          }
-                                          if (i == 1) spTrue.notifyListeners();
-                                        },
-                                        // suffixTap: () => spTrue.checkIdClicked(i),
-                                        suffixTxt: '',
-                                        error: spTrue.acces[i].error,
-                                        security: false,
-                                        valid: true,
-                                        maxLines: 1,
-                                        formate: FilteringTextInputFormatter
-                                            .singleLineFormatter,
-                                        maxlen: i == 1 ? 6 : 50,
+                      Builder(
+                          builder: (context) => Form(
+                              key: spFalse.formKey,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              child: Column(children: [
+                                for (int i = 0; i < spFalse.title.length; i++)
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: sm.h(4),
+                                        left: sm.w(4),
+                                        right: sm.w(4)),
+                                    // padding: const EdgeInsets.symmetric(
+                                    //     vertical: 4.0),
+                                    child: EditTextComponent(
+                                      controller: spTrue.acces[i].controller,
+                                      title: spTrue.title[i],
+                                      hint: spTrue.title[i],
+                                      myOnChanged: (val) {
+                                        if (i == 1 && val.length == 6) {
+                                          print("its:$i,$val");
+                                          spTrue.checkPin(
+                                              i, RIKeys.josKeys10);
+                                        }
+                                        if (i == 1) spTrue.notifyListeners();
+                                      },
+                                      // suffixTap: () => spTrue.checkIdClicked(i),
+                                      suffixTxt: '',
+                                      error: spTrue.acces[i].error,
+                                      security: false,
+                                      valid: true,
+                                      maxLines: (spFalse.title.length-1)==i?8:1,
+                                      formate: FilteringTextInputFormatter
+                                          .singleLineFormatter,
+                                      maxlen: i == 1 ? 6 : 50,
 
-                                        keyboardSet: i == 1
-                                            ? TextInputType.phone
-                                            : TextInputType.text,
-                                        prefixIcon: spTrue.prefix[i],
-                                      ),
+                                      keyboardSet: i == 1
+                                          ? TextInputType.phone
+                                          : TextInputType.text,
+                                      prefixIcon: (spFalse.title.length-1)!=i?spTrue.prefix[i]:null,
                                     ),
-                                  tcp(
-                                    key: key,
-                                    sm: sm,
-                                    newValue: spTrue.newValue,
-                                    returnValue: (a) {
-                                      spTrue.newValue = a;
-                                    },
                                   ),
-                                ]))),
-                      ),
+                                tcp(
+                                  key: key,
+                                  sm: sm,
+                                  newValue: spTrue.newValue,
+                                  returnValue: (a) {
+                                    spTrue.newValue = a;
+                                  },
+                                ),
+                              ]))),
                       Visibility(
                         visible:
                             (spTrue.acces[1].controller.text.length == 6) &&

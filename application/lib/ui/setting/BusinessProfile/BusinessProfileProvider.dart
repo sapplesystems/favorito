@@ -228,7 +228,7 @@ class BusinessProfileProvider extends ChangeNotifier {
 
       dd1?.currentState?.changeSelectedItem(va?.workingHours ?? "");
 
-      pinCaller(va.postalCode);
+      pinCaller(va.postalCode,false);
       controller[13].text = va.businessEmail;
       controller[14].text = va.shortDescription;
 
@@ -252,9 +252,10 @@ class BusinessProfileProvider extends ChangeNotifier {
       }
       return value;
     });
+    getWebSiteList();
   }
 
-  void pinCaller(String _val) async {
+  void pinCaller(String _val,bool _val1) async {
     if (_val?.length == 6) {
       await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
         if (value.data.city == null) {
@@ -272,8 +273,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       controller[11].text = "";
       error[9] = null;
     }
-    notifyListeners();
-    needSave(false);
+    needSave(_val1);
   }
 
   setContext(BuildContext context) {
@@ -311,12 +311,18 @@ class BusinessProfileProvider extends ChangeNotifier {
    try{
       if((value?.data?.length??0)>0){
         websiteList.clear();
-        websiteList.addAll(value.data);
+        websiteList.addAll(value.data??[' ']);
+        if(websiteList.length==0)websiteList.add(' ');
         for(int _i=0;_i<websiteList.length;_i++){
           print("fdfdf:${websiteList[_i]}");
           controller.add(TextEditingController());
           controller[controller.length-1].text=websiteList[_i];
         }
+      }else{
+        if(controller.length<16){
+          controller.add(TextEditingController());
+        }
+        
         notifyListeners();
       }
         }catch(e){

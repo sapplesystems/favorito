@@ -29,4 +29,6 @@ class RIKeys {
   GlobalKey<DropdownSearchState<String>>();
   //BookTable
   static final josKeys22 = GlobalKey<ScaffoldState>(); //Booking&appoinmnet list
+  static final josKeys23 = GlobalKey<FormState>(); //appointment create
+
 }

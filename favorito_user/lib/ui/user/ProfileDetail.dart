@@ -1,26 +1,29 @@
 import 'package:favorito_user/component/FollowBtn.dart';
-import 'package:favorito_user/component/Friend.dart';
+import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/component/Message.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:provider/provider.dart';
 
-class ProfileDetail extends StatefulWidget {
-  _ProfileDetailState createState() => _ProfileDetailState();
+class ProfileMaster extends StatelessWidget {
   Color selectedTab = Colors.black;
   Color deselectedTab = myGrey;
   bool reviewsSelected = false;
   bool photosSelected = true;
   bool favouritesSelected = false;
-}
 
-class _ProfileDetailState extends State<ProfileDetail> {
+
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Scaffold(
-      backgroundColor: myButtonBackground,
+      backgroundColor: Color(0xffF4F6FC),
       appBar: AppBar(
           toolbarHeight: sm.h(5),
           backgroundColor: myAppBarBackground,
@@ -48,19 +51,29 @@ class _ProfileDetailState extends State<ProfileDetail> {
             ),
             child: Column(
               children: [
-                Container(
-                    width: sm.w(25),
-                    height: sm.w(25),
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: new DecorationImage(
-                            fit: BoxFit.fill,
-                            image: new NetworkImage(
-                                "https://source.unsplash.com/1NiNq7S4-AA/40*40")))),
+                InkWell(
+                  onTap: () {
+                    Provider.of<UserAddressProvider>(context, listen: false)
+                        .getImage(ImgSource.Gallery, RIKeys.josKeys3);
+                  },
+                  child: ClipOval(
+                    child: Container(
+                        height: sm.h(14),
+                        width: sm.h(14),
+                        decoration: new BoxDecoration(
+                          color: Colors.orange,
+                          shape: BoxShape.circle
+                        ),
+                        child: ImageMaster(
+                            url: Provider.of<UserAddressProvider>(context,
+                                listen: true)
+                                .getProfileImage())),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: sm.h(1)),
-                  child: Text(
-                    "Jessica Saint",
+                  child: Text(Provider.of<PersonalInfoProvider>(context,
+    listen: true).profileModel?.data?.detail?.fullName??'',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
@@ -68,16 +81,16 @@ class _ProfileDetailState extends State<ProfileDetail> {
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: sm.w(8), vertical: sm.h(1)),
-                  child: Text(
-                    "Business manager at Avadh group of companies and always open for collaborations",
+                  child: Text(Provider.of<PersonalInfoProvider>(context,
+                      listen: true).profileModel?.data?.detail?.shortDescription??'',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
-                      color: myGrey,
+                      color: myGrey
                     ),
                   ),
                 ),
-                Text("Surat, Gujrat",
+                Text(Provider.of<UserAddressProvider>(context,listen: true).getSelectedAddress()??'',
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
@@ -87,17 +100,17 @@ class _ProfileDetailState extends State<ProfileDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Column(
-                        children: [
-                          Text("Friends",
-                              style: TextStyle(fontSize: 10, color: myGrey)),
-                          Text("650",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600))
-                        ],
-                      ),
+                      // Column(
+                      //   children: [
+                      //     Text("Friends",
+                      //         style: TextStyle(fontSize: 10, color: myGrey)),
+                      //     Text("650",
+                      //         style: TextStyle(
+                      //             fontSize: 10,
+                      //             color: Colors.black,
+                      //             fontWeight: FontWeight.w600))
+                      //   ]
+                      // ),
                       Column(
                         children: [
                           Text("Followers",
@@ -127,7 +140,10 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     padding: EdgeInsets.only(top: sm.h(1)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [FriendBtn(), FollowBtn(), MessageBtn()],
+                      children: [
+                        //FriendBtn(),
+                        MessageBtn(txt: 'Follow'),
+                        MessageBtn(txt: 'Message')],
                     ))
               ],
             ),
@@ -140,52 +156,50 @@ class _ProfileDetailState extends State<ProfileDetail> {
               children: [
                 InkWell(
                     onTap: () {
-                      widget.reviewsSelected = true;
-                      widget.photosSelected = false;
-                      widget.favouritesSelected = false;
-                      setState(() {});
+                      reviewsSelected = true;
+                      photosSelected = false;
+                      favouritesSelected = false;
+
                     },
                     child: Text("Reviews",
                         style: TextStyle(
                             fontSize: 18,
-                            color: widget.reviewsSelected
-                                ? widget.selectedTab
-                                : widget.deselectedTab))),
+                            color: reviewsSelected
+                                ? selectedTab
+                                : deselectedTab))),
                 InkWell(
                     onTap: () {
-                      widget.reviewsSelected = false;
-                      widget.photosSelected = true;
-                      widget.favouritesSelected = false;
-                      setState(() {});
+                      reviewsSelected = false;
+                      photosSelected = true;
+                      favouritesSelected = false;
                     },
                     child: Text("Photos",
                         style: TextStyle(
                             fontSize: 18,
-                            color: widget.photosSelected
-                                ? widget.selectedTab
-                                : widget.deselectedTab))),
+                            color: photosSelected
+                                ? selectedTab
+                                : deselectedTab))),
                 InkWell(
                     onTap: () {
-                      widget.reviewsSelected = false;
-                      widget.photosSelected = false;
-                      widget.favouritesSelected = true;
-                      setState(() {});
+                      reviewsSelected = false;
+                      photosSelected = false;
+                      favouritesSelected = true;
                     },
                     child: Text("Favourites",
                         style: TextStyle(
                             fontSize: 18,
-                            color: widget.favouritesSelected
-                                ? widget.selectedTab
-                                : widget.deselectedTab)))
+                            color: favouritesSelected
+                                ? selectedTab
+                                : deselectedTab)))
               ],
             ),
           ),
-          widget.reviewsSelected
+          reviewsSelected
               ? getReviewsWidget(sm)
-              : widget.photosSelected
+              : photosSelected
                   ? getPhotosWidget(sm, 51, 6, 3.0, 1.5)
-                  : getFavouritesWidget(sm),
-        ],
+                  : getFavouritesWidget(sm)
+        ]
       ),
     );
   }

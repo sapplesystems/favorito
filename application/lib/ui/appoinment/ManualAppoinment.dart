@@ -1,84 +1,42 @@
-import 'package:Favorito/model/appoinment/PersonList.dart';
-import 'package:Favorito/model/appoinment/ServiceData.dart';
+import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/Regexer.dart';
-import 'package:Favorito/utils/dateformate.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
+import 'package:provider/provider.dart';
 import '../../component/roundedButton.dart';
 import '../../component/txtfieldboundry.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
-import 'package:Favorito/network/webservices.dart';
-import 'package:bot_toast/bot_toast.dart';
 import '../../config/SizeManager.dart';
 
-class ManualAppoinment extends StatefulWidget {
-  var data;
-  String start;
-  String end;
-  ManualAppoinment({this.data, this.start, this.end});
-  @override
-  _ManualAppoinment createState() => _ManualAppoinment();
-}
-
-class _ManualAppoinment extends State<ManualAppoinment> {
+class ManualAppoinment extends StatelessWidget {
   SizeManager sm;
-  List<ServiceList> serviceList = List();
-  List<String> serviceListText = List();
+  AppoinmentProvider vaTrue;
+bool isFirst = true;
+bool _autovalidate = false;
 
-  List<PersonList> personList;
-  List<String> personListText = List();
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  MaterialLocalizations localizations;
-
-  List<TextEditingController> controller = List();
-
-  TimeOfDay _intitialTime;
-
-  DateTime _initialDate;
-
-  initializeDefaultValues() {
-    _intitialTime = TimeOfDay.now();
-    for (var v in controller) v.text = "";
-    setState(() => _initialDate = DateTime.now());
-    controller[0].text = 'Select Date';
-    controller[1].text = 'Select Time';
-  }
-
-  @override
-  void initState() {
-    for (int i = 0; i < 7; i++) controller.add(TextEditingController());
-    getDataVerbode();
-    // getPageData();
-    if (widget.data != null) {
-      controller[0].text = widget.data.createdDate;
-      controller[1].text = widget.start + "-" + widget.end;
-      controller[2].text = widget.data.name;
-      controller[3].text = widget.data.contact;
-      controller[4].text = widget.data.service_name;
-      controller[5].text = widget.data.person_name;
-      controller[6].text = widget.data.specialNotes;
-      print(
-          "controller[3,4]:${widget.data.service_name}${widget.data.person_name}");
-    } else
-      initializeDefaultValues();
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    localizations = MaterialLocalizations.of(context);
     sm = SizeManager(context);
+    vaTrue = Provider.of<AppoinmentProvider>(context,listen: true);
+    if(isFirst){
+      if(vaTrue.getSelectedAppointmentId()== 0){
+        vaTrue.appClean(); 
+        vaTrue.controller[0].text = 'Select Date';
+        vaTrue.controller[1].text = 'Select Time';
+       
+      }
+      isFirst =false;
+    }
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(context).pop()
           ),
           title:
               Text("Manual Appointment", style: TextStyle(color: Colors.black)),
@@ -89,21 +47,21 @@ class _ManualAppoinment extends State<ManualAppoinment> {
               child: Card(
                   child: Builder(
                       builder: (context) => Form(
-                          key: _formKey,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          key: RIKeys.josKeys13,
+                          autovalidate: _autovalidate,
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.only(top:24.0),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.symmetric(horizontal:18.0),
                                     child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           SizedBox(
-                                            width: sm.w(40),
+                                            width: sm.w(38),
                                             child: Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
@@ -111,27 +69,8 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                                   Expanded(
                                                       child: InkWell(
                                                           onTap: () {
-                                                            showDatePicker(
-                                                                    context:
-                                                                        context,
-                                                                    initialDate:
-                                                                        DateTime
-                                                                            .now(),
-                                                                    firstDate:
-                                                                        DateTime(
-                                                                            2020),
-                                                                    lastDate:
-                                                                        DateTime(
-                                                                            2022))
-                                                                .then((_val) {
-                                                              setState(() {
-                                                                controller[0]
-                                                                        .text =
-                                                                    dateFormat1
-                                                                        .format(
-                                                                            _val);
-                                                              });
-                                                            });
+                                                            vaTrue.showOnlyDatePicker(context,0);
+                                                            vaTrue.setDone(true);
                                                           },
                                                           child: SizedBox(
                                                             width: sm.w(40),
@@ -139,7 +78,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                                                 OutlineGradientButton(
                                                               child: Center(
                                                                   child: Text(
-                                                                      controller[
+                                                                      vaTrue.controller[
                                                                               0]
                                                                           .text)),
                                                               gradient:
@@ -160,35 +99,11 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                                 ]),
                                           ),
                                           SizedBox(
-                                              width: sm.w(40),
+                                              width: sm.w(38),
                                               child: InkWell(
                                                   onTap: () {
-                                                    showTimePicker(
-                                                      context: context,
-                                                      initialTime:
-                                                          TimeOfDay.now(),
-                                                      builder:
-                                                          (BuildContext context,
-                                                              Widget child) {
-                                                        return MediaQuery(
-                                                          data: MediaQuery.of(
-                                                                  context)
-                                                              .copyWith(
-                                                                  alwaysUse24HourFormat:
-                                                                      true),
-                                                          child: child,
-                                                        );
-                                                      },
-                                                    ).then((value) {
-                                                      setState(() {
-                                                        controller[1].text =
-                                                            localizations
-                                                                .formatTimeOfDay(
-                                                                    value,
-                                                                    alwaysUse24HourFormat:
-                                                                        true);
-                                                      });
-                                                    });
+                                                    vaTrue.showOnlyTimePicker(context, 1);
+                                                  vaTrue.setDone(true);
                                                   },
                                                   child: SizedBox(
                                                     width: sm.h(40),
@@ -196,7 +111,7 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                                         OutlineGradientButton(
                                                       child: Center(
                                                           child: Text(
-                                                              controller[1]
+                                                              vaTrue.controller[1]
                                                                   .text)),
                                                       gradient: LinearGradient(
                                                           colors: [
@@ -215,140 +130,115 @@ class _ManualAppoinment extends State<ManualAppoinment> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.only(top:8.0,left:16.0,right:16.0),
                                   child: txtfieldboundry(
-                                    controller: controller[2],
+                                    controller: vaTrue.controller[2],
                                     title: "Name",
                                     security: false,
                                     valid: true,
+                                    myOnChanged: (_){vaTrue.setDone(true);},
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.only(top:0.0,left:16.0,right:16.0),
                                   child: txtfieldboundry(
-                                    controller: controller[3],
+                                    controller: vaTrue.controller[3],
                                     title: "Contact",
                                     security: false,
                                     maxlen: 10,
                                     myregex: mobileRegex,
                                     keyboardSet: TextInputType.number,
                                     valid: true,
+                                    myOnChanged: (_){vaTrue.setDone(true);},
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 24),
+                                  padding: const EdgeInsets.only(top:8.0,left:24.0,right:24.0),
                                   child: DropdownSearch<String>(
+                                    key: RIKeys.josKeys14,
                                       validator: (v) =>
                                           v == '' ? "required field" : null,
                                       autoValidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       mode: Mode.MENU,
-                                      selectedItem: controller[4].text,
-                                      items: serviceListText,
+                                      maxHeight:vaTrue.servicesString.length>4? 200:150,
+                                      selectedItem: vaTrue.controller[4].text,
+                                      items: vaTrue.servicesString,
                                       label: "Service",
                                       hint: "Please Select Service",
                                       showSearchBox: false,
-                                      onChanged: (value) => setState(
-                                          () => controller[4].text = value)),
+                                      onChanged: (value) {
+                                        vaTrue.setDone(true);
+                                        vaTrue.controller[4].text = value;
+                                      }),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 24, vertical: 12),
+                                  padding: EdgeInsets.only(
+                                      left: 24,right: 24, top: 16),
                                   child: DropdownSearch<String>(
+                                    key: RIKeys.josKeys15,
                                       validator: (v) =>
                                           v == '' ? "required field" : null,
                                       autoValidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       mode: Mode.MENU,
-                                      selectedItem: controller[5].text,
-                                      items: personListText,
+                                      selectedItem: vaTrue.controller[5].text,
+                                      items: vaTrue.personListTxt,
+                                      maxHeight:(vaTrue.personListTxt?.length??0)>4? 200:((vaTrue.personListTxt?.length??0))*60.0,
                                       label: "Person",
                                       hint: "Please Select Person",
                                       showSearchBox: false,
-                                      onChanged: (value) => setState(
-                                          () => controller[5].text = value)),
+                                      onChanged: (value) {
+                                        vaTrue.setDone(true);
+                                        vaTrue.controller[5].text = value;
+                                      }
+                                          ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.only(left: 16,right: 16,top:8,bottom: 20),
                                   child: txtfieldboundry(
-                                    controller: controller[6],
+                                    controller: vaTrue.controller[6],
                                     title: "Special Notes",
                                     security: false,
                                     maxLines: 5,
+                                    myOnChanged: (_){
+                                      vaTrue.setDone(true);
+                                    },
                                     valid: true,
                                   ),
                                 ),
                               ]))))),
           Visibility(
-            visible: widget.data == null,
+            visible: vaTrue.getDone(),
             child: Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: sm.w(15), vertical: 16.0),
               child: RoundedButton(
                 clicker: () {
-                  if (_formKey.currentState.validate()) {
-                    if (controller[0].text == 'Select Date') {
-                      BotToast.showText(
-                          text: "Please select a date",
-                          duration: Duration(seconds: 5));
-                      return;
-                    }
-                    if (controller[1].text == 'Select Time') {
-                      BotToast.showText(
-                          text: "Please select a time",
-                          duration: Duration(seconds: 5));
-                      return;
-                    }
-                    var selectedService;
-                    var selectedPerson;
-                    for (var v in serviceList) {
-                      if (v.serviceName == controller[4].text)
-                        selectedService = v.id;
-                    }
-                    for (var v in personList) {
-                      if (v.personName == controller[5].text)
-                        selectedPerson = v.id;
-                    }
-
-                    Map<String, dynamic> _map = {
-                      "created_date": controller[0].text,
-                      "created_time": controller[1].text,
-                      "name": controller[2].text,
-                      "contact": controller[3].text,
-                      "service_id": selectedService,
-                      "person_id": selectedPerson,
-                      "special_notes": controller[6].text
-                    };
-
-                    print("_map ${_map.toString()}");
-                    WebService.funAppoinmentCreate(_map, context).then((value) {
-                      if (value.status == "success") {
-                        BotToast.showText(
-                            text: value.message,
-                            duration: Duration(seconds: 5));
-                        initializeDefaultValues();
-                      }
-                    });
-                  }
-                },
+              if (RIKeys.josKeys13.currentState.validate()) {
+                  vaTrue.funSubmitManualAppointment(context);
+                }else{
+                  _autovalidate = true;
+                }},
                 clr: Colors.red,
-                title: widget.data != null ? "Update" : "Save",
+                title: (vaTrue.getSelectedAppointmentId()!=0) ? "Update" : "Save",
               ),
             ),
           ),
+        
         ]));
   }
 
-  void getDataVerbode() async {
-    await WebService.funAppoinmentVerbose(context).then((value) {
-      if (value.status == "success") {
-        var va = value.data;
-        serviceList = va.serviceList;
-        for (var va in serviceList) serviceListText.add(va.serviceName);
-        personList = va.personList;
-        for (var va in personList) personListText.add(va.personName);
-        setState(() {});
-      }
-    });
-  }
+  // void getDataVerbode() async {
+  //   await WebService.funAppoinmentVerbose(context).then((value) {
+  //     if (value.status == "success") {
+  //       var va = value.data;
+  //       serviceList = va.serviceList;
+  //       for (var va in serviceList) serviceListText.add(va.serviceName);
+  //       personList = va.personList;
+  //       for (var va in personList) personListText.add(va.personName);
+  //       setState(() {});
+  //     }
+  //   });
+  // }
 }

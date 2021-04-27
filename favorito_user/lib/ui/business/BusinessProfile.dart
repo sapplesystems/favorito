@@ -5,6 +5,7 @@ import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
+import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/tabber.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -294,14 +295,7 @@ class BusinessProfile extends StatelessWidget {
     BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
     List<String> service = [
       'Call Now',
-      'Chat',
-      // (widget.attribute.contains('Booking')
-      //     ? 'Booking'
-      //     : (widget.attribute.contains('Appointment'))
-      //         ? 'Appointment'
-      //         : null),
-      // (widget.attribute.contains('Waitlist') ? 'Waitlist' : null),
-    ];
+      'Chat' ];
     service.addAll(vatrue?.attribute);
     List<IconData> serviceIcons = [
       Icons.call_outlined,
@@ -343,9 +337,9 @@ class BusinessProfile extends StatelessWidget {
                     break;
                   case 'Appointment':
                     {
+                      Provider.of<AppointmentProvider>(context,listen: false).baseUserAppointmentVerboseService(context);
                       Navigator.of(context).pushNamed(
-                          '/bookingOrAppointmentList',
-                          arguments: badm);
+                          '/bookAppointment');
                     }
                     break;
                   case 'Waitlist':

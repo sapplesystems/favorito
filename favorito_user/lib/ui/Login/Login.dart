@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }

@@ -46,7 +46,7 @@ class Data {
   String location;
   int byAppointmentOnly;
   String workingHours;
-  List<String> website;
+  // List<String> website;
   String shortDescription;
   String businessStatus;
   List<Hours> hours;
@@ -71,7 +71,7 @@ class Data {
       this.location,
       this.byAppointmentOnly,
       this.workingHours,
-      this.website,
+      // this.website,
       this.shortDescription,
       this.businessStatus,
       this.hours});
@@ -96,7 +96,7 @@ class Data {
     location = json['location'];
     byAppointmentOnly = json['by_appointment_only'];
     workingHours = json['working_hours'];
-    website = json['website']?.cast<String>();
+    // website = json['website']?.cast<String>();
     shortDescription = json['short_description'];
     businessStatus = json['business_status'];
     if (json['hours'] != null) {
@@ -128,7 +128,7 @@ class Data {
     data['location'] = this.location;
     data['by_appointment_only'] = this.byAppointmentOnly;
     data['working_hours'] = this.workingHours;
-    data['website'] = this.website;
+    // data['website'] = this.website;
     data['short_description'] = this.shortDescription;
     data['business_status'] = this.businessStatus;
     if (this.hours != null) {

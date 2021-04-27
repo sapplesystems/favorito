@@ -76,10 +76,11 @@ class Signup_a extends StatelessWidget {
                                           horizontal: 8.0),
                                       child: DropdownSearch<String>(
                                         key: SignUpProvider.categoryKey1,
-                                        mode: Mode.MENU,
+                                        mode: Mode.DIALOG,
                                         validator: (v) => (v == null)
                                             ? "Required field"
                                             : null,
+                                            showSearchBox: false,
                                         autoValidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         maxHeight: signUpProviderTrue
@@ -121,15 +122,15 @@ class Signup_a extends StatelessWidget {
                                           child: DropdownSearch<String>(
                                             key: SignUpProvider.categoryKey,
                                             mode: Mode.MENU,
-                                            // maxHeight: busy.length * 58.0,
+                                            maxHeight:sm.h(28),
                                             validator: (v) => (v == '')
                                                 ? "Required field"
                                                 : null,
                                             autoValidateMode: AutovalidateMode
                                                 .onUserInteraction,
-                                            // showSelectedItem: true,
+                                            showSelectedItem: false,
 
-                                            showSearchBox: true,
+                                            showSearchBox: false,
                                             items: signUpProviderTrue
                                                 .getCategoryAll(),
                                             label: "Business Category",

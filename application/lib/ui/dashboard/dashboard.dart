@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/component/card1.dart';
 import 'package:Favorito/component/card2.dart';
 import 'package:Favorito/component/cart3.dart';
@@ -48,187 +49,192 @@ class _dashboardState extends State<dashboard> {
       calldashBoard(context);
       isFirst = false;
     }
-    return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0),
-          child: AppBar(
-            title: Padding(
-              padding: EdgeInsets.only(top: sm.w(10)),
-              child: Text("Dashboard",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.title),
+    return WillPopScope(
+      onWillPop: (){
+        BaseProvider.onWillPop(context);
+      },
+          child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(70.0),
+            child: AppBar(
+              title: Padding(
+                padding: EdgeInsets.only(top: sm.w(10)),
+                child: Text("Dashboard",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.title),
+              ),
+              centerTitle: true,
+              elevation: 0,
+              leading: IconButton(
+                  icon: Icon(null, color: Colors.black),
+                  onPressed: () => Navigator.of(context).pop()),
+              iconTheme: IconThemeData(color: Colors.white),
             ),
-            centerTitle: true,
-            elevation: 0,
-            leading: IconButton(
-                icon: Icon(null, color: Colors.black),
-                onPressed: () => Navigator.of(context).pop()),
-            iconTheme: IconThemeData(color: Colors.white),
           ),
-        ),
-        body: RefreshIndicator(
-          onRefresh: () => calldashBoard(context),
-          backgroundColor: Colors.amber,
-          child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
-              child: ListView(children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: sm.h(2)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text("ver : 1.3", style: TextStyle(fontSize: 8)),
-                      Text("Status : ",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
-                      Text(
-                          is_verified == "0"
-                              ? "Offline"
-                              : is_verified == "1"
-                                  ? "Live"
-                                  : "Blocked",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: is_verified == "0"
-                                  ? Colors.grey
-                                  : is_verified == "1"
-                                      ? Colors.green
-                                      : Colors.red,
-                              fontFamily: 'Gilroy-Medium',
-                              fontWeight: FontWeight.w500)),
-                      SizedBox(
-                        width: 20,
-                      )
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: is_profile_completed == '0' ? true : false,
-                  child: rowWithTextNButton(
-                      txt1: "Complete Your Profile",
-                      txt2: "Fill",
-                      check: is_profile_completed,
-                      function: () {
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BusinessProfile()))
-                            .whenComplete(() => calldashBoard(context));
-                      }),
-                ),
-                Visibility(
-                  visible: is_information_completed == '0' ? true : false,
-                  child: rowWithTextNButton(
-                      txt1: "Complete Your Information",
-                      txt2: "Now",
-                      check: is_information_completed,
-                      function: () {
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => businessInfo()))
-                            .whenComplete(() => calldashBoard(context));
-                      }),
-                ),
-                Visibility(
-                  visible: is_verified == "0" ? true : false,
-                  child: rowWithTextNButton(
-                      txt1: "Send For Verification",
-                      txt2: "Verify",
-                      check: is_verified,
-                      function: () {
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BusinessClaim()))
-                            .whenComplete(() => calldashBoard(context));
-                      }),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: sm.h(2)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      card1(
-                          checkins: check_ins,
-                          function: () {
-                            Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => checkins()))
-                                .whenComplete(() => calldashBoard(context));
-                          }),
-                      card2(
-                          ratings:
-                              double.parse(ratings ?? 0.0).toStringAsFixed(1),
-                          function: () {
-                            Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => reviewList()))
-                                .whenComplete(() => calldashBoard(context));
-                          },
-                          va: ratingCount ?? '0')
-                    ],
-                  ),
-                ),
-                Padding(
+          body: RefreshIndicator(
+            onRefresh: () => calldashBoard(context),
+            backgroundColor: Colors.amber,
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                child: ListView(children: [
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: sm.h(2)),
                     child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Catalogs()))
-                                    .whenComplete(() => calldashBoard(context));
-                              },
-                              child: card3(
-                                  txt1: "Catalogoues", title: catalogoues)),
-                          InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Orders()))
-                                    .whenComplete(() => calldashBoard(context));
-                              },
-                              child: card3(txt1: "Orders", title: orders))
-                        ])),
-                Row(children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      "Grow your Business",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                    ),
-                  )
-                ]),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        credit("Free Credit", free_credit ?? 0,
-                            "assets/icon/warning.svg", true),
-                        credit("Paid Credit", paid_credit,
-                            "assets/icon/warning.svg", false)
-                      ]),
-                ),
-                rowCard(
-                    "Advertise",
-                    "Reach new audience searching for related services",
-                    () => Navigator.of(context)
-                        .pushNamed('/adSpent')
-                        .whenComplete(() => calldashBoard(context))),
-                rowCard("Notifications", "Send Direct Update To Customer", () {
-                  Navigator.of(context).pushNamed('/notifications');
-                }),
-              ])),
-        ));
+                        Text("ver : 1.4", style: TextStyle(fontSize: 8)),
+                        Text("Status : ",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600)),
+                        Text(
+                            is_verified == "0"
+                                ? "Offline"
+                                : is_verified == "1"
+                                    ? "Live"
+                                    : "Blocked",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: is_verified == "0"
+                                    ? Colors.grey
+                                    : is_verified == "1"
+                                        ? Colors.green
+                                        : Colors.red,
+                                fontFamily: 'Gilroy-Medium',
+                                fontWeight: FontWeight.w500)),
+                        SizedBox(
+                          width: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: is_profile_completed == '0' ? true : false,
+                    child: rowWithTextNButton(
+                        txt1: "Complete Your Profile",
+                        txt2: "Fill",
+                        check: is_profile_completed,
+                        function: () {
+                          Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BusinessProfile()))
+                              .whenComplete(() => calldashBoard(context));
+                        }),
+                  ),
+                  Visibility(
+                    visible: is_information_completed == '0' ? true : false,
+                    child: rowWithTextNButton(
+                        txt1: "Complete Your Information",
+                        txt2: "Now",
+                        check: is_information_completed,
+                        function: () {
+                          Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => businessInfo()))
+                              .whenComplete(() => calldashBoard(context));
+                        }),
+                  ),
+                  Visibility(
+                    visible: is_verified == "0" ? true : false,
+                    child: rowWithTextNButton(
+                        txt1: "Send For Verification",
+                        txt2: "Verify",
+                        check: is_verified,
+                        function: () {
+                          Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BusinessClaim()))
+                              .whenComplete(() => calldashBoard(context));
+                        }),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: sm.h(2)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        card1(
+                            checkins: check_ins,
+                            function: () {
+                              Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => checkins()))
+                                  .whenComplete(() => calldashBoard(context));
+                            }),
+                        card2(
+                            ratings:
+                                double.parse(ratings ?? 0.0).toStringAsFixed(1),
+                            function: () {
+                              Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => reviewList()))
+                                  .whenComplete(() => calldashBoard(context));
+                            },
+                            va: ratingCount ?? '0')
+                      ],
+                    ),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(vertical: sm.h(2)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Catalogs()))
+                                      .whenComplete(() => calldashBoard(context));
+                                },
+                                child: card3(
+                                    txt1: "Catalogoues", title: catalogoues)),
+                            InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Orders()))
+                                      .whenComplete(() => calldashBoard(context));
+                                },
+                                child: card3(txt1: "Orders", title: orders))
+                          ])),
+                  Row(children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Grow your Business",
+                        style:
+                            TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                      ),
+                    )
+                  ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          credit("Free Credit", free_credit ?? 0,
+                              "assets/icon/warning.svg", true),
+                          credit("Paid Credit", paid_credit,
+                              "assets/icon/warning.svg", false)
+                        ]),
+                  ),
+                  rowCard(
+                      "Advertise",
+                      "Reach new audience searching for related services",
+                      () => Navigator.of(context)
+                          .pushNamed('/adSpent')
+                          .whenComplete(() => calldashBoard(context))),
+                  rowCard("Notifications", "Send Direct Update To Customer", () {
+                    Navigator.of(context).pushNamed('/notifications');
+                  }),
+                ])),
+          )),
+    );
   }
 
   Widget rowCard(String title, String subtitle, Function function) => InkWell(

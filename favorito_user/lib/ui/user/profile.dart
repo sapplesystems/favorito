@@ -49,7 +49,7 @@ class Profile extends StatelessWidget {
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfileDetail())),
+                              builder: (context) => ProfileMaster())),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Container(
@@ -94,8 +94,8 @@ class Profile extends StatelessWidget {
                   ]),
                   Padding(
                     padding: EdgeInsets.only(top: sm.h(2)),
-                    child: Text(
-                      "Business manager at Avadh group of companies and always open for collaborations",
+                    child: Text(Provider.of<PersonalInfoProvider>(context,
+                        listen: true).profileModel?.data?.detail?.shortDescription??'',
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
