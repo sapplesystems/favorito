@@ -1,4 +1,5 @@
 const { log } = require('debug');
+const { response } = require('express');
 var db = require('../config/db');
 
 var today = new Date();
@@ -122,6 +123,28 @@ exports.saveRestriction = function(req, res, next) {
         db.query(sql, postval, function(err, result) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+            }
+            return res.status(200).json({ status: 'success', message: 'Restriction saved successfully.' });
+        });
+
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+exports.saveMultiRestriction = function(req, res, next) {
+    try {
+        restrictions = req.body.restrictions
+        var business_id = req.userdata.business_id;
+        for (let i = 0; i < restrictions.length; i++) {
+            restrictions[i].unshift(business_id)
+        }
+
+        var sql = `INSERT INTO business_appointment_restriction (business_id,person_id,service_id,start_datetime,end_datetime) VALUES ?`
+
+        db.query(sql, [restrictions], function(err, result) {
+            if (err) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: err });
             }
             return res.status(200).json({ status: 'success', message: 'Restriction saved successfully.' });
         });
@@ -547,12 +570,12 @@ exports.findAppointmentById = async function(req, res, next) {
             return res.status(403).json({ status: 'error', message: 'Appointment id not found.' });
         }
         var business_id = req.userdata.business_id;
-        var person_list = await exports.getAllPersons(business_id);
-        var service_list = await exports.getAllServices(business_id);
-        var verbose = {
-            person_list: person_list,
-            service_list: service_list
-        };
+        // var person_list = await exports.getAllPersons(business_id);
+        // var service_list = await exports.getAllServices(business_id);
+        // var verbose = {
+        //     person_list: person_list,
+        //     service_list: service_list
+        // };
 
         var appointment_id = req.body.appointment_id;
         var sql = "SELECT id,`name`,contact,service_id,person_id,special_notes, \n\
@@ -563,12 +586,76 @@ exports.findAppointmentById = async function(req, res, next) {
             if (err) {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
-            return res.status(200).json({ status: 'success', message: 'success', verbose: verbose, data: result[0] });
+            if (result == '') {
+                return res.status(200).json({ status: 'success', message: 'No detail is found.', data: result[0] });
+            }
+            return res.status(200).json({ status: 'success', message: 'success', data: result[0] });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.getPersonByService = async(req, res) => {
+    let business_id = req.userdata.business_id
+
+    if (!req.body.service_id) {
+        return res.status(403).json({ status: 'error', message: 'service_id is missing' });
+    } else {
+        service_id = req.body.service_id
+    }
+
+    if (!req.body.datetime) {
+        return res.status(403).json({ status: 'error', message: 'datetime is missing' });
+    } else {
+        datetime = req.body.datetime
+    }
+    // let sqlQueryGetPerson = `select b_a_r.id as r_id, b_a_p.business_id, b_a_p.id as person_id,b_a_p.person_name,b_a_p.person_mobile,b_a_p.person_email,b_a_s.id  as s_id, b_a_s.service_name from\n\
+    // business_appointment_person as b_a_p \n\
+    // LEFT JOIN business_appointment_restriction as b_a_r on b_a_p.service_id = b_a_r.service_id\n\
+    // LEFT JOIN business_appointment_service as b_a_s on b_a_s.id=b_a_p.service_id \n\
+    // where b_a_p.business_id = '${business_id}' and b_a_s.is_active = 1 and b_a_p.is_active = 1  group by b_a_p.id\n\
+    // `
+
+    let sqlQueryGetPerson = `select b_a_p.id as person_id,b_a_p.person_name,b_a_p.person_email,b_a_p.person_mobile,b_a_r.service_id,b_a_s.service_name from business_appointment_restriction as b_a_r\n\
+    left join business_appointment_service as b_a_s on b_a_s.id =  b_a_r.service_id \n\
+    left join business_appointment_person as b_a_p on b_a_r.service_id = b_a_s.id
+    where b_a_p.business_id = '${business_id}' and b_a_s.is_active = 1 and b_a_p.is_active = 1 and b_a_r.person_id != 0 and '${datetime}' between start_datetime and end_datetime and b_a_r.service_id = '${service_id}' group by b_a_r.service_id `
+
+    try {
+        const resultQueryGetPerson = await exports.run_query(sqlQueryGetPerson)
+        return res.status(200).json({ status: 'success', message: 'success', data: resultQueryGetPerson });
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+    }
+
+}
+
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+}
 
 /**
  * EDIT BUSINESS APPOINTMENT BY ID

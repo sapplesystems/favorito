@@ -12,10 +12,10 @@ exports.verboseService = async(req, res) => {
         business_id = req.body.business_id
     }
     try {
-        sqlGetService = `select id, service_name from business_appointment_service where business_id = '${business_id}' and is_active = 1`
+        sqlGetService = `select id, service_name,is_active as status from business_appointment_service where business_id = '${business_id}'`
         resultGetService = await exports.run_query(sqlGetService)
 
-        sqlGetSetting = `select booking_per_slot, advance_booking_start_days, advance_booking_hours from business_appointment_setting where business_id = '${business_id}'`
+        sqlGetSetting = `select booking_per_slot, advance_booking_start_days,advance_booking_end_days, advance_booking_hours from business_appointment_setting where business_id = '${business_id}'`
 
         resultGetSetting = await exports.run_query(sqlGetSetting)
 
@@ -43,7 +43,7 @@ exports.getPersonByServiceId = async(req, res) => {
     try {
         var result_get_persons = await exports.run_query(sql_get_person_by_service)
         if (result_get_persons == '') {
-            return res.status(200).json({ status: 'success', message: 'There is no person by this service id' });
+            return res.status(200).json({ status: 'success', message: 'There is no person by this service id', data: [] });
         }
         return res.status(200).json({ status: 'success', message: 'success', data: result_get_persons });
     } catch (error) {
@@ -70,16 +70,19 @@ exports.restrictedPersonDateTime = async(req, res) => {
         var sql_booking_setting = "SELECT start_time,end_time,slot_length,booking_per_slot,advance_booking_end_days,booking_per_day,advance_booking_start_days FROM business_appointment_setting WHERE business_id='" + business_id + "'";
         var result_appointment_setting = await exports.run_query(sql_booking_setting)
         restrictedDates = []
-        for (let j = 0; j < result_appointment_setting[0].advance_booking_end_days; j++) {
+
+        for (let j = 0; j <= result_appointment_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
 
-            // sqlCountAppointment = `select count(*) as count from business_appointment where business_id = '${business_id}'`
-            // resultCountAppointment = 
+            console.log(moment(date).format('YYYY-MM-DD'))
+            sqlCountAppointment = `select count(*) as count from business_appointment where business_id = '${business_id}' and  deleted_at is null and date(created_datetime) =  date('${moment(date).format('YYYY-MM-DD')}')`
 
-            // if (result_appointment_setting[0].booking_per_day) {
+            resultCountAppointment = await exports.run_query(sqlCountAppointment)
 
-            // }
-            restrictedDates.push({ date: moment(date).format('YYYY-MM-DD') })
+            if (result_appointment_setting[0].booking_per_day <= resultCountAppointment[0].count) {
+                restrictedDates.push({ date: moment(date).format('YYYY-MM-DD') })
+            }
+
         }
 
         return res.status(200).send({ status: 'success', message: 'success', data: [{ restrictedDateTime: resultGetRestrictedDateTime, restrictedDates: restrictedDates }] });
@@ -158,6 +161,147 @@ exports.getVerboseAppointment = async(req, res, next) => {
     }
 }
 
+exports.getsSlots = async(req, res) => {
+    if (!req.body.business_id) {
+        return res.status(400).send({ status: 'error', message: 'Business id is missing' });
+    } else {
+        business_id = req.body.business_id
+    }
+
+    if (!req.body.date) {
+        return res.status(400).send({ status: 'error', message: 'date is missing' });
+    } else {
+        date = req.body.date
+    }
+
+    try {
+
+        let sqlGetCountByDate = `select count(id) as count from business_appointment where business_id = '${business_id}' and date(created_datetime) = '${date}'`
+        let resultGetCountByDate = await exports.run_query(sqlGetCountByDate)
+
+        let sqlBookingPerDay = `select booking_per_day from business_appointment_setting where business_id = '${business_id}'`
+        let resultBookingPerDay = await exports.run_query(sqlBookingPerDay)
+
+
+        if (resultBookingPerDay[0].booking_per_day <= resultGetCountByDate[0].count) {
+            return res.status(200).json({ status: 'success', message: 'Maximum limit has reached for this day', data: { date: date, slots: [] } });
+        }
+
+
+        var sql_booking_setting = "SELECT business_id,start_time,end_time,slot_length,booking_per_slot,advance_booking_hours,advance_booking_end_days,advance_booking_start_days FROM business_appointment_setting WHERE business_id='" + business_id + "'";
+        var result_appointment_setting = await exports.run_query(sql_booking_setting)
+
+        slots_data = await exports.createSlotWithDate(result_appointment_setting, date)
+
+        if (slots_data == '') {
+            return res.status(200).json({ status: 'success', message: 'No slot is available', data: slots_data });
+        }
+        return res.status(200).json({ status: 'success', message: 'success ', data: slots_data });
+    } catch (error) {
+        return res.status(400).json({ status: 'failed', message: 'Something went wrong', error });
+    }
+
+}
+
+
+exports.createSlotWithDate = async(result_appointment_setting, date) => {
+    return new Promise(async(resolve, reject) => {
+        // create object with date and slots of that date
+        temp_slot_detail = {}
+        date_1 = moment(date).format('YYYY-MM-DD');
+        // creating slot 
+
+        today_date = moment().format('YYYY-MM-DD')
+        let requiredDate = moment(date)
+        let isToday = false
+        advance_booking_time = null
+        if (requiredDate.isSame(today_date, 'day')) {
+            advance_booking_time = result_appointment_setting[0].advance_booking_hours
+            isToday = true
+        }
+        const get_slot = await exports.createSlots(result_appointment_setting[0].start_time, result_appointment_setting[0].end_time, result_appointment_setting[0].slot_length, advance_booking_time, isToday, result_appointment_setting, date_1)
+        temp_slot_detail.date = date_1
+        temp_slot_detail.slots = get_slot
+        resolve(temp_slot_detail)
+    })
+}
+
+
+exports.createSlots = async function(starttime, endtime, interval, advance_booking_hours, isToday, result_appointment_setting, data_1) {
+    return new Promise(async(resolve, reject) => {
+        array_slots = []
+        array_slots_final = []
+        start_time = starttime
+        end_time = endtime
+        current_time = moment()
+
+        start_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)
+        if (advance_booking_hours) {
+            start_time = moment(start_time, 'HH:mm').add(advance_booking_hours, 'minutes')
+        }
+        end_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${end_time}`)
+        while (start_time.isBefore(end_time)) {
+            // adding the minutes
+            array_slots.push({
+                slot: [start_time.format('HH:mm'), moment(start_time, 'HH:mm').add(interval, 'minutes').format('HH:mm')]
+            })
+            start_time = moment(start_time, 'HH:mm').add(interval, 'minutes')
+        }
+        if (isToday) {
+            for (let i = 0; i < array_slots.length; i++) {
+                current_time = moment().add(advance_booking_hours, 'minutes')
+                    // current_time = moment()
+                const slot = array_slots[i];
+                start_slot_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${slot.slot[0]}`)
+
+                // getting the count between the slot by substracting the 1 minute to manage the duplicate data
+
+                // start time slot
+                s_slot = `${date_1} ${slot.slot[0]}`
+
+                // end time slot
+                e_slot = moment(`${date_1} ${slot.slot[1]}`).subtract(1, 'minutes').format('YYYY-MM-DD HH:mm:ss')
+
+                sqlGetCountAppointmentSlot = `select count(*) as count from business_appointment where business_id = '${result_appointment_setting[0].business_id}' and created_datetime between '${s_slot}' and '${e_slot}' and deleted_at is null`
+
+                resultGetCountBookedSlot = await exports.run_query(sqlGetCountAppointmentSlot)
+
+                // select query to get the slot lenght
+                if (current_time.isBefore(start_slot_time) && result_appointment_setting[0].booking_per_slot > resultGetCountBookedSlot[0].count) {
+                    array_slots_final.push({ start_time: slot.slot[0], end_time: slot.slot[1] })
+                }
+            }
+        } else {
+            // select query to get the slot lenght
+            for (let i = 0; i < array_slots.length; i++) {
+                // current_time = moment()
+                const slot = array_slots[i];
+                // start_slot_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${slot.slot[0]}`)
+
+                // getting the count between the slot by substracting the 1 minute to manage the duplicate data
+
+                // start time slot
+                s_slot = `${date_1} ${slot.slot[0]}`
+
+                // end time slot
+                e_slot = moment(`${date_1} ${slot.slot[1]}`).subtract(1, 'minutes').format('YYYY-MM-DD HH:mm:ss')
+
+                sqlGetCountAppointmentSlot = `select count(*) as count from business_appointment where business_id = '${result_appointment_setting[0].business_id}' and created_datetime between '${s_slot}' and '${e_slot}' and deleted_at is null`
+
+                resultGetCountBookedSlot = await exports.run_query(sqlGetCountAppointmentSlot)
+
+                // select query to get the slot lenght
+                if (result_appointment_setting[0].booking_per_slot > resultGetCountBookedSlot[0].count) {
+                    array_slots_final.push({ start_time: slot.slot[0], end_time: slot.slot[1] })
+                }
+            }
+
+        }
+
+        resolve(array_slots_final)
+    })
+}
+
 getDayNameByDate = (date = false) => {
     if (date) {
         var d = new Date(date);
@@ -201,54 +345,28 @@ exports.setAppointmentNote = async function(req, res, next) {
     }
 }
 
-exports.createSlotWithDate = async(result_appointment_setting, date) => {
-    return new Promise(async(resolve, reject) => {
-        // create object with date and slots of that date
-        temp_slot_detail = {}
-        date_1 = moment(date).format('YYYY-MM-DD');
-        // creating slot 
-        const get_slot = await exports.createSlots(result_appointment_setting[0].start_time, result_appointment_setting[0].end_time, result_appointment_setting[0].slot_length)
-        temp_slot_detail.date = date_1
-        temp_slot_detail.slots = get_slot
-        resolve(temp_slot_detail)
-    })
-}
-
-exports.createSlots = function(starttime, endtime, interval) {
-    return new Promise((resolve, reject) => {
-        array_slots = []
-
-        start_time = starttime
-        end_time = endtime
-        current_time = moment()
-        start_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)
-        end_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${end_time}`)
-        while (start_time.isBefore(end_time)) {
-            // adding the minutes
-            array_slots.push({
-                slot: [start_time.format('HH:mm'), moment(start_time, 'HH:mm').add(interval, 'minutes').format('HH:mm')]
-            })
-            start_time = moment(start_time, 'HH:mm').add(interval, 'minutes')
-        }
-        resolve(array_slots)
-    })
-}
-
-// exports.createSlots = function(starttime, endtime, interval) {
+// exports.createSlots = function(starttime, endtime, interval, date) {
+//     if( )
 //     return new Promise((resolve, reject) => {
 //         array_slots = []
 //         start_time = starttime
 //         end_time = endtime
-//         for (let i = parseInt(start_time.substring(0, 2)); i < parseInt(end_time.substring(0, 2)) - interval; i = i + interval) {
-//             array_slots.push({ slot: [i, i + interval] })
+//         current_time = moment()
+//         start_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)
+//         end_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${end_time}`)
+//         while (start_time.isBefore(end_time)) {
+//             // adding the minutes
+//             array_slots.push({ start_time: start_time.format('HH:mm'), end_time: moment(start_time, 'HH:mm').add(interval, 'minutes').format('HH:mm') })
+//             start_time = moment(start_time, 'HH:mm').add(interval, 'minutes')
 //         }
-//         console.log(array_slots)
 //         resolve(array_slots)
 //     })
 // }
 
 
+
 // setting and updating the appointment booking booked by the user
+
 exports.setBookingAppointment = async function(req, res, next) {
     data_to_insert = {}
     if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
@@ -332,23 +450,25 @@ exports.getBookingAppointment = async function(req, res, next) {
     if (req.body.business_id) {
         business_id = req.body.business_id
     }
+
     if (business_id != null) {
-        var sql = "SELECT b_a.id, b_a.business_id, IFNULL(b_m.business_name,'') as business_name, IFNULL(b_m.business_phone,'') as business_phone, IFNULL(b_a_p.person_email,'') as person_email , b_a.special_notes,b_a.appointment_status as status,DATE_FORMAT(b_a.created_datetime , '%Y%m%d%h%i%s') as time, DATE_FORMAT(b_a.created_datetime , '%Y-%m-%d %h:%i:%s') AS created_datetime\n\
+        var sql = "SELECT b_a.id, b_a.business_id, IFNULL(b_m.business_name,'') as business_name, IFNULL(b_m.business_phone,'') as business_phone, IFNULL(b_a_p.person_email,'') as person_email , b_a.special_notes,if(b_a.created_datetime < NOW() ,'completed', if(b_a.deleted_at IS NOT NULL,'cancelled','upcoming'))  as status ,DATE_FORMAT(b_a.created_datetime , '%Y%m%d%H%i%s') as time, DATE_FORMAT(b_a.created_datetime , '%Y-%m-%d %H:%i:%s') AS created_datetime\n\
         FROM business_appointment as b_a \n\
         JOIN business_appointment_person as b_a_p \n\
         JOIN business_master as b_m \n\
         ON b_m.business_id= b_a.business_id \n\
         AND b_a.person_id = b_a_p.id \n\
-        WHERE b_a.user_id = '" + req.body.user_id + "' AND b_a.business_id = '" + business_id + "' AND b_a.deleted_at IS NULL GROUP BY id ORDER BY b_a.created_datetime DESC"
+        WHERE b_a.user_id = '" + user_id + "' AND b_a.business_id = '" + business_id + "' GROUP BY id ORDER BY b_a.created_datetime DESC"
         appointment_data = await exports.run_query(sql);
     } else {
-        var sql = "SELECT b_a.id, b_a.business_id, IFNULL(b_m.business_name,'') as business_name, IFNULL(b_m.business_phone,'') as business_phone, IFNULL(b_a_p.person_email,'') as person_email , b_a.special_notes,b_a.appointment_status as status,DATE_FORMAT(b_a.created_datetime , '%Y%m%d%h%i%s') as time, DATE_FORMAT(b_a.created_datetime , '%Y-%m-%d %h:%i:%s') AS created_datetime\n\
+
+        var sql = "SELECT b_a.id,b_a.user_id, b_a.business_id, IFNULL(b_m.business_name,'') as business_name, IFNULL(b_m.business_phone,'') as business_phone, IFNULL(b_a_p.person_email,'') as person_email , b_a.special_notes,b_a.special_notes,if(b_a.created_datetime < NOW() ,'completed', if(b_a.deleted_at IS NOT NULL,'cancelled','upcoming'))  as status ,DATE_FORMAT(b_a.created_datetime , '%Y%m%d%H%i%s') as time, DATE_FORMAT(b_a.created_datetime , '%Y-%m-%d %H:%i:%s') AS created_datetime\n\
         FROM business_appointment as b_a \n\
         JOIN business_appointment_person as b_a_p \n\
         JOIN business_master as b_m \n\
         ON b_m.business_id= b_a.business_id \n\
         AND b_a.person_id = b_a_p.id \n\
-        WHERE b_a.user_id = '" + req.body.user_id + "' AND b_a.deleted_at IS NULL GROUP BY id ORDER BY b_a.created_datetime DESC"
+        WHERE b_a.user_id = '" + user_id + "' GROUP BY id ORDER BY b_a.created_datetime DESC"
         appointment_data = await exports.run_query(sql);
     }
     result = await exports.run_query(sql);
