@@ -13,6 +13,8 @@ router.post('/get-person-by-service', CheckAuth, UserAppointmentController.getPe
 
 router.post('/restricted-datetime-person', CheckAuth, UserAppointmentController.restrictedPersonDateTime);
 
+router.post('/get-appointment-slot', CheckAuth, UserAppointmentController.getsSlots);
+
 // requre user_id
 router.post('/set-appointment', CheckAuth, UserAppointmentController.setAppointment);
 // router.post('/get-all-appointment', CheckAuth, UserAppointmentController.allAppointments);

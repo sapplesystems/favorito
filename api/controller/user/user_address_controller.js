@@ -5,7 +5,7 @@ exports.getAddress = async function(req, res, next) {
         var sql = "SELECT address1, address2, address3, pincode, town_city, state_id, country_id, location FROM business_master WHERE business_id = '" + req.userdata.business_id + "'";
     } else if (req.userdata.id) {
         var sql_count_for_default = `select count(id) as count , id from user_address where user_id = '${req.userdata.id}' and deleted_at is null`
-        var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address, IFNULL(address_type,'') as address_type, deleted_at FROM user_address WHERE user_id = '" + req.userdata.id + "' and deleted_at is null";
+        var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address, IFNULL(address_type,'') as address_type, deleted_at,latitude, longitude FROM user_address WHERE user_id = '" + req.userdata.id + "' and deleted_at is null";
         var sql_name = "SELECT first_name, last_name FROM users WHERE id = '" + req.userdata.id + "'"
     } else {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
@@ -119,6 +119,12 @@ exports.changeAddress = async function(req, res, next) {
             if (req.body.address_type) {
                 set += ", address_type = '" + req.body.address_type + "'"
             }
+            if (req.body.latitude) {
+                set += ", latitude = '" + req.body.latitude + "'"
+            }
+            if (req.body.longitude) {
+                set += ", longitude = '" + req.body.longitude + "'"
+            }
             try {
                 var sql = "UPDATE user_address SET " + set + " WHERE id='" + req.body.address_id + "'";
                 update_result = await exports.executeSql(sql, res)
@@ -153,6 +159,18 @@ exports.changeAddress = async function(req, res, next) {
                 if (req.body.address_type) {
                     address_type = req.body.address_type
                 }
+                if (req.body.latitude) {
+                    latitude = req.body.latitude
+                } else {
+                    latitude = null
+
+                }
+
+                if (req.body.longitude) {
+                    longitude = req.body.longitude
+                } else {
+                    longitude = null
+                }
                 var user_id = req.userdata.id
                 data_to_enter = {
                     city: city,
@@ -163,6 +181,8 @@ exports.changeAddress = async function(req, res, next) {
                     address: address,
                     user_id: user_id,
                     address_type: address_type,
+                    latitude: latitude,
+                    longitude: longitude,
                 }
 
                 var sql = "INSERT user_address SET ?";
