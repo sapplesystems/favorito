@@ -1,32 +1,41 @@
 import 'dart:async';
-import 'package:favorito_user/Providers/MenuHomeProvider.dart';
+import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/ui/OnlineMenu/FloatingActionButtons.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 class MenuHome extends StatelessWidget {
   var _mySearchEditTextController = TextEditingController();
   SizeManager sm;
-
   List<MenuItemModel> menuItemBaseModel = [];
-  ProgressDialog pr;
+  MenuHomeProvider vaTrue;
   ControllerCallback controller;
+  bool isFisrt = true;
   @override
   Widget build(BuildContext context) {
-    sm = SizeManager(context);
-    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(message: 'Please wait');
-
-    var vaTrue = Provider.of<MenuHomeProvider>(context, listen: true);
-    var vaFalse = Provider.of<MenuHomeProvider>(context, listen: false);
-    vaTrue.userOrderCreateVerbose();
-    vaTrue.getMenuData();
+    if (isFisrt) {
+      sm = SizeManager(context);
+      vaTrue = Provider.of<MenuHomeProvider>(context, listen: true);
+      vaTrue.userOrderCreateVerbose();
+      vaTrue
+        ..setBusinessIdName(
+            Provider.of<BusinessProfileProvider>(context, listen: true)
+                .getBusinessProfileData()
+                .businessId,
+            Provider.of<BusinessProfileProvider>(context, listen: true)
+                .getBusinessProfileData()
+                .businessName)
+        ..checkisFoody()
+        ..isVegFilter = false
+        ..menuTabGet();
+      isFisrt = false;
+    }
     return SafeArea(
       child: Scaffold(
         backgroundColor: myBackGround,
@@ -36,11 +45,15 @@ class MenuHome extends StatelessWidget {
             vaTrue.notifyListeners();
           },
           child: ListView(children: [
-            Text(vaFalse.getBusinessName() ?? '',
+            Text(
+                Provider.of<BusinessProfileProvider>(context, listen: true)
+                        .getBusinessProfileData()
+                        .businessName ??
+                    '',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 20)),
             Divider(),
-            search(vaFalse, vaTrue),
+            search(),
             Container(
               height: 500,
               child: Column(
@@ -61,8 +74,8 @@ class MenuHome extends StatelessWidget {
                                       ? UnderlineInputBorder()
                                       : null,
                                   onPressed: () {
-                                    vaFalse.categorySelector(index);
-                                    vaFalse.notifyListeners();
+                                    vaTrue.categorySelector(index);
+                                    vaTrue.notifyListeners();
                                   },
                                   child: Text(vaTrue.cat[index]?.categoryName,
                                       style: TextStyle(
@@ -100,9 +113,8 @@ class MenuHome extends StatelessWidget {
                 fontSize: 20)));
   }
 
-  search(vaFalse, vaTrue) {
-    return Container(
-      height: 80,
+  search() {
+    return Padding(
       padding: EdgeInsets.all(sm.w(4)),
       child: Row(children: [
         Flexible(
@@ -115,14 +127,14 @@ class MenuHome extends StatelessWidget {
               prefixIcon: 'search',
               keyBoardAction: TextInputAction.search,
               myOnChanged: (_val) {
-                vaFalse.txt = _val;
+                vaTrue.txt = _val;
               },
               atSubmit: (_val) {
-                vaFalse.setSearchText(_val);
+                vaTrue.setSearchText(_val);
                 vaTrue.notifyListeners();
               },
               prefClick: () {
-                vaFalse.setSearchText(
+                vaTrue.setSearchText(
                     (_mySearchEditTextController.text == null ||
                             _mySearchEditTextController.text == "")
                         ? null
@@ -130,30 +142,33 @@ class MenuHome extends StatelessWidget {
                 vaTrue.notifyListeners();
               }),
         ),
-        Column(children: [
-          Text(
-            'Only Veg',
-            style: TextStyle(
-                fontSize: 10, fontFamily: 'Gilroy-Medium', color: myGrey),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(left: sm.w(2), right: sm.w(1), top: sm.h(1)),
-            child: NeumorphicSwitch(
-              value: vaFalse.getIsVeg() ?? false,
-              height: sm.h(3.5),
-              style: NeumorphicSwitchStyle(
-                  activeThumbColor: Colors.green,
-                  activeTrackColor: Colors.green[100],
-                  inactiveTrackColor: Color(0xfff4f6fc),
-                  inactiveThumbColor: myBackGround),
-              onChanged: (val) {
-                vaFalse.setIsVeg(val);
-                vaFalse.catItems.isVeg = val;
-              },
+        Visibility(
+          visible: vaTrue.getisFoody(),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Text(
+              'Only Veg',
+              style: TextStyle(
+                  fontSize: 10, fontFamily: 'Gilroy-Medium', color: myGrey),
             ),
-          ),
-        ])
+            Padding(
+              padding: EdgeInsets.only(
+                  left: sm.w(2), right: sm.w(1), bottom: sm.h(3)),
+              child: NeumorphicSwitch(
+                value: vaTrue.getIsVeg() ?? false,
+                height: sm.h(3.5),
+                style: NeumorphicSwitchStyle(
+                    activeThumbColor: Colors.green,
+                    activeTrackColor: Colors.green[100],
+                    inactiveTrackColor: Color(0xfff4f6fc),
+                    inactiveThumbColor: myBackGround),
+                onChanged: (val) {
+                  vaTrue.setIsVeg(val);
+                  vaTrue.catItems.isVeg = val;
+                },
+              ),
+            ),
+          ]),
+        )
       ]),
     );
   }

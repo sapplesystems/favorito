@@ -1,5 +1,6 @@
 import 'package:favorito_user/component/Following.dart';
 import 'package:favorito_user/component/PinCodeVerificationScreen.dart';
+import 'package:favorito_user/ui/appointment/AppBookDetail.dart';
 import 'package:favorito_user/ui/appointment/BookAppointment.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
@@ -85,6 +86,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ChangePass());
       case '/bookAppointment':
         return MaterialPageRoute(builder: (_) => BookAppointment());
+      case '/appBookDetail':
+        return MaterialPageRoute(builder: (_) => AppBookDetail());
       default:
         return _errorRoute();
     }

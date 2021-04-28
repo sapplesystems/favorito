@@ -5,12 +5,10 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/model/menu/Category.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/menu/CallSwitcher.dart';
-import 'package:Favorito/utils/myColors.dart';
+import 'package:Favorito/ui/menu/MenuProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
-// import 'package:Favorito/model/menu/MenuBaseModel.dart';
+import 'package:provider/provider.dart';
 
-// funMenuCatList
 class CategoryForm extends StatefulWidget {
   String id;
   Category data;
@@ -20,15 +18,15 @@ class CategoryForm extends StatefulWidget {
 }
 
 class _CategoryFormState extends State<CategoryForm> {
+  bool isFirst = true;
   List title = ['Details', 'Slot start time', 'Slot end time'];
   List<TextEditingController> controller = [];
   List<String> daylist = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   List<String> selectedDays = [];
   MaterialLocalizations localizations;
   SizeManager sm;
-  ProgressDialog pr;
   Category da = Category();
-
+  MenuProvider vaTrue;
   @override
   void initState() {
     print("category_id: ${widget.id}");
@@ -54,22 +52,13 @@ class _CategoryFormState extends State<CategoryForm> {
 
   @override
   Widget build(BuildContext context) {
-    localizations = MaterialLocalizations.of(context);
-    pr = ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr.style(
-        message: 'Please wait...',
-        borderRadius: 8.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 8.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
-    sm = SizeManager(context);
+    if (isFirst) {
+      localizations = MaterialLocalizations.of(context);
+      sm = SizeManager(context);
+      vaTrue = Provider.of<MenuProvider>(context, listen: true);
+      vaTrue.callerIdSet(int.parse(widget.id));
+      isFirst = false;
+    }
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -96,7 +85,7 @@ class _CategoryFormState extends State<CategoryForm> {
                 ),
                 Column(
                   children: [
-                    CallSwitcher(id: widget.id),
+                    CallSwitcher(),
                     Text(
                       'Out of stock',
                       style: TextStyle(color: Colors.black, fontSize: 8),
@@ -194,10 +183,8 @@ class _CategoryFormState extends State<CategoryForm> {
   }
 
   setData(_map) async {
-    pr?.show();
     print("Data:${_map.toString()}");
     await WebService.funMenuCatEdit(_map).then((value) {
-      pr?.hide();
       if (value.status == 'success') Navigator.pop(context);
     });
   }

@@ -45,6 +45,7 @@ dependencies:
   image_cropper:
   flutter_rating_bar:
   barcode_scan:
+  place_picker:
   flutter:
     sdk: flutter
 

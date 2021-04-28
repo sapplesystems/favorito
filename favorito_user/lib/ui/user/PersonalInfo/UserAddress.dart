@@ -5,6 +5,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
+import 'package:place_picker/place_picker.dart';
 
 class UserAddress extends StatelessWidget {
   SizeManager sm;
@@ -35,11 +36,15 @@ class UserAddress extends StatelessWidget {
             Text('My Addresses',
                 style: TextStyle(fontSize: 22, fontFamily: 'Gilroy-Regular')),
             InkWell(
-                onTap: () {
+                onTap: () async{
                   data.setEditId(null);
-                  Navigator.of(context)
-                      .pushNamed('/addAddress')
-                      .whenComplete(() => vaTrue.getAddress());
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => PlacePicker("AIzaSyBhxep9O8VQz-JHmJW2XSzgjTRemLv91sI"))).then((value) {
+                    Provider.of<UserAddressProvider>(context,listen: false).setLocations(value);
+                    Navigator.of(context).pushNamed('/addAddress').whenComplete(() => vaTrue.getAddress());
+        });
+      
+                  
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: sm.h(2)),

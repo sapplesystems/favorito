@@ -293,9 +293,7 @@ class BusinessProfile extends StatelessWidget {
 
   ServicCart(BuildContext context) {
     BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
-    List<String> service = [
-      'Call Now',
-      'Chat' ];
+    List<String> service = ['Call Now', 'Chat'];
     service.addAll(vatrue?.attribute);
     List<IconData> serviceIcons = [
       Icons.call_outlined,
@@ -337,9 +335,9 @@ class BusinessProfile extends StatelessWidget {
                     break;
                   case 'Appointment':
                     {
-                      Provider.of<AppointmentProvider>(context,listen: false).baseUserAppointmentVerboseService(context);
-                      Navigator.of(context).pushNamed(
-                          '/bookAppointment');
+                      Provider.of<AppointmentProvider>(context, listen: false)
+                          .baseUserAppointmentVerboseService(context);
+                      Navigator.of(context).pushNamed('/bookAppointment');
                     }
                     break;
                   case 'Waitlist':

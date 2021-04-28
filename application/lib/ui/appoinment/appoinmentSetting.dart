@@ -46,8 +46,8 @@ class AppoinmentSetting extends StatelessWidget {
         ),
         body: RefreshIndicator(
           onRefresh: ()async{
-            vaTrue.getSettingdata();
-          },
+            vaTrue.refreshCall();
+          }, 
                   child: Builder(
             builder: (ctx) => Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4.0),
@@ -230,7 +230,7 @@ class AppoinmentSetting extends StatelessWidget {
             icon: Icon(Icons.add_circle_outline, size: 28, color: myRed),
             onPressed: () { 
               int _i = int.parse(ctrl.text);
-             ctrl.text = (((_i<8)&&(_i>0))?++_i:_i).toString();
+             ctrl.text = (((_i<8))?++_i:_i).toString();
               vaTrue.setDone(true);
             }
           )

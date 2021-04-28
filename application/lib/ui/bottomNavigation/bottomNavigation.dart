@@ -1,10 +1,9 @@
-import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
 import 'package:Favorito/ui/dashboard/dashboard.dart';
 import 'package:Favorito/ui/login/login.dart';
-import 'package:Favorito/ui/menu/Menu.dart';
+import 'package:Favorito/ui/menu/MenuHome.dart';
 import 'package:Favorito/ui/setting/setting/setting.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ class _bottomNavigationState extends State<bottomNavigation> {
     Bookings(),
     Appoinment(),
     // Bookings(),
-    Menu(),
+    MenuHome(),
     Setting()
   ];
 

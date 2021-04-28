@@ -21,9 +21,11 @@ class RIKeys {
       GlobalKey<DropdownSearchState<String>>(); //appointment setting  slot key
   static final josKeys12 = GlobalKey<FormState>(); //appointment add restriction
   static final josKeys13 = GlobalKey<FormState>(); //manual appointment
-static final josKeys14 =
+  static final josKeys14 =
       GlobalKey<DropdownSearchState<String>>(); //appointment manual  slot key
   static final josKeys15 =
       GlobalKey<DropdownSearchState<String>>(); //appointment manual  slot key
-  
+  static final josKeys16 = GlobalKey<FormState>(); //menuSetting FormKey key
+  static final josKeys17 = GlobalKey<ScaffoldState>(); //menuSetting FormKey key
+
 }

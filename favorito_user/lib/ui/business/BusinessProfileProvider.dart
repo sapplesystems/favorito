@@ -7,10 +7,12 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class BusinessProfileProvider extends BaseProvider {
   WaitListDataModel _waitListDataModel = WaitListDataModel();
@@ -94,17 +96,19 @@ class BusinessProfileProvider extends BaseProvider {
           break;
         }
 
-      case 2:{
-        print("tullu:2");
-        getBusinessHours();
-        break;
-      }
+      case 2:
+        {
+          print("tullu:2");
+          getBusinessHours();
+          break;
+        }
 
-      case 3:{
-        print("tullu:3");
-        getBusinessHours();
-        break;
-      }
+      case 3:
+        {
+          print("tullu:3");
+          getBusinessHours();
+          break;
+        }
       case 4:
         // callhere appointment verbose
         break;

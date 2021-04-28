@@ -25,8 +25,7 @@ class _PayOptionState extends State<PayOption> {
     List<Widget> widget = [];
     for (PayData _data in payDataList) {
       widget.add(Container(
-        color: _data.colors,
-        height: 30,
+        height: 40,
         child: RadioListTile(
           value: _data,
           groupValue: selectedPayData,
@@ -54,11 +53,3 @@ class _PayOptionState extends State<PayOption> {
     );
   }
 }
-
-//  Text(
-//     "   Select payment method",
-//     style: TextStyle(
-//       fontFamily: "Gilroy-Medium",
-//       fontSize: 16,
-//     ),
-//   ),

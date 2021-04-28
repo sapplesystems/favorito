@@ -1,48 +1,17 @@
-import 'package:Favorito/model/menu/MenuBaseModel.dart';
-import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/menu/MenuProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class CallSwitcher extends StatefulWidget {
-  String id;
-  CallSwitcher({this.id});
-  @override
-  _CallSwitcherState createState() => _CallSwitcherState();
-}
-
-class _CallSwitcherState extends State<CallSwitcher> {
+class CallSwitcher extends StatelessWidget {
+  MenuProvider vaTrue;
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<MenuBaseModel>(
-        future: WebService.funMenuCatList({"category_id": widget.id}),
-        builder: (BuildContext context, AsyncSnapshot<MenuBaseModel> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Container(
-              height: 10,
-              child: Center(
-                  child: Icon(
-                Icons.cached,
-              )),
-            );
-          else if (snapshot.hasError)
-            return Center(child: null);
-          else {
-            return Switch(
-              value: snapshot?.data?.data[0]?.outOfStock == 1,
-              onChanged: (value) async {
-                Map _map = {
-                  "id": widget.id,
-                  'out_of_stock':
-                      snapshot?.data?.data[0]?.outOfStock == 1 ? 0 : 1,
-                };
-                print("Data is :${_map}");
-                await WebService.funMenuCatEdit(_map).then((value) {
-                  if (value.status == 'success') setState(() {});
-                });
-              },
-              activeTrackColor: Color(0x56dd2525),
-              activeColor: Colors.red,
-            );
-          }
-        });
+    vaTrue = Provider.of<MenuProvider>(context, listen: true);
+    return Switch(
+      value: vaTrue.getCatData()?.outOfStock == 1,
+      onChanged: (value) => vaTrue.funMenuCatEdit(),
+      activeTrackColor: Color(0x56dd2525),
+      activeColor: Colors.red,
+    );
   }
 }

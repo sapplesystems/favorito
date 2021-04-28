@@ -16,6 +16,7 @@ class txtfieldboundry extends StatefulWidget {
   Function myOnChanged;
   RegExp myregex;
   Function prefClick;
+  String prefix;
   String error;
   FocusNode focusNode;
 
@@ -33,6 +34,7 @@ class txtfieldboundry extends StatefulWidget {
       this.myOnChanged,
       this.prefClick,
       this.error,
+      this.prefix,
       this.focusNode});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
@@ -56,6 +58,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
             labelStyle: TextStyle(color: myGrey, fontFamily: 'Gilroy-Regular'),
             counterText: "",
             hintText: widget.hint,
+            prefix: Text(widget.prefix ?? ''),
             hintStyle: TextStyle(color: myGrey, fontFamily: 'Gilroy-Regular'),
             fillColor: Colors.transparent,
             border: OutlineInputBorder(

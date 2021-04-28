@@ -271,7 +271,6 @@ class JobProvider extends ChangeNotifier {
       await WebService.serviceCall(requestModel).then((value) {
         var _v =
             CityModelResponse.fromJson(convert.json.decode(value.toString()));
-        print("ffff${_v.data.city}");
 
         try {
           if (_v.data.city == null) {

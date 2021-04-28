@@ -17,6 +17,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/Extentions.dart';
+import 'package:place_picker/place_picker.dart';
 
 class UserAddressProvider extends ChangeNotifier {
   String _profileImage;
@@ -32,6 +33,7 @@ class UserAddressProvider extends ChangeNotifier {
   List<Acces> acces = [];
   String _addresstype = 'Home';
   List<String> fList = ["Home", "Office", "Hotel", "Others"];
+  LocationResult locationResult;
   var id;
   UserAddressProvider() {
     for (int i = 0; i < 5; i++) acces.add(Acces());
@@ -125,7 +127,9 @@ class UserAddressProvider extends ChangeNotifier {
       'country': 'India',
       'landmark': acces[1].controller.text,
       'address': acces[0].controller.text,
-      'address_type': _addresstype
+      'address_type': _addresstype,
+      'longitude':locationResult.latLng.latitude,
+      'latitude':locationResult.latLng.longitude
     };
     Map _map2 = {
       'address_id': _editId,
@@ -135,13 +139,15 @@ class UserAddressProvider extends ChangeNotifier {
       'country': 'India',
       'landmark': acces[1].controller.text,
       'address': acces[0].controller.text,
-      'address_type': _addresstype
+      'address_type': _addresstype,
+      'longitude':locationResult.latLng.latitude,
+      'latitude':locationResult.latLng.longitude
     };
     await APIManager.modifyAddress(
             mode == 'Add' ? _map : _map2, RIKeys.josKeys6)
         .then((value) {
       if (value.status == "success") {
-        for (var v in acces) {
+        if(mode == 'Add')for (var v in acces) {
           v.controller.text = '';
           v.error = null;
         }
@@ -321,6 +327,25 @@ class UserAddressProvider extends ChangeNotifier {
   onWillPop(context) {
     this.onWillPop(context);
   }
+
+  void showPlacePicker(context) async {
+     locationResult = await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => PlacePicker("AIzaSyBhxep9O8VQz-JHmJW2XSzgjTRemLv91sI")));
+      print("sdf${locationResult.formattedAddress.length}");
+      acces[0].controller.text =locationResult.formattedAddress.toString().substring(0,70);
+      acces[1].controller.text =locationResult.locality;
+      acces[2].controller.text =locationResult.postalCode;
+      checkPin();
+      }
+
+  setLocations(LocationResult _val){
+    locationResult =_val;
+    print("sdf${locationResult.formattedAddress.length}");
+      acces[0].controller.text =locationResult.formattedAddress.toString().substring(0,70);
+      acces[1].controller.text =locationResult.locality;
+      acces[2].controller.text =locationResult.postalCode;
+      checkPin();
+  }    
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {
   //     if (value.status == 'success') {

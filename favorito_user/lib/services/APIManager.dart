@@ -15,6 +15,7 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
 import 'package:favorito_user/model/appModel/CheckAccountmodel.dart';
+import 'package:favorito_user/model/appModel/Menu/IsFoodModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
@@ -632,7 +633,7 @@ class APIManager {
 
   //booking
   static Future<BookingOrAppointmentListModel> baseUserBookingList(
-      Map _map, bool isBooking,GlobalKey<ScaffoldState> formKey) async {
+      bool isBooking, GlobalKey<ScaffoldState> formKey) async {
     if (!await utilProvider.checkInternet())
       return BookingOrAppointmentListModel(
           status: 'fail', message: 'Please check internet connections');
@@ -659,25 +660,22 @@ class APIManager {
         ? service.baseUserBookingList
         : service.baseUserAppointmentList;
 
-    print('Resuest data : ${_map.toString()}');
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
 
-    print("service.baseUserBookingList : $url");
-try{
-
-  response = await dio.post(url, data: _map, options: opt);
-  pr.hide();
-}on DioError catch (e) {
-  ExceptionHandler(e, pr, url, formKey);
-} finally {
-  pr.hide();
-}
+    print("url : $url");
+    try {
+      response = await dio.post(url, options: opt);
+      pr.hide();
+    } on DioError catch (e) {
+      ExceptionHandler(e, pr, url, formKey);
+    } finally {
+      pr.hide();
+    }
     return BookingOrAppointmentListModel.fromJson(
         convert.jsonDecode(response.toString()));
   }
-
 
   // baseUserAppointmentVerboseService
   static Future<AppSerModel> baseUserAppointmentVerboseService(Map _map) async {
@@ -690,18 +688,18 @@ try{
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print("service.baseUserBookingList : $url");
-    try{
-      response = await dio.post(url,data:_map, options: opt);
-    }on DioError catch (e) {
-      BotToast.showText(text: 'baseUserAppointmentVerboseService:${e.toString}');
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      BotToast.showText(
+          text: 'baseUserAppointmentVerboseService:${e.toString}');
     }
-    return AppSerModel.fromJson(
-        convert.jsonDecode(response.toString()));
+    return AppSerModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-
   // baseUserAppointmentPersonByServiceid
-  static Future<PersonListModel> baseUserAppointmentPersonByServiceid(Map _map) async {
+  static Future<PersonListModel> baseUserAppointmentPersonByServiceid(
+      Map _map) async {
     if (!await utilProvider.checkInternet())
       return PersonListModel(
           status: 'fail', message: 'Please check internet connections');
@@ -711,15 +709,14 @@ try{
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print("Url: : $url");
-    try{
-      response = await dio.post(url,data:_map, options: opt);
-    }on DioError catch (e) {
-      BotToast.showText(text: 'baseUserAppointmentPersonByServiceid:${e.toString}');
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      BotToast.showText(
+          text: 'baseUserAppointmentPersonByServiceid:${e.toString}');
     }
-    return PersonListModel.fromJson(
-        convert.jsonDecode(response.toString()));
+    return PersonListModel.fromJson(convert.jsonDecode(response.toString()));
   }
-
 
   // baseUserAppointmentSlots
   static Future<SlotModel> baseUserAppointmentSlots(Map _map) async {
@@ -732,15 +729,13 @@ try{
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print("Url: : $url");
-    try{
-      response = await dio.post(url,data:_map, options: opt);
-    }on DioError catch (e) {
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
       BotToast.showText(text: '$url:${e.toString}');
     }
-    return SlotModel.fromJson(
-        convert.jsonDecode(response.toString()));
+    return SlotModel.fromJson(convert.jsonDecode(response.toString()));
   }
-
 
   // create appointment
   static Future<BaseResponse> baseUserAppointmentCreate(Map _map) async {
@@ -753,17 +748,17 @@ try{
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     print("Url: : $url");
-    try{
-      response = await dio.post(url,data:_map, options: opt);
-    }on DioError catch (e) {
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
       BotToast.showText(text: '$url:${e.toString}');
     }
-    return BaseResponse.fromJson(
-        convert.jsonDecode(response.toString()));
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
 
   //getTableVerboseData --table booking
-  static Future<BookTableVerbose> baseUserBookingVerbose(Map _map,context) async {
+  static Future<BookTableVerbose> baseUserBookingVerbose(
+      Map _map, context) async {
     if (!await utilProvider.checkInternet())
       return BookTableVerbose(
           status: 'fail', message: 'Please check internet connections');
@@ -824,6 +819,19 @@ try{
     return MenuTabModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
+  //Menu
+  static Future<IsFoodModel> menusIsFoodItem(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String url = service.menusIsFoodItem;
+    print("$url : $url");
+    response = await dio.post(url, data: _map, options: opt);
+    print("url : ${response.toString}");
+    return IsFoodModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
 //Menu item
   static Future<MenuItemBaseModel> menuTabItemGet(Map _map) async {
     String token = await Prefs.token;
@@ -852,10 +860,10 @@ try{
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.userOrderCreateVerbose : ${service.userOrderCreateVerbose}");
-    response = await dio.post(service.userOrderCreateVerbose,
-        data: _map, options: opt);
-    print("service.userOrderCreateVerbose : ${response.toString}");
+    String url = service.userOrderCreateVerbose;
+    print("$url : ${service.userOrderCreateVerbose}");
+    response = await dio.post(url, data: _map, options: opt);
+    print("$url : ${response.toString}");
     return ModelOption.fromJson(convert.jsonDecode(response.toString()));
   }
 
