@@ -82,10 +82,9 @@ class _dashboardState extends State<dashboard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text("ver : 1.4", style: TextStyle(fontSize: 8)),
+                        Text("ver : 1.5", style: TextStyle(fontSize: 8)),
                         Text("Status : ",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                         Text(
                             is_verified == "0"
                                 ? "Offline"

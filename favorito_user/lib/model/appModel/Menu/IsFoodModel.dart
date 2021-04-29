@@ -1,15 +1,15 @@
-class MenuItemOnlyModel {
+class IsFoodModel {
   String status;
   String message;
   List<Data> data;
 
-  MenuItemOnlyModel({this.status, this.message, this.data});
+  IsFoodModel({this.status, this.message, this.data});
 
-  MenuItemOnlyModel.fromJson(Map<String, dynamic> json) {
+  IsFoodModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = [];
+      data = new List<Data>();
       json['data'].forEach((v) {
         data.add(new Data.fromJson(v));
       });
@@ -28,17 +28,17 @@ class MenuItemOnlyModel {
 }
 
 class Data {
-  int isActivated;
+  int isFood;
 
-  Data({this.isActivated});
+  Data({this.isFood});
 
   Data.fromJson(Map<String, dynamic> json) {
-    isActivated = json['is_activated'];
+    isFood = json['is_food'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['is_activated'] = this.isActivated;
+    data['is_food'] = this.isFood;
     return data;
   }
 }

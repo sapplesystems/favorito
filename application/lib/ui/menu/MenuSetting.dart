@@ -1,432 +1,278 @@
 import 'package:Favorito/component/CustomSwitch.dart';
-import 'package:Favorito/component/TimePicker.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/model/menu/MenuSettingModel.dart';
-import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/menu/MenuProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
-import '../../utils/myString.dart';
+import 'package:provider/provider.dart';
 
-class MenuSetting extends StatefulWidget {
-  @override
-  _MenuSettingState createState() => _MenuSettingState();
-}
-
-class _MenuSettingState extends State<MenuSetting> {
-  ProgressDialog pr;
-  // bool _isAcceptingOrdersSwitch = true;
-  // bool _isTakeAwaySwitch = true;
-  // bool _isDineInSwicth = true;
-  // bool _isDeliverySwitch = true;
-
-  TimeOfDay _intitialTime = TimeOfDay.now();
-
-  String _selectedTakeAwayStartTimeText;
-  String _selectedTakeAwayEndTimeText;
-  String _selectedDineInStartTimeText;
-  String _selectedDineInEndTimeText;
-  String _selectedDeliveryStartTimeText;
-  String _selectedDeliveryEndTimeText;
-
-  var _myTakeAwayMinimumAmountEditController = TextEditingController();
-  var _myTakeAwayPackagingEditController = TextEditingController();
-  var _myDeliveryMinimumAmountEditController = TextEditingController();
-  var _myDeliveryPackagingEditController = TextEditingController();
-  var fut;
-  initializeValues() {}
-
-  @override
-  void initState() {
-    initializeValues();
-    super.initState();
-    fut = WebService.funMenuSetting();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _selectedTakeAwayStartTimeText = _intitialTime.format(context);
-    _selectedTakeAwayEndTimeText = _intitialTime.format(context);
-    _selectedDineInStartTimeText = _intitialTime.format(context);
-    _selectedDineInEndTimeText = _intitialTime.format(context);
-    _selectedDeliveryStartTimeText = _intitialTime.format(context);
-    _selectedDeliveryEndTimeText = _intitialTime.format(context);
-    super.didChangeDependencies();
-  }
-
+class MenuSetting extends StatelessWidget {
+  bool isFirst = true;
+  SizeManager sm;
+  bool _needValidate = false;
+  MaterialLocalizations localizations;
+  MenuProvider vaTrue;
   @override
   Widget build(BuildContext context) {
-    SizeManager sm = SizeManager(context);
-
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(
-        message: 'Please wait...',
-        borderRadius: 8.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 8.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
+    if (isFirst) {
+      sm = SizeManager(context);
+      vaTrue = Provider.of<MenuProvider>(context, listen: true);
+      vaTrue
+        ..menuSettingsGetServiceCall()
+        ..setNeedSave(false);
+      localizations = MaterialLocalizations.of(context);
+      isFirst = false;
+    }
     return Scaffold(
+        key: RIKeys.josKeys17,
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          title: Text(
-            "Menu Setting",
-            style: TextStyle(color: Colors.black),
-          ),
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop()),
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text("Menu Setting", style: TextStyle(color: Colors.black)),
         ),
-        body: FutureBuilder<MenuSettingModel>(
-          future: fut,
-          builder:
-              (BuildContext context, AsyncSnapshot<MenuSettingModel> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: Text(loading));
-            else if (snapshot.hasError)
-              return Center(child: Text("Something went wrong..."));
-            else {
-              var v = snapshot.data.data;
-              _selectedTakeAwayStartTimeText =
-                  v.takeAwayStartTime.trim().substring(0, 5);
-              _selectedTakeAwayEndTimeText =
-                  v.takeAwayEndTime.trim().substring(0, 5);
-              _myTakeAwayMinimumAmountEditController.text =
-                  v.takeAwayMinimumBill.toString();
-              _myTakeAwayPackagingEditController.text =
-                  v.takeAwayPackagingCharge.toString();
-              //dining
-              _selectedDineInStartTimeText =
-                  v.dineInStartTime.trim().substring(0, 5);
-              _selectedDineInEndTimeText =
-                  v.dineInEndTime.trim().substring(0, 5);
-              //delevery
-              _selectedDeliveryStartTimeText =
-                  v.deliveryStartTime.trim().substring(0, 5);
-              _selectedDeliveryEndTimeText =
-                  v.deliveryEndTime.trim().substring(0, 5);
-              _myDeliveryMinimumAmountEditController.text =
-                  v.deliveryMiniumBill.toString();
-              _myDeliveryPackagingEditController.text =
-                  v.deliveryPackagingCharge.toString();
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListView(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Accepting Orders",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        CustomSwitch(
-                          value: v.acceptingOrder == 1,
-                          activeColor: Color(0xff1dd100),
-                          inactiveColor: Colors.red,
-                          activeText: "Online",
-                          inactiveText: "Offline",
-                          activeTextColor: Colors.white,
-                          inactiveTextColor: Colors.white,
-                          onChanged: (value) {
-                            setState(() {
-                              v.acceptingOrder = value ? 1 : 0;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Take Away",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+        body: Consumer<MenuProvider>(builder: (context, _data, child) {
+          return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Builder(builder: (context) {
+                return Form(
+                  key: RIKeys.josKeys16,
+                  autovalidate: _needValidate,
+                  child: ListView(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Accepting Orders",
+                                textScaleFactor: 1.2,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                            CustomSwitch(
+                              value: _data.acceptingOrder,
+                              activeColor: Color(0xff1dd100),
+                              inactiveColor: Colors.red,
+                              activeText: "Online",
+                              inactiveText: "Offline",
+                              activeTextColor: Colors.white,
+                              inactiveTextColor: Colors.white,
+                              onChanged: (value) => _data.acceptingOrderOnOff(),
                             ),
-                          ),
-                          Switch(
-                            value: v.takeAway == 1,
-                            onChanged: (value) {
-                              setState(() {
-                                v.takeAway = value ? 1 : 0;
-                              });
+                          ]),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Take Away",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
+                                Switch(
+                                    value: _data.takeAway,
+                                    onChanged: (value) {
+                                      _data.takeawayOnOff();
+                                    },
+                                    activeTrackColor: Colors.grey,
+                                    activeColor: Colors.red)
+                              ])),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 20.0, left: 30.0),
+                          child: Text("Time",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14))),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              for (int _i = 0; _i <= 1; _i++)
+                                InkWell(
+                                  onTap: () {
+                                    _data.getTimePicker(
+                                        _i, context, localizations);
+                                  },
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: myGreyLight2),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8))),
+                                      alignment: Alignment.center,
+                                      width: sm.w(24),
+                                      height: sm.h(5),
+                                      child: Text(vaTrue.controller[_i].text ??
+                                          'select')),
+                                ),
+                            ]),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              left: 32.0, top: 16.0, right: 16.0),
+                          child: txtfieldboundry(
+                              controller: _data.controller[2],
+                              title: "Minimum Bill",
+                              hint: "Enter minimum amount",
+                              security: false,
+                              prefix: '\u20B9: ',
+                              keyboardSet: TextInputType.number,
+                              maxlen: 10,
+                              maxLines: 1,
+                              myOnChanged: (_) => _data.setNeedSave(true),
+                              valid: true)),
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              left: 32.0, top: 16.0, right: 16.0),
+                          child: txtfieldboundry(
+                              controller: _data.controller[3],
+                              title: "Packaging Charge",
+                              hint: "Enter packaging charge",
+                              prefix: '\u20B9: ',
+                              keyboardSet: TextInputType.number,
+                              maxlen: 10,
+                              maxLines: 1,
+                              security: false,
+                              myOnChanged: (_) => _data.setNeedSave(true),
+                              valid: true)),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Dine-in",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16)),
+                              Switch(
+                                  value: _data.dineIn,
+                                  onChanged: (value) => _data.dineInOnOff(),
+                                  activeTrackColor: Colors.grey,
+                                  activeColor: Colors.red)
+                            ]),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 24.0, left: 32.0),
+                          child: Text("Time",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14))),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            for (int _i = 4; _i <= 5; _i++)
+                              InkWell(
+                                onTap: () {
+                                  _data.getTimePicker(
+                                      _i, context, localizations);
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: myGreyLight2),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8))),
+                                    alignment: Alignment.center,
+                                    width: sm.w(24),
+                                    height: sm.h(5),
+                                    child: Text(vaTrue.controller[_i].text ??
+                                        'select')),
+                              ),
+                          ]),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Delivery",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16)),
+                              Switch(
+                                  value: _data.delivery,
+                                  onChanged: (value) => _data.deliveryOnOff(),
+                                  activeTrackColor: Colors.grey,
+                                  activeColor: Colors.red)
+                            ]),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 24.0, left: 32.0),
+                          child: Text("Time",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14))),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            for (int _i = 6; _i <= 7; _i++)
+                              InkWell(
+                                onTap: () {
+                                  _data.getTimePicker(
+                                      _i, context, localizations);
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: myGreyLight2),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8))),
+                                    alignment: Alignment.center,
+                                    width: sm.w(24),
+                                    height: sm.h(5),
+                                    child: Text(vaTrue.controller[_i].text ??
+                                        'select')),
+                              ),
+                          ]),
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              left: 32.0, top: 16.0, right: 16.0),
+                          child: txtfieldboundry(
+                              controller: _data.controller[8],
+                              title: "Minimum Bill",
+                              hint: "Enter minimum amount",
+                              security: false,
+                              prefix: '\u20B9: ',
+                              keyboardSet: TextInputType.number,
+                              maxlen: 10,
+                              maxLines: 1,
+                              myOnChanged: (_) => _data.setNeedSave(true),
+                              valid: true)),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 32.0, top: 16.0, right: 16.0),
+                        child: txtfieldboundry(
+                            controller: _data.controller[9],
+                            title: "Packaging Charge",
+                            hint: "Enter packaging charge",
+                            security: false,
+                            prefix: '\u20B9: ',
+                            keyboardSet: TextInputType.number,
+                            maxlen: 10,
+                            maxLines: 1,
+                            myOnChanged: (_) => _data.setNeedSave(true),
+                            valid: true),
+                      ),
+                      Visibility(
+                        visible: _data.needSave,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: sm.w(15), vertical: 16.0),
+                          child: RoundedButton(
+                            clicker: () async {
+                              if (RIKeys.josKeys16.currentState.validate()) {
+                                _data.saveSettingServiceCall();
+                              } else {
+                                _needValidate = true;
+                              }
+                              _data.notifyListeners();
                             },
-                            activeTrackColor: Colors.grey,
-                            activeColor: Colors.red,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0, left: 30.0),
-                      child: Text(
-                        "Time",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            width: sm.w(20),
-                            child: TimePicker(
-                              selectedTimeText: _selectedTakeAwayStartTimeText,
-                              selectedTime: _intitialTime,
-                              onChanged: ((value) {
-                                _selectedTakeAwayStartTimeText = value;
-                              }),
-                            ),
-                          ),
-                          SizedBox(
-                            width: sm.w(20),
-                            child: TimePicker(
-                              selectedTimeText: _selectedTakeAwayEndTimeText,
-                              selectedTime: _intitialTime,
-                              onChanged: ((value) {
-                                _selectedTakeAwayEndTimeText = value;
-                              }),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 32.0, top: 16.0, right: 16.0),
-                      child: txtfieldboundry(
-                        controller: _myTakeAwayMinimumAmountEditController,
-                        title: "Minimum Bill",
-                        hint: "Enter minimum amount",
-                        security: false,
-                        valid: true,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 32.0, top: 16.0, right: 16.0),
-                      child: txtfieldboundry(
-                        controller: _myTakeAwayPackagingEditController,
-                        title: "Packaging Charge",
-                        hint: "Enter packaging charge",
-                        security: false,
-                        valid: true,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Dine-in",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Switch(
-                            value: v.dineIn == 1,
-                            onChanged: (value) {
-                              setState(() {
-                                v.dineIn = value ? 1 : 0;
-                              });
-                            },
-                            activeTrackColor: Colors.grey,
-                            activeColor: Colors.red,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0, left: 32.0),
-                      child: Text(
-                        "Time",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: sm.w(20),
-                          child: TimePicker(
-                            selectedTimeText: _selectedDineInStartTimeText,
-                            selectedTime: _intitialTime,
-                            onChanged: ((value) {
-                              _selectedDineInStartTimeText = value;
-                            }),
+                            clr: Colors.red,
+                            title: "Save",
                           ),
                         ),
-                        SizedBox(
-                          width: sm.w(20),
-                          child: TimePicker(
-                            selectedTimeText: _selectedDineInEndTimeText,
-                            selectedTime: _intitialTime,
-                            onChanged: ((value) {
-                              _selectedDineInEndTimeText = value;
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Delivery",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Switch(
-                            value: v.delivery == 1,
-                            onChanged: (value) {
-                              setState(() {
-                                v.delivery = value ? 1 : 0;
-                              });
-                            },
-                            activeTrackColor: Colors.grey,
-                            activeColor: Colors.red,
-                          ),
-                        ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0, left: 32.0),
-                      child: Text(
-                        "Time",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: sm.w(20),
-                          child: TimePicker(
-                            selectedTimeText: _selectedDeliveryStartTimeText,
-                            selectedTime: _intitialTime,
-                            onChanged: ((value) {
-                              _selectedDeliveryStartTimeText = value;
-                            }),
-                          ),
-                        ),
-                        SizedBox(
-                          width: sm.w(20),
-                          child: TimePicker(
-                            selectedTimeText: _selectedDeliveryEndTimeText,
-                            selectedTime: _intitialTime,
-                            onChanged: ((value) {
-                              _selectedDeliveryEndTimeText = value;
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 32.0, top: 16.0, right: 16.0),
-                      child: txtfieldboundry(
-                        controller: _myDeliveryMinimumAmountEditController,
-                        title: "Minimum Bill",
-                        hint: "Enter minimum amount",
-                        security: false,
-                        valid: true,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 32.0, top: 16.0, right: 16.0),
-                      child: txtfieldboundry(
-                        controller: _myDeliveryPackagingEditController,
-                        title: "Packaging Charge",
-                        hint: "Enter packaging charge",
-                        security: false,
-                        valid: true,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: sm.w(15), vertical: 16.0),
-                      child: RoundedButton(
-                        clicker: () async {
-                          pr.show();
-                          Map _map = {
-                            "accepting_order": v.acceptingOrder,
-                            "take_away": v.takeAway,
-                            "take_away_start_time":
-                                _selectedTakeAwayStartTimeText,
-                            "take_away_end_time": _selectedTakeAwayEndTimeText,
-                            "take_away_minimum_bill":
-                                _myTakeAwayMinimumAmountEditController.text,
-                            "take_away_packaging_charge":
-                                _myTakeAwayPackagingEditController.text,
-                            "dine_in": v.dineIn,
-                            "dine_in_start_time": _selectedDineInStartTimeText,
-                            "dine_in_end_time": _selectedDineInEndTimeText,
-                            "delivery": v.delivery,
-                            "delivery_start_time":
-                                _selectedDeliveryStartTimeText,
-                            "delivery_end_time": _selectedDeliveryEndTimeText,
-                            "delivery_minium_bill":
-                                _myDeliveryMinimumAmountEditController.text,
-                            "delivery_packaging_charge":
-                                _myDeliveryPackagingEditController.text
-                          };
-                          print("_map:${_map.toString()}");
-                          await WebService.funMenuSettingUpdate(_map)
-                              .then((value) {
-                            pr.hide();
-                            if (value.status == 'success')
-                              Navigator.pop(context);
-                            else
-                              BotToast.showText(text: value.message);
-                          });
-                        },
-                        clr: Colors.red,
-                        title: "Save",
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        ));
+                    ],
+                  ),
+                );
+              }));
+        }));
   }
 }

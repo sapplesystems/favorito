@@ -225,12 +225,7 @@ class AppBookProvider extends BaseProvider {
 
   AppoointmentList(context) async {
     print("1servicess are called:${this.getBusinessId()}");
-    await APIManager.baseUserBookingList({
-      "business_id":
-          Provider.of<BusinessProfileProvider>(context, listen: false)
-                  .getBusinessId() ??
-              ''
-    }, _isBook,RIKeys.josKeys22)
+    await APIManager.baseUserBookingList(_isBook,RIKeys.josKeys22)
         .then((value) {
       _message = value.message;
       if (value.status == 'success') {
@@ -243,12 +238,7 @@ class AppBookProvider extends BaseProvider {
 
   BookingList(context) async {
     _isProcessing = true;
-    await APIManager.baseUserBookingList({
-      // "business_id":
-      //     Provider.of<BusinessProfileProvider>(context, listen: false)
-      //             .getBusinessId() ??
-      //         ''
-    }, _isBook,RIKeys.josKeys22)
+    await APIManager.baseUserBookingList(_isBook,RIKeys.josKeys22)
         .then((value) {
       _message = value.message;
       if (value.status == 'success') {
@@ -337,4 +327,6 @@ acces[0].controller.text = Provider.of<PersonalInfoProvider>(context,listen: fal
     notifyListeners();
     // setPageData();
   }
+
+  
 }

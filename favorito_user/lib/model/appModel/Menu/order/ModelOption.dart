@@ -33,7 +33,7 @@ class ModelOptionData {
 
   ModelOptionData.fromJson(Map<String, dynamic> json) {
     if (json['order_type'] != null) {
-      orderType = new List<OrderType>();
+      orderType = [];
       json['order_type'].forEach((v) {
         orderType.add(new OrderType.fromJson(v));
       });

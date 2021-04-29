@@ -1,4 +1,4 @@
-import 'package:favorito_user/Providers/MenuHomeProvider.dart';
+import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuItem.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';

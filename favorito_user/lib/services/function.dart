@@ -81,10 +81,11 @@ class service {
       baseUserAppointment + 'get-appointment-slot';
 
   static final baseUserAppointmentCreate =
-      baseUserAppointment + 'set-appointment';
+      baseUserAppointment + 'set-booking-appointment';
 
-      
+//menu
   static final menuTabGet = userBusinessMenu + 'get-category';
+  static final menusIsFoodItem = userBusinessMenu + 'get-business-isfood';
   static final menuTabItemGet =
       userBusinessMenu + 'get-category-item'; //this is based on previous
 
@@ -116,6 +117,4 @@ class service {
   static final verifyLogin = base + 'user/verify-login-otp';
   static final emailRegister = base + 'user/email-register';
   static final changePassword = base + 'user/set-password';
-
-
 }

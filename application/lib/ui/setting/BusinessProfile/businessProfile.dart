@@ -166,9 +166,7 @@ class BusinessProfile extends StatelessWidget {
                                 ],
                               ),
                               Container(
-                                //_controller[6] is allign for this
                                 margin: EdgeInsets.all(8),
-
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(30),
                                     border:

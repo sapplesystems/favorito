@@ -61,13 +61,12 @@ class BookAppChild extends StatelessWidget {
                         itemBuilder: (BuildContext context, int index) {
                           print("name is :${
                               da[index].businessName}");
-                          return InkWell(
-                            onTap: () => {
-                              // showPopup(context, NewAppointment(1, data), 'Appointment')
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(top: sm.h(1)),
-                              child: Card(
+                          return Padding(
+                            padding: EdgeInsets.only(top: sm.h(1)),
+                            child: InkWell(
+                              onTap: (){
+                                // Navigator.pushNamed(context, '/appBookDetail');
+                              },                  child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12.0)),
@@ -134,22 +133,23 @@ class BookAppChild extends StatelessWidget {
                                                     fontWeight:
                                                     FontWeight.w400),
                                               ),
-                                            ),Visibility(
-                                              visible: da[index]
-                                                  .name!=null,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 2.0),
-                                                child: Text(
-                                                      da[index]
-                                                          .name,
-                                                  style: TextStyle(
-                                                      fontSize: 12,color:myGrey,
-                                                      fontWeight:
-                                                      FontWeight.w400),
-                                                ),
-                                              ),
                                             ),
+                                            // Visibility(
+                                            //   visible: da[index]
+                                            //       .name!=null,
+                                            //   child: Padding(
+                                            //     padding: const EdgeInsets.only(
+                                            //         top: 2.0),
+                                            //     child: Text(
+                                            //           da[index]
+                                            //               .name,
+                                            //       style: TextStyle(
+                                            //           fontSize: 12,color:myGrey,
+                                            //           fontWeight:
+                                            //           FontWeight.w400),
+                                            //     ),
+                                            //   ),
+                                            // ),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   top: 4.0),

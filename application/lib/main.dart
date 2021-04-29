@@ -8,6 +8,7 @@ import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
 import 'package:Favorito/ui/jobs/JobProvider.dart';
+import 'package:Favorito/ui/menu/MenuProvider.dart';
 import 'package:Favorito/ui/notification/NotificationProvider.dart';
 import 'package:Favorito/ui/offer/offersProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
@@ -45,6 +46,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => NotificationsProvider()),
       ChangeNotifierProvider(create: (context) => UtilProvider()),
       ChangeNotifierProvider(create: (context) => BookingProvider()),
+      ChangeNotifierProvider(create: (context) => MenuProvider()),
       ChangeNotifierProvider(create: (context) => AppoinmentProvider()),
     ], child: MyApp()));
   });
@@ -60,27 +62,22 @@ class MyApp extends StatelessWidget {
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       theme: ThemeData(
-        fontFamily: 'Gilroy-Regular',
-        textTheme: TextTheme(
-          title: TextStyle(
-              fontSize: 28, color: Colors.black, fontFamily: 'Gilroy-Bold'),
-          body1: TextStyle(fontSize: 16, color: Colors.black),
-          body2: TextStyle(fontSize: 18, color: Colors.black)
-        ),
-        primaryColor: myRed,
-        accentColor: myRedLight,
-        appBarTheme: AppBarTheme(
-          color: myBackGround,
-          elevation: 0
-        ),
-        cardTheme: CardTheme(shape: roundedRectangleBorder, elevation: 2),
-        iconTheme: IconThemeData(color: Colors.red),
-        scaffoldBackgroundColor: myBackGround,
-        bottomAppBarColor: myBackGround,
-        bottomAppBarTheme: BottomAppBarTheme(color: myBackGround),
-        primarySwatch: Colors.red,
-        visualDensity: VisualDensity.adaptivePlatformDensity
-      ),
+          fontFamily: 'Gilroy-Regular',
+          textTheme: TextTheme(
+              title: TextStyle(
+                  fontSize: 28, color: Colors.black, fontFamily: 'Gilroy-Bold'),
+              body1: TextStyle(fontSize: 16, color: Colors.black),
+              body2: TextStyle(fontSize: 18, color: Colors.black)),
+          primaryColor: myRed,
+          accentColor: myRedLight,
+          appBarTheme: AppBarTheme(color: myBackGround, elevation: 0),
+          cardTheme: CardTheme(shape: roundedRectangleBorder, elevation: 2),
+          iconTheme: IconThemeData(color: Colors.red),
+          scaffoldBackgroundColor: myBackGround,
+          bottomAppBarColor: myBackGround,
+          bottomAppBarTheme: BottomAppBarTheme(color: myBackGround),
+          primarySwatch: Colors.red,
+          visualDensity: VisualDensity.adaptivePlatformDensity),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
     );

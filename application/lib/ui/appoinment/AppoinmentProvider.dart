@@ -42,6 +42,9 @@ class AppoinmentProvider extends ChangeNotifier {
   DateTime _initialDate = DateTime.now();
 int _selectedAppointmentId =0;
   AppoinmentProvider() {
+    refreshCall();
+  }
+  refreshCall(){
     getPersonCall();
     getAllService();
     getRestriction();
@@ -518,7 +521,7 @@ cleanAllPerson(){
       "end_time": _endTime,
       "advance_booking_start_days": '0',
       "advance_booking_end_days": controller[9].text,
-      "advance_booking_hours": controller[10].text,
+      "advance_booking_hours": (int.parse(controller[10].text))*60,
       "slot_length": controller[11].text,
       "booking_per_slot": controller[12].text,
       "booking_per_day": controller[13].text,
@@ -574,7 +577,7 @@ cleanAllPerson(){
         _startTime = _settingData?.startTime?.trim()?.substring(0, 5);
         _endTime = _settingData?.endTime?.trim()?.substring(0, 5);
         controller[9].text = _settingData.advanceBookingEndDays.toString();
-        controller[10].text = _settingData.advanceBookingHours.toString();
+        controller[10].text = '${(_settingData.advanceBookingHours/60).toString().substring(0,1)}';
         controller[11].text = _settingData.slotLength.toString();
         controller[12].text = _settingData.bookingPerSlot.toString();
         controller[13].text = _settingData.bookingPerDay.toString();

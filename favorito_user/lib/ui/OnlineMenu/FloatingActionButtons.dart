@@ -1,4 +1,4 @@
-import 'package:favorito_user/Providers/MenuHomeProvider.dart';
+import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/component/RoundedButton.dart';
 import 'package:favorito_user/config/SizeManager.dart';
@@ -91,11 +91,10 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
             return Container(
               height: sm.h(90),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
-              ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
               child: ListView(
                 physics: new NeverScrollableScrollPhysics(),
                 children: <Widget>[
@@ -142,39 +141,37 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
 
   header(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(top: sm.w(4)),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: myGreyLight,
-              ),
-              width: sm.w(18),
-              height: 6,
+      child: Column(children: [
+        Center(
+          child: Container(
+            margin: EdgeInsets.only(top: sm.w(4)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: myGreyLight,
             ),
+            width: sm.w(18),
+            height: 6,
           ),
-          Row(
-            children: [
-              SizedBox(width: sm.w(2)),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: sm.w(5), horizontal: sm.w(2)),
-                child: SvgPicture.asset(
-                  title == yourBasket
-                      ? 'assets/icon/basket.svg'
-                      : 'assets/icon/customize.svg',
-                  height: sm.h(4),
-                ),
+        ),
+        Row(
+          children: [
+            SizedBox(width: sm.w(2)),
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(vertical: sm.w(5), horizontal: sm.w(2)),
+              child: SvgPicture.asset(
+                title == yourBasket
+                    ? 'assets/icon/basket.svg'
+                    : 'assets/icon/customize.svg',
+                height: sm.h(4),
               ),
-              Text(title,
-                  style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 20)),
-            ],
-          ),
-          Divider(),
-        ],
-      ),
+            ),
+            Text(title,
+                style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 20)),
+          ],
+        ),
+        Divider(),
+      ]),
     );
   }
 

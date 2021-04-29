@@ -1300,8 +1300,7 @@ class WebService {
 
   //***********************************************appointment*****************************/
 
-  static Future<appointmentSettingModel> funAppoinmentSetting(
-    ) async {
+  static Future<appointmentSettingModel> funAppoinmentSetting() async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentSetting;
     opt = Options(
@@ -1317,8 +1316,7 @@ class WebService {
     }
   }
 
-  static Future<RestrictionModel> funAppoinmentRestriction(
-      ) async {
+  static Future<RestrictionModel> funAppoinmentRestriction() async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentRestriction;
     opt = Options(
@@ -1349,8 +1347,7 @@ class WebService {
       return BaseResponseModel.fromJson(
           convert.json.decode(response.toString()));
     }
-     return BaseResponseModel.fromJson(
-          convert.json.decode(response.toString()));
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<BaseResponseModel> funAppoinmentServicePersonOnOff(
@@ -1374,8 +1371,7 @@ class WebService {
     }
   }
 
-  static Future<BaseResponseModel> funAppoinmentSaveService(
-      Map _map) async {
+  static Future<BaseResponseModel> funAppoinmentSaveService(Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentSaveService;
     opt = Options(
@@ -1460,8 +1456,7 @@ class WebService {
     }
   }
 
-  static Future<BaseResponseModel> funAppoinmentSaveSetting(
-      Map _map) async {
+  static Future<BaseResponseModel> funAppoinmentSaveSetting(Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentSaveSetting;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1475,10 +1470,11 @@ class WebService {
     }
   }
 
-  static Future<BaseResponseModel> funAppoinmentCreate(
-      Map _map,isnew) async {
+  static Future<BaseResponseModel> funAppoinmentCreate(Map _map, isnew) async {
     String token = await Prefs.token;
-    String url = isnew?serviceFunction.funAppoinmentCreate:serviceFunction.funAppoinmentEdit;
+    String url = isnew
+        ? serviceFunction.funAppoinmentCreate
+        : serviceFunction.funAppoinmentEdit;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
     response = await dio.post(url, data: _map, options: opt);
 
@@ -1490,12 +1486,11 @@ class WebService {
     }
   }
 
-  static Future<appointmentModel> funAppoinmentDetail(
-      Map _map) async {
+  static Future<appointmentModel> funAppoinmentDetail(Map _map) async {
     String token = await Prefs.token;
     String url = serviceFunction.funAppoinmentDetail;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(url,data:_map, options: opt);
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1525,7 +1520,7 @@ class WebService {
     print("tiken:${token}");
     String url = serviceFunction.funAppoinmentList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(url,data:_map, options: opt);
+    response = await dio.post(url, data: _map, options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
@@ -1818,7 +1813,7 @@ class WebService {
     }
   }
 
-  static Future<MenuItemOnlyModel> funMenuStatusChange(Map _map) async {
+  static Future<dynamic> funMenuStatusChange(Map _map) async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuStatusChange;
@@ -1832,14 +1827,16 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return MenuItemOnlyModel.fromJson(
-          convert.json.decode(response.toString()));
+      return _map['api_type'] == 'get'
+          ? MenuItemOnlyModel.fromJson(convert.json.decode(response.toString()))
+          : BaseResponseModel.fromJson(
+              convert.json.decode(response.toString()));
     }
   }
 
-  static Future<MenuBaseModel> funMenuList(context) async {
+  static Future<MenuBaseModel> funMenuList() async {
     String token = await Prefs.token;
-    print("tiken:${token}");
+    print("token:${token}");
     String url = serviceFunction.funMenuList;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -1847,7 +1844,6 @@ class WebService {
     response = await dio.post(url, options: opt);
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
-      print("Response is :${response.toString()}");
       return MenuBaseModel.fromJson(convert.json.decode(response.toString()));
     }
   }
@@ -1995,6 +1991,7 @@ class WebService {
       return ProfileImage.fromJson(convert.json.decode(response.toString()));
     }
   }
+
   static Future<websiteModel> websitesList() async {
     String token = await Prefs.token;
     print("tiken:${token}");

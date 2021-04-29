@@ -266,7 +266,7 @@ class Appoinment extends StatelessWidget {
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 12),
                                             child: AutoSizeText(
-                                              va.specialNotes,
+                                              va.specialNotes??"",
                                               maxLines: 3,
                                               overflow: TextOverflow.ellipsis,
                                               minFontSize: 12,

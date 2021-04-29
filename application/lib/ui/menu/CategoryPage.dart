@@ -2,15 +2,16 @@ import 'package:Favorito/model/menu/Category.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/menu/CallSwitcher.dart';
 import 'package:Favorito/ui/menu/CategoryForm.dart';
+import 'package:Favorito/ui/menu/MenuProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:Favorito/model/menu/MenuBaseModel.dart';
+import 'package:provider/provider.dart';
 import '../../utils/myString.dart';
 
 class CategoryPage extends StatefulWidget {
   String title;
-  String id;
+  int id;
   CategoryPage({this.title, this.id});
 
   @override
@@ -18,31 +19,12 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  ProgressDialog pr;
+  MenuProvider vaTrue;
   Category data = Category();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(
-        message: 'Please wait...',
-        borderRadius: 8.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 8.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
+    vaTrue = Provider.of<MenuProvider>(context, listen: true);
     return SafeArea(
         child: Scaffold(
             body: FutureBuilder<MenuBaseModel>(
@@ -53,6 +35,7 @@ class _CategoryPageState extends State<CategoryPage> {
         else if (data.hasError)
           return Center(child: Text("Something went wrong.."));
         else {
+          vaTrue.callerIdSet(widget.id);
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListView(
@@ -87,9 +70,9 @@ class _CategoryPageState extends State<CategoryPage> {
                       flex: 1,
                       child: Column(
                         children: [
-                          CallSwitcher(id: widget.id.toString()),
+                          CallSwitcher(),
                           Text(
-                            'Out of stock',
+                            'Out of stock11',
                             style: TextStyle(color: Colors.black, fontSize: 8),
                           ),
                         ],
