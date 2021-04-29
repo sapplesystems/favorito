@@ -12,6 +12,8 @@ exports.getMenuCategories = async function(req, res, next) {
         } else {
             business_id = req.body.business_id
         }
+
+
         var day_name = moment().format('dddd').substring(0, 3);
         current_time = moment().format('H:mm:ss')
         var COND = `b_m_c.business_id='${business_id}' AND b_m_c.menu_type_id='${menu_type_id}' AND b_m_c.is_activated='1' AND b_m_c.available_on LIKE '%${day_name}%' AND b_m_c.deleted_at IS NULL AND b_m_c.slot_start_time < '${current_time}' AND b_m_c.slot_end_time >'${current_time}'`
@@ -268,6 +270,46 @@ exports.businessMenuSetting = async(req, res) => {
     } catch (error) {
         return res.status(400).json({ status: 'error', message: 'Something went wrong', error });
     }
+}
+
+exports.getItemCustomizationDetial = async(req, res) => {
+    if (!req.body.item_id) {
+        return res.status(400).json({ status: 'error', message: 'item_id is missing' });
+    } else {
+        item_id = req.body.item_id
+    }
+
+    sqlItemDetail = `select iam.id as attribute_id ,iam.name as attribute_name , icm.customization_price as customization_price, iam.multi_selection as multi_selection  from item_attribute_master as iam \n\
+    inner join item_customize_master as icm on icm.attribute_id = iam.id \n\
+    where icm.item_id = '${item_id}'`
+    resultItemDetail = await exports.run_query(sqlItemDetail)
+
+    if (resultItemDetail == '') {
+        return res.status(200).json({ status: 'success', message: 'No customization is available on this item', data: [] });
+    }
+
+    for (let i = 0; i < resultItemDetail.length; i++) {
+        sqlAttributeOptions = `select iao.id_attribute, iao.id as option_id, iao.option as name from item_attribute_option as iao where id_attribute = '${resultItemDetail[i].attribute_id}'`
+        resultAttributeOptions = await exports.run_query(sqlAttributeOptions)
+        resultItemDetail[i].customization_option = resultAttributeOptions
+    }
+
+    return res.status(200).json({ status: 'success', message: 'success', data: resultItemDetail });
+}
+
+exports.getBusinessIsFood = async(req, res) => {
+    if (!req.body.business_id) {
+        return res.status(400).json({ status: 'error', message: 'business_id is missing' });
+    } else {
+        business_id = req.body.business_id
+    }
+
+    sqlIsFood = `select business_category_id from business_master where business_id = '${business_id}'`
+    resultIsFood = await exports.run_query(sqlIsFood)
+    if (resultIsFood[0].business_category_id == 7 || resultIsFood[0].business_category_id == 13 || resultIsFood[0].business_category_id == 17) {
+        return res.status(200).json({ status: 'success', message: 'success', data: [{ is_food: 1 }] });
+    }
+    return res.status(200).json({ status: 'success', message: 'success', data: [{ is_food: 0 }] });
 }
 
 exports.run_query = (sql, param = false) => {
