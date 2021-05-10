@@ -40,4 +40,10 @@ router.post('/save-setting', multer().array(), CheckAuth, BusinessBookingControl
  */
 router.post('/setting', CheckAuth, BusinessBookingController.get_setting);
 
+router.post('/set-restriction-date', CheckAuth, BusinessBookingController.setRestrictionDate);
+
+router.post('/get-restriction-date', CheckAuth, BusinessBookingController.getRestrictionDate);
+
+router.post('/delete-restriction-date', CheckAuth, BusinessBookingController.deleteRestrictionDate);
+
 module.exports = router;

@@ -14,6 +14,7 @@ var storage_user_profile = multer.diskStorage({
         mkdirp.sync('./public/uploads/');
         cb(null, './public/uploads/');
     },
+
     filename: function(req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
     }

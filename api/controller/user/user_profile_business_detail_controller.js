@@ -40,6 +40,49 @@ exports.getBusinessDetail = async function(req, res) {
             sql_attributes = `SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attributes_master as b_a_m ON b_a_m.id = b_a.attributes_id WHERE b_a.business_id= '${business_id}'`
             result_attributes = await exports.run_query(sql_attributes)
 
+            // getting the booking setting
+
+            sqlGetBookingSetting = `select id from business_booking_setting where business_id = '${business_id}'`
+            resultGetBookingSetting = await exports.run_query(sqlGetBookingSetting)
+
+            // getting the menu setting 
+            sqlGetMenuSetting = `select id from business_menu_setting where business_id = '${business_id}'`
+            resultGetMenuSetting = await exports.run_query(sqlGetMenuSetting)
+
+            // getting the menu setting 
+            sqlGetWaitlistSetting = `select id from business_waitlist_setting where business_id = '${business_id}'`
+            resultGetWaitlistSetting = await exports.run_query(sqlGetWaitlistSetting)
+
+            // getting the menu setting 
+            sqlGetAppointmentSetting = `select id from business_appointment_setting where business_id = '${business_id}'`
+            resultGetAppointmentSetting = await exports.run_query(sqlGetAppointmentSetting)
+                // return res.send(resultGetMenuSetting)
+
+
+            // removing the attribute if settings are not saved
+            for (let i = 0; i < result_attributes.length; i++) {
+                const element = result_attributes[i];
+                if (element.attribute_name == 'Booking' && resultGetBookingSetting == '') {
+                    result_attributes.splice(i, 1)
+                }
+
+                if (element.attribute_name == 'Online Menu' && resultGetMenuSetting == '') {
+                    result_attributes.splice(i, 1)
+                }
+
+                if (element.attribute_name == 'Take away' && resultGetMenuSetting == '') {
+                    result_attributes.splice(i, 1)
+                }
+
+                if (element.attribute_name == 'Waitlist' && resultGetWaitlistSetting == '') {
+                    result_attributes.splice(i, 1)
+                }
+
+                if (element.attribute_name == 'Appointment' && resultGetAppointmentSetting == '') {
+                    result_attributes.splice(i, 1)
+                }
+            }
+
             sql_relation = `SELECT r_c.relationship_description as relation FROM user_business_relation AS u_b_r LEFT JOIN relationship_code AS r_c ON u_b_r.relation_type = r_c.relationship_code WHERE source_id = '${user_id}' AND target_id = '${business_id}'`
 
             result_relation = await exports.run_query(sql_relation)

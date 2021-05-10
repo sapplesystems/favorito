@@ -1,6 +1,8 @@
 const e = require('express');
 var db = require('../config/db');
 
+const moment = require('moment')
+
 var today = new Date();
 var today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
@@ -384,4 +386,98 @@ function newstarttime(datetime, minutes) {
         ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
         ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
     return tempTime;
+}
+
+exports.setRestrictionDate = async(req, res) => {
+
+    business_id = req.userdata.business_id;
+
+    if (!req.body.start_date) {
+        return res.status(400).send({ status: 'error', message: 'start_date is missing' });
+    } else {
+        startDate = req.body.start_date
+    }
+
+    endDate = null
+
+    if (req.body.end_date) {
+        endDate = req.body.end_date
+    }
+
+    array_restricted_date = []
+
+    startDateMoment = moment(moment(startDate))
+    if (endDate) {
+        endDateMoment = moment(moment(endDate))
+    } else {
+        endDateMoment = null
+    }
+
+    tempDate = startDateMoment
+
+    if (endDateMoment) {
+        while (!tempDate.isAfter(endDateMoment)) {
+            array_restricted_date.push([business_id, tempDate.format('YYYY-MM-DD')])
+            tempDate = tempDate.add(1, 'day')
+        }
+    } else {
+        array_restricted_date.push([business_id, tempDate.format('YYYY-MM-DD')])
+    }
+
+    try {
+        sqlInsertRestriction = `insert into business_booking_restriction (business_id,restriction_date) values ?`
+        resultInsertRestriction = await exports.run_query(sqlInsertRestriction, [array_restricted_date])
+        return res.status(200).json({ status: 'success', message: 'Restriction added successfully' });
+    } catch (error) {
+        return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
+    }
+}
+
+exports.getRestrictionDate = async(req, res) => {
+    try {
+        sqlGetRestriction = `select DATE_FORMAT(restriction_date, '%Y-%m-%d') restriction_date from business_booking_restriction where business_id = '${req.userdata.business_id}'`
+        resultGetRestriction = await exports.run_query(sqlGetRestriction)
+        return res.status(200).json({ status: 'success', message: 'Restriction added successfully', date: resultGetRestriction });
+    } catch (error) {
+        return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
+    }
+}
+
+exports.deleteRestrictionDate = async(req, res) => {
+    if (!req.body.restriction_id) {
+        return res.status(400).send({ status: 'error', message: 'restriction_id is missing' });
+    }
+
+    try {
+        sqlDeleteRestriction = `delete from business_booking_restriction where id = ${req.body.restriction_id}`
+        resultDeleteRestriction = await exports.run_query(sqlDeleteRestriction)
+        return res.status(200).json({ status: 'success', message: 'Deleted successfull' });
+    } catch (error) {
+        return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
+    }
+}
+
+exports.run_query = (sql, param = false) => {
+    if (param == false) {
+        return new Promise((resolve, reject) => {
+            db.query(sql, (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    } else {
+        return new Promise((resolve, reject) => {
+            db.query(sql, param, (error, result) => {
+                if (error) {
+                    console.log(error)
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            })
+        })
+    }
 }

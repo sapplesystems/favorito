@@ -37,6 +37,32 @@ exports.getOrderList = async function(req, res, next) {
     }
 }
 
+// exports.getOrderDetail = async function(req, res, next) {
+//     if (req.body.order_id) {
+//         order_id = req.body.order_id
+//     } else {
+//         return res.status(400).json({ status: 'failed', message: 'order_id is missing' });
+//     }
+//     var sql_order = "SELECT b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type, b_o.created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.order_id = '" + order_id + "' GROUP BY b_o.order_id"
+//     var sql_order_detail = `SELECT b_m_i.id as item_id , b_m_i.title as item,b_o_d.quantity,b_m_i.price as per_price,b_m_i.type as type FROM business_orders as b_o JOIN business_order_detail as b_o_d JOIN business_menu_item as b_m_i ON b_o.order_id = b_o_d.order_id AND b_m_i.id =b_o_d.item_id WHERE b_o_d.order_id = '${order_id}'`
+
+//     // try {
+//     result_order = await exports.run_query(sql_order)
+//     return res.send(result_order)
+//     result_order[0].delivery_charge = result_order[0].total_amount * 5 / 100
+//     result_order_detail = await exports.run_query(sql_order_detail)
+//     for (let i = 0; i < result_order_detail.length; i++) {
+//         const element = result_order_detail[i];
+//         element.total_price = element.per_price * element.quantity
+//     }
+//     return res.status(200).send({ status: 'success', message: 'Successfull', data: [{ order: result_order[0], order_detail: result_order_detail }] })
+//         // } catch (error) {
+//     return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+//     // }
+
+// }
+
+
 exports.getOrderDetail = async function(req, res, next) {
     if (req.body.order_id) {
         order_id = req.body.order_id
@@ -46,6 +72,8 @@ exports.getOrderDetail = async function(req, res, next) {
     var sql_order = "SELECT b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type, b_o.created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.order_id = '" + order_id + "' GROUP BY b_o.order_id"
     var sql_order_detail = `SELECT b_m_i.id as item_id , b_m_i.title as item,b_o_d.quantity,b_m_i.price as per_price,b_m_i.type as type FROM business_orders as b_o JOIN business_order_detail as b_o_d JOIN business_menu_item as b_m_i ON b_o.order_id = b_o_d.order_id AND b_m_i.id =b_o_d.item_id WHERE b_o_d.order_id = '${order_id}'`
 
+
+
     try {
         result_order = await exports.run_query(sql_order)
         result_order[0].delivery_charge = result_order[0].total_amount * 5 / 100
@@ -53,6 +81,14 @@ exports.getOrderDetail = async function(req, res, next) {
         for (let i = 0; i < result_order_detail.length; i++) {
             const element = result_order_detail[i];
             element.total_price = element.per_price * element.quantity
+            sqlItemCustomization = `select boicd.id,iam.name,iao.option, boicd.attribute_id,boicd.option_id,boicd.price as customization_price from business_order_item_customization_detail as boicd \n\
+                left join item_attribute_master as iam on iam.id = boicd.attribute_id \n\
+                left join item_attribute_option as iao on iao.id = boicd.option_id\n\
+                where boicd.order_id = '${order_id}' and boicd.item_id = '${element.item_id}'`
+                // console.log('element.option_id', element)
+            resultItemCustomization = await exports.run_query(sqlItemCustomization)
+            element.item_custumization = resultItemCustomization
+
         }
         return res.status(200).send({ status: 'success', message: 'Successfull', data: [{ order: result_order[0], order_detail: result_order_detail }] })
     } catch (error) {
@@ -226,13 +262,29 @@ exports.createOrder = async function(req, res, next) {
                 var qty = Number(category_items[j].qty);
                 var price = Number(category_items[j].price);
                 // var tax_percent = Number(category_items[j].tax)
-                var tax = Number(category_items[j].tax) * qty;
-                var amount = (price * qty) + tax;
+                // var tax = Number(category_items[j].tax) * qty;
 
+                // calculate the custumization price for this item
+                item_custumization_price = 0;
+                if (category_items[j].attributes) {
+                    for (let c = 0; c < category_items[j].attributes.length; c++) {
+                        insertDataCustomizationItem = {
+                            order_id: order_id,
+                            item_id: item_id,
+                            attribute_id: category_items[j].attributes[c].attribute_id,
+                            option_id: category_items[j].attributes[c].option_id,
+                            price: category_items[j].attributes[c].price,
+                        }
+                        sqlInsertCustomizationItem = "INSERT INTO business_order_item_customization_detail set ?";
+                        await exports.run_query(sqlInsertCustomizationItem, insertDataCustomizationItem)
+                        item_custumization_price += (category_items[j].attributes[c].price)
+                    }
+                }
+                var amount = ((price * qty) + item_custumization_price) + (((price * qty) + item_custumization_price) * Number(category_items[j].tax) / 100);
                 total_price = (total_price + price);
+                tax = ((price * qty) + item_custumization_price) * Number(category_items[j].tax) / 100
                 total_tax = (total_tax + tax);
                 total_amount = (total_amount + amount);
-
                 var order_detail = {
                     business_id: req.body.business_id,
                     order_id: order_id,

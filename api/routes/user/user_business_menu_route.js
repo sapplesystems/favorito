@@ -14,4 +14,8 @@ router.post('/search-item-category', CheckAuth, UserBusinessMenuController.searc
 
 router.post('/get-menu-setting', CheckAuth, UserBusinessMenuController.businessMenuSetting);
 
+router.post('/get-item-customization-detail', CheckAuth, UserBusinessMenuController.getItemCustomizationDetial);
+
+router.post('/get-business-isfood', CheckAuth, UserBusinessMenuController.getBusinessIsFood);
+
 module.exports = router;
