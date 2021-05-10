@@ -31,7 +31,12 @@ class _mostPopularState extends State<MostPopular> {
         builder: (BuildContext context,
             AsyncSnapshot<TrendingBusinessModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: Text(loading));
+            return Center(
+                child: Text(
+              loading,
+              style:
+                  Theme.of(context).textTheme.headline6.copyWith(fontSize: 12),
+            ));
           else if (snapshot.hasError)
             return Center(child: Text('Error : ${snapshot.error}'));
           else if (dataList != snapshot.data.data) {
@@ -80,10 +85,12 @@ class _mostPopularState extends State<MostPopular> {
                                           .businessName
                                           .substring(0, 12) +
                                       '..',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Gilroy-Regular',
-                                  fontWeight: FontWeight.w400)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400)),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -104,7 +111,11 @@ class _mostPopularState extends State<MostPopular> {
                                 ),
                                 Text(
                                   dataList[index].avgRating.toString(),
-                                  style: TextStyle(color: myOrangeBase),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(
+                                          fontSize: 12, color: myOrangeBase),
                                 )
                               ]),
                         ),

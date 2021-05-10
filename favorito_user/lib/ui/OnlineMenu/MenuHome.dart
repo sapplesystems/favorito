@@ -7,8 +7,10 @@ import 'package:favorito_user/ui/OnlineMenu/FloatingActionButtons.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
+import '../../utils/myString.dart';
 
 class MenuHome extends StatelessWidget {
   var _mySearchEditTextController = TextEditingController();
@@ -22,7 +24,6 @@ class MenuHome extends StatelessWidget {
     if (isFisrt) {
       sm = SizeManager(context);
       vaTrue = Provider.of<MenuHomeProvider>(context, listen: true);
-      vaTrue.userOrderCreateVerbose();
       vaTrue
         ..setBusinessIdName(
             Provider.of<BusinessProfileProvider>(context, listen: true)
@@ -31,86 +32,105 @@ class MenuHome extends StatelessWidget {
             Provider.of<BusinessProfileProvider>(context, listen: true)
                 .getBusinessProfileData()
                 .businessName)
-        ..checkisFoody()
         ..isVegFilter = false
+        ..checkisFoody()
+        ..userOrderCreateVerbose()
+        ..getMenuItem()
         ..menuTabGet();
       isFisrt = false;
     }
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: myBackGround,
-        appBar: myAppBar(),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            vaTrue.notifyListeners();
-          },
-          child: ListView(children: [
-            Text(
-                Provider.of<BusinessProfileProvider>(context, listen: true)
-                        .getBusinessProfileData()
-                        .businessName ??
-                    '',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 20)),
-            Divider(),
-            search(),
-            Container(
-              height: 500,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      height: sm.h(6),
-                      child: Consumer<MenuHomeProvider>(
-                        builder: (context, data, child) {
-                          if (data.cat.length == 0) vaTrue.notifyListeners();
-
-                          return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: data.cat.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return MaterialButton(
-                                  shape: vaTrue.catItems.selectedCatId == index
-                                      ? UnderlineInputBorder()
-                                      : null,
-                                  onPressed: () {
-                                    vaTrue.categorySelector(index);
-                                    vaTrue.notifyListeners();
-                                  },
-                                  child: Text(vaTrue.cat[index]?.categoryName,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: data.cat[index].outOfStock == 1
-                                            ? myGrey
+    return WillPopScope(
+      onWillPop: () async {
+        vaTrue.clearAll();
+        Navigator.pop(context);
+      },
+      child: SafeArea(
+        child: Scaffold(
+          key: RIKeys.josKeys25,
+          backgroundColor: myBackGround,
+          appBar: myAppBar(context),
+          body: RefreshIndicator(
+            onRefresh: () async {},
+            child: ListView(children: [
+              Text(
+                  Provider.of<BusinessProfileProvider>(context, listen: true)
+                          .getBusinessProfileData()
+                          ?.businessName ??
+                      '',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(fontSize: 20)),
+              Divider(),
+              search(),
+              Container(
+                height: 500,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        height: sm.h(6),
+                        child: Consumer<MenuHomeProvider>(
+                          builder: (context, data, child) {
+                            // if (data?.cat?.length == 0) vaTrue.notifyListeners();
+                            return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: data?.cat?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return MaterialButton(
+                                    shape:
+                                        vaTrue.catItems?.selectedCatId == index
+                                            ? UnderlineInputBorder()
                                             : null,
-                                        fontFamily: 'Gilroy-Medium',
-                                      )),
-                                );
-                              });
-                        },
-                      )),
-                  Divider(),
-                  Container(height: sm.h(60), child: MenuPage())
-                ],
-              ),
-            )
-          ]),
+                                    onPressed: () {
+                                      vaTrue.categorySelector(index);
+                                      vaTrue.notifyListeners();
+                                    },
+                                    child: Text(
+                                        vaTrue.cat[index]?.categoryName ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                                fontSize: 12,
+                                                color: data?.cat[index]
+                                                            ?.outOfStock ==
+                                                        1
+                                                    ? myGrey
+                                                    : null)),
+                                  );
+                                });
+                          },
+                        )),
+                    Divider(),
+                    Container(
+                        height: sm.h(60),
+                        child: vaTrue.cat.isEmpty
+                            ? Center(child: CircularProgressIndicator())
+                            : MenuPage())
+                  ],
+                ),
+              )
+            ]),
+          ),
+          floatingActionButton: FloatingActionButtons(),
         ),
-        floatingActionButton: FloatingActionButtons(),
       ),
     );
   }
 
-  myAppBar() {
+  myAppBar(context) {
     return AppBar(
         backgroundColor: myBackGround,
         elevation: 0,
+        leading: Icon(Icons.keyboard_backspace, color: myGrey),
         title: Text('Menu',
-            style: TextStyle(
-                fontFamily: 'Gilroy-Reguler',
-                fontWeight: FontWeight.w600,
-                letterSpacing: .4,
-                fontSize: 20)));
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: .4,
+                )));
   }
 
   search() {

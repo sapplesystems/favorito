@@ -8,6 +8,7 @@ import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
 import 'package:Favorito/ui/jobs/CreateJob.dart';
+import 'package:Favorito/ui/jobs/CreateJob.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/notification/Notifications.dart';
 import 'package:Favorito/ui/signup/signup_a.dart';
@@ -44,10 +45,10 @@ class RouteGenerator {
 
       case '/adSpent':
         return MaterialPageRoute(builder: (_) => adSpent());
-     
+
       case '/addPerson':
         return MaterialPageRoute(builder: (_) => AddPerson());
-     
+
       case '/addServices':
         return MaterialPageRoute(builder: (_) => AddServices());
 

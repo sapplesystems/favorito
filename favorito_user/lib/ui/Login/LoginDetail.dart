@@ -17,25 +17,25 @@ class LoginDetail extends StatelessWidget {
       isFirst = false;
     }
     return Scaffold(
-      key: RIKeys.josKeys14,
-      appBar: AppBar(
-        backgroundColor: myBackGround,
-        elevation: 0,
-        title: Text('Login Details',
-            style: TextStyle(
-                fontFamily: 'Gilroy-Reguler',
-                fontWeight: FontWeight.w600,
-                letterSpacing: .4,
-                fontSize: 20)),
-      ),
-      backgroundColor: myBackGround,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 48.0),
-        child: ListView.builder(
-            itemCount: vaTrue.loginDetailsList.length ?? 0,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
+        key: RIKeys.josKeys14,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          leading: Icon(
+            Icons.keyboard_backspace,
+          ),
+          elevation: 0,
+          title: Text('Login Details',
+              style: Theme.of(context).textTheme.headline3.copyWith(
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: .4,
+                  fontSize: 20)),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(top: 48.0),
+          child: ListView.builder(
+              itemCount: vaTrue.loginDetailsList.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                return Column(children: [
                   InkWell(
                     onTap: () => vaTrue.onSelect(index, RIKeys.josKeys14),
                     child: Row(
@@ -50,18 +50,22 @@ class LoginDetail extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(vaTrue.loginDetailsList[index],
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          letterSpacing: .40,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Gilroy-Regular')),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              fontSize: 15,
+                                              letterSpacing: .40,
+                                              fontWeight: FontWeight.w600)),
                                   Text(vaTrue.loginDetailsList2[index],
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          letterSpacing: .40,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Gilroy-Regular',
-                                          color: myGrey))
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline3
+                                          .copyWith(
+                                              fontSize: 14,
+                                              letterSpacing: .40,
+                                              fontWeight: FontWeight.w600,
+                                              color: myGrey))
                                 ]),
                           ),
                           Padding(
@@ -71,10 +75,8 @@ class LoginDetail extends StatelessWidget {
                         ]),
                   ),
                   Padding(padding: const EdgeInsets.all(4), child: Divider())
-                ],
-              );
-            }),
-      ),
-    );
+                ]);
+              }),
+        ));
   }
 }

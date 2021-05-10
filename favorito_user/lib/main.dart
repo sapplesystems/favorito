@@ -1,11 +1,11 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/Providers/BaseProvider.dart';
-import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
 import 'package:favorito_user/ui/Login/LoginController.dart';
+import 'package:favorito_user/ui/OnlineMenu/Order/OrderProvider.dart';
 import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
@@ -28,7 +28,6 @@ void main() {
         // Provider(create: (context) => BaseProvider()),
         ChangeNotifierProvider(create: (context) => BaseProvider()),
         ChangeNotifierProvider(create: (context) => MenuHomeProvider()),
-        ChangeNotifierProvider(create: (context) => BasketControllers()),
         ChangeNotifierProvider(create: (context) => OptController()),
         ChangeNotifierProvider(create: (context) => AppBookProvider()),
         ChangeNotifierProvider(create: (context) => ForgetPasswordProvider()),
@@ -38,6 +37,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
         ChangeNotifierProvider(create: (context) => AppointmentProvider()),
+        ChangeNotifierProvider(create: (context) => OrderProvicer()),
       ],
       child: MyApp(),
     ));
@@ -50,11 +50,64 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: kReleaseMode ? false : true,
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
+      materialTheme: ThemeData.light().copyWith(
+          scaffoldBackgroundColor: Colors.white,
+          canvasColor: myGreyDark,
+          backgroundColor: myGrey,
+          hintColor: myGrey,
+          // hoverColor: myRed,
+          primaryColor: Colors.black,
+          primaryIconTheme: IconThemeData(color: Colors.black87),
+          primaryTextTheme: TextTheme(
+            headline1:
+                TextStyle(fontFamily: ' Gilroy-ExtraBold', color: Colors.black),
+            headline2:
+                TextStyle(fontFamily: ' Gilroy-Heavy', color: Colors.black),
+            headline3:
+                TextStyle(fontFamily: ' Gilroy-Bold', color: Colors.black),
+            headline4:
+                TextStyle(fontFamily: ' Gilroy-Medium', color: Colors.black),
+            headline5:
+                TextStyle(fontFamily: ' Gilroy-Regular', color: Colors.black),
+            headline6:
+                TextStyle(fontFamily: ' Gilroy-Light', color: Colors.black),
+          ),
+          appBarTheme: AppBarTheme(
+              shadowColor: myRed, foregroundColor: myRed, color: myGreyDark),
+          textTheme: TextTheme(
+            headline1:
+                TextStyle(fontFamily: ' Gilroy-ExtraBold', color: Colors.black),
+            headline2:
+                TextStyle(fontFamily: ' Gilroy-Heavy', color: Colors.black),
+            headline3:
+                TextStyle(fontFamily: ' Gilroy-Bold', color: Colors.black),
+            headline4:
+                TextStyle(fontFamily: ' Gilroy-Medium', color: Colors.black),
+            headline5:
+                TextStyle(fontFamily: ' Gilroy-Regular', color: Colors.black),
+            headline6:
+                TextStyle(fontFamily: ' Gilroy-Light', color: Colors.black),
+          )), //Gilroy-Regular
       theme: NeumorphicThemeData(
+          baseColor: myGreyLight,
           defaultTextColor: myRed,
-          accentColor: Colors.grey,
+          accentColor: myRed,
           variantColor: Colors.black38,
           depth: 8,
+          textTheme: TextTheme(
+            headline1:
+                TextStyle(fontFamily: ' Gilroy-ExtraBold', color: Colors.black),
+            headline2:
+                TextStyle(fontFamily: ' Gilroy-Heavy', color: Colors.black),
+            headline3:
+                TextStyle(fontFamily: ' Gilroy-Bold', color: Colors.black),
+            headline4:
+                TextStyle(fontFamily: ' Gilroy-Medium', color: Colors.black),
+            headline5:
+                TextStyle(fontFamily: ' Gilroy-Regular', color: Colors.black),
+            headline6:
+                TextStyle(fontFamily: ' Gilroy-Light', color: Colors.black),
+          ),
           intensity: 0.65),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute);

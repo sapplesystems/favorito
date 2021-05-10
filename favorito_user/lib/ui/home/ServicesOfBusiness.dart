@@ -20,6 +20,9 @@ class _ServicesOfBusinessState extends State<ServicesOfBusiness> {
       categoryName = categoryName + _v.categoryName + " | ";
     }
     return Text(categoryName.substring(0, 16),
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300));
+        style: Theme.of(context)
+            .textTheme
+            .headline6
+            .copyWith(fontSize: 14, fontWeight: FontWeight.w300));
   }
 }

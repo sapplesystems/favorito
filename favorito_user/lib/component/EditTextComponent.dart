@@ -55,17 +55,22 @@ class EditTextComponent extends StatefulWidget {
 
 class _EditTextComponentState extends State<EditTextComponent> {
   SizeManager sm;
-
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+
+    Color color =
+        NeumorphicTheme.isUsingDark(context) ? Colors.white : Colors.black;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Neumorphic(
         style: NeumorphicStyle(
             shape: NeumorphicShape.convex,
             depth: -48,
             lightSource: LightSource.topLeft,
-            color: myBackGround,
+            color:
+                (MediaQuery.of(context).platformBrightness != Brightness.dark)
+                    ? myBackGround
+                    : null,
             boxShape: NeumorphicBoxShape.roundRect(
                 BorderRadius.all(Radius.circular(30.0)))),
         child: TextFormField(
@@ -76,21 +81,32 @@ class _EditTextComponentState extends State<EditTextComponent> {
             widget.formate ?? FilteringTextInputFormatter.singleLineFormatter
           ],
           decoration: InputDecoration(
+              labelStyle:
+                  Theme.of(context).textTheme.headline6.copyWith(fontSize: 12),
               suffix: InkWell(
                   onTap: () => widget.suffixTap(),
-                  child: Text(widget.suffixTxt ?? '')),
+                  child: Text(
+                    widget.suffixTxt ?? '',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(fontSize: 12, fontWeight: FontWeight.w300),
+                  )),
               prefixIcon: widget.prefixIcon == 'mail'
                   ? InkWell(
                       child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 14, vertical: 16),
                           child: SvgPicture.asset("assets/icon/enovelop.svg",
-                              fit: BoxFit.fill, height: 1, width: 1)),
+                              color: color,
+                              fit: BoxFit.fill,
+                              height: 1,
+                              width: 1)),
                       onTap: () {},
                     )
                   : widget.prefixIcon == 'password'
                       ? InkWell(
-                          child: Icon(Icons.lock_outline),
+                          child: Icon(Icons.lock_outline, color: color),
                           onTap: () {},
                         )
                       : widget.prefixIcon == 'name'
@@ -98,7 +114,8 @@ class _EditTextComponentState extends State<EditTextComponent> {
                               child: Container(
                                   margin: EdgeInsets.all(sm.h(1.9)),
                                   child: SvgPicture.asset(
-                                      'assets/icon/fullname.svg')),
+                                      'assets/icon/fullname.svg',
+                                      color: color)),
                               onTap: () {},
                             )
                           : widget.prefixIcon == 'phone'
@@ -106,12 +123,13 @@ class _EditTextComponentState extends State<EditTextComponent> {
                                   child: Container(
                                       margin: EdgeInsets.all(sm.h(1.9)),
                                       child: SvgPicture.asset(
-                                          'assets/icon/phone.svg')),
+                                          'assets/icon/phone.svg',
+                                          color: color)),
                                   onTap: () {},
                                 )
                               : widget.prefixIcon == 'search'
                                   ? InkWell(
-                                      child: Icon(Icons.search),
+                                      child: Icon(Icons.search, color: color),
                                       onTap: () => widget.prefClick(),
                                     )
                                   : widget.prefixIcon == 'postal'
@@ -119,22 +137,28 @@ class _EditTextComponentState extends State<EditTextComponent> {
                                           child: Container(
                                               margin: EdgeInsets.all(sm.h(1.9)),
                                               child: SvgPicture.asset(
-                                                  'assets/icon/location.svg')),
+                                                  'assets/icon/location.svg',
+                                                  color: color)),
                                           onTap: () => widget.prefClick())
                                       : widget.prefixIcon == 'address'
                                           ? InkWell(
-                                              child: Icon(Icons.home_outlined),
+                                              child: Icon(Icons.home_outlined,
+                                                  color: color),
                                               onTap: () => widget.prefClick())
                                           : widget.prefixIcon == 'pincode'
                                               ? InkWell(
-                                                  child: Icon(Icons.dialpad),
+                                                  child: Icon(Icons.dialpad,
+                                                      color: color),
                                                   onTap: () =>
                                                       widget.prefClick())
                                               : null,
               counterText: "",
               hintText: widget.hint ?? '',
               alignLabelWithHint: true,
-              hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
+              // hintStyle: Theme.of(context).textTheme.headline6.copyWith(
+              // color: Colors.black,
+              //     fontSize: 18,
+              //     textBaseline: TextBaseline.alphabetic),
               contentPadding: EdgeInsets.only(
                   top: (widget.maxLines ?? 1) > 1 ? 14 : 14,
                   right: 16,
@@ -142,9 +166,13 @@ class _EditTextComponentState extends State<EditTextComponent> {
               fillColor: Colors.transparent,
               border: InputBorder.none),
           autofocus: false,
+          focusNode: null,
           keyboardType: widget.keyboardSet,
           textInputAction: widget.keyBoardAction,
-          style: TextStyle(fontFamily: "Poppins"),
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
           maxLines: widget.maxLines ?? 1,
           onChanged: widget.myOnChanged,
           enabled: widget.isEnabled,

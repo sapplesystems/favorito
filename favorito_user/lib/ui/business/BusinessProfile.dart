@@ -4,7 +4,6 @@ import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/component/favoriteBtn.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
-import 'package:favorito_user/model/appModel/BookingOrAppointment/BookingOrAppointmentDataModel.dart';
 import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/tabber.dart';
@@ -40,7 +39,7 @@ class BusinessProfile extends StatelessWidget {
       },
       child: Scaffold(
           key: RIKeys.josKeys2,
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           body: vatrue.getIsProgress()
               ? Center(
                   child: CircularProgressIndicator(semanticsLabel: pleaseWait))
@@ -57,11 +56,13 @@ class BusinessProfile extends StatelessWidget {
                                 vatrue.getBusinessProfileData().businessName ??
                                     '',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    letterSpacing: -.5,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Gilroy-Bold')),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    .copyWith(
+                                        letterSpacing: -.5,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w400)),
                           ),
                         ),
                         Padding(
@@ -72,12 +73,11 @@ class BusinessProfile extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: sm.w(1), vertical: sm.w(0)),
                             decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.grey, width: 1),
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(8),
-                                    bottomRight: Radius.circular(8)),
-                                color: Colors.white),
+                              border: Border.all(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8),
+                                  bottomRight: Radius.circular(8)),
+                            ),
                             child: Center(
                               child: Wrap(
                                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -88,15 +88,17 @@ class BusinessProfile extends StatelessWidget {
                                       child: Text(
                                           '${vatrue.getBusinessProfileData()?.totalReviews ?? 0}',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: 'Gilroy-Reguler')),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(fontSize: 20)),
                                     ),
                                     Text('Reviews'.toUpperCase(),
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: myGrey,
-                                            fontFamily: 'Gilroy-Reguler'))
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                                fontSize: 12, color: myGrey))
                                   ]),
                             ),
                           ),
@@ -110,7 +112,7 @@ class BusinessProfile extends StatelessWidget {
                     padding: EdgeInsets.only(left: sm.w(4), top: sm.h(4)),
                     child: Text(
                         vatrue.getBusinessProfileData()?.shortDesciption ?? "",
-                        style: TextStyle(
+                        style: Theme.of(context).textTheme.headline5.copyWith(
                             fontSize: 16, fontWeight: FontWeight.w400)),
                   ),
                   Padding(
@@ -121,10 +123,13 @@ class BusinessProfile extends StatelessWidget {
                           },
                           child: Text(
                               '${vatrue.getBusinessProfileData()?.townCity ?? ""} ${vatrue.getBusinessProfileData()?.state ?? ""}',
-                              style: TextStyle(
-                                  color: myGrey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400)))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      color: myGrey,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400)))),
                   Row(
                     children: [
                       Padding(
@@ -132,17 +137,20 @@ class BusinessProfile extends StatelessWidget {
                         child: Text(
                             "${vatrue.getBusinessProfileData()?.businessStatus}"
                                 .capitalize(),
-                            style: TextStyle(
-                                color: vatrue
-                                            .getBusinessProfileData()
-                                            .businessStatus
-                                            .toString()
-                                            .toLowerCase() ==
-                                        'offline'
-                                    ? myRed
-                                    : Colors.green,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    color: vatrue
+                                                .getBusinessProfileData()
+                                                .businessStatus
+                                                .toString()
+                                                .toLowerCase() ==
+                                            'offline'
+                                        ? myRed
+                                        : Colors.green,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300)),
                       ),
                       Visibility(
                         visible: vatrue
@@ -167,16 +175,21 @@ class BusinessProfile extends StatelessWidget {
                                       return Container(
                                           height: sm.h(70),
                                           decoration: BoxDecoration(
-                                              color: Colors.white),
-                                          child: HoursList(vatrue, sm));
+                                              // color: Colors.white
+                                              ),
+                                          child:
+                                              HoursList(vatrue, sm, context));
                                     });
                                   });
                             },
                             child: Text(vatrue.getShopTime(),
-                                style: TextStyle(
-                                    color: myGrey,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w300)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        color: myGrey,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300)),
                           ),
                         ),
                       ),
@@ -188,7 +201,7 @@ class BusinessProfile extends StatelessWidget {
                         "\u{20B9} : " +
                                 vatrue.getBusinessProfileData()?.priceRange ??
                             "",
-                        style: TextStyle(
+                        style: Theme.of(context).textTheme.headline6.copyWith(
                             color: myGrey,
                             fontSize: 16,
                             fontWeight: FontWeight.w300)),
@@ -266,9 +279,8 @@ class BusinessProfile extends StatelessWidget {
                       double.parse(
                               '${vatrue?.getBusinessProfileData()?.avgRating?.toStringAsFixed(1) ?? 0} ')
                           .toString(),
-                      style: TextStyle(
+                      style: Theme.of(context).textTheme.headline5.copyWith(
                           fontSize: 20,
-                          fontFamily: 'Gilroy-Regular',
                           color: Colors.white,
                           fontWeight: FontWeight.w900)),
                 ),
@@ -292,7 +304,6 @@ class BusinessProfile extends StatelessWidget {
   }
 
   ServicCart(BuildContext context) {
-    BookingOrAppointmentDataModel badm = BookingOrAppointmentDataModel();
     List<String> service = ['Call Now', 'Chat'];
     service.addAll(vatrue?.attribute);
     List<IconData> serviceIcons = [
@@ -358,7 +369,6 @@ class BusinessProfile extends StatelessWidget {
                 width: sm.w(28),
                 padding: const EdgeInsets.only(left: 2.0, right: 2.0),
                 child: Card(
-                    color: Colors.white,
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -369,7 +379,11 @@ class BusinessProfile extends StatelessWidget {
                       children: [
                         Icon(serviceIcons[i], color: myRed),
                         SizedBox(height: sm.h(.6)),
-                        Text(service[i] ?? "", style: TextStyle(fontSize: 12)),
+                        Text(service[i] ?? "",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(fontSize: 12)),
                       ],
                     )),
               ),
@@ -379,7 +393,8 @@ class BusinessProfile extends StatelessWidget {
     );
   }
 
-  HoursList(BusinessProfileProvider vaTrue, SizeManager sm) {
+  HoursList(
+      BusinessProfileProvider vaTrue, SizeManager sm, BuildContext context) {
     List<WorkingHoursData> businessProfileProvider =
         vaTrue.getWorkingHoursList();
     return Container(
@@ -389,22 +404,30 @@ class BusinessProfile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SizedBox(
-                    width: sm.w(20),
-                    child: Text('Day',
-                        style: TextStyle(fontFamily: 'Gilroy-Bold'))),
-                SizedBox(
-                    width: sm.w(20),
-                    child: Text('StartTime',
-                        style: TextStyle(fontFamily: 'Gilroy-Bold'))),
-                SizedBox(
-                    width: sm.w(20),
-                    child: Text('EndTime',
-                        style: TextStyle(fontFamily: 'Gilroy-Bold'))),
-              ],
-            ),
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                      width: sm.w(20),
+                      child: Text('Day',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontSize: 16))),
+                  SizedBox(
+                      width: sm.w(20),
+                      child: Text('StartTime',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontSize: 16))),
+                  SizedBox(
+                      width: sm.w(20),
+                      child: Text('EndTime',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontSize: 16))),
+                ]),
           ),
           Container(
             height: sm.h(64),
@@ -422,19 +445,37 @@ class BusinessProfile extends StatelessWidget {
                           width: sm.w(20),
                           child: Text(v.day,
                               textAlign: TextAlign.start,
-                              style: TextStyle(fontFamily: 'Gilroy-Regular')),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w400)),
                         ),
                         SizedBox(
                           width: sm.w(20),
                           child: Text(v.startHours.trim().substring(0, 5),
                               textAlign: TextAlign.start,
-                              style: TextStyle(fontFamily: 'Gilroy-Regular')),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w400)),
                         ),
                         SizedBox(
                           width: sm.w(20),
                           child: Text(v.endHours.substring(0, 5).trim(),
                               textAlign: TextAlign.start,
-                              style: TextStyle(fontFamily: 'Gilroy-Regular')),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w400)),
                         ),
                       ],
                     ),

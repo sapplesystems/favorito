@@ -2,6 +2,7 @@ class CustomizationOptionModel {
   int idAttribute;
   int optionId;
   String name;
+
   bool isSelected = false;
 
   CustomizationOptionModel({this.idAttribute, this.optionId, this.name});

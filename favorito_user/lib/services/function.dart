@@ -88,10 +88,14 @@ class service {
   static final menusIsFoodItem = userBusinessMenu + 'get-business-isfood';
   static final menuTabItemGet =
       userBusinessMenu + 'get-category-item'; //this is based on previous
+  static final menuItemCust = userBusinessMenu +
+      'get-item-customization-detail'; //this is based on previous
 
   //Order
   static final userOrderCreate =
       baseUserOrder + 'create-order'; //this is used to create a new order
+  static final userOrderList =
+      baseUserOrder + 'get-order-list'; //this is used to list order
   static final userOrderCreateVerbose =
       userOrderCreate + '-verbose'; //this is used to create a new order
 

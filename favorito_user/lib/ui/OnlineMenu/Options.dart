@@ -1,6 +1,6 @@
-import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:favorito_user/component/VegNonVegMarka.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OptionsModel.dart';
+import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ class Options extends StatelessWidget {
     _opt.name = "Olive Carry";
     _opt.price = "100";
     _opt.val = val;
-    providerBasketTrue = Provider.of<BasketControllers>(context, listen: true);
+    providerBasketTrue = Provider.of<MenuHomeProvider>(context, listen: true);
     return InkWell(
       onTap: () {
         val = !val;

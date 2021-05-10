@@ -1,19 +1,19 @@
-import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
+import 'package:favorito_user/model/appModel/Menu/order/OrderListData.dart';
 
-class MenuItemBaseModel {
+class OrderListModel {
   String status;
   String message;
-  List<MenuItemModel> data;
+  List<OrderListData> data;
 
-  MenuItemBaseModel({this.status, this.message, this.data});
+  OrderListModel({this.status, this.message, this.data});
 
-  MenuItemBaseModel.fromJson(Map<String, dynamic> json) {
+  OrderListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
       data = [];
       json['data'].forEach((v) {
-        data.add(new MenuItemModel.fromJson(v));
+        data.add(new OrderListData.fromJson(v));
       });
     }
   }
@@ -26,13 +26,5 @@ class MenuItemBaseModel {
       data['data'] = this.data.map((v) => v.toJson()).toList();
     }
     return data;
-  }
-
-  void setQuantity(int id, int quantity) {
-    for (var v in this.data) {
-      if (id == v.id) {
-        v.quantity = quantity;
-      }
-    }
   }
 }

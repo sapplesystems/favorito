@@ -5,7 +5,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class RIKeys {
   static final josKeys1 = GlobalKey<ScaffoldState>();
   static final josKeys2 = GlobalKey<ScaffoldState>();
-  static final josKeys3 = GlobalKey<ScaffoldState>(); //home
   static final josKeys4 = GlobalKey<ScaffoldState>(); //SearchResult
   static final josKeys5 = GlobalKey<ScaffoldState>(); //Profile
   static final josKeys6 = GlobalKey<ScaffoldState>(); //AddAddress
@@ -25,10 +24,11 @@ class RIKeys {
   static final josKeys18 = GlobalKey<ScaffoldState>(); //Waitlist
   static final josKeys19 = GlobalKey<ScaffoldState>(); //BookTable
   static final josKeys20 = GlobalKey<FormState>(); //BookTableForm
-  static final josKeys21 =
-  GlobalKey<DropdownSearchState<String>>();
+  static final josKeys21 = GlobalKey<DropdownSearchState<String>>();
   //BookTable
   static final josKeys22 = GlobalKey<ScaffoldState>(); //Booking&appoinmnet list
   static final josKeys23 = GlobalKey<FormState>(); //appointment create
 
+  static final josKeys24 = GlobalKey<ScaffoldState>(); //home
+  static final josKeys25 = GlobalKey<ScaffoldState>(); //home
 }

@@ -1,50 +1,24 @@
-import 'package:favorito_user/model/appModel/Menu/CustomizationOptionModel.dart';
+import 'package:favorito_user/model/appModel/Menu/Customization.dart/CustomizationOptionModel.dart';
 
-class CustomizationItemModel {
-  String status;
-  String message;
-  List<Data> data;
-
-  CustomizationItemModel({this.status, this.message, this.data});
-
-  CustomizationItemModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
-    if (json['data'] != null) {
-      data = [];
-      json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Data {
+class AttributeModel {
   int attributeId;
   String attributeName;
   int multiSelection;
+  var attributePrice;
   List<CustomizationOptionModel> customizationOption;
 
-  Data(
+  AttributeModel(
       {this.attributeId,
       this.attributeName,
       this.multiSelection,
+      this.attributePrice,
       this.customizationOption});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  AttributeModel.fromJson(Map<String, dynamic> json) {
     attributeId = json['attribute_id'];
     attributeName = json['attribute_name'];
     multiSelection = json['multi_selection'];
+    attributePrice = json['customization_price'];
     if (json['customization_option'] != null) {
       customizationOption = [];
       json['customization_option'].forEach((v) {
@@ -58,10 +32,21 @@ class Data {
     data['attribute_id'] = this.attributeId;
     data['attribute_name'] = this.attributeName;
     data['multi_selection'] = this.multiSelection;
+    data['customization_price'] = this.attributePrice;
     if (this.customizationOption != null) {
       data['customization_option'] =
           this.customizationOption.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  getSelectedOptions() {
+    List<int> selectedOption = [];
+    for (var r in customizationOption) {
+      if (r?.isSelected) {
+        selectedOption.add(r?.optionId);
+      }
+    }
+    return selectedOption;
   }
 }

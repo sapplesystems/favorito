@@ -51,20 +51,19 @@ class _HomeState extends State<Home> {
     return WillPopScope(
       onWillPop: () => APIManager.onWillPop(context),
       child: Scaffold(
-        key: RIKeys.josKeys3,
-        backgroundColor: myBackGround,
+        key: RIKeys.josKeys24,
         body: ListView(children: [
           Container(
             padding: EdgeInsets.all(sm.w(4)),
             margin: EdgeInsets.only(top: sm.h(2)),
-            color: Colors.white,
+            // color: Colors.white,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
                     onTap: () {
                       Provider.of<UserAddressProvider>(context, listen: false)
-                          .getImage(ImgSource.Gallery, RIKeys.josKeys3);
+                          .getImage(ImgSource.Gallery, RIKeys.josKeys24);
                     },
                     child: Container(
                       width: sm.w(20),
@@ -93,8 +92,8 @@ class _HomeState extends State<Home> {
                                 (BuildContext context, StateSetter setState) {
                               return Container(
                                   height: sm.h(70),
-                                  decoration:
-                                      BoxDecoration(color: Colors.white),
+                                  // decoration:
+                                  //     BoxDecoration(color: Colors.white),
                                   child: UserAddress());
                             });
                           });
@@ -107,18 +106,26 @@ class _HomeState extends State<Home> {
                               Provider.of<PersonalInfoProvider>(context,
                                       listen: true)
                                   .username,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Gilroy-Bold'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(fontSize: 16),
                             ),
                             Text(
-                                "${data?.getSelectedAddress()}  ${data?.getSelectedAddress().length > 1 ? '\u{25bc}' : ''}",
-                                textAlign: TextAlign.start),
-                            Text(
-                              'v1.5',
+                              "${data?.getSelectedAddress()}  ${(data?.getSelectedAddress()?.length ?? 0) > 1 ? '\u{25bc}' : ''}",
                               textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 8),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(fontSize: 10),
+                            ),
+                            Text(
+                              'v1.6',
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(fontSize: 8),
                             )
                           ]);
                     })),
@@ -155,11 +162,9 @@ class _HomeState extends State<Home> {
                 Navigator.of(context).pushNamed('/searchResult',
                     arguments: SearchReqData(text: _val));
               },
-              prefClick: () {
-                Navigator.of(context).pushNamed('/searchResult',
-                    arguments:
-                        SearchReqData(text: _mySearchEditTextController.text));
-              },
+              prefClick: () => Navigator.of(context).pushNamed('/searchResult',
+                  arguments:
+                      SearchReqData(text: _mySearchEditTextController.text)),
             ),
           ),
           Padding(
@@ -199,6 +204,12 @@ class _HomeState extends State<Home> {
                           Padding(
                             padding: EdgeInsets.only(top: sm.h(2.5)),
                             child: Text(widget.imagName[i].toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
                                 textAlign: TextAlign.center),
                           ),
                         ]),
@@ -216,31 +227,25 @@ class _HomeState extends State<Home> {
   Widget header(SizeManager sm, String title) {
     return Padding(
       padding: EdgeInsets.all(sm.w(5)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+        ),
+        InkWell(
+          onTap: () {
+            setState(() {});
+          },
+          child: Text(
+            "View all",
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+                decoration: TextDecoration.underline,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey),
           ),
-          InkWell(
-            onTap: () {
-              setState(() {});
-            },
-            child: Text(
-              "View all",
-              style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey),
-            ),
-          )
-        ],
-      ),
+        )
+      ]),
     );
   }
 }

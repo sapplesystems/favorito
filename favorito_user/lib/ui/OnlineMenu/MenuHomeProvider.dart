@@ -1,5 +1,6 @@
+import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/appModel/Business/Category.dart';
-import 'package:favorito_user/model/appModel/Menu/CustomizationModel.dart';
+import 'package:favorito_user/model/appModel/Menu/Customization.dart/CustomizationModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
@@ -7,13 +8,16 @@ import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OptionsModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
+import 'package:favorito_user/ui/OnlineMenu/Paydata.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class MenuHomeProvider extends ChangeNotifier {
+class MenuHomeProvider extends BaseProvider {
   static List<MenuItemModel> _listItem = [];
   static List<OptionsModel> _listOpt = [];
   List<MenuItemModel> bucket = [];
+  double customizationPrice = 0.0;
   ModelOption modelOption = ModelOption();
   MenuTabModel menuTabModel = MenuTabModel();
   CatItem catItems = CatItem();
@@ -25,10 +29,16 @@ class MenuHomeProvider extends ChangeNotifier {
   String txt = '';
   bool _getisFoody = false;
   Map<int, List<int>> selectedCustomizetionId = Map();
+  MenuItemBaseModel _menuItemBaseModel = MenuItemBaseModel();
+  // CustomizationItemModel customizationItemModel = CustomizationItemModel();
+
+  List<PayData> payDataList = [];
+  PayData selectedPayData;
+
   MenuHomeProvider() {
+    // _businessId = 'KIR4WQ4N7KF697HRQ';
     catItems.isVeg = catItems.isVeg ?? false;
   }
-  CustomizationItemModel customizationItemModel = CustomizationItemModel();
 
   void addbucket(MenuItemModel data) {
     bucket.add(data);
@@ -44,13 +54,6 @@ class MenuHomeProvider extends ChangeNotifier {
   }
 
   List getBucket() => bucket;
-
-  setBusinessDetail(String id, String name) {
-    catItems.buId = id;
-    catItems.cat = name;
-    print("fdd");
-    pages = MenuPage();
-  }
 
   setBusinessIdName(String id, String name) {
     _businessId = id;
@@ -78,6 +81,7 @@ class MenuHomeProvider extends ChangeNotifier {
   categorySelector(int index) {
     catItems.selectedCatId = index;
     catItems.cat = cat[index].id.toString();
+    getMenuItem();
     pages = MenuPage();
   }
 
@@ -104,9 +108,8 @@ class MenuHomeProvider extends ChangeNotifier {
     return val;
   }
 
-// Provider.of<BusinessProfileProvider>(context, listen: true);
   menuTabGet() async {
-    print("businessId:${_businessId}");
+    print("businessId1:${_businessId}");
     await APIManager.menuTabGet({'business_id': _businessId}).then((value) {
       menuTabModel = value;
       setCategories(value.data);
@@ -114,26 +117,37 @@ class MenuHomeProvider extends ChangeNotifier {
   }
 
   Future<MenuItemBaseModel> getMenuItem() async {
-    print(" getBusinessDetail().cat:${getBusinessDetail().cat}");
-    return await APIManager.menuTabItemGet({
+    Map _map = {
       "business_id": _businessId,
-      "category_id": getBusinessDetail().cat ?? 0,
+      "category_id": '${catItems?.cat ?? 3}',
       "keyword": getSearchText(),
       "filter": {"sd": "${getBusinessDetail().isVeg ? 1 : 0}"}
+    };
+    print('_map${_map.toString()}');
+    await APIManager.menuTabItemGet(_map).then((value) {
+      if (value.status == 'success') {
+        setMenuItemBaseModel(value);
+      }
     });
   }
 
-  //options this will provide payoptions as well
+  setMenuItemBaseModel(MenuItemBaseModel _val) {
+    _menuItemBaseModel = _val;
+    notifyListeners();
+  }
+
+  getMenuItemBaseModel() => _menuItemBaseModel;
+
   userOrderCreateVerbose() async {
-    print("businessId:$_businessId");
+    print("businessId2:$_businessId");
     await APIManager.userOrderCreateVerbose({'business_id': _businessId})
         .then((value) {
       if (value.status == 'success') {
         modelOption = value;
-        print('eee${value.data.paymentType.length}');
+        setPayData(value.data.paymentType);
+        // print('eee${value.data.paymentType.length}');
       }
     });
-    // notifyListeners();
   }
 
   getModelOption() => modelOption;
@@ -141,8 +155,7 @@ class MenuHomeProvider extends ChangeNotifier {
     await APIManager.menusIsFoodItem({'business_id': _businessId})
         .then((value) {
       if (value.status == 'success') {
-        setisFoody(value.data[0].isFood == 1);
-        notifyListeners();
+        setisFoody(value?.data[0]?.isFood == 1);
       }
     });
   }
@@ -153,62 +166,152 @@ class MenuHomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  menuTabItemGetCustomization(String _itenId) async {
-    // await APIManager.menuTabItemGetCustomization({'item_id': _itenId})
-    //     .then((value) {
-    //   if (value.status == 'success') {
-    //     customizationItemModel = value;
-    //   }
-    // });
+  void addOptionsToList(OptionsModel _data, bool _val) {
+    (_val ?? false) ? _listOpt.add(_data) : _listOpt.remove(_data);
+    notifyListeners();
   }
 
-  getCustomizations() => customizationItemModel.data;
+  List getMyObjectsList() => _listItem;
 
-  cutiomizationSelection(int _index, int _a) {
-    // Map<int, List<int>> _map = Map();
-    if (selectedCustomizetionId.keys
-        .contains(customizationItemModel.data[_index].attributeId))
-      // _map[customizationItemModel.data[_index].attributeId] = _map[customizationItemModel.data[_index].attributeId].contains(customizationItemModel.data[_index].customizationOption[_a].optionId)
-      //   customizationItemModel.data[_index].customizationOption[_a].optionId
-      // ];
-      // if (selectedCustomizetionId.contains(
-      //     customizationItemModel.data[_index].customizationOption[_a].optionId))
-      //   selectedCustomizetionId.remove(
-      //       customizationItemModel.data[_index].customizationOption[_a].optionId);
-      // else
-      //   selectedCustomizetionId.add(
-      //       customizationItemModel.data[_index].customizationOption[_a].optionId);
-      notifyListeners();
+  removeMyObjectsList(int _id) {
+    _listItem.removeAt(_id);
+    notifyListeners();
+  }
+
+  updateMyObjectsList(int _id) {
+    int _i = _listItem.indexWhere((element) => element.id == _id);
+
+    double _localprice = 0.0;
+    for (var _v in _listItem[_i].customizationItemModel.data) {
+      for (var _b in _v.customizationOption) {
+        if (_b.isSelected) {
+          _localprice =
+              _localprice + double.parse(_v.attributePrice.toString());
+          if (_v.multiSelection == 0) break;
+        }
+      }
+    }
+    _listItem[_i].itenCustomizationSum = _localprice.toString();
+    print("sdsd${_listItem[_i].itenCustomizationSum}");
+    // _listItem = customizationItemModel.data;
+
+    allPrice();
+    // customizationItemModel.data = [];
+    notifyListeners();
+  }
+
+  double allPrice() {
+    var totel = allItemPrices()
+        // + allOptionsPrice()
+        ;
+    print('totel:${totel}');
+    return totel;
+  }
+
+  double allItemPrices() {
+    double groundTotel = 0.0;
+    for (var _v in _listItem) {
+      double _temp = 0;
+      if (_v.customizationItemModel.data != null) {
+        _v.itenCustomizationSum = '0.0';
+        for (var _a in _v.customizationItemModel.data) {
+          for (var _b in _a.customizationOption) {
+            if (_b.isSelected == true) {
+              _v.itenCustomizationSum =
+                  '${double.parse(_v.itenCustomizationSum.toString()) + double.parse(_a.attributePrice.toString())}';
+              if (_a.multiSelection == 0) break;
+            }
+          }
+        }
+        _temp =
+            _v.quantity * (_v.price + double.parse(_v.itenCustomizationSum));
+      }
+      groundTotel = groundTotel + _temp;
+    }
+    return groundTotel;
   }
 
   void addItemToList(MenuItemModel _data) {
     _listItem.add(_data);
   }
 
-  void addOptionsToList(OptionsModel _data, bool _val) {
-    (_val ?? false) ? _listOpt.add(_data) : _listOpt.remove(_data);
-    notifyListeners();
-  }
-
-  double allItemPrices() {
-    double _temp = 0;
-    for (var _v in getMyObjectsList()) {
-      _temp = _temp + (_v.quantity * _v.price);
-    }
-    notifyListeners();
-    return _temp;
-  }
-
-  double allOptionsPrice() {
-    double _temp = 0.0;
-    for (var _v in getOptionsList()) {
-      _temp = _temp + double.parse(_v.price);
-    }
-    notifyListeners();
-    return _temp;
-  }
-
-  List getMyObjectsList() => _listItem;
   List getOptionsList() => _listOpt;
-  double allPrice() => allItemPrices() + allOptionsPrice();
+
+  menuItemCust(int _id) async {
+    print('item id:$_id');
+    Map _map = {'item_id': _id};
+    await APIManager.menuItemCust(_map).then((value) {
+      if (value.status == 'success')
+        _listItem[_listItem.indexWhere((element) => element.id == _id)]
+            .customizationItemModel = value;
+      notifyListeners();
+    });
+  }
+
+  CustomizationItemModel getCustomizationItemModel(_id) =>
+      _listItem[_listItem.indexWhere((element) => element.id == _id)]
+          .customizationItemModel;
+
+  setSelectedPay(PayData payData) {
+    selectedPayData = payData;
+  }
+
+  List<PayData> getPayData() => payDataList;
+  void setPayData(List<String> _data) {
+    payDataList.clear();
+
+    for (int _i = 0; _i < _data.length; _i++) {
+      payDataList.add(PayData(
+        id: _i,
+        selected: false,
+        title: _data[_i].toString(),
+      ));
+    }
+    setSelectedPay(payDataList[0]);
+  }
+
+  // userOrderCreate
+  //
+  callCustomizetion() async {
+    Map _map = {
+      "business_id": _businessId,
+      "notes": "",
+      "order_type": "3",
+      "payment_type": selectedPayData.title,
+      "category": [
+        for (var _v in _listItem)
+          {
+            "category_id": _v.menuCategoryId.toString(),
+            "category_item": [
+              {
+                "item_id": _v.id,
+                "price": _v.price,
+                "qty": _v.quantity,
+                "tax": _v.tax,
+                "attributes": [
+                  for (var _vv in _v?.customizationItemModel?.data)
+                    {
+                      "attribute_id": _vv?.attributeId,
+                      "option_id": _vv?.getSelectedOptions(),
+                      "price": _vv.attributePrice
+                    }
+                ]
+              }
+            ]
+          }
+      ]
+    };
+    print('_map:${_map.toString()}');
+    await APIManager.userOrderCreate(_map).then((value) {
+      this.snackBar(value.message, RIKeys.josKeys25);
+      if (value.status == 'success') {
+        Navigator.of(RIKeys.josKeys25.currentContext).pushNamed('/orderHome');
+        // print("success Done");
+      }
+    });
+  }
+
+  clearAll() {
+    _listItem.clear();
+  }
 }

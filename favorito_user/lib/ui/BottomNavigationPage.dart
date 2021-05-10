@@ -7,6 +7,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -54,7 +55,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ),
         bottomNavigationBar: FFNavigationBar(
             theme: FFNavigationBarTheme(
-                barBackgroundColor: Colors.white,
+                barBackgroundColor: NeumorphicTheme.isUsingDark(context)
+                    ? myGreyDark
+                    : myBackGround,
                 selectedItemBorderColor: myBackGround,
                 selectedItemBackgroundColor: myBackGround,
                 selectedItemIconColor: Colors.black,

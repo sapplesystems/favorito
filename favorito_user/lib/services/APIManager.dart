@@ -15,10 +15,12 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
 import 'package:favorito_user/model/appModel/CheckAccountmodel.dart';
+import 'package:favorito_user/model/appModel/Menu/Customization.dart/CustomizationModel.dart';
 import 'package:favorito_user/model/appModel/Menu/IsFoodModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
+import 'package:favorito_user/model/appModel/Menu/order/OrderListModel.dart';
 import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
 import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
@@ -438,7 +440,7 @@ class APIManager {
 
 //userdetail
   static Future<ProfileModel> userdetail(
-      Map _map, GlobalKey<ScaffoldState> josKeys3) async {
+      Map _map, GlobalKey<ScaffoldState> josKeys10) async {
     if (!await utilProvider.checkInternet())
       return ProfileModel(
           status: 'fail', message: 'Please check internet connections');
@@ -452,7 +454,7 @@ class APIManager {
     try {
       response = await dio.post(url, data: _map, options: opt);
     } on DioError catch (e) {
-      ExceptionHandler(e, null, url, josKeys3);
+      ExceptionHandler(e, null, url, josKeys10);
     }
     print("service.mostPopulerBusiness : ${response.toString}");
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
@@ -843,7 +845,20 @@ class APIManager {
     return MenuItemBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-//order
+//Menu item customizetion
+  static Future<CustomizationItemModel> menuItemCust(Map _map) async {
+    String token = await Prefs.token;
+    print("menuItemRequest : ${_map.toString()}");
+    opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String url = service.menuItemCust;
+    print("$url : ${service.menuTabItemGet}");
+    response = await dio.post(url, data: _map, options: opt);
+    print("$url : ${response.toString}");
+    return CustomizationItemModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+//order Create
   static Future<BaseResponse> userOrderCreate(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
@@ -851,7 +866,7 @@ class APIManager {
     print("service.userOrderCreate : ${service.userOrderCreate}");
     response =
         await dio.post(service.userOrderCreate, data: _map, options: opt);
-    print("service.userOrderCreate : ${response.toString}");
+
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
 
@@ -859,12 +874,25 @@ class APIManager {
   static Future<ModelOption> userOrderCreateVerbose(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
+    print("token : $token");
     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     String url = service.userOrderCreateVerbose;
     print("$url : ${service.userOrderCreateVerbose}");
     response = await dio.post(url, data: _map, options: opt);
     print("$url : ${response.toString}");
     return ModelOption.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//order list
+  static Future<OrderListModel> userOrderList() async {
+    String token = await Prefs.token;
+    print("token : $token");
+    opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.userOrderList;
+    print("$_url : ${service.userOrderList}");
+    response = await dio.post(_url, options: opt);
+    print("$_url : ${response.toString}");
+    return OrderListModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
 //sendOtp

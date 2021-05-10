@@ -54,7 +54,7 @@ class PersonalInfoProvider extends BaseProvider {
   getPersonalData() async {
     print('service:${this.getBusinessId()}');
     Map _map = {"api_type": 'get'};
-    await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
+    await APIManager.userdetail(_map, RIKeys.josKeys10).then((value) {
       if (value.status == 'success') {
         profileModel.data = value.data;
         var v = value.data.detail;
@@ -96,7 +96,7 @@ class PersonalInfoProvider extends BaseProvider {
         'short_description': acces[2].controller.text,
         'reach_whatsapp': newValue ? 1 : 0
       };
-      await APIManager.userdetail(_map, RIKeys.josKeys3).then((value) {
+      await APIManager.userdetail(_map, RIKeys.josKeys10).then((value) {
         pr.hide();
         if (value.status == 'success') getPersonalData();
       });

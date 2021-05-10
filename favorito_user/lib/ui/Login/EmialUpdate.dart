@@ -25,21 +25,22 @@ class UpdateEmail extends StatelessWidget {
     }
     return Scaffold(
       key: RIKeys.josKeys15,
-      backgroundColor: myBackGround,
+      // backgroundColor: myBackGround,
       appBar: AppBar(
-        backgroundColor: myBackGround,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text('Update Email',
-            style: TextStyle(
-                fontFamily: 'Gilroy-Reguler',
-                fontWeight: FontWeight.w600,
-                letterSpacing: .4,
-                fontSize: 20)),
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                fontWeight: FontWeight.w600, letterSpacing: .4, fontSize: 20)),
       ),
       body: ListView(children: [
         Padding(
           padding: const EdgeInsets.only(left: 30.0, bottom: 20, top: 20),
-          child: Text('Email : ${vaTrue.getEmail() ?? ''}'),
+          child: Text('Email : ${vaTrue.getEmail() ?? ''}',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(fontWeight: FontWeight.w400, fontSize: 18)),
         ),
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -77,11 +78,11 @@ class UpdateEmail extends StatelessWidget {
               child: NeumorphicButton(
                 style: NeumorphicStyle(
                     shape: NeumorphicShape.concave,
-                    depth: 11,
+                    // depth: 11,
                     intensity: 40,
                     surfaceIntensity: -.4,
                     // lightSource: LightSource.topLeft,
-                    color: Color(0xffedf0f5),
+                    color: myButtonBackground,
                     boxShape: NeumorphicBoxShape.roundRect(
                         BorderRadius.all(Radius.circular(24.0)))),
                 margin: EdgeInsets.symmetric(horizontal: 10),

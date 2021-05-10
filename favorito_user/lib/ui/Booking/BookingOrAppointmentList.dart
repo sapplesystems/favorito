@@ -31,11 +31,11 @@ class BookingOrAppointmentParent extends StatelessWidget {
       onWillPop: () => APIManager.onWillPop(context),
       child: Scaffold(
           key: RIKeys.josKeys22,
-          backgroundColor: myBackGround,
+          // backgroundColor: myBackGround,
           appBar: AppBar(
-            backgroundColor: myBackGround,
+            backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(vaTrue.getAppBookingHeader()??""),
+            title: Text(vaTrue.getAppBookingHeader() ?? ""),
             actions: <Widget>[
               InkWell(
                   child: Icon(Icons.refresh),
@@ -45,7 +45,7 @@ class BookingOrAppointmentParent extends StatelessWidget {
                 itemBuilder: (BuildContext context) {
                   return vaTrue.appBookingHeaderList
                       .map((String choice) => PopupMenuItem<String>(
-                          value: choice, child: Text(choice??"")))
+                          value: choice, child: Text(choice ?? "")))
                       .toList();
                 },
               ),

@@ -28,7 +28,12 @@ class _TopRatedState extends State<TopRated> {
       builder: (BuildContext context,
           AsyncSnapshot<TrendingBusinessModel> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(child: Text(loading));
+          return Center(
+              child: Text(loading,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontSize: 12)));
         else {
           if (snapshot.hasError)
             return Center(child: Text('Error : ${snapshot.error}'));
@@ -42,65 +47,69 @@ class _TopRatedState extends State<TopRated> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Provider.of<BusinessProfileProvider>(context,
-                                    listen: false)
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Provider.of<BusinessProfileProvider>(context,
+                                  listen: false)
                                 ..setBusinessId(data[index].businessId)
-                            ..refresh(1);
-                            Navigator.of(context).pushNamed('/businessProfile');
-                          },
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: br,
-                            ),
-                            elevation: 10,
-                            child: ClipRRect(
-                              borderRadius: br,
-                              child: Image.network(
-                                data[index].photo,
-                                height: widget.sm.h(20),
-                                fit: BoxFit.cover,
-                                width: widget.sm.w(28),
+                                ..refresh(1);
+                              Navigator.of(context)
+                                  .pushNamed('/businessProfile');
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: br,
+                              ),
+                              elevation: 10,
+                              child: ClipRRect(
+                                borderRadius: br,
+                                child: Image.network(
+                                  data[index].photo,
+                                  height: widget.sm.h(20),
+                                  fit: BoxFit.cover,
+                                  width: widget.sm.w(28),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: widget.sm.w(2), top: widget.sm.h(1)),
-                          child: Text(
-                              data[index].businessName.length <= 12
-                                  ? data[index].businessName
-                                  : data[index].businessName.substring(0, 12) +
-                                      '..',
-                              softWrap: true,
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w400)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: widget.sm.w(2)),
-                          child: ServicesOfBusiness(
-                              sm: widget.sm, data: data[index].subCategory),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: widget.sm.w(1)),
-                          child: Row(
-                            children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: widget.sm.w(2), top: widget.sm.h(1)),
+                            child: Text(
+                                data[index].businessName.length <= 12
+                                    ? data[index].businessName
+                                    : data[index]
+                                            .businessName
+                                            .substring(0, 12) +
+                                        '..',
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400)),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: widget.sm.w(2)),
+                            child: ServicesOfBusiness(
+                                sm: widget.sm, data: data[index].subCategory),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: widget.sm.w(1)),
+                            child: Row(children: [
                               for (var i = 0; i < data[index].avgRating; i++)
                                 Icon(
                                   Icons.star,
                                   color: myRed,
                                   size: widget.sm.h(1.8),
                                 )
-                            ],
+                            ]),
                           ),
-                        ),
-                      ],
-                    ),
+                        ]),
                   );
                 });
           }
