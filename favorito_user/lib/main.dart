@@ -12,6 +12,7 @@ import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
+import 'package:favorito_user/ui/user/ProfileProvider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
         ChangeNotifierProvider(create: (context) => AppointmentProvider()),
         ChangeNotifierProvider(create: (context) => OrderProvicer()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
       ],
       child: MyApp(),
     ));
@@ -55,7 +57,6 @@ class MyApp extends StatelessWidget {
           canvasColor: myGreyDark,
           backgroundColor: myGrey,
           hintColor: myGrey,
-          // hoverColor: myRed,
           primaryColor: Colors.black,
           primaryIconTheme: IconThemeData(color: Colors.black87),
           primaryTextTheme: TextTheme(

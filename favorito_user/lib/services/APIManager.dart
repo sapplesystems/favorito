@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
+import 'package:favorito_user/model/Follow/followingModel.dart';
 import 'package:favorito_user/model/ProfilePhoto.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
@@ -629,8 +630,8 @@ class APIManager {
 
     response =
         await dio.post(service.businessRelationGet, data: _map, options: opt);
-    print("service.businessRelationGet : ${response.toString}");
-    return RelationBase.fromJson(convert.jsonDecode(response.toString()));
+
+    return RelationBase.fromJson(convert.jsonDecode('$response'));
   }
 
   //booking
@@ -1427,6 +1428,20 @@ class APIManager {
     }
     print("service.verifyOtp : ${response.toString}");
     return loginModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<FollowingModel> getFollowing(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return FollowingModel(
+          status: 'fail', message: 'Please check internet connections');
+    String _url = service.getFollowing;
+    print("url : $_url");
+    try {
+      response = await dio.post(_url, data: _map, options: opt);
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, _url, null);
+    }
+    return FollowingModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
   static void ExceptionHandler(DioError e, pr, url, formKey) {

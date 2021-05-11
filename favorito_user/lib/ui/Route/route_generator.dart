@@ -19,6 +19,7 @@ import 'package:favorito_user/ui/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/business/waitlist/waitlist.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/splash/Splash.dart';
+import 'package:favorito_user/ui/user/Following.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/AddAdress.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfo.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddress.dart';
@@ -54,6 +55,9 @@ class RouteGenerator {
 
       case '/following':
         return MaterialPageRoute(builder: (_) => Following());
+
+      case '/followingUser':
+        return MaterialPageRoute(builder: (_) => FollowingUser());
 
       case '/waitlist':
         return MaterialPageRoute(builder: (_) => Waitlist());

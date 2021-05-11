@@ -298,7 +298,14 @@ class BusinessProfile extends StatelessWidget {
   followingAndFavorite() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       SizedBox(width: sm.w(12)),
-      FollowBtn(id: vatrue.getBusinessId()),
+      FollowBtn(
+        id: vatrue.getBusinessId(),
+        callback: () {
+          // isFirst = true;
+
+          vatrue.abc();
+        },
+      ),
       FavoriteBtn(id: vatrue.getBusinessId())
     ]);
   }

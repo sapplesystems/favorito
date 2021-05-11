@@ -6,7 +6,8 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class FollowBtn extends StatefulWidget {
   String id;
-  FollowBtn({this.id});
+  Function callback;
+  FollowBtn({this.id, this.callback});
 
   @override
   _FollowBtnState createState() => _FollowBtnState();
@@ -67,6 +68,10 @@ class _FollowBtnState extends State<FollowBtn> {
       'relation_id': relation.relationId
     };
     print('relation request Data:${_map.toString()}');
-    await APIManager.businessRelationGet(_map).then((value) => setState(() {}));
+    await APIManager.businessRelationGet(_map).then((value) {
+      print("ertyuiop");
+      widget.callback;
+      setState(() {});
+    });
   }
 }

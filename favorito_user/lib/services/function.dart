@@ -61,6 +61,7 @@ class service {
 
   //userDetail
   static final userdetail = baseUserProfile + 'user-detail';
+  static final getFollowing = baseUserProfile + 'get-all-relation';
 
   //booking
   static final baseUserBookingList = baseUserBooking + 'get-book-table';

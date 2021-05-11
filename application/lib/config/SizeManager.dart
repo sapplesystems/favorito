@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SizeManager {
-  var _context;
+  BuildContext _context;
   double _screenHeight;
   double _screenWidth;
 
@@ -10,11 +10,7 @@ class SizeManager {
     _screenWidth = MediaQuery.of(_context).size.width;
   }
 
-  double h(double value) {
-    return value * _screenHeight / 100;
-  }
+  double h(double value) => value * _screenHeight / 100;
 
-  double w(double value) {
-    return value * _screenWidth / 100;
-  }
+  double w(double value) => value * _screenWidth / 100;
 }

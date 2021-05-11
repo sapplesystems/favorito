@@ -5,6 +5,7 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileDetail.dart';
+import 'package:favorito_user/ui/user/ProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
@@ -171,6 +172,25 @@ class Profile extends StatelessWidget {
           case 'Change login details':
             Navigator.of(context).pushNamed('/loginDetail');
             break;
+
+          case 'Following':
+            {
+              Provider.of<ProfileProvider>(context, listen: false).dataWill(1);
+              Navigator.of(context).pushNamed('/followingUser');
+              break;
+            }
+          case 'Following Business':
+            {
+              Provider.of<ProfileProvider>(context, listen: false).dataWill(2);
+              Navigator.of(context).pushNamed('/followingUser');
+              break;
+            }
+          case 'Followers':
+            {
+              Provider.of<ProfileProvider>(context, listen: false).dataWill(-3);
+              Navigator.of(context).pushNamed('/followingUser');
+              break;
+            }
         }
       },
       child: Padding(
