@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/Follow/followingModel.dart';
 import 'package:favorito_user/model/ProfilePhoto.dart';
+import 'package:favorito_user/model/RatingModel.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
@@ -26,6 +27,9 @@ import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
 import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
+import 'package:favorito_user/model/appModel/Review/MyRatingModel.dart';
+import 'package:favorito_user/model/appModel/Review/ReviewListModel.dart';
+import 'package:favorito_user/model/appModel/Review/ReviewModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
 import 'package:favorito_user/model/appModel/appointment/PersonListModel.dart';
@@ -820,6 +824,79 @@ class APIManager {
     response = await dio.post(service.menuTabGet, data: _map, options: opt);
     print("service.menuTabGet : ${response.toString}");
     return MenuTabModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //set-Review
+  static Future<BaseResponse> businessSetReview(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.businessSetReview;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //get-Review-replies
+  static Future<ReviewModel> getReviewReplies(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getReviewReplies;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return ReviewModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //get-getReviewListing
+  static Future<ReviewListModel> getReviewListing(
+      Map _map, BuildContext context) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getReviewListing;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return ReviewListModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //get-getrating
+  static Future<RatingModel> getrating(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getrating;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return RatingModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //setRating
+  static Future<BaseResponse> setRating(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.setRating;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //getRating
+  static Future<MyRatingModel> getRating(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getRating;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return MyRatingModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
   //Menu

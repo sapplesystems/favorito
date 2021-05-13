@@ -109,49 +109,58 @@ class _EditTextComponentState extends State<EditTextComponent> {
                           child: Icon(Icons.lock_outline, color: color),
                           onTap: () {},
                         )
-                      : widget.prefixIcon == 'name'
+                      : widget.prefixIcon == 'write'
                           ? InkWell(
-                              child: Container(
-                                  margin: EdgeInsets.all(sm.h(1.9)),
-                                  child: SvgPicture.asset(
-                                      'assets/icon/fullname.svg',
-                                      color: color)),
+                              child: Icon(Icons.create, color: color),
                               onTap: () {},
                             )
-                          : widget.prefixIcon == 'phone'
+                          : widget.prefixIcon == 'name'
                               ? InkWell(
                                   child: Container(
                                       margin: EdgeInsets.all(sm.h(1.9)),
                                       child: SvgPicture.asset(
-                                          'assets/icon/phone.svg',
+                                          'assets/icon/fullname.svg',
                                           color: color)),
                                   onTap: () {},
                                 )
-                              : widget.prefixIcon == 'search'
+                              : widget.prefixIcon == 'phone'
                                   ? InkWell(
-                                      child: Icon(Icons.search, color: color),
-                                      onTap: () => widget.prefClick(),
+                                      child: Container(
+                                          margin: EdgeInsets.all(sm.h(1.9)),
+                                          child: SvgPicture.asset(
+                                              'assets/icon/phone.svg',
+                                              color: color)),
+                                      onTap: () {},
                                     )
-                                  : widget.prefixIcon == 'postal'
+                                  : widget.prefixIcon == 'search'
                                       ? InkWell(
-                                          child: Container(
-                                              margin: EdgeInsets.all(sm.h(1.9)),
-                                              child: SvgPicture.asset(
-                                                  'assets/icon/location.svg',
-                                                  color: color)),
-                                          onTap: () => widget.prefClick())
-                                      : widget.prefixIcon == 'address'
+                                          child:
+                                              Icon(Icons.search, color: color),
+                                          onTap: () => widget.prefClick(),
+                                        )
+                                      : widget.prefixIcon == 'postal'
                                           ? InkWell(
-                                              child: Icon(Icons.home_outlined,
-                                                  color: color),
+                                              child: Container(
+                                                  margin:
+                                                      EdgeInsets.all(sm.h(1.9)),
+                                                  child: SvgPicture.asset(
+                                                      'assets/icon/location.svg',
+                                                      color: color)),
                                               onTap: () => widget.prefClick())
-                                          : widget.prefixIcon == 'pincode'
+                                          : widget.prefixIcon == 'address'
                                               ? InkWell(
-                                                  child: Icon(Icons.dialpad,
+                                                  child: Icon(
+                                                      Icons.home_outlined,
                                                       color: color),
                                                   onTap: () =>
                                                       widget.prefClick())
-                                              : null,
+                                              : widget.prefixIcon == 'pincode'
+                                                  ? InkWell(
+                                                      child: Icon(Icons.dialpad,
+                                                          color: color),
+                                                      onTap: () =>
+                                                          widget.prefClick())
+                                                  : null,
               counterText: "",
               hintText: widget.hint ?? '',
               alignLabelWithHint: true,

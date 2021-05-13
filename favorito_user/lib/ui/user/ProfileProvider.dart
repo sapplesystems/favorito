@@ -3,6 +3,7 @@ import 'package:favorito_user/model/Follow/FollowingData.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/Regexer.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 class ProfileProvider extends BaseProvider {

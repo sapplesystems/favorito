@@ -34,6 +34,7 @@ class BaseProvider extends ChangeNotifier {
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text('No'),
               ),
+              // ignore: deprecated_member_use
               new FlatButton(
                 onPressed: () => SystemNavigator.pop(),
                 child: new Text('Yes'),

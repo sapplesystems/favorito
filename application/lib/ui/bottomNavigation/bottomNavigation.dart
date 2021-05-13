@@ -52,15 +52,15 @@ Provider.of<BookingProvider>(context, listen: false).getBookingData();
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("")),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), title: Text("")),
+              icon: Icon(Icons.calendar_today), label: ""),
           BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.comment), title: Text("")),
+              icon: Icon(FontAwesomeIcons.comment), label: ""),
           BottomNavigationBarItem(
-              icon: Icon(Icons.format_list_bulleted), title: Text("")),
+              icon: Icon(Icons.format_list_bulleted), label: ""),
           BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.cog), title: Text("")),
+              icon: Icon(FontAwesomeIcons.cog), label: ""),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],

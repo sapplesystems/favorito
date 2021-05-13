@@ -16,6 +16,7 @@ class service {
   static final baseUserBooking = baseUser + 'booking/';
   static final baseUserAppointment = baseUser + 'appointment/';
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
+  static final baseBusinessReview = baseBusiness + 'review/';
   static final baseUserOrder = baseUser + 'order/';
 
 //function
@@ -58,6 +59,14 @@ class service {
 
   //relation
   static final businessRelationGet = baseUserProfile + 'user-business-relation';
+
+  //review
+  static final businessSetReview = baseBusinessReview + 'set-review';
+  static final getReviewReplies = baseBusinessReview + 'get-review-replies';
+  static final getrating = baseBusinessReview + 'get-review-detail';
+  static final getReviewListing = baseUserProfile + 'user-review';
+  static final setRating = baseUserProfile + 'set-business-rating';
+  static final getRating = baseUserProfile + 'get-business-rating';
 
   //userDetail
   static final userdetail = baseUserProfile + 'user-detail';

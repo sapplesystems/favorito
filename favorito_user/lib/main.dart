@@ -10,6 +10,7 @@ import 'package:favorito_user/ui/Route/route_generator.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/business/tabs/Review/ReviewProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileProvider.dart';
@@ -40,6 +41,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => AppointmentProvider()),
         ChangeNotifierProvider(create: (context) => OrderProvicer()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => ReviewProvider()),
       ],
       child: MyApp(),
     ));

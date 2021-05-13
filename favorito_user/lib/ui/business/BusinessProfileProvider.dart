@@ -10,7 +10,6 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/state_manager.dart';
 import 'package:intl/intl.dart';
 
 class BusinessProfileProvider extends BaseProvider {
@@ -27,7 +26,7 @@ class BusinessProfileProvider extends BaseProvider {
   List<TextEditingController> controller = [];
   JobListModel jobListModel = JobListModel();
   bool isWaiting = false;
-
+  ScrollController scrollController = ScrollController();
   int remainTime;
   bool _getWaitlistDone = false;
 

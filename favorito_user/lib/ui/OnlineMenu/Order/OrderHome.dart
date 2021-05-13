@@ -6,7 +6,6 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/dateformate.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/Extentions.dart';
 

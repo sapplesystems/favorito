@@ -9,12 +9,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class reviewList extends StatefulWidget {
+class ReviewList extends StatefulWidget {
   @override
-  _reviewListState createState() => _reviewListState();
+  _ReviewListState createState() => _ReviewListState();
 }
 
-class _reviewListState extends State<reviewList> {
+class _ReviewListState extends State<ReviewList> {
   SizeManager sm;
   ReviewintroModel rmi = ReviewintroModel();
   List<double> ratinglist = [];
@@ -139,8 +139,8 @@ class _reviewListState extends State<reviewList> {
                                       builder: (context) => review(
                                           userid: rlm[i].userId,
                                           id: rlm[i].id,
-                                          rating: rlm[i].rating)));
-                            }, rlm[i]?.rating),
+                                          rating: rlm[i].rating ?? 0)));
+                            }, rlm[i]?.rating ?? 0),
                         ],
                       ),
                     )
