@@ -139,16 +139,19 @@ class Order extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
               ),
-              Text(
-                _va,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(fontWeight: FontWeight.w400, fontSize: 14),
-                // maxLines: 2,
-                // softWrap: true,
-                // overflow: TextOverflow.ellipsis,
-                // textAlign: TextAlign.left,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Text(
+                  _va,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontWeight: FontWeight.w400, fontSize: 14),
+                  // maxLines: 2,
+                  // softWrap: true,
+                  // overflow: TextOverflow.ellipsis,
+                  // textAlign: TextAlign.left,
+                ),
               ),
 
               // Container(

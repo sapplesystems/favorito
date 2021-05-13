@@ -109,7 +109,7 @@ class AvgRatingData {
   AvgRatingData({this.avgRating});
 
   AvgRatingData.fromJson(Map<String, dynamic> json) {
-    avgRating = json['avg_rating'];
+    avgRating = double.parse((json['avg_rating'] ?? 0).toString());
   }
 
   Map<String, dynamic> toJson() {

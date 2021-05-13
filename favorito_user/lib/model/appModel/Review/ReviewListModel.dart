@@ -29,57 +29,69 @@ class ReviewListModel {
 
 class ReviewData1 {
   int rootId;
+  String userId;
+  int self;
   String businessId;
   String reviews;
   int parentId;
   String name;
   String photo;
-  String createdAt;
   String userReview;
+  String createdAt;
+  String businessDate;
   String businessReview;
-  int totalReviews;
   var rating;
+  int totalReviews;
 
   ReviewData1(
       {this.rootId,
+      this.userId,
+      this.self,
       this.businessId,
       this.reviews,
       this.parentId,
       this.name,
       this.photo,
-      this.createdAt,
       this.userReview,
+      this.createdAt,
+      this.businessDate,
       this.businessReview,
-      this.totalReviews,
-      this.rating});
+      this.rating,
+      this.totalReviews});
 
   ReviewData1.fromJson(Map<String, dynamic> json) {
     rootId = json['root_id'];
+    userId = json['user_id'];
+    self = json['self'];
     businessId = json['business_id'];
     reviews = json['reviews'];
     parentId = json['parent_id'];
     name = json['name'];
     photo = json['photo'];
-    createdAt = json['created_at'];
     userReview = json['user_review'];
+    createdAt = json['created_at'];
+    businessDate = json['business_date'];
     businessReview = json['business_review'];
-    totalReviews = json['total_reviews'];
     rating = json['rating'];
+    totalReviews = json['total_reviews'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['root_id'] = this.rootId;
+    data['user_id'] = this.userId;
+    data['self'] = this.self;
     data['business_id'] = this.businessId;
     data['reviews'] = this.reviews;
     data['parent_id'] = this.parentId;
     data['name'] = this.name;
     data['photo'] = this.photo;
-    data['created_at'] = this.createdAt;
     data['user_review'] = this.userReview;
+    data['created_at'] = this.createdAt;
+    data['business_date'] = this.businessDate;
     data['business_review'] = this.businessReview;
-    data['total_reviews'] = this.totalReviews;
     data['rating'] = this.rating;
+    data['total_reviews'] = this.totalReviews;
     return data;
   }
 }

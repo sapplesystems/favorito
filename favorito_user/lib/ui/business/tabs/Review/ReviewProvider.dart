@@ -17,11 +17,10 @@ class ReviewProvider extends BaseProvider {
   String businessId;
   List<double> ratingPoints = [0.0, 0.0, 0.0, 0.0, 0.0];
   List<Reviewdata> reviewModel = [];
-  RatingData _ratingData = RatingData();
+  RatingData _ratingDatas = RatingData();
   void businessSetReview(context) async {
     Map _map = {
       'business_id': businessId,
-      // 'business_id': 'KIR4WQ4N7KF697HRQ',
       "review": controller.text,
       "parent_id":
           (_selectedReviewId != "null" && int.parse(_selectedReviewId) > 0)
@@ -59,12 +58,10 @@ class ReviewProvider extends BaseProvider {
   }
 
   void getReviewReplies() async {
+    print("_rootId:$_rootId");
     if (_rootId != "null")
-      await APIManager.getReviewReplies({
-        "business_id": businessId,
-        // "business_id": 'KIR4WQ4N7KF697HRQ',
-        "review_id": _rootId
-      }).then((value) {
+      await APIManager.getReviewReplies(
+          {"business_id": businessId, "review_id": _rootId}).then((value) {
         if (value.status == 'success') {
           reviewModel?.clear();
           reviewModel.addAll(value.data);
@@ -83,18 +80,19 @@ class ReviewProvider extends BaseProvider {
 
   void getrating() async {
     Map _map = {"business_id": businessId};
+    print("getrating:${_map.toString()}");
     await APIManager.getrating(_map).then((value) {
-      _ratingData = value.data;
-      ratingPoints[0] = value.data.ratingsByPoints.rating1 / 10;
-      ratingPoints[1] = value.data.ratingsByPoints.rating2 / 10;
-      ratingPoints[2] = value.data.ratingsByPoints.rating3 / 10;
-      ratingPoints[3] = value.data.ratingsByPoints.rating4 / 10;
-      ratingPoints[4] = value.data.ratingsByPoints.rating5 / 10;
+      _ratingDatas = value.data;
+      ratingPoints[0] = (value.data?.ratingsByPoints?.rating1 ?? 0) / 10;
+      ratingPoints[1] = (value.data?.ratingsByPoints?.rating2 ?? 0) / 10;
+      ratingPoints[2] = (value.data?.ratingsByPoints?.rating3 ?? 0) / 10;
+      ratingPoints[3] = (value.data?.ratingsByPoints?.rating4 ?? 0) / 10;
+      ratingPoints[4] = (value.data?.ratingsByPoints?.rating5 ?? 0) / 10;
       notifyListeners();
     });
   }
 
-  RatingData getRatingData() => _ratingData;
+  RatingData getRatingData() => _ratingDatas;
 
   void setRating() async {
     Map _map = {'business_id': businessId, 'rating': rating};
@@ -106,13 +104,15 @@ class ReviewProvider extends BaseProvider {
 
   void getRating() async {
     Map _map = {'business_id': businessId};
+    print("_map${_map.toString()}");
     await APIManager.getRating(_map).then((value) {
       rating = '${value.data[0].rating}';
+      notifyListeners();
     });
   }
 
   getCurrentBusinessId(context) {
-    businessId = Provider.of<BusinessProfileProvider>(context, listen: true)
+    businessId = Provider.of<BusinessProfileProvider>(context, listen: false)
         .getBusinessId();
   }
 }

@@ -2,7 +2,6 @@ import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Review/ReviewListModel.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
-import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/Review/RateMe.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -23,10 +22,10 @@ class ReviewTab extends StatelessWidget {
     if (isFirst) {
       sm = SizeManager(context);
       vaTrue = Provider.of<ReviewProvider>(context, listen: true);
-      vaTrue
-        ..getCurrentBusinessId(context)
-        ..getReviewListing(context)
-        ..getrating();
+
+      vaTrue.getCurrentBusinessId(context);
+      vaTrue.getrating();
+      vaTrue.getReviewListing(context);
       isFirst = false;
     }
     return Scaffold(
@@ -51,7 +50,7 @@ class ReviewTab extends StatelessWidget {
                         spacing: -8,
                         children: [
                           Text(
-                            '${vaTrue.getRatingData()?.avgRatingData?.avgRating ?? 0.0}'
+                            '${vaTrue.getRatingData()?.avgRatingData?.avgRating ?? 0}'
                                 .substring(0, 3),
                             style: Theme.of(context)
                                 .textTheme
@@ -98,7 +97,7 @@ class ReviewTab extends StatelessWidget {
                           ],
                         ),
                       Text(
-                        '${vaTrue.getRatingData()?.totalRating?.totalRatings} Ratings       ${vaTrue.getRatingData()?.totalReview?.totalReviews} reviews',
+                        '${vaTrue.getRatingData()?.totalRating?.totalRatings ?? 0} Ratings       ${vaTrue.getRatingData()?.totalReview?.totalReviews ?? 0} reviews',
                         style: Theme.of(context).textTheme.headline3.copyWith(
                             fontSize: 10,
                             letterSpacing: .40,
@@ -118,7 +117,6 @@ class ReviewTab extends StatelessWidget {
                           // Navigator.pushNamed(context, '/review')
                           //     .whenComplete(() {
                           //   vaTrue.getReviewListing(
-                          //       'KIR4WQ4N7KF697HRQ'
                           //       // Provider.of<BusinessProfileProvider>(context,
                           //       // listen: true)
                           //       // .getBusinessId()
@@ -127,31 +125,32 @@ class ReviewTab extends StatelessWidget {
                           // });
 
                           showModalBottomSheet<void>(
-                                  isDismissible: false,
-                                  enableDrag: true,
-                                  isScrollControlled: true,
-                                  context: context,
-                                  backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-                                  builder: (BuildContext context) {
-                                    return StatefulBuilder(builder:
-                                        (BuildContext context,
-                                            StateSetter setState) {
-                                      return Container(
-                                          height: sm.h(26),
-                                          decoration: new BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  new BorderRadius.only(
-                                                topLeft:
-                                                    const Radius.circular(40.0),
-                                                topRight:
-                                                    const Radius.circular(40.0),
-                                              )),
-                                          child: RateMe());
-                                    });
-                                  })
-                              .whenComplete(
-                                  () => vaTrue.getReviewListing(context));
+                              isDismissible: false,
+                              enableDrag: true,
+                              isScrollControlled: true,
+                              context: context,
+                              backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(builder:
+                                    (BuildContext context,
+                                        StateSetter setState) {
+                                  return Container(
+                                      height: sm.h(26),
+                                      decoration: new BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: new BorderRadius.only(
+                                            topLeft:
+                                                const Radius.circular(40.0),
+                                            topRight:
+                                                const Radius.circular(40.0),
+                                          )),
+                                      child: RateMe());
+                                });
+                              }).whenComplete(() {
+                            vaTrue.getCurrentBusinessId(context);
+                            vaTrue.getrating();
+                            vaTrue.getReviewListing(context);
+                          });
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -173,6 +172,8 @@ class ReviewTab extends StatelessWidget {
 
                           Navigator.pushNamed(context, '/review')
                               .whenComplete(() {
+                            vaTrue.getCurrentBusinessId(context);
+                            vaTrue.getrating();
                             vaTrue.getReviewListing(context);
                           });
                         },
@@ -201,11 +202,15 @@ class ReviewTab extends StatelessWidget {
                             vaTrue.getAllreviewsListForUi();
                         return InkWell(
                           onTap: () {
-                            vaTrue.setRootId(_data[_index].rootId.toString());
-                            Navigator.pushNamed(context, '/review')
-                                .whenComplete(() {
-                              vaTrue.getReviewListing(context);
-                            });
+                            if (_data[_index].self == 1) {
+                              vaTrue.setRootId(_data[_index].rootId.toString());
+                              Navigator.pushNamed(context, '/review')
+                                  .whenComplete(() {
+                                vaTrue.getCurrentBusinessId(context);
+                                vaTrue.getrating();
+                                vaTrue.getReviewListing(context);
+                              });
+                            }
                           },
                           child: Card(
                             child: Column(
@@ -222,7 +227,8 @@ class ReviewTab extends StatelessWidget {
                                               height: sm.h(8),
                                               width: sm.h(8),
                                               child: ImageMaster(
-                                                  url: _data[_index].photo))),
+                                                  url: _data[_index]?.photo ??
+                                                      "https://emoji.gg/assets/emoji/f.png"))),
                                       SizedBox(width: sm.w(4)),
                                       Expanded(
                                         child: Column(
@@ -253,34 +259,32 @@ class ReviewTab extends StatelessWidget {
                                       // Icon(Icons.more_vert, color: myGrey)
                                     ]),
                                   ),
-                                  Row(
-                                    children: [
-                                      for (int i = 0;
-                                          i < (_data[_index].rating ?? 0);
-                                          i++)
-                                        Icon(
-                                          Icons.star,
-                                          size: 16,
-                                          color: 0 == 0 ? myRed : Colors.white,
-                                        ),
-                                      SizedBox(width: 20),
-                                      Text(
-                                        _data[_index]
-                                            .createdAt
-                                            .substring(0, 6)
-                                            .replaceAll('-', ' '),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
-                                      )
-                                    ],
-                                  ),
+                                  Row(children: [
+                                    for (int i = 0;
+                                        i < (_data[_index].rating ?? 0);
+                                        i++)
+                                      Icon(
+                                        Icons.star,
+                                        size: 16,
+                                        color: 0 == 0 ? myRed : Colors.white,
+                                      ),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      _data[_index]
+                                          ?.createdAt
+                                          ?.substring(0, 6)
+                                          ?.replaceAll('-', ' '),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400),
+                                    )
+                                  ]),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(_data[_index].reviews,
+                                    child: Text(_data[_index]?.reviews ?? '',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6
@@ -319,45 +323,38 @@ class ReviewTab extends StatelessWidget {
                                   //       Icon(Icons.share)
                                   //     ])
                                   Visibility(
-                                    visible: _data[_index]
-                                            ?.businessReview
-                                            ?.trim()
-                                            ?.isNotEmpty ??
-                                        false,
+                                    visible:
+                                        _data[_index]?.businessReview != null,
                                     child: Row(children: [
                                       Container(
                                           height: 50,
                                           padding: EdgeInsets.only(left: 18.0),
                                           child: SvgPicture.asset(
                                               'assets/icon/Line.svg')),
-                                      Visibility(
-                                        visible: _data[_index]
-                                                ?.businessReview
-                                                ?.trim()
-                                                ?.isNotEmpty ??
-                                            false,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: Column(
+                                      // Visibility(
+                                      //   visible:
+                                      //       _data[_index]?.businessReview !=
+                                      //           null,
+                                      //   child:
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "Response from owner",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3
-                                                    .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                textScaleFactor: .3,
-                                              ),
+                                              Text("Response from owner",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                  textScaleFactor: .3),
                                               Text(
                                                 _data[_index]
-                                                    .createdAt
-                                                    .replaceAll('-', ' ')
-                                                    .substring(0, 6),
+                                                    ?.createdAt
+                                                    ?.replaceAll('-', ' ')
+                                                    ?.substring(0, 6),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline3
@@ -368,21 +365,19 @@ class ReviewTab extends StatelessWidget {
                                                 textScaleFactor: .35,
                                               ),
                                               Text(
-                                                _data[_index].businessReview ??
-                                                    "",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline3
-                                                    .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ),
-                                                textScaleFactor: .35,
-                                              )
-                                            ],
-                                          ),
-                                        ),
+                                                  _data[_index]
+                                                          ?.businessReview ??
+                                                      '',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline3
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                  textScaleFactor: .35)
+                                            ]),
                                       ),
+                                      // ),
                                     ]),
                                   ),
                                 ]),

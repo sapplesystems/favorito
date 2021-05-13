@@ -1,12 +1,11 @@
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
-import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+
 import 'package:favorito_user/ui/business/tabs/CatlogTab.dart';
 import 'package:favorito_user/ui/business/tabs/JobTab.dart';
 import 'package:favorito_user/ui/business/tabs/OverviewTab.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewTab.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:provider/provider.dart';
 
 class Tabber extends StatefulWidget {
   BusinessProfileData data;
@@ -40,18 +39,6 @@ class profilePageState extends State<Tabber>
     return Column(
       children: [
         TabBar(
-          onTap: (j) {
-            Provider.of<BusinessProfileProvider>(context, listen: true)
-                .scrollController
-                .animateTo(
-                    Provider.of<BusinessProfileProvider>(context, listen: true)
-                            .scrollController
-                            .offset +
-                        100,
-                    curve: Curves.linear,
-                    duration: Duration(milliseconds: 500));
-            print('tabClicked1${j.toString()}');
-          },
           isScrollable: true,
           unselectedLabelColor: myGreyLight,
           labelColor: Colors.red,
