@@ -132,10 +132,12 @@ exports.trendingNearby = async function(req, res, next) {
         } else {
             offset = 0
         }
-
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -209,6 +211,22 @@ exports.trendingNearby = async function(req, res, next) {
     }
 };
 
+var getUserDefaultLocation = async(user_id) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const sqlLocation = `select latitude, longitude from user_address where user_id = '${user_id}' and default_address = 1`
+            let resultLocation = await exports.run_query(sqlLocation)
+            if (resultLocation[0].latitude == null || resultLocation[0].longitude == null) {
+                resolve(null)
+            } else {
+                resolve(resultLocation)
+            }
+        } catch (error) {
+            resolve(null)
+        }
+    })
+}
+
 var get_day_name = (date_object = false) => {
     var d = new Date();
     var weekday = new Array(7);
@@ -236,6 +254,9 @@ exports.newBusiness = async function(req, res, next) {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -302,6 +323,9 @@ exports.topRated = async function(req, res, next) {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -372,6 +396,9 @@ exports.mostPopular = async function(req, res, next) {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -499,6 +526,9 @@ exports.getBusinessByAppointment = async function(req, res, next) {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -560,6 +590,9 @@ exports.getBusinessByFreelancer = async function(req, res, next) {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -614,6 +647,9 @@ exports.getBusinessByBookTable = async(req, res, next) => {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -667,6 +703,9 @@ exports.getBusinessByJob = async function(req, res, next) {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -689,7 +728,7 @@ exports.getBusinessByJob = async function(req, res, next) {
             }
         });
 
-        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
+        var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated,location, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
         SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
            POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
            ,business_category_id, b_m.business_name, b_m.town_city, CONCAT(' ${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m JOIN business_ratings AS b_r  ON b_m.business_id = b_r.business_id WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_m.business_id RLIKE '${regex}' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id order by distance is null, distance LIMIT ${limit} OFFSET ${offset}`;
@@ -730,6 +769,9 @@ exports.getBusinessByFood = async(req, res, next) => {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)
@@ -793,6 +835,9 @@ exports.getBusinessByDoctor = async(req, res, next) => {
         if (req.body.latitude && req.body.longitude) {
             latitude = req.body.latitude
             longitude = req.body.longitude
+        } else if (userLocation = await getUserDefaultLocation(req.userdata.id)) {
+            latitude = userLocation[0].latitude
+            longitude = userLocation[0].longitude
         } else {
             try {
                 pincode_user = await user_pincode(req.userdata.id)

@@ -435,7 +435,7 @@ exports.setRestrictionDate = async(req, res) => {
 
 exports.getRestrictionDate = async(req, res) => {
     try {
-        sqlGetRestriction = `select DATE_FORMAT(restriction_date, '%Y-%m-%d') restriction_date from business_booking_restriction where business_id = '${req.userdata.business_id}'`
+        sqlGetRestriction = `select id as restriction_id, DATE_FORMAT(restriction_date, '%Y-%m-%d') as restriction_date from business_booking_restriction where business_id = '${req.userdata.business_id}'`
         resultGetRestriction = await exports.run_query(sqlGetRestriction)
         return res.status(200).json({ status: 'success', message: 'Restriction added successfully', date: resultGetRestriction });
     } catch (error) {

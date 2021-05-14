@@ -11,5 +11,7 @@ router.post('/create-order', CheckAuth, UserOrderController.createOrder);
 
 router.post('/create-order-verbose', CheckAuth, UserOrderController.createOrderVerbose);
 
+router.post('/cancel-order', CheckAuth, UserOrderController.cancelOrder);
+
 
 module.exports = router;
