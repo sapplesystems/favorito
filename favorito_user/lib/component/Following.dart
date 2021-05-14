@@ -22,10 +22,7 @@ class _fromToState extends State<Following> {
       padding: EdgeInsets.symmetric(vertical: sm.h(1.4)),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: widget.clr,
-          width: 1,
-        ),
+        border: Border.all(color: widget.clr, width: 1),
       ),
       child: Text(
         widget.txt,

@@ -128,8 +128,8 @@ class UserAddressProvider extends ChangeNotifier {
       'landmark': acces[1].controller.text,
       'address': acces[0].controller.text,
       'address_type': _addresstype,
-      'longitude':locationResult.latLng.latitude,
-      'latitude':locationResult.latLng.longitude
+      'longitude': locationResult.latLng.latitude,
+      'latitude': locationResult.latLng.longitude
     };
     Map _map2 = {
       'address_id': _editId,
@@ -140,17 +140,18 @@ class UserAddressProvider extends ChangeNotifier {
       'landmark': acces[1].controller.text,
       'address': acces[0].controller.text,
       'address_type': _addresstype,
-      'longitude':locationResult.latLng.latitude,
-      'latitude':locationResult.latLng.longitude
+      'longitude': locationResult.latLng.latitude,
+      'latitude': locationResult.latLng.longitude
     };
     await APIManager.modifyAddress(
             mode == 'Add' ? _map : _map2, RIKeys.josKeys6)
         .then((value) {
       if (value.status == "success") {
-        if(mode == 'Add')for (var v in acces) {
-          v.controller.text = '';
-          v.error = null;
-        }
+        if (mode == 'Add')
+          for (var v in acces) {
+            v.controller.text = '';
+            v.error = null;
+          }
         BotToast.showText(text: value.message);
       } else
         BotToast.showText(text: value.message);
@@ -191,7 +192,7 @@ class UserAddressProvider extends ChangeNotifier {
   seSelectedAddress(int index) async {
     await APIManager.changeAddress(
         {'default_address_id': this.addressListModel.data.addresses[index].id},
-        RIKeys.josKeys3);
+        RIKeys.josKeys24);
 
     for (int _i = 0; _i < this.addressListModel.data.addresses.length; _i++) {
       this.addressListModel.data.addresses[_i].defaultAddress =
@@ -246,7 +247,7 @@ class UserAddressProvider extends ChangeNotifier {
   }
 
   void getAllState() async {
-    await APIManager.stateList(null, RIKeys.josKeys3).then((value) {
+    await APIManager.stateList(null, RIKeys.josKeys24).then((value) {
       if (value.status == 'success') {
         try {
           _stateList.addAll(value.data);
@@ -299,8 +300,8 @@ class UserAddressProvider extends ChangeNotifier {
         qrResult = _val.rawContent;
         if (qrResult.length < 6) return;
         Provider.of<BusinessProfileProvider>(context, listen: false)
-            ..setBusinessId(qrResult)
-        ..refresh(1);
+          ..setBusinessId(qrResult)
+          ..refresh(1);
         Navigator.of(context).pushNamed('/businessProfile');
         print("qrResult:$qrResult");
       });
@@ -329,23 +330,25 @@ class UserAddressProvider extends ChangeNotifier {
   }
 
   void showPlacePicker(context) async {
-     locationResult = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => PlacePicker("AIzaSyBhxep9O8VQz-JHmJW2XSzgjTRemLv91sI")));
-      print("sdf${locationResult.formattedAddress.length}");
-      acces[0].controller.text =locationResult.formattedAddress.toString().substring(0,70);
-      acces[1].controller.text =locationResult.locality;
-      acces[2].controller.text =locationResult.postalCode;
-      checkPin();
-      }
-
-  setLocations(LocationResult _val){
-    locationResult =_val;
+    locationResult = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            PlacePicker("AIzaSyBhxep9O8VQz-JHmJW2XSzgjTRemLv91sI")));
     print("sdf${locationResult.formattedAddress.length}");
-      acces[0].controller.text =locationResult.formattedAddress.toString().substring(0,70);
-      acces[1].controller.text =locationResult.locality;
-      acces[2].controller.text =locationResult.postalCode;
-      checkPin();
-  }    
+    acces[0].controller.text =
+        locationResult.formattedAddress.toString().substring(0, 70);
+    acces[1].controller.text = locationResult.locality;
+    acces[2].controller.text = locationResult.postalCode;
+    checkPin();
+  }
+
+  setLocations(LocationResult _val) {
+    locationResult = _val;
+    acces[0].controller.text =
+        locationResult.formattedAddress.toString().substring(0, 70);
+    acces[1].controller.text = locationResult.locality;
+    acces[2].controller.text = locationResult.postalCode;
+    checkPin();
+  }
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {
   //     if (value.status == 'success') {

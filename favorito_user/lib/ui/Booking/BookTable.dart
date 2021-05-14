@@ -199,7 +199,8 @@ class BookTable extends StatelessWidget {
                           child: Divider(height: sm.h(6))),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
-                          child: Text('Time', style: TextStyle(color: myGrey)))   ,                   Container(
+                          child: Text('Time', style: TextStyle(color: myGrey))),
+                      Container(
                         height: 100,
                         child: ListView(
                             shrinkWrap: true,
@@ -225,9 +226,8 @@ class BookTable extends StatelessWidget {
                                             color: myBackGround,
                                             elevation: 12,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(40)),
-                                            ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(40))),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(
                                                   vertical: 20, horizontal: 8),
@@ -369,7 +369,7 @@ class BookTable extends StatelessWidget {
                             : NeumorphicButton(
                                 style: NeumorphicStyle(
                                     shape: NeumorphicShape.convex,
-                                    depth: 4,
+                                    // depth: 4,
                                     lightSource: LightSource.topLeft,
                                     color: myBackGround,
                                     boxShape: NeumorphicBoxShape.roundRect(

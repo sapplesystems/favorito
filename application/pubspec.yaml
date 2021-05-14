@@ -1,5 +1,5 @@
 name: Favorito
-description: Favorito.
+description: favorito.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -30,8 +30,7 @@ dependencies:
   url_launcher:
   dropdown_search:
   percent_indicator:
-  
-  
+
   flutter:
     sdk: flutter
 
@@ -63,8 +62,7 @@ dependencies:
   google_maps_place_picker:
   time_picker_widget:
   http:
-  
-  
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_dotenv:
@@ -100,7 +98,7 @@ flutter:
   fonts:
     - family: Gilroy-Bold
       fonts:
-        - asset: assets/fonts/Gilroy-Bold.ttf  
+        - asset: assets/fonts/Gilroy-Bold.ttf
     - family: Gilroy-ExtraBold
       fonts:
         - asset: assets/fonts/Gilroy-ExtraBold.otf
@@ -116,6 +114,6 @@ flutter:
     - family: Gilroy-Regular
       fonts:
         - asset: assets/fonts/Gilroy-Regular.ttf
-   
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

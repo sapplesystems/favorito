@@ -1,13 +1,12 @@
+import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/component/RoundedButton.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/Fab.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuItem.dart';
-import 'package:favorito_user/ui/OnlineMenu/Options.dart';
 import 'package:favorito_user/ui/OnlineMenu/PayOption.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-import 'package:favorito_user/Providers/BasketControllers.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +19,6 @@ class FloatingActionButtons extends StatefulWidget {
 
 class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   SizeManager sm;
-  var providerBasketTrue;
-  var providerBasketFalse;
   var providerMenuFalse;
   var providerMenuTrue;
   var vaFalse;
@@ -32,12 +29,8 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    providerBasketTrue = Provider.of<BasketControllers>(context, listen: true);
-    providerBasketFalse =
-        Provider.of<BasketControllers>(context, listen: false);
     providerMenuFalse = Provider.of<MenuHomeProvider>(context, listen: false);
     providerMenuTrue = Provider.of<MenuHomeProvider>(context, listen: true);
-    vaFalse = Provider.of<MenuHomeProvider>(context, listen: false);
     vaOptFalse = Provider.of<OptController>(context, listen: false);
     vaOptTrue = Provider.of<OptController>(context, listen: true);
 
@@ -47,65 +40,6 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
         },
         backgroundColor: myBackGround,
         child: Fab());
-  }
-
-  body2(context) {
-    return Scrollbar(
-      child: Column(
-        children: [
-          Container(
-            height: sm.h(60),
-            child: Consumer<MenuHomeProvider>(
-              builder: (context, data, child) {
-                return ListView(
-                  children: [
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: new NeverScrollableScrollPhysics(),
-                        itemCount: data.modelOption.data.paymentType.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Options();
-                        }),
-                    Divider(),
-                    PayOption(),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void callCustomizetion(BuildContext context) {
-    title = customizetion;
-    showModalBottomSheet<void>(
-        enableDrag: true,
-        isScrollControlled: true,
-        context: context,
-        backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              height: sm.h(90),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30))),
-              child: ListView(
-                physics: new NeverScrollableScrollPhysics(),
-                children: <Widget>[
-                  header(context),
-                  body2(context),
-                  footer(context)
-                ],
-              ),
-            );
-          });
-        });
   }
 
   void bucketBottomSheet(BuildContext context) {
@@ -119,7 +53,7 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return Container(
-              height: sm.h(60),
+              height: sm.h(80),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -143,33 +77,32 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
     return Container(
       child: Column(children: [
         Center(
-          child: Container(
-            margin: EdgeInsets.only(top: sm.w(4)),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: myGreyLight,
+            child: Container(
+                margin: EdgeInsets.only(top: sm.w(4)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: myGreyLight,
+                ),
+                width: sm.w(18),
+                height: 6)),
+        Row(children: [
+          SizedBox(width: sm.w(2)),
+          Padding(
+            padding:
+                EdgeInsets.symmetric(vertical: sm.w(5), horizontal: sm.w(2)),
+            child: SvgPicture.asset(
+              title == yourBasket
+                  ? 'assets/icon/basket.svg'
+                  : 'assets/icon/customize.svg',
+              height: sm.h(4),
             ),
-            width: sm.w(18),
-            height: 6,
           ),
-        ),
-        Row(
-          children: [
-            SizedBox(width: sm.w(2)),
-            Padding(
-              padding:
-                  EdgeInsets.symmetric(vertical: sm.w(5), horizontal: sm.w(2)),
-              child: SvgPicture.asset(
-                title == yourBasket
-                    ? 'assets/icon/basket.svg'
-                    : 'assets/icon/customize.svg',
-                height: sm.h(4),
-              ),
-            ),
-            Text(title,
-                style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 20)),
-          ],
-        ),
+          Text(title,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(fontWeight: FontWeight.w400, fontSize: 20)),
+        ]),
         Divider(),
       ]),
     );
@@ -178,65 +111,70 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   footer(BuildContext context) {
     return Container(
       height: 100,
-      child: ListView(
-        physics: new NeverScrollableScrollPhysics(),
-        children: [
-          Divider(),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
-            child: Row(
-              children: [
-                Text("Total Amount",
-                    style:
-                        TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 16)),
-                Spacer(),
-                Consumer<BasketControllers>(builder: (context, _data, child) {
-                  return Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: Text("${_data.allPrice() ?? 0.toString()}\u{20B9}",
-                        style: TextStyle(
-                            fontFamily: 'Gilroy-Medium', fontSize: 16)),
-                  );
-                }),
-              ],
-            ),
+      child: ListView(physics: new NeverScrollableScrollPhysics(), children: [
+        Divider(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
+          child: Row(
+            children: [
+              Text("Total Amount",
+                  style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 16)),
+              Spacer(),
+              Consumer<MenuHomeProvider>(builder: (context, _data, child) {
+                return Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Text("${_data.allPrice() ?? 0.toString()}\u{20B9}",
+                      style:
+                          TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 16)),
+                );
+              }),
+            ],
           ),
-          Padding(
+        ),
+        Visibility(
+          visible: providerMenuTrue.allPrice() > 0,
+          child: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(16), vertical: 2),
             child: RoundedButton(
-              clicker: () {
-                callCustomizetion(context);
-              },
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontFamily: "Gilroy-Bold",
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 1),
-              title: 'Confirm Order',
-            ),
-          )
-        ],
-      ),
+                clicker: () {
+                  providerMenuTrue.callCustomizetion();
+                },
+                textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontFamily: "Gilroy-Bold",
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 1),
+                title: 'Confirm Order'),
+          ),
+        )
+      ]),
     );
   }
 
-  body1(context) => Container(
-        height: sm.h(30),
-        child: Scrollbar(
-          isAlwaysShown: true,
-          child: ListView.builder(
-              itemCount: providerBasketTrue.getMyObjectsList().length,
-              itemBuilder: (BuildContext context, int index) {
-                return MenuItems(
-                    data: providerBasketTrue.getMyObjectsList()[index],
-                    isRefresh: true,
-                    callBack: () {
-                      providerBasketTrue.notifyListeners();
-                    });
-              }),
+  body1(context) {
+    List<MenuItemModel> _va = providerMenuFalse.getMyObjectsList();
+    return Container(
+      height: sm.h(52),
+      child: Scrollbar(
+        isAlwaysShown: true,
+        child: ListView(
+          children: [
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: _va.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return MenuItems(
+                      data: _va[index],
+                      isRefresh: true,
+                      callBack: () => providerMenuTrue.notifyListeners());
+                }),
+            PayOption()
+          ],
         ),
-      );
+      ),
+    );
+  }
 }
 
 // Map _map = {

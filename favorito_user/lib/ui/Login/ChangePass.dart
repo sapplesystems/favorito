@@ -26,7 +26,7 @@ class ChangePass extends StatelessWidget {
       key: RIKeys.josKeys17,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: myBackGround,
+        backgroundColor: Colors.transparent,
         title: Text('Change Password',
             style: TextStyle(
                 fontFamily: 'Gilroy-Reguler',
@@ -34,7 +34,7 @@ class ChangePass extends StatelessWidget {
                 letterSpacing: .4,
                 fontSize: 20)),
       ),
-      backgroundColor: myBackGround,
+      // backgroundColor: myBackGround,
       body: ListView(children: [
         for (int i = 0; i < 2; i++)
           Padding(
@@ -63,19 +63,20 @@ class ChangePass extends StatelessWidget {
             ),
           ),
         Visibility(
-          visible: vaTrue.getErrorPass(0) == null &&
-              vaTrue.getErrorPass(1) == null &&
-              vaTrue.controller[0].text.length > 0,
+          visible: true,
+          //  vaTrue.getErrorPass(0) == null &&
+          //     vaTrue.getErrorPass(1) == null &&
+          //     vaTrue.controller[0].text.length > 0,
           child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
               child: NeumorphicButton(
                 style: NeumorphicStyle(
                     shape: NeumorphicShape.concave,
-                    depth: 11,
-                    intensity: 40,
+                    // depth: 11,
+                    // intensity: 40,
                     surfaceIntensity: -.4,
                     // lightSource: LightSource.topLeft,
-                    color: Color(0xffedf0f5),
+                    color: myButtonBackground,
                     boxShape: NeumorphicBoxShape.roundRect(
                         BorderRadius.all(Radius.circular(24.0)))),
                 margin: EdgeInsets.symmetric(horizontal: 10),
@@ -83,10 +84,9 @@ class ChangePass extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Center(
                     child: Text("Submit",
-                        style: TextStyle(
+                        style: Theme.of(context).textTheme.headline6.copyWith(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'Gilroy-Light',
                             color: myRed))),
               )),
         ),

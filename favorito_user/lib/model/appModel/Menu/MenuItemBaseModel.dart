@@ -11,7 +11,7 @@ class MenuItemBaseModel {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<MenuItemModel>();
+      data = [];
       json['data'].forEach((v) {
         data.add(new MenuItemModel.fromJson(v));
       });

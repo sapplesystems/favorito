@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
+import 'package:favorito_user/model/Follow/followingModel.dart';
 import 'package:favorito_user/model/ProfilePhoto.dart';
+import 'package:favorito_user/model/RatingModel.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/AddressListModel.dart';
 import 'package:favorito_user/model/appModel/BookingOrAppointment/BookTableVerbose.dart';
@@ -15,14 +17,19 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
 import 'package:favorito_user/model/appModel/CheckAccountmodel.dart';
+import 'package:favorito_user/model/appModel/Menu/Customization.dart/CustomizationModel.dart';
 import 'package:favorito_user/model/appModel/Menu/IsFoodModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
+import 'package:favorito_user/model/appModel/Menu/order/OrderListModel.dart';
 import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
 import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
 import 'package:favorito_user/model/appModel/Relation.dart/relationBase.dart';
+import 'package:favorito_user/model/appModel/Review/MyRatingModel.dart';
+import 'package:favorito_user/model/appModel/Review/ReviewListModel.dart';
+import 'package:favorito_user/model/appModel/Review/ReviewModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListBaseModel.dart';
 import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
 import 'package:favorito_user/model/appModel/appointment/PersonListModel.dart';
@@ -438,7 +445,7 @@ class APIManager {
 
 //userdetail
   static Future<ProfileModel> userdetail(
-      Map _map, GlobalKey<ScaffoldState> josKeys3) async {
+      Map _map, GlobalKey<ScaffoldState> josKeys10) async {
     if (!await utilProvider.checkInternet())
       return ProfileModel(
           status: 'fail', message: 'Please check internet connections');
@@ -452,7 +459,7 @@ class APIManager {
     try {
       response = await dio.post(url, data: _map, options: opt);
     } on DioError catch (e) {
-      ExceptionHandler(e, null, url, josKeys3);
+      ExceptionHandler(e, null, url, josKeys10);
     }
     print("service.mostPopulerBusiness : ${response.toString}");
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
@@ -627,8 +634,8 @@ class APIManager {
 
     response =
         await dio.post(service.businessRelationGet, data: _map, options: opt);
-    print("service.businessRelationGet : ${response.toString}");
-    return RelationBase.fromJson(convert.jsonDecode(response.toString()));
+
+    return RelationBase.fromJson(convert.jsonDecode('$response'));
   }
 
   //booking
@@ -819,6 +826,79 @@ class APIManager {
     return MenuTabModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
+  //set-Review
+  static Future<BaseResponse> businessSetReview(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.businessSetReview;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //get-Review-replies
+  static Future<ReviewModel> getReviewReplies(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getReviewReplies;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return ReviewModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //get-getReviewListing
+  static Future<ReviewListModel> getReviewListing(
+      Map _map, BuildContext context) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getReviewListing;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return ReviewListModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //get-getrating
+  static Future<RatingModel> getrating(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getrating;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return RatingModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //setRating
+  static Future<BaseResponse> setRating(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.setRating;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  //getRating
+  static Future<MyRatingModel> getRating(Map _map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.getRating;
+    print("$_url : $_url");
+    response = await dio.post(_url, data: _map, options: opt);
+    return MyRatingModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
   //Menu
   static Future<IsFoodModel> menusIsFoodItem(Map _map) async {
     String token = await Prefs.token;
@@ -843,7 +923,20 @@ class APIManager {
     return MenuItemBaseModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-//order
+//Menu item customizetion
+  static Future<CustomizationItemModel> menuItemCust(Map _map) async {
+    String token = await Prefs.token;
+    print("menuItemRequest : ${_map.toString()}");
+    opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String url = service.menuItemCust;
+    print("$url : ${service.menuTabItemGet}");
+    response = await dio.post(url, data: _map, options: opt);
+    print("$url : ${response.toString}");
+    return CustomizationItemModel.fromJson(
+        convert.jsonDecode(response.toString()));
+  }
+
+//order Create
   static Future<BaseResponse> userOrderCreate(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
@@ -851,7 +944,7 @@ class APIManager {
     print("service.userOrderCreate : ${service.userOrderCreate}");
     response =
         await dio.post(service.userOrderCreate, data: _map, options: opt);
-    print("service.userOrderCreate : ${response.toString}");
+
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
 
@@ -859,12 +952,25 @@ class APIManager {
   static Future<ModelOption> userOrderCreateVerbose(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
+    print("token : $token");
     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     String url = service.userOrderCreateVerbose;
     print("$url : ${service.userOrderCreateVerbose}");
     response = await dio.post(url, data: _map, options: opt);
     print("$url : ${response.toString}");
     return ModelOption.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//order list
+  static Future<OrderListModel> userOrderList() async {
+    String token = await Prefs.token;
+    print("token : $token");
+    opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    String _url = service.userOrderList;
+    print("$_url : ${service.userOrderList}");
+    response = await dio.post(_url, options: opt);
+    print("$_url : ${response.toString}");
+    return OrderListModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
 //sendOtp
@@ -1399,6 +1505,20 @@ class APIManager {
     }
     print("service.verifyOtp : ${response.toString}");
     return loginModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<FollowingModel> getFollowing(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return FollowingModel(
+          status: 'fail', message: 'Please check internet connections');
+    String _url = service.getFollowing;
+    print("url : $_url");
+    try {
+      response = await dio.post(_url, data: _map, options: opt);
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, _url, null);
+    }
+    return FollowingModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
   static void ExceptionHandler(DioError e, pr, url, formKey) {

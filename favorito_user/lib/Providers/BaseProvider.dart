@@ -14,10 +14,7 @@ class BaseProvider extends ChangeNotifier {
   }
 
   setBusinessId(String _val) {
-    print('setting:${_val ?? null}');
-    // Prefs.setToken(value.token);
     _businessId = _val;
-    notifyListeners();
   }
 
 // await Prefs.token

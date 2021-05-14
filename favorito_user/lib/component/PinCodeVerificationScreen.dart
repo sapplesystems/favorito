@@ -201,11 +201,11 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
               child: NeumorphicButton(
                 style: NeumorphicStyle(
                     // shape: NeumorphicShape.concave,
-                    depth: 11,
+                    // depth: 11,
                     intensity: 40,
                     surfaceIntensity: -.4,
                     // lightSource: LightSource.topLeft,
-                    color: Color(0xffedf0f5),
+                    color: myButtonBackground,
                     boxShape: NeumorphicBoxShape.roundRect(
                         BorderRadius.all(Radius.circular(24.0)))),
                 margin: EdgeInsets.symmetric(horizontal: sm.w(20)),

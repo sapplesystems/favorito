@@ -1,5 +1,6 @@
 import 'package:favorito_user/component/Following.dart';
 import 'package:favorito_user/component/PinCodeVerificationScreen.dart';
+import 'package:favorito_user/ui/OnlineMenu/Order/OrderHome.dart';
 import 'package:favorito_user/ui/appointment/AppBookDetail.dart';
 import 'package:favorito_user/ui/appointment/BookAppointment.dart';
 import 'package:favorito_user/ui/Booking/BookTable.dart';
@@ -13,10 +14,13 @@ import 'package:favorito_user/ui/Login/LoginDetail.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHome.dart';
 import 'package:favorito_user/ui/Signup/Signup.dart';
 import 'package:favorito_user/ui/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/business/tabs/Review/Review.dart';
+import 'package:favorito_user/ui/business/tabs/Review/ReviewTab.dart';
 import 'package:favorito_user/ui/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/business/waitlist/waitlist.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/splash/Splash.dart';
+import 'package:favorito_user/ui/user/Following.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/AddAdress.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfo.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddress.dart';
@@ -29,6 +33,8 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
+        // return MaterialPageRoute(builder: (_) => MenuHome());
+        // return MaterialPageRoute(builder: (_) => ReviewTab());
         return MaterialPageRoute(builder: (_) => BottomNavBar());
       case '/splash':
         return MaterialPageRoute(builder: (_) => Splash());
@@ -50,6 +56,9 @@ class RouteGenerator {
 
       case '/following':
         return MaterialPageRoute(builder: (_) => Following());
+
+      case '/followingUser':
+        return MaterialPageRoute(builder: (_) => FollowingUser());
 
       case '/waitlist':
         return MaterialPageRoute(builder: (_) => Waitlist());
@@ -88,6 +97,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => BookAppointment());
       case '/appBookDetail':
         return MaterialPageRoute(builder: (_) => AppBookDetail());
+      case '/orderHome':
+        return MaterialPageRoute(builder: (_) => OrderHome());
+      case '/review':
+        return MaterialPageRoute(builder: (_) => Review());
       default:
         return _errorRoute();
     }

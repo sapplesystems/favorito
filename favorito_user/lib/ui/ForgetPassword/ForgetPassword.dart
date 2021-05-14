@@ -166,10 +166,10 @@ class ForgetPassword extends StatelessWidget {
                         padding: EdgeInsets.only(top: sm.h(6)),
                         child: NeumorphicButton(
                           style: NeumorphicStyle(
-                              depth: 11,
+                              // depth: 11,
                               intensity: 40,
                               surfaceIntensity: -.4,
-                              color: Color(0xffedf0f5),
+                              color: myButtonBackground,
                               boxShape: NeumorphicBoxShape.roundRect(
                                   BorderRadius.all(Radius.circular(24.0)))),
                           margin: EdgeInsets.symmetric(horizontal: sm.w(10)),

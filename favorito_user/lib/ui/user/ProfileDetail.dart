@@ -18,7 +18,6 @@ class ProfileMaster extends StatelessWidget {
   bool photosSelected = true;
   bool favouritesSelected = false;
 
-
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
@@ -38,169 +37,172 @@ class ProfileMaster extends StatelessWidget {
               onPressed: () {},
             )
           ]),
-      body: ListView(
-        children: [
-          Container(
-            height: sm.h(36),
-            width: sm.w(100),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)),
-            ),
-            child: Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Provider.of<UserAddressProvider>(context, listen: false)
-                        .getImage(ImgSource.Gallery, RIKeys.josKeys3);
-                  },
-                  child: ClipOval(
-                    child: Container(
-                        height: sm.h(14),
-                        width: sm.h(14),
-                        decoration: new BoxDecoration(
-                          color: Colors.orange,
-                          shape: BoxShape.circle
-                        ),
-                        child: ImageMaster(
-                            url: Provider.of<UserAddressProvider>(context,
-                                listen: true)
-                                .getProfileImage())),
-                  ),
+      body: ListView(children: [
+        Container(
+          height: sm.h(36),
+          width: sm.w(100),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  Provider.of<UserAddressProvider>(context, listen: false)
+                      .getImage(ImgSource.Gallery, RIKeys.josKeys10);
+                },
+                child: ClipOval(
+                  child: Container(
+                      height: sm.h(14),
+                      width: sm.h(14),
+                      decoration: new BoxDecoration(
+                          color: Colors.orange, shape: BoxShape.circle),
+                      child: ImageMaster(
+                          url: Provider.of<UserAddressProvider>(context,
+                                  listen: true)
+                              .getProfileImage())),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: sm.h(1)),
-                  child: Text(Provider.of<PersonalInfoProvider>(context,
-    listen: true).profileModel?.data?.detail?.fullName??'',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: sm.h(1)),
+                child: Text(
+                  Provider.of<PersonalInfoProvider>(context, listen: true)
+                          .profileModel
+                          ?.data
+                          ?.detail
+                          ?.fullName ??
+                      '',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: sm.w(8), vertical: sm.h(1)),
-                  child: Text(Provider.of<PersonalInfoProvider>(context,
-                      listen: true).profileModel?.data?.detail?.shortDescription??'',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: sm.w(8), vertical: sm.h(1)),
+                child: Text(
+                  Provider.of<PersonalInfoProvider>(context, listen: true)
+                          .profileModel
+                          ?.data
+                          ?.detail
+                          ?.shortDescription ??
+                      '',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: myGrey),
+                ),
+              ),
+              Text(
+                  Provider.of<UserAddressProvider>(context, listen: true)
+                          .getSelectedAddress() ??
+                      '',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
                       fontSize: 12,
-                      color: myGrey
+                      color: myGrey)),
+              Padding(
+                padding: EdgeInsets.only(top: sm.h(1)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // Column(
+                    //   children: [
+                    //     Text("Friends",
+                    //         style: TextStyle(fontSize: 10, color: myGrey)),
+                    //     Text("650",
+                    //         style: TextStyle(
+                    //             fontSize: 10,
+                    //             color: Colors.black,
+                    //             fontWeight: FontWeight.w600))
+                    //   ]
+                    // ),
+                    Column(
+                      children: [
+                        Text("Followers",
+                            style: TextStyle(fontSize: 10, color: myGrey)),
+                        Text("380",
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600))
+                      ],
                     ),
-                  ),
+                    Column(
+                      children: [
+                        Text("Following",
+                            style: TextStyle(fontSize: 10, color: myGrey)),
+                        Text("900",
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600))
+                      ],
+                    )
+                  ],
                 ),
-                Text(Provider.of<UserAddressProvider>(context,listen: true).getSelectedAddress()??'',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: myGrey)),
-                Padding(
+              ),
+              Padding(
                   padding: EdgeInsets.only(top: sm.h(1)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      // Column(
-                      //   children: [
-                      //     Text("Friends",
-                      //         style: TextStyle(fontSize: 10, color: myGrey)),
-                      //     Text("650",
-                      //         style: TextStyle(
-                      //             fontSize: 10,
-                      //             color: Colors.black,
-                      //             fontWeight: FontWeight.w600))
-                      //   ]
-                      // ),
-                      Column(
-                        children: [
-                          Text("Followers",
-                              style: TextStyle(fontSize: 10, color: myGrey)),
-                          Text("380",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600))
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text("Following",
-                              style: TextStyle(fontSize: 10, color: myGrey)),
-                          Text("900",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600))
-                        ],
-                      )
+                      //FriendBtn(),
+                      MessageBtn(txt: 'Follow'),
+                      MessageBtn(txt: 'Message')
                     ],
-                  ),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(top: sm.h(1)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        //FriendBtn(),
-                        MessageBtn(txt: 'Follow'),
-                        MessageBtn(txt: 'Message')],
-                    ))
-              ],
-            ),
+                  ))
+            ],
           ),
-          Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: sm.w(2), vertical: sm.h(2)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                    onTap: () {
-                      reviewsSelected = true;
-                      photosSelected = false;
-                      favouritesSelected = false;
-
-                    },
-                    child: Text("Reviews",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: reviewsSelected
-                                ? selectedTab
-                                : deselectedTab))),
-                InkWell(
-                    onTap: () {
-                      reviewsSelected = false;
-                      photosSelected = true;
-                      favouritesSelected = false;
-                    },
-                    child: Text("Photos",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: photosSelected
-                                ? selectedTab
-                                : deselectedTab))),
-                InkWell(
-                    onTap: () {
-                      reviewsSelected = false;
-                      photosSelected = false;
-                      favouritesSelected = true;
-                    },
-                    child: Text("Favourites",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: favouritesSelected
-                                ? selectedTab
-                                : deselectedTab)))
-              ],
-            ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: sm.w(2), vertical: sm.h(2)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              InkWell(
+                  onTap: () {
+                    reviewsSelected = true;
+                    photosSelected = false;
+                    favouritesSelected = false;
+                  },
+                  child: Text("Reviews",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color:
+                              reviewsSelected ? selectedTab : deselectedTab))),
+              InkWell(
+                  onTap: () {
+                    reviewsSelected = false;
+                    photosSelected = true;
+                    favouritesSelected = false;
+                  },
+                  child: Text("Photos",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color:
+                              photosSelected ? selectedTab : deselectedTab))),
+              InkWell(
+                  onTap: () {
+                    reviewsSelected = false;
+                    photosSelected = false;
+                    favouritesSelected = true;
+                  },
+                  child: Text("Favourites",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: favouritesSelected
+                              ? selectedTab
+                              : deselectedTab)))
+            ],
           ),
-          reviewsSelected
-              ? getReviewsWidget(sm)
-              : photosSelected
-                  ? getPhotosWidget(sm, 51, 6, 3.0, 1.5)
-                  : getFavouritesWidget(sm)
-        ]
-      ),
+        ),
+        reviewsSelected
+            ? getReviewsWidget(sm)
+            : photosSelected
+                ? getPhotosWidget(sm, 51, 6, 3.0, 1.5)
+                : getFavouritesWidget(sm)
+      ]),
     );
   }
 

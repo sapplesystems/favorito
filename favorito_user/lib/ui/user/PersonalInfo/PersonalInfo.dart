@@ -32,7 +32,7 @@ class PersonalInfo extends StatelessWidget {
         child: SafeArea(
             key: RIKeys.josKeys10,
             child: Scaffold(
-                backgroundColor: myBackGround,
+                // backgroundColor: myBackGround,
                 body: Padding(
                     padding: EdgeInsets.symmetric(horizontal: sm.w(10)),
                     child: ListView(shrinkWrap: true, children: [
@@ -71,8 +71,7 @@ class PersonalInfo extends StatelessWidget {
                                       myOnChanged: (val) {
                                         if (i == 1 && val.length == 6) {
                                           print("its:$i,$val");
-                                          spTrue.checkPin(
-                                              i, RIKeys.josKeys10);
+                                          spTrue.checkPin(i, RIKeys.josKeys10);
                                         }
                                         if (i == 1) spTrue.notifyListeners();
                                       },
@@ -81,7 +80,9 @@ class PersonalInfo extends StatelessWidget {
                                       error: spTrue.acces[i].error,
                                       security: false,
                                       valid: true,
-                                      maxLines: (spFalse.title.length-1)==i?8:1,
+                                      maxLines: (spFalse.title.length - 1) == i
+                                          ? 8
+                                          : 1,
                                       formate: FilteringTextInputFormatter
                                           .singleLineFormatter,
                                       maxlen: i == 1 ? 6 : 50,
@@ -89,7 +90,10 @@ class PersonalInfo extends StatelessWidget {
                                       keyboardSet: i == 1
                                           ? TextInputType.phone
                                           : TextInputType.text,
-                                      prefixIcon: (spFalse.title.length-1)!=i?spTrue.prefix[i]:null,
+                                      prefixIcon:
+                                          (spFalse.title.length - 1) != i
+                                              ? spTrue.prefix[i]
+                                              : null,
                                     ),
                                   ),
                                 tcp(
@@ -111,7 +115,7 @@ class PersonalInfo extends StatelessWidget {
                             child: NeumorphicButton(
                                 style: NeumorphicStyle(
                                     shape: NeumorphicShape.convex,
-                                    depth: 4,
+                                    // depth: 4,
                                     lightSource: LightSource.topLeft,
                                     color: myButtonBackground,
                                     boxShape: NeumorphicBoxShape.roundRect(
@@ -185,6 +189,7 @@ class t_c extends StatelessWidget {
           Checkbox(
             value: isChecked,
             onChanged: function,
+            activeColor: myRed,
           ),
           Expanded(
             child: Text(

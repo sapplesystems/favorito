@@ -12,7 +12,7 @@ class _FriendBtnState extends State<FriendBtn> {
     return NeumorphicButton(
       style: NeumorphicStyle(
           shape: NeumorphicShape.convex,
-          depth: 4,
+          // depth: 4,
           lightSource: LightSource.topLeft,
           color: myRed,
           boxShape: NeumorphicBoxShape.roundRect(

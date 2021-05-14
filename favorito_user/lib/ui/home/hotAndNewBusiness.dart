@@ -28,15 +28,18 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
         builder:
             (BuildContext context, AsyncSnapshot<NewBusinessModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: Text('Please wait its loading...'));
+            return Center(
+                child: Text(
+              'Please wait its loading...',
+              style:
+                  Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
+            ));
           else {
             if (snapshot.hasError)
               return Center(child: Text('Error: ${snapshot.error}'));
             else {
               if (newBusinessData != snapshot.data)
                 newBusinessData = snapshot.data;
-              print(
-                  "newBusinessData?.data?.length:${newBusinessData?.data?.length}");
               return Container(
                 padding: EdgeInsets.only(bottom: sm.h(2)),
                 height: sm.h(25),
@@ -89,9 +92,12 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                                         newBusinessData
                                             .data[index].businessName,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400)),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400)),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(left: sm.w(2)),
@@ -104,9 +110,12 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                                     padding: EdgeInsets.only(left: sm.w(2)),
                                     child: Text(
                                         "${newBusinessData?.data[index]?.distance?.toStringAsFixed(1) ?? '00'} km | ${newBusinessData.data[index].townCity ?? ''}",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w300)),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w300)),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(

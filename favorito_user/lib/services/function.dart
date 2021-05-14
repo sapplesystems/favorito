@@ -16,6 +16,7 @@ class service {
   static final baseUserBooking = baseUser + 'booking/';
   static final baseUserAppointment = baseUser + 'appointment/';
   static final baseBusinessDashboard = baseBusiness + 'dashboard/';
+  static final baseBusinessReview = baseBusiness + 'review/';
   static final baseUserOrder = baseUser + 'order/';
 
 //function
@@ -59,8 +60,17 @@ class service {
   //relation
   static final businessRelationGet = baseUserProfile + 'user-business-relation';
 
+  //review
+  static final businessSetReview = baseBusinessReview + 'set-review';
+  static final getReviewReplies = baseBusinessReview + 'get-review-replies';
+  static final getrating = baseBusinessReview + 'get-review-detail';
+  static final getReviewListing = baseUserProfile + 'user-review';
+  static final setRating = baseUserProfile + 'set-business-rating';
+  static final getRating = baseUserProfile + 'get-business-rating';
+
   //userDetail
   static final userdetail = baseUserProfile + 'user-detail';
+  static final getFollowing = baseUserProfile + 'get-all-relation';
 
   //booking
   static final baseUserBookingList = baseUserBooking + 'get-book-table';
@@ -88,10 +98,14 @@ class service {
   static final menusIsFoodItem = userBusinessMenu + 'get-business-isfood';
   static final menuTabItemGet =
       userBusinessMenu + 'get-category-item'; //this is based on previous
+  static final menuItemCust = userBusinessMenu +
+      'get-item-customization-detail'; //this is based on previous
 
   //Order
   static final userOrderCreate =
       baseUserOrder + 'create-order'; //this is used to create a new order
+  static final userOrderList =
+      baseUserOrder + 'get-order-list'; //this is used to list order
   static final userOrderCreateVerbose =
       userOrderCreate + '-verbose'; //this is used to create a new order
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import '../../../utils/Extentions.dart';
 
 class JobTab extends StatelessWidget {
   SizeManager sm;
@@ -29,17 +30,23 @@ class JobTab extends StatelessWidget {
                       height: sm.h(10),
                       width: sm.w(80),
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.white),
+                          // color: Colors.white,
+                          // border: Border.all(color: Colors.white),
                           borderRadius:
                               BorderRadius.all(Radius.circular(20.0))),
                       margin: EdgeInsets.symmetric(horizontal: 14),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(vaTrue.jobListModel.data[index].title,
-                                style: TextStyle(
-                                    fontSize: 15, fontFamily: 'Gilroy-Mediam')),
+                            Text(
+                                '${vaTrue?.jobListModel?.data[index]?.title ?? ''}'
+                                    .capitalize(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline4
+                                    .copyWith(
+                                        fontSize: 15,
+                                        fontFamily: 'Gilroy-Mediam')),
                             SizedBox(
                                 width: 20,
                                 child:

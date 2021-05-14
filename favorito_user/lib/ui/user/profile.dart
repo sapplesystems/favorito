@@ -5,6 +5,7 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileDetail.dart';
+import 'package:favorito_user/ui/user/ProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
@@ -20,28 +21,26 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
-    vaTrue = Provider.of<BaseProvider>(context,listen: false);
+    vaTrue = Provider.of<BaseProvider>(context, listen: false);
     return WillPopScope(
       onWillPop: () => APIManager.onWillPop(context),
       child: SafeArea(
         child: Scaffold(
             key: RIKeys.josKeys5,
-            backgroundColor: myBackGround,
             appBar: AppBar(
                 toolbarHeight: sm.h(5),
-                backgroundColor: myBackGround,
+                backgroundColor: Colors.transparent,
                 elevation: 0,
                 automaticallyImplyLeading: false,
                 title: Text("My Profile",
-                    style: TextStyle(
-                        fontFamily: 'Gilroy-Reguler',
+                    style: Theme.of(context).textTheme.headline6.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: .4,
                         fontSize: 20))),
             body: ListView(children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: sm.w(5)),
-                height: sm.h(20),
+                height: sm.h(18),
                 width: sm.w(100),
                 child: ListView(children: [
                   Row(children: [
@@ -63,46 +62,50 @@ class Profile extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: sm.w(2)),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              Provider.of<PersonalInfoProvider>(context,
-                                      listen: true)
-                                  .username,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Gilroy-Bold')),
-                          Text(
-                              Provider.of<PersonalInfoProvider>(context,
-                                      listen: true)
-                                  .phone,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: myGrey)),
-                          Text(
-                              "${Provider.of<UserAddressProvider>(context, listen: true).city},${Provider.of<UserAddressProvider>(context, listen: true).state}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                  color: myGrey))
-                        ],
-                      ),
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                Provider.of<PersonalInfoProvider>(context,
+                                        listen: true)
+                                    .username,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline3
+                                    .copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500)),
+                            Text(
+                                Provider.of<PersonalInfoProvider>(context,
+                                        listen: true)
+                                    .phone,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: myGrey)),
+                            Text(
+                                "${Provider.of<UserAddressProvider>(context, listen: true).city},${Provider.of<UserAddressProvider>(context, listen: true).state}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    color: myGrey))
+                          ]),
                     )
                   ]),
                   Padding(
                     padding: EdgeInsets.only(top: sm.h(2)),
-                    child: Text(Provider.of<PersonalInfoProvider>(context,
-                        listen: true).profileModel?.data?.detail?.shortDescription??'',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Gilroy-Regular',
-                          letterSpacing: 0.28,
-                          color: myGrey),
-                    ),
+                    child: Text(
+                        Provider.of<PersonalInfoProvider>(context, listen: true)
+                                .profileModel
+                                ?.data
+                                ?.detail
+                                ?.shortDescription ??
+                            '',
+                        style: Theme.of(context).textTheme.headline3.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.28,
+                            color: myGrey)),
                   )
                 ]),
               ),
@@ -161,9 +164,33 @@ class Profile extends StatelessWidget {
                 .pushNamed('/userAddress');
             break;
 
+          case 'Orders':
+            Navigator.of(RIKeys.josKeys5.currentContext)
+                .pushNamed('/orderHome');
+            break;
+
           case 'Change login details':
             Navigator.of(context).pushNamed('/loginDetail');
             break;
+
+          case 'Following':
+            {
+              Provider.of<ProfileProvider>(context, listen: false).dataWill(1);
+              Navigator.of(context).pushNamed('/followingUser');
+              break;
+            }
+          case 'Following Business':
+            {
+              Provider.of<ProfileProvider>(context, listen: false).dataWill(2);
+              Navigator.of(context).pushNamed('/followingUser');
+              break;
+            }
+          case 'Followers':
+            {
+              Provider.of<ProfileProvider>(context, listen: false).dataWill(-3);
+              Navigator.of(context).pushNamed('/followingUser');
+              break;
+            }
         }
       },
       child: Padding(

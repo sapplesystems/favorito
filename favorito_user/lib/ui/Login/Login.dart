@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+
 class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
@@ -27,7 +28,6 @@ class _LoginState extends State<Login> {
         onWillPop: () => APIManager.onWillPop(context),
         child: Scaffold(
             key: _scaffoldKey,
-            backgroundColor: Color(0xffedf0f5),
             body: Padding(
                 padding: EdgeInsets.only(
                     left: sm.w(10), right: sm.w(10), top: sm.h(5)),
@@ -35,10 +35,9 @@ class _LoginState extends State<Login> {
                   SvgPicture.asset('assets/icon/login_image.svg',
                       height: sm.h(34), fit: BoxFit.fill),
                   SizedBox(height: sm.h(2)),
-                  Text("Welcome Back.",
-                      style: TextStyle(
-                          fontFamily: 'Gilroy-Medium',
-                          fontWeight: FontWeight.w800,
+                  Text("Welcome Back...",
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                          fontWeight: FontWeight.w400,
                           letterSpacing: 1.4,
                           fontSize: 28)),
                   Builder(
@@ -79,7 +78,11 @@ class _LoginState extends State<Login> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text('Forgot password ?  ',
-                                            style: TextStyle(color: myRed))
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(color: myRed),
+                                            textScaleFactor: .8)
                                       ])),
                             )
                           ]))),
@@ -88,11 +91,11 @@ class _LoginState extends State<Login> {
                       child: NeumorphicButton(
                         style: NeumorphicStyle(
                             // shape: NeumorphicShape.concave,
-                            depth: 11,
+                            // depth: 11,
                             intensity: 40,
                             surfaceIntensity: -.4,
                             // lightSource: LightSource.topLeft,
-                            color: Color(0xffedf0f5),
+                            color: myButtonBackground,
                             boxShape: NeumorphicBoxShape.roundRect(
                                 BorderRadius.all(Radius.circular(24.0)))),
                         margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
@@ -103,11 +106,13 @@ class _LoginState extends State<Login> {
                             EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         child: Center(
                             child: Text(vaTrue.getIsPass() ? 'Login' : 'Next',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Gilroy-Light',
-                                    color: myRed))),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: myRed))),
                       )),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: sm.h(4)),
@@ -115,10 +120,13 @@ class _LoginState extends State<Login> {
                       children: [
                         Expanded(child: Divider()),
                         Text('  OR  ',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: myGrey,
-                                fontSize: 16)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: myGrey,
+                                    fontSize: 16)),
                         Expanded(child: Divider())
                       ],
                     ),
@@ -128,7 +136,7 @@ class _LoginState extends State<Login> {
                     children: [
                       Text(
                         "Login using ",
-                        style: TextStyle(
+                        style: Theme.of(context).textTheme.headline6.copyWith(
                             fontWeight: FontWeight.w300,
                             color: myGrey,
                             fontSize: 16),
@@ -146,10 +154,13 @@ class _LoginState extends State<Login> {
                       child: Padding(
                           padding: EdgeInsets.only(top: sm.h(4)),
                           child: Text("Dont have account yet?",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  color: myGrey,
-                                  fontSize: 16)))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      color: myGrey,
+                                      fontSize: 16)))),
                   Center(
                       child: Padding(
                           padding: EdgeInsets.only(bottom: sm.h(4)),

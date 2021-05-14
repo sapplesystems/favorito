@@ -26,7 +26,7 @@ class _SearchState extends State<Search> {
       onWillPop: () => APIManager.onWillPop(context),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Color(0xffF9FAFF),
+          // backgroundColor: Color(0xffF9FAFF),
           body: ListView(
             children: [
               Container(
@@ -40,6 +40,7 @@ class _SearchState extends State<Search> {
                   maxLines: 1,
                   maxlen: 100,
                   suffixTxt: '',
+                  hint: 'search',
                   prefixIcon: 'search',
                   keyBoardAction: TextInputAction.search,
                   atSubmit: (_val) {
@@ -56,7 +57,7 @@ class _SearchState extends State<Search> {
               ),
               Container(
                 height: sm.h(82),
-                decoration: BoxDecoration(color: myBackGround),
+                // decoration: BoxDecoration(color: myBackGround),
                 child: ListView(
                   shrinkWrap: true,
                   children: [
@@ -102,16 +103,16 @@ class _SearchState extends State<Search> {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.headline3.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           InkWell(
             onTap: () {},
             child: Text(
               "View all",
-              style: TextStyle(
+              style: Theme.of(context).textTheme.headline6.copyWith(
                   decoration: TextDecoration.underline,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,

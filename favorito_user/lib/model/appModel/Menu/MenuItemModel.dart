@@ -1,14 +1,20 @@
+import 'package:favorito_user/model/appModel/Menu/Customization.dart/CustomizationModel.dart';
+
 class MenuItemModel {
   int id;
   String title;
-  int price;
+  var price;
   String description;
   String type;
   var photoId;
   var photos;
   var businessId;
   int quantity;
-
+  int catagoryId;
+  var tax;
+  int menuCategoryId;
+  String itenCustomizationSum;
+  CustomizationItemModel customizationItemModel = CustomizationItemModel();
   MenuItemModel(
       {this.id,
       this.title,
@@ -18,7 +24,12 @@ class MenuItemModel {
       this.photoId,
       this.photos,
       this.businessId,
-      this.quantity});
+      this.quantity,
+      this.catagoryId,
+      this.customizationItemModel,
+      this.tax,
+      this.itenCustomizationSum,
+      this.menuCategoryId});
 
   MenuItemModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -29,6 +40,8 @@ class MenuItemModel {
     photoId = json['photo_id'] ?? [];
     photos = json['photos'] ?? [];
     businessId = json['business_id'];
+    tax = json['tax'];
+    menuCategoryId = json['menu_category_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +54,8 @@ class MenuItemModel {
     data['photo_id'] = this.photoId;
     data['photos'] = this.photos;
     data['business_id'] = this.businessId;
+    data['tax'] = this.tax;
+    data['menu_category_id'] = this.menuCategoryId;
     return data;
   }
 }

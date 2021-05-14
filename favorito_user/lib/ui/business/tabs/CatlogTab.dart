@@ -35,7 +35,9 @@ class _CatlogTabState extends State<CatalogTab> {
       future: fut,
       builder: (BuildContext context, AsyncSnapshot<CatlogModel> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(child: Text(loading));
+          return Center(
+              child:
+                  Text(loading, style: Theme.of(context).textTheme.headline6));
         else if (snapshot.hasError)
           return Center(child: Text('Error : ${snapshot.error}'));
         else if (catlogModel != snapshot.data) {
@@ -59,20 +61,21 @@ class _CatlogTabState extends State<CatalogTab> {
                           height: sm.h(10),
                           width: sm.w(80),
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.white),
+                              // color: Colors.white,
+                              // border:
+                              //     Border.all(color: Colors.white, width: .0),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20.0))),
-                          margin: EdgeInsets.symmetric(vertical: 2.0),
+                          // margin: EdgeInsets.symmetric(vertical: 2.0),
                           child: Center(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
                                     width: sm.w(20),
-                                    height: sm.w(20),
+                                    // height: sm.w(22),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(12),
                                       child: ImageMaster(
                                           url: catlogModel.data[index].photos
                                               ?.split(',')[0]),
@@ -92,8 +95,15 @@ class _CatlogTabState extends State<CatalogTab> {
                                     child: Padding(
                                       padding: EdgeInsets.only(left: 4.0),
                                       child: Text(
-                                        catlogModel.data[index].catalogTitle ??
-                                            "",
+                                        catlogModel
+                                                ?.data[index]?.catalogTitle ??
+                                            '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16),
                                       ),
                                     )),
                                 Expanded(

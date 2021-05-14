@@ -1,5 +1,4 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
@@ -17,12 +16,13 @@ import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/ui/waitlist/WaitlistProvider.dart';
 import 'package:Favorito/utils/RouteGenerator.dart';
 import 'package:Favorito/utils/UtilProvider.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import './utils/MyTheme.dart';
+import 'package:flutter/foundation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,28 +56,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: kReleaseMode ? false : true,
       title: 'Favorito',
-      darkTheme: ThemeData.from(colorScheme: ColorScheme.dark()),
+      darkTheme: MyTheme().themeDataDark,
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
-      theme: ThemeData(
-          fontFamily: 'Gilroy-Regular',
-          textTheme: TextTheme(
-              title: TextStyle(
-                  fontSize: 28, color: Colors.black, fontFamily: 'Gilroy-Bold'),
-              body1: TextStyle(fontSize: 16, color: Colors.black),
-              body2: TextStyle(fontSize: 18, color: Colors.black)),
-          primaryColor: myRed,
-          accentColor: myRedLight,
-          appBarTheme: AppBarTheme(color: myBackGround, elevation: 0),
-          cardTheme: CardTheme(shape: roundedRectangleBorder, elevation: 2),
-          iconTheme: IconThemeData(color: Colors.red),
-          scaffoldBackgroundColor: myBackGround,
-          bottomAppBarColor: myBackGround,
-          bottomAppBarTheme: BottomAppBarTheme(color: myBackGround),
-          primarySwatch: Colors.red,
-          visualDensity: VisualDensity.adaptivePlatformDensity),
+      theme: MyTheme().themeDataLight,
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
     );

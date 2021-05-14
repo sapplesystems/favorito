@@ -14,7 +14,7 @@ import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/order/Orders.dart';
-import 'package:Favorito/ui/review/reviewList.dart';
+import 'package:Favorito/ui/review/ReviewList.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
@@ -50,10 +50,10 @@ class _dashboardState extends State<dashboard> {
       isFirst = false;
     }
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         BaseProvider.onWillPop(context);
       },
-          child: Scaffold(
+      child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(70.0),
             child: AppBar(
@@ -82,9 +82,10 @@ class _dashboardState extends State<dashboard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text("ver : 1.5", style: TextStyle(fontSize: 8)),
+                        Text("ver : 1.6", style: TextStyle(fontSize: 8)),
                         Text("Status : ",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600)),
                         Text(
                             is_verified == "0"
                                 ? "Offline"
@@ -169,7 +170,7 @@ class _dashboardState extends State<dashboard> {
                               Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => reviewList()))
+                                          builder: (context) => ReviewList()))
                                   .whenComplete(() => calldashBoard(context));
                             },
                             va: ratingCount ?? '0')
@@ -187,7 +188,8 @@ class _dashboardState extends State<dashboard> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Catalogs()))
-                                      .whenComplete(() => calldashBoard(context));
+                                      .whenComplete(
+                                          () => calldashBoard(context));
                                 },
                                 child: card3(
                                     txt1: "Catalogoues", title: catalogoues)),
@@ -197,7 +199,8 @@ class _dashboardState extends State<dashboard> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Orders()))
-                                      .whenComplete(() => calldashBoard(context));
+                                      .whenComplete(
+                                          () => calldashBoard(context));
                                 },
                                 child: card3(txt1: "Orders", title: orders))
                           ])),
@@ -206,8 +209,8 @@ class _dashboardState extends State<dashboard> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         "Grow your Business",
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w800),
                       ),
                     )
                   ]),
@@ -228,7 +231,8 @@ class _dashboardState extends State<dashboard> {
                       () => Navigator.of(context)
                           .pushNamed('/adSpent')
                           .whenComplete(() => calldashBoard(context))),
-                  rowCard("Notifications", "Send Direct Update To Customer", () {
+                  rowCard("Notifications", "Send Direct Update To Customer",
+                      () {
                     Navigator.of(context).pushNamed('/notifications');
                   }),
                 ])),

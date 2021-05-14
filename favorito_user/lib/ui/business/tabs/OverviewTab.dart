@@ -56,7 +56,11 @@ class _OverviewState extends State<OverviewTab> {
         builder: (BuildContext context,
             AsyncSnapshot<businessOverViewModel> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: Text(loading));
+            return Center(
+                child: Text(
+              loading,
+              style: Theme.of(context).textTheme.headline6,
+            ));
           else {
             if (overviewData != snapshot.data) overviewData = snapshot.data;
             List<String> listKey = ['Phone', 'Email', 'Website', 'Address'];
@@ -80,21 +84,17 @@ class _OverviewState extends State<OverviewTab> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
                     child: Text(shortDisc,
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Gilroy-Medium')),
+                        style: Theme.of(context).textTheme.headline4.copyWith(
+                            fontWeight: FontWeight.w500, fontSize: 15),
+                        textAlign: TextAlign.justify),
                   ),
                   myCarousel(overviewData?.data[0]?.businessId),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
-                    child: Text(
-                      longDisc,
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Gilroy-Medium'),
-                    ),
+                    child: Text(longDisc,
+                        style: Theme.of(context).textTheme.headline4.copyWith(
+                            fontWeight: FontWeight.w500, fontSize: 15),
+                        textAlign: TextAlign.justify),
                   ),
                   for (int i = 0; i < listKey.length; i++)
                     Padding(
@@ -105,22 +105,27 @@ class _OverviewState extends State<OverviewTab> {
                           flex: 3,
                           child: Text(
                             listKey[i] ?? '',
-                            style: TextStyle(
-                                fontFamily: 'Gilroy-Regular',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    fontFamily: 'Gilroy-Regular',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17),
                           ),
                         ),
                         Expanded(
                           flex: 7,
                           child: Text(
                             listValue[i] ?? '',
-                            style: TextStyle(
-                                color:
-                                    (i == 0 || i == 2) ? myRed : Colors.black,
-                                fontFamily: 'Gilroy-Regular',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: (i == 0 || i == 2) ? myRed : null,
+                                    fontFamily: 'Gilroy-Regular',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16),
                           ),
                         ),
                       ]),
@@ -139,69 +144,61 @@ class _OverviewState extends State<OverviewTab> {
                   ),
                   Container(
                     height: 40,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        for (var _va in _attribute)
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: sm.w(2), vertical: sm.h(.5)),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 6),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey[600], //   width: 1,
-                              ),
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(6),
+                    child:
+                        ListView(scrollDirection: Axis.horizontal, children: [
+                      for (var _va in _attribute)
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: sm.w(2), vertical: sm.h(.5)),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey[600], //   width: 1,
                             ),
-                            child: Text(
-                              _va ?? '',
-                              style: TextStyle(color: Colors.black),
-                            ),
+                            // color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(6),
                           ),
-                      ],
-                    ),
+                          child: Text(
+                            _va,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    fontWeight: FontWeight.w400, fontSize: 16),
+                          ),
+                        ),
+                    ]),
                   ),
                   Padding(
                     padding: EdgeInsets.all(sm.h(2)),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            'Payment',
-                            style: TextStyle(
-                                fontFamily: 'Gilroy-Regular',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18),
-                          ),
+                    child: Row(children: [
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          'Payment',
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                              fontWeight: FontWeight.w600, fontSize: 18),
                         ),
-                        Expanded(
-                          flex: 7,
-                          child: Text(
-                            overviewData?.data[0]?.paymentMethod
-                                ?.replaceAll(',', ' , '),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Gilroy-Regular',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15),
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        flex: 7,
+                        child: Text(
+                          overviewData?.data[0]?.paymentMethod
+                              ?.replaceAll(',', ' , '),
+                          style: Theme.of(context).textTheme.headline1.copyWith(
+                              fontWeight: FontWeight.w500, fontSize: 15),
+                        ),
+                      )
+                    ]),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: sm.h(2)),
                     child: Row(children: [
                       Text(
                         '\t\t\tSponsored',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Gilroy-Medium',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18),
+                        style: Theme.of(context).textTheme.headline4.copyWith(
+                            fontWeight: FontWeight.w600, fontSize: 18),
                       ),
                     ]),
                   ),

@@ -1,55 +1,42 @@
+import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/ui/OnlineMenu/Paydata.dart';
 import 'package:favorito_user/utils/MyColors.dart';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-List<String> payVia = ["lafayette", "jefferson", "jeffersonu"];
-
-class PayOption extends StatefulWidget {
-  @override
-  _PayOptionState createState() => _PayOptionState();
-}
-
-class _PayOptionState extends State<PayOption> {
-  List<PayData> payDataList;
-  PayData selectedPayData;
-
-  @override
-  void initState() {
-    payDataList = PayData.getPayData();
-  }
-
-  setSelectedPay(PayData payData) => setState(() => selectedPayData = payData);
-
-  List<Widget> createPayDataList() {
-    List<Widget> widget = [];
-    for (PayData _data in payDataList) {
-      widget.add(Container(
-        height: 40,
-        child: RadioListTile(
-          value: _data,
-          groupValue: selectedPayData,
-          onChanged: (_v) {
-            setSelectedPay(_v);
-          },
-          title: Text(_data.title),
-          activeColor: myGreenDark,
-          selected: selectedPayData == _data,
-        ),
-      ));
-    }
-    return widget;
-  }
+class PayOption extends StatelessWidget {
+  MenuHomeProvider vaTrue;
 
   Widget build(BuildContext context) {
+    vaTrue = Provider.of<MenuHomeProvider>(context, listen: true);
     return Align(
       alignment: Alignment.centerLeft,
-      child: Padding(
-          padding: const EdgeInsets.only(top: 18.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: createPayDataList(),
-          )),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 26.0),
+          child: Text('pay mode',
+              textScaleFactor: 1.4,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(fontWeight: FontWeight.w400, fontSize: 12)),
+        ),
+        for (PayData _data in vaTrue.payDataList)
+          Container(
+            height: 30,
+            padding: EdgeInsets.only(left: 18),
+            child: RadioListTile(
+              value: _data,
+              groupValue: vaTrue.selectedPayData,
+              onChanged: (_v) {
+                vaTrue.setSelectedPay(_v);
+              },
+              title: Text(_data.title),
+              activeColor: myRed,
+              selected: vaTrue.selectedPayData == _data,
+            ),
+          )
+      ]),
     );
   }
 }

@@ -7,12 +7,10 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class BusinessProfileProvider extends BaseProvider {
   WaitListDataModel _waitListDataModel = WaitListDataModel();
@@ -28,7 +26,7 @@ class BusinessProfileProvider extends BaseProvider {
   List<TextEditingController> controller = [];
   JobListModel jobListModel = JobListModel();
   bool isWaiting = false;
-
+  ScrollController scrollController = ScrollController();
   int remainTime;
   bool _getWaitlistDone = false;
 
@@ -294,6 +292,10 @@ class BusinessProfileProvider extends BaseProvider {
 
   void allClear() {
     _waitListDataModel = WaitListDataModel();
+  }
+
+  abc() {
+    notifyListeners();
   }
 
   joinWaitlistClear() {

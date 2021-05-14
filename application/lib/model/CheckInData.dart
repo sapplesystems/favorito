@@ -1,7 +1,7 @@
 class CheckInData {
   int id;
   String reviews;
-  double rating;
+  var rating;
   String name;
   String reviewDate;
   String reviewAt;
@@ -18,7 +18,7 @@ class CheckInData {
   CheckInData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     reviews = json['reviews'];
-    rating = json['rating'];
+    rating = json['rating'] ?? '0';
     name = json['name'];
     reviewDate = json['review_date'];
     reviewAt = json['review_at'];
@@ -29,7 +29,7 @@ class CheckInData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['reviews'] = this.reviews;
-    data['rating'] = this.rating;
+    data['rating'] = this.rating ?? '0';
     data['name'] = this.name;
     data['review_date'] = this.reviewDate;
     data['review_at'] = this.reviewAt;

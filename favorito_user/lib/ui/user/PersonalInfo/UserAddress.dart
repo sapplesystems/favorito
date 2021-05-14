@@ -19,7 +19,6 @@ class UserAddress extends StatelessWidget {
     sm = SizeManager(context);
     return Scaffold(
       key: RIKeys.josKeys8,
-      backgroundColor: myBackGround,
       body: Consumer<UserAddressProvider>(builder: (context, data, child) {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 22, vertical: sm.h(2)),
@@ -29,22 +28,28 @@ class UserAddress extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                   child: Icon(Icons.keyboard_backspace, size: 24)),
               InkWell(
-                  onTap: () => vaTrue.getAddress(),
-                  child: Icon(Icons.refresh, color: Colors.black))
+                  onTap: () => vaTrue.getAddress(), child: Icon(Icons.refresh))
             ]),
             SizedBox(height: sm.h(4)),
             Text('My Addresses',
-                style: TextStyle(fontSize: 22, fontFamily: 'Gilroy-Regular')),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    .copyWith(fontSize: 18)),
             InkWell(
-                onTap: () async{
+                onTap: () async {
                   data.setEditId(null);
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => PlacePicker("AIzaSyBhxep9O8VQz-JHmJW2XSzgjTRemLv91sI"))).then((value) {
-                    Provider.of<UserAddressProvider>(context,listen: false).setLocations(value);
-                    Navigator.of(context).pushNamed('/addAddress').whenComplete(() => vaTrue.getAddress());
-        });
-      
-                  
+                  await Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => PlacePicker(
+                              "AIzaSyBhxep9O8VQz-JHmJW2XSzgjTRemLv91sI")))
+                      .then((value) {
+                    Provider.of<UserAddressProvider>(context, listen: false)
+                        .setLocations(value);
+                    Navigator.of(context)
+                        .pushNamed('/addAddress')
+                        .whenComplete(() => vaTrue.getAddress());
+                  });
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: sm.h(2)),
@@ -52,10 +57,10 @@ class UserAddress extends StatelessWidget {
                     Icon(Icons.add, size: 26, color: myRed),
                     Text(
                       '\tAdd Address',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Gilroy-Medium'),
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                     ),
                   ]),
                 )),
@@ -104,10 +109,13 @@ class UserAddress extends StatelessWidget {
                                         onPressed: () {}),
                                     Expanded(
                                         child: Text(_v,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Gilroy-Regular'))),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5
+                                                .copyWith(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400))),
                                     PopupMenuButton(
                                       onSelected: (_val) {
                                         if (_val == 'Edit') {
@@ -127,10 +135,29 @@ class UserAddress extends StatelessWidget {
                                       itemBuilder: (BuildContext context) =>
                                           <PopupMenuEntry<String>>[
                                         PopupMenuItem<String>(
-                                            value: 'Edit', child: Text('Edit')),
+                                            value: 'Edit',
+                                            child: Text(
+                                              'Edit',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .copyWith(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                            )),
                                         PopupMenuItem<String>(
                                             value: 'Delete',
-                                            child: Text('Delete'))
+                                            child: Text(
+                                              'Delete',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .copyWith(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                            ))
                                       ],
                                     )
                                   ]),
@@ -170,7 +197,7 @@ class _myDropDownState extends State<myDropDown> {
                 shape: NeumorphicShape.convex,
                 depth: 8,
                 lightSource: LightSource.top,
-                color: Colors.white,
+                // color: Colors.white,
                 boxShape: NeumorphicBoxShape.roundRect(
                     BorderRadius.all(Radius.circular(30.0)))),
             child: DropdownButton(
@@ -178,7 +205,8 @@ class _myDropDownState extends State<myDropDown> {
                 isExpanded: true,
                 hint: Padding(
                   padding: EdgeInsets.only(left: sm.w(14), right: sm.w(6)),
-                  child: Text("Select Service"),
+                  child: Text("Select Service",
+                      style: Theme.of(context).textTheme.headline6),
                 ),
                 underline: Container(),
                 // this is the magic
@@ -187,7 +215,11 @@ class _myDropDownState extends State<myDropDown> {
                       value: value,
                       child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
-                          child: Text(value)));
+                          child: Text(value,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith())));
                 })?.toList(),
                 onChanged: (value) {
                   // setState(() {

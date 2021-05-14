@@ -10,13 +10,12 @@ class MessageBtn extends StatefulWidget {
 }
 
 class _MessageBtnState extends State<MessageBtn> {
-
   @override
   Widget build(BuildContext context) {
     return NeumorphicButton(
       style: NeumorphicStyle(
           shape: NeumorphicShape.convex,
-          depth: 4,
+          // depth: 4,
           lightSource: LightSource.topLeft,
           color: myRed,
           boxShape: NeumorphicBoxShape.roundRect(
@@ -27,7 +26,8 @@ class _MessageBtnState extends State<MessageBtn> {
         width: 100,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
         child: Text(
-          widget.txt,textAlign: TextAlign.center,
+          widget.txt,
+          textAlign: TextAlign.center,
           style: TextStyle(fontWeight: FontWeight.w400, color: Colors.white),
         ),
       ),
