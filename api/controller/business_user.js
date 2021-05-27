@@ -386,6 +386,8 @@ exports.getRegisteredEmailMobile = function(req, res, next) {
     }
 }
 
+// All chat functions
+
 exports.getRoomId = async function(req, res, next) {
     if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
         var source_id = req.userdata.business_id;
@@ -443,7 +445,7 @@ exports.getChats = async(req, res, next) => {
     limit = 20
 
     try {
-        sql_get_messages = `SELECT id, source_id, target_id, message from business_chat_messages where room_id = '${room_id}' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
+        sql_get_messages = `SELECT id, source_id, target_id, message,DATE_FORMAT(created_at, '%d-%b-%Y %H:%i:%s') AS created_at from business_chat_messages where room_id = '${room_id}' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
         result_get_message = await exports.run_query(sql_get_messages)
     } catch (error) {
         return res.status(500).send({ status: 'failed', message: 'failed', error })
@@ -455,7 +457,51 @@ exports.getChats = async(req, res, next) => {
     }
 }
 
+exports.setChat = async(req, res) => {
+    if (req.userdata.business_id) {
+        source_id = req.userdata.business_id
+        if (!req.body.user_id) {
+            return res.status(400).json({ status: 'error', message: 'user_id is missing' });
+        } else {
+            target_id = req.body.user_id
+        }
+    } else {
+        source_id = req.userdata.id
+        if (!req.body.business_id) {
+            return res.status(400).json({ status: 'error', message: 'business_id is missing' });
+        } else {
+            target_id = req.body.business_id
+        }
+    }
 
+    if (!req.body.room_id) {
+        return res.status(400).json({ status: 'error', message: 'room_id is missing' });
+    } else {
+        room_id = req.body.room_id
+    }
+
+    if (!req.body.message) {
+        return res.status(400).json({ status: 'error', message: 'message is missing' });
+    } else {
+        message = req.body.message
+    }
+
+    dataToInsert = {
+        source_id: source_id,
+        target_id: target_id,
+        room_id: room_id,
+        message: message
+    }
+
+    sqlInsertChat = `insert into business_chat_messages set ?`
+    try {
+        await exports.run_query(sqlInsertChat, dataToInsert)
+        return res.status(200).json({ status: 'success', message: 'Message is saved' });
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong' });
+    }
+
+}
 
 
 exports.run_query = (sql, param = false) => {

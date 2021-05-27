@@ -48,6 +48,13 @@ router.post('/get-all-relation', CheckAuth, UserProfileController.getAllRelation
 // This is use for the set and the get of the user detial 
 router.post('/user-detail', CheckAuth, UserProfileController.userDetail);
 
+// set business rating
+router.post('/set-business-rating', CheckAuth, UserProfileController.setBusinessRating);
+
+router.post('/get-business-rating', CheckAuth, UserProfileController.getBusinessRating);
+
+
+
 // terms and condition for the user link
 router.get('/user-terms-condition', (req, res) => {
     res.render('terms_condition_user.hbs')

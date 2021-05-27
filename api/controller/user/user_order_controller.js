@@ -7,7 +7,7 @@ const DINE_IN = 2
 const TAKE_AWAY = 3
 
 exports.getOrderList = async function(req, res, next) {
-    if (req.body.user_id != null || req.body.user_id != undefined || req.body.user_id != '') {
+    if (req.body.user_id) {
         user_id = req.body.user_id
     } else if (req.userdata.id) {
         user_id = req.userdata.id
@@ -15,7 +15,7 @@ exports.getOrderList = async function(req, res, next) {
         return res.status(400).json({ status: 'error', message: 'User id is not found' });
     }
     try {
-        var sql = "SELECT b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type, b_o.created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.user_id = '" + user_id + "' GROUP BY b_o.order_id"
+        var sql = "SELECT b_o.id,b_o.order_id,b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type,DATE_FORMAT(b_o.created_at , '%Y-%m-%d %H:%i:%s') as created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.user_id = '" + user_id + "' GROUP BY b_o.order_id order by created_at desc"
         result_sql = await exports.run_query(sql)
         final_data = []
         for (let i = 0; i < result_sql.length; i++) {
@@ -27,7 +27,7 @@ exports.getOrderList = async function(req, res, next) {
                 result_detail_order = await exports.run_query(sql_detail_order)
                 order.order_detail = result_detail_order
             } catch (error) {
-                return res.send(error)
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
 
         }
@@ -69,7 +69,7 @@ exports.getOrderDetail = async function(req, res, next) {
     } else {
         return res.status(400).json({ status: 'failed', message: 'order_id is missing' });
     }
-    var sql_order = "SELECT b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type, b_o.created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.order_id = '" + order_id + "' GROUP BY b_o.order_id"
+    var sql_order = "SELECT b_o.order_id,b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type, DATE_FORMAT(b_o.created_at , '%Y-%m-%d %H:%i:%s') as created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.order_id = '" + order_id + "' GROUP BY b_o.order_id"
     var sql_order_detail = `SELECT b_m_i.id as item_id , b_m_i.title as item,b_o_d.quantity,b_m_i.price as per_price,b_m_i.type as type FROM business_orders as b_o JOIN business_order_detail as b_o_d JOIN business_menu_item as b_m_i ON b_o.order_id = b_o_d.order_id AND b_m_i.id =b_o_d.item_id WHERE b_o_d.order_id = '${order_id}'`
 
 
@@ -186,9 +186,7 @@ exports.createOrder = async function(req, res, next) {
         var user_id = req.userdata.id;
         var category;
         var item;
-        if (req.body.notes == '' || req.body.notes == 'undefined' || req.body.notes == null) {
-            return res.status(403).json({ status: 'error', message: 'Notes not found.' });
-        } else if (req.body.order_type == '' || req.body.order_type == 'undefined' || req.body.order_type == null) {
+        if (req.body.order_type == '' || req.body.order_type == 'undefined' || req.body.order_type == null) {
             return res.status(403).json({ status: 'error', message: 'Order type not found.' });
         } else if (req.body.category == '' || req.body.category == 'undefined' || req.body.category == null) {
             return res.status(403).json({ status: 'error', message: 'No category selected.' });
@@ -267,17 +265,22 @@ exports.createOrder = async function(req, res, next) {
                 // calculate the custumization price for this item
                 item_custumization_price = 0;
                 if (category_items[j].attributes) {
+                    // saving the order attribute of the item
                     for (let c = 0; c < category_items[j].attributes.length; c++) {
-                        insertDataCustomizationItem = {
-                            order_id: order_id,
-                            item_id: item_id,
-                            attribute_id: category_items[j].attributes[c].attribute_id,
-                            option_id: category_items[j].attributes[c].option_id,
-                            price: category_items[j].attributes[c].price,
+                        // if there is more option in one attribute 
+                        for (let o = 0; o < category_items[j].attributes[c].option_id.length; o++) {
+                            const element = category_items[j].attributes[c].option_id[o];
+                            insertDataCustomizationItem = {
+                                order_id: order_id,
+                                item_id: item_id,
+                                attribute_id: category_items[j].attributes[c].attribute_id,
+                                option_id: category_items[j].attributes[c].option_id[o],
+                                price: category_items[j].attributes[c].price,
+                            }
+                            sqlInsertCustomizationItem = "INSERT INTO business_order_item_customization_detail set ?";
+                            await exports.run_query(sqlInsertCustomizationItem, insertDataCustomizationItem)
+                            item_custumization_price += (category_items[j].attributes[c].price)
                         }
-                        sqlInsertCustomizationItem = "INSERT INTO business_order_item_customization_detail set ?";
-                        await exports.run_query(sqlInsertCustomizationItem, insertDataCustomizationItem)
-                        item_custumization_price += (category_items[j].attributes[c].price)
                     }
                 }
                 var amount = ((price * qty) + item_custumization_price) + (((price * qty) + item_custumization_price) * Number(category_items[j].tax) / 100);
@@ -372,6 +375,23 @@ exports.createOrderVerbose = async(req, res, next) => {
     return res.status(200).json({ status: 'success', message: 'success', data: { accepting_order, order_type: final_data, payment_type: payment_methods } });
 }
 
+exports.cancelOrder = async(req, res) => {
+    if (!req.body.order_id) {
+        return res.status(400).json({ status: 'error', message: 'order_id is missing' });
+    } else {
+        order_id = req.body.order_id
+    }
+
+    try {
+        sqlCancelOrder = `update business_orders set order_status = 'canceled', deleted_at = NOW(), updated_at = NOW() where order_id = '${order_id}'`
+        resultCancelOrder = await exports.run_query(sqlCancelOrder)
+        return res.status(200).json({ status: 'success', message: 'Order canceled successfull' });
+    } catch (error) {
+        return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
+    }
+
+
+}
 
 exports.run_query = (sql, param = false) => {
     if (param == false) {

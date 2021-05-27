@@ -14,34 +14,17 @@ exports.all_business_reviewlist = async function(req, res, next) {
             var sql = "SELECT b_r.id, u.full_name, b_r.user_id as user_id,b_r.business_id as business_id,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
             DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
             FROM business_reviews as b_r\n\
-            JOIN users as u ON u.id = b_r.user_id  \n\
-            JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
+           left JOIN users as u ON u.id = b_r.user_id  \n\
+           left JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
             WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 AND b_r.id = '" + req.body.review_id + "' GROUP BY id ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
         } else {
             var sql = "SELECT b_r.id, u.full_name, b_r.user_id as user_id,b_r.business_id as business_id,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
             DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
             FROM business_reviews as b_r\n\
-            JOIN users as u ON u.id = b_r.user_id  \n\
-            JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
+           left JOIN users as u ON u.id = b_r.user_id  \n\
+           left JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
             WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 GROUP BY id ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
         }
-
-        // if (req.body.review_id != '' && req.body.review_id != undefined && req.body.review_id != null) {
-        //     var sql = "SELECT b_r.id, u.full_name, b_r.user_id as user_id,b_r.business_id as business_id,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
-        //     DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
-        //     FROM business_reviews as b_r\n\
-        //     JOIN users as u ON u.id = b_r.user_id  \n\
-        //     JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
-        //     WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 AND b_r.id = '" + req.body.review_id + "' GROUP BY id ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
-        // } else {
-        //     var sql = "SELECT b_r.id, u.full_name, b_r.user_id as user_id,b_r.business_id as business_id,b_rate.rating as rating, reviews, DATE_FORMAT(b_r.created_at, '%Y-%m-%d') as review_date, \n\
-        //     DATE_FORMAT(b_r.created_at, '%H:%i') AS review_at \n\
-        //     FROM business_reviews as b_r\n\
-        //     JOIN users as u ON u.id = b_r.user_id  \n\
-        //     JOIN business_ratings as b_rate ON u.id = b_rate.user_id  \n\
-        //     WHERE b_r.business_id='" + business_id + "' AND b_r.deleted_at IS NULL AND b_r.parent_id = 0 GROUP BY id ORDER BY id DESC LIMIT 8 OFFSET " + data_from;
-        // }
-
 
         result = await exports.run_query(sql)
         if (result.length > 0) {
@@ -49,7 +32,11 @@ exports.all_business_reviewlist = async function(req, res, next) {
                 const e = result[i];
                 sql_rating = `SELECT rating from business_ratings where business_id = '${result[i].business_id}' and user_id = '${result[i].user_id}' limit 1`
                 result_rating = await exports.run_query(sql_rating)
-                result[i].rating = result_rating[0].rating
+                if (result_rating != '') {
+                    result[i].rating = result_rating[0].rating
+                } else {
+                    result[i].rating = null
+                }
             }
         }
 

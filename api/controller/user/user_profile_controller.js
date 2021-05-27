@@ -35,22 +35,153 @@ exports.getCaruoselData = async function(req, res) {
 }
 
 exports.getUserReview = async function(req, res, next) {
+    // try {
+    business_id = null
+    if (!req.userdata.id) {
+        return res.status(400).json({ status: 'error', message: 'user_id is missing.' });
+    } else {
+        user_id = req.userdata.id
+    }
+    if (!req.body.business_id) {
+        return res.status(400).json({ status: 'error', message: 'business_id is missing.' });
+    } else {
+        business_id = req.body.business_id
+    }
+    if (req.body.page_size == null || req.body.page_size == undefined || req.body.page_size == '' || req.body.page_size == 0 || req.body.page_size == 1) {
+        var data_from = 0;
+    } else {
+        var num = parseInt(req.body.page_size.trim());
+        var data_from = (num - 1) * 8;
+    }
+    if (business_id) {
+        var sql = `SELECT br.id as root_id, br.user_id, if(br.user_id = '${req.userdata.id}',1,0) as self,br.business_id,br.reviews,br.parent_id,u.full_name as name,if(u.photo IS NULL or u.photo = '(NULL)' , null ,concat('${img_path}' ,u.photo) )  as photo FROM business_reviews as br\n\
+            left join users as u on u.id = br.user_id WHERE b_to_u = 0 AND parent_id = 0 and business_id = '${business_id}' order by root_id desc limit 8 offset ${data_from}`
+    }
+
+    var result = await exports.run_query(sql)
+
+
+    if (result.length > 0) {
+        for (let i = 0; i < result.length; i++) {
+
+            // for the latest review.
+            var sqlReviewReplies = "SELECT id, reviews, parent_id, b_to_u,  DATE_FORMAT(created_at,'%d-%b-%Y %H:%i:%s') AS created_at FROM `business_reviews` WHERE id>='" + result[i].root_id + "' AND user_id='" + result[i].user_id + "' and business_id ='" + result[i].business_id + "' order by parent_id";
+            var resultReviewReplies = await exports.run_query(sqlReviewReplies)
+            result[i].user_review = null
+            result[i].created_at = null
+            result[i].business_date = null
+            result[i].business_review = null
+
+            if (resultReviewReplies.length > 0) {
+                final_result = []
+                var start_id = result[i].root_id
+                final_result.push(resultReviewReplies[0])
+                resultReviewReplies.forEach(element => {
+                    resultReviewReplies.forEach((value, index, arr) => {
+                        if (value.parent_id == start_id) {
+                            final_result.push(value)
+                            start_id = value.id
+                        }
+                    })
+                });
+                let ur = 0
+                let br = 0
+                for (let p = final_result.length - 1; p >= 0; p--) {
+                    if (final_result[p].b_to_u == 1) {
+                        result[i].business_review = final_result[p].reviews
+                        result[i].business_date = final_result[p].created_at
+                        br = 1
+                    }
+                    if (final_result[p].b_to_u == 0) {
+                        result[i].user_review = final_result[p].reviews
+                        result[i].created_at = final_result[p].created_at
+                        ur = 1
+                    }
+
+                    if (br == 1 && ur == 1) {
+                        break
+                    }
+                }
+            }
+
+            var sqlcountReview = "SELECT count(id) as count FROM `business_reviews` WHERE id>='" + result[i].root_id + "' AND user_id='" + result[i].user_id + "' and business_id ='" + result[i].business_id + "'";
+            var resultsqlcountReview = await exports.run_query(sqlcountReview)
+
+            sql_rating = `SELECT rating from business_ratings where business_id = '${result[i].business_id}' and user_id = '${result[i].user_id}' limit 1`
+            result_rating = await exports.run_query(sql_rating)
+            if (result_rating != '') {
+                result[i].rating = result_rating[0].rating
+            } else {
+                result[i].rating = null
+            }
+
+            result[i].total_reviews = resultsqlcountReview[0].count
+        }
+    }
+
+    if (result == '') {
+        return res.status(200).send({ status: 'success', message: 'No review found', data: result })
+    }
+    return res.status(200).send({ status: 'success', message: 'success', data: result })
+        // } catch (error) {
+        // res.status(500).json({ status: 'error', message: 'Something went wrong.', error })
+        // }
+}
+
+exports.setBusinessRating = async(req, res) => {
+    if (!req.body.business_id) {
+        return res.status(400).json({ status: 'error', message: 'business_id is missing.' });
+    }
+    if (!req.body.rating) {
+        return res.status(400).json({ status: 'error', message: 'rating is missing.' });
+    }
+
+    objectToInsert = {
+        business_id: req.body.business_id,
+        user_id: req.userdata.id,
+        rating: req.body.rating
+    }
+
     try {
-        if (!req.userdata.id) {
-            return res.status(400).json({ status: 'error', message: 'user_id is missing.' });
+        sqlCheckRating = `select id from business_ratings where user_id = '${req.userdata.id}' and business_id = '${req.body.business_id}' limit 1`
+        resultCheckRating = await exports.run_query(sqlCheckRating)
+        if (resultCheckRating == '') {
+            sqlInsertRating = `insert into business_ratings set ?`
+            await exports.run_query(sqlInsertRating, objectToInsert)
+        } else {
+            sqlUpadteRating = `update business_ratings set ? where id = ${ resultCheckRating[0].id}`
+            await exports.run_query(sqlUpadteRating, objectToInsert)
         }
-        var sql = `SELECT id,business_id,reviews,created_at FROM business_reviews WHERE user_id = '${req.userdata.id}' AND b_to_u = 0 AND parent_id = 0`
-        var result = await exports.run_query(sql)
-        if (result == '') {
-            return res.status(200).send({ status: 'success', message: 'No review found', data: result })
-        }
-        return res.status(200).send({ status: 'success', message: 'success', data: result })
+        return res.status(200).send({ status: 'success', message: 'Rating saved successfully' })
     } catch (error) {
         res.status(500).json({ status: 'error', message: 'Something went wrong.', error })
     }
 }
 
+exports.getBusinessRating = async(req, res) => {
+    business_id = null
+    if (!req.body.business_id) {
+        return res.status(400).json({ status: 'error', message: 'business_id is missing.' });
+    } else {
+        business_id = req.body.business_id
+    }
+    try {
+        if (business_id) {
+            sqlRating = `select business_id, rating from business_ratings where user_id = '${req.userdata.id}' and business_id = '${business_id}'`
+        } else {
+            sqlRating = `select business_id, rating from business_ratings where user_id = '${req.userdata.id}'`
+        }
+        resultRating = await exports.run_query(sqlRating)
+        if (resultRating == '') {
+            return res.status(200).send({ status: 'success', message: 'success', data: [{ business_id: null, rating: null }] })
+        } else {
+            return res.status(200).send({ status: 'success', message: 'success', data: resultRating })
+        }
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: 'Something went wrong.', error })
+    }
 
+}
 
 exports.userProfilePhoto = async function(req, res, next) {
     if (req.userdata.id) {
@@ -373,14 +504,38 @@ exports.endRelation = async(req, res, next) => {
 exports.getAllRelation = async(req, res, next) => {
     if (req.body.relation_type == null || req.body.relation_type == undefined || req.body.relation_type == '') {
         return res.status(400).send({ status: 'failed', message: 'relation_type is missing' })
-    } else if (req.userdata.business_id == null && req.userdata.business_id == undefined && req.userdata.business_id == '') {
+    }
+    if (req.userdata.business_id) {
+        user_id = req.userdata.business_id
+    } else {
         user_id = req.userdata.id
     }
-    try {
-        sql_get_all_business_relation = `SELECT u_b_r.id as relation_id, u_b_r.source_id as source_id, u_b_r.target_id as target_id ,b_m.business_name as business_name, b_m.website as websites, b_m.short_description as short_description,b_m.business_status as status, CONCAT('${img_path}' , b_m.photo) as photo FROM user_business_relation AS u_b_r JOIN business_master as b_m WHERE u_b_r.target_id = b_m.business_id AND u_b_r.relation_type = '${req.body.relation_type}'`
 
-        result_get_all_business_relation = await exports.run_query(sql_get_all_business_relation)
-        return res.send(result_get_all_business_relation)
+    try {
+        if (req.body.relation_type > 0) {
+            sql_get_all_business_relation = `SELECT u_b_r.id as relation_id, u_b_r.source_id as source_id, u_b_r.target_id as target_id ,b_m.business_name as name, b_m.website as websites, b_m.short_description as short_description,b_m.business_status as status, CONCAT('${img_path}' , b_m.photo) as photo FROM user_business_relation AS u_b_r JOIN business_master as b_m WHERE u_b_r.target_id = b_m.business_id AND u_b_r.relation_type = '${req.body.relation_type}' AND u_b_r.source_id = '${user_id}'`
+
+            result_get_all_business_relation = await exports.run_query(sql_get_all_business_relation)
+
+            sql_get_all_user_relation = `SELECT u_b_r.id as relation_id, u_b_r.source_id as source_id, u_b_r.target_id as target_id ,u.full_name as name, null as websites, null as status, u.short_description as short_description, CONCAT('${img_path}' , u.photo) as photo FROM user_business_relation AS u_b_r JOIN users as u WHERE u_b_r.target_id = u.id AND u_b_r.relation_type = '${req.body.relation_type}' AND u_b_r.source_id = '${user_id}'`
+
+            result_get_all_user_relation = await exports.run_query(sql_get_all_user_relation)
+
+
+        } else {
+            sql_get_all_business_relation = `SELECT u_b_r.id as relation_id, u_b_r.source_id as source_id, u_b_r.target_id as target_id ,b_m.business_name as business_name, b_m.website as websites, b_m.short_description as short_description,b_m.business_status as status, CONCAT('${img_path}' , b_m.photo) as photo FROM user_business_relation AS u_b_r JOIN business_master as b_m WHERE u_b_r.source_id = b_m.business_id AND u_b_r.relation_type = '${Math.abs(req.body.relation_type)}' AND u_b_r.target_id = '${user_id}'`
+
+            result_get_all_business_relation = await exports.run_query(sql_get_all_business_relation)
+
+            sql_get_all_user_relation = `SELECT u_b_r.id as relation_id, u_b_r.source_id as source_id, u_b_r.target_id as target_id ,u.full_name as name, null as websites, null as business_name, null as status, u.short_description as short_description, CONCAT('${img_path}' , u.photo) as photo FROM user_business_relation AS u_b_r JOIN users as u WHERE u_b_r.source_id = u.id AND u_b_r.relation_type = '${Math.abs(req.body.relation_type)}' AND u_b_r.target_id = '${user_id}'`
+
+            result_get_all_user_relation = await exports.run_query(sql_get_all_user_relation)
+        }
+        data = [...result_get_all_business_relation, ...result_get_all_user_relation]
+        if (data == '') {
+            return res.status(200).send({ status: 'success', message: 'There is no relation found ', data: data })
+        }
+        return res.status(200).send({ status: 'success', message: 'success', data: data })
     } catch (error) {
         return res.status(500).send({ status: 'failed', message: 'Something went wrong', error })
     }
