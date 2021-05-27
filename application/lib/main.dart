@@ -1,4 +1,5 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
+import 'package:Favorito/ui/Chat/ChatProvider.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
@@ -48,6 +49,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => BookingProvider()),
       ChangeNotifierProvider(create: (context) => MenuProvider()),
       ChangeNotifierProvider(create: (context) => AppoinmentProvider()),
+      ChangeNotifierProvider(create: (context) => ChatProvider()),
     ], child: MyApp()));
   });
 }

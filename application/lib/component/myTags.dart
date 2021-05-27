@@ -67,7 +67,7 @@ class _MyTagsState extends State<MyTags> {
               scrollDirection:
                   widget.directionVeticle ? Axis.vertical : Axis.horizontal,
               children: [
-                for (int i = 0; i < widget.selectedList.length; i++)
+                for (int i = 0; i < (widget.selectedList?.length ?? 0); i++)
                   roundButtonRightIcon(
                       borderColor: widget.border ? myRed : Colors.white,
                       title: widget.selectedList[i],

@@ -11,6 +11,7 @@ import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewProvider.dart';
+import 'package:favorito_user/ui/chat/ChatProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileProvider.dart';
@@ -42,6 +43,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => OrderProvicer()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => ReviewProvider()),
+        ChangeNotifierProvider(create: (context) => ChatProvider()),
       ],
       child: MyApp(),
     ));
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       materialTheme: ThemeData.light().copyWith(
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: Color(0xffF4F6FC),
           canvasColor: myGreyDark,
           backgroundColor: myGrey,
           hintColor: myGrey,

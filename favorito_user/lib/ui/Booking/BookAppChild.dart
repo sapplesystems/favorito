@@ -35,18 +35,17 @@ class BookAppChild extends StatelessWidget {
               elevation: 8,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () => vaTrue.setSelectedTab('New'),
-                      child: newHistory('New'),
-                    ),
-                    InkWell(
-                      onTap: () => vaTrue.setSelectedTab('History'),
-                      child: newHistory('History'),
-                    ),
-                  ]),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                InkWell(
+                  onTap: () => vaTrue.setSelectedTab('New'),
+                  child: newHistory('New'),
+                ),
+                InkWell(
+                  onTap: () => vaTrue.setSelectedTab('History'),
+                  child: newHistory('History'),
+                ),
+              ]),
             ),
           ),
           Consumer<AppBookProvider>(
@@ -59,14 +58,14 @@ class BookAppChild extends StatelessWidget {
                     : ListView.builder(
                         itemCount: da.length,
                         itemBuilder: (BuildContext context, int index) {
-                          print("name is :${
-                              da[index].businessName}");
+                          print("name is :${da[index].businessName}");
                           return Padding(
                             padding: EdgeInsets.only(top: sm.h(1)),
                             child: InkWell(
-                              onTap: (){
+                              onTap: () {
                                 // Navigator.pushNamed(context, '/appBookDetail');
-                              },                  child: Card(
+                              },
+                              child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12.0)),
@@ -89,17 +88,21 @@ class BookAppChild extends StatelessWidget {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    da[index]?.businessName?.toString()?.capitalize()
-                                                  ,
+                                                    da[index]
+                                                        ?.businessName
+                                                        ?.toString()
+                                                        ?.capitalize(),
                                                     style: TextStyle(
                                                         fontSize: 20,
                                                         fontFamily:
                                                             'GilRoy-Bold'),
                                                   ),
-                                                   Text("\t\t(${da[index]?.status})",style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontFamily:
-                                                            'GilRoy-Medium')),
+                                                  Text(
+                                                      "\t\t(${da[index]?.status})",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontFamily:
+                                                              'GilRoy-Medium')),
                                                   // Icon(
                                                   //   da[index].status ==
                                                   //           'pending'
@@ -124,14 +127,14 @@ class BookAppChild extends StatelessWidget {
                                                   top: 2.0),
                                               child: Text(
                                                 DateFormat(
-                                                    'dd MMMM yyyy | h:mm a')
+                                                        'dd MMMM yyyy | h:mm a')
                                                     .format(DateTime.parse(
-                                                    da[index]
-                                                        .createdDatetime)),
+                                                        da[index]
+                                                            .createdDatetime)),
                                                 style: TextStyle(
                                                     fontSize: 12,
                                                     fontWeight:
-                                                    FontWeight.w400),
+                                                        FontWeight.w400),
                                               ),
                                             ),
                                             // Visibility(
@@ -161,7 +164,8 @@ class BookAppChild extends StatelessWidget {
                                                 child: Text(
                                                   "${da[index].specialNotes}",
                                                   style: TextStyle(
-                                                      fontSize: 13,color: myGrey,
+                                                      fontSize: 13,
+                                                      color: myGrey,
                                                       fontWeight:
                                                           FontWeight.w400),
                                                 ),

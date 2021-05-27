@@ -46,9 +46,13 @@ dependencies:
   flutter_rating_bar:
   barcode_scan:
   place_picker:
+  cached_network_image:
   flutter:
     sdk: flutter
   smooth_star_rating: ^1.1.1
+  # socket_io_client: ^1.0.1
+  # socket_io:
+  # web_socket_channel:
 
 dev_dependencies:
   flutter_test:

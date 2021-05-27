@@ -18,6 +18,8 @@ import 'package:favorito_user/ui/business/tabs/Review/Review.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewTab.dart';
 import 'package:favorito_user/ui/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/business/waitlist/waitlist.dart';
+import 'package:favorito_user/ui/chat/Chat.dart';
+import 'package:favorito_user/ui/chat/ChatHome.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/splash/Splash.dart';
 import 'package:favorito_user/ui/user/Following.dart';
@@ -33,7 +35,7 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
-        // return MaterialPageRoute(builder: (_) => MenuHome());
+        // return MaterialPageRoute(builder: (_) => ChatHome());
         // return MaterialPageRoute(builder: (_) => ReviewTab());
         return MaterialPageRoute(builder: (_) => BottomNavBar());
       case '/splash':
@@ -101,6 +103,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => OrderHome());
       case '/review':
         return MaterialPageRoute(builder: (_) => Review());
+      case '/chat':
+        return MaterialPageRoute(builder: (_) => Chat());
       default:
         return _errorRoute();
     }

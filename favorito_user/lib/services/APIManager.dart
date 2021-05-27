@@ -1,8 +1,9 @@
 import 'dart:convert' as convert;
 import 'dart:io';
-
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
+import 'package:favorito_user/model/Chat/UserModel.dart';
+import 'package:favorito_user/model/Chat/chatModel.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/Follow/followingModel.dart';
 import 'package:favorito_user/model/ProfilePhoto.dart';
@@ -1505,6 +1506,52 @@ class APIManager {
     }
     print("service.verifyOtp : ${response.toString}");
     return loginModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//chat this will provide list  of all user who is nvolved in chat
+  static Future<UserModel> getChatList(GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return UserModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = service.getChatList;
+    print("url : $url");
+    try {
+      response = await dio.post(url, options: opt);
+    } on DioError catch (e) {
+      // ExceptionHandler(e, null, url, formKey);
+    }
+    return UserModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//chat this will provide list  of all user who is nvolved in chat
+  static Future<ChatModel> getChat(
+      Map _map, GlobalKey<ScaffoldState> formKey) async {
+    if (!await utilProvider.checkInternet())
+      return ChatModel(
+          status: 'fail', message: 'Please check internet connections');
+    print("121b:${_map.toString()}");
+    String token = await Prefs.token;
+    // opt = Options(
+    //     contentType: Headers.formUrlEncodedContentType,
+    //     headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    var _response;
+    try {
+      _response = await dio.post(service.getChat,
+          data: _map,
+          options: Options(
+              contentType: Headers.formUrlEncodedContentType,
+              headers: {HttpHeaders.authorizationHeader: "Bearer $token"}));
+    } on DioError catch (e) {
+      // ExceptionHandler(e, null, service.getChat, formKey);
+    }
+    print("1212:${_response.toString()}");
+    return ChatModel.fromJson(convert.jsonDecode(_response.toString()));
   }
 
   static Future<FollowingModel> getFollowing(Map _map) async {

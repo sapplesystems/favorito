@@ -15,12 +15,14 @@ class minut20 extends StatelessWidget {
           SizedBox(width: 10),
           Text(
             myMinut,
-            style: TextStyle(fontSize: 40, fontFamily: 'Gilroy-Reguler'),
+            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 40),
           ),
           Text('Minutes',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 14, letterSpacing: 1, fontFamily: 'Gilroy-Bold')),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(fontSize: 14, letterSpacing: 1)),
         ]);
   }
 }

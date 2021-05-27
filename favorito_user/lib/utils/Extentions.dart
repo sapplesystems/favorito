@@ -32,6 +32,15 @@ extension StringExtension on String {
         .join(' ');
   }
 
+  // String sentenseCase() {
+  //   // if (this.isEmpty) return this;
+  //   return this
+  //       .trim()
+  //       .split('.')
+  //       .map((word) => (word.substring(0, 1).toUpperCase()) + word.substring(1))
+  //       .join(' ');
+  // }
+
   String convert24to12() {
     int hh = int.parse(this.substring(0, 2));
     String turn = 12 > hh ? 'am' : 'pm';

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:favorito_user/component/CirculerProgress.dart';
@@ -67,23 +66,27 @@ class Waitlist extends StatelessWidget {
                                           children: [
                                             SizedBox(height: sm.h(.4)),
                                             Text(currentWaitlistAt,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontFamily:
-                                                        'Gilroy-Regular')),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(
+                                                        fontSize: 16,
+                                                        fontFamily:
+                                                            'Gilroy-Regular')),
                                             Text(
                                                 vaTrue
                                                         .getWaitListData()
                                                         ?.businessName ??
                                                     '',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: 'Gilroy-Bold')),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(fontSize: 20)),
                                           ]),
                                       SvgPicture.asset(
                                           'assets/icon/cutlery.svg')
                                     ])),
-                            bodyPart(),
+                            bodyPart(context),
                             footer(context)
                           ]))
                   : Center(
@@ -94,7 +97,7 @@ class Waitlist extends StatelessWidget {
     );
   }
 
-  Widget bodyPart() {
+  Widget bodyPart(context) {
     print("dddd${vaTrue.getWaitListData()?.partiesBeforeYou}");
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Container(
@@ -110,21 +113,26 @@ class Waitlist extends StatelessWidget {
                       // ?.convert24to12()
                       ??
                       vaTrue.getWaitListData()?.bookedSlot ??
-                      '0'),
+                      '0',
+                  context),
               SizedBox(height: sm.h(6)),
               Visibility(
-                  visible: vaTrue.isWaiting,
-                  child: beforeU('# in Parties', 'admin',
-                      vaTrue.getWaitListData()?.noOfPerson?.toString() ?? '0')),
+                visible: vaTrue.isWaiting,
+                child: beforeU(
+                    '# in Parties',
+                    'admin',
+                    vaTrue.getWaitListData()?.noOfPerson?.toString() ?? '0',
+                    context),
+              ),
               Visibility(
                   visible: vaTrue.isWaiting, child: SizedBox(height: sm.h(6))),
               beforeU(
                   'Parties Before you',
                   'admin',
-                  vaTrue.getWaitListData()?.partiesBeforeYou?.toString() ??
-                      '0'),
+                  vaTrue.getWaitListData()?.partiesBeforeYou?.toString() ?? '0',
+                  context),
               SizedBox(height: sm.h(6)),
-              waitingTime(),
+              waitingTime(context),
             ],
           )),
       Container(
@@ -155,7 +163,7 @@ class Waitlist extends StatelessWidget {
                       )),
                       child: Text(
                         (i + 1).toString(),
-                        style: TextStyle(
+                        style: Theme.of(context).textTheme.headline6.copyWith(
                             fontSize: 16,
                             color: (vaTrue.isWaiting &&
                                     i ==
@@ -235,11 +243,14 @@ class Waitlist extends StatelessWidget {
                               left: 12.0, right: 30, bottom: 16, top: 16),
                           child: Text(
                             vaTrue.btnTxt,
-                            style: TextStyle(
-                                color: Color(0xffdd2626),
-                                fontSize: 18,
-                                letterSpacing: 0.36,
-                                fontFamily: 'Gilroy-Light'),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    color: Color(0xffdd2626),
+                                    fontSize: 18,
+                                    letterSpacing: 0.36,
+                                    fontWeight: FontWeight.w300),
                           ))
                     ]))),
         InkWell(
@@ -264,12 +275,12 @@ class Waitlist extends StatelessWidget {
     );
   }
 
-  Widget beforeU(String _title, String _icon, String _val) {
+  Widget beforeU(String _title, String _icon, String _val, context) {
     return Column(children: [
       Row(children: [
         Text(
           _title,
-          style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular'),
+          style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
         ),
       ]),
       Row(children: [
@@ -281,23 +292,26 @@ class Waitlist extends StatelessWidget {
         ),
         Text(
           ' $_val',
-          style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'Gilroy-medium',
-              fontWeight: FontWeight.w600),
+          style: Theme.of(context)
+              .textTheme
+              .headline5
+              .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ]),
     ]);
   }
 
-  waitingTime() {
+  waitingTime(context) {
     print("data.waitlistStatus:${vaTrue.getWaitListData()?.waitlistStatus}");
     var _wait = vaTrue.getWaitListData()?.minimumWaitTime ?? "00";
     print("asd${vaTrue.getWaitListData()?.waitlistStatus}");
     return Column(
       children: [
         Text('Waiting time',
-            style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Regular')),
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                .copyWith(fontSize: 16, fontFamily: 'Gilroy-Regular')),
         (vaTrue.isWaiting &&
                 vaTrue.timerTime &&
                 vaTrue.getWaitListData()?.waitlistStatus == 'accepted')

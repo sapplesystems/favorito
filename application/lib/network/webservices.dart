@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
+import 'package:Favorito/model/Chat/ChatModel.dart';
+import 'package:Favorito/model/Chat/UserModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagModel.dart';
@@ -1599,6 +1601,60 @@ class WebService {
           text: response.statusMessage, duration: Duration(seconds: 5));
     }
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  //Chat
+  static Future<UserModel> getChatList(Key key) async {
+    String url = serviceFunction.getChatList;
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    return UserModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  //getChat
+  static Future<ChatModel> getChat(Map _map, Key key) async {
+    String url = serviceFunction.getChat;
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    return ChatModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+//setChat
+  static Future<BaseResponseModel> setChat(
+      String userId, String roomId, List files, String message) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.setChat;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {
+      "file": va,
+      "user_id": userId,
+      "room_id": roomId,
+      "message": message
+    };
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(url, data: formData, options: opt);
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
   }
 
   //resetPassword

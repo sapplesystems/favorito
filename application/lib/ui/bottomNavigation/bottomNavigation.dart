@@ -1,3 +1,4 @@
+import 'package:Favorito/ui/Chat/ChatHome.dart';
 import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
@@ -20,8 +21,9 @@ class _bottomNavigationState extends State<bottomNavigation> {
   static List<Widget> _widgetOptions = <Widget>[
     dashboard(),
     Bookings(),
-    Appoinment(),
+    // Appoinment(),
     // Bookings(),
+    ChatHome(),
     MenuHome(),
     Setting()
   ];
@@ -33,8 +35,8 @@ class _bottomNavigationState extends State<bottomNavigation> {
   }
 
   void _onItemTapped(int index) {
-    if(index==1){
-Provider.of<BookingProvider>(context, listen: false).getBookingData();
+    if (index == 1) {
+      Provider.of<BookingProvider>(context, listen: false).getBookingData();
     }
     // else if(index==2){
     //   Provider.of<AppoinmentProvider>(context, listen: false).getAppointmentCall();
@@ -44,7 +46,6 @@ Provider.of<BookingProvider>(context, listen: false).getBookingData();
 
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -53,14 +54,12 @@ Provider.of<BookingProvider>(context, listen: false).getBookingData();
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: ""),
           BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.comment), label: ""),
           BottomNavigationBarItem(
               icon: Icon(Icons.format_list_bulleted), label: ""),
-          BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.cog), label: ""),
+          BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.cog), label: ""),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
