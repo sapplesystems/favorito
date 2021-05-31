@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
+import 'package:favorito_user/ui/Chat/ChatProvider.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
@@ -11,7 +12,6 @@ import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewProvider.dart';
-import 'package:favorito_user/ui/chat/ChatProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileProvider.dart';
@@ -43,7 +43,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => OrderProvicer()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => ReviewProvider()),
-        ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => ChatProvier()),
       ],
       child: MyApp(),
     ));

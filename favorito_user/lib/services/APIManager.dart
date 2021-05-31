@@ -1402,37 +1402,32 @@ class APIManager {
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
 
-  static Future<BaseResponse> emailRegister(
-      Map _map, GlobalKey<ScaffoldState> formKey) async {
+  static Future<BaseResponse> emailRegister(Map _map) async {
     if (!await utilProvider.checkInternet())
       return BaseResponse(
           status: 'fail', message: 'Please check internet connections');
-    final ProgressDialog pr = ProgressDialog(formKey.currentContext,
-        type: ProgressDialogType.Normal, isDismissible: false)
-      ..style(
-          message: 'Please wait...',
-          borderRadius: 8.0,
-          backgroundColor: Colors.white,
-          progressWidget: CircularProgressIndicator(),
-          elevation: 8.0,
-          insetAnimCurve: Curves.easeInOut,
-          progress: 0.0,
-          maxProgress: 100.0,
-          progressTextStyle: TextStyle(
-              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-          messageTextStyle: TextStyle(
-              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600))
-      ..show();
     String url = service.emailRegister;
     print("url : $url");
     try {
       response = await dio.post(url, data: _map, options: opt);
-      pr.hide();
     } on DioError catch (e) {
-      ExceptionHandler(e, pr, url, formKey);
-    } finally {
-      pr.hide();
-    }
+      ExceptionHandler(e, null, url, null);
+    } finally {}
+    print("service.verifyOtp : ${response.toString}");
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<BaseResponse> setGetFirebaseId(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponse(
+          status: 'fail', message: 'Please check internet connections');
+    String url = service.setGetFirebaseId;
+    print("url : $url");
+    try {
+      response = await dio.post(url, data: _map, options: opt);
+    } on DioError catch (e) {
+      ExceptionHandler(e, null, url, null);
+    } finally {}
     print("service.verifyOtp : ${response.toString}");
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }

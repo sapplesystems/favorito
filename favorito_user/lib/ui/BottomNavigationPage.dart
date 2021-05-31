@@ -1,5 +1,6 @@
 import 'package:favorito_user/ui/Booking/BookingOrAppointmentList.dart';
-import 'package:favorito_user/ui/chat/ChatHome.dart';
+import 'package:favorito_user/ui/Chat/LoginPage.dart';
+// import 'package:favorito_user/ui/chat/ChatHome.dart';
 import 'package:favorito_user/ui/home/Home.dart';
 import 'package:favorito_user/ui/search/Search.dart';
 import 'package:favorito_user/ui/user/profile.dart';
@@ -24,7 +25,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       Home(),
       Search(),
       BookingOrAppointmentParent(),
-      ChatHome(),
+      ChatLogin(),
       Profile()
     ];
     decideit();

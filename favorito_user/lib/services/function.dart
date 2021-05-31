@@ -135,4 +135,5 @@ class service {
   //Chat
   static final getChatList = baseBusiness2 + 'get-chat-list';
   static final getChat = baseBusiness2 + 'get-chats';
+  static final setGetFirebaseId = baseBusiness2 + 'firebase-id';
 }

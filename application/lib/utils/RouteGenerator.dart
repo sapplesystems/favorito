@@ -1,5 +1,4 @@
 import 'package:Favorito/component/NetworkImages.dart';
-import 'package:Favorito/ui/Chat/Chat.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/appoinment/AddPerson.dart';
 import 'package:Favorito/ui/appoinment/AddRestriction.dart';
@@ -59,8 +58,8 @@ class RouteGenerator {
       case '/manualAppoinment':
         return MaterialPageRoute(builder: (_) => ManualAppoinment());
 
-      case '/chat':
-        return MaterialPageRoute(builder: (_) => Chat());
+      // case '/chat':
+      //   return MaterialPageRoute(builder: (_) => Chat());
 
       case '/networkImages':
         return MaterialPageRoute(

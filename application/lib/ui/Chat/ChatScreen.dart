@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:Favorito/component/FullPhoto.dart';
+import 'package:Favorito/component/Progress.dart';
+import 'package:Favorito/model/Chat/User.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:favorito_user/component/FullPhoto.dart';
-import 'package:favorito_user/component/circularProgress.dart';
-import 'package:favorito_user/model/Chat/User.dart';
-import 'package:favorito_user/utils/MyColors.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -67,7 +67,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
       child: WillPopScope(
           child: Stack(children: [
@@ -80,7 +79,7 @@ class ChatScreenState extends State<ChatScreen> {
               //Create input
               createInput(),
             ]),
-            createLoading()
+            // createLoading()
           ]),
           onWillPop: onBackPress),
     );
@@ -218,7 +217,8 @@ class ChatScreenState extends State<ChatScreen> {
                       bottom: isLastMsgRight(index) ? 20 : 10, right: 10),
                   width: 200,
                   decoration: BoxDecoration(
-                      color: Colors.lightBlueAccent,
+                      color: myRed,
+                      //  Colors.lightBlueAccent,
                       borderRadius: BorderRadius.circular(15.0)),
                   child: Text(
                     document["content"],
@@ -326,7 +326,7 @@ class ChatScreenState extends State<ChatScreen> {
                       margin: EdgeInsets.only(left: 10),
                       width: 200,
                       decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: myRed.withOpacity(.09),
                           borderRadius: BorderRadius.circular(8.0)),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,

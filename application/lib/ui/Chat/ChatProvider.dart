@@ -1,8 +1,7 @@
+import 'package:Favorito/Provider/BaseProvider.dart';
+import 'package:Favorito/model/Chat/User.dart';
+import 'package:Favorito/ui/Chat/UserResult.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:favorito_user/Providers/BaseProvider.dart';
-import 'package:favorito_user/model/Chat/User.dart';
-import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/Chat/HomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatProvier extends BaseProvider {
@@ -18,10 +17,11 @@ class ChatProvier extends BaseProvider {
   }
 
   controlSearching(String userName) async {
+    print("userName$userName");
     Future<QuerySnapshot> allFoundUsers = Firestore.instance
         .collection("user")
         // .where(Firestore.instance.collection('messages').document(_chatId).collection(_chatId))
-        // .where("nickname", isGreaterThanOrEqualTo: userName)
+        .where("nickname", isGreaterThanOrEqualTo: userName)
         .getDocuments();
 
     futureSearchResultsd = allFoundUsers;
@@ -38,12 +38,12 @@ class ChatProvier extends BaseProvider {
         }
       });
     });
-    Future<QuerySnapshot> abc = Firestore.instance
-        .collection('messages')
-        .document(_chatId)
-        .collection(_chatId)
-        .getDocuments();
-    print(abc);
+    // Future<QuerySnapshot> abc = Firestore.instance
+    //     .collection('messages')
+    //     .document(_chatId)
+    //     .collection(_chatId)
+    //     .getDocuments();
+    // print(abc);
   }
 
   removeUser([userResult]) {
@@ -63,11 +63,12 @@ class ChatProvier extends BaseProvider {
   }
 
   sendEmailToserver(String str, key) async {
-    await APIManager.emailRegister({'email': str});
+    // await APIManager.emailRegister({'email': str}, key);
   }
 
   sendFireBaseIdToServer(String str, key) async {
-    await APIManager.setGetFirebaseId({'api_type': 'set', 'firebase_id': str});
+    // await APIManager.setGetFirebaseId(
+    //     {'api_type': 'set', 'firebase_id': str}, key);
   }
 
   List getabd() {

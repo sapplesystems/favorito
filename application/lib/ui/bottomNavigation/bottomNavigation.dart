@@ -1,4 +1,4 @@
-import 'package:Favorito/ui/Chat/ChatHome.dart';
+import 'package:Favorito/ui/Chat/LoginPage.dart';
 import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
@@ -23,7 +23,7 @@ class _bottomNavigationState extends State<bottomNavigation> {
     Bookings(),
     // Appoinment(),
     // Bookings(),
-    ChatHome(),
+    ChatLogin(),
     MenuHome(),
     Setting()
   ];
