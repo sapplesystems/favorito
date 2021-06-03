@@ -1,137 +1,42 @@
 {
   "project_info": {
-    "project_number": "385334296160",
-    "project_id": "social-network-app-281fa",
-    "storage_bucket": "social-network-app-281fa.appspot.com"
+    "project_number": "23149609014",
+    "project_id": "favorito-00302",
+    "storage_bucket": "favorito-00302.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:385334296160:android:5129c549a403436c1a0d05",
+        "mobilesdk_app_id": "1:23149609014:android:d8c9c941bb779c2def9897",
         "android_client_info": {
-          "package_name": "com.example.application"
+          "package_name": "com.business.favorito"
         }
       },
       "oauth_client": [
         {
-          "client_id": "385334296160-esj2ig92rf7uc39j53sdo41fnqpnf5m1.apps.googleusercontent.com",
+          "client_id": "23149609014-7f2m42af96n8164u2lu3pot5qsh2u7c6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.application",
+            "package_name": "com.business.favorito",
             "certificate_hash": "48ca27728cb411443af163f9b24290ef00b1645a"
           }
         },
         {
-          "client_id": "385334296160-tq4gi5vffo4j2gj83l69q7vlaeljnb2c.apps.googleusercontent.com",
+          "client_id": "23149609014-ob72bglanja398ovmvb60q019se6k5mp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDR7fC39c2xj63yOnKnoW9HcjxMazbk5sM"
+          "current_key": "AIzaSyCscehEF8ii5_94MWEp4CRNl79UurxINKQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "385334296160-tq4gi5vffo4j2gj83l69q7vlaeljnb2c.apps.googleusercontent.com",
+              "client_id": "23149609014-ob72bglanja398ovmvb60q019se6k5mp.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "385334296160-bpb5so01p4fhffsr9u5s575grf3ns516.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.muhammadali.telegramchatapp"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:385334296160:android:4cca72822ba1961d1a0d05",
-        "android_client_info": {
-          "package_name": "com.example.applications"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "385334296160-ij3qut3sh4svojm64fvh36sngg9b4nf5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.applications",
-            "certificate_hash": "48ca27728cb411443af163f9b24290ef00b1645a"
-          }
-        },
-        {
-          "client_id": "385334296160-tq4gi5vffo4j2gj83l69q7vlaeljnb2c.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDR7fC39c2xj63yOnKnoW9HcjxMazbk5sM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "385334296160-tq4gi5vffo4j2gj83l69q7vlaeljnb2c.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "385334296160-bpb5so01p4fhffsr9u5s575grf3ns516.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.muhammadali.telegramchatapp"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:385334296160:android:32ca9d9afea8adf51a0d05",
-        "android_client_info": {
-          "package_name": "com.muhammadali.telegramchatapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "385334296160-7vobqk5cjajbk50r4seiksdij4u4rbum.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.muhammadali.telegramchatapp",
-            "certificate_hash": "48ca27728cb411443af163f9b24290ef00b1645a"
-          }
-        },
-        {
-          "client_id": "385334296160-tq4gi5vffo4j2gj83l69q7vlaeljnb2c.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDR7fC39c2xj63yOnKnoW9HcjxMazbk5sM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "385334296160-tq4gi5vffo4j2gj83l69q7vlaeljnb2c.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "385334296160-bpb5so01p4fhffsr9u5s575grf3ns516.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.muhammadali.telegramchatapp"
-              }
             }
           ]
         }

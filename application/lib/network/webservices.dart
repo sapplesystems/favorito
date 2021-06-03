@@ -1550,7 +1550,7 @@ class WebService {
 
   //*************************************/Claims/*********************************/
 
-  static Future<claimInfo> funClaimInfo(BuildContext context) async {
+  static Future<ClaimInfo> funClaimInfo(BuildContext context) async {
     String token = await Prefs.token;
     String url = serviceFunction.funClaimInfo;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1561,7 +1561,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return claimInfo.fromJson(convert.json.decode(response.toString()));
+      return ClaimInfo.fromJson(convert.json.decode(response.toString()));
     }
   }
 
@@ -1923,6 +1923,22 @@ class WebService {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuCatEdit;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> setGetFirebaseId(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.setGetFirebaseId;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});

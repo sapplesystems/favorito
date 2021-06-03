@@ -3,6 +3,7 @@ import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/component/listItem.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
+import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,10 @@ class Setting extends StatelessWidget {
     spFalse = Provider.of<SettingProvider>(context, listen: false);
     spFalse.setContext(context);
     return WillPopScope(
-      onWillPop: (){
-
+      onWillPop: () {
         BaseProvider.onWillPop(context);
       },
-          child: Scaffold(
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text("Settings",
@@ -142,6 +142,10 @@ class Setting extends StatelessWidget {
                                   title: spFalse.title[i],
                                   ico: spFalse.icon[i],
                                   clicker: () {
+                                    if (i == 2)
+                                      Provider.of<ClaimProvider>(context,
+                                              listen: false)
+                                          .getClaimData(context);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -207,7 +211,8 @@ class Setting extends StatelessWidget {
                             child: Row(children: [
                               Expanded(
                                   flex: 2,
-                                  child: SvgPicture.asset('assets/icon/horn.svg',
+                                  child: SvgPicture.asset(
+                                      'assets/icon/horn.svg',
                                       alignment: Alignment.center,
                                       height: sm.h(3))),
                               Expanded(
@@ -244,7 +249,8 @@ class Setting extends StatelessWidget {
                             child: Text("Help",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w800))),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800))),
                         Expanded(
                             flex: 1,
                             child: Icon(spFalse.settingTool ? null : null,

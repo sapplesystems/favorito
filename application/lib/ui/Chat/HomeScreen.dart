@@ -1,14 +1,9 @@
-import 'package:Favorito/component/Progress.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/model/Chat/User.dart';
 import 'package:Favorito/ui/Chat/ChatProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import '../../utils/MyString.dart';
-import '../../utils/Extentions.dart';
 
 class HomeScreen extends StatefulWidget {
   final String currentUserId;
@@ -89,7 +84,8 @@ class HomeScreenState extends State<HomeScreen> {
               : Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: vv.length <= 0
-                      ? circularProgress()
+                      // ? circularProgress()
+                      ? displayNoSerachResultScreen()
                       : ListView(children: vv),
                 ),
         )
@@ -100,12 +96,11 @@ class HomeScreenState extends State<HomeScreen> {
   displayNoSerachResultScreen() {
     return Center(
       child: ListView(shrinkWrap: true, children: [
-        Icon(Icons.group,
-            color: Colors.lightBlueAccent.withOpacity(.4), size: 200),
+        Icon(Icons.group, color: myRed.withOpacity(.1), size: 200),
         Text("Search user",
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headline6.copyWith(
-                color: Colors.lightBlueAccent.withOpacity(.4),
+                color: myRed.withOpacity(.1),
                 fontSize: 50,
                 fontWeight: FontWeight.w500))
       ]),

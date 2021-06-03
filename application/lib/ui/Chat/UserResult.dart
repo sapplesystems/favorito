@@ -26,7 +26,7 @@ class UserResult extends StatelessWidget {
                       radius: 28,
                       backgroundColor: Colors.black,
                       backgroundImage:
-                          CachedNetworkImageProvider(eachUser.photoUrl),
+                          CachedNetworkImageProvider(eachUser?.photoUrl ?? ""),
                     ),
                     title: Text(
                       eachUser.nickname,

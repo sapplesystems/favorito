@@ -2,6 +2,7 @@ import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/PageViews/PageViews.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
+import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
 import 'package:Favorito/ui/highlights/highlights.dart';
@@ -16,9 +17,12 @@ import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingProvider extends ChangeNotifier {
   BuildContext _context;
+  SharedPreferences preferences;
+
   SettingProvider() {
     getProfileImage();
   }
@@ -51,7 +55,7 @@ class SettingProvider extends ChangeNotifier {
   List<Widget> pages = [
     BusinessProfile(),
     businessInfo(),
-    BusinessClaim(),
+    BusinessClaim(isFirst: true),
     ContactPerson(),
     Offers(),
     JobList(),
@@ -87,13 +91,14 @@ class SettingProvider extends ChangeNotifier {
     this._context = _context;
   }
 
-  logout() {
+  logout() async {
+    preferences = await SharedPreferences.getInstance();
     Prefs().clear();
     Provider.of<BusinessProfileProvider>(_context, listen: false).allClear();
     Provider.of<BusinessHoursProvider>(_context, listen: false).allClear();
     Provider.of<BusinessHoursProvider>(_context, listen: false).allClear();
     Provider.of<AppoinmentProvider>(_context, listen: false).logout();
-
+    preferences.clear();
     Navigator.pop(_context);
     Navigator.of(_context).pushNamed('/login');
   }

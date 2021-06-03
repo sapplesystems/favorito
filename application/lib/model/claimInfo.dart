@@ -1,11 +1,11 @@
-class claimInfo {
+class ClaimInfo {
   String status;
   String message;
   List<Result> result;
 
-  claimInfo({this.status, this.message, this.result});
+  ClaimInfo({this.status, this.message, this.result});
 
-  claimInfo.fromJson(Map<String, dynamic> json) {
+  ClaimInfo.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['result'] != null) {

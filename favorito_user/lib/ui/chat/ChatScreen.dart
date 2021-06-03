@@ -67,7 +67,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
       child: WillPopScope(
           child: Stack(children: [
@@ -218,8 +217,13 @@ class ChatScreenState extends State<ChatScreen> {
                       bottom: isLastMsgRight(index) ? 20 : 10, right: 10),
                   width: 200,
                   decoration: BoxDecoration(
-                      color: Colors.lightBlueAccent,
-                      borderRadius: BorderRadius.circular(15.0)),
+                    color: Colors.lightBlueAccent,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                    ),
+                  ),
                   child: Text(
                     document["content"],
                     style: TextStyle(
@@ -327,7 +331,11 @@ class ChatScreenState extends State<ChatScreen> {
                       width: 200,
                       decoration: BoxDecoration(
                           color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0)),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          )),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

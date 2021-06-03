@@ -6,8 +6,8 @@ import 'package:Favorito/ui/appoinment/AddServices.dart';
 import 'package:Favorito/ui/appoinment/ManualAppoinment.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
+import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPass.dart';
-import 'package:Favorito/ui/jobs/CreateJob.dart';
 import 'package:Favorito/ui/jobs/CreateJob.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/notification/Notifications.dart';
@@ -20,6 +20,7 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
+        // return MaterialPageRoute(builder: (_) => BusinessClaim());
         return MaterialPageRoute(builder: (_) => Splash());
 
       case '/signUpA':

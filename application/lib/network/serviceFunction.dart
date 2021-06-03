@@ -145,4 +145,5 @@ class serviceFunction {
   static final getChatList = baseUrl1 + 'user/get-chat-list';
   static final getChat = baseUrl1 + 'user/get-chats';
   static final setChat = baseUrl1 + 'user/set-chat';
+  static final setGetFirebaseId = baseUrl1 + 'user/firebase-id';
 }

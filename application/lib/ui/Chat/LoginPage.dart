@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math' as math;
 
 class ChatLogin extends StatefulWidget {
   ChatLogin({Key key}) : super(key: key);
@@ -29,26 +30,24 @@ class LoginScreenState extends State<ChatLogin> {
   FocusNode focusnode = FocusNode();
   String verificationId, smsCode;
   bool codeSent = false;
-  @override
-  void initState() {
-    super.initState();
-    isSignedIn();
-  }
-
+  bool isFirst = true;
+  String currentUserId;
   void isSignedIn() async {
     this.setState(() {
       isLoggedIn = true;
     });
     preferences = await SharedPreferences.getInstance();
-    isLoggedIn = await googleSignIn.isSignedIn();
-    if (isLoggedIn) {
+    // isLoggedIn = await googleSignIn.isSignedIn();
+    currentUserId = preferences.getString("id");
+    // if (isLoggedIn) {
+    if (currentUserId != null && currentUserId.length > 4) {
       // Navigator.pop(context);
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  HomeScreen(currentUserId: preferences.getString("id"))));
+              builder: (context) => HomeScreen(currentUserId: currentUserId)));
     }
+    print("currentUserId:$currentUserId");
     this.setState(() {
       focusnode.requestFocus();
       focusnode.canRequestFocus = false;
@@ -58,6 +57,10 @@ class LoginScreenState extends State<ChatLogin> {
 
   @override
   Widget build(BuildContext context) {
+    if (isFirst) {
+      isSignedIn();
+      isFirst = false;
+    }
     return Scaffold(
       key: RIKeys.josKeys20,
       body: Container(
@@ -72,25 +75,23 @@ class LoginScreenState extends State<ChatLogin> {
                 textScaleFactor: 1.8,
               ),
               GestureDetector(
-                onTap: controlSignIn,
+                // onTap: controlSignIn,
+                onTap: () {
+                  setState(() {
+                    isFirst = true;
+                  });
+                },
                 child: Center(
-                  child: Column(children: [
-                    Container(
-                      width: 270,
-                      height: 65,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                              'assets/image/google_signin_button.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(1.2),
-                      child: isLoading ? circularProgress() : Container(),
-                    ),
-                  ]),
+                  child: currentUserId != null
+                      ? Transform.rotate(
+                          angle: 300,
+                          child: Icon(
+                            Icons.arrow_circle_down,
+                            size: 80,
+                          ))
+                      : Text(
+                          'Please verify business contect number\n in claim section',
+                          textAlign: TextAlign.center),
                 ),
               ),
             ]),
@@ -162,11 +163,11 @@ class LoginScreenState extends State<ChatLogin> {
       });
 
       // Navigator.pop(context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HomeScreen(currentUserId: firebaseUser.uid)));
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) =>
+      //             HomeScreen(currentUserId: firebaseUser.uid)));
     }
     //SignIn not success
     else {

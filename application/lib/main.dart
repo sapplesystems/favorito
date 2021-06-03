@@ -5,6 +5,7 @@ import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
+import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
@@ -51,6 +52,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => MenuProvider()),
       ChangeNotifierProvider(create: (context) => AppoinmentProvider()),
       ChangeNotifierProvider(create: (context) => ChatProvier()),
+      ChangeNotifierProvider(create: (context) => ClaimProvider()),
     ], child: MyApp()));
   });
 }

@@ -12,6 +12,7 @@ import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/checkins/checkins.dart';
+import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/order/Orders.dart';
 import 'package:Favorito/ui/review/ReviewList.dart';
@@ -25,6 +26,7 @@ import 'package:Favorito/utils/myString.Dart';
 import 'dart:convert' as convert;
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class dashboard extends StatefulWidget {
   @override
@@ -33,12 +35,9 @@ class dashboard extends StatefulWidget {
 
 class _dashboardState extends State<dashboard> {
   SizeManager sm;
+  SharedPreferences preferences;
   var ratingCount;
   bool isFirst = true;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +81,7 @@ class _dashboardState extends State<dashboard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text("ver : 1.7", style: TextStyle(fontSize: 8)),
+                        Text("ver : 1.8", style: TextStyle(fontSize: 8)),
                         Text("Status : ",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600)),
@@ -142,10 +141,14 @@ class _dashboardState extends State<dashboard> {
                         txt2: "Verify",
                         check: is_verified,
                         function: () {
+                          Provider.of<ClaimProvider>(context, listen: false)
+                              .getClaimData(context);
                           Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => BusinessClaim()))
+                                      builder: (context) => BusinessClaim(
+                                            isFirst: true,
+                                          )))
                               .whenComplete(() => calldashBoard(context));
                         }),
                   ),
@@ -291,6 +294,7 @@ class _dashboardState extends State<dashboard> {
   }
 
   calldashBoard(BuildContext _context) async {
+    preferences = await SharedPreferences.getInstance();
     final RequestModel requestModel = RequestModel();
     requestModel.context = _context;
     requestModel.url = serviceFunction.funDash;
@@ -299,6 +303,8 @@ class _dashboardState extends State<dashboard> {
       var va = _v?.data;
       business_id = va?.businessId;
       business_name = va?.businessName;
+      preferences.setString('nickname', va?.businessName);
+      preferences.setString('photoUrl', va?.photo);
       business_status = va?.businessStatus;
       photoUrl = va?.photo;
       is_profile_completed = va?.isProfileCompleted?.toString() ?? '';

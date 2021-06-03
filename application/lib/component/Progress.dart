@@ -1,11 +1,13 @@
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 circularProgress() {
   return Container(
+    color: myBackGround.withOpacity(.5),
     alignment: Alignment.center,
     padding: EdgeInsets.only(top: 12),
     child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation(Colors.lightBlueAccent),
+      valueColor: AlwaysStoppedAnimation(myRed.withOpacity(0.5)),
     ),
   );
 }

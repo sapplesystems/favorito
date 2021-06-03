@@ -1,5 +1,6 @@
 import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/model/Chat/User.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/Chat/UserResult.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,19 +9,19 @@ class ChatProvier extends BaseProvider {
   SharedPreferences preferences;
   Future<QuerySnapshot> futureSearchResultsd;
   String _chatId = "";
-  String id;
+  // String id;
   String currentUserId;
+
   List<UserResult> serachUserResult = [];
   initialCAll() async {
     preferences = await SharedPreferences.getInstance();
-    id = preferences.getString("id");
+    currentUserId = preferences.getString("id");
   }
 
   controlSearching(String userName) async {
     print("userName$userName");
     Future<QuerySnapshot> allFoundUsers = Firestore.instance
         .collection("user")
-        // .where(Firestore.instance.collection('messages').document(_chatId).collection(_chatId))
         .where("nickname", isGreaterThanOrEqualTo: userName)
         .getDocuments();
 
@@ -30,10 +31,10 @@ class ChatProvier extends BaseProvider {
       value.documents.forEach((document) {
         User eachUser = User.fromDocument(document);
         UserResult userResult = UserResult(eachUser);
-        // removeUser(userResult);
+        removeUser(userResult);
         if (currentUserId != document["id"] &&
             !serachUserResult.contains(userResult)) {
-          serachUserResult.add(userResult);
+          serachUserResult.add(UserResult(eachUser));
           notifyListeners();
         }
       });
@@ -47,7 +48,7 @@ class ChatProvier extends BaseProvider {
   }
 
   removeUser([userResult]) {
-    _chatId = '$id-${userResult.eachUser.id}';
+    _chatId = '$currentUserId-${userResult.eachUser.id}';
     Firestore.instance
         .collection("messages")
         .document(_chatId)
@@ -63,12 +64,11 @@ class ChatProvier extends BaseProvider {
   }
 
   sendEmailToserver(String str, key) async {
-    // await APIManager.emailRegister({'email': str}, key);
+    // await WebService.setGetFirebaseId({'api_type': 'set', 'firebase_id': str});
   }
 
   sendFireBaseIdToServer(String str, key) async {
-    // await APIManager.setGetFirebaseId(
-    //     {'api_type': 'set', 'firebase_id': str}, key);
+    await WebService.setGetFirebaseId({'api_type': 'set', 'firebase_id': str});
   }
 
   List getabd() {

@@ -219,7 +219,11 @@ class ChatScreenState extends State<ChatScreen> {
                   decoration: BoxDecoration(
                       color: myRed,
                       //  Colors.lightBlueAccent,
-                      borderRadius: BorderRadius.circular(15.0)),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      )),
                   child: Text(
                     document["content"],
                     style: TextStyle(
@@ -327,7 +331,11 @@ class ChatScreenState extends State<ChatScreen> {
                       width: 200,
                       decoration: BoxDecoration(
                           color: myRed.withOpacity(.09),
-                          borderRadius: BorderRadius.circular(8.0)),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          )),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
