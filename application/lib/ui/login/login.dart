@@ -67,6 +67,7 @@ class _LoginState extends State<Login> {
                         child: txtfieldPostAction(
                           valid: true,
                           title: "Email/Phone",
+                          maxLines: 1,
                           controller: userCtrl,
                           security: false,
                         ),

@@ -76,8 +76,8 @@ class BusinessClaim extends StatelessWidget {
                                         hint: "Enter business phone",
                                         title: "Phone",
                                         maxLines: 1,
-                                        // readOnly: true,
-                                        readOnly: false,
+                                        readOnly: true,
+                                        // readOnly: false,
                                         maxlen: 10,
                                         valid: true,
                                         sufixTxt:
@@ -98,8 +98,8 @@ class BusinessClaim extends StatelessWidget {
                                           if (vaTrue.getOtpverify() == 'verify')
                                             vaTrue.sendOtp(context);
                                         }),
-                                    Visibility(
-                                      visible: (vaTrue.isOtpSend ?? false),
+                                    Container(
+                                      height: vaTrue.getIsOtpSend() ? 140 : 0,
                                       child: Column(children: [
                                         Padding(
                                           padding: const EdgeInsets.all(12.0),
@@ -113,7 +113,8 @@ class BusinessClaim extends StatelessWidget {
                                         PinCodeTextField(
                                           onChanged: (d) {},
                                           length: 6,
-                                          controller: vaTrue.otpController,
+
+                                          // controller: vaTrue.otpController,
                                           obscureText: true,
                                           appContext: context,
                                           animationType: AnimationType.fade,
@@ -135,8 +136,8 @@ class BusinessClaim extends StatelessWidget {
                                               Duration(milliseconds: 300),
                                           backgroundColor: Colors.white,
                                           enableActiveFill: true,
-                                          errorAnimationController:
-                                              vaTrue.errorController,
+                                          // errorAnimationController:
+                                          //     vaTrue.errorController,
                                           onCompleted: (v) =>
                                               vaTrue.verifyOtp(v, context),
                                           beforeTextPaste: (text) {

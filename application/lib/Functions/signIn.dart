@@ -42,8 +42,9 @@ initFirebase(firebaseUser, key) async {
       await preferences.setString("aboutMe", documentSnapshots[0]["aboutMe"]);
       // await preferences.setString("id", documentSnapshots[0]["id"]);
     }
-    Provider.of<ClaimProvider>(key.currentContext, listen: false)
-        .isOtpSendSet(false);
+    Provider.of<ClaimProvider>(key.currentContext, listen: true)
+      ..isOtpSendSet(false)
+      ..notifyListeners();
     Fluttertoast.showToast(msg: "Congratulations, Sign in Successful.");
     // this.setState(() {
     //   isLoading = false;

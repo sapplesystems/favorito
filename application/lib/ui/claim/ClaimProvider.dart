@@ -21,7 +21,7 @@ class ClaimProvider extends BaseProvider {
   TextEditingController ctrlMail = TextEditingController();
   StreamController<ErrorAnimationType> errorController = StreamController();
   ClaimInfo claimInfo = ClaimInfo();
-  TextEditingController otpController;
+  // TextEditingController otpController;
   bool isOtpSend = false;
   String currentUserId;
   SharedPreferences preferences;
@@ -34,7 +34,7 @@ class ClaimProvider extends BaseProvider {
   bool isLoading = false;
   ClaimProvider() {
     ctrlMobile = TextEditingController();
-    otpController = TextEditingController();
+    // otpController = TextEditingController();
   }
   void initCall(context) async {
     preferences = await SharedPreferences.getInstance();
@@ -47,12 +47,18 @@ class ClaimProvider extends BaseProvider {
     notifyListeners();
   }
 
-  getOtpverify() => verificationId != null ? "verified" : "verify";
+  getOtpverify() {
+    currentUserId = preferences.getString("id");
+    var _v = currentUserId != null ? "verified" : "verify";
+    return _v;
+  }
+
   isLoadingSet(bool _val) {
     isLoading = _val;
     notifyListeners();
   }
 
+  getIsOtpSend() => isOtpSend ?? false;
   isOtpSendSet(bool _val) {
     isOtpSend = _val;
     otpverify = 'verified';
@@ -68,7 +74,7 @@ class ClaimProvider extends BaseProvider {
 
     final PhoneVerificationFailed verificationfield =
         (AuthException exception) {
-      otpController.text = "";
+      // otpController.text = "";
       snackBar(exception.message, RIKeys.josKeys21);
       isLoadingSet(false);
       print("${exception.message}");
@@ -77,6 +83,7 @@ class ClaimProvider extends BaseProvider {
     final PhoneCodeSent smsSent = (String verId, [int forceResent]) {
       this.verificationId = verId;
       isOtpSend = true;
+      notifyListeners();
       isLoadingSet(false);
     };
 
