@@ -131,7 +131,6 @@ class service {
   static final verifyLogin = base + 'user/verify-login-otp';
   static final emailRegister = base + 'user/email-register';
   static final changePassword = base + 'user/set-password';
-
   //Chat
   static final getChatList = baseBusiness2 + 'get-chat-list';
   static final getChat = baseBusiness2 + 'get-chats';
