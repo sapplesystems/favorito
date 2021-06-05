@@ -1286,7 +1286,7 @@ class WebService {
     }
   }
 
-  static Future<orderListModel> orderList(
+  static Future<OrderListModel> orderList(
       Map _map, BuildContext context) async {
     String token = await Prefs.token;
     String url = serviceFunction.funOrderList;
@@ -1296,7 +1296,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return orderListModel.fromJson(convert.json.decode(response.toString()));
+      return OrderListModel.fromJson(convert.json.decode(response.toString()));
     }
   }
 

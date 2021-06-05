@@ -1,9 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:favorito_user/component/circularProgress.dart';
 import 'package:favorito_user/config/SizeManager.dart';
-import 'package:favorito_user/model/Chat/User.dart';
 import 'package:favorito_user/ui/Chat/ChatProvider.dart';
-import 'package:favorito_user/ui/Chat/ChattingPage.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

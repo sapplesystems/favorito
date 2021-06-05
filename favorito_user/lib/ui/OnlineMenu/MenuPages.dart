@@ -10,8 +10,8 @@ class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var vaTrue = Provider.of<MenuHomeProvider>(context, listen: true);
-
-    return (vaTrue.getMenuItemBaseModel()?.data?.length == 0)
+    List value = vaTrue.getMenuItemBaseModel()?.data;
+    return (value.length == 0)
         ? Center(
             child: Text(menuItemNotAvailable,
                 style: Theme.of(context)
@@ -19,9 +19,10 @@ class MenuPage extends StatelessWidget {
                     .headline6
                     .copyWith(fontWeight: FontWeight.w300, fontSize: 12)))
         : ListView.builder(
-            itemCount: vaTrue.getMenuItemBaseModel()?.data?.length,
+            itemCount: value.length,
             itemBuilder: (BuildContext context, int index) {
-              MenuItemModel _v = vaTrue.getMenuItemBaseModel()?.data[index];
+              MenuItemModel _v = value[index];
+              print('_menuItemBaseModel:${value.length}');
               return MenuItems(
                 data: _v,
                 isRefresh: false,

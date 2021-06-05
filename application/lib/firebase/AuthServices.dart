@@ -33,8 +33,7 @@ class AuthServices extends BaseProvider {
             .signInWithCredential(authCreds)
             .onError((error, stackTrace) {
       print("otpError:${error.message}");
-      Provider.of<ClaimProvider>(key.currentContext, listen: false)
-          .isLoadingSet(false);
+      Provider.of<ClaimProvider>(key.currentContext).isLoadingSet(false);
       snackBar('Invalid otp please try again.', key);
       return null;
     }))

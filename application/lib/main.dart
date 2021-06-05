@@ -13,6 +13,7 @@ import 'package:Favorito/ui/jobs/JobProvider.dart';
 import 'package:Favorito/ui/menu/MenuProvider.dart';
 import 'package:Favorito/ui/notification/NotificationProvider.dart';
 import 'package:Favorito/ui/offer/offersProvider.dart';
+import 'package:Favorito/ui/order/OrderProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
@@ -53,6 +54,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => AppoinmentProvider()),
       ChangeNotifierProvider(create: (context) => ChatProvier()),
       ChangeNotifierProvider(create: (context) => ClaimProvider()),
+      ChangeNotifierProvider(create: (context) => OrderProvider()),
     ], child: MyApp()));
   });
 }

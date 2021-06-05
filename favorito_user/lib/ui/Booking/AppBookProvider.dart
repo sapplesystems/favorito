@@ -42,8 +42,6 @@ class AppBookProvider extends BaseProvider {
   bool _isBook = true;
   String _selectedTab;
 
-
-
   bool _isVerboseCall = true;
 
   String getAppBookingHeader() => _appBookingHeader;
@@ -72,8 +70,6 @@ class AppBookProvider extends BaseProvider {
     bookingVerbose(context);
     notifyListeners();
   }
-
-
 
   getSelectDate() => _selectedDateIndex;
 
@@ -106,8 +102,6 @@ class AppBookProvider extends BaseProvider {
     // setTimeSlot(_bookTableVerbose.data.slots);
     notifyListeners();
   }
-
-
 
   changeParticipent(bool _val) {
     if (_val)
@@ -156,7 +150,7 @@ class AppBookProvider extends BaseProvider {
   //   notifyListeners();
   // }
 
-  getPageData() => _selectedTab == 'History' ?oldData  : newData;
+  getPageData() => _selectedTab == 'History' ? oldData : newData;
 
   String getSelectedTab() => _selectedTab;
 
@@ -225,7 +219,7 @@ class AppBookProvider extends BaseProvider {
 
   AppoointmentList(context) async {
     print("1servicess are called:${this.getBusinessId()}");
-    await APIManager.baseUserBookingList(_isBook,RIKeys.josKeys22)
+    await APIManager.baseUserBookingList(_isBook, RIKeys.josKeys22)
         .then((value) {
       _message = value.message;
       if (value.status == 'success') {
@@ -238,11 +232,10 @@ class AppBookProvider extends BaseProvider {
 
   BookingList(context) async {
     _isProcessing = true;
-    await APIManager.baseUserBookingList(_isBook,RIKeys.josKeys22)
+    await APIManager.baseUserBookingList(_isBook, RIKeys.josKeys22)
         .then((value) {
       _message = value.message;
       if (value.status == 'success') {
-
         print("app:book1:${_bookData.length}");
         _bookData.clear();
 
@@ -255,13 +248,14 @@ class AppBookProvider extends BaseProvider {
     });
     notifyListeners();
   }
-  CallServiceForData(context){
-    if(_isBook)
+
+  CallServiceForData(context) {
+    if (_isBook)
       BookingList(context);
     else
       AppoointmentList(context);
-
   }
+
   bookingVerbose(context) async {
     await APIManager.baseUserBookingVerbose({
       "business_id":
@@ -269,36 +263,49 @@ class AppBookProvider extends BaseProvider {
                   .getBusinessId() ??
               '',
       "date": _selectedDate
-    },context).then((value) {
+    }, context)
+        .then((value) {
       _message = value.message;
       if (value.status == 'success') {
         _selectedTime = value.data?.slots[0]?.startTime;
         _selectedOccasion = "Select Occasion";
         setBookTableVerbose(value);
-        }
+      }
       setIsVerboseCall(false);
     });
-
   }
-void setMyDetail(context){
-acces[0].controller.text = Provider.of<PersonalInfoProvider>(context,listen: false)?.profileModel?.data?.detail?.fullName??'';
-        acces[1].controller.text = Provider.of<PersonalInfoProvider>(context,listen: false)?.profileModel?.data?.detail?.phone??'';
-      notifyListeners();
-      
-}
+
+  void setMyDetail(context) {
+    acces[0].controller.text =
+        Provider.of<PersonalInfoProvider>(context, listen: false)
+                ?.profileModel
+                ?.data
+                ?.detail
+                ?.fullName ??
+            '';
+    acces[1].controller.text =
+        Provider.of<PersonalInfoProvider>(context, listen: false)
+                ?.profileModel
+                ?.data
+                ?.detail
+                ?.phone ??
+            '';
+    notifyListeners();
+  }
+
   void handleClick(String value) {
     switch (value) {
       case 'Appointments':
         {
-
           print("app:app${_appbookData.length}");
           setIsBooking(false);
           setAppBookingHeader('Appointments');
           newData.clear();
           oldData.clear();
 
-          for (int _i = 0; _i <_appbookData.length; _i++)
-            DateTime.parse(_appbookData[_i].createdDatetime).isAfter(DateTime.now())
+          for (int _i = 0; _i < _appbookData.length; _i++)
+            DateTime.parse(_appbookData[_i].createdDatetime)
+                    .isAfter(DateTime.now())
                 ? newData.add(_appbookData[_i])
                 : oldData.add(_appbookData[_i]);
           break;
@@ -310,23 +317,23 @@ acces[0].controller.text = Provider.of<PersonalInfoProvider>(context,listen: fal
           setAppBookingHeader('Booking');
           newData.clear();
           oldData.clear();
-          for (int _i = 0; _i <_bookData.length; _i++){
+          for (int _i = 0; _i < _bookData.length; _i++) {
             // int _abc = DateTime.parse(_bookData[_i].createdDatetime).compareTo(DateTime.now());
-            int _abc = DateTime.parse(_bookData[_i].createdDatetime).difference(DateTime.now()).inMinutes;
-           print("_abc:$_abc");
-           print("_abcd:${_bookData[_i].createdDatetime}");
-            if(_abc>0){
+            int _abc = DateTime.parse(_bookData[_i].createdDatetime)
+                .difference(DateTime.now())
+                .inMinutes;
+            print("_abc:$_abc");
+            print("_abcd:${_bookData[_i].createdDatetime}");
+            if (_abc > 0) {
               newData.add(_bookData[_i]);
-            }else{
+            } else {
               oldData.add(_bookData[_i]);
             }
           }
-                 break;
+          break;
         }
     }
     notifyListeners();
     // setPageData();
   }
-
-  
 }

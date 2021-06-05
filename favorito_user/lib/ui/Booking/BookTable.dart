@@ -33,7 +33,7 @@ class BookTable extends StatelessWidget {
       isFirst = false;
     }
     return Scaffold(
-        backgroundColor: myBackGround,
+        // backgroundColor: myBackGround,
         body: vaTrue.getIsVerboseCall()
             ? Center(
                 child: CircularProgressIndicator(
@@ -47,9 +47,10 @@ class BookTable extends StatelessWidget {
                 },
                 child: SafeArea(
                   child: Scaffold(
-                    backgroundColor: myBackGround,
                     appBar: AppBar(
-                      backgroundColor: myBackGround,
+                      backgroundColor: NeumorphicTheme.isUsingDark(context)
+                          ? Colors.grey[850]
+                          : Color(0xffF4F6FC),
                       elevation: 0,
                       leading: IconButton(
                           color: Colors.black,
@@ -57,7 +58,7 @@ class BookTable extends StatelessWidget {
                           icon: Icon(Icons.keyboard_arrow_left),
                           onPressed: () => Navigator.of(context).pop()),
                       title: Text("Book Table",
-                          style: TextStyle(
+                          style: Theme.of(context).textTheme.headline6.copyWith(
                               fontSize: 20, fontWeight: FontWeight.w400)),
                     ),
                     key: RIKeys.josKeys19,
@@ -70,12 +71,18 @@ class BookTable extends StatelessWidget {
                                   ?.capitalize() ??
                               "",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontSize: 18)),
                       Padding(
                           padding: EdgeInsets.only(top: sm.h(2), left: sm.w(6)),
                           child: Row(children: [
                             Text('How many guests?',
-                                style: TextStyle(color: myGrey))
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(color: myGrey, fontSize: 12))
                           ])),
                       Padding(
                         padding: EdgeInsets.only(
@@ -91,18 +98,28 @@ class BookTable extends StatelessWidget {
                                 width: sm.w(22),
                                 child: Neumorphic(
                                   style: NeumorphicStyle(
-                                      depth: -10,
-                                      boxShape: NeumorphicBoxShape.roundRect(
-                                          BorderRadius.circular(24)),
-                                      color: myBackGround),
+                                    depth: -10,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(24)),
+                                    color: NeumorphicTheme.isUsingDark(context)
+                                        ? Colors.grey[850]
+                                        : Color(0xffF4F6FC),
+                                  ),
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: sm.w(4), vertical: sm.w(5)),
                                     child: Consumer<AppBookProvider>(
                                         builder: (context, data, child) {
                                       return Text('${vaTrue.getParticipent()}',
-                                          style: TextStyle(
-                                              color: Color(0xff686868)),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  color: NeumorphicTheme
+                                                          .isUsingDark(context)
+                                                      ? Colors.white
+                                                      : Color(0xff686868)),
                                           textAlign: TextAlign.center);
                                     }),
                                   ),
@@ -113,7 +130,9 @@ class BookTable extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () => vaTrue.changeParticipent(false),
                                   child: Card(
-                                    color: myBackGround,
+                                    color: NeumorphicTheme.isUsingDark(context)
+                                        ? Color(0xffF4F6FC)
+                                        : myBackGround,
                                     elevation: 12,
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
@@ -129,7 +148,9 @@ class BookTable extends StatelessWidget {
                               InkWell(
                                 onTap: () => vaTrue.changeParticipent(true),
                                 child: Card(
-                                  color: myBackGround,
+                                  color: NeumorphicTheme.isUsingDark(context)
+                                      ? Colors.white
+                                      : myBackGround,
                                   elevation: 12,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -148,7 +169,14 @@ class BookTable extends StatelessWidget {
                           child: Divider(height: sm.h(6))),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
-                          child: Text('Date', style: TextStyle(color: myGrey))),
+                          child: Text('Date',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontSize: 14,
+                                      color: myGrey,
+                                      fontWeight: FontWeight.normal))),
                       Container(
                         height: 90,
                         child: ListView(
@@ -170,7 +198,10 @@ class BookTable extends StatelessWidget {
                                         onTap: () =>
                                             vaTrue.setSelectDate(context, i),
                                         child: Card(
-                                          color: myBackGround,
+                                          color: !NeumorphicTheme.isUsingDark(
+                                                  context)
+                                              ? Colors.white
+                                              : myBackGround,
                                           elevation: 12,
                                           shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(
@@ -181,12 +212,18 @@ class BookTable extends StatelessWidget {
                                                 horizontal: sm.w(6)),
                                             child: Text(
                                               "${vaTrue.getBookTableVerbose()?.data?.availableDates[i].day} (${dateFormat7.format(DateTime.parse(vaTrue.getBookTableVerbose()?.data?.availableDates[i].date))})",
-                                              style: TextStyle(
-                                                  color:
-                                                      vaTrue.getSelectDate() ==
-                                                              i
-                                                          ? myRed
-                                                          : myGrey),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .copyWith(
+                                                      color:
+                                                          vaTrue.getSelectDate() ==
+                                                                  i
+                                                              ? myRed
+                                                              : myGrey,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.normal),
                                             ),
                                           ),
                                         ),
@@ -199,7 +236,14 @@ class BookTable extends StatelessWidget {
                           child: Divider(height: sm.h(6))),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
-                          child: Text('Time', style: TextStyle(color: myGrey))),
+                          child: Text('Time',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: myGrey))),
                       Container(
                         height: 100,
                         child: ListView(
@@ -232,14 +276,17 @@ class BookTable extends StatelessWidget {
                                               padding: EdgeInsets.symmetric(
                                                   vertical: 20, horizontal: 8),
                                               child: Text(
-                                                "${vaTrue.getBookTableVerbose()?.data?.slots[i].startTime.substring(0, 5)} ",
-                                                style: TextStyle(
-                                                    color:
-                                                        vaTrue.getSelectTime() ==
-                                                                i
-                                                            ? myRed
-                                                            : myGrey),
-                                              ),
+                                                  "${vaTrue.getBookTableVerbose()?.data?.slots[i].startTime.substring(0, 5)} ",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .copyWith(
+                                                          color:
+                                                              vaTrue.getSelectTime() ==
+                                                                      i
+                                                                  ? myRed
+                                                                  : myGrey,
+                                                          fontSize: 12)),
                                             ),
                                           ),
                                         ),
@@ -254,7 +301,10 @@ class BookTable extends StatelessWidget {
                           padding: EdgeInsets.only(
                               top: 8.0, left: sm.w(6), right: sm.w(6)),
                           child: Text('Occation',
-                              style: TextStyle(color: myGrey))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(fontSize: 12, color: myGrey))),
                       Padding(
                         padding: EdgeInsets.only(top: sm.h(2)),
                         child: Center(
@@ -275,7 +325,15 @@ class BookTable extends StatelessWidget {
                                   hint: Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: sm.w(2)),
-                                      child: Text("Select Occasion")),
+                                      child: Text(
+                                        "Select Occasion",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 12),
+                                      )),
                                   underline: Container(),
                                   items: vaTrue
                                       .getOccasionList()
@@ -286,7 +344,14 @@ class BookTable extends StatelessWidget {
                                         child: Padding(
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: sm.w(2)),
-                                            child: Text(value)));
+                                            child: Text(value,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 12))));
                                   }).toList(),
                                   onChanged: (String value) =>
                                       vaTrue.selectedOccasion = value),
@@ -299,8 +364,14 @@ class BookTable extends StatelessWidget {
                           child: Divider(height: sm.h(6))),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
-                          child:
-                              Text('Detail', style: TextStyle(color: myGrey))),
+                          child: Text('Detail',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 12,
+                                      color: myGrey))),
                       Builder(
                           builder: (context) => Form(
                                 key: _formKey,
@@ -383,9 +454,13 @@ class BookTable extends StatelessWidget {
                                     horizontal: 14, vertical: 16),
                                 child: Center(
                                   child: Text("Done",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: myRed)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              color: myRed)),
                                 ),
                               ),
                       ),
@@ -395,7 +470,7 @@ class BookTable extends StatelessWidget {
               ));
   }
 
-  Widget mySlotSelector(_data) {
+  Widget mySlotSelector(_data, context) {
     return Container(
       width: sm.w(100),
       height: sm.h(8),
@@ -427,7 +502,9 @@ class BookTable extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
                       child: Text(temp.slot,
-                          style: TextStyle(
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12,
                               color:
                                   temp.selected ? Colors.green : Colors.grey)),
                     ),

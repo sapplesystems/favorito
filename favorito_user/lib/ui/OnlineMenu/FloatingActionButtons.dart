@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemModel.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
@@ -6,6 +7,7 @@ import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/OnlineMenu/Fab.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuItem.dart';
 import 'package:favorito_user/ui/OnlineMenu/PayOption.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,7 +22,7 @@ class FloatingActionButtons extends StatefulWidget {
 class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   SizeManager sm;
   var providerMenuFalse;
-  var providerMenuTrue;
+  MenuHomeProvider providerMenuTrue;
   var vaFalse;
   var vaOptFalse;
   var vaOptTrue;
@@ -136,8 +138,28 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(16), vertical: 2),
             child: RoundedButton(
+                clr:
+                    Provider.of<BusinessProfileProvider>(context, listen: false)
+                                .getBusinessProfileData()
+                                .businessStatus
+                                .toString()
+                                .toLowerCase() ==
+                            'online'
+                        ? myRed
+                        : myGrey,
                 clicker: () {
-                  providerMenuTrue.callCustomizetion();
+                  if (Provider.of<BusinessProfileProvider>(context,
+                              listen: false)
+                          .getBusinessProfileData()
+                          .businessStatus
+                          .toString()
+                          .toLowerCase() ==
+                      'online') {
+                    providerMenuTrue.callCustomizetion();
+                  } else {
+                    BotToast.showText(
+                        text: 'Order not accepting at these time');
+                  }
                 },
                 textStyle: TextStyle(
                     color: Colors.white,

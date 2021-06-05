@@ -1,38 +1,35 @@
-class Order {
+class OrderData {
   String orderId;
   String name;
   String mobile;
   String notes;
   String orderType;
-  double totalAmount;
-  int isAccepted;
-  int isRejected;
+  int totalAmount;
+  String orderStatus;
   String orderDate;
-  String payType;
+  String paymentType;
 
-  Order(
+  OrderData(
       {this.orderId,
       this.name,
       this.mobile,
       this.notes,
       this.orderType,
       this.totalAmount,
-      this.isAccepted,
-      this.isRejected,
+      this.orderStatus,
       this.orderDate,
-      this.payType});
+      this.paymentType});
 
-  Order.fromJson(Map<String, dynamic> json) {
+  OrderData.fromJson(Map<String, dynamic> json) {
     orderId = json['order_id'];
     name = json['name'];
     mobile = json['mobile'];
     notes = json['notes'];
     orderType = json['order_type'];
     totalAmount = json['total_amount'];
-    isAccepted = json['is_accepted'];
-    isRejected = json['is_rejected'];
+    orderStatus = json['order_status'];
     orderDate = json['order_date'];
-    payType = json['payment_type'];
+    paymentType = json['payment_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,10 +40,9 @@ class Order {
     data['notes'] = this.notes;
     data['order_type'] = this.orderType;
     data['total_amount'] = this.totalAmount;
-    data['is_accepted'] = this.isAccepted;
-    data['is_rejected'] = this.isRejected;
+    data['order_status'] = this.orderStatus;
     data['order_date'] = this.orderDate;
-    data['payment_type'] = this.payType;
+    data['payment_type'] = this.paymentType;
     return data;
   }
 }
