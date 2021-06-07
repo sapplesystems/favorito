@@ -1135,10 +1135,7 @@ class WebService {
     for (var v in files)
       va.add(await MultipartFile.fromFile(v.path,
           filename: v.path.split('/').last));
-    Map<String, dynamic> _map = {
-      "photo": va,
-    };
-    print("_map:${_map.toString()}");
+    Map<String, dynamic> _map = {"photo": va};
     FormData formData = FormData.fromMap(_map);
     response = await dio.post(serviceFunction.funUserInformationAddPhoto,
         data: formData, options: _opt);

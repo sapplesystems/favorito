@@ -32,5 +32,6 @@ class RIKeys {
   static final josKeys20 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
   static final josKeys21 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
   static final josKeys22 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
+  static final josKeys23 = GlobalKey<FormState>(); //Char Home Scaffold key
 
 }

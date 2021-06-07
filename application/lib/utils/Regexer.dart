@@ -17,3 +17,7 @@ RegExp emailAndMobileRegex = RegExp(_emailAndMobilePattern);
 
 Pattern _urlPattern = r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+';
 var urlRegex = new RegExp(_urlPattern);
+
+Pattern _passwordPattern =
+    r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$';
+RegExp passwordRegex = RegExp(_passwordPattern);

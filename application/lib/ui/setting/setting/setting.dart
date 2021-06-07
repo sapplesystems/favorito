@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/component/listItem.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
@@ -16,12 +15,18 @@ import 'package:provider/provider.dart';
 class Setting extends StatelessWidget {
   SettingProvider spTrue;
   SettingProvider spFalse;
+  bool isFirst = true;
+  SizeManager sm;
+
   @override
   Widget build(BuildContext context) {
-    SizeManager sm = SizeManager(context);
-    spTrue = Provider.of<SettingProvider>(context, listen: true);
-    spFalse = Provider.of<SettingProvider>(context, listen: false);
-    spFalse.setContext(context);
+    if (isFirst) {
+      sm = SizeManager(context);
+      spTrue = Provider.of<SettingProvider>(context, listen: true);
+      spFalse = Provider.of<SettingProvider>(context, listen: false);
+      spFalse.setContext(context);
+      isFirst = false;
+    }
     return WillPopScope(
       onWillPop: () {
         BaseProvider.onWillPop(context);
@@ -139,8 +144,8 @@ class Setting extends StatelessWidget {
                           child: Column(children: [
                             for (int i = 0; i < 4; i++)
                               listItems(
-                                  title: spFalse.title[i],
-                                  ico: spFalse.icon[i],
+                                  title: spFalse?.title[i],
+                                  ico: spFalse?.icon[i],
                                   clicker: () {
                                     if (i == 2)
                                       Provider.of<ClaimProvider>(context,
@@ -185,7 +190,7 @@ class Setting extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: sm.w(14)),
                           child: Column(children: [
-                            for (int _i = 4; _i < 10; _i++)
+                            for (int _i = 4; _i < spTrue.title.length; _i++)
                               listItems(
                                   title: spFalse.title[_i],
                                   ico: spFalse.icon[_i],

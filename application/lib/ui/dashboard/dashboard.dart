@@ -305,6 +305,9 @@ class _dashboardState extends State<dashboard> {
       business_name = va?.businessName;
       preferences.setString('nickname', va?.businessName);
       preferences.setString('photoUrl', va?.photo);
+      preferences.setInt('type', va?.businessType);
+      Provider.of<SettingProvider>(context, listen: false)
+          .initCall(va?.businessType == 1);
       preferences.setBool(
           'isAppointment', va?.businessAttributes.contains('Appointment'));
       print("isAppointment:${va?.businessAttributes.contains('Appointment')}");

@@ -43,6 +43,7 @@ class Data {
   int totalSpent;
   int freeCredit;
   int paidCredit;
+  int businessType;
 
   Data(
       {this.id,
@@ -64,7 +65,8 @@ class Data {
       this.businessAttributes,
       this.totalSpent,
       this.freeCredit,
-      this.paidCredit});
+      this.paidCredit,
+      this.businessType});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -87,6 +89,7 @@ class Data {
     totalSpent = json['total_spent'];
     freeCredit = json['free_credit'];
     paidCredit = json['paid_credit'];
+    businessType = json['business_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -111,6 +114,7 @@ class Data {
     data['total_spent'] = this.totalSpent;
     data['free_credit'] = this.freeCredit;
     data['paid_credit'] = this.paidCredit;
+    data['business_type'] = this.businessType;
     return data;
   }
 }

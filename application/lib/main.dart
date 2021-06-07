@@ -16,6 +16,7 @@ import 'package:Favorito/ui/offer/offersProvider.dart';
 import 'package:Favorito/ui/order/OrderProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/ui/setting/businessInfo/businessInfoProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/ui/waitlist/WaitlistProvider.dart';
 import 'package:Favorito/utils/RouteGenerator.dart';
@@ -55,6 +56,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => ChatProvier()),
       ChangeNotifierProvider(create: (context) => ClaimProvider()),
       ChangeNotifierProvider(create: (context) => OrderProvider()),
+      ChangeNotifierProvider(create: (context) => businessInfoProvider()),
     ], child: MyApp()));
   });
 }

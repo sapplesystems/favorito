@@ -3,7 +3,7 @@ import 'package:Favorito/model/TagList.dart';
 
 class DdVerbose {
   List<String> staticPaymentMethod;
-  List<int> staticPriceRange;
+  List<String> staticPriceRange;
   List<TagList> tagList;
   List<AttributeList> attributeList;
 
@@ -15,15 +15,15 @@ class DdVerbose {
 
   DdVerbose.fromJson(Map<String, dynamic> json) {
     staticPaymentMethod = json['static_payment_method']?.cast<String>();
-    staticPriceRange = json['static_price_range']?.cast<int>();
+    staticPriceRange = json['static_price_range']?.cast<String>();
     if (json['tag_list'] != null) {
-      tagList = new List<TagList>();
+      tagList = [];
       json['tag_list'].forEach((v) {
         tagList.add(new TagList.fromJson(v));
       });
     }
     if (json['attribute_list'] != null) {
-      attributeList = new List<AttributeList>();
+      attributeList = [];
       json['attribute_list'].forEach((v) {
         attributeList.add(new AttributeList.fromJson(v));
       });

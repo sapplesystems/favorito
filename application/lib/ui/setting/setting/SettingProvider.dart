@@ -102,4 +102,12 @@ class SettingProvider extends ChangeNotifier {
     Navigator.pop(_context);
     Navigator.of(_context).pushNamed('/login');
   }
+
+  initCall(_val) async {
+    if (_val) {
+      title.remove("Waitlist");
+      icon.remove("waiting");
+      pages.remove(Waitlist());
+    }
+  }
 }
