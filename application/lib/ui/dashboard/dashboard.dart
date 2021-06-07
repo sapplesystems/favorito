@@ -299,12 +299,15 @@ class _dashboardState extends State<dashboard> {
     requestModel.context = _context;
     requestModel.url = serviceFunction.funDash;
     await WebService.serviceCall(requestModel).then((value) {
-      var _v = dashModel.fromJson(convert.json.decode(value?.toString()));
+      var _v = DashModel.fromJson(convert.json.decode(value?.toString()));
       var va = _v?.data;
       business_id = va?.businessId;
       business_name = va?.businessName;
       preferences.setString('nickname', va?.businessName);
       preferences.setString('photoUrl', va?.photo);
+      preferences.setBool(
+          'isAppointment', va?.businessAttributes.contains('Appointment'));
+      print("isAppointment:${va?.businessAttributes.contains('Appointment')}");
       business_status = va?.businessStatus;
       photoUrl = va?.photo;
       is_profile_completed = va?.isProfileCompleted?.toString() ?? '';

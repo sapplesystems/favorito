@@ -23,6 +23,7 @@ class MenuSetting extends StatelessWidget {
         ..menuSettingsGetServiceCall()
         ..setNeedSave(false);
       localizations = MaterialLocalizations.of(context);
+      vaTrue.initcall();
       isFirst = false;
     }
     return Scaffold(

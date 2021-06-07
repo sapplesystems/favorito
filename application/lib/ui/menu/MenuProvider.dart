@@ -20,6 +20,10 @@ class MenuProvider extends BaseProvider {
   bool delivery = false;
   bool acceptingOrder = false;
   bool needSave = false;
+  initcall() {
+    controller.map((e) => e.text = "00");
+  }
+
   void getMenuList() async {
     await WebService.funMenuList().then((value) {
       menuBaseModel = value;
@@ -124,7 +128,7 @@ class MenuProvider extends BaseProvider {
 
   getTimePicker(int _index, context, localizations) {
     TimeOfDay timeOfDay;
-    if (controller[_index].text.trim() != 'select') {
+    if (controller[_index].text != null) {
       var _s = controller[_index].text;
 
       timeOfDay = TimeOfDay(

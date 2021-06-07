@@ -55,7 +55,7 @@ import 'package:Favorito/model/orderListModel.dart';
 import 'package:Favorito/model/photoModel.dart';
 import 'package:Favorito/model/profile/ProfileImage.dart';
 import 'package:Favorito/model/profileDataModel.dart';
-import 'package:Favorito/model/registerModel.dart';
+import 'package:Favorito/model/RegisterModel.dart';
 import 'package:Favorito/model/review/ReviewListModel.dart';
 import 'package:Favorito/model/review/ReviewModel.dart';
 import 'package:Favorito/model/review/ReviewintroModel.dart';
@@ -305,12 +305,12 @@ class WebService {
     return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<registerModel> funRegister(
+  static Future<RegisterModel> funRegister(
       Map _map, BuildContext context) async {
-    registerModel _data = registerModel();
+    RegisterModel _data = RegisterModel();
     response = await dio.post(serviceFunction.funBusyRegister,
         data: _map, options: opt);
-    _data = registerModel.fromJson(convert.json.decode(response.toString()));
+    _data = RegisterModel.fromJson(convert.json.decode(response.toString()));
     // Prefs.setToken(_data.token.toString().trim());
     print("responseData7:${_data.toString().trim()}");
     // print("token:${_data.token.toString().trim()}");
@@ -666,6 +666,20 @@ class WebService {
     response = await dio.post(serviceFunction.funCatalogAddPhoto,
         data: formData, options: _opt);
     return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  // infoDeletePhote
+  static Future<BaseResponseModel> infoDeletePhoto(
+      Map _map, BuildContext context) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    String url = serviceFunction.infoDeletePhoto;
+    print("_map:$url");
+    response = await dio.post(url, data: _map, options: _opt);
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   // funCatalogEdit

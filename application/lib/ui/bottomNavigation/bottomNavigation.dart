@@ -10,6 +10,7 @@ import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class bottomNavigation extends StatefulWidget {
   @override
@@ -18,18 +19,16 @@ class bottomNavigation extends StatefulWidget {
 
 class _bottomNavigationState extends State<bottomNavigation> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = [
     dashboard(),
     Bookings(),
-    // Appoinment(),
-    // Bookings(),
     ChatLogin(),
     MenuHome(),
     Setting()
   ];
 
   @override
-  void initState() {
+  initState() {
     decide();
     super.initState();
   }
@@ -69,6 +68,11 @@ class _bottomNavigationState extends State<bottomNavigation> {
   }
 
   void decide() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    print("isAppointment:${preferences.getBool('isAppointment')}");
+
+    _widgetOptions[1] =
+        preferences.getBool('isAppointment') ? Appoinment() : Bookings();
     var token = await Prefs.token;
     if (token == null || token == "") {
       Navigator.of(context).pushAndRemoveUntil(

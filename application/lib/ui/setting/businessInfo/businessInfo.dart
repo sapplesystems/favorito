@@ -9,6 +9,7 @@ import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/UtilProvider.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -110,23 +111,41 @@ class _businessInfoState extends State<businessInfo> {
                     letterSpacing: 2)),
             Container(
               height: sm.h(24),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (int i = 0; i < photoData.length; i++)
-                    Card(
-                      semanticContainer: true,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Image.network(photoData[i].photo.toString(),
-                          fit: BoxFit.fill),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      elevation: 5,
-                      margin: EdgeInsets.all(10),
-                    )
-                ],
-              ),
+              child: ListView(scrollDirection: Axis.horizontal, children: [
+                for (int i = 0; i < photoData.length; i++)
+                  Stack(
+                    children: [
+                      Card(
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Image.network(photoData[i].photo.toString(),
+                              fit: BoxFit.fill),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          elevation: 5,
+                          margin: EdgeInsets.all(10)),
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.delete, color: myRed),
+                          onPressed: () async {
+                            var _va = {'image_id': photoData[i].id};
+                            await WebService.infoDeletePhoto(_va, context)
+                                .then((value) {
+                              if (value.status == "success") {
+                                setState(() {
+                                  photoData.remove(i);
+                                });
+                              }
+                            });
+                          },
+                        ),
+                      )
+                    ],
+                  )
+              ]),
             ),
             MyOutlineButton(
               title: "Add more photo",

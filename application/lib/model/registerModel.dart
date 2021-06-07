@@ -1,4 +1,4 @@
-class registerModel {
+class RegisterModel {
   String status;
   String message;
   int id;
@@ -6,10 +6,10 @@ class registerModel {
   String phone;
   String token;
 
-  registerModel(
+  RegisterModel(
       {this.status, this.message, this.id, this.email, this.phone, this.token});
 
-  registerModel.fromJson(Map<String, dynamic> json) {
+  RegisterModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     id = json['id'];

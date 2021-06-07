@@ -1,29 +1,31 @@
-class dashModel {
+class DashModel {
   String status;
   String message;
-  DashData data;
+  Data data;
 
-  dashModel({this.status, this.message, this.data});
+  DashModel({this.status, this.message, this.data});
 
-  dashModel.fromJson(Map<String, dynamic> json) {
+  DashModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new DashData.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    if (this.data != null) data['data'] = this.data.toJson();
-
+    if (this.data != null) {
+      data['data'] = this.data.toJson();
+    }
     return data;
   }
 }
 
-class DashData {
+class Data {
   int id;
   String businessId;
+  int status;
   String businessName;
   String photo;
   String businessStatus;
@@ -33,16 +35,19 @@ class DashData {
   int isEmailVerified;
   int isVerified;
   int checkIns;
-  var ratings;
+  int ratings;
+  int ratingCount;
   int catalogoues;
   int orders;
+  List<String> businessAttributes;
+  int totalSpent;
   int freeCredit;
   int paidCredit;
-  var ratingCount;
 
-  DashData(
+  Data(
       {this.id,
       this.businessId,
+      this.status,
       this.businessName,
       this.photo,
       this.businessStatus,
@@ -53,15 +58,18 @@ class DashData {
       this.isVerified,
       this.checkIns,
       this.ratings,
+      this.ratingCount,
       this.catalogoues,
       this.orders,
+      this.businessAttributes,
+      this.totalSpent,
       this.freeCredit,
-      this.paidCredit,
-      this.ratingCount});
+      this.paidCredit});
 
-  DashData.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     businessId = json['business_id'];
+    status = json['status'];
     businessName = json['business_name'];
     photo = json['photo'];
     businessStatus = json['business_status'];
@@ -72,17 +80,20 @@ class DashData {
     isVerified = json['is_verified'];
     checkIns = json['check_ins'];
     ratings = json['ratings'];
+    ratingCount = json['rating_count'];
     catalogoues = json['catalogoues'];
     orders = json['orders'];
+    businessAttributes = json['business_keys'].cast<String>();
+    totalSpent = json['total_spent'];
     freeCredit = json['free_credit'];
     paidCredit = json['paid_credit'];
-    ratingCount = json['rating_count'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['business_id'] = this.businessId;
+    data['status'] = this.status;
     data['business_name'] = this.businessName;
     data['photo'] = this.photo;
     data['business_status'] = this.businessStatus;
@@ -93,11 +104,13 @@ class DashData {
     data['is_verified'] = this.isVerified;
     data['check_ins'] = this.checkIns;
     data['ratings'] = this.ratings;
+    data['rating_count'] = this.ratingCount;
     data['catalogoues'] = this.catalogoues;
     data['orders'] = this.orders;
+    data['business_attributes'] = this.businessAttributes;
+    data['total_spent'] = this.totalSpent;
     data['free_credit'] = this.freeCredit;
     data['paid_credit'] = this.paidCredit;
-    data['rating_count'] = this.ratingCount;
     return data;
   }
 }

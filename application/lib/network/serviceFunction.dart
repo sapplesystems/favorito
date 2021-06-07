@@ -146,4 +146,7 @@ class serviceFunction {
   static final getChat = baseUrl1 + 'user/get-chats';
   static final setChat = baseUrl1 + 'user/set-chat';
   static final setGetFirebaseId = baseUrl1 + 'user/firebase-id';
+  // business info page
+
+  static String infoDeletePhoto = baseUrl1 + 'user/information/delete-photo';
 }

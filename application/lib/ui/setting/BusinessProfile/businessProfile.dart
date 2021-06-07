@@ -38,7 +38,7 @@ class BusinessProfile extends StatelessWidget {
       child:
           Consumer<BusinessProfileProvider>(builder: (_context, data, child) {
         return WillPopScope(
-          onWillPop: () async{
+          onWillPop: () async {
             isFirst = true;
             v.getProfileData(false);
             Navigator.pop(context);
@@ -206,8 +206,7 @@ class BusinessProfile extends StatelessWidget {
                                   keyboardSet: TextInputType.number,
                                   hint: "Enter Pincode",
                                   myOnChanged: (_val) {
-                                    data.pinCaller(_val,true);
-                                    
+                                    data.pinCaller(_val, true);
                                   }),
                               Padding(
                                 padding: EdgeInsets.all(8.0),
@@ -304,25 +303,22 @@ class BusinessProfile extends StatelessWidget {
                                 hint: "Enter Description",
                               ),
                               // if ((data.websiteList?.length ?? 0) > 0)
-                                for (int i = 15;
-                                    i < data.controller?.length ;
-                                    i++)
-                              txtfieldPostAction(
-                                  controller: data.controller[i],
-                                  hint: "Enter Website ",
-                                  title: "Website ",
-                                  maxLines: 1,
-                                  valid: false,
-                                  myOnChanged: (_) {
-                                    v.needSave(true);
-                                  },
-                                  sufixColor: myRed,
-                                  sufixTxt: "Add Line",
-                                  security: false,
-                                  sufixClick: () {
-                                    data.webSiteLengthPlus();
-                                  }),
-
+                              for (int i = 15; i < data.controller?.length; i++)
+                                txtfieldPostAction(
+                                    controller: data.controller[i],
+                                    hint: "Enter Website ",
+                                    title: "Website ",
+                                    maxLines: 1,
+                                    valid: false,
+                                    myOnChanged: (_) {
+                                      v.needSave(true);
+                                    },
+                                    sufixColor: myRed,
+                                    sufixTxt: "Add Line",
+                                    security: false,
+                                    sufixClick: () {
+                                      data.webSiteLengthPlus(i);
+                                    }),
                             ]),
                           )),
                     ),
