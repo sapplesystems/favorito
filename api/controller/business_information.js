@@ -1,7 +1,9 @@
 var db = require('../config/db');
+var fs = require('fs');
+
 var dd_verbose = {
     static_payment_method: ['Cash Only', 'Cash & Cards', 'Favorito Pay'],
-    static_price_range: [10, 100, 1000, 10000]
+    static_price_range: ['\u{20B9}', '\u{20B9}\u{20B9}', '\u{20B9}\u{20B9}\u{20B9}', '\u{20B9}\u{20B9}\u{20B9}\u{20B9}']
 };
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 
@@ -230,6 +232,36 @@ exports.addPhotos = async function(req, res, next) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
+
+exports.deletePhoto = async(req, res) => {
+    if (!req.body.image_id) {
+        return res.status(400).json({ status: 'failed', message: 'image_id is missing' });
+    }
+
+    sqlGetImage = `select asset_url as image from business_uploads where id = '${req.body.image_id}' and business_id = '${req.userdata.business_id}'`
+    resultGetImage = await exports.run_query(sqlGetImage)
+        // return res.send(resultGetImage)
+    if (resultGetImage != '') {
+        path_photo = '././public/uploads/' + resultGetImage[0].image
+    }
+    if (fs.existsSync(path_photo)) {
+        fs.unlink(path_photo, async(error) => {
+            if (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong ' });
+            }
+            try {
+                sqlDeleteImage = `delete from business_uploads where id = '${req.body.image_id}' and business_id = '${req.userdata.business_id}'`
+                resultDeleteImage = await exports.run_query(sqlDeleteImage)
+                return res.status(200).json({ status: 'success', message: 'Image deleted successfully ' });
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Something went wrong ' });
+            }
+        })
+    } else {
+        return res.status(404).json({ status: 'error', message: 'Image do not exists ' });
+    }
+
+}
 
 exports.getTagList = function(req, res, next) {
     try {

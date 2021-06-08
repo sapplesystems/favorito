@@ -64,9 +64,10 @@ exports.getItemOfCategory = async(req, res) => {
             return res.status(400).json({ status: 'error', message: 'Search keyword is missing.' });
         }
         business_id = req.body.business_id
-        var sql = "SELECT id, business_id, title, price, description, `type`, \n\
+        var sql = "SELECT id, business_id, title, price, description,quantity, max_qty_per_order, `type`, \n\
                             (SELECT GROUP_CONCAT(id) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photo_id, \n\
-                            (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos \n\
+                            (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos, \n\
+                            if(ifnull ((select id from item_customize_master where item_id=business_menu_item.id) ,0) = 0 ,0,1) as is_customizable \n\
                             FROM business_menu_item \n\
                             WHERE business_id='" + business_id + "' " + category_where_clause + " AND is_activated = 1  " + item_type + " AND (" + keyword_like + ") ";
         // var sql = "SELECT id, business_id, title, price, description, `type`, \n\
@@ -106,12 +107,15 @@ exports.getItemOfCategory = async(req, res) => {
                 item_type = ` AND type = 'veg'`
             }
         }
+        console.log('asdf')
+
         business_id = req.body.business_id
         category_id = req.body.category_id
         if (category_id == 0) {
-            var sql = "SELECT id,menu_category_id, title, price, description, `type`, \n\
+            var sql = "SELECT id,menu_category_id, title, price, description ,quantity, max_qty_per_order , `type`, \n\
                                 (SELECT GROUP_CONCAT(id) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photo_id, \n\
-                                (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos \n\
+                                (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos, \n\
+                               if(ifnull ((select id from item_customize_master where item_id=business_menu_item.id) ,0) = 0 ,0,1) as is_customizable \n\
                                 FROM business_menu_item \n\
                                 WHERE business_id='" + business_id + "' AND  is_activated = 1  " + item_type;
             result_1 = await exports.run_query(sql)
@@ -129,12 +133,15 @@ exports.getItemOfCategory = async(req, res) => {
             return res.status(200).json({ status: 'success', message: 'success.', data: result_1 });
 
         } else {
-            var sql = "SELECT id, title, price, description, `type`, \n\
+            var sql = "SELECT id, title, price, description ,quantity, max_qty_per_order, `type`, \n\
                                 (SELECT GROUP_CONCAT(id) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photo_id, \n\
-                                (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos \n\
+                                (SELECT GROUP_CONCAT(CONCAT('" + img_path + "',photo)) FROM business_menu_photo WHERE business_menu_item_id=business_menu_item.id) AS photos, \n\
+                                if(ifnull ((select id from item_customize_master where item_id=business_menu_item.id) ,0) = 0 ,0,1) as is_customizable \n\
                                 FROM business_menu_item \n\
                                 WHERE business_id='" + business_id + "' AND menu_category_id='" + category_id + "' AND is_activated = 1  " + item_type;
-            var sql_category_tax = `SELECT tax FROM business_menu_category WHERE id = '${category_id}'`
+
+            var sql_category_tax = `SELECT tax FROM business_menu_category WHERE category_id = '${category_id}' and business_id = '${business_id}'`
+
             var result_category_tax = await exports.run_query(sql_category_tax)
             db.query(sql, async function(error, items) {
                 if (error) {
@@ -142,7 +149,7 @@ exports.getItemOfCategory = async(req, res) => {
                 }
                 var items_length = items.length;
                 for (var i = 0; i < items_length; i++) {
-                    if (result_category_tax && result_category_tax[0].tax) {
+                    if (result_category_tax && result_category_tax[0] && result_category_tax[0].tax) {
                         items[i].tax = result_category_tax[0].tax
                     }
                     if (items[i].photo_id != null && items[i].photos != null) {

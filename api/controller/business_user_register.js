@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 var jwt = require('jsonwebtoken');
 var uniqid = require('uniqid');
 
-exports.register = function(req, res, next) {
+exports.register = async function(req, res, next) {
     try {
         if (req.body.business_type_id == '' || req.body.business_type_id == null) {
             return res.status(403).json({ status: 'error', message: 'Business type is required' });
@@ -39,6 +39,17 @@ exports.register = function(req, res, next) {
         var email = req.body.email;
         var phone = business_phone;
         var password = req.body.password;
+
+        // checking if the email domain is restricted or allowed
+        // checking the email domain is restricted or not table inlcude is restricted_domain
+        let domain = (email.split('@')[1]).split('.')[0];
+        sqlCheckDomain = `select id from restricted_domain where restricted_domain like '%${domain}%'`
+        resultCheckDomain = await exports.run_query(sqlCheckDomain)
+
+        if (resultCheckDomain != '') {
+            return res.status(403).send({ status: 'error', message: 'The domain of this email has been restricted', data: [] })
+        }
+
         var reach_whatsapp = 0;
         if (req.body.reach_whatsapp != '' && req.body.reach_whatsapp != null) {
             reach_whatsapp = 1;
@@ -53,10 +64,17 @@ exports.register = function(req, res, next) {
             last_name = split_name.join(' ');;
         }
 
-        bcrypt.hash(password, 10, function(err, hash) {
+        bcrypt.hash(password, 10, async function(err, hash) {
             if (err) {
                 return res.status(403).json({ status: 'error', message: 'Password encryption failed' });
             }
+
+            sqlCheckUser = `select count(id) as count from users where phone = '${business_phone}'`
+            resultCheckUser = await exports.run_query(sqlCheckUser)
+            if (resultCheckUser[0].count > 0) {
+                return res.status(200).json({ status: 'error', message: 'Phone number already exist in user account' });
+            }
+
             var cslq = "select count(*) as c from business_master where (business_email='" + email + "' or business_phone='" + phone + "') and deleted_at is null";
             db.query(cslq, function(chkerr, check) {
                 if (chkerr) {
