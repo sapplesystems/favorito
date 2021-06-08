@@ -47,7 +47,10 @@ class ForgetPassword extends StatelessWidget {
               ),
               Row(children: [
                 Text("Forgot password.",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26))
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 26))
               ]),
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14.0),
@@ -68,17 +71,20 @@ class ForgetPassword extends StatelessWidget {
                 Text(
                   prTrue.didNotReceive,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 10,
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: Theme.of(context).textTheme.headline6.copyWith(
+                        fontSize: 10,
+                        decoration: TextDecoration.underline,
+                      ),
                 ),
                 FlatButton(
                   onPressed: () => prTrue.funSendOtpSms(),
                   child: Text(
                     prFalse.sendOtptxt,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: myRed, fontSize: 16),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(color: myRed, fontSize: 16),
                   ),
                 ),
               ]),
@@ -96,8 +102,10 @@ class ForgetPassword extends StatelessWidget {
                               EdgeInsets.only(top: sm.h(3), bottom: sm.h(1)),
                           child: Text("Enter OTP",
                               textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 20))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(color: Colors.grey, fontSize: 20))),
                       Padding(
                           padding: EdgeInsets.only(
                               left: sm.h(1.4), right: sm.h(1.4)),
@@ -139,7 +147,10 @@ class ForgetPassword extends StatelessWidget {
                               })),
                       Text(prTrue.acces[1].error ?? '',
                           textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 14, color: myRed)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontSize: 14, color: myRed)),
                       for (int i = 2; i < prFalse.title.length; i++)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -180,8 +191,12 @@ class ForgetPassword extends StatelessWidget {
                               horizontal: 16, vertical: 16),
                           child: Center(
                             child: Text("Submit",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400, color: myRed)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        color: myRed)),
                           ),
                         ),
                       ),

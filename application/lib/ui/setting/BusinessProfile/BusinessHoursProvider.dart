@@ -1,10 +1,13 @@
+import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class BusinessHoursProvider extends ChangeNotifier {
+class BusinessHoursProvider extends BaseProvider {
+  String _businessId;
+  SharedPreferences preferences;
   String hoursTitle1 = 'Existing Slots';
   String hoursTitle2 = 'Add New Slots';
   List<Hours> daysHours = List();
@@ -213,7 +216,12 @@ class BusinessHoursProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  allClear() {
-    selecteddayList.clear();
+  allClear() async {
+    preferences = await SharedPreferences.getInstance();
+    if (preferences.getString('businessId') != _businessId) {
+      _businessId = preferences.getString('businessId');
+      selecteddayList.clear();
+      notifyListeners();
+    }
   }
 }

@@ -14,8 +14,8 @@ import 'package:favorito_user/ui/Login/LoginDetail.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHome.dart';
 import 'package:favorito_user/ui/Signup/Signup.dart';
 import 'package:favorito_user/ui/business/BusinessProfile.dart';
+import 'package:favorito_user/ui/business/tabs/JobDetail.dart';
 import 'package:favorito_user/ui/business/tabs/Review/Review.dart';
-import 'package:favorito_user/ui/business/tabs/Review/ReviewTab.dart';
 import 'package:favorito_user/ui/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/business/waitlist/waitlist.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
@@ -101,8 +101,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => OrderHome());
       case '/review':
         return MaterialPageRoute(builder: (_) => Review());
-      // case '/chat':
-      //   return MaterialPageRoute(builder: (_) => Chat());
+      case '/JobDetail':
+        return MaterialPageRoute(builder: (_) => JobDetail());
       default:
         return _errorRoute();
     }

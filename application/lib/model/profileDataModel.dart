@@ -42,7 +42,7 @@ class Data {
   String townCity;
   int stateId;
   int countryId;
-  String location;
+  var location;
   int byAppointmentOnly;
   String workingHours;
   // List<String> website;

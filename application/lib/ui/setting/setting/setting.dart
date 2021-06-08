@@ -3,6 +3,8 @@ import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/component/listItem.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/ui/setting/businessInfo/businessInfoProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -151,6 +153,15 @@ class Setting extends StatelessWidget {
                                       Provider.of<ClaimProvider>(context,
                                               listen: false)
                                           .getClaimData(context);
+                                    if (i == 1)
+                                      Provider.of<businessInfoProvider>(context,
+                                              listen: false)
+                                          .getPageData(context);
+                                    if (i == 0)
+                                      Provider.of<BusinessProfileProvider>(
+                                              context,
+                                              listen: false)
+                                          .localAuth();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -262,7 +273,12 @@ class Setting extends StatelessWidget {
                                 size: 28, color: Colors.black))
                       ]),
                       InkWell(
-                        onTap: () => spFalse.logout(),
+                        onTap: () {
+                          //Provider.of<BaseProvider>(context, listen: false)
+                          //  .logoutApp(context);
+                          Navigator.pop(context);
+                          Navigator.of(context).pushNamed('/login');
+                        },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           child: Row(children: [

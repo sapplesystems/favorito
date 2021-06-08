@@ -117,7 +117,7 @@ class CatalogsProvider extends ChangeNotifier {
       print("size in loop:${size}");
 
       try {
-        if (double.parse(size.toString()) < 2048) {
+        if (double.parse(size.toString()) < 200048) {
           pr.show().timeout(Duration(seconds: 10));
           WebService.catlogImageUpdate(result.files, selectedId ?? '')
               .then((value) {

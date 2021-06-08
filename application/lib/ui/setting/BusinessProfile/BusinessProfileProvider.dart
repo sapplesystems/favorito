@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/business/BusinessProfileModel.dart';
 import 'package:Favorito/model/notification/CityListModel.dart';
@@ -16,12 +17,14 @@ import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class BusinessProfileProvider extends ChangeNotifier {
+class BusinessProfileProvider extends BaseProvider {
+  String _businessId;
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   CameraPosition _initPosition;
-  Completer<GoogleMapController> GMapcontroller = Completer();
+  Completer<GoogleMapController> gMapcontroller = Completer();
   Set<Marker> _marker = {};
   List<TextEditingController> controller = [];
   ScrollController listviewController = ScrollController();
@@ -48,6 +51,7 @@ class BusinessProfileProvider extends ChangeNotifier {
   final dd1 = GlobalKey<DropdownSearchState<String>>();
   List<String> titleList = ["", "Business Name", "Business Phone", "LandLine"];
   List<bool> validateList = [false, true, true, false];
+
   List<TextInputType> inputType = [
     TextInputType.name,
     TextInputType.name,
@@ -168,6 +172,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       } catch (e) {
         print(e.toString);
       }
+
     await WebService.getProfileData().then((value) {
       if (val)
         try {
@@ -244,11 +249,13 @@ class BusinessProfileProvider extends ChangeNotifier {
             duration: const Duration(milliseconds: 40));
 
         dd1?.currentState?.changeSelectedItem(va.workingHours ?? '');
-        Provider.of<BusinessHoursProvider>(context, listen: false)
+        Provider.of<BusinessHoursProvider>(context, listen: true)
             .setController(va.workingHours);
       } catch (e) {} finally {
         notifyListeners();
       }
+      Provider.of<BusinessHoursProvider>(context, listen: false)
+          .setController(va.workingHours);
       return value;
     });
     getWebSiteList();
@@ -312,7 +319,8 @@ class BusinessProfileProvider extends ChangeNotifier {
       // if (websiteList.length == 0) websiteList.add(' ');
       try {
         if ((value?.data?.length ?? 0) > 0) {
-          for (int _i = 0; _i < value.data.length; _i++) {
+          // for (int _i = 0; _i < value.data.length; _i++) {
+          for (int _i = 0; _i < 1; _i++) {
             if (!websites.contains(value.data[_i])) {
               websites.add(value.data[_i]);
               controller.add(TextEditingController());
@@ -393,20 +401,12 @@ class BusinessProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  allClear() {
-    BusinessProfileModel _temp = BusinessProfileModel();
-    _businessProfileData = _temp;
-
-    controller.forEach((e) {
-      e.text = '';
-    });
-    notifyListeners();
-  }
-
   void setPosition(List<String> _v) {
     Marker _val = Marker(
       markerId: MarkerId('new Address'),
-      position: LatLng(double.parse(_v[0]), double.parse(_v[1])),
+      position: LatLng(
+          double.parse((_v[0] == "null" || _v[0] == 'null') ? "0.0" : _v[0]),
+          double.parse((_v[1] == "null" || _v[1] == 'null') ? "0.0" : _v[1])),
     );
 
     _initPosition = CameraPosition(target: _val.position, zoom: 17);
@@ -448,5 +448,17 @@ class BusinessProfileProvider extends ChangeNotifier {
     notifyListeners();
     // v.needSave(false);
     Navigator.pop(context);
+  }
+
+  localAuth() {
+    if (preferences.getString('businessId') != _businessId) {
+      _businessId = preferences.getString('businessId');
+      BusinessProfileModel _temp = BusinessProfileModel();
+      _businessProfileData = _temp;
+      for (var v in controller) {
+        v.text = null;
+      }
+      notifyListeners();
+    }
   }
 }

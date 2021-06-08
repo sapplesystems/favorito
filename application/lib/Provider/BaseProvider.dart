@@ -1,10 +1,25 @@
+import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BaseProvider extends ChangeNotifier {
   String businessId;
   String _userEmail;
+  SharedPreferences preferences;
+
+  BaseProvider() {
+    _initCall();
+  }
+
+  _initCall() async {
+    preferences = await SharedPreferences.getInstance();
+  }
 
   String getUserEmail() => _userEmail;
 
@@ -13,14 +28,23 @@ class BaseProvider extends ChangeNotifier {
     _userEmail = value;
   }
 
-  snackBar(String message, GlobalKey key) {
+  snackBar(String message, GlobalKey key, Color color) {
     return ScaffoldMessenger.of(key.currentContext).showSnackBar(
       SnackBar(
         content: Text(message),
         duration: Duration(seconds: 2),
-        backgroundColor: myRed,
+        backgroundColor: color ?? myRed,
       ),
     );
+  }
+
+  logoutApp(context) {
+    Prefs().clear();
+    preferences.clear();
+
+    // Provider.of<BusinessProfileProvider>(context, listen: false).allClear();
+    // Provider.of<BusinessHoursProvider>(context, listen: false).allClear();
+    // Provider.of<AppoinmentProvider>(context, listen: false).logout();
   }
 
   static Future<void> onWillPop(context) async {

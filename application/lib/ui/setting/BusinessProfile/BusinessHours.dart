@@ -2,6 +2,7 @@ import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/component/workingDateTime.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,8 @@ class BusinessHours extends StatelessWidget {
                 maxHeight: 110,
                 onChanged: (value) {
                   bspTrue.setController(value != null ? value : "");
-                  print("value:$value");
+                  Provider.of<BusinessProfileProvider>(context, listen: false)
+                      .needSave(true);
                 })),
         Visibility(
           visible: bspFalse.getController() == "Select Hours",

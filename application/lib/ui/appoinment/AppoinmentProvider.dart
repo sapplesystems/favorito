@@ -1,3 +1,4 @@
+import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/model/appoinment/PersonList.dart';
 import 'package:Favorito/model/appoinment/RestrictionOnlyModel.dart';
 import 'package:Favorito/model/appoinment/SettingData.dart';
@@ -9,14 +10,15 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/model/appoinment/appointmentServiceOnlyModel.dart';
 
-class AppoinmentProvider extends ChangeNotifier {
+class AppoinmentProvider extends BaseProvider {
+  String _businessId;
   List<String> abc = ["Name", "Mobile", "Email"];
   List<TextEditingController> controller = [
     for (int _i = 0; _i < 15; _i++) TextEditingController()
   ];
   bool _loading = false;
   List<String> personListTxt = [];
-  List<PersonList> _personList=[];
+  List<PersonList> _personList = [];
   List<String> servicesString = [];
   List<Data> _servicesList = [];
   bool _servicesDD = false;
@@ -28,7 +30,6 @@ class AppoinmentProvider extends ChangeNotifier {
   int _selectedRestrictionId;
   List<RestrictionOnlyModel> _restrictionList = [];
 
-  
   List<String> slot = [
     '15 min',
     '30 min',
@@ -40,11 +41,11 @@ class AppoinmentProvider extends ChangeNotifier {
   String _startTime = '00:00';
   String _endTime = '00:00';
   DateTime _initialDate = DateTime.now();
-int _selectedAppointmentId =0;
+  int _selectedAppointmentId = 0;
   AppoinmentProvider() {
     refreshCall();
   }
-  refreshCall(){
+  refreshCall() {
     getPersonCall();
     getAllService();
     getRestriction();
@@ -91,7 +92,6 @@ int _selectedAppointmentId =0;
     notifyListeners();
   }
 
-
   funAddPerson(context) async {
     int _serviceId;
     for (var _va in _servicesList) {
@@ -122,7 +122,7 @@ int _selectedAppointmentId =0;
   void getPersonCall() async {
     await WebService.funAppoinmentPerson().then((_value) {
       if (_value.status == "success") {
-      _personList.clear();
+        _personList.clear();
         _personList.addAll(_value.data);
         personListTxt.clear();
         for (var _va in _personList) personListTxt.add(_va.personName ?? "");
@@ -135,28 +135,28 @@ int _selectedAppointmentId =0;
   List<PersonList> getPerson() {
     print('llll${_personList?.length}');
     return _personList;
-  } 
-
-getPersonNameById(int _id){
-  String _name;
-  for(var _va in _personList){
-    if(_id==_va.id){
-      _name = _va.personName;
-    }
   }
-  return _name;
-}
 
-
-getPersonIdByName(String _name){
-  int _id;
-  for(var _va in _personList){
-    if(_name==_va.personName){
-      _id = _va.id;
+  getPersonNameById(int _id) {
+    String _name;
+    for (var _va in _personList) {
+      if (_id == _va.id) {
+        _name = _va.personName;
+      }
     }
+    return _name;
   }
-  return _id;
-}
+
+  getPersonIdByName(String _name) {
+    int _id;
+    for (var _va in _personList) {
+      if (_name == _va.personName) {
+        _id = _va.id;
+      }
+    }
+    return _id;
+  }
+
   funAddServicesCall() async {
     if (controller[6].text != "") {
       WebService.funAppoinmentSaveService({"service_name": controller[6].text})
@@ -193,27 +193,29 @@ getPersonIdByName(String _name){
     _servicesList = _list;
     notifyListeners();
   }
-getServiceNameById(int _id){
-  String _name;
-  for(var _va in _servicesList){
-    if(_id==_va.id){
-      _name = _va.serviceName;
-    }
-  }
-  print("name:$_name");
-  return _name;
-}
 
-getServiceIdByName(String _name){
-  int  _id;
-  for(var _va in _servicesList){
-    if(_name.trim()==_va.serviceName){
-      _id = _va.id;
+  getServiceNameById(int _id) {
+    String _name;
+    for (var _va in _servicesList) {
+      if (_id == _va.id) {
+        _name = _va.serviceName;
+      }
     }
+    print("name:$_name");
+    return _name;
   }
-  print("id:$_id");
-  return _id;
-}
+
+  getServiceIdByName(String _name) {
+    int _id;
+    for (var _va in _servicesList) {
+      if (_name.trim() == _va.serviceName) {
+        _id = _va.id;
+      }
+    }
+    print("id:$_id");
+    return _id;
+  }
+
   getServicesList() => _servicesList;
 
   getLoading() => _loading;
@@ -258,13 +260,12 @@ getServiceIdByName(String _name){
     });
   }
 
-
-cleanAllPerson(){
+  cleanAllPerson() {
     controller[0].text = "";
     controller[1].text = "";
     controller[2].text = "";
-  
-}
+  }
+
   void cleanAll() {
     cleanAllPerson();
     controller[3].text = "";
@@ -299,12 +300,12 @@ cleanAllPerson(){
     }
   }
 
-  appClean(){
-    controller[2].text = '' ;
-    controller[3].text = '' ;
-    controller[4].text = '' ;
-    controller[5].text = '' ;
-    controller[6].text = '' ;
+  appClean() {
+    controller[2].text = '';
+    controller[3].text = '';
+    controller[4].text = '';
+    controller[5].text = '';
+    controller[6].text = '';
     notifyListeners();
   }
 
@@ -320,11 +321,11 @@ cleanAllPerson(){
   }
 
   selectDate(context, localizations) {
-    var _d ;
-    var _t ;
-    if(controller[2].text.contains(':')){
-        _d = DateTime.parse((controller[2].text.split(' '))[0].trim());
-    }else{
+    var _d;
+    var _t;
+    if (controller[2].text.contains(':')) {
+      _d = DateTime.parse((controller[2].text.split(' '))[0].trim());
+    } else {
       _d = DateTime.now();
     }
 
@@ -356,10 +357,10 @@ cleanAllPerson(){
 
   selectDate2(context, localizations) {
     var _ab;
-    if(controller[2].text==''){
-     _ab = DateTime.now();
-    }else{
-     _ab = DateTime.parse(controller[2].text.trim());    
+    if (controller[2].text == '') {
+      _ab = DateTime.now();
+    } else {
+      _ab = DateTime.parse(controller[2].text.trim());
     }
     print("_ab${_ab}");
     showDatePicker(
@@ -480,7 +481,9 @@ cleanAllPerson(){
       initialEntryMode: TimePickerEntryMode.input,
       context: RIKeys.josKeys10.currentContext,
       // initialTime: _val?_startTime:_endTime,
-      initialTime: TimeOfDay(hour:int.parse((_val?_startTime:_endTime).split(":")[0]),minute: int.parse((_val?_startTime:_endTime).split(":")[1])),
+      initialTime: TimeOfDay(
+          hour: int.parse((_val ? _startTime : _endTime).split(":")[0]),
+          minute: int.parse((_val ? _startTime : _endTime).split(":")[1])),
       builder: (BuildContext ctx, Widget child) {
         return MediaQuery(
             data: MediaQuery.of(ctx).copyWith(alwaysUse24HourFormat: true),
@@ -521,7 +524,7 @@ cleanAllPerson(){
       "end_time": _endTime,
       "advance_booking_start_days": '0',
       "advance_booking_end_days": controller[9].text,
-      "advance_booking_hours": (int.parse(controller[10].text))*60,
+      "advance_booking_hours": (int.parse(controller[10].text)) * 60,
       "slot_length": controller[11].text,
       "booking_per_slot": controller[12].text,
       "booking_per_day": controller[13].text,
@@ -577,7 +580,8 @@ cleanAllPerson(){
         _startTime = _settingData?.startTime?.trim()?.substring(0, 5);
         _endTime = _settingData?.endTime?.trim()?.substring(0, 5);
         controller[9].text = _settingData.advanceBookingEndDays.toString();
-        controller[10].text = '${(_settingData.advanceBookingHours/60).toString().substring(0,1)}';
+        controller[10].text =
+            '${(_settingData.advanceBookingHours / 60).toString().substring(0, 1)}';
         controller[11].text = _settingData.slotLength.toString();
         controller[12].text = _settingData.bookingPerSlot.toString();
         controller[13].text = _settingData.bookingPerDay.toString();
@@ -608,25 +612,29 @@ cleanAllPerson(){
 
   bookingListModel getAppointmentData() => _blm;
 
-setSelectedAppointmentId(int _id){
-  _selectedAppointmentId =  _id;
-  if(_id!=0)getAppoinmentDetail();
-}
+  setSelectedAppointmentId(int _id) {
+    _selectedAppointmentId = _id;
+    if (_id != 0) getAppoinmentDetail();
+  }
 
-getSelectedAppointmentId()=>_selectedAppointmentId;
+  getSelectedAppointmentId() => _selectedAppointmentId;
 //findAppointment by id
   getAppoinmentDetail() async {
-    await WebService.funAppoinmentDetail({'appointment_id': _selectedAppointmentId}).then((value) {
+    await WebService.funAppoinmentDetail(
+        {'appointment_id': _selectedAppointmentId}).then((value) {
       if (value.status == 'success') {
-        controller[0].text = "${value.data.createdDate.substring(6,10)}-${value.data.createdDate.substring(3,5)}-${value.data.createdDate.substring(0,2)}";
+        controller[0].text =
+            "${value.data.createdDate.substring(6, 10)}-${value.data.createdDate.substring(3, 5)}-${value.data.createdDate.substring(0, 2)}";
         controller[1].text = value.data.createdTime;
-        controller[2].text = value.data?.name??'';
-        controller[3].text = value.data?.contact?.toString()??"";
+        controller[2].text = value.data?.name ?? '';
+        controller[3].text = value.data?.contact?.toString() ?? "";
         // controller[4].text = value.data.serviceId;
         // controller[5].text = value.data.name;
-        controller[6].text = value.data?.specialNotes??'';
-        RIKeys.josKeys14.currentState.changeSelectedItem(getServiceNameById(value.data?.serviceId));
-        RIKeys.josKeys15.currentState.changeSelectedItem(getPersonNameById(value.data?.personId));
+        controller[6].text = value.data?.specialNotes ?? '';
+        RIKeys.josKeys14.currentState
+            .changeSelectedItem(getServiceNameById(value.data?.serviceId));
+        RIKeys.josKeys15.currentState
+            .changeSelectedItem(getPersonNameById(value.data?.personId));
         controller[4].text = getServiceNameById(value.data?.serviceId);
         notifyListeners();
       }
@@ -636,7 +644,7 @@ getSelectedAppointmentId()=>_selectedAppointmentId;
   showOnlyDatePicker(context, int _controllerId) {
     var _ab;
     // if(controller[_controllerId].text=='Select Date'){
-      _ab = DateTime.now();
+    _ab = DateTime.now();
     // }else{
     //   _ab = DateTime.parse(controller[_controllerId].text.trim());
     // }
@@ -644,23 +652,26 @@ getSelectedAppointmentId()=>_selectedAppointmentId;
             context: context,
             initialDate: _ab,
             firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(Duration(days: _settingData.advanceBookingEndDays))
-            )
+            lastDate: DateTime.now()
+                .add(Duration(days: _settingData.advanceBookingEndDays)))
         .then((_val) {
       controller[_controllerId].text = dateFormat1.format(_val);
       notifyListeners();
     });
   }
 
-  showOnlyTimePicker(context,int _controllerId) {
-    var _abc ;    
-    if(controller[_controllerId].text.contains(':')){
-      _abc = TimeOfDay(hour:int.parse(controller[_controllerId].text.split(":")[0]),minute: int.parse(controller[_controllerId].text.split(":")[1]));
-    }else{
+  showOnlyTimePicker(context, int _controllerId) {
+    var _abc;
+    if (controller[_controllerId].text.contains(':')) {
+      _abc = TimeOfDay(
+          hour: int.parse(controller[_controllerId].text.split(":")[0]),
+          minute: int.parse(controller[_controllerId].text.split(":")[1]));
+    } else {
       _abc = TimeOfDay.now();
     }
     showTimePicker(
-      context: context,initialEntryMode: TimePickerEntryMode.input,
+      context: context,
+      initialEntryMode: TimePickerEntryMode.input,
       initialTime: _abc,
       builder: (BuildContext context, Widget child) {
         return MediaQuery(
@@ -669,69 +680,67 @@ getSelectedAppointmentId()=>_selectedAppointmentId;
         );
       },
     ).then((value) {
-      controller[_controllerId].text =
-          MaterialLocalizations.of(context)
-              .formatTimeOfDay(
-                  value,
-                  alwaysUse24HourFormat:
-                      true);
-                      notifyListeners();
+      controller[_controllerId].text = MaterialLocalizations.of(context)
+          .formatTimeOfDay(value, alwaysUse24HourFormat: true);
+      notifyListeners();
     });
   }
 
-funSubmitManualAppointment(context)async{
-                    if (controller[0].text == 'Select Date') {
-                      BotToast.showText(
-                          text: "Please select a date",
-                          duration: Duration(seconds: 5));
-                      return;
-                    }
-                    if (controller[1].text == 'Select Time') {
-                      BotToast.showText(
-                          text: "Please select a time",
-                          duration: Duration(seconds: 5));
-                      return;
-                    }
-                    // for (var v in _servicesList ) {
-                    //   if (v.serviceName == controller[4].text)
-                    //     selectedService = v.id;
-                    // }
-                    // s// }
-                    var _va1 = getServiceIdByName( controller[4].text);
-                    var _va2 = getPersonIdByName( controller[5].text);
-                    Map<String, dynamic> _map1 = {
-                    "appointment_id":_selectedAppointmentId??0,
-                      "created_date": controller[0].text,
-                      "created_time": controller[1].text,
-                      "name": controller[2].text,
-                      "contact": controller[3].text,
-                      "service_id":_va1,
-                      "person_id": _va2,
-                      "special_notes": controller[6].text
-                    };
+  funSubmitManualAppointment(context) async {
+    if (controller[0].text == 'Select Date') {
+      BotToast.showText(
+          text: "Please select a date", duration: Duration(seconds: 5));
+      return;
+    }
+    if (controller[1].text == 'Select Time') {
+      BotToast.showText(
+          text: "Please select a time", duration: Duration(seconds: 5));
+      return;
+    }
+    // for (var v in _servicesList ) {
+    //   if (v.serviceName == controller[4].text)
+    //     selectedService = v.id;
+    // }
+    // s// }
+    var _va1 = getServiceIdByName(controller[4].text);
+    var _va2 = getPersonIdByName(controller[5].text);
+    Map<String, dynamic> _map1 = {
+      "appointment_id": _selectedAppointmentId ?? 0,
+      "created_date": controller[0].text,
+      "created_time": controller[1].text,
+      "name": controller[2].text,
+      "contact": controller[3].text,
+      "service_id": _va1,
+      "person_id": _va2,
+      "special_notes": controller[6].text
+    };
 
-                     Map<String, dynamic> _map2 = {
-                      "created_date": controller[0].text,
-                      "created_time": controller[1].text,
-                      "name": controller[2].text,
-                      "contact": controller[3].text,
-                      "service_id":_va1,
-                      "person_id": _va2,
-                      "special_notes": controller[6].text
-                    };
-                    print("_map ${_selectedAppointmentId==0?_map2:_map1}");
-                  await  WebService.funAppoinmentCreate(_selectedAppointmentId==0?_map2:_map1,_selectedAppointmentId==0).then((value) {
-                      if (value.status == "success") {
-                        BotToast.showText(
-                            text: value.message,
-                            duration: Duration(seconds: 5));
-                        Navigator.pop(context);
-                      }
-                    });
-                  
-}
-logout(){
-  _blm = bookingListModel();
-}
+    Map<String, dynamic> _map2 = {
+      "created_date": controller[0].text,
+      "created_time": controller[1].text,
+      "name": controller[2].text,
+      "contact": controller[3].text,
+      "service_id": _va1,
+      "person_id": _va2,
+      "special_notes": controller[6].text
+    };
+    print("_map ${_selectedAppointmentId == 0 ? _map2 : _map1}");
+    await WebService.funAppoinmentCreate(
+            _selectedAppointmentId == 0 ? _map2 : _map1,
+            _selectedAppointmentId == 0)
+        .then((value) {
+      if (value.status == "success") {
+        BotToast.showText(text: value.message, duration: Duration(seconds: 5));
+        Navigator.pop(context);
+      }
+    });
+  }
 
+  localAuth() async {
+    if (preferences.getString('businessId') != _businessId) {
+      _businessId = preferences.getString('businessId');
+      _blm = bookingListModel();
+      notifyListeners();
+    }
+  }
 }

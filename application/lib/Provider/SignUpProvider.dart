@@ -21,7 +21,7 @@ class SignUpProvider extends ChangeNotifier {
     }
   }
   BuildContext context;
-  ProgressDialog pr;
+  // ProgressDialog pr;
   List<TextEditingController> controller = [];
   List<String> error = [];
   List<catData> _catdata = [];
@@ -36,21 +36,6 @@ class SignUpProvider extends ChangeNotifier {
   List<String> busy = ["Owner", "Manager", "Employee"];
   setContext(BuildContext context) {
     this.context = context;
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(
-        message: 'Please wait...',
-        borderRadius: 8.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 8.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
   }
 
   int getTypeId() => _typeId; //businessTypeId
@@ -144,9 +129,7 @@ class SignUpProvider extends ChangeNotifier {
     };
 
     print("Request:${_map}");
-    pr.show().timeout(Duration(seconds: 5));
     WebService.funRegister(_map, context).then((value) {
-      pr.hide();
       if (value.status == 'success') {
         BotToast.showText(text: value.message ?? '');
         allClear();
@@ -159,9 +142,7 @@ class SignUpProvider extends ChangeNotifier {
   }
 
   void pinCaller(String _val) async {
-    pr.show();
     await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
-      pr.hide();
       if (value.data.city == null) {
         error[1] = value.message;
         controller[1].text = '';

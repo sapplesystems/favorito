@@ -5,6 +5,7 @@ import 'package:Favorito/model/claimInfo.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/UtilProvider.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class ClaimProvider extends BaseProvider {
     final PhoneVerificationFailed verificationfield =
         (AuthException exception) {
       // otpController.text = "";
-      snackBar(exception.message, RIKeys.josKeys21);
+      snackBar(exception.message, RIKeys.josKeys21, myGreen);
       isLoadingSet(false);
       print("${exception.message}");
     };

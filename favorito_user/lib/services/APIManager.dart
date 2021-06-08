@@ -36,6 +36,7 @@ import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
 import 'package:favorito_user/model/appModel/appointment/PersonListModel.dart';
 import 'package:favorito_user/model/appModel/appointment/SlotModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
+import 'package:favorito_user/model/appModel/job/JobDetailModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
@@ -527,6 +528,19 @@ class APIManager {
         data: _map, options: opt);
     print("service.mostPopulerBusiness : ${response.toString}");
     return CatlogModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//job detail
+  static Future<JobDetailModels> jobDetail(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserProfileDetail : ${service.baseUserProfileDetail}");
+    response = await dio.post(service.jobDetail, data: _map, options: opt);
+    print("service.mostPopulerBusiness : ${response.toString}");
+    return JobDetailModels.fromJson(convert.jsonDecode(response.toString()));
   }
 
   static Future<JobListModel> joblist(Map _map) async {

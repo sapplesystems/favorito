@@ -16,6 +16,7 @@ import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/order/Orders.dart';
 import 'package:Favorito/ui/review/ReviewList.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
@@ -113,10 +114,14 @@ class _dashboardState extends State<dashboard> {
                         txt2: "Fill",
                         check: is_profile_completed,
                         function: () {
+                          Provider.of<BusinessProfileProvider>(context,
+                                  listen: false)
+                              .getProfileData(false);
                           Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => BusinessProfile()))
+                                      builder: (context) =>
+                                          BusinessProfile(isFirst: true)))
                               .whenComplete(() => calldashBoard(context));
                         }),
                   ),

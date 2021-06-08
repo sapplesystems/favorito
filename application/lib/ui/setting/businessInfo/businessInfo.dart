@@ -7,8 +7,6 @@ import 'package:Favorito/utils/myColors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:flutter_svg/parser.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +16,13 @@ class businessInfo extends StatelessWidget {
   SizeManager sm;
   @override
   Widget build(BuildContext context) {
-    if (isFirst) {
-      sm = SizeManager(context);
-      vaTrue = Provider.of<businessInfoProvider>(context, listen: true);
-      vaTrue.getPageData(context);
-      isFirst = false;
-    }
+    // print("${isFirst}");
+    // if (isFirst) {
+    sm = SizeManager(context);
+    vaTrue = Provider.of<businessInfoProvider>(context, listen: true);
+    // vaTrue.getPageData(context);
+    // isFirst = false;
+    // }
 
     return Scaffold(
       backgroundColor: Color(0xfffff4f4),
@@ -160,17 +159,7 @@ class businessInfo extends StatelessWidget {
                           padding: EdgeInsets.all(8.0),
                           child: InkWell(
                             onTap: () {
-                              vaTrue.setNeedSave(true);
-                              print("priceRange $i");
-                              vaTrue.priceRange = vaTrue.priceRangelist[i];
-                              for (int j = 0;
-                                  j < vaTrue.priceRangelist.length;
-                                  j++) {
-                                // if (i == vaTrue.priceRange)
-                                //   vaTrue.radioChecked[i] = true;
-                                // else
-                                //   vaTrue.radioChecked[i] = false;
-                              }
+                              vaTrue.tapOnRupies(i);
                             },
                             child: Row(children: [
                               Icon(

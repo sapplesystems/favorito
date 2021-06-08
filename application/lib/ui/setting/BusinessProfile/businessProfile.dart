@@ -15,7 +15,8 @@ import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
 
 class BusinessProfile extends StatelessWidget {
-  bool isFirst = true;
+  bool isFirst;
+  BusinessProfile({this.isFirst});
   BusinessProfileProvider v;
 
   @override
@@ -26,9 +27,9 @@ class BusinessProfile extends StatelessWidget {
     if (v?.controller[1]?.text?.isEmpty) {
       v..getProfileData(false);
     }
-    print("isFirst:$isFirst");
     if (isFirst) {
       v.getProfileData(false);
+      v.localAuth();
       isFirst = false;
     }
     return RefreshIndicator(
@@ -39,10 +40,10 @@ class BusinessProfile extends StatelessWidget {
           Consumer<BusinessProfileProvider>(builder: (_context, data, child) {
         return WillPopScope(
           onWillPop: () async {
-            isFirst = true;
             v.getProfileData(false);
             Navigator.pop(context);
             v.needSave(false);
+            return null;
           },
           child: Scaffold(
             appBar: AppBar(
@@ -174,7 +175,7 @@ class BusinessProfile extends StatelessWidget {
                                 height: 250,
                                 child: data.getPosition() != null
                                     ? MyGoogleMap(
-                                        controller: data.GMapcontroller)
+                                        controller: data.gMapcontroller)
                                     : Container(),
                               ),
                               for (int i = 0; i < data.addressLength; i++)
@@ -314,7 +315,7 @@ class BusinessProfile extends StatelessWidget {
                                       v.needSave(true);
                                     },
                                     sufixColor: myRed,
-                                    sufixTxt: "Add Line",
+                                    // sufixTxt: "Add Line",
                                     security: false,
                                     sufixClick: () {
                                       data.webSiteLengthPlus(i);

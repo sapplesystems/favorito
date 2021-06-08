@@ -50,6 +50,7 @@ class service {
 
   static final joblist = base + 'job/list';
   static final checkPostalCode = base + 'job/city-from-pincode';
+  static final jobDetail = base + 'user-job/detail';
 
   //waitlist
   static final baseUserWaitlistVerbose = baseUserWaitlist + 'waitlist-verbose';

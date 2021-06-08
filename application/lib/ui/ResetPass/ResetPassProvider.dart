@@ -85,7 +85,7 @@ class ResetPassProvider extends BaseProvider {
       "confirm_password": controller[2].text
     }, context)
         .then((value) {
-      this.snackBar(value.message, RIKeys.josKeys1);
+      this.snackBar(value.message, RIKeys.josKeys1, myGreen);
       if (value.status == 'success') {
         clear();
         Navigator.pop(context);
