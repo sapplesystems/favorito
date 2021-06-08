@@ -305,6 +305,11 @@ class BusinessProfileProvider extends BaseProvider {
       controller[2].text = '';
     } catch (e) {}
   }
+
+  catalogList() async {
+    await APIManager.baseUserProfileBusinessCatalogList(
+        {"business_id": this.getBusinessId()}).then((value) {});
+  }
 }
 
 // per = (((100 * (waitTime - now.difference(startTime).inMinutes)) /

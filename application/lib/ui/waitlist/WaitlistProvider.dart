@@ -48,13 +48,14 @@ class WaitlistProvider extends ChangeNotifier {
 
   getNeedSave() => _done;
 
-  List<String> selectedList = [];
+  List<String> _selectedList = [];
   List<TextEditingController> controller = [];
   String startTime = "00:00";
   String endTime = "00:00";
   MaterialLocalizations localizations;
 
   void getPageData(context) async {
+    _selectedList.clear();
     await WebService.funWaitlistSetting(context).then((value) {
       if (value.status == "success") {
         var va = value.data[0];
@@ -67,10 +68,13 @@ class WaitlistProvider extends ChangeNotifier {
         controller[4].text = va.bookingPerDay?.toString();
         controller[5].text = va.waitlistManagerName?.toString();
         controller[6].text = va.announcement?.toString();
-        selectedList = va.exceptDays?.split(",");
+        print("exceptDays:${va.exceptDays.toString()}");
+        if (va.exceptDays.trim().contains(',') || va.exceptDays.length > 4)
+          _selectedList.addAll(va.exceptDays?.split(","));
 
         slotKey?.currentState?.changeSelectedItem('60 min');
-        selectedList.forEach((element) => list.remove(element));
+        _selectedList.forEach((element) => list.remove(element));
+        // print();
         notifyListeners();
       }
     });
@@ -79,8 +83,10 @@ class WaitlistProvider extends ChangeNotifier {
   void submitDataCall() {
     pr.show().timeout(Duration(seconds: 6));
     var days = "";
-    for (int _i = 0; _i < selectedList.length; _i++)
-      days = days + (_i == 0 ? "" : ",") + selectedList[_i];
+    var _local = _selectedList;
+    _local.remove('Select');
+    for (int _i = 0; _i < (_local?.length ?? 0); _i++)
+      days = days + (_i == 0 ? "" : ",") + _local[_i];
 
     Map _map = {
       "start_time": startTime,
@@ -151,4 +157,6 @@ class WaitlistProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  getSelectedList() => _selectedList;
 }

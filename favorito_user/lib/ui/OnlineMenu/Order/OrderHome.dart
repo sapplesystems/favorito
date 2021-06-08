@@ -26,7 +26,7 @@ class OrderHome extends StatelessWidget {
         appBar: AppBar(
             backgroundColor: myBackGround,
             leading: InkWell(
-              onTap: () => Navigator.pop(context),
+              // onTap: () => Navigator.pushNamed(context, '/'),
               child: Icon(
                 Icons.arrow_back_ios,
                 color: Colors.black54,
@@ -79,14 +79,15 @@ class Order extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String _va = orderListData.orderDetail
-        .map((e) => '\u{2022}${e.qty} X ${e.item} ')
+        .map((e) => '\t\u{2022}${e.qty}\tx\t${e.item.capitalize()}\t')
         .toString()
         .replaceAll('(', '')
         .replaceAll(')', '')
-        .replaceAll(',', '');
+        .replaceAll(',', '  ');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
       child: Card(
+        elevation: 10,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16))),
         child: Padding(
@@ -140,7 +141,7 @@ class Order extends StatelessWidget {
                     fontWeight: FontWeight.w400),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 6.0),
                 child: Text(
                   _va,
                   style: Theme.of(context)
@@ -168,12 +169,15 @@ class Order extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
               ),
-              Text(
-                '${dateFormat9.format(DateTime.parse(orderListData.createdAt))}',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Text(
+                  '${dateFormat9.format(DateTime.parse(orderListData.createdAt))}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
               ),
               SizedBox(height: sm.h(1.4)),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -185,12 +189,15 @@ class Order extends StatelessWidget {
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                   ),
-                  Text(
-                    '\u{20B9}${orderListData.totalAmount}'.trim(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                  Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Text(
+                      '\u{20B9} ${orderListData.totalAmount}'.trim(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                    ),
                   )
                 ]),
                 Column(
@@ -203,10 +210,13 @@ class Order extends StatelessWidget {
                             fontSize: 14,
                             fontWeight: FontWeight.w400),
                       ),
-                      Text(
-                        '${orderListData.orderType}'.trim(),
-                        style: Theme.of(context).textTheme.headline6.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w400),
+                      Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(
+                          '${orderListData.orderType}'.trim(),
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontSize: 14, fontWeight: FontWeight.w400),
+                        ),
                       )
                     ]),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -217,12 +227,15 @@ class Order extends StatelessWidget {
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                   ),
-                  Text(
-                    '${orderListData.paymentType}'.trim(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Text(
+                      '${orderListData.paymentType}'.trim(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(fontSize: 14, fontWeight: FontWeight.w400),
+                    ),
                   )
                 ])
               ])

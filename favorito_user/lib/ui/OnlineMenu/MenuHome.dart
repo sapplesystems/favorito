@@ -10,7 +10,6 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
-import '../../utils/myString.dart';
 
 class MenuHome extends StatelessWidget {
   var _mySearchEditTextController = TextEditingController();
@@ -73,7 +72,8 @@ class MenuHome extends StatelessWidget {
                         height: sm.h(6),
                         child: Consumer<MenuHomeProvider>(
                           builder: (context, data, child) {
-                            // if (data?.cat?.length == 0) vaTrue.notifyListeners();
+                            // if (data?.cat?.length == 0)
+                            //   vaTrue.notifyListeners();
                             return ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: data?.cat?.length,
@@ -124,7 +124,10 @@ class MenuHome extends StatelessWidget {
     return AppBar(
         backgroundColor: myBackGround,
         elevation: 0,
-        leading: Icon(Icons.keyboard_backspace, color: myGrey),
+        leading: IconButton(
+          icon: Icon(Icons.keyboard_backspace, color: myGrey),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text('Menu',
             style: Theme.of(context).textTheme.headline6.copyWith(
                   fontSize: 20,

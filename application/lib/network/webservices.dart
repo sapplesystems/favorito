@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
+import 'package:Favorito/model/Chat/ChatModel.dart';
+import 'package:Favorito/model/Chat/UserModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagModel.dart';
@@ -53,7 +55,7 @@ import 'package:Favorito/model/orderListModel.dart';
 import 'package:Favorito/model/photoModel.dart';
 import 'package:Favorito/model/profile/ProfileImage.dart';
 import 'package:Favorito/model/profileDataModel.dart';
-import 'package:Favorito/model/registerModel.dart';
+import 'package:Favorito/model/RegisterModel.dart';
 import 'package:Favorito/model/review/ReviewListModel.dart';
 import 'package:Favorito/model/review/ReviewModel.dart';
 import 'package:Favorito/model/review/ReviewintroModel.dart';
@@ -303,12 +305,12 @@ class WebService {
     return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<registerModel> funRegister(
+  static Future<RegisterModel> funRegister(
       Map _map, BuildContext context) async {
-    registerModel _data = registerModel();
+    RegisterModel _data = RegisterModel();
     response = await dio.post(serviceFunction.funBusyRegister,
         data: _map, options: opt);
-    _data = registerModel.fromJson(convert.json.decode(response.toString()));
+    _data = RegisterModel.fromJson(convert.json.decode(response.toString()));
     // Prefs.setToken(_data.token.toString().trim());
     print("responseData7:${_data.toString().trim()}");
     // print("token:${_data.token.toString().trim()}");
@@ -664,6 +666,20 @@ class WebService {
     response = await dio.post(serviceFunction.funCatalogAddPhoto,
         data: formData, options: _opt);
     return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  // infoDeletePhote
+  static Future<BaseResponseModel> infoDeletePhoto(
+      Map _map, BuildContext context) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    String url = serviceFunction.infoDeletePhoto;
+    print("_map:$url");
+    response = await dio.post(url, data: _map, options: _opt);
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   // funCatalogEdit
@@ -1119,10 +1135,7 @@ class WebService {
     for (var v in files)
       va.add(await MultipartFile.fromFile(v.path,
           filename: v.path.split('/').last));
-    Map<String, dynamic> _map = {
-      "photo": va,
-    };
-    print("_map:${_map.toString()}");
+    Map<String, dynamic> _map = {"photo": va};
     FormData formData = FormData.fromMap(_map);
     response = await dio.post(serviceFunction.funUserInformationAddPhoto,
         data: formData, options: _opt);
@@ -1284,7 +1297,7 @@ class WebService {
     }
   }
 
-  static Future<orderListModel> orderList(
+  static Future<OrderListModel> orderList(
       Map _map, BuildContext context) async {
     String token = await Prefs.token;
     String url = serviceFunction.funOrderList;
@@ -1294,7 +1307,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return orderListModel.fromJson(convert.json.decode(response.toString()));
+      return OrderListModel.fromJson(convert.json.decode(response.toString()));
     }
   }
 
@@ -1548,7 +1561,7 @@ class WebService {
 
   //*************************************/Claims/*********************************/
 
-  static Future<claimInfo> funClaimInfo(BuildContext context) async {
+  static Future<ClaimInfo> funClaimInfo(BuildContext context) async {
     String token = await Prefs.token;
     String url = serviceFunction.funClaimInfo;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1559,7 +1572,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return claimInfo.fromJson(convert.json.decode(response.toString()));
+      return ClaimInfo.fromJson(convert.json.decode(response.toString()));
     }
   }
 
@@ -1599,6 +1612,60 @@ class WebService {
           text: response.statusMessage, duration: Duration(seconds: 5));
     }
     return verifyOtpModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  //Chat
+  static Future<UserModel> getChatList(Key key) async {
+    String url = serviceFunction.getChatList;
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    return UserModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+  //getChat
+  static Future<ChatModel> getChat(Map _map, Key key) async {
+    String url = serviceFunction.getChat;
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    return ChatModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+//setChat
+  static Future<BaseResponseModel> setChat(
+      String userId, String roomId, List files, String message) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.setChat;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {
+      "file": va,
+      "user_id": userId,
+      "room_id": roomId,
+      "message": message
+    };
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(url, data: formData, options: opt);
+
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
   }
 
   //resetPassword
@@ -1867,6 +1934,22 @@ class WebService {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funMenuCatEdit;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, data: _map, options: opt);
+    if (response.statusCode == HttpStatus.ok) {
+      print("Request URL:$url");
+      print("Response is :${response.toString()}");
+      return BaseResponseModel.fromJson(
+          convert.json.decode(response.toString()));
+    }
+  }
+
+  static Future<BaseResponseModel> setGetFirebaseId(Map _map) async {
+    String token = await Prefs.token;
+    print("tiken:${token}");
+    String url = serviceFunction.setGetFirebaseId;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});

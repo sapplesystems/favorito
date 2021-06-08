@@ -1,8 +1,11 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
+import 'package:Favorito/ui/Chat/ChatProvider.dart';
+
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
+import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/ui/dashboard/dashboardProvider.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
@@ -10,8 +13,10 @@ import 'package:Favorito/ui/jobs/JobProvider.dart';
 import 'package:Favorito/ui/menu/MenuProvider.dart';
 import 'package:Favorito/ui/notification/NotificationProvider.dart';
 import 'package:Favorito/ui/offer/offersProvider.dart';
+import 'package:Favorito/ui/order/OrderProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/ui/setting/businessInfo/businessInfoProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
 import 'package:Favorito/ui/waitlist/WaitlistProvider.dart';
 import 'package:Favorito/utils/RouteGenerator.dart';
@@ -48,6 +53,10 @@ void main() async {
       ChangeNotifierProvider(create: (context) => BookingProvider()),
       ChangeNotifierProvider(create: (context) => MenuProvider()),
       ChangeNotifierProvider(create: (context) => AppoinmentProvider()),
+      ChangeNotifierProvider(create: (context) => ChatProvier()),
+      ChangeNotifierProvider(create: (context) => ClaimProvider()),
+      ChangeNotifierProvider(create: (context) => OrderProvider()),
+      ChangeNotifierProvider(create: (context) => businessInfoProvider()),
     ], child: MyApp()));
   });
 }

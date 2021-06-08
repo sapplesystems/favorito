@@ -6,7 +6,7 @@ class service {
   static final baseBusiness = base + 'business-';
   static final baseUser = base + 'user-';
   static final baseUser2 = base + 'user/';
-  static final baseBusiness2 = base + 'business/';
+  static final baseBusiness2 = baseBusiness + 'user/';
 
   //User+switch
 
@@ -131,4 +131,8 @@ class service {
   static final verifyLogin = base + 'user/verify-login-otp';
   static final emailRegister = base + 'user/email-register';
   static final changePassword = base + 'user/set-password';
+  //Chat
+  static final getChatList = baseBusiness2 + 'get-chat-list';
+  static final getChat = baseBusiness2 + 'get-chats';
+  static final setGetFirebaseId = baseBusiness2 + 'firebase-id';
 }

@@ -7,11 +7,13 @@ import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../utils/RIKeys.dart';
 
 class PersonalInfoProvider extends BaseProvider {
   Validator validator = Validator();
+  SharedPreferences preferences;
   String _username = '';
   List<Acces> acces = [for (int i = 0; i < 3; i++) Acces()];
   ProgressDialog pr;
@@ -53,6 +55,8 @@ class PersonalInfoProvider extends BaseProvider {
 
   getPersonalData() async {
     print('service:${this.getBusinessId()}');
+
+    preferences = await SharedPreferences.getInstance();
     Map _map = {"api_type": 'get'};
     await APIManager.userdetail(_map, RIKeys.josKeys10).then((value) {
       if (value.status == 'success') {
@@ -62,6 +66,9 @@ class PersonalInfoProvider extends BaseProvider {
         acces[0].controller.text = v.fullName;
         acces[1].controller.text = v.postal;
         acces[2].controller.text = v.shortDescription;
+        preferences.setString('phone', v.phone);
+        preferences.setString('nickName', v.fullName);
+        preferences.setString('aboutMe', v.shortDescription);
         newValue = v.reachWhatsapp == 1 ? true : false;
         _phone = v.phone;
       }

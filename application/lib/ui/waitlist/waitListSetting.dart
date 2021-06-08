@@ -148,8 +148,8 @@ class WaitListSetting extends StatelessWidget {
                                       EdgeInsets.symmetric(horizontal: sm.h(1)),
                                   child: MyTags(
                                       searchable: false,
-                                      sourceList: vaFalse.list,
-                                      selectedList: vaFalse.selectedList,
+                                      sourceList: vaTrue?.list,
+                                      selectedList: vaTrue?.getSelectedList(),
                                       hint: "Please select ${vaFalse.title[5]}",
                                       border: true,
                                       refresh: () {
@@ -168,8 +168,8 @@ class WaitListSetting extends StatelessWidget {
                                 bottom: sm.w(16)),
                             child: RoundedButton(
                                 clicker: () {
-                                  if (vaFalse.key.currentState.validate())
-                                    vaFalse.submitDataCall();
+                                  if (vaTrue.key.currentState.validate())
+                                    vaTrue.submitDataCall();
                                 },
                                 clr: Colors.red,
                                 title: "Done"))

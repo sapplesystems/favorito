@@ -1,35 +1,28 @@
 import 'package:Favorito/config/SizeManager.dart';
+import 'package:Favorito/ui/order/OrderProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:Favorito/model/OrderDetail.dart';
 import 'package:Favorito/myCss.dart';
-import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:icon_text_button/icon_text_button.dart';
 
-class Orders extends StatefulWidget {
-  @override
-  _Orders createState() => _Orders();
-}
-
-class _Orders extends State<Orders> {
-  List<OrderData> allOrdersList = [];
-  List<OrderData> newOrdersList = [];
-  List<OrderData> inputOrdersList = [];
-  String selectedTab = 'New Orders';
+class Orders extends StatelessWidget {
   SizeManager sm;
-
-  @override
-  void initState() {
-    callPageData();
-    super.initState();
-  }
+  OrderProvider vaTrue;
+  bool isFirst = true;
 
   @override
   Widget build(BuildContext context) {
-    sm = SizeManager(context);
+    if (isFirst) {
+      sm = SizeManager(context);
+      vaTrue = Provider.of<OrderProvider>(context, listen: true);
+      vaTrue.callPageData();
+    }
     return Scaffold(
+        key: RIKeys.josKeys22,
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
@@ -41,12 +34,9 @@ class _Orders extends State<Orders> {
           ),
           title: InkWell(
             onTap: () {
-              callPageData();
+              vaTrue.callPageData();
             },
-            child: Text(
-              "Orders",
-              style: TextStyle(color: Colors.black),
-            ),
+            child: Text("Orders", style: TextStyle(color: Colors.black)),
           ),
         ),
         body: Column(
@@ -57,37 +47,21 @@ class _Orders extends State<Orders> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    onTap: () => {
-                      setState(() {
-                        selectedTab = 'New Orders';
-                        inputOrdersList.clear();
-                        for (var temp in allOrdersList)
-                          if (temp.order.isAccepted == 0)
-                            inputOrdersList.add(temp);
-                      })
-                    },
+                    onTap: () => vaTrue.tapNewOrder(),
                     child: Text("New Orders",
                         style: TextStyle(
                             fontSize: 16.0,
-                            decoration: selectedTab == 'New Orders'
+                            decoration: vaTrue.selectedTab == 'New Orders'
                                 ? TextDecoration.underline
                                 : null)),
                   ),
                   Text("|"),
                   InkWell(
-                    onTap: () => {
-                      setState(() {
-                        selectedTab = 'All Orders';
-                        inputOrdersList.clear();
-                        for (var temp in allOrdersList)
-                          if (temp.order.isAccepted != 0)
-                            inputOrdersList.add(temp);
-                      })
-                    },
+                    onTap: () => vaTrue.tapAllOrder(),
                     child: Text("All Orders",
                         style: TextStyle(
                             fontSize: 16.0,
-                            decoration: selectedTab == 'All Orders'
+                            decoration: vaTrue.selectedTab == 'All Orders'
                                 ? TextDecoration.underline
                                 : null)),
                   ),
@@ -97,7 +71,7 @@ class _Orders extends State<Orders> {
                   padding: EdgeInsets.all(8.0),
                   height: sm.h(80),
                   child: ListView.builder(
-                      itemCount: inputOrdersList.length,
+                      itemCount: vaTrue.inputOrdersList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                             elevation: 5,
@@ -122,13 +96,13 @@ class _Orders extends State<Orders> {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                      "${inputOrdersList[index].order.name}",
+                                                      "${vaTrue.inputOrdersList[index].name}",
                                                       style: TextStyle(
                                                           fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.w600)),
                                                   Text(
-                                                      "(${inputOrdersList[index].order.orderId})",
+                                                      "(${vaTrue.inputOrdersList[index].orderId})",
                                                       style: TextStyle(
                                                           fontSize: 16,
                                                           color: Colors.grey,
@@ -141,7 +115,7 @@ class _Orders extends State<Orders> {
                                               padding: const EdgeInsets.only(
                                                   left: 12.0, top: 8.0),
                                               child: Text(
-                                                "${inputOrdersList[index].order.orderDate}",
+                                                "${vaTrue.inputOrdersList[index].orderDate}",
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight:
@@ -152,7 +126,7 @@ class _Orders extends State<Orders> {
                                         ),
                                         InkWell(
                                             onTap: () => launch(
-                                                "tel://${inputOrdersList[index].order.mobile}"),
+                                                "tel://${vaTrue.inputOrdersList[index].mobile}"),
                                             child: Container(
                                                 decoration: bd1Red,
                                                 padding: EdgeInsets.all(6),
@@ -179,9 +153,9 @@ class _Orders extends State<Orders> {
                                               ),
                                               Expanded(
                                                 child: Text(
-                                                  buildDatailInRow(
-                                                      inputOrdersList[index]
-                                                          .detail),
+                                                  buildDatailInRow(vaTrue
+                                                      .inputOrdersList[index]
+                                                      .notes),
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -196,7 +170,7 @@ class _Orders extends State<Orders> {
                                         Padding(
                                           padding: EdgeInsets.only(left: 8.0),
                                           child: Text(
-                                            "Total : ${inputOrdersList[index].order.totalAmount} | ${inputOrdersList[index].order.orderType} | ${inputOrdersList[index].order.payType} ",
+                                            "Total : ${vaTrue.inputOrdersList[index].totalAmount} | ${vaTrue.inputOrdersList[index].orderType} | ${vaTrue.inputOrdersList[index].paymentType} ",
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400),
@@ -255,17 +229,5 @@ class _Orders extends State<Orders> {
     String txt = '';
     for (var item in v) txt = txt + "${item.quantity} X ${item.categoryName}";
     return txt;
-  }
-
-  void callPageData() {
-    WebService.orderList(null, context).then((value) {
-      if (value.status == "success") {
-        allOrdersList.addAll(value.data);
-        setState(() {
-          for (var va in allOrdersList)
-            if (va.order.isAccepted == 0) inputOrdersList.add(va);
-        });
-      }
-    });
   }
 }

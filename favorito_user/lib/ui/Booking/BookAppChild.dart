@@ -35,18 +35,17 @@ class BookAppChild extends StatelessWidget {
               elevation: 8,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () => vaTrue.setSelectedTab('New'),
-                      child: newHistory('New'),
-                    ),
-                    InkWell(
-                      onTap: () => vaTrue.setSelectedTab('History'),
-                      child: newHistory('History'),
-                    ),
-                  ]),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                InkWell(
+                  onTap: () => vaTrue.setSelectedTab('New'),
+                  child: newHistory('New', context),
+                ),
+                InkWell(
+                  onTap: () => vaTrue.setSelectedTab('History'),
+                  child: newHistory('History', context ),
+                ),
+              ]),
             ),
           ),
           Consumer<AppBookProvider>(
@@ -55,18 +54,22 @@ class BookAppChild extends StatelessWidget {
               return Container(
                 height: sm.h(73),
                 child: da.length == 0
-                    ? Center(child: Text(vaTrue.getMessage() ?? 'No Data '))
+                    ? Center(
+                        child: Text(
+                        vaTrue.getMessage() ?? 'No Data ',
+                        style: Theme.of(context).textTheme.headline6.copyWith(),
+                      ))
                     : ListView.builder(
                         itemCount: da.length,
                         itemBuilder: (BuildContext context, int index) {
-                          print("name is :${
-                              da[index].businessName}");
+                          print("name is :${da[index].businessName}");
                           return Padding(
                             padding: EdgeInsets.only(top: sm.h(1)),
                             child: InkWell(
-                              onTap: (){
+                              onTap: () {
                                 // Navigator.pushNamed(context, '/appBookDetail');
-                              },                  child: Card(
+                              },
+                              child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12.0)),
@@ -89,17 +92,27 @@ class BookAppChild extends StatelessWidget {
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    da[index]?.businessName?.toString()?.capitalize()
-                                                  ,
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontFamily:
-                                                            'GilRoy-Bold'),
+                                                    da[index]
+                                                        ?.businessName
+                                                        ?.toString()
+                                                        ?.capitalize(),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6
+                                                        .copyWith(
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'GilRoy-Bold'),
                                                   ),
-                                                   Text("\t\t(${da[index]?.status})",style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontFamily:
-                                                            'GilRoy-Medium')),
+                                                  Text(
+                                                      "\t\t(${da[index]?.status})",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6
+                                                          .copyWith(
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  'GilRoy-Medium')),
                                                   // Icon(
                                                   //   da[index].status ==
                                                   //           'pending'
@@ -124,14 +137,17 @@ class BookAppChild extends StatelessWidget {
                                                   top: 2.0),
                                               child: Text(
                                                 DateFormat(
-                                                    'dd MMMM yyyy | h:mm a')
+                                                        'dd MMMM yyyy | h:mm a')
                                                     .format(DateTime.parse(
-                                                    da[index]
-                                                        .createdDatetime)),
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                    FontWeight.w400),
+                                                        da[index]
+                                                            .createdDatetime)),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400),
                                               ),
                                             ),
                                             // Visibility(
@@ -160,10 +176,14 @@ class BookAppChild extends StatelessWidget {
                                                     false,
                                                 child: Text(
                                                   "${da[index].specialNotes}",
-                                                  style: TextStyle(
-                                                      fontSize: 13,color: myGrey,
-                                                      fontWeight:
-                                                          FontWeight.w400),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .copyWith(
+                                                          fontSize: 13,
+                                                          color: myGrey,
+                                                          fontWeight:
+                                                              FontWeight.w400),
                                                 ),
                                               ),
                                             ),
@@ -177,10 +197,13 @@ class BookAppChild extends StatelessWidget {
                                                     false,
                                                 child: Text(
                                                   "Review : ${da[index].review}",
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w400),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .copyWith(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w400),
                                                 ),
                                               ),
                                             ),
@@ -238,11 +261,11 @@ class BookAppChild extends StatelessWidget {
     );
   }
 
-  newHistory(String title) {
+  newHistory(String title, context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16.0),
       child: Text(title,
-          style: TextStyle(
+          style: Theme.of(context).textTheme.headline6.copyWith(
               fontSize: 14.0,
               color: vaFalse.getSelectedTab() == title ? myRed : myGrey)),
     );

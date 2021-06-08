@@ -1,6 +1,6 @@
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 
-import 'package:favorito_user/ui/business/tabs/CatlogTab.dart';
+import 'package:favorito_user/ui/business/tabs/CatalogTab.dart';
 import 'package:favorito_user/ui/business/tabs/JobTab.dart';
 import 'package:favorito_user/ui/business/tabs/OverviewTab.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewTab.dart';

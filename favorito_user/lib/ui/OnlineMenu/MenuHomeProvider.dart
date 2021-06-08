@@ -23,7 +23,7 @@ class MenuHomeProvider extends BaseProvider {
   CatItem catItems = CatItem();
   String _businessId;
   String _businessName;
-  Widget pages;
+  // Widget pages;
   List<Category> cat = [];
   bool isVegFilter = false;
   String txt = '';
@@ -60,8 +60,9 @@ class MenuHomeProvider extends BaseProvider {
     _businessName = name;
   }
 
-  setSearchText(String txt) {
-    txt = txt;
+  setSearchText(String _txt) {
+    txt = _txt;
+    getMenuItem();
   }
 
   getSearchText() => txt;
@@ -82,7 +83,7 @@ class MenuHomeProvider extends BaseProvider {
     catItems.selectedCatId = index;
     catItems.cat = cat[index].id.toString();
     getMenuItem();
-    pages = MenuPage();
+    // pages = MenuPage();
   }
 
   List<Category> getCategories() => cat;
@@ -120,13 +121,15 @@ class MenuHomeProvider extends BaseProvider {
     Map _map = {
       "business_id": _businessId,
       "category_id": '${catItems?.cat ?? 3}',
-      "keyword": getSearchText(),
+      "keyword": txt,
       "filter": {"sd": "${getBusinessDetail().isVeg ? 1 : 0}"}
     };
     print('_map${_map.toString()}');
     await APIManager.menuTabItemGet(_map).then((value) {
       if (value.status == 'success') {
+        print(value.data.length);
         setMenuItemBaseModel(value);
+        notifyListeners();
       }
     });
   }
@@ -136,7 +139,10 @@ class MenuHomeProvider extends BaseProvider {
     notifyListeners();
   }
 
-  getMenuItemBaseModel() => _menuItemBaseModel;
+  getMenuItemBaseModel() {
+    print('_menuItemBaseModelq:${_menuItemBaseModel.data.length}');
+    return _menuItemBaseModel;
+  }
 
   userOrderCreateVerbose() async {
     print("businessId2:$_businessId");
@@ -254,17 +260,19 @@ class MenuHomeProvider extends BaseProvider {
 
   setSelectedPay(PayData payData) {
     selectedPayData = payData;
+    notifyListeners();
   }
 
   List<PayData> getPayData() => payDataList;
   void setPayData(List<String> _data) {
+    print("ddd${_data.length}");
     payDataList.clear();
 
     for (int _i = 0; _i < _data.length; _i++) {
       payDataList.add(PayData(
         id: _i,
         selected: false,
-        title: _data[_i].toString(),
+        title: "${_data[_i]}",
       ));
     }
     setSelectedPay(payDataList[0]);
@@ -305,6 +313,8 @@ class MenuHomeProvider extends BaseProvider {
     await APIManager.userOrderCreate(_map).then((value) {
       this.snackBar(value.message, RIKeys.josKeys25);
       if (value.status == 'success') {
+        Navigator.pop(RIKeys.josKeys25.currentContext);
+        Navigator.pop(RIKeys.josKeys25.currentContext);
         Navigator.of(RIKeys.josKeys25.currentContext).pushNamed('/orderHome');
         // print("success Done");
       }

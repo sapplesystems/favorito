@@ -59,9 +59,9 @@ class WSData {
     slotLength = json['slot_length'];
     bookingPerSlot = json['booking_per_slot'];
     bookingPerDay = json['booking_per_day'];
-    waitlistManagerName = json['waitlist_manager_name'];
-    announcement = json['announcement'];
-    exceptDays = json['except_days'];
+    waitlistManagerName = json['waitlist_manager_name'] ?? "";
+    announcement = json['announcement'] ?? "";
+    exceptDays = json['except_days'] ?? "";
   }
 
   Map<String, dynamic> toJson() {

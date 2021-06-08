@@ -27,5 +27,11 @@ class RIKeys {
       GlobalKey<DropdownSearchState<String>>(); //appointment manual  slot key
   static final josKeys16 = GlobalKey<FormState>(); //menuSetting FormKey key
   static final josKeys17 = GlobalKey<ScaffoldState>(); //menuSetting FormKey key
+  static final josKeys18 = GlobalKey<ScaffoldState>(); //Chat FormKey key
+  static final josKeys19 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
+  static final josKeys20 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
+  static final josKeys21 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
+  static final josKeys22 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
+  static final josKeys23 = GlobalKey<FormState>(); //Char Home Scaffold key
 
 }

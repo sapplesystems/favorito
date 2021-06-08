@@ -25,12 +25,12 @@ class BusinessProfileProvider extends ChangeNotifier {
   Set<Marker> _marker = {};
   List<TextEditingController> controller = [];
   ScrollController listviewController = ScrollController();
-  List<FocusNode> focusnode =[];
+  List<FocusNode> focusnode = [];
   List<String> error = [];
   bool firstTime = true;
   ProgressDialog pr;
   int addressLength = 1;
-  List<String> websiteList = [];
+  List<String> websites = [];
   List<String> cityList = ["Please Select ..."];
   List<CityModel> _cityModel = [];
   List<String> stateList = ["Please Select ..."];
@@ -101,10 +101,10 @@ class BusinessProfileProvider extends ChangeNotifier {
   }
 
   prepareWebService() async {
-    websiteList.clear();
     for (int _i = 15; _i < controller.length; _i++) {
-      if(controller[_i].text!=null){
-        websiteList.add(controller[_i].text.trim());
+      if (controller[_i].text != null &&
+          !websites.contains(controller[_i].text.trim())) {
+        websites.add(controller[_i].text.trim());
       }
     }
     List<Map> lst = List();
@@ -124,7 +124,6 @@ class BusinessProfileProvider extends ChangeNotifier {
       BotToast.showText(text: 'To continue turn on location services!');
       return;
     }
-    print("asas:${websiteList?.toString()?.trim()}");
     Map<String, dynamic> map = {
       "business_name": controller[1].text,
       "landline": controller[3].text,
@@ -136,7 +135,7 @@ class BusinessProfileProvider extends ChangeNotifier {
       "country_id": '1',
       "location": positions ?? "",
       "working_hours": dd1.currentState.getSelectedItem,
-      "website": websiteList,
+      "website": websites,
       "business_email": controller[13].text,
       "short_description": controller[14].text,
       "photo": "${controller[0].text}",
@@ -228,7 +227,7 @@ class BusinessProfileProvider extends ChangeNotifier {
 
       dd1?.currentState?.changeSelectedItem(va?.workingHours ?? "");
 
-      pinCaller(va.postalCode,false);
+      pinCaller(va.postalCode, false);
       controller[13].text = va.businessEmail;
       controller[14].text = va.shortDescription;
 
@@ -255,7 +254,7 @@ class BusinessProfileProvider extends ChangeNotifier {
     getWebSiteList();
   }
 
-  void pinCaller(String _val,bool _val1) async {
+  void pinCaller(String _val, bool _val1) async {
     if (_val?.length == 6) {
       await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
         if (value.data.city == null) {
@@ -294,8 +293,9 @@ class BusinessProfileProvider extends ChangeNotifier {
               color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
   }
 
-  void webSiteLengthPlus() {
-    controller.add(TextEditingController());
+  void webSiteLengthPlus(int i) {
+    if (controller[i].text.isNotEmpty && (i == controller.length - 1))
+      controller.add(TextEditingController());
     notifyListeners();
   }
 
@@ -306,29 +306,29 @@ class BusinessProfileProvider extends ChangeNotifier {
     });
   }
 
-  getWebSiteList()async{
+  getWebSiteList() async {
     await WebService.websitesList().then((value) {
-   try{
-      if((value?.data?.length??0)>0){
-        websiteList.clear();
-        websiteList.addAll(value.data??[' ']);
-        if(websiteList.length==0)websiteList.add(' ');
-        for(int _i=0;_i<websiteList.length;_i++){
-          print("fdfdf:${websiteList[_i]}");
-          controller.add(TextEditingController());
-          controller[controller.length-1].text=websiteList[_i];
-        }
-      }else{
-        if(controller.length<16){
-          controller.add(TextEditingController());
-        }
-        
-        notifyListeners();
-      }
-        }catch(e){
-      print("Website Error:${e.toString()}");
-    }
+      // websiteList.addAll(value.data ?? [' ']);
+      // if (websiteList.length == 0) websiteList.add(' ');
+      try {
+        if ((value?.data?.length ?? 0) > 0) {
+          for (int _i = 0; _i < value.data.length; _i++) {
+            if (!websites.contains(value.data[_i])) {
+              websites.add(value.data[_i]);
+              controller.add(TextEditingController());
+              controller[controller.length - 1].text = websites[_i];
+            }
+          }
+        } else {
+          if (controller.length < 16) {
+            controller.add(TextEditingController());
+          }
 
+          notifyListeners();
+        }
+      } catch (e) {
+        print("Website Error:${e.toString()}");
+      }
     });
   }
 
@@ -352,7 +352,7 @@ class BusinessProfileProvider extends ChangeNotifier {
         imageQuality: 10,
         cameraIcon: Icon(Icons.add, color: Colors.red));
 
-    File croppedFile = await ImageCropper.cropImage(
+    await ImageCropper.cropImage(
             sourcePath: image.path,
             aspectRatioPresets: [
               CropAspectRatioPreset.square,
@@ -364,22 +364,30 @@ class BusinessProfileProvider extends ChangeNotifier {
             androidUiSettings: AndroidUiSettings(
                 toolbarTitle: 'Cropper',
                 toolbarColor: myRed,
+                statusBarColor: myBackGround,
+                cropGridColor: myBackGround,
+                backgroundColor: myBackGround,
+                cropFrameColor: myBackGround,
+                dimmedLayerColor: myBackGround,
+                cropGridColumnCount: 8,
+                activeControlsWidgetColor: myBackGround,
                 toolbarWidgetColor: Colors.white,
                 initAspectRatio: CropAspectRatioPreset.original,
-                lockAspectRatio: false),
+                lockAspectRatio: true),
             iosUiSettings: IOSUiSettings(minimumAspectRatio: 1.0))
         .then((value) async {
-      // image = croppedFile;
-      image = value;
-      await WebService.profileImageUpdate(image, context).then((value) {
-        if (value.status == "success") {
-          controller[0].text = value.data[0].photo;
-          addOrChangePhoto = 'Change Photo';
-          notifyListeners();
-          Provider.of<SettingProvider>(context, listen: false)
-              .getProfileImage();
-        }
-      });
+      if (value != null) {
+        image = value;
+        await WebService.profileImageUpdate(image, context).then((value) {
+          if (value.status == "success") {
+            controller[0].text = value.data[0].photo;
+            addOrChangePhoto = 'Change Photo';
+            notifyListeners();
+            Provider.of<SettingProvider>(context, listen: false)
+                .getProfileImage();
+          }
+        });
+      }
     });
 
     notifyListeners();

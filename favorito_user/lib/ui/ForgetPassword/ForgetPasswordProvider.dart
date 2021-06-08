@@ -74,10 +74,10 @@ class ForgetPasswordProvider extends ChangeNotifier {
       };
       print("data:${_map.toString()}");
       await APIManager.verifyOtp(_map, RIKeys.josKeys1).then((value) {
-        if (value.status == 'success')
+        if (value.status == 'success') {
           allClear();
-        else
-          BotToast.showText(text: value.message);
+        }
+        BotToast.showText(text: value.message, duration: Duration(seconds: 4));
       });
     }
     notifyListeners();

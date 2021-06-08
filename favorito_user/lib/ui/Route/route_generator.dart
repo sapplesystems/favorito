@@ -33,7 +33,7 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
-        // return MaterialPageRoute(builder: (_) => MenuHome());
+        // return MaterialPageRoute(builder: (_) => ChatHome());
         // return MaterialPageRoute(builder: (_) => ReviewTab());
         return MaterialPageRoute(builder: (_) => BottomNavBar());
       case '/splash':
@@ -101,6 +101,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => OrderHome());
       case '/review':
         return MaterialPageRoute(builder: (_) => Review());
+      // case '/chat':
+      //   return MaterialPageRoute(builder: (_) => Chat());
       default:
         return _errorRoute();
     }

@@ -24,10 +24,10 @@ class _WaitListHeaderState extends State<WaitListHeader> {
           padding: EdgeInsets.only(top: sm.h(0.2)),
           child: Text(widget.title,
               textAlign: TextAlign.start,
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Gilroy-Reguler')))
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(fontSize: 20, fontWeight: FontWeight.w600)))
     ]);
   }
 }

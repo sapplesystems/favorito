@@ -27,7 +27,10 @@ class _CirculerProgressState extends State<CirculerProgress> {
           center: minut20(myMinut: widget.waitTime),
           footer: new Text(
             '',
-            style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 17.0),
           ),
           circularStrokeCap: CircularStrokeCap.round,
           progressColor: myRed),

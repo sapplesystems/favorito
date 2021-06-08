@@ -2,6 +2,7 @@ import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:Favorito/utils/Regexer.dart';
 
@@ -23,7 +24,6 @@ class ForgetPassProvider extends ChangeNotifier {
   TextEditingController textEditingController = TextEditingController();
   TextEditingController errorController = TextEditingController();
   BuildContext context;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   ProgressDialog pr;
   setContext(BuildContext context) {
     context = context;
@@ -76,7 +76,7 @@ class ForgetPassProvider extends ChangeNotifier {
     await WebService.funVerifyOtp(map).then((value) {
       pr.hide();
       if (value.status == 'success') {
-        BotToast.showText(text: value.message);
+        BotToast.showText(text: value.message, duration: Duration(seconds: 4));
         clearall();
       } else if (value.status == 'fail') {
         textEditingController.text = "";
@@ -85,13 +85,13 @@ class ForgetPassProvider extends ChangeNotifier {
     });
   }
 
-  bool caoparePassword() {
-    if (passCtrl.text.isNotEmpty && cPassCtrl.text.isNotEmpty) {
-      ctrlPassError =
-          passCtrl.text != cPassCtrl.text ? "Password mismatch.." : null;
-      notifyListeners();
-    }
-  }
+  // bool caoparePassword() {
+  //   if (passCtrl.text.isNotEmpty && cPassCtrl.text.isNotEmpty) {
+  //     ctrlPassError =
+  //         passCtrl.text != cPassCtrl.text ? "Password mismatch.." : null;
+  //     notifyListeners();
+  //   }
+  // }
 
   clearall() {
     ctrlUser.text = '';

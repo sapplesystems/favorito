@@ -1,13 +1,13 @@
-import 'package:Favorito/model/OrderDetail.dart';
+import 'package:Favorito/model/Order.dart';
 
-class orderListModel {
+class OrderListModel {
   String status;
   String message;
   List<OrderData> data;
 
-  orderListModel({this.status, this.message, this.data});
+  OrderListModel({this.status, this.message, this.data});
 
-  orderListModel.fromJson(Map<String, dynamic> json) {
+  OrderListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {

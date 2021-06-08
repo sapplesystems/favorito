@@ -2,6 +2,7 @@ import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/ui/forgetPass/ForgetPassProvider.dart';
 import 'package:Favorito/component/roundedButton.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -56,7 +57,7 @@ class ForgetPass extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Builder(
                   builder: (context) => Form(
-                    key: fpTrue.formKey,
+                    key: RIKeys.josKeys23,
                     child: Column(
                       children: [
                         Padding(
@@ -153,6 +154,7 @@ class ForgetPass extends StatelessWidget {
                                   valid: true,
                                   maxLines: 1,
                                   hint: "Password",
+                                  myregex: passwordRegex,
                                   controller: fpTrue.passCtrl,
                                   security:
                                       (fpTrue.iconData == Icons.visibility_off),
@@ -174,6 +176,7 @@ class ForgetPass extends StatelessWidget {
                               child: txtfieldPostAction(
                                 valid: true,
                                 maxLines: 1,
+                                myregex: passwordRegex,
                                 hint: "Confirm Password",
                                 controller: fpTrue.cPassCtrl,
                                 errorText: fpTrue.ctrlPassError,
@@ -215,7 +218,10 @@ class ForgetPass extends StatelessWidget {
                       vertical: sm.w(10),
                     ),
                     child: RoundedButton(
-                        clicker: () => fpFalse.verifyOtp(),
+                        clicker: () {
+                          if (RIKeys.josKeys23.currentState.validate())
+                            fpFalse.verifyOtp();
+                        },
                         clr: Colors.red,
                         title: "Submit")),
               );

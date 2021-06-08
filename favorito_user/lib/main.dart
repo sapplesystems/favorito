@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
+import 'package:favorito_user/ui/Chat/ChatProvider.dart';
 import 'package:favorito_user/ui/OnlineMenu/MenuHomeProvider.dart';
 import 'package:favorito_user/Providers/OptController.dart';
 import 'package:favorito_user/ui/ForgetPassword/ForgetPasswordProvider.dart';
@@ -42,6 +43,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => OrderProvicer()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => ReviewProvider()),
+        ChangeNotifierProvider(create: (context) => ChatProvier()),
       ],
       child: MyApp(),
     ));
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
       materialTheme: ThemeData.light().copyWith(
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: Color(0xffF4F6FC),
           canvasColor: myGreyDark,
           backgroundColor: myGrey,
           hintColor: myGrey,

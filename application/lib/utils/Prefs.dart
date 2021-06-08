@@ -33,12 +33,6 @@ class Prefs {
 
   Future<void> clear() async {
     await Future.wait(<Future>[
-      // setAuthenticated(false),
-      // setISIN(false),
-      // setPasscode(''),
-      // setuserId(null),
-      // setrolenumber(null),
-      // setHostelId(0),
       setToken(null),
     ]);
   }

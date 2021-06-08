@@ -31,7 +31,11 @@ class PayOption extends StatelessWidget {
               onChanged: (_v) {
                 vaTrue.setSelectedPay(_v);
               },
-              title: Text(_data.title),
+              title: Text(_data.title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      .copyWith(fontSize: 12, fontWeight: FontWeight.w400)),
               activeColor: myRed,
               selected: vaTrue.selectedPayData == _data,
             ),
