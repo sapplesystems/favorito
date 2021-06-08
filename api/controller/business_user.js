@@ -2,6 +2,7 @@ var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
+const { resolveHostname } = require('nodemailer/lib/shared');
 
 
 var user_role = ['Owner', 'Manager', 'Employee'];
@@ -429,10 +430,30 @@ exports.getRoomId = async function(req, res, next) {
 
 exports.getChats = async(req, res, next) => {
 
-    if (!req.body.room_id) {
-        return res.status(400).json({ status: 'failed', message: 'room_id is missing ' });
-    } else {
+    // getting the room id form the req if not found then from the token 
+    if (req.body.room_id) {
         room_id = req.body.room_id
+    } else {
+        if (req.userdata.business_id != null && req.userdata.business_id != undefined && req.userdata.business_id != '') {
+            var source_id = req.userdata.business_id;
+        } else if (req.userdata.id != null && req.userdata.id != undefined && req.userdata.id != '') {
+            var source_id = req.userdata.id;
+        }
+
+        if (req.body.target_id != null && req.body.target_id != undefined && req.body.target_id != '') {
+            target_id = req.body.target_id
+        } else {
+            return res.status(400).json({ status: 'error', message: 'target_id is missing' });
+        }
+
+        sql_exist_room_id = `SELECT room_id from business_chat_messages \n\
+        where (source_id = '${source_id}' and target_id = '${target_id}') \n\
+        or (source_id = '${target_id}' and target_id = '${source_id}') limit 1`
+        try {
+            room_id = (await exports.run_query(sql_exist_room_id))[0].room_id
+        } catch (error) {
+            return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+        }
     }
 
 
@@ -445,7 +466,7 @@ exports.getChats = async(req, res, next) => {
     limit = 20
 
     try {
-        sql_get_messages = `SELECT id, source_id, target_id, message,DATE_FORMAT(created_at, '%d-%b-%Y %H:%i:%s') AS created_at from business_chat_messages where room_id = '${room_id}' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
+        sql_get_messages = `SELECT id, source_id, target_id, message, concat('${img_path}chat_files/',file) as file, DATE_FORMAT(created_at, '%d-%b-%Y %H:%i:%s') AS created_at from business_chat_messages where room_id = '${room_id}' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`
         result_get_message = await exports.run_query(sql_get_messages)
     } catch (error) {
         return res.status(500).send({ status: 'failed', message: 'failed', error })
@@ -453,7 +474,7 @@ exports.getChats = async(req, res, next) => {
     if (result_get_message != '') {
         return res.status(200).send({ status: 'success', message: 'success', data: result_get_message })
     } else {
-        return res.status(400).send({ status: 'success', message: 'There is no message to show.' })
+        return res.status(400).send({ status: 'success', message: 'There is no message to show.', data: [] })
     }
 }
 
@@ -474,23 +495,22 @@ exports.setChat = async(req, res) => {
         }
     }
 
+    if (!req.body.message && !req.file) {
+        return res.status(400).json({ status: 'error', message: 'message or file is missing' });
+    }
+
     if (!req.body.room_id) {
         return res.status(400).json({ status: 'error', message: 'room_id is missing' });
     } else {
         room_id = req.body.room_id
     }
 
-    if (!req.body.message) {
-        return res.status(400).json({ status: 'error', message: 'message is missing' });
-    } else {
-        message = req.body.message
-    }
-
     dataToInsert = {
         source_id: source_id,
         target_id: target_id,
         room_id: room_id,
-        message: message
+        message: req.body.message ? req.body.message : null,
+        file: req.file ? req.file.filename : null
     }
 
     sqlInsertChat = `insert into business_chat_messages set ?`
@@ -503,6 +523,104 @@ exports.setChat = async(req, res) => {
 
 }
 
+exports.getChatList = async(req, res) => {
+    if (req.body.current_no_list) {
+        offset = req.body.current_no_list
+    } else {
+        offset = 0
+    }
+    limit = 10
+
+    if (req.userdata.business_id) {
+        source_id = req.userdata.business_id
+    } else {
+        source_id = req.userdata.id
+    }
+
+
+    //     sqlGetChatList = `select bcm.source_id, bcm.target_id,bcm.room_id,\n\
+    //     ifnull(u.full_name,bm.business_name) as name,\n\
+    //     ifnull(concat('${img_path}',u.photo),concat('${img_path}',bm.photo)) as photo, \n\
+    //     ifnull(u.short_description,bm.short_description) as short_description,\n\
+    //    (select count(bcms.id) from business_chat_messages as bcms where source_id = '${source_id}' and target_id = bcm.target_id) as unseen_count\n\
+    //     from business_chat_messages as bcm \n\
+    //     left join users as u on bcm.target_id = u.id or bcm.source_id = u.id\n\
+    //     left join business_master as bm on bcm.target_id = bm.business_id or bcm.source_id = bm.business_id
+    //     where source_id = '${source_id}'  group by bcm.room_id order by bcm.id desc limit ${limit} offset ${offset}`
+
+
+    sqlGetChatList = `select bcm.source_id, bcm.target_id,bcm.room_id,\n\
+        if('${source_id} ' = bcm.source_id ,ifnull((select full_name from users where id = bcm.target_id),(select business_name from business_master where business_id = bcm.target_id)), ifnull((select full_name from users where id = bcm.source_id),(select business_name from business_master where business_id = bcm.source_id))) as name,\n\
+        if('${source_id} ' = bcm.source_id ,ifnull((select concat('${img_path}',photo) from users where id = bcm.target_id),(select concat('${img_path}',photo) from business_master where business_id = bcm.target_id)), ifnull((select concat('${img_path}',photo) from users where id = bcm.source_id),(select concat('${img_path}',photo) from business_master where business_id = bcm.source_id))) as photo, \n\
+        if('${source_id} ' = bcm.source_id ,ifnull((select short_description from users where id = bcm.target_id),(select short_description from business_master where business_id = bcm.target_id)), ifnull((select short_description from users where id = bcm.source_id),(select short_description from business_master where business_id = bcm.source_id))) as short_description,\n\
+       (select count(bcms.id) from business_chat_messages as bcms where source_id = '${source_id}' and target_id = bcm.target_id) as unseen_count\n\
+        from business_chat_messages as bcm \n\
+        where source_id = '${source_id}' or target_id = '${source_id}' group by bcm.room_id order by bcm.id desc limit ${limit} offset ${offset}`
+
+    try {
+        resultGetChatList = await exports.run_query(sqlGetChatList)
+        if (resultGetChatList == '') {
+            return res.status(200).json({ status: 'success', message: 'No chat exists', data: [{ target_id: null, room_id: null, name: null, photo: null, short_description: null, unseen_count: null }] });
+        }
+        return res.status(200).json({ status: 'success', message: 'success', data: resultGetChatList });
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+    }
+}
+
+exports.firebaseId = async(req, res) => {
+    let table = null
+    let api_type = null
+    let id = null
+    let column = null
+    let firebase_id = null
+    if (!req.body.api_type) {
+        return res.status(400).json({ status: 'error', message: 'api_type is missing either set or get' });
+    } else {
+        api_type = req.body.api_type
+        if (api_type == 'set') {
+            if (!req.body.firebase_id) {
+                return res.status(400).json({ status: 'error', message: 'firebase_id is missing' });
+            } else {
+                firebase_id = req.body.firebase_id
+            }
+        }
+    }
+
+    if (id = req.body.id) {
+        if (isNaN(id)) {
+            table = 'business_master'
+            column = 'business_id'
+        } else {
+            table = 'users'
+            column = 'id'
+        }
+    } else {
+        if (req.userdata.business_id) {
+            id = req.userdata.business_id
+            table = 'business_master'
+            column = 'business_id'
+        } else {
+            id = req.userdata.id
+            table = 'users'
+            column = 'id'
+        }
+    }
+
+    try {
+        if (api_type == 'set') {
+            sql = `update ${table} set firebase_chat_id = '${firebase_id}' where ${column} = '${id}'`
+            result = await exports.run_query(sql)
+            return res.status(200).json({ status: 'success', message: 'Updated successfully', });
+        } else {
+            sql = `select firebase_chat_id from ${table} where ${column} = '${id}'`
+            result = await exports.run_query(sql)
+            return res.status(200).json({ status: 'success', message: 'success', data: result });
+        }
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong', error });
+    }
+}
 
 exports.run_query = (sql, param = false) => {
     if (param == false) {

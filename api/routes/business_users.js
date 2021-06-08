@@ -12,6 +12,7 @@ const mkdirp = require('mkdirp');
 
 /*to upload the media use multer: start here*/
 var multer = require('multer');
+
 var storage_business_profile = multer.diskStorage({
     destination: function(req, file, cb) {
         mkdirp.sync('./public/uploads/');
@@ -24,6 +25,18 @@ var storage_business_profile = multer.diskStorage({
 var upload_business_profile = multer({ storage: storage_business_profile });
 /*to upload the media use multer: end here*/
 
+/* Upload the chat files*/
+
+var storage_chat_files = multer.diskStorage({
+    destination: function(req, file, cb) {
+        mkdirp.sync('./public/uploads/chat_files');
+        cb(null, './public/uploads/chat_files');
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+var upload_chat_files = multer({ storage: storage_chat_files });
 
 /**
  * BUSINESS INFORMATION MEDIA UPLOAD CONFIGURATION START HERE
@@ -38,6 +51,8 @@ var storage_business_info_media = multer.diskStorage({
     }
 });
 var upload_business_info_media = multer({ storage: storage_business_info_media });
+
+
 /**END HERE */
 
 
@@ -77,6 +92,9 @@ router.post('/information/update', multer().array(), CheckAuth, UpdateBusinessIn
 
 router.post('/information/add-photo', upload_business_info_media.array('photo[]', 1000), CheckAuth, UpdateBusinessInformationController.addPhotos);
 
+router.post('/information/delete-photo', CheckAuth, UpdateBusinessInformationController.deletePhoto);
+
+
 router.post('/profile-photo', CheckAuth, UserController.getProfilePhoto);
 
 router.post('/get-registered-email-phone', CheckAuth, UserController.getRegisteredEmailMobile);
@@ -94,10 +112,16 @@ router.post('/get-room-id', CheckAuth, UserController.getRoomId);
 
 router.post('/get-chats', CheckAuth, UserController.getChats);
 
-router.post('/set-chat', CheckAuth, UserController.setChat);
+router.post('/set-chat', upload_chat_files.single('file'), CheckAuth, UserController.setChat);
 
 
+router.post('/get-chat-list', CheckAuth, UserController.getChatList);
 
 router.post('/is-account-exist', UserRegisterController.isAccountExist);
+
+/* Set and get the firebase_id */
+router.post('/firebase-id', CheckAuth, UserController.firebaseId);
+
+
 
 module.exports = router;

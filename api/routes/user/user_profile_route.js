@@ -53,6 +53,8 @@ router.post('/set-business-rating', CheckAuth, UserProfileController.setBusiness
 
 router.post('/get-business-rating', CheckAuth, UserProfileController.getBusinessRating);
 
+router.post('/get-contact-business', CheckAuth, UserProfileBusinessDetailController.getContactBusiness);
+
 
 
 // terms and condition for the user link

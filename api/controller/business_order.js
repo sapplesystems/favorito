@@ -241,14 +241,15 @@ exports.listAllOrder = function(req, res, next) {
 
             var len = result.length;
             var dataset = [];
-            for (var i = 0; i < len; i++) {
-                var data = {
-                    "order": result[i],
-                    "detail": await exports.orderItemDetail(business_id, result[i].order_id)
-                };
-                dataset.push(data);
-            }
-            return res.status(200).json({ status: 'success', message: 'success', data: dataset });
+            // for (var i = 0; i < len; i++) {
+            //     var data = {
+            //         "order": result[i],
+            //         "detail": await exports.orderItemDetail(business_id, result[i].order_id)
+            //     };
+            //     dataset.push(data);
+            // }
+            // return res.status(200).json({ status: 'success', message: 'success', data: dataset });
+            return res.status(200).json({ status: 'success', message: 'success', data: result });
         });
     } catch (e) {
         return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
@@ -269,6 +270,7 @@ exports.orderItemDetail = function(business_id, order_id) {
                         FROM business_order_detail \n\
                         WHERE business_id='" + business_id + "' AND order_id='" + order_id + "'";
             db.query(sql, function(err, result) {
+                console.log(result)
                 resolve(result);
             });
         });

@@ -48,6 +48,7 @@ var userCheckinRoute = require('./routes/user/user_checkin_route');
 var userBusinessMenuRoute = require('./routes/user/user_business_menu_route');
 var userChangePasswordController = require('./routes/user/user_change_password_route');
 var userAdsRoute = require('./routes/user/user_ads_route');
+var userJobRoute = require('./routes/user/user_job_route');
 
 
 
@@ -135,6 +136,11 @@ app.use('/api/user-ads', userAdsRoute)
  * USER ROUTES FOR CHANGE PASSWORD
  */
 app.use('/api/user-change-password', userChangePasswordController)
+
+/* 
+user job route
+*/
+app.use('/api/user-job', userJobRoute)
 
 
 // catch 404 and forward to error handler

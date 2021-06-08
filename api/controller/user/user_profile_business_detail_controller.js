@@ -1,3 +1,4 @@
+const { reduceRight } = require('async');
 var db = require('../../config/db');
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';
 
@@ -28,11 +29,28 @@ exports.businessDetail = async function(req, res, next) {
 
 exports.getBusinessDetail = async function(req, res) {
     try {
-        if (req.body.business_id == null || req.body.business_id == undefined || req.body.business_id == '') {
-            return res.status(400).json({ status: 'error', message: 'business_id is missing' });
+        let isVisited = 0
+
+        if (!req.body.business_id && !req.body.firebase_id) {
+            return res.status(400).json({ status: 'error', message: 'business_id or firebase_id is missing' });
         } else {
             user_id = req.userdata.id
-            business_id = req.body.business_id
+            if (req.body.business_id) {
+                business_id = req.body.business_id
+            } else {
+                firebase_chat_id = req.body.firebase_id
+                sqlGetBusinessIdByFirebaseId = `select business_id from business_master where firebase_chat_id = '${firebase_chat_id}'`
+                try {
+                    resultGetBusinessIdByFirebaseId = await exports.run_query(sqlGetBusinessIdByFirebaseId)
+                    if (resultGetBusinessIdByFirebaseId != '') {
+                        business_id = resultGetBusinessIdByFirebaseId[0].business_id
+                    } else {
+                        return res.status(400).json({ status: 'error', message: 'This firebase id do not exist' });
+                    }
+                } catch (error) {
+                    return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+                }
+            }
         }
         try {
             sql_count_rating = "SELECT AVG(rating) as count FROM business_ratings WHERE business_id = '" + business_id + "'"
@@ -57,6 +75,31 @@ exports.getBusinessDetail = async function(req, res) {
             sqlGetAppointmentSetting = `select id from business_appointment_setting where business_id = '${business_id}'`
             resultGetAppointmentSetting = await exports.run_query(sqlGetAppointmentSetting)
                 // return res.send(resultGetMenuSetting)
+
+            // checking if this user is involved in any of the activity of this business like waitlist booking order or appointment.
+
+            // booking
+
+            console.log(user_id)
+            sqlIsBooking = `select id from business_booking where user_id = '${user_id}'`
+            resultIsBooking = await exports.run_query(sqlIsBooking)
+
+            // waitlist
+            sqlIsWaitlist = `select id from business_waitlist where user_id = '${user_id}'`
+            resultIsWaitlist = await exports.run_query(sqlIsWaitlist)
+
+            //appointment  
+            sqlIsAppointment = `select id from business_appointment where user_id = '${user_id}'`
+            resultIsAppointment = await exports.run_query(sqlIsAppointment)
+
+            // order 
+            sqlIsOrder = `select id from business_orders where user_id = '${user_id}'`
+            resultIsOrder = await exports.run_query(sqlIsOrder)
+            if (resultIsBooking == '' && resultIsWaitlist == '' && resultIsAppointment == '' && resultIsOrder == '') {
+                isVisited = 0
+            } else {
+                isVisited = 1
+            }
 
 
             // removing the attribute if settings are not saved
@@ -94,11 +137,11 @@ exports.getBusinessDetail = async function(req, res) {
         } catch (error) {
             return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
         }
-        var sql = "SELECT b_m.id, b_m.business_id,IFNULL(b_m.short_description,'') as short_desciption,IFNULL(b_i.price_range ,0) AS price_range, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations AS b_i LEFT JOIN business_hours as b_h ON  b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
+        var sql = "SELECT b_m.id, b_m.business_id,b_m.firebase_chat_id ,IFNULL(b_m.short_description,'') as short_desciption,IFNULL(b_i.price_range ,0) AS price_range, b_m.postal_code postal_code,b_m.business_phone as phone,b_m.landline as landline,b_m.business_email,IFNULL((SELECT COUNT(business_id) FROM business_reviews WHERE business_id = '" + business_id + "' AND parent_id = 0) ,0) as total_reviews,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m JOIN business_informations AS b_i LEFT JOIN business_hours as b_h ON  b_m.business_id = b_h.business_id WHERE b_m.is_activated='1' AND b_m.business_id = '" + business_id + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ";
 
         result = await exports.run_query(sql)
         if (result == '') {
-            return res.status(200).send({ status: 'success', message: 'No contect found', data: result })
+            return res.status(200).send({ status: 'success', message: 'No content found', data: result })
         }
 
         // checking the online or offline
@@ -131,6 +174,8 @@ exports.getBusinessDetail = async function(req, res) {
         result[0].avg_rating = avg_rating;
         result[0].attributes = result_attributes;
         result[0].relation = result_relation;
+        result[0].is_visited = isVisited;
+
         return res.status(200).send({ status: 'success', message: 'respone successfull', data: result })
 
     } catch (error) {
@@ -261,6 +306,32 @@ exports.getAllHoursBusiness = async function(req, res, next) {
     } catch (error) {
         return res.status(400).json({ status: 'error', message: 'Something went wrong', error });
     }
+}
+
+exports.getContactBusiness = async(req, res) => {
+    if (!req.body.business_id && !req.body.firebase_id) {
+        return res.status(400).json({ status: 'error', message: 'business_id or firebase_id is missing' });
+    } else {
+        if (req.body.business_id) {
+            business_id = req.body.business_id
+            sqlContactBusiness = `select business_phone, landline from business_master where business_id = '${business_id}'`
+        } else {
+            firebase_chat_id = req.body.firebase_id
+            sqlContactBusiness = `select business_phone, landline from business_master where firebase_chat_id = '${firebase_chat_id}'`
+        }
+    }
+
+    try {
+        resultContactBusiness = await exports.run_query(sqlContactBusiness)
+        if (resultContactBusiness == '') {
+            return res.status(200).json({ status: 'success', message: 'No content found', data: resultContactBusiness });
+        } else {
+            return res.status(200).json({ status: 'success', message: 'success', data: resultContactBusiness });
+        }
+    } catch (error) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', error });
+    }
+
 }
 
 exports.run_query = (sql, param = false) => {

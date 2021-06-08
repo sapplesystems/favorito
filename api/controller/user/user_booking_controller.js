@@ -624,7 +624,6 @@ exports.createSlots = async function(starttime, endtime, interval, advance_booki
         } else {
             // select query to get the slot lenght
             array_slots_final = [...array_slots]
-
         }
 
         resolve(array_slots_final)

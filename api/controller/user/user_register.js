@@ -53,10 +53,18 @@ exports.register = async function(req, res, next) {
             last_name = split_name.join(' ');;
         }
 
+        // also checking from the business account 
+
+        sqlCheckBusiness = `select count(id) as count from business_master where business_phone = '${phone}'`
+        resultCheckBusiness = await exports.run_query(sqlCheckBusiness)
+        if (resultCheckBusiness[0].count > 0) {
+            return res.status(403).json({ status: 'error', message: 'Phone number already exist in business account' });
+        }
+
         var cslq = "select count(*) as c from users where phone='" + phone + "' and deleted_at is null";
         db.query(cslq, function(chkerr, check) {
             if (chkerr) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', chkerr });
             } else {
                 if (check[0].c === 0) {
                     var postval = {
@@ -96,7 +104,7 @@ exports.register = async function(req, res, next) {
             }
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', error: e });
     }
 };
 
@@ -222,6 +230,15 @@ exports.registerEmail = async(req, res) => {
         var email = req.body.email
     }
     try {
+        // checking the email domain is restricted or not table inlcude is restricted_domain
+        let domain = (email.split('@')[1]).split('.')[0];
+        sqlCheckDomain = `select id from restricted_domain where restricted_domain like '%${domain}%'`
+        resultCheckDomain = await exports.run_query(sqlCheckDomain)
+
+        if (resultCheckDomain != '') {
+            return res.status(403).send({ status: 'error', message: 'The domain of this email has been restricted' })
+        }
+
         var check_email = "select count(*) as c from users where email='" + email + "' and deleted_at is null";
         var result_check_email = await exports.run_query(check_email)
     } catch (error) {
@@ -300,6 +317,14 @@ exports.isAccountExist = async(req, res) => {
         if (!req.body.email) {
             return res.status(400).json({ status: 'error', message: 'email number is missing' });
         } else {
+            // checking the email domain is restricted or not table inlcude is restricted_domain
+            let domain = (req.body.email.split('@')[1]).split('.')[0];
+            sqlCheckDomain = `select id from restricted_domain where restricted_domain like '%${domain}%'`
+            resultCheckDomain = await exports.run_query(sqlCheckDomain)
+
+            if (resultCheckDomain != '') {
+                return res.status(403).send({ status: 'error', message: 'The domain of this email has been restricted', data: [] })
+            }
             sql_email_check = `SELECT id FROM users WHERE email = '${req.body.email}'`
             result_email_check = await exports.run_query(sql_email_check)
             if (result_email_check == '') {
