@@ -1,5 +1,6 @@
 //shared prefrence
 String TOKEN = "TOKEN";
+String HOURS = "HOURS";
 
 const String welcometxt = "Welcome to Favorito";
 

@@ -14,7 +14,9 @@ class BusinessHoursProvider extends BaseProvider {
 
   bool _isEdit = false;
   BuildContext context;
+
   MaterialLocalizations localizations;
+
   BoxDecoration bdcf = BoxDecoration(
       border: Border.all(width: 1.0, color: myGrey),
       borderRadius: BorderRadius.all(Radius.circular(5.0)));
@@ -26,7 +28,7 @@ class BusinessHoursProvider extends BaseProvider {
       color: myGrey,
       border: Border.all(width: 1.0, color: myRed),
       borderRadius: BorderRadius.all(Radius.circular(5.0)));
-  TextEditingController _controller = TextEditingController();
+  String text;
   List<String> daylist = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   Map<String, String> selecteddayList = {};
   String startTime = 'Start Time';
@@ -43,12 +45,19 @@ class BusinessHoursProvider extends BaseProvider {
     getData();
   }
 
-  setController(String _val) {
-    _controller.text = _val;
+  setText(String _val) {
+    print("_val:$_val");
+    text = _val ?? "";
+    notifyListeners();
     getData();
   }
 
-  getSelectedItem() => _controller.text;
+  clear() {
+    text = '';
+    notifyListeners();
+  }
+
+  String getSelectedItem() => text;
 
   getData() async {
     await WebService.funGetBusinessWorkingHours().then((value) {

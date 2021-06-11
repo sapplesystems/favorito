@@ -16,8 +16,9 @@ class Prefs {
   static Future setToken(String value) =>
       SharedPrefUtils.setString(TOKEN, value);
 
-  // static Future<String> get name => SharedPrefUtils.getString(NAME);
-  // static Future setName(String value) => SharedPrefUtils.setString(NAME , value);
+  static Future<String> get hours => SharedPrefUtils.getString(HOURS);
+  static Future setHours(String value) =>
+      SharedPrefUtils.setString(HOURS, value);
 
   // static Future<int> get rolenumber => SharedPrefUtils.getInt(ROLENUMBER);
   // static Future setrolenumber(int value) => SharedPrefUtils.setInt(ROLENUMBER, value);

@@ -7,7 +7,7 @@ import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
-import 'package:Favorito/utils/RIKeys.dart';
+
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -31,7 +31,7 @@ class BusinessProfileProvider extends BaseProvider {
   List<FocusNode> focusnode = [];
   List<String> error = [];
   bool firstTime = true;
-
+  bool loading = false;
   int addressLength = 1;
   List<String> websites = [];
   List<String> cityList = ["Please Select ..."];
@@ -48,7 +48,7 @@ class BusinessProfileProvider extends BaseProvider {
   final dd1 = GlobalKey<DropdownSearchState<String>>();
   List<String> titleList = ["", "Business Name", "Business Phone", "LandLine"];
   List<bool> validateList = [false, true, true, false];
-  String workingHours;
+  String workingItem;
   List<TextInputType> inputType = [
     TextInputType.name,
     TextInputType.name,
@@ -70,7 +70,6 @@ class BusinessProfileProvider extends BaseProvider {
       focusnode.add(FocusNode());
       error.add(null);
     }
-    getProfileData(false);
     getBusinessProfileData();
   }
 
@@ -116,7 +115,7 @@ class BusinessProfileProvider extends BaseProvider {
     };
     print("_map:${map.toString()}");
     await WebService.funUserProfileUpdate(map).then((value) async {
-      Provider.of<SettingProvider>(context, listen: false).getProfileImage();
+      // Provider.of<SettingProvider>(context, listen: false).getProfileImage();
       if (value.status == 'success') {
         await Future.delayed(const Duration(seconds: 1));
         needSave(false);
@@ -133,10 +132,12 @@ class BusinessProfileProvider extends BaseProvider {
     });
   }
 
-  getProfileData(bool val) async {
+  getProfileData(context) async {
+    loading = true;
+
     await WebService.getProfileData().then((value) {
       var va = value?.data;
-
+      loading = false;
       if (va.location != null) {
         var _v = (va.location?.split(','));
         setPosition(_v);
@@ -165,7 +166,7 @@ class BusinessProfileProvider extends BaseProvider {
       controller[7].text = addressList[1] ?? '';
       controller[8].text = addressList[2] ?? '';
       controller[9].text = va.postalCode ?? '';
-      workingHours = va?.workingHours ?? "";
+      workingItem = va?.workingHours ?? "";
       pinCaller(va.postalCode, false);
       controller[13].text = va.businessEmail;
       controller[14].text = va.shortDescription;
@@ -181,19 +182,20 @@ class BusinessProfileProvider extends BaseProvider {
             listviewController?.position?.minScrollExtent,
             curve: Curves.easeOut,
             duration: const Duration(milliseconds: 40));
-
-        dd1?.currentState?.changeSelectedItem(va.workingHours ?? '');
-        Provider.of<BusinessHoursProvider>(context, listen: true)
-            .setController(va.workingHours);
-      } catch (e) {} finally {
+      } catch (e) {}
+      try {
+        print("_controller.text1;${va.workingHours}");
+        // dd1?.currentState?.changeSelectedItem(va.workingHours ?? '');
+        Provider.of<BusinessHoursProvider>(context, listen: true).text =
+            (va.workingHours);
+      } catch (e) {
+        print("_controller.textError:${e.toString()}");
+      } finally {
         notifyListeners();
       }
-      try {
-        Provider.of<BusinessHoursProvider>(context, listen: false)
-            .setController(va.workingHours);
-      } catch (e) {}
-      return value;
     });
+    // if (Provider.of<BusinessHoursProvider>(context, listen: false).text !=
+    //     workingItem) getProfileData(context);
     getWebSiteList();
   }
 
@@ -315,49 +317,4 @@ class BusinessProfileProvider extends BaseProvider {
 
   CameraPosition getPosition() => _initPosition;
   getMarget() => _marker;
-
-  willPop(ctx) {
-    showDialog(
-      context: ctx,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Please confirm"),
-          content: Text('do you save data?'),
-          actions: [
-            new FlatButton(
-                child: const Text("Ok"),
-                onPressed: () {
-                  if (RIKeys.josKeys24.currentState.validate())
-                    prepareWebService();
-                }),
-            new FlatButton(
-              child: const Text("Cancel"),
-              onPressed: () async {
-                getProfileData(true);
-              },
-            ),
-            new FlatButton(
-              child: const Text(''),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
-    );
-    notifyListeners();
-    // v.needSave(false);
-    Navigator.pop(context);
-  }
-
-  localAuth() {
-    if (preferences.getString('businessId') != _businessId) {
-      _businessId = preferences.getString('businessId');
-      BusinessProfileModel _temp = BusinessProfileModel();
-      _businessProfileData = _temp;
-      for (var v in controller) {
-        v.text = null;
-      }
-      notifyListeners();
-    }
-  }
 }

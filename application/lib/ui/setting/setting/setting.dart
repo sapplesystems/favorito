@@ -161,7 +161,7 @@ class Setting extends StatelessWidget {
                                       Provider.of<BusinessProfileProvider>(
                                               context,
                                               listen: false)
-                                          .localAuth();
+                                          .getProfileData(context);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

@@ -116,7 +116,7 @@ class _dashboardState extends State<dashboard> {
                         function: () {
                           Provider.of<BusinessProfileProvider>(context,
                                   listen: false)
-                              .getProfileData(false);
+                              .getProfileData(context);
                           Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -332,8 +332,8 @@ class _dashboardState extends State<dashboard> {
         paid_credit = va?.paidCredit?.toString() ?? '';
         free_credit = va?.freeCredit?.toString() ?? '';
       });
-      Provider.of<BusinessProfileProvider>(context, listen: false)
-          .getProfileData(false);
+      Provider.of<BusinessProfileProvider>(_context, listen: false)
+          .getProfileData(_context);
     });
   }
 }
