@@ -38,7 +38,7 @@ void main() async {
     runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => SignUpProvider()),
       ChangeNotifierProvider(create: (context) => ContactPersonProvider()),
-      ChangeNotifierProvider(create: (context) => BusinessHoursProvider()),
+      // ChangeNotifierProvider(create: (context) => BusinessHoursProvider()),
       ChangeNotifierProvider(create: (context) => SettingProvider()),
       ChangeNotifierProvider(create: (context) => ForgetPassProvider()),
       ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
