@@ -4,6 +4,7 @@ import 'package:Favorito/model/SubCategories.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/utils/UtilProvider.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:Favorito/network/webservices.dart';
@@ -217,10 +218,52 @@ class businessInfoProvider extends ChangeNotifier {
   }
 
   deleteImage(int i, context) async {
-    var _va = {'image_id': photos[i].id};
-    await WebService.infoDeletePhoto(_va, context).then((value) {
-      getPageData(context);
-    });
+    showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text(
+                  '\t\t\t\t\tAre you sure you want to delete ?',
+                  style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Medium'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                        child: Text("Ok",
+                            style: TextStyle(
+                                color: myRed,
+                                fontSize: 16,
+                                fontFamily: 'Gilroy-Medium')),
+                        onPressed: () async {
+                          var _va = {'image_id': photos[i].id};
+                          await WebService.infoDeletePhoto(_va, context)
+                              .then((value) {
+                            getPageData(context);
+                          });
+                          Navigator.pop(context);
+                        }),
+                    InkWell(
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                            color: myRed,
+                            fontSize: 16,
+                            fontFamily: 'Gilroy-Medium'),
+                      ),
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   tapOnRupies(i) {

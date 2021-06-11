@@ -12,6 +12,8 @@ class ResetPassProvider extends BaseProvider {
   IconData iconData2 = Icons.visibility_off;
   List<String> passError = [null, null, null];
   bool buttonVisible = false;
+  bool autovalidate = false;
+  bool showNote = false;
   ProgressDialog pr;
   List<IconData> security = [
     Icons.visibility,
@@ -25,6 +27,12 @@ class ResetPassProvider extends BaseProvider {
     TextEditingController(),
     TextEditingController()
   ];
+
+  showNoteSet(_val) {
+    showNote = _val;
+    notifyListeners();
+  }
+
   passwordSame() {
     if ((controller[1].text.isNotEmpty && controller[2].text.isNotEmpty) &&
         (controller[1].text != controller[2].text)) {
@@ -85,12 +93,13 @@ class ResetPassProvider extends BaseProvider {
       "confirm_password": controller[2].text
     }, context)
         .then((value) {
-      this.snackBar(value.message, RIKeys.josKeys1, myGreen);
       if (value.status == 'success') {
+        this.snackBar(value.message, RIKeys.josKeys1, myGreen);
         clear();
         Navigator.pop(context);
-      } else
-        BotToast.showText(text: value.message);
+      } else if (value.status == 'error') {
+        this.snackBar(value.message, RIKeys.josKeys1, myRed);
+      }
     });
   }
 }
