@@ -332,6 +332,8 @@ class _dashboardState extends State<dashboard> {
         paid_credit = va?.paidCredit?.toString() ?? '';
         free_credit = va?.freeCredit?.toString() ?? '';
       });
+      Provider.of<BusinessProfileProvider>(context, listen: false)
+          .getProfileData(false);
     });
   }
 }

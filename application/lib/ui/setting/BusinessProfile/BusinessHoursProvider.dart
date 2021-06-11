@@ -11,6 +11,7 @@ class BusinessHoursProvider extends BaseProvider {
   String hoursTitle1 = 'Existing Slots';
   String hoursTitle2 = 'Add New Slots';
   List<Hours> daysHours = List();
+
   bool _isEdit = false;
   BuildContext context;
   MaterialLocalizations localizations;
@@ -38,15 +39,16 @@ class BusinessHoursProvider extends BaseProvider {
       daysHours.add(Hours(
           day: _d, open: false, selected: false, startHours: "", endHours: ""));
     }
+
     getData();
   }
 
   setController(String _val) {
     _controller.text = _val;
-    notifyListeners();
+    getData();
   }
 
-  getController() => _controller.text;
+  getSelectedItem() => _controller.text;
 
   getData() async {
     await WebService.funGetBusinessWorkingHours().then((value) {
@@ -81,7 +83,6 @@ class BusinessHoursProvider extends BaseProvider {
         }
       }
       notifyListeners();
-      // Navigator.pop(context);
     });
   }
 

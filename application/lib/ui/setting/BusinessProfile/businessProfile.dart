@@ -4,6 +4,7 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldPostAction.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHours.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/utils/myString.Dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
@@ -18,12 +19,12 @@ class BusinessProfile extends StatelessWidget {
   bool isFirst;
   BusinessProfile({this.isFirst});
   BusinessProfileProvider v;
-
+  bool _autovalidate = false;
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     v = Provider.of<BusinessProfileProvider>(context, listen: true);
-    v.setContext(context);
+
     if (v?.controller[1]?.text?.isEmpty) {
       v..getProfileData(false);
     }
@@ -36,8 +37,7 @@ class BusinessProfile extends StatelessWidget {
       onRefresh: () async {
         v.getProfileData(true);
       },
-      child:
-          Consumer<BusinessProfileProvider>(builder: (_context, data, child) {
+      child: Consumer<BusinessProfileProvider>(builder: (context, data, child) {
         return WillPopScope(
           onWillPop: () async {
             v.getProfileData(false);
@@ -73,7 +73,8 @@ class BusinessProfile extends StatelessWidget {
                     margin: EdgeInsets.only(top: sm.h(10)),
                     child: Builder(
                       builder: (context) => Form(
-                          key: data.formKey,
+                          key: RIKeys.josKeys24,
+                          autovalidate: _autovalidate,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(children: [
@@ -209,69 +210,22 @@ class BusinessProfile extends StatelessWidget {
                                   myOnChanged: (_val) {
                                     data.pinCaller(_val, true);
                                   }),
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: DropdownSearch<String>(
-                                  autoValidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  mode: Mode.MENU,
-                                  key: data.ddCity,
-                                  showSelectedItem: true,
-                                  enabled: false,
-                                  validator: (_v) {
-                                    var va;
-                                    if (_v == "") {
-                                      va = 'required field';
-                                    } else {
-                                      va = null;
-                                    }
-                                    return va;
-                                  },
-                                  selectedItem: data.controller[10].text,
-                                  items: data.cityList != null
-                                      ? data.cityList
-                                      : null,
-                                  label: "Town/City",
+                              txtfieldboundry(
+                                  controller: data.controller[10],
+                                  title: "Town/City",
                                   hint: "Please Select Town/City",
-                                  showSearchBox: true,
-                                  onChanged: (value) {
-                                    data.controller[10].text = value;
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8),
-                                child: DropdownSearch<String>(
-                                  validator: (_v) {
-                                    var va;
-                                    if (_v == "") {
-                                      va = 'required field';
-                                    } else {
-                                      va = null;
-                                    }
-                                    return va;
-                                  },
-                                  autoValidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  mode: Mode.MENU,
-                                  key: data.ddState,
-                                  enabled: false,
-                                  showSelectedItem: true,
-                                  selectedItem: data.controller[11].text,
-                                  items: data.stateList != null
-                                      ? data.stateList
-                                      : null,
-                                  label: "State",
+                                  security: false,
+                                  valid: true,
+                                  isEnabled: false,
+                                  error: v.error[10]),
+                              txtfieldboundry(
+                                  controller: data.controller[11],
+                                  title: "State",
                                   hint: "Please Select State",
-                                  showSearchBox: true,
-                                  onChanged: (_value) {
-                                    data.controller[11].text = _value;
-                                    data.controller[12].text = "India";
-
-                                    v.needSave(true);
-                                  },
-                                ),
-                              ),
+                                  security: false,
+                                  valid: true,
+                                  isEnabled: false,
+                                  error: v.error[11]),
                               txtfieldboundry(
                                 controller: data.controller[12],
                                 title: "Country",
@@ -303,23 +257,20 @@ class BusinessProfile extends StatelessWidget {
                                 myOnChanged: (_) => v.needSave(true),
                                 hint: "Enter Description",
                               ),
-                              // if ((data.websiteList?.length ?? 0) > 0)
-                              for (int i = 15; i < data.controller?.length; i++)
-                                txtfieldPostAction(
-                                    controller: data.controller[i],
-                                    hint: "Enter Website ",
-                                    title: "Website ",
-                                    maxLines: 1,
-                                    valid: false,
-                                    myOnChanged: (_) {
-                                      v.needSave(true);
-                                    },
-                                    sufixColor: myRed,
-                                    // sufixTxt: "Add Line",
-                                    security: false,
-                                    sufixClick: () {
-                                      data.webSiteLengthPlus(i);
-                                    }),
+                              txtfieldPostAction(
+                                  controller: data.controller[15],
+                                  hint: "Enter Website ",
+                                  title: "Website ",
+                                  maxLines: 1,
+                                  valid: false,
+                                  myOnChanged: (_) {
+                                    v.needSave(true);
+                                  },
+                                  sufixColor: myRed,
+                                  security: false,
+                                  sufixClick: () {
+                                    data.webSiteLengthPlus(15);
+                                  }),
                             ]),
                           )),
                     ),
@@ -363,8 +314,12 @@ class BusinessProfile extends StatelessWidget {
                     margin: EdgeInsets.only(bottom: 8.0),
                     child: RoundedButton(
                         clicker: () {
-                          if (data.formKey.currentState.validate())
+                          if (RIKeys.josKeys24.currentState.validate())
                             data.prepareWebService();
+                          else {
+                            _autovalidate = true;
+                            data.notifyListeners();
+                          }
                         },
                         clr: Colors.red,
                         textStyle: TextStyle(

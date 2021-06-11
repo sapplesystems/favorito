@@ -32,7 +32,7 @@ class BusinessHours extends StatelessWidget {
                 autoValidateMode: AutovalidateMode.onUserInteraction,
                 mode: Mode.MENU,
                 showSelectedItem: true,
-                selectedItem: bspTrue.getController(),
+                selectedItem: bspTrue.getSelectedItem(),
                 items: ["Select Hours", "Always Open"],
                 label: "Working Hours",
                 hint: "Please Select",
@@ -44,7 +44,7 @@ class BusinessHours extends StatelessWidget {
                       .needSave(true);
                 })),
         Visibility(
-          visible: bspFalse.getController() == "Select Hours",
+          visible: bspFalse.getSelectedItem() == "Select Hours",
           child: Padding(
             padding: EdgeInsets.only(left: 18, right: 18),
             child:

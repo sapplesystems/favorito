@@ -7,6 +7,7 @@ import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -14,10 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BusinessProfileProvider extends BaseProvider {
   String _businessId;
@@ -31,7 +31,7 @@ class BusinessProfileProvider extends BaseProvider {
   List<FocusNode> focusnode = [];
   List<String> error = [];
   bool firstTime = true;
-  ProgressDialog pr;
+
   int addressLength = 1;
   List<String> websites = [];
   List<String> cityList = ["Please Select ..."];
@@ -44,14 +44,11 @@ class BusinessProfileProvider extends BaseProvider {
   int cityId = 0;
   List<String> addressList = [];
   BuildContext context;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final ddCity = GlobalKey<DropdownSearchState<String>>();
-  final ddState = GlobalKey<DropdownSearchState<String>>();
   String addOrChangePhoto = 'Add Photo';
   final dd1 = GlobalKey<DropdownSearchState<String>>();
   List<String> titleList = ["", "Business Name", "Business Phone", "LandLine"];
   List<bool> validateList = [false, true, true, false];
-
+  String workingHours;
   List<TextInputType> inputType = [
     TextInputType.name,
     TextInputType.name,
@@ -68,40 +65,13 @@ class BusinessProfileProvider extends BaseProvider {
 
   BusinessProfileProvider() {
     _getCurrentLocation();
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 16; i++) {
       controller.add(TextEditingController());
       focusnode.add(FocusNode());
       error.add(null);
     }
-    getWebSiteList();
     getProfileData(false);
     getBusinessProfileData();
-    _cityWebData();
-    _stateWebData();
-  }
-
-  void _cityWebData() async {
-    await WebService.funGetCities().then((value) {
-      if (value.message == "success") {
-        _cityModel.clear();
-        cityList.clear();
-        _cityModel.addAll(value.data);
-        for (int i = 0; i < _cityModel?.length; i++)
-          cityList.add(_cityModel[i].city);
-      }
-    });
-  }
-
-  void _stateWebData() async {
-    WebService.funGetStates().then((value) {
-      if (value.message == "success") {
-        stateModel.clear();
-        stateList.clear();
-        stateModel.addAll(value.data);
-        for (int i = 0; i < stateModel?.length; i++)
-          stateList.add(stateModel[i].state);
-      }
-    });
   }
 
   prepareWebService() async {
@@ -138,16 +108,14 @@ class BusinessProfileProvider extends BaseProvider {
       "state_id": controller[11].text,
       "country_id": '1',
       "location": positions ?? "",
-      "working_hours": dd1.currentState.getSelectedItem,
+      "working_hours": dd1?.currentState?.getSelectedItem ?? "",
       "website": websites,
       "business_email": controller[13].text,
       "short_description": controller[14].text,
       "photo": "${controller[0].text}",
     };
     print("_map:${map.toString()}");
-    pr.show().timeout(Duration(seconds: 5));
     await WebService.funUserProfileUpdate(map).then((value) async {
-      pr.hide();
       Provider.of<SettingProvider>(context, listen: false).getProfileImage();
       if (value.status == 'success') {
         await Future.delayed(const Duration(seconds: 1));
@@ -166,21 +134,7 @@ class BusinessProfileProvider extends BaseProvider {
   }
 
   getProfileData(bool val) async {
-    if (val)
-      try {
-        pr?.show()?.timeout(Duration(seconds: 10));
-      } catch (e) {
-        print(e.toString);
-      }
-
     await WebService.getProfileData().then((value) {
-      if (val)
-        try {
-          pr?.hide()?.timeout(Duration(seconds: 10));
-        } catch (e) {
-          print(e.toString);
-        }
-      if (pr.isShowing()) pr.hide();
       var va = value?.data;
 
       if (va.location != null) {
@@ -188,24 +142,6 @@ class BusinessProfileProvider extends BaseProvider {
         setPosition(_v);
       }
       addressList?.clear();
-
-      // for (int i = 0; i < va.website?.length; i++)
-      //   if (va?.website[i] == '') va?.website.removeAt(i);
-      // webSiteLength = va.website.length;
-      // print("sdsd${va.website.length}");
-      // for (int i = 0; i < va.website?.length; i++) {
-      //   controller[15 + i].text = va.website[0];
-      // }
-      notifyListeners();
-      // if (va?.website != null)
-      //   for (int i = 0; i < va.website.length; i++) {
-      //     print("_v1:${controller.length}");
-      //     if (va.website[i].trim().isNotEmpty &&
-      //         va.website[i].characters.length > 2) {
-      //       controller[15 + i].text = va.website[0];
-      //       if (va.website.length < webSiteLength) webSiteLengthPlus();
-      //     }
-      //   }
       controller[1].text = va.businessName ?? '';
 
       controller[2].text = va.businessPhone ?? '';
@@ -229,9 +165,7 @@ class BusinessProfileProvider extends BaseProvider {
       controller[7].text = addressList[1] ?? '';
       controller[8].text = addressList[2] ?? '';
       controller[9].text = va.postalCode ?? '';
-
-      dd1?.currentState?.changeSelectedItem(va?.workingHours ?? "");
-
+      workingHours = va?.workingHours ?? "";
       pinCaller(va.postalCode, false);
       controller[13].text = va.businessEmail;
       controller[14].text = va.shortDescription;
@@ -254,8 +188,10 @@ class BusinessProfileProvider extends BaseProvider {
       } catch (e) {} finally {
         notifyListeners();
       }
-      Provider.of<BusinessHoursProvider>(context, listen: false)
-          .setController(va.workingHours);
+      try {
+        Provider.of<BusinessHoursProvider>(context, listen: false)
+            .setController(va.workingHours);
+      } catch (e) {}
       return value;
     });
     getWebSiteList();
@@ -269,9 +205,8 @@ class BusinessProfileProvider extends BaseProvider {
           return;
         } else
           error[9] = null;
-
-        ddCity?.currentState?.changeSelectedItem(value.data.city);
-        ddState?.currentState?.changeSelectedItem(value.data.stateName);
+        controller[10].text = value.data.city;
+        controller[11].text = value.data.stateName;
         controller[12].text = "India";
       });
     } else {
@@ -282,27 +217,10 @@ class BusinessProfileProvider extends BaseProvider {
     needSave(_val1);
   }
 
-  setContext(BuildContext context) {
-    this.context = context;
-    pr = ProgressDialog(context)
-      ..style(
-          message: 'Please wait...',
-          borderRadius: 8.0,
-          backgroundColor: Colors.white,
-          progressWidget: CircularProgressIndicator(),
-          elevation: 8.0,
-          insetAnimCurve: Curves.easeInOut,
-          progress: 0.0,
-          maxProgress: 100.0,
-          progressTextStyle: TextStyle(
-              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-          messageTextStyle: TextStyle(
-              color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
-  }
-
   void webSiteLengthPlus(int i) {
     if (controller[i].text.isNotEmpty && (i == controller.length - 1))
       controller.add(TextEditingController());
+    Provider.of<BusinessHoursProvider>(context, listen: false).getData();
     notifyListeners();
   }
 
@@ -315,28 +233,8 @@ class BusinessProfileProvider extends BaseProvider {
 
   getWebSiteList() async {
     await WebService.websitesList().then((value) {
-      // websiteList.addAll(value.data ?? [' ']);
-      // if (websiteList.length == 0) websiteList.add(' ');
-      try {
-        if ((value?.data?.length ?? 0) > 0) {
-          // for (int _i = 0; _i < value.data.length; _i++) {
-          for (int _i = 0; _i < 1; _i++) {
-            if (!websites.contains(value.data[_i])) {
-              websites.add(value.data[_i]);
-              controller.add(TextEditingController());
-              controller[controller.length - 1].text = websites[_i];
-            }
-          }
-        } else {
-          if (controller.length < 16) {
-            controller.add(TextEditingController());
-          }
-
-          notifyListeners();
-        }
-      } catch (e) {
-        print("Website Error:${e.toString()}");
-      }
+      controller[15].text = value.data.isNotEmpty ? value.data.first : "";
+      // notifyListeners();
     });
   }
 
@@ -429,7 +327,8 @@ class BusinessProfileProvider extends BaseProvider {
             new FlatButton(
                 child: const Text("Ok"),
                 onPressed: () {
-                  if (formKey.currentState.validate()) prepareWebService();
+                  if (RIKeys.josKeys24.currentState.validate())
+                    prepareWebService();
                 }),
             new FlatButton(
               child: const Text("Cancel"),
