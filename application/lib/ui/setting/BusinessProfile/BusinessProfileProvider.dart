@@ -24,7 +24,7 @@ class BusinessProfileProvider extends BaseProvider {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   CameraPosition _initPosition;
-  Completer<GoogleMapController> gMapcontroller = Completer();
+  // Completer<GoogleMapController> gMapcontroller = Completer();
   Set<Marker> _marker = {};
   List<TextEditingController> controller = [];
   ScrollController listviewController = ScrollController();

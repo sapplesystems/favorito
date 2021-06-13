@@ -426,9 +426,8 @@ class APIManager {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     response = await dio.post(service.mostPopulerBusiness, options: opt);
-    print("topRatedBusiness responseData:${response.toString()}");
-    return TrendingBusinessModel.fromJson(
-        convert.json.decode(response.toString()));
+    // print("topRatedBusiness responseData:${response.toString()}");
+    return TrendingBusinessModel.fromJson(convert.json.decode("$response"));
   }
 
   static Future<businessOverViewModel> baseUserProfileOverview(Map _map) async {
@@ -493,6 +492,7 @@ class APIManager {
         ;
     String token = await Prefs.token;
     print('token : ${token.toString()}');
+    print('_map : ${_map.toString()}');
     String url = service.baseUserProfileDetail;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,

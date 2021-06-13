@@ -1,9 +1,12 @@
 import 'package:Favorito/Provider/BaseProvider.dart';
+import 'package:Favorito/model/Restriction/BookingRestrictionModel.dart';
+import 'package:Favorito/model/Restriction/RestrictionData.dart';
 import 'package:Favorito/model/booking/BookingModel.dart';
 import 'package:Favorito/model/booking/bookingListModel.dart';
 import 'package:Favorito/model/booking/bookingSettingModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/RIKeys.dart';
+import 'package:Favorito/utils/dateformate.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +21,8 @@ class BookingProvider extends BaseProvider {
     "Bookings/Day",
     "Announcement"
   ];
+  bool isSingleDate = true;
+  List<RestrictionData> restrictionDataList = [];
   int _totalBookingDays = 0;
   int _totalBookingHours = 0;
   List<User> _userInputList = [];
@@ -62,7 +67,7 @@ class BookingProvider extends BaseProvider {
   List<TextEditingController> controller = [];
   bookingSettingModel bs;
   BookingProvider() {
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 8; i++) {
       controller.add(TextEditingController());
       controller[i].text = (i != 5 && i != 2) ? "0" : '';
     }
@@ -124,6 +129,45 @@ class BookingProvider extends BaseProvider {
         setDone(false);
         this.snackBar(value.message, RIKeys.josKeys5, myGreen);
       }
+    });
+  }
+
+  funSublimRestriction(context, _val, boolval) async {
+    setIsProgress(true);
+    Map _map = {'restriction_id': _val};
+    Map _map1 = {"start_date": controller[6].text};
+    Map _map2 = {
+      "start_date": controller[6].text,
+      "end_date": controller[7].text
+    };
+    if(!boolval){
+      print("");
+    }
+    await WebService.restrinction(
+            _val == ""
+                ? isSingleDate
+                    ? _map1
+                    : _map2
+                : _map,
+            boolval)
+        .then((value) {
+      setIsProgress(false);
+      getRestrinction(context);
+      controller[6].text = "";
+      controller[7].text = "";
+      isSingleDate = true;
+      if (value.status == "success") {
+        setDone(false);
+        this.snackBar(value.message, RIKeys.josKeys5, myGreen);
+      }
+    });
+  }
+
+  getRestrinction(context) async {
+    await WebService.getRestrinction().then((value) {
+      restrictionDataList.clear();
+      restrictionDataList.addAll(value.date);
+      notifyListeners();
     });
   }
 
@@ -209,5 +253,43 @@ class BookingProvider extends BaseProvider {
         getBookingData();
       }
     });
+  }
+
+  selectDate(context, localizations) {
+    var _d;
+
+    if (controller[6].text.trim() != "")
+      _d = DateTime.parse((controller[6].text.trim() + " 00:00:00.000"));
+    else
+      _d = DateTime.now();
+
+    print('_val');
+    showDatePicker(
+            context: context,
+            initialDate: _d,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2022))
+        .then((_val) {
+      print(_val);
+      controller[6].text = dateFormat1.format(_val);
+      print("6wala :${controller[6].text}");
+    });
+    notifyListeners();
+  }
+
+  selectDate1(context, localizations) {
+    var _d;
+    if (controller[6].text?.trim() != "")
+      _d = DateTime.parse(controller[6].text.trim() + " 00:00:00.000");
+    print("eeee${_d}");
+    showDatePicker(
+            context: context,
+            initialDate: _d,
+            firstDate: _d,
+            lastDate: DateTime(2022))
+        .then((_val) {
+      controller[7].text = dateFormat1.format(_val);
+    });
+    notifyListeners();
   }
 }

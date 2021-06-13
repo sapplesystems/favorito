@@ -5,6 +5,7 @@ import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/Chat/ChatModel.dart';
 import 'package:Favorito/model/Chat/UserModel.dart';
+import 'package:Favorito/model/Restriction/BookingRestrictionModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagModel.dart';
@@ -27,6 +28,7 @@ import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/model/campainVerbose.dart';
 import 'package:Favorito/model/catalog/CatalogDetailModel.dart';
 import 'package:Favorito/model/catalog/CatlogListModel.dart';
+import 'package:Favorito/model/checkMailMobileModel.dart';
 import 'package:Favorito/model/checkinsModel.dart';
 import 'package:Favorito/model/claimInfo.dart';
 import 'package:Favorito/model/contactPerson/ContactPersonRequiredDataModel.dart';
@@ -141,6 +143,7 @@ class WebService {
     } on DioError catch (e) {
       pr.hide();
       if (e.error is SocketException) {
+        print("Login Error:${e.toString()}");
         BotToast.showText(text: "Server not responding");
         response = null;
       } else {
@@ -712,6 +715,46 @@ class WebService {
     return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
+  // checkEmailAndMobile
+  static Future<checkMailMobileModel> checkEmailAndMobile(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return checkMailMobileModel(
+          status: 'fail', message: 'Please check internet connections');
+
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    String url = serviceFunction.checkEmailAndMobile;
+    print("_map:$url");
+    try {
+      response = await dio.post(url, data: _map, options: _opt);
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        BotToast.showText(text: "Server not responding");
+        response = null;
+      } else {
+        if (e.response.statusCode == 401) {
+          return checkMailMobileModel(
+              status: 'fail', message: e.response.data['message']);
+
+          //   BotToast.showText(
+          //       text: BaseResponseModel.fromJson(
+          //               convert.json.decode(e.response.toString()))
+          //           .message);
+          //   Navigator.of(key.currentContext).pushNamed('/login');
+        }
+        if (e.response.statusCode == 403) {
+          return checkMailMobileModel(
+              status: 'fail', message: e.response.data['message']);
+        }
+      }
+    }
+    return checkMailMobileModel
+        .fromJson(convert.json.decode(response.toString()));
+  }
+
   // funCatalogEdit
   static Future<businessInfoImage> catlogEdit(
       Map _map, BuildContext context) async {
@@ -955,6 +998,27 @@ class WebService {
         .fromJson(convert.json.decode(response.toString()));
   }
 
+//  setRestrinction deleteRestrinction
+  static Future<BaseResponseModel> restrinction(_map, isDelete) async {
+    String token = await Prefs.token;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    String _url = isDelete
+        ? serviceFunction.deleteRestrinction
+        : serviceFunction.setRestrinction;
+    response = await dio.post(_url, data: _map, options: opt);
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+//  getRestrinction
+  static Future<BookingRestrictionModel> getRestrinction() async {
+    String token = await Prefs.token;
+    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    String _url = serviceFunction.getRestrinction;
+    response = await dio.post(_url, options: opt);
+    return BookingRestrictionModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
   static Future<bookingListModel> funBookingList(Map _map) async {
     String token = await Prefs.token;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -976,6 +1040,40 @@ class WebService {
     _returnData = SearchBranchResponseModel.fromJson(
         convert.json.decode(response.toString()));
     return _returnData;
+  }
+
+  //this api is used to upload photo of catalog
+  static Future<businessInfoImage> funCatalogAddPhoto(
+      List files, var id) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+
+    List va = [];
+    for (var v in files)
+      va.add(await MultipartFile.fromFile(v.path,
+          filename: v.path.split('/').last));
+    Map<String, dynamic> _map = {"photo": va, "catalog_id": id};
+    print("_map:${_map.toString()}");
+    FormData formData = FormData.fromMap(_map);
+    response = await dio.post(serviceFunction.funCatalogAddPhoto,
+        data: formData, options: _opt);
+    return businessInfoImage.fromJson(convert.json.decode(response.toString()));
+  }
+
+  // infoDeletePhote
+  static Future<BaseResponseModel> funCatalogDeletePhoto(Map _map) async {
+    String token = await Prefs.token;
+    Options _opt =
+        Options(contentType: Headers.formUrlEncodedContentType, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token",
+    });
+    String url = serviceFunction.funCatalogDeletePhoto;
+    print("_map:$url");
+    response = await dio.post(url, data: _map, options: _opt);
+    return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<BusinessProfileModel> funGetBusinessProfileData() async {

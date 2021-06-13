@@ -2,6 +2,8 @@ import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/utils/Regexer.dart';
+import 'package:Favorito/utils/myColors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:flutter_svg/svg.dart';
@@ -74,19 +76,34 @@ class NewCatlog extends StatelessWidget {
                     )),
                 if (vaTrue.imgUrls != null)
                   for (int i = vaTrue.imgUrls.length - 1; i >= 0; i--)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: vaTrue.imgUrls[i] != null
-                          ? Card(
-                              semanticContainer: true,
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              child: FadeInImage.memoryNetwork(
-                                  fit: BoxFit.cover,
-                                  width: sm.h(17),
-                                  placeholder: kTransparentImage,
-                                  image: vaTrue.imgUrls[i]),
-                              margin: EdgeInsets.all(0))
-                          : null,
+                    Stack(
+                      children: [
+                        Container(
+                          height: sm.h(32),
+                          padding: const EdgeInsets.all(1.4),
+                          child: vaTrue.imgUrls[i] != null
+                              ? Card(
+                                  semanticContainer: true,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  child: CachedNetworkImage(
+                                      width: sm.h(18),
+                                      placeholder: (context, url) => Center(
+                                          child: CircularProgressIndicator()),
+                                      imageUrl: vaTrue.imgUrls[i],
+                                      fit: BoxFit.fill),
+                                )
+                              : null,
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: IconButton(
+                              onPressed: () {
+                                vaTrue.deleteImage(i);
+                              },
+                              icon: Icon(Icons.delete, color: myRed)),
+                        ),
+                      ],
                     )
               ]),
             ),

@@ -39,7 +39,9 @@ class BookingSetting extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          vaTrue.getPageData();
+          vaTrue
+            ..getPageData()
+            ..getRestrinction(context);
         },
         child: Builder(
           builder: (context) => Form(
@@ -68,14 +70,16 @@ class BookingSetting extends StatelessWidget {
                                           onTap: () =>
                                               vaTrue.dateTimePicker(true),
                                           child: fromTo(
-                                              txt: vaTrue.getStartTime()??'00:00',
+                                              txt: vaTrue.getStartTime() ??
+                                                  '00:00',
                                               clr: myRed,
                                               txtClr: Colors.black)),
                                       InkWell(
                                           onTap: () =>
                                               vaTrue.dateTimePicker(false),
                                           child: fromTo(
-                                              txt: vaTrue.getEndTime()??'00:00',
+                                              txt: vaTrue.getEndTime() ??
+                                                  '00:00',
                                               clr: myRed,
                                               txtClr: Colors.black))
                                     ]),
@@ -181,10 +185,143 @@ class BookingSetting extends StatelessWidget {
                                     vaTrue.setDone(true);
                                   },
                                 ),
-                              )
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 20.0),
+                                  child: null),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Restriction',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            color: myGrey,
+                                            fontSize: 14),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      vaTrue.controller[6].text = "";
+                                      vaTrue.controller[7].text = "";
+                                      Navigator.pushNamed(
+                                          context, '/bookigDateRistriction');
+                                    },
+                                    child: Text(
+                                      'Add New',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: myRed,
+                                              fontSize: 14),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(children: [
+                                for (int i = 0;
+                                    i < vaTrue.restrictionDataList.length;
+                                    i++)
+                                  Column(
+                                    children: [
+                                      Divider(),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(vaTrue.restrictionDataList[i]
+                                                .restrictionDate),
+                                            InkWell(
+                                                child: Icon(
+                                                    Icons.cancel_outlined,
+                                                    color: myRed),
+                                                onTap: () {
+                                                  showModalBottomSheet<void>(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return Container(
+                                                          height: 100,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: <Widget>[
+                                                              Text(
+                                                                '\t\t\t\t\tAre you sure you want to delete ?',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontFamily:
+                                                                        'Gilroy-Medium'),
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: [
+                                                                  TextButton(
+                                                                      child: Text(
+                                                                          "Ok",
+                                                                          style: TextStyle(
+                                                                              color:
+                                                                                  myRed,
+                                                                              fontSize:
+                                                                                  16,
+                                                                              fontFamily:
+                                                                                  'Gilroy-Medium')),
+                                                                      onPressed:
+                                                                          () async {
+                                                                        vaTrue.funSublimRestriction(
+                                                                            context,
+                                                                            '${vaTrue.restrictionDataList[i].restrictionId}',
+                                                                            true);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      }),
+                                                                  InkWell(
+                                                                    child: Text(
+                                                                      "Cancel",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              myRed,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontFamily:
+                                                                              'Gilroy-Medium'),
+                                                                    ),
+                                                                    onTap: () =>
+                                                                        Navigator.pop(
+                                                                            context),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            ],
+                                                          ),
+                                                        );
+                                                      });
+                                                })
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                              ])
                             ]))),
                 Visibility(
-                  visible: vaTrue.getDone(),
+                  // visible: vaTrue.getDone(),
+                  visible: true,
                   child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: sm.w(16), vertical: sm.h(2)),
