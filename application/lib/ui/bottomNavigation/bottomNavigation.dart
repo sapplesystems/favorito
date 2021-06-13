@@ -2,6 +2,7 @@ import 'package:Favorito/ui/Chat/LoginPage.dart';
 import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
+import 'package:Favorito/ui/bottomNavigation/LetmeDecide.dart';
 import 'package:Favorito/ui/dashboard/dashboard.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/menu/MenuHome.dart';
@@ -17,11 +18,13 @@ class bottomNavigation extends StatefulWidget {
   _bottomNavigationState createState() => _bottomNavigationState();
 }
 
+SharedPreferences preferences;
+
 class _bottomNavigationState extends State<bottomNavigation> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = [
     dashboard(),
-    Bookings(),
+    CircularProgressIndicator(),
     ChatLogin(),
     MenuHome(),
     Setting()
@@ -33,9 +36,16 @@ class _bottomNavigationState extends State<bottomNavigation> {
     super.initState();
   }
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index) async {
+    var _va = await Prefs.isAppointment;
+
     if (index == 1) {
-      Provider.of<BookingProvider>(context, listen: false).getBookingData();
+      _widgetOptions[1] = _va ? Appoinment() : Bookings();
+      print('ddddd$_va');
+      if (_va) {
+      } else {
+        Provider.of<BookingProvider>(context, listen: false).getBookingData();
+      }
     }
     // else if(index==2){
     //   Provider.of<AppoinmentProvider>(context, listen: false).getAppointmentCall();
@@ -68,11 +78,11 @@ class _bottomNavigationState extends State<bottomNavigation> {
   }
 
   void decide() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences = await SharedPreferences.getInstance();
     print("isAppointment:${preferences.getBool('isAppointment')}");
 
-    _widgetOptions[1] =
-        preferences.getBool('isAppointment') ? Appoinment() : Bookings();
+    // _widgetOptions[1] =
+    //     preferences.getBool('isAppointment') ? Appoinment() : Bookings();
     var token = await Prefs.token;
     if (token == null || token == "") {
       Navigator.of(context).pushAndRemoveUntil(

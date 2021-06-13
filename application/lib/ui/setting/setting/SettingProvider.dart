@@ -1,7 +1,6 @@
 import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/PageViews/PageViews.dart';
-import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/contactPerson/ContactPerson.dart';
@@ -12,15 +11,10 @@ import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/waitlist/Waitlist.dart';
 import 'package:flutter/material.dart';
-
-import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
-import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
-import 'package:Favorito/utils/Prefs.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingProvider extends BaseProvider {
-  BuildContext _context;
+  // BuildContext _context;
   SharedPreferences preferences;
 
   SettingProvider() {
@@ -28,6 +22,7 @@ class SettingProvider extends BaseProvider {
   }
   String photo = '';
   String shortdescription = '';
+  bool wait = true;
   List<String> title = [
     "Bussiness Profile",
     "Bussiness Information",
@@ -85,17 +80,5 @@ class SettingProvider extends BaseProvider {
       }
       notifyListeners();
     });
-  }
-
-  setContext(BuildContext _context) {
-    this._context = _context;
-  }
-
-  initCall(_val) async {
-    if (_val) {
-      title.remove("Waitlist");
-      icon.remove("waiting");
-      pages.remove(Waitlist());
-    }
   }
 }

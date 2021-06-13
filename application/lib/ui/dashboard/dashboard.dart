@@ -10,6 +10,7 @@ import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/bottomNavigation/bottomNavigationProvider.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
@@ -20,6 +21,7 @@ import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -311,10 +313,10 @@ class _dashboardState extends State<dashboard> {
       preferences.setString('nickname', va?.businessName);
       preferences.setString('photoUrl', va?.photo);
       preferences.setInt('type', va?.businessType);
-      Provider.of<SettingProvider>(context, listen: false)
-          .initCall(va?.businessType == 1);
-      preferences.setBool(
-          'isAppointment', va?.businessAttributes.contains('Appointment'));
+      Prefs.setBusinessType(va?.businessType);
+      // Provider.of<SettingProvider>(context, listen: false)
+      //     .initCall(va?.businessType == 1);
+      Prefs.setISAPPOINTMENT(va?.businessAttributes.contains('Appointment'));
       print("isAppointment:${va?.businessAttributes.contains('Appointment')}");
       business_status = va?.businessStatus;
       photoUrl = va?.photo;
@@ -334,6 +336,9 @@ class _dashboardState extends State<dashboard> {
       });
       Provider.of<BusinessProfileProvider>(_context, listen: false)
           .getProfileData(_context);
+
+      Provider.of<SettingProvider>(_context, listen: false).wait =
+          va.businessType == 1;
     });
   }
 }

@@ -9,11 +9,14 @@ import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:Favorito/ui/bottomNavigation/bottomNavigationProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -188,6 +191,13 @@ class _LoginState extends State<Login> {
           preferences.setString('email', _v.data.email);
           preferences.setString('phone', _v.data.phone);
           Prefs.setToken(_v.token.toString().trim());
+          Consumer<bottomNavigationProvider>(
+            builder: (ctx, data, child) {
+              data.setSelectedIndex(0);
+              return null;
+            },
+          );
+
           Navigator.pop(context);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => bottomNavigation()));
