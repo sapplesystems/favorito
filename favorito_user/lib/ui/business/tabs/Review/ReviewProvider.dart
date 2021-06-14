@@ -29,11 +29,14 @@ class ReviewProvider extends BaseProvider {
       'b_to_u': 0
     };
     print("_map:${_map.toString()}");
+
     await APIManager.businessSetReview(_map).then((value) {
       if (_selectedReviewId == "null") {
         Navigator.pop(context);
       }
+
       controller.text = "";
+      setRating();
 
       getReviewReplies();
     });

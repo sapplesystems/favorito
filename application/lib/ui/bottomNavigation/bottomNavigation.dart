@@ -2,7 +2,6 @@ import 'package:Favorito/ui/Chat/LoginPage.dart';
 import 'package:Favorito/ui/appoinment/appoinment.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/ui/booking/Bookings.dart';
-import 'package:Favorito/ui/bottomNavigation/LetmeDecide.dart';
 import 'package:Favorito/ui/dashboard/dashboard.dart';
 import 'package:Favorito/ui/login/login.dart';
 import 'package:Favorito/ui/menu/MenuHome.dart';

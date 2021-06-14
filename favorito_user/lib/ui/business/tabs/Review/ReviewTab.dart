@@ -114,17 +114,6 @@ class ReviewTab extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap: () {
-                          // vaTrue.setRootId("null");
-                          // Navigator.pushNamed(context, '/review')
-                          //     .whenComplete(() {
-                          //   vaTrue.getReviewListing(
-                          //       // Provider.of<BusinessProfileProvider>(context,
-                          //       // listen: true)
-                          //       // .getBusinessId()
-                          //       ,
-                          //       context);
-                          // });
-
                           showModalBottomSheet<void>(
                               isDismissible: false,
                               enableDrag: true,
