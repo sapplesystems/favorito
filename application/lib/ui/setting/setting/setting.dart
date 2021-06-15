@@ -64,7 +64,7 @@ class Setting extends StatelessWidget {
                               backgroundImage: NetworkImage(data.photo)),
                         ),
                         title: Text(
-                          business_name,
+                          business_name ?? "ghjk",
                           style: TextStyle(
                               wordSpacing: 2,
                               fontFamily: 'Gilroy-Medium',

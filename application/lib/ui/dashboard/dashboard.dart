@@ -10,7 +10,6 @@ import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/ui/bottomNavigation/bottomNavigationProvider.dart';
 import 'package:Favorito/ui/catalog/Catalogs.dart';
 import 'package:Favorito/ui/checkins/checkins.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';

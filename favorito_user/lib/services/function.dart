@@ -67,7 +67,7 @@ class service {
   static final getrating = baseBusinessReview + 'get-review-detail';
   static final getReviewListing = baseUserProfile + 'user-review';
   static final setRating = baseUserProfile + 'set-business-rating';
-  static final getRating = baseUserProfile + 'get-business-rating';
+  static final getMyRating = baseUserProfile + 'get-business-rating';
 
   //userDetail
   static final userdetail = baseUserProfile + 'user-detail';

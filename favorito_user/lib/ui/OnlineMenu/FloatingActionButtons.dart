@@ -111,6 +111,15 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
   }
 
   footer(BuildContext context) {
+    // modelOption
+    bool _va = (context
+                .read<BusinessProfileProvider>()
+                .getBusinessProfileData()
+                .businessStatus
+                .toString()
+                .toLowerCase() ==
+            'online') &&
+        (context.read<MenuHomeProvider>().modelOption.data.acceptingOrder == 1);
     return Container(
       height: 100,
       child: ListView(physics: new NeverScrollableScrollPhysics(), children: [
@@ -120,14 +129,19 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
           child: Row(
             children: [
               Text("Total Amount",
-                  style: TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 16)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(fontSize: 16, color: myRed)),
               Spacer(),
               Consumer<MenuHomeProvider>(builder: (context, _data, child) {
                 return Padding(
                   padding: const EdgeInsets.all(0.0),
                   child: Text("${_data.allPrice() ?? 0.toString()}\u{20B9}",
-                      style:
-                          TextStyle(fontFamily: 'Gilroy-Medium', fontSize: 16)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(fontSize: 16, color: myRed)),
                 );
               }),
             ],
@@ -138,23 +152,9 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: sm.w(16), vertical: 2),
             child: RoundedButton(
-                clr:
-                    Provider.of<BusinessProfileProvider>(context, listen: false)
-                                .getBusinessProfileData()
-                                .businessStatus
-                                .toString()
-                                .toLowerCase() ==
-                            'online'
-                        ? myRed
-                        : myGrey,
+                clr: _va ? myRed : myGrey,
                 clicker: () {
-                  if (Provider.of<BusinessProfileProvider>(context,
-                              listen: false)
-                          .getBusinessProfileData()
-                          .businessStatus
-                          .toString()
-                          .toLowerCase() ==
-                      'online') {
+                  if (_va) {
                     providerMenuTrue.callCustomizetion();
                   } else {
                     BotToast.showText(

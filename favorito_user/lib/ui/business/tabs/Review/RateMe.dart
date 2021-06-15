@@ -25,7 +25,7 @@ class RateMe extends StatelessWidget {
           child: SmoothStarRating(
         borderColor: myRed,
         color: myRed,
-        rating: double.parse(vaTrue.rating),
+        rating: double.parse(vaTrue.myRating),
         isReadOnly: false,
         size: 50,
         filledIconData: Icons.star,
@@ -35,7 +35,7 @@ class RateMe extends StatelessWidget {
         allowHalfRating: false,
         spacing: 2.0,
         onRated: (value) {
-          vaTrue.rating = value.toString();
+          vaTrue.myRating = value.toString();
         },
       )),
       NeumorphicButton(

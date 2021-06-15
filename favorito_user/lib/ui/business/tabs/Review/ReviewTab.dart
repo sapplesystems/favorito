@@ -23,7 +23,6 @@ class ReviewTab extends StatelessWidget {
     if (isFirst) {
       sm = SizeManager(context);
       vaTrue = Provider.of<ReviewProvider>(context, listen: true);
-
       vaTrue.getCurrentBusinessId(context);
       vaTrue.getrating();
       vaTrue.getReviewListing(context);
@@ -109,79 +108,77 @@ class ReviewTab extends StatelessWidget {
                   ),
                 ]),
                 Divider(),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          showModalBottomSheet<void>(
-                              isDismissible: false,
-                              enableDrag: true,
-                              isScrollControlled: true,
-                              context: context,
-                              backgroundColor: Color.fromRGBO(255, 0, 0, 0),
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(builder:
-                                    (BuildContext context,
-                                        StateSetter setState) {
-                                  return Container(
-                                      height: sm.h(26),
-                                      decoration: new BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: new BorderRadius.only(
-                                            topLeft:
-                                                const Radius.circular(40.0),
-                                            topRight:
-                                                const Radius.circular(40.0),
-                                          )),
-                                      child: RateMe());
-                                });
-                              }).whenComplete(() {
-                            vaTrue.getCurrentBusinessId(context);
-                            vaTrue.getrating();
-                            vaTrue.getReviewListing(context);
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            '+ Add Rating ',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6
-                                .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: myRed),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          vaTrue.setRootId("null");
+                InkWell(
+                  onTap: () {
+                    vaTrue
+                      ..clearSelectedReviewId()
+                      ..setRootId("null");
 
-                          Navigator.pushNamed(context, '/review')
-                              .whenComplete(() {
-                            vaTrue.getCurrentBusinessId(context);
-                            vaTrue.getrating();
-                            vaTrue.getReviewListing(context);
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            '+ Add Review ',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6
-                                .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: myRed),
-                          ),
-                        ),
-                      )
-                    ]),
+                    Navigator.pushNamed(context, '/review').whenComplete(() {
+                      vaTrue.getCurrentBusinessId(context);
+                      vaTrue.getrating();
+                      vaTrue.getReviewListing(context);
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '+ Add Review ',
+                      style: Theme.of(context).textTheme.headline6.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: myRed),
+                    ),
+                  ),
+                ),
+                // Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       InkWell(
+                //         onTap: () {
+                //           showModalBottomSheet<void>(
+                //               isDismissible: false,
+                //               enableDrag: true,
+                //               isScrollControlled: true,
+                //               context: context,
+                //               backgroundColor: Color.fromRGBO(255, 0, 0, 0),
+                //               builder: (BuildContext context) {
+                //                 return StatefulBuilder(builder:
+                //                     (BuildContext context,
+                //                         StateSetter setState) {
+                //                   return Container(
+                //                       height: sm.h(26),
+                //                       decoration: new BoxDecoration(
+                //                           color: Colors.white,
+                //                           borderRadius: new BorderRadius.only(
+                //                             topLeft:
+                //                                 const Radius.circular(40.0),
+                //                             topRight:
+                //                                 const Radius.circular(40.0),
+                //                           )),
+                //                       child: RateMe());
+                //                 });
+                //               }).whenComplete(() {
+                //             vaTrue.getCurrentBusinessId(context);
+                //             vaTrue.getrating();
+                //             vaTrue.getReviewListing(context);
+                //           });
+                //         },
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: Text(
+                //             '+ Add Rating ',
+                //             style: Theme.of(context)
+                //                 .textTheme
+                //                 .headline6
+                //                 .copyWith(
+                //                     fontWeight: FontWeight.w500,
+                //                     fontSize: 16,
+                //                     color: myRed),
+                //           ),
+                //         ),
+                //       ),
+                //       ]),
                 Container(
                   height: sm.h(41),
                   child: ListView.builder(

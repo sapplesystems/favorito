@@ -140,7 +140,7 @@ class BookingProvider extends BaseProvider {
       "start_date": controller[6].text,
       "end_date": controller[7].text
     };
-    if(!boolval){
+    if (!boolval) {
       print("");
     }
     await WebService.restrinction(

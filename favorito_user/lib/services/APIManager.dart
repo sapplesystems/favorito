@@ -903,12 +903,12 @@ class APIManager {
   }
 
   //getRating
-  static Future<MyRatingModel> getRating(Map _map) async {
+  static Future<MyRatingModel> getMyRating(Map _map) async {
     String token = await Prefs.token;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    String _url = service.getRating;
+    String _url = service.getMyRating;
     print("$_url : $_url");
     response = await dio.post(_url, data: _map, options: opt);
     return MyRatingModel.fromJson(convert.jsonDecode(response.toString()));

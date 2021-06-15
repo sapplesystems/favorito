@@ -14,6 +14,7 @@ class MenuItemModel {
   var tax;
   int menuCategoryId;
   String itenCustomizationSum;
+  int isCustomizable;
   CustomizationItemModel customizationItemModel = CustomizationItemModel();
   MenuItemModel(
       {this.id,
@@ -29,6 +30,7 @@ class MenuItemModel {
       this.customizationItemModel,
       this.tax,
       this.itenCustomizationSum,
+      this.isCustomizable,
       this.menuCategoryId});
 
   MenuItemModel.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class MenuItemModel {
     photos = json['photos'] ?? [];
     businessId = json['business_id'];
     tax = json['tax'];
+    isCustomizable = json['is_customizable'];
     menuCategoryId = json['menu_category_id'];
   }
 
@@ -55,6 +58,7 @@ class MenuItemModel {
     data['photos'] = this.photos;
     data['business_id'] = this.businessId;
     data['tax'] = this.tax;
+    data['is_customizable'] = this.isCustomizable;
     data['menu_category_id'] = this.menuCategoryId;
     return data;
   }
