@@ -6,18 +6,22 @@ class Prefs {
   // static Future setMoileNumber(String value) =>
   //     SharedPrefUtils.setString(MONO, value);
 
-  // static Future<int> get userId => SharedPrefUtils.getInt(USER_ID );
-  // static Future setuserId(int value) => SharedPrefUtils.setInt(USER_ID , value);
+  static Future<int> get businessType => SharedPrefUtils.getInt(BUSINESSTYPE);
+  static Future setBusinessType(int value) =>
+      SharedPrefUtils.setInt(BUSINESSTYPE, value);
 
-  // static Future<int> get hostelId => SharedPrefUtils.getInt(HOSTEL_ID);
-  // static Future setHostelId(int value) => SharedPrefUtils.setInt(HOSTEL_ID , value);
+  static Future<bool> get isAppointment =>
+      SharedPrefUtils.getBool(ISAPPOINTMENT);
+  static Future setISAPPOINTMENT(bool value) =>
+      SharedPrefUtils.setBool(ISAPPOINTMENT, value);
 
   static Future<String> get token => SharedPrefUtils.getString(TOKEN);
   static Future setToken(String value) =>
       SharedPrefUtils.setString(TOKEN, value);
 
-  // static Future<String> get name => SharedPrefUtils.getString(NAME);
-  // static Future setName(String value) => SharedPrefUtils.setString(NAME , value);
+  static Future<String> get hours => SharedPrefUtils.getString(HOURS);
+  static Future setHours(String value) =>
+      SharedPrefUtils.setString(HOURS, value);
 
   // static Future<int> get rolenumber => SharedPrefUtils.getInt(ROLENUMBER);
   // static Future setrolenumber(int value) => SharedPrefUtils.setInt(ROLENUMBER, value);

@@ -33,5 +33,9 @@ class RIKeys {
   static final josKeys21 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
   static final josKeys22 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
   static final josKeys23 = GlobalKey<FormState>(); //Char Home Scaffold key
+  static final josKeys24 = GlobalKey<FormState>(); //Char Home Scaffold key
+  static final josKeys25 = GlobalKey<ScaffoldState>(); //Char Home Scaffold key
+  static final josKeys26 = GlobalKey<FormState>(); //booking restriction
+  static final josKeys27 = GlobalKey<FormState>(); //bottom navigation
 
 }

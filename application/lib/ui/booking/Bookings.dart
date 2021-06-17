@@ -17,31 +17,28 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:Favorito/Provider/BaseProvider.dart';
 import '../../config/SizeManager.dart';
 
-
 class Bookings extends StatelessWidget {
   BookingProvider vaTrue;
   BookingProvider vafalse;
   SizeManager sm;
   bool isFirst = true;
 
-
   @override
   Widget build(BuildContext context) {
-    
     sm = SizeManager(context);
     vaTrue = Provider.of<BookingProvider>(context, listen: true);
     vafalse = Provider.of<BookingProvider>(context, listen: false);
-    
-     if(isFirst){
-        print("asd:2");
+
+    if (isFirst) {
+      print("asd:2");
       vaTrue.getBookingData();
-isFirst = false;
-     }
+      isFirst = false;
+    }
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         BaseProvider.onWillPop(context);
       },
-          child: Scaffold(
+      child: Scaffold(
           key: RIKeys.josKeys6,
           appBar: AppBar(
               elevation: 0,
@@ -61,14 +58,16 @@ isFirst = false;
                   ),
                 ),
                 IconButton(
-                  icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
-                      alignment: Alignment.center),
-                  onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BookingSetting()))
-                      .whenComplete(() => vaTrue.getPageData()),
-                )
+                    icon: SvgPicture.asset('assets/icon/settingWaitlist.svg',
+                        alignment: Alignment.center),
+                    onPressed: () {
+                      vaTrue.getRestrinction(context);
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BookingSetting()))
+                          .whenComplete(() => vaTrue.getPageData());
+                    })
               ]),
           body: vaTrue.blm.slots == null
               ? Center(child: Text(''))
@@ -85,7 +84,8 @@ isFirst = false;
                                     vaTrue.getInitialDate() ?? DateTime.now(),
                                 firstDate:
                                     DateTime.now().subtract(Duration(days: 90)),
-                                lastDate: DateTime.now().add(Duration(days: 10)))
+                                lastDate:
+                                    DateTime.now().add(Duration(days: 10)))
                             .then((_val) {
                           vaTrue.setInitialDate(dateFormat1.format(_val));
                         });
@@ -103,15 +103,18 @@ isFirst = false;
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text(
-                                    dateFormat1.format(vaTrue.getInitialDate()) ==
+                                    dateFormat1.format(
+                                                vaTrue.getInitialDate()) ==
                                             dateFormat1.format(DateTime.now())
                                         ? 'Today'
                                         : dateFormat6.format(
                                                 vaTrue.getInitialDate()) ??
                                             'Select',
-                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
                                     textAlign: TextAlign.center),
-                                SvgPicture.asset('assets/icon/triangle_down.svg')
+                                SvgPicture.asset(
+                                    'assets/icon/triangle_down.svg')
                               ])),
                     ),
                     Container(
@@ -153,14 +156,13 @@ isFirst = false;
                                         child: Text(
                                             "${vaTrue.blm?.slots[index]?.slotStart ?? '00:00'}-${vaTrue.blm?.slots[index]?.slotEnd ?? '00:00'}",
                                             style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Gilroy-Regular',
-                                              backgroundColor:
-                                                  vaTrue.getSelectedSlotIndex() ==
-                                                          index
-                                                      ? myGrey
-                                                      : myRed
-                                            )),
+                                                color: Colors.white,
+                                                fontFamily: 'Gilroy-Regular',
+                                                backgroundColor:
+                                                    vaTrue.getSelectedSlotIndex() ==
+                                                            index
+                                                        ? myGrey
+                                                        : myRed)),
                                       ),
                                     ),
                                   ),
@@ -170,7 +172,8 @@ isFirst = false;
                                         color: Colors.white,
                                         borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(10.0),
-                                            bottomRight: Radius.circular(10.0))),
+                                            bottomRight:
+                                                Radius.circular(10.0))),
                                     child: Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Center(
@@ -190,7 +193,7 @@ isFirst = false;
                       ),
                     ),
                     Container(
-                      height: vaTrue.blm.slots.length  <2 ? sm.h(48) : null,
+                      height: vaTrue.blm.slots.length < 2 ? sm.h(48) : null,
                       padding: EdgeInsets.only(left: 20.0, right: 20.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -200,16 +203,15 @@ isFirst = false;
                         ),
                       ),
                       child: Column(
-
                         // shrinkWrap: true,
                         children: [
                           Padding(
-
                             padding: EdgeInsets.symmetric(vertical: 16),
                             child: Text("User Details",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 22.0, fontWeight: FontWeight.w700)),
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.w700)),
                           ),
                           ListView.builder(
                               shrinkWrap: true,
@@ -231,9 +233,7 @@ isFirst = false;
                                     child: InkWell(
                                       onTap: () => showPopup(
                                           context, va, _popupBody(va, vv)),
-                                      child: Column(
-
-                                          children: [
+                                      child: Column(children: [
                                         ListTile(
                                           title: Text(
                                             vv,
@@ -250,8 +250,8 @@ isFirst = false;
                                                             builder: (context) =>
                                                                 ManualBooking(
                                                                     data: va)))
-                                                    .whenComplete(() =>
-                                                        vaTrue.getBookingData());
+                                                    .whenComplete(() => vaTrue
+                                                        .getBookingData());
                                               },
                                               child: Icon(Icons.edit,
                                                   color: myRed, size: 20)),
@@ -282,7 +282,8 @@ isFirst = false;
                                             child: Container(
                                               decoration: bd1Red,
                                               padding: EdgeInsets.all(6),
-                                              margin: EdgeInsets.only(right: 10),
+                                              margin:
+                                                  EdgeInsets.only(right: 10),
                                               child: Icon(
                                                 Icons.call,
                                                 color: Colors.white,

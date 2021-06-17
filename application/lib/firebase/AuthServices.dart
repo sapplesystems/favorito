@@ -1,6 +1,7 @@
 import 'package:Favorito/Functions/signIn.dart';
 import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class AuthServices extends BaseProvider {
             .onError((error, stackTrace) {
       print("otpError:${error.message}");
       Provider.of<ClaimProvider>(key.currentContext).isLoadingSet(false);
-      snackBar('Invalid otp please try again.', key);
+      snackBar('Invalid otp please try again.', key, myGreen);
       return null;
     }))
         .user;

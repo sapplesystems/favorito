@@ -38,6 +38,7 @@ class _FollowBtnState extends State<FollowBtn> {
             else {
               relation = snapshot.data.data[0];
               btnTxt = relation.isRelation == 1 ? 'Following' : 'Follow';
+              print(relation.isRelation);
               return InkWell(
                 onTap: () => btnTxt == 'Follow'
                     ? changeRelation('set')
@@ -69,9 +70,9 @@ class _FollowBtnState extends State<FollowBtn> {
     };
     print('relation request Data:${_map.toString()}');
     await APIManager.businessRelationGet(_map).then((value) {
-      print("ertyuiop");
-      widget.callback;
-      setState(() {});
+      print("inner");
+      widget.callback();
+      // setState(() {});
     });
   }
 }

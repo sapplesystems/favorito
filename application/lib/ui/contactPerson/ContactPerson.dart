@@ -123,20 +123,7 @@ class ContactPerson extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () {
-                                  showPopup(
-                                    ctx: context,
-                                    callback: () {
-                                      Provider.of<ResetPassProvider>(context,
-                                              listen: false)
-                                          .clear();
-                                    },
-                                    sm: sm,
-                                    widget: ResetPass(),
-                                    sizesRight: 3,
-                                    sizesTop: 10,
-                                    sizesLeft: 3,
-                                    sizesBottom: 36,
-                                  ).show();
+                                  Navigator.pushNamed(context, '/ResetPass');
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(

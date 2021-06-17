@@ -54,13 +54,16 @@ class ModelOptionData {
 }
 
 class OrderType {
+  int orderTypeId;
   String attribute;
   int minimumBill;
   int packagingCharge;
+  
 
-  OrderType({this.attribute, this.minimumBill, this.packagingCharge});
+  OrderType({this.orderTypeId,this.attribute, this.minimumBill, this.packagingCharge});
 
   OrderType.fromJson(Map<String, dynamic> json) {
+    orderTypeId = json['order_type_id'];
     attribute = json['attribute'];
     minimumBill = json['minimum_bill'];
     packagingCharge = json['packaging_charge'];
@@ -68,6 +71,7 @@ class OrderType {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['order_type_id'] = this.orderTypeId;
     data['attribute'] = this.attribute;
     data['minimum_bill'] = this.minimumBill;
     data['packaging_charge'] = this.packagingCharge;

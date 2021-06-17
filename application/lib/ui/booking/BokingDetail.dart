@@ -119,8 +119,73 @@ class BokingDetail extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      delete(waitlistData.id);
-                      Navigator.pop(context);
+
+                        showModalBottomSheet<void>(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Container(
+                                                      height: 100,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            '\t\t\t\t\tAre you sure you want to delete ?',
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'Gilroy-Medium'),
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              TextButton(
+                                                                  child: Text(
+                                                                      "Ok",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              myRed,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontFamily:
+                                                                              'Gilroy-Medium')),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context); 
+                                                                        delete(waitlistData.id);
+                                                                        Navigator.pop(context);
+                                                                  }),
+                                                              InkWell(
+                                                                child: Text(
+                                                                  "Cancel",
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          myRed,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontFamily:
+                                                                          'Gilroy-Medium'),
+                                                                ),
+                                                                onTap: () =>
+                                                                    Navigator.pop(
+                                                                        context),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  });
+                                            
+                     
                     },
                     child: CircleAvatar(
                         maxRadius: sm.h(3),

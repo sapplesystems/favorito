@@ -35,7 +35,7 @@ class Data {
   int isEmailVerified;
   int isVerified;
   int checkIns;
-  int ratings;
+  var ratings;
   int ratingCount;
   int catalogoues;
   int orders;

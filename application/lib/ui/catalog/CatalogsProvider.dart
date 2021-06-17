@@ -117,9 +117,9 @@ class CatalogsProvider extends ChangeNotifier {
       print("size in loop:${size}");
 
       try {
-        if (double.parse(size.toString()) < 2048) {
+        if (double.parse(size.toString()) < 200048) {
           pr.show().timeout(Duration(seconds: 10));
-          WebService.catlogImageUpdate(result.files, selectedId ?? '')
+          await WebService.funCatalogAddPhoto(result.files, selectedId ?? '')
               .then((value) {
             pr.hide();
             if (value.status == "success") {
@@ -148,6 +148,58 @@ class CatalogsProvider extends ChangeNotifier {
     }
   }
 
+  deleteImage(int _i) async {
+    // funCatalogDeletePhoto
+    showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text(
+                  '\t\t\t\t\tAre you sure you want to delete ?',
+                  style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Medium'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                        child: Text("Ok",
+                            style: TextStyle(
+                                color: myRed,
+                                fontSize: 16,
+                                fontFamily: 'Gilroy-Medium')),
+                        onPressed: () async {
+                          await WebService.funCatalogDeletePhoto(
+                              {'photo_id': imgUrlsId[_i]}).then((value) {
+                            imgUrlsId.removeAt(_i);
+                            imgUrls.removeAt(_i);
+                            notifyListeners();
+
+                            Navigator.pop(context);
+                          });
+                        }),
+                    InkWell(
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                            color: myRed,
+                            fontSize: 16,
+                            fontFamily: 'Gilroy-Medium'),
+                      ),
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
+  }
+
   setSelectedCatalog(String _id) {
     selectedId = _id;
     WebService.funCatalogDetail({'catalog_id': selectedId}).then((value) {
@@ -157,8 +209,10 @@ class CatalogsProvider extends ChangeNotifier {
       controller[3].text = value.data[0].productUrl;
       controller[4].text = value.data[0].productId;
       try {
-        var v = value.data[0].photos.split(',');
-        imgUrls.addAll(v);
+        var _v = value.data[0].photos.split(',');
+        imgUrls.addAll(_v);
+        var _vv = value.data[0].photosId.split(',');
+        imgUrlsId.addAll(_vv);
       } catch (e) {
         imgUrls.add(value.data[0].photos);
       }

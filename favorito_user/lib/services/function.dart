@@ -50,6 +50,7 @@ class service {
 
   static final joblist = base + 'job/list';
   static final checkPostalCode = base + 'job/city-from-pincode';
+  static final jobDetail = base + 'user-job/detail';
 
   //waitlist
   static final baseUserWaitlistVerbose = baseUserWaitlist + 'waitlist-verbose';
@@ -66,7 +67,7 @@ class service {
   static final getrating = baseBusinessReview + 'get-review-detail';
   static final getReviewListing = baseUserProfile + 'user-review';
   static final setRating = baseUserProfile + 'set-business-rating';
-  static final getRating = baseUserProfile + 'get-business-rating';
+  static final getMyRating = baseUserProfile + 'get-business-rating';
 
   //userDetail
   static final userdetail = baseUserProfile + 'user-detail';

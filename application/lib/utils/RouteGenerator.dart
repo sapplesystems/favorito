@@ -1,9 +1,11 @@
 import 'package:Favorito/component/NetworkImages.dart';
+import 'package:Favorito/ui/ResetPass/ResetPass.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/appoinment/AddPerson.dart';
 import 'package:Favorito/ui/appoinment/AddRestriction.dart';
 import 'package:Favorito/ui/appoinment/AddServices.dart';
 import 'package:Favorito/ui/appoinment/ManualAppoinment.dart';
+import 'package:Favorito/ui/booking/BookigDateRistriction.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/catalog/NewCatlog.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
@@ -59,8 +61,8 @@ class RouteGenerator {
       case '/manualAppoinment':
         return MaterialPageRoute(builder: (_) => ManualAppoinment());
 
-      // case '/chat':
-      //   return MaterialPageRoute(builder: (_) => Chat());
+      case '/ResetPass':
+        return MaterialPageRoute(builder: (_) => ResetPass());
 
       case '/networkImages':
         return MaterialPageRoute(
@@ -69,8 +71,8 @@ class RouteGenerator {
                       'https://wonderfulengineering.com/wp-content/uploads/2016/01/nature-wallpapers-38-610x381.jpg',
                 ));
 
-      // case '/bookingOrAppointmentList':
-      //   return MaterialPageRoute(builder: (_) => BookingOrAppointmentParent());
+      case '/bookigDateRistriction':
+        return MaterialPageRoute(builder: (_) => BookigDateRistriction());
 
       // case '/searchResult':
       //   return MaterialPageRoute(builder: (_) => SearchResult(data: args));

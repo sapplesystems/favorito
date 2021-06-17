@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:Favorito/Provider/SignUpProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
@@ -14,8 +15,8 @@ import 'package:provider/provider.dart';
 class signup_b extends StatelessWidget {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  var signUpProviderTrue;
-  var signUpProviderFalse;
+  SignUpProvider signUpProviderTrue;
+  SignUpProvider signUpProviderFalse;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class signup_b extends StatelessWidget {
     String passNotSameTxt;
     SizeManager sm = SizeManager(context);
     return Scaffold(
+      key: RIKeys.josKeys24,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
@@ -143,14 +145,30 @@ class signup_b extends StatelessWidget {
                                       controller:
                                           signUpProviderTrue.controller[5],
                                       myregex: emailRegex,
+                                      myOnChanged: (c) =>
+                                          signUpProviderTrue.refresh(),
                                       security: false),
+                                  Visibility(
+                                    visible:
+                                        signUpProviderTrue.mailError != null,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: Text(
+                                        signUpProviderTrue.mailError ?? '',
+                                        style: TextStyle(color: myRed),
+                                      ),
+                                    ),
+                                  ),
                                   txtfieldboundry(
                                       valid: true,
                                       maxLines: 1,
                                       controller:
                                           signUpProviderTrue.controller[6],
                                       title: "Password",
-                                      myregex: passwordRegex,
+                                      error: signUpProviderTrue.passError,
+                                      myOnChanged: (_v) => signUpProviderTrue
+                                          .validatePassword(_v),
                                       security: true),
                                   txtfieldboundry(
                                       valid: true,
@@ -158,8 +176,9 @@ class signup_b extends StatelessWidget {
                                       controller:
                                           signUpProviderTrue.controller[7],
                                       title: "Confirm Password",
-                                      myregex: passwordRegex,
-                                      error: passNotSameTxt,
+                                      error: signUpProviderTrue.passError1,
+                                      myOnChanged: (_v) => signUpProviderTrue
+                                          .validatePassword1(_v),
                                       security: true),
                                   CheckboxListTile(
                                     title: Text(
@@ -206,13 +225,8 @@ class signup_b extends StatelessWidget {
 
   void funSublim() {
     if (_formKey.currentState.validate()) {
-      if (signUpProviderTrue.controller[6].text !=
-          signUpProviderTrue.controller[7].text) {
-        // signUpProviderTrue.controller[6].text = "";
-        // signUpProviderTrue.controller[7].text = "";
-        BotToast.showText(text: "Please confirm your password!");
-        return;
-      }
+      if (signUpProviderTrue.mailError != null) return;
+
       if (!signUpProviderTrue.getTnCChecked()) {
         BotToast.showText(text: "Please confirm T&C!");
         return;

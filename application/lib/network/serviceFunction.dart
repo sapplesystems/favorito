@@ -34,6 +34,7 @@ class serviceFunction {
   static String funWaitlistDelete = baseUrl1 + 'waitlist/delete';
   static String funSearchBranches = baseUrl2 + 'business-user/search-branch';
   static String funGetBusinessProfileData = baseUrl2 + 'business-user/profile';
+
   static String funGetBusinessWorkingHours =
       funGetBusinessProfileData + '/get-working-hour';
   static String funSetBusinessWorkingHours =
@@ -42,6 +43,7 @@ class serviceFunction {
   static String funEditOffer = funOffer + 'edit';
   static String funGetEditJobData = baseUrl2 + 'job/detail';
   static String funUserProfileUpdate = baseUrl1 + 'user/profile/update';
+  static String funCatalogDeletePhoto = baseUrl2 + 'catalog/delete-photo';
   static String funProfileUpdatephoto = baseUrl1 + 'user/profile/update-photo';
   static String funUserProfile = baseUrl1 + 'user/profile';
   static String funUserInformation = baseUrl1 + 'user/information';
@@ -57,6 +59,7 @@ class serviceFunction {
   static String funCreateCampainEdit = baseUrl1 + 'ad-spent-campaign/edit';
   static String funOrderList = baseUrl1 + 'order/list';
   static String funCatalogAddPhoto = baseUrl2 + 'catalog/add-photo';
+
   static String funCatalogEdit = baseUrl2 + 'catalog/edit';
   static String funCatalogDetail = baseUrl2 + 'catalog/detail';
   static String funManualBooking = funBooking + 'create';
@@ -64,7 +67,14 @@ class serviceFunction {
   static String funBookingSaveSetting = funBooking + 'save-setting';
   static String funBookingList = funBooking + 'list';
   static String funBookingEdit = funBooking + 'edit';
+  static String deleteBooking = baseUrl1 + 'booking/delete';
+  static String acceptBooking = baseUrl1 + 'booking/accept';
+  static String setRestrinction = baseUrl1 + 'booking/set-restriction-date';
+  static String getRestrinction = baseUrl1 + 'booking/get-restriction-date';
+  static String deleteRestrinction =
+      baseUrl1 + 'booking/delete-restriction-date';
 
+// set-restriction-date
   static String funNotificationsList = funNotification + 'list';
   static String funGetCreateNotificationDefaultData =
       funNotification + 'dd-verbose';
@@ -137,8 +147,6 @@ class serviceFunction {
       baseUrl2 + 'change-password/verify-otp-change-password';
   static String funChangePassword =
       baseUrl2 + 'change-password/change-password-by-old';
-  static String deleteBooking = baseUrl2 + 'business-booking/delete';
-  static String acceptBooking = baseUrl2 + 'business-booking/accept';
   static String websitesList = baseUrl1 + 'user/business-website';
 
   //Chat
@@ -149,4 +157,5 @@ class serviceFunction {
   // business info page
 
   static String infoDeletePhoto = baseUrl1 + 'user/information/delete-photo';
+  static String checkEmailAndMobile = baseUrl1 + 'user/is-account-exist';
 }

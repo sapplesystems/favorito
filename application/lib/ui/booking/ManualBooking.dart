@@ -1,7 +1,7 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/model/booking/SlotData.dart';
-import 'package:Favorito/myCss.dart';
+
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
 import 'package:Favorito/utils/Regexer.dart';
@@ -82,7 +82,8 @@ class _ManualBooking extends State<ManualBooking> {
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Manual Booking", style: titleStyle),
+          title: Text("Manual Booking",
+              style: Theme.of(context).textTheme.headline6.copyWith()),
         ),
         body: ListView(children: [
           Padding(
@@ -120,10 +121,11 @@ class _ManualBooking extends State<ManualBooking> {
                                                       child: Center(
                                                           child: Text(
                                                               _selectedDateText,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600))),
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline6
+                                                                  .copyWith())),
                                                       gradient: LinearGradient(
                                                           colors: [
                                                             myGrey,
@@ -155,9 +157,10 @@ class _ManualBooking extends State<ManualBooking> {
                                             child: OutlineGradientButton(
                                               child: Center(
                                                   child: Text(_selectedTimeText,
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .w600))),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6
+                                                          .copyWith())),
                                               gradient: LinearGradient(
                                                   colors: [myGrey, myGrey]),
                                               strokeWidth: 1,
@@ -330,7 +333,10 @@ class _ManualBooking extends State<ManualBooking> {
 
     if (isToday) {
       if (b) {
-        startTime = DateTime.now().hour + h;
+        int _va = DateTime.now().hour;
+        int _va2 = _va+ h;
+        if(_va2>23)_va2=0;
+        startTime =  _va2;
       } else {
         startTime = aa.hour + h;
       }
@@ -346,6 +352,9 @@ class _ManualBooking extends State<ManualBooking> {
     print('hours:$h'
         // now:$now c:$c '
         ' isToday$isToday  startTime:${va.getStartTime()} endTime:${va.getEndTime()}');
+
+        print("startTime:$startTime");
+        
     showCustomTimePicker(
         context: context,
         onFailValidation: (context) => print('Unavailable selection'),

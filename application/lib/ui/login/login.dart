@@ -9,11 +9,15 @@ import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
+import 'package:Favorito/ui/bottomNavigation/bottomNavigationProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -23,8 +27,10 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController userCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
+  SharedPreferences preferences;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool showPass = false;
+  SizeManager sm;
   @override
   void initState() {
     super.initState();
@@ -33,7 +39,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    SizeManager sm = SizeManager(context);
+    sm = SizeManager(context);
     return Scaffold(
         body: ListView(children: [
       Padding(
@@ -60,40 +66,38 @@ class _LoginState extends State<Login> {
               child: Builder(
                 builder: (context) => Form(
                   key: _formKey,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: sm.h(8)),
+                  child: Column(children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: sm.h(8)),
+                      child: txtfieldPostAction(
+                        valid: true,
+                        title: "Email/Phone",
+                        maxLines: 1,
+                        controller: userCtrl,
+                        security: false,
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: sm.h(4)),
                         child: txtfieldPostAction(
                           valid: true,
-                          title: "Email/Phone",
                           maxLines: 1,
-                          controller: userCtrl,
-                          security: false,
-                        ),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(top: sm.h(4)),
-                          child: txtfieldPostAction(
-                            valid: true,
-                            maxLines: 1,
-                            title: "Password",
-                            sufixClick: () =>
-                                setState(() => showPass = !showPass),
-                            sufixIcon: showPass
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            controller: passCtrl,
-                            sufixColor: myRed,
-                            security: !showPass,
-                          )),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(bottom: sm.h(4), right: sm.w(2)),
-                        child: InkWell(
-                          onTap: () =>
-                              Navigator.of(context).pushNamed('/forgetPass'),
-                          child: Row(
+                          title: "Password",
+                          sufixClick: () =>
+                              setState(() => showPass = !showPass),
+                          sufixIcon: showPass
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          controller: passCtrl,
+                          sufixColor: myRed,
+                          security: !showPass,
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: sm.h(4), right: sm.w(2)),
+                      child: InkWell(
+                        onTap: () =>
+                            Navigator.of(context).pushNamed('/forgetPass'),
+                        child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
@@ -106,12 +110,10 @@ class _LoginState extends State<Login> {
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
+                            ]),
                       ),
-                    ],
-                  ),
+                    ),
+                  ]),
                 ),
               ),
             ),
@@ -170,7 +172,7 @@ class _LoginState extends State<Login> {
     ]));
   }
 
-  void funClick() {
+  void funClick() async {
     if (_formKey.currentState.validate()) {
       Map<String, dynamic> _map = {
         "username": userCtrl.text,
@@ -180,12 +182,22 @@ class _LoginState extends State<Login> {
       requestModel.context = context;
       requestModel.data = _map;
       requestModel.url = serviceFunction.funLogin;
-
-      WebService.serviceCall(requestModel).then((value) {
+      preferences = await SharedPreferences.getInstance();
+      await WebService.serviceCall(requestModel).then((value) {
         loginModel _v =
             loginModel.fromJson(convert.json.decode(value.toString()));
         if (_v.status == "success") {
+          preferences.setString('businessId', _v.data.businessId);
+          preferences.setString('email', _v.data.email);
+          preferences.setString('phone', _v.data.phone);
           Prefs.setToken(_v.token.toString().trim());
+          Consumer<bottomNavigationProvider>(
+            builder: (ctx, data, child) {
+              data.setSelectedIndex(0);
+              return null;
+            },
+          );
+
           Navigator.pop(context);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => bottomNavigation()));

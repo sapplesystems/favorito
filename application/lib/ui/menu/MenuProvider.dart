@@ -4,6 +4,7 @@ import 'package:Favorito/model/menu/MenuBaseModel.dart';
 import 'package:Favorito/model/menu/MenuSettingModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/RIKeys.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class MenuProvider extends BaseProvider {
@@ -118,7 +119,7 @@ class MenuProvider extends BaseProvider {
     };
     print("_map:${_map.toString()}");
     await WebService.funMenuSettingUpdate(_map).then((value) {
-      this.snackBar(value.message, RIKeys.josKeys17);
+      this.snackBar(value.message, RIKeys.josKeys17, myGreen);
       if (value.status == 'success') {
         Navigator.pop(RIKeys.josKeys16.currentContext);
         setNeedSave(false);

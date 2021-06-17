@@ -328,8 +328,7 @@ class BusinessProfile extends StatelessWidget {
       FollowBtn(
         id: vatrue.getBusinessId(),
         callback: () {
-          // isFirst = true;
-
+          print("outer");
           vatrue.abc();
         },
       ),

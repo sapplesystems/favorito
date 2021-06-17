@@ -1,17 +1,22 @@
+import 'dart:async';
+
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/busyListModel.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/utils/myColors.dart';
+import 'package:Favorito/utils/Regexer.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 
 class SignUpProvider extends ChangeNotifier {
   static final categoryKey = GlobalKey<DropdownSearchState<String>>();
   static final categoryKey1 = GlobalKey<DropdownSearchState<String>>();
   static final categoryKey2 = GlobalKey<DropdownSearchState<String>>();
   static bool signCler = true;
+  String mailError;
+  String passError;
+  String passError1;
+  Timer _debounce;
   SignUpProvider() {
     getCategory();
     getBusiness();
@@ -19,9 +24,20 @@ class SignUpProvider extends ChangeNotifier {
       controller.add(TextEditingController());
       error.add(null);
     }
+
+    controller[5].addListener(_onSearchChanged);
   }
+  _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(Duration(seconds: 1), () {
+      if (controller[5].text != "") {
+        validatemail();
+      }
+    });
+  }
+
   BuildContext context;
-  ProgressDialog pr;
+  // ProgressDialog pr;
   List<TextEditingController> controller = [];
   List<String> error = [];
   List<catData> _catdata = [];
@@ -36,21 +52,6 @@ class SignUpProvider extends ChangeNotifier {
   List<String> busy = ["Owner", "Manager", "Employee"];
   setContext(BuildContext context) {
     this.context = context;
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(
-        message: 'Please wait...',
-        borderRadius: 8.0,
-        backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
-        elevation: 8.0,
-        insetAnimCurve: Curves.easeInOut,
-        progress: 0.0,
-        maxProgress: 100.0,
-        progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-        messageTextStyle: TextStyle(
-            color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
   }
 
   int getTypeId() => _typeId; //businessTypeId
@@ -144,9 +145,7 @@ class SignUpProvider extends ChangeNotifier {
     };
 
     print("Request:${_map}");
-    pr.show().timeout(Duration(seconds: 5));
     WebService.funRegister(_map, context).then((value) {
-      pr.hide();
       if (value.status == 'success') {
         BotToast.showText(text: value.message ?? '');
         allClear();
@@ -159,9 +158,7 @@ class SignUpProvider extends ChangeNotifier {
   }
 
   void pinCaller(String _val) async {
-    pr.show();
     await WebService.funGetCityByPincode({"pincode": _val}).then((value) {
-      pr.hide();
       if (value.data.city == null) {
         error[1] = value.message;
         controller[1].text = '';
@@ -192,5 +189,56 @@ class SignUpProvider extends ChangeNotifier {
 
     error[1] = null;
     // categoryKey.currentState.initState();
+  }
+
+  validatemail() async {
+    print("fsdfsdfsdf");
+    if (emailRegex.hasMatch(controller[5].text)) {
+      await WebService.checkEmailAndMobile(
+        {"api_type": "email", "email": controller[5].text},
+      ).then((value) {
+        if (value.status == "success") {
+          mailError = value.data[0].isExist == 1
+              ? '\t\t\tThis mail arleady registered with us.'
+              : null;
+        } else {
+          mailError = '${value.message}';
+        }
+      });
+    } else {
+      mailError = null;
+    }
+    notifyListeners();
+  }
+
+  validatePassword(_val) {
+    if (!passwordRegex.hasMatch(_val)) {
+      passError =
+          'Password should be 8 Character or \n longer. At least a number, a symbol.';
+    } else {
+      passError = null;
+    }
+    if (controller[6].text != controller[7].text) {
+      passError1 = 'Password mismatch';
+    } else {
+      passError1 = null;
+    }
+    notifyListeners();
+  }
+
+  validatePassword1(_val) {
+    if (!passwordRegex.hasMatch(_val)) {
+      passError1 =
+          'Password should be 8 Character or \n longer. At least a number, a symbol.';
+    } else if (controller[6].text != controller[7].text) {
+      passError1 = 'Password mismatch';
+    } else {
+      passError1 = null;
+    }
+    notifyListeners();
+  }
+
+  refresh() {
+    notifyListeners();
   }
 }

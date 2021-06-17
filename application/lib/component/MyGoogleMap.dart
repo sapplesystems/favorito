@@ -6,10 +6,6 @@ import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:provider/provider.dart';
 
 class MyGoogleMap extends StatefulWidget {
-  Completer<GoogleMapController> controller;
-
-  MyGoogleMap({this.controller});
-
   @override
   _MyGoogleMapState createState() => _MyGoogleMapState();
 }
@@ -22,11 +18,7 @@ class _MyGoogleMapState extends State<MyGoogleMap> {
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-            bottomLeft: Radius.circular(30)),
+        borderRadius: BorderRadius.circular(30),
         child: Align(
           alignment: Alignment.bottomRight,
           heightFactor: 0.3,
@@ -34,7 +26,6 @@ class _MyGoogleMapState extends State<MyGoogleMap> {
           child: Consumer<BusinessProfileProvider>(
             builder: (context, data, child) {
               return GoogleMap(
-                  // key: _key,
                   initialCameraPosition:
                       data.getPosition() ?? data.getPosition(),
                   onMapCreated: (GoogleMapController controller) {

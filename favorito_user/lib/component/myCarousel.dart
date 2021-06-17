@@ -25,6 +25,7 @@ class _myCarouselState extends State<myCarousel> {
     sm = SizeManager(context);
     return FutureBuilder<CarouselModel>(
       future: APIManager.carousel({'business_id': widget.id}),
+      // ignore: missing_return
       builder: (BuildContext context, AsyncSnapshot<CarouselModel> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: Text(loading));
@@ -37,10 +38,7 @@ class _myCarouselState extends State<myCarousel> {
             height: sm.h(30),
             child: CarouselSlider(
                 options: CarouselOptions(
-                  autoPlay: false,
-                  aspectRatio: 2.0,
-                  enlargeCenterPage: true,
-                ),
+                    autoPlay: false, aspectRatio: 2.0, enlargeCenterPage: true),
                 items: carouselModel.data
                     .map(
                       (item) => InkWell(

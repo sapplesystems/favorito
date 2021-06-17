@@ -22,37 +22,42 @@ class JobTab extends StatelessWidget {
               itemCount: vaTrue.jobListModel?.data?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
+                    onTap: () {
+                      vaTrue.jobDetail(vaTrue?.jobListModel?.data[index]?.id);
+                      Navigator.pushNamed(context, '/JobDetail');
+                    },
                     child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                  child: Container(
-                      height: sm.h(10),
-                      width: sm.w(80),
-                      decoration: BoxDecoration(
-                          // color: Colors.white,
-                          // border: Border.all(color: Colors.white),
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(20.0))),
-                      margin: EdgeInsets.symmetric(horizontal: 14),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                                '${vaTrue?.jobListModel?.data[index]?.title ?? ''}'
-                                    .capitalize(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline4
-                                    .copyWith(
-                                        fontSize: 15,
-                                        fontFamily: 'Gilroy-Mediam')),
-                            SizedBox(
-                                width: 20,
-                                child:
-                                    SvgPicture.asset('assets/icon/reply.svg'))
-                          ])),
-                ));
+                      child: Container(
+                          height: sm.h(10),
+                          width: sm.w(80),
+                          decoration: BoxDecoration(
+                              // color: Colors.white,
+                              // border: Border.all(color: Colors.white),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0))),
+                          margin: EdgeInsets.symmetric(horizontal: 14),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    '${vaTrue?.jobListModel?.data[index]?.title ?? ''}'
+                                        .capitalize(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline4
+                                        .copyWith(
+                                            fontSize: 15,
+                                            fontFamily: 'Gilroy-Mediam')),
+                                SizedBox(
+                                    width: 20,
+                                    child: SvgPicture.asset(
+                                        'assets/icon/reply.svg'))
+                              ])),
+                    ));
               })),
     );
   }

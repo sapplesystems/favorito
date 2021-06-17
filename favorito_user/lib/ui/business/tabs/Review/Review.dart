@@ -7,21 +7,13 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/dateformate.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
-import '../../../../utils/Extentions.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class Review extends StatelessWidget {
   SizeManager sm;
-  ReviewProvider vaTrue;
   bool isFirst = true;
   @override
   Widget build(BuildContext context) {
-    if (isFirst) {
-      vaTrue = Provider.of<ReviewProvider>(context, listen: true);
-      vaTrue.reviewModel.clear();
-      sm = SizeManager(context);
-      vaTrue.getReviewReplies();
-      isFirst = false;
-    }
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -33,27 +25,47 @@ class Review extends StatelessWidget {
             iconTheme: IconThemeData(color: Colors.black),
             centerTitle: true,
             title: Text("Review",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(color: myRed),
+                style: Theme.of(context).textTheme.headline6.copyWith(),
                 textScaleFactor: 1)),
-        // funReviewgetReviewReplies
-        body: RefreshIndicator(
-          onRefresh: () async {
-            vaTrue.getReviewReplies();
-          },
-          child: ListView(
-            children: [
+        body: Consumer<ReviewProvider>(builder: (context, data, child) {
+          if (isFirst) {
+            data.reviewModel.clear();
+            sm = SizeManager(context);
+            data.getReviewReplies();
+            isFirst = false;
+          }
+          return RefreshIndicator(
+            onRefresh: () async {
+              data.getReviewReplies();
+            },
+            child: ListView(shrinkWrap: true, children: [
+              Container(
+                alignment: Alignment.center,
+                child: SmoothStarRating(
+                  borderColor: myRed,
+                  color: myRed,
+                  rating: double.parse(data.myRating),
+                  isReadOnly: false,
+                  size: 40,
+                  filledIconData: Icons.star,
+                  halfFilledIconData: Icons.star_half,
+                  defaultIconData: Icons.star_border,
+                  starCount: 5,
+                  allowHalfRating: false,
+                  spacing: 2.0,
+                  onRated: (value) => data.myRating = value.toString(),
+                ),
+              ),
+
               Visibility(
-                visible: !vaTrue.getSelectedReviewId(),
+                visible: !data.getSelectedReviewId(),
                 child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     height: sm.h(54),
                     child: Card(
                         child: bodyData(
-                            ctrl: vaTrue.controller,
-                            data: vaTrue.reviewModel,
+                            ctrl: data.controller,
+                            data: data.reviewModel,
                             rat: 0))),
               ),
 
@@ -62,9 +74,9 @@ class Review extends StatelessWidget {
                 child: EditTextComponent(
                     valid: true,
                     title: "Reply",
-                    controller: vaTrue.controller,
+                    controller: data.controller,
                     maxLines: 5,
-                    hint: "Enter reply to user",
+                    hint: "Update review here",
                     security: false),
               ),
               // ),
@@ -72,11 +84,8 @@ class Review extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: sm.w(20)),
                 child: NeumorphicButton(
                   style: NeumorphicStyle(
-                      // shape: NeumorphicShape.concave,
-                      // depth: 11,
                       intensity: 40,
                       surfaceIntensity: -.4,
-                      // lightSource: LightSource.topLeft,
                       color: myButtonBackground,
                       boxShape: NeumorphicBoxShape.roundRect(
                           BorderRadius.all(Radius.circular(24.0)))),
@@ -92,20 +101,18 @@ class Review extends StatelessWidget {
                         textScaleFactor: .65),
                   ),
                   onPressed: () {
-                    if (vaTrue.controller.text != null &&
-                        vaTrue.controller.text.length > 0) {
-                      vaTrue.businessSetReview(context);
+                    if (data.controller.text != null &&
+                        data.controller.text.length > 0) {
+                      data.businessSetReview(context);
                     } else {
                       BotToast.showText(text: "Please fill Review..");
                     }
                   },
                 ),
               ),
-              //   ],
-              // );
-            ],
-          ),
-        ));
+            ]),
+          );
+        }));
   }
 }
 

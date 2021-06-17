@@ -22,6 +22,7 @@ import 'package:favorito_user/model/appModel/Menu/Customization.dart/Customizati
 import 'package:favorito_user/model/appModel/Menu/IsFoodModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
+import 'package:favorito_user/model/appModel/Menu/order/CreateOrderModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OrderListModel.dart';
 import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
@@ -36,6 +37,7 @@ import 'package:favorito_user/model/appModel/appointment/AppSerModel.dart';
 import 'package:favorito_user/model/appModel/appointment/PersonListModel.dart';
 import 'package:favorito_user/model/appModel/appointment/SlotModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
+import 'package:favorito_user/model/appModel/job/JobDetailModel.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/model/appModel/login/loginModel.dart';
 import 'package:favorito_user/model/appModel/registerModel.dart';
@@ -425,9 +427,8 @@ class APIManager {
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
     response = await dio.post(service.mostPopulerBusiness, options: opt);
-    print("topRatedBusiness responseData:${response.toString()}");
-    return TrendingBusinessModel.fromJson(
-        convert.json.decode(response.toString()));
+    // print("topRatedBusiness responseData:${response.toString()}");
+    return TrendingBusinessModel.fromJson(convert.json.decode("$response"));
   }
 
   static Future<businessOverViewModel> baseUserProfileOverview(Map _map) async {
@@ -492,6 +493,7 @@ class APIManager {
         ;
     String token = await Prefs.token;
     print('token : ${token.toString()}');
+    print('_map : ${_map.toString()}');
     String url = service.baseUserProfileDetail;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
@@ -527,6 +529,19 @@ class APIManager {
         data: _map, options: opt);
     print("service.mostPopulerBusiness : ${response.toString}");
     return CatlogModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+//job detail
+  static Future<JobDetailModels> jobDetail(Map _map) async {
+    String token = await Prefs.token;
+    print('token : ${token.toString()}');
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    print("service.baseUserProfileDetail : ${service.baseUserProfileDetail}");
+    response = await dio.post(service.jobDetail, data: _map, options: opt);
+    print("service.mostPopulerBusiness : ${response.toString}");
+    return JobDetailModels.fromJson(convert.jsonDecode(response.toString()));
   }
 
   static Future<JobListModel> joblist(Map _map) async {
@@ -889,12 +904,12 @@ class APIManager {
   }
 
   //getRating
-  static Future<MyRatingModel> getRating(Map _map) async {
+  static Future<MyRatingModel> getMyRating(Map _map) async {
     String token = await Prefs.token;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    String _url = service.getRating;
+    String _url = service.getMyRating;
     print("$_url : $_url");
     response = await dio.post(_url, data: _map, options: opt);
     return MyRatingModel.fromJson(convert.jsonDecode(response.toString()));
@@ -938,7 +953,7 @@ class APIManager {
   }
 
 //order Create
-  static Future<BaseResponse> userOrderCreate(Map _map) async {
+  static Future<CreateOrderModel> userOrderCreate(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -946,7 +961,7 @@ class APIManager {
     response =
         await dio.post(service.userOrderCreate, data: _map, options: opt);
 
-    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+    return CreateOrderModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
 //order verbose

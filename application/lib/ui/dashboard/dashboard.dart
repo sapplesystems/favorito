@@ -16,9 +16,11 @@ import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/claim/buisnessClaim.dart';
 import 'package:Favorito/ui/order/Orders.dart';
 import 'package:Favorito/ui/review/ReviewList.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfo.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
+import 'package:Favorito/utils/Prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -81,7 +83,7 @@ class _dashboardState extends State<dashboard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text("ver : 1.9", style: TextStyle(fontSize: 8)),
+                        Text("ver : 2.0", style: TextStyle(fontSize: 8)),
                         Text("Status : ",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600)),
@@ -113,10 +115,14 @@ class _dashboardState extends State<dashboard> {
                         txt2: "Fill",
                         check: is_profile_completed,
                         function: () {
+                          Provider.of<BusinessProfileProvider>(context,
+                                  listen: false)
+                              .getProfileData(context);
                           Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => BusinessProfile()))
+                                      builder: (context) =>
+                                          BusinessProfile(isFirst: true)))
                               .whenComplete(() => calldashBoard(context));
                         }),
                   ),
@@ -306,10 +312,10 @@ class _dashboardState extends State<dashboard> {
       preferences.setString('nickname', va?.businessName);
       preferences.setString('photoUrl', va?.photo);
       preferences.setInt('type', va?.businessType);
-      Provider.of<SettingProvider>(context, listen: false)
-          .initCall(va?.businessType == 1);
-      preferences.setBool(
-          'isAppointment', va?.businessAttributes.contains('Appointment'));
+      Prefs.setBusinessType(va?.businessType);
+      // Provider.of<SettingProvider>(context, listen: false)
+      //     .initCall(va?.businessType == 1);
+      Prefs.setISAPPOINTMENT(va?.businessAttributes.contains('Appointment'));
       print("isAppointment:${va?.businessAttributes.contains('Appointment')}");
       business_status = va?.businessStatus;
       photoUrl = va?.photo;
@@ -327,6 +333,11 @@ class _dashboardState extends State<dashboard> {
         paid_credit = va?.paidCredit?.toString() ?? '';
         free_credit = va?.freeCredit?.toString() ?? '';
       });
+      Provider.of<BusinessProfileProvider>(_context, listen: false)
+          .getProfileData(_context);
+
+      Provider.of<SettingProvider>(_context, listen: false).wait =
+          va.businessType == 1;
     });
   }
 }

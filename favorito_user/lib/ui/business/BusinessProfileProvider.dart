@@ -4,7 +4,11 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
+import 'package:favorito_user/model/appModel/Catlog/CatlogData.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
+import 'package:favorito_user/model/appModel/job/JobData.dart';
+import 'package:favorito_user/model/appModel/job/JobDetailModel.dart';
+
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/MyString.dart';
@@ -15,6 +19,7 @@ import 'package:intl/intl.dart';
 class BusinessProfileProvider extends BaseProvider {
   WaitListDataModel _waitListDataModel = WaitListDataModel();
   bool _isProgress = true;
+  List<CatlogData> catlogList;
   WorkingHoursModel workingHoursModel = WorkingHoursModel();
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   List<String> attribute = [];
@@ -30,6 +35,7 @@ class BusinessProfileProvider extends BaseProvider {
   int remainTime;
   bool _getWaitlistDone = false;
 
+  JobData jobData = JobData();
   bool getIsProgress() => _isProgress;
 
   setIsProgress(bool _val) {
@@ -130,6 +136,7 @@ class BusinessProfileProvider extends BaseProvider {
       } catch (e) {
         BotToast.showText(text: e.toString());
       } finally {
+        // catalogList();
         notifyListeners();
       }
     });
@@ -306,11 +313,15 @@ class BusinessProfileProvider extends BaseProvider {
     } catch (e) {}
   }
 
-  catalogList() async {
-    await APIManager.baseUserProfileBusinessCatalogList(
-        {"business_id": this.getBusinessId()}).then((value) {});
+  jobDetail(int _i) async {
+    await APIManager.jobDetail({"job_id": _i}).then((value) {
+      jobData = value.data[0];
+      notifyListeners();
+    });
   }
 }
+
+
 
 // per = (((100 * (waitTime - now.difference(startTime).inMinutes)) /
 //     waitTime));

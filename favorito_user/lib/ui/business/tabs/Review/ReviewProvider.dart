@@ -13,12 +13,13 @@ class ReviewProvider extends BaseProvider {
   List<ReviewData1> reviewData1 = [];
   String _selectedReviewId = "null";
   String _rootId = "null";
-  String rating = '3.0';
+  String myRating = '3.0';
   String businessId;
   List<double> ratingPoints = [0.0, 0.0, 0.0, 0.0, 0.0];
   List<Reviewdata> reviewModel = [];
   RatingData _ratingDatas = RatingData();
   void businessSetReview(context) async {
+    print("aaa:${_selectedReviewId}");
     Map _map = {
       'business_id': businessId,
       "review": controller.text,
@@ -29,14 +30,22 @@ class ReviewProvider extends BaseProvider {
       'b_to_u': 0
     };
     print("_map:${_map.toString()}");
+
     await APIManager.businessSetReview(_map).then((value) {
       if (_selectedReviewId == "null") {
         Navigator.pop(context);
       }
+
       controller.text = "";
+      setRating();
 
       getReviewReplies();
     });
+  }
+
+  clearSelectedReviewId() {
+    _selectedReviewId = '0';
+    notifyListeners();
   }
 
   void getReviewListing(BuildContext context) async {
@@ -45,7 +54,7 @@ class ReviewProvider extends BaseProvider {
       reviewData1.clear();
       if (value.status == 'success') {
         reviewData1.addAll(value.data);
-        notifyListeners();
+        getMyRating();
       }
     });
   }
@@ -88,25 +97,26 @@ class ReviewProvider extends BaseProvider {
       ratingPoints[2] = (value.data?.ratingsByPoints?.rating3 ?? 0) / 10;
       ratingPoints[3] = (value.data?.ratingsByPoints?.rating4 ?? 0) / 10;
       ratingPoints[4] = (value.data?.ratingsByPoints?.rating5 ?? 0) / 10;
-      notifyListeners();
+      getMyRating();
     });
   }
 
   RatingData getRatingData() => _ratingDatas;
 
   void setRating() async {
-    Map _map = {'business_id': businessId, 'rating': rating};
+    Map _map = {'business_id': businessId, 'rating': myRating};
     print('ratMap:${_map.toString()}');
     await APIManager.setRating(_map).then((value) {
       BotToast.showText(text: value.message);
+      getMyRating();
     });
   }
 
-  void getRating() async {
+  void getMyRating() async {
     Map _map = {'business_id': businessId};
     print("_map${_map.toString()}");
-    await APIManager.getRating(_map).then((value) {
-      rating = '${value.data[0].rating}';
+    await APIManager.getMyRating(_map).then((value) {
+      myRating = '${value.data[0].rating}';
       notifyListeners();
     });
   }

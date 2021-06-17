@@ -4,6 +4,7 @@ import 'package:Favorito/model/SubCategories.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
 import 'package:Favorito/model/TagList.dart';
 import 'package:Favorito/utils/UtilProvider.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:Favorito/network/webservices.dart';
@@ -79,7 +80,10 @@ class businessInfoProvider extends ChangeNotifier {
                 .add(selectedSubCategories[i].categoryName);
 
           priceRange = _va.priceRange;
+          priceRangelist.clear();
+
           priceRangelist.addAll(_vaddV.staticPriceRange);
+          // priceRangelist.map((e) => e.replaceAll('?', '\u{20B9}'));
           for (int i = 0; i < _vaddV.staticPriceRange.length; i++)
             radioChecked.add(false);
 
@@ -140,6 +144,7 @@ class businessInfoProvider extends ChangeNotifier {
         "payment_method": selectPay,
         "attributes": selectAttributeId
       };
+      print("_map:${_map.toString()}");
       if (await Provider.of<UtilProvider>(context, listen: false)
           .checkInternet())
         await WebService.setBusinessInfoData(_map, context).then((value) {
@@ -213,9 +218,66 @@ class businessInfoProvider extends ChangeNotifier {
   }
 
   deleteImage(int i, context) async {
-    var _va = {'image_id': photos[i].id};
-    await WebService.infoDeletePhoto(_va, context).then((value) {
-      getPageData(context);
-    });
+    showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text(
+                  '\t\t\t\t\tAre you sure you want to delete ?',
+                  style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Medium'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                        child: Text("Ok",
+                            style: TextStyle(
+                                color: myRed,
+                                fontSize: 16,
+                                fontFamily: 'Gilroy-Medium')),
+                        onPressed: () async {
+                          var _va = {'image_id': photos[i].id};
+                          await WebService.infoDeletePhoto(_va, context)
+                              .then((value) {
+                            getPageData(context);
+                          });
+                          Navigator.pop(context);
+                        }),
+                    InkWell(
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                            color: myRed,
+                            fontSize: 16,
+                            fontFamily: 'Gilroy-Medium'),
+                      ),
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  tapOnRupies(i) {
+    setNeedSave(true);
+    print("priceRange $i");
+    priceRange = priceRangelist[i];
+    for (int j = 0; j < priceRangelist.length; j++) {
+      print("$i:${priceRange.length - 1}");
+      if (i == priceRange.length - 1)
+        radioChecked[i] = true;
+      else
+        radioChecked[i] = false;
+    }
+    print(priceRange);
+    notifyListeners();
   }
 }

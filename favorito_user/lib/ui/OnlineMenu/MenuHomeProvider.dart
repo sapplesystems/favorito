@@ -7,9 +7,13 @@ import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OptionsModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/OnlineMenu/MenuPages.dart';
+import 'package:favorito_user/ui/Login/LoginController.dart';
 import 'package:favorito_user/ui/OnlineMenu/Paydata.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/pay/PayHome.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
+import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -29,11 +33,13 @@ class MenuHomeProvider extends BaseProvider {
   String txt = '';
   bool _getisFoody = false;
   Map<int, List<int>> selectedCustomizetionId = Map();
-  MenuItemBaseModel _menuItemBaseModel = MenuItemBaseModel();
+  MenuItemBaseModel menuItemBaseModel = MenuItemBaseModel();
   // CustomizationItemModel customizationItemModel = CustomizationItemModel();
 
   List<PayData> payDataList = [];
+  List<OrderType> orderType = [];
   PayData selectedPayData;
+  OrderType selectedOrderType;
 
   MenuHomeProvider() {
     // _businessId = 'KIR4WQ4N7KF697HRQ';
@@ -135,14 +141,14 @@ class MenuHomeProvider extends BaseProvider {
   }
 
   setMenuItemBaseModel(MenuItemBaseModel _val) {
-    _menuItemBaseModel = _val;
+    menuItemBaseModel = _val;
     notifyListeners();
   }
 
-  getMenuItemBaseModel() {
-    print('_menuItemBaseModelq:${_menuItemBaseModel.data.length}');
-    return _menuItemBaseModel;
-  }
+  // getMenuItemBaseModel() {
+  //   print('_menuItemBaseModelq:${menuItemBaseModel.data.length}');
+  //   return menuItemBaseModel;
+  // }
 
   userOrderCreateVerbose() async {
     print("businessId2:$_businessId");
@@ -150,8 +156,10 @@ class MenuHomeProvider extends BaseProvider {
         .then((value) {
       if (value.status == 'success') {
         modelOption = value;
+        orderType.clear();
         setPayData(value.data.paymentType);
-        // print('eee${value.data.paymentType.length}');
+        orderType.addAll(value.data.orderType);  
+        setSelectedOrderType(orderType[0]);
       }
     });
   }
@@ -206,10 +214,11 @@ class MenuHomeProvider extends BaseProvider {
     notifyListeners();
   }
 
+// 7533998990
+// 8991
   double allPrice() {
-    var totel = allItemPrices()
-        // + allOptionsPrice()
-        ;
+    var totel = allItemPrices();
+    // + allOptionsPrice();
     print('totel:${totel}');
     return totel;
   }
@@ -234,6 +243,7 @@ class MenuHomeProvider extends BaseProvider {
       }
       groundTotel = groundTotel + _temp;
     }
+    print(groundTotel);
     return groundTotel;
   }
 
@@ -263,7 +273,13 @@ class MenuHomeProvider extends BaseProvider {
     notifyListeners();
   }
 
+  setSelectedOrderType(OrderType orderType) {
+    selectedOrderType = orderType;
+    notifyListeners();
+  }
+
   List<PayData> getPayData() => payDataList;
+
   void setPayData(List<String> _data) {
     print("ddd${_data.length}");
     payDataList.clear();
@@ -280,11 +296,11 @@ class MenuHomeProvider extends BaseProvider {
 
   // userOrderCreate
   //
-  callCustomizetion() async {
+  callCustomizetion(context) async {
     Map _map = {
       "business_id": _businessId,
       "notes": "",
-      "order_type": "3",
+      "order_type": selectedOrderType.orderTypeId,
       "payment_type": selectedPayData.title,
       "category": [
         for (var _v in _listItem)
@@ -313,9 +329,24 @@ class MenuHomeProvider extends BaseProvider {
     await APIManager.userOrderCreate(_map).then((value) {
       this.snackBar(value.message, RIKeys.josKeys25);
       if (value.status == 'success') {
-        Navigator.pop(RIKeys.josKeys25.currentContext);
-        Navigator.pop(RIKeys.josKeys25.currentContext);
-        Navigator.of(RIKeys.josKeys25.currentContext).pushNamed('/orderHome');
+        var options = {
+  'key': 'rzp_test_7JXfR6RFNC1yI6',
+  'amount': value.data.amount, //in the smallest currency sub-unit.
+  'name': 'Acme Corp.',
+  'order_id': value.data.id, // Generate order_id using Orders API
+  'description': '',
+  'timeout': 60, // in seconds
+  'prefill': {
+    // 'contact': context.read<PersonalInfoProvider>().phone,
+    // 'email':context.read<LoginProvider>().getEmail()??"", 
+  }
+};
+// PayHome payHome = PayHome();
+// payHome.options
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>PayHome(options: options,key:RIKeys.josKeys25)));
+        // Navigator.pop(RIKeys.josKeys25.currentContext);
+        // Navigator.pop(RIKeys.josKeys25.currentContext);
+        //  Navigator.of(RIKeys.josKeys25.currentContext).pushNamed('/orderHome');
         // print("success Done");
       }
     });

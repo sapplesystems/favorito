@@ -1,76 +1,70 @@
 import 'package:Favorito/component/fromTo.dart';
 import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:Favorito/utils/myString.dart';
 
 class WorkingDateTime extends StatelessWidget {
   SizeManager sm;
-  BusinessHoursProvider bhpTrue;
-  BusinessHoursProvider bhpFalse;
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    bhpTrue = Provider.of<BusinessHoursProvider>(context, listen: true);
-    bhpFalse = Provider.of<BusinessHoursProvider>(context, listen: true);
-    bhpFalse.SetContexts(context);
-    bhpFalse.localizations = MaterialLocalizations.of(context);
-    return Column(children: [
-      Text(bhpTrue.getMod() ? bhpTrue.hoursTitle1 : bhpTrue.hoursTitle2),
-      Container(
-        height: sm.h(8.5),
-        child: ListView(scrollDirection: Axis.horizontal, children: [
-          for (int i = 0; i < 7; i++)
-            InkWell(
-              onTap: () => bhpFalse.selectDay(i),
-              child: Container(
-                  width: sm.w(12),
-                  margin: EdgeInsets.all(2),
-                  decoration: bhpFalse.daysHours[i].selected
-                      ? bhpFalse.bdct
-                      : (!bhpTrue.getMod() && bhpTrue.daysHours[i].open)
-                          ? bhpTrue.bdctt
-                          : bhpTrue.bdcf,
-                  child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Column(
-                        children: [
-                          Text(bhpFalse.daylist[i], //got
+    return Consumer<BusinessProfileProvider>(builder: (context, data, child) {
+      data.SetContexts(context);
+      data.localizations = MaterialLocalizations.of(context);
+      return Column(children: [
+        Text(data.getMod() ? data.hoursTitle1 : data.hoursTitle2),
+        Container(
+          height: sm.h(8.5),
+          child: ListView(scrollDirection: Axis.horizontal, children: [
+            for (int i = 0; i < 7; i++)
+              InkWell(
+                onTap: () {
+                  data.selectDay(i);
+                },
+                child: Container(
+                    width: sm.w(12),
+                    margin: EdgeInsets.all(2),
+                    decoration: data.daysHours[i]?.selected
+                        ? data?.bdct
+                        : (!data.getMod() && data.daysHours[i].open)
+                            ? data.bdctt
+                            : data.bdcf,
+                    child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Column(children: [
+                          Text(data.daylist[i], //got
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: bhpTrue.daysHours[i].selected
+                                  color: data.daysHours[i].selected
                                       ? Colors.white
-                                      : (!bhpTrue.getMod() &&
-                                              bhpTrue.daysHours[i].open)
+                                      : (!data.getMod() &&
+                                              data.daysHours[i].open)
                                           ? Colors.white
                                           : myGrey)),
                           Icon(Icons.done, color: Colors.white)
-                        ],
-                      ))),
-            )
-        ]),
-      ),
-      Padding(
-        padding: EdgeInsets.symmetric(vertical: 0.0),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          InkWell(
-              onTap: () => bhpFalse.pickDate(true),
-              child: fromTo(txt: bhpFalse.startTime, clr: myGrey)),
-          Text("-", style: TextStyle(fontSize: 40, color: myGrey)),
-          InkWell(
-              onTap: () => bhpFalse.pickDate(false),
-              child: fromTo(txt: bhpFalse.endTime, clr: myGrey))
-        ]),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+                        ]))),
+              )
+          ]),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 0.0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            InkWell(
+                onTap: () => data.pickDate(true),
+                child: fromTo(txt: data.startTime, clr: myGrey)),
+            Text("-", style: TextStyle(fontSize: 40, color: myGrey)),
+            InkWell(
+                onTap: () => data.pickDate(false),
+                child: fromTo(txt: data.endTime, clr: myGrey))
+          ]),
+        ),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
             width: sm.w(20),
             child: InkWell(
-                onTap: () => bhpTrue.prepareData(),
+                onTap: () => data.prepareData(),
                 child: fromTo(txt: "Add", clr: myRed)),
           ),
           Container(
@@ -79,8 +73,8 @@ class WorkingDateTime extends StatelessWidget {
                 onTap: () => Navigator.pop(context),
                 child: fromTo(txt: "Close", clr: myRed)),
           ),
-        ],
-      )
-    ]);
+        ])
+      ]);
+    });
   }
 }

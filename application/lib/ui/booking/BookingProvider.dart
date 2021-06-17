@@ -1,9 +1,13 @@
 import 'package:Favorito/Provider/BaseProvider.dart';
+import 'package:Favorito/model/Restriction/BookingRestrictionModel.dart';
+import 'package:Favorito/model/Restriction/RestrictionData.dart';
 import 'package:Favorito/model/booking/BookingModel.dart';
 import 'package:Favorito/model/booking/bookingListModel.dart';
 import 'package:Favorito/model/booking/bookingSettingModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/RIKeys.dart';
+import 'package:Favorito/utils/dateformate.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class BookingProvider extends BaseProvider {
@@ -17,6 +21,8 @@ class BookingProvider extends BaseProvider {
     "Bookings/Day",
     "Announcement"
   ];
+  bool isSingleDate = true;
+  List<RestrictionData> restrictionDataList = [];
   int _totalBookingDays = 0;
   int _totalBookingHours = 0;
   List<User> _userInputList = [];
@@ -61,7 +67,7 @@ class BookingProvider extends BaseProvider {
   List<TextEditingController> controller = [];
   bookingSettingModel bs;
   BookingProvider() {
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 8; i++) {
       controller.add(TextEditingController());
       controller[i].text = (i != 5 && i != 2) ? "0" : '';
     }
@@ -106,7 +112,7 @@ class BookingProvider extends BaseProvider {
       "end_time": _endTime,
       "advance_booking_start_days": '0',
       "advance_booking_end_days": controller[0].text,
-      "advance_booking_hours": int.parse(controller[1].text)*60,
+      "advance_booking_hours": int.parse(controller[1].text) * 60,
       "slot_length": controller[2].text,
       "booking_per_slot": controller[3].text,
       "booking_per_day": controller[4].text,
@@ -121,8 +127,47 @@ class BookingProvider extends BaseProvider {
       notifyListeners();
       if (value.status == "success") {
         setDone(false);
-        this.snackBar(value.message, RIKeys.josKeys5);
+        this.snackBar(value.message, RIKeys.josKeys5, myGreen);
       }
+    });
+  }
+
+  funSublimRestriction(context, _val, boolval) async {
+    setIsProgress(true);
+    Map _map = {'restriction_id': _val};
+    Map _map1 = {"start_date": controller[6].text};
+    Map _map2 = {
+      "start_date": controller[6].text,
+      "end_date": controller[7].text
+    };
+    if (!boolval) {
+      print("");
+    }
+    await WebService.restrinction(
+            _val == ""
+                ? isSingleDate
+                    ? _map1
+                    : _map2
+                : _map,
+            boolval)
+        .then((value) {
+      setIsProgress(false);
+      getRestrinction(context);
+      controller[6].text = "";
+      controller[7].text = "";
+      isSingleDate = true;
+      if (value.status == "success") {
+        setDone(false);
+        this.snackBar(value.message, RIKeys.josKeys5, myGreen);
+      }
+    });
+  }
+
+  getRestrinction(context) async {
+    await WebService.getRestrinction().then((value) {
+      restrictionDataList.clear();
+      restrictionDataList.addAll(value.date);
+      notifyListeners();
     });
   }
 
@@ -130,26 +175,25 @@ class BookingProvider extends BaseProvider {
     await WebService.funBookingSetting().then((value) {
       if (value.status == "success") {
         bs = value;
-        String  _a ='1'; 
-        if(bs.data[0]?.advanceBookingHours!=null){
-          _a = (bs.data[0].advanceBookingHours/60).toString().substring(0,1);
+        String _a = '1';
+        if (bs.data[0]?.advanceBookingHours != null) {
+          _a = (bs.data[0].advanceBookingHours / 60).toString().substring(0, 1);
         }
         _totalBookingDays = bs.data[0]?.advanceBookingEndDays ?? 0;
         setStartTime(bs.data[0]?.startTime?.substring(0, 5) ?? '');
         setEndTime(bs.data[0]?.endTime?.substring(0, 5) ?? '');
         controller[0].text = bs.data[0]?.advanceBookingEndDays?.toString();
-        controller[1].text = _a ;
+        controller[1].text = _a;
         setTotalBookingHours(bs.data[0]?.advanceBookingHours ?? 0);
         controller[2].text = bs.data[0]?.slotLength?.toString() ?? '60';
         controller[3].text = bs.data[0]?.bookingPerSlot?.toString();
         controller[4].text = bs.data[0]?.bookingPerDay?.toString();
         controller[5].text = bs.data[0]?.announcement ?? '';
-        RIKeys?.josKeys3?.currentState?.changeSelectedItem(
-            slot[slot.indexOf(
-              '60 min'
-              // '${controller[2].text} min'
-              )]);
-              setDone(false);
+        RIKeys?.josKeys3?.currentState
+            ?.changeSelectedItem(slot[slot.indexOf('60 min'
+                // '${controller[2].text} min'
+                )]);
+        setDone(false);
       }
     });
   }
@@ -157,20 +201,18 @@ class BookingProvider extends BaseProvider {
   addition(int _i) {
     if (int.parse(controller[_i].text) < 8) {
       controller[_i].text = (int.parse(controller[_i].text) + 1).toString();
-    setDone(true);
+      setDone(true);
     }
-    
   }
 
   subTraction(int _i) {
     int a = int.parse(controller[_i].text);
-    
-     if(a > 1){
+
+    if (a > 1) {
       a = a - 1;
-    controller[_i].text = a.toString();
-    setDone(true); 
-     }
-    
+      controller[_i].text = a.toString();
+      setDone(true);
+    }
   }
 
   dateTimePicker(bool _val) {
@@ -211,5 +253,43 @@ class BookingProvider extends BaseProvider {
         getBookingData();
       }
     });
+  }
+
+  selectDate(context, localizations) {
+    var _d;
+
+    if (controller[6].text.trim() != "")
+      _d = DateTime.parse((controller[6].text.trim() + " 00:00:00.000"));
+    else
+      _d = DateTime.now();
+
+    print('_val');
+    showDatePicker(
+            context: context,
+            initialDate: _d,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2022))
+        .then((_val) {
+      print(_val);
+      controller[6].text = dateFormat1.format(_val);
+      print("6wala :${controller[6].text}");
+    });
+    notifyListeners();
+  }
+
+  selectDate1(context, localizations) {
+    var _d;
+    if (controller[6].text?.trim() != "")
+      _d = DateTime.parse(controller[6].text.trim() + " 00:00:00.000");
+    print("eeee${_d}");
+    showDatePicker(
+            context: context,
+            initialDate: _d,
+            firstDate: _d,
+            lastDate: DateTime(2022))
+        .then((_val) {
+      controller[7].text = dateFormat1.format(_val);
+    });
+    notifyListeners();
   }
 }

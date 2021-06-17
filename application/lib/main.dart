@@ -4,6 +4,7 @@ import 'package:Favorito/ui/Chat/ChatProvider.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';
+import 'package:Favorito/ui/bottomNavigation/bottomNavigationProvider.dart';
 import 'package:Favorito/ui/catalog/CatalogsProvider.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
@@ -38,7 +39,7 @@ void main() async {
     runApp(MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => SignUpProvider()),
       ChangeNotifierProvider(create: (context) => ContactPersonProvider()),
-      ChangeNotifierProvider(create: (context) => BusinessHoursProvider()),
+      // ChangeNotifierProvider(create: (context) => BusinessHoursProvider()),
       ChangeNotifierProvider(create: (context) => SettingProvider()),
       ChangeNotifierProvider(create: (context) => ForgetPassProvider()),
       ChangeNotifierProvider(create: (context) => BusinessProfileProvider()),
@@ -57,6 +58,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => ClaimProvider()),
       ChangeNotifierProvider(create: (context) => OrderProvider()),
       ChangeNotifierProvider(create: (context) => businessInfoProvider()),
+      ChangeNotifierProvider(create: (context) => bottomNavigationProvider()),
     ], child: MyApp()));
   });
 }
