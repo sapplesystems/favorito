@@ -7,8 +7,13 @@ import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OptionsModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/Login/LoginController.dart';
 import 'package:favorito_user/ui/OnlineMenu/Paydata.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
+import 'package:favorito_user/ui/pay/PayHome.dart';
+import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
+import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -153,8 +158,8 @@ class MenuHomeProvider extends BaseProvider {
         modelOption = value;
         orderType.clear();
         setPayData(value.data.paymentType);
-        orderType.addAll(value.data.orderType);
-        // print('eee${value.data.paymentType.length}');
+        orderType.addAll(value.data.orderType);  
+        setSelectedOrderType(orderType[0]);
       }
     });
   }
@@ -291,11 +296,11 @@ class MenuHomeProvider extends BaseProvider {
 
   // userOrderCreate
   //
-  callCustomizetion() async {
+  callCustomizetion(context) async {
     Map _map = {
       "business_id": _businessId,
       "notes": "",
-      "order_type": "3",
+      "order_type": selectedOrderType.orderTypeId,
       "payment_type": selectedPayData.title,
       "category": [
         for (var _v in _listItem)
@@ -324,9 +329,24 @@ class MenuHomeProvider extends BaseProvider {
     await APIManager.userOrderCreate(_map).then((value) {
       this.snackBar(value.message, RIKeys.josKeys25);
       if (value.status == 'success') {
-        Navigator.pop(RIKeys.josKeys25.currentContext);
-        Navigator.pop(RIKeys.josKeys25.currentContext);
-        Navigator.of(RIKeys.josKeys25.currentContext).pushNamed('/orderHome');
+        var options = {
+  'key': 'rzp_test_7JXfR6RFNC1yI6',
+  'amount': value.data.amount, //in the smallest currency sub-unit.
+  'name': 'Acme Corp.',
+  'order_id': value.data.id, // Generate order_id using Orders API
+  'description': '',
+  'timeout': 60, // in seconds
+  'prefill': {
+    // 'contact': context.read<PersonalInfoProvider>().phone,
+    // 'email':context.read<LoginProvider>().getEmail()??"", 
+  }
+};
+// PayHome payHome = PayHome();
+// payHome.options
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>PayHome(options: options,key:RIKeys.josKeys25)));
+        // Navigator.pop(RIKeys.josKeys25.currentContext);
+        // Navigator.pop(RIKeys.josKeys25.currentContext);
+        //  Navigator.of(RIKeys.josKeys25.currentContext).pushNamed('/orderHome');
         // print("success Done");
       }
     });

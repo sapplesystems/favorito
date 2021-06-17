@@ -76,7 +76,7 @@ class Review extends StatelessWidget {
                     title: "Reply",
                     controller: data.controller,
                     maxLines: 5,
-                    hint: "Enter reply to user",
+                    hint: "Update review here",
                     security: false),
               ),
               // ),

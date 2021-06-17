@@ -48,9 +48,8 @@ class NewCatlog extends StatelessWidget {
           ),
           centerTitle: true,
           iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          elevation: 0,
+            color: Colors.black),
+          elevation: 0
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),

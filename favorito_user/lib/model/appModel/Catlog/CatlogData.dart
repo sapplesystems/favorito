@@ -20,9 +20,9 @@ class CatlogData {
 
   CatlogData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    catalogTitle = json['catalog_title'];
-    catalogPrice = json['catalog_price'];
-    catalogDesc = json['catalog_desc'];
+    catalogTitle = json['catalog_title']??"Title";
+    catalogPrice = json['catalog_price']??0;
+    catalogDesc = json['catalog_desc']??"";
     productUrl = json['product_url'];
     productId = json['product_id'];
     photosId = json['photos_id'];

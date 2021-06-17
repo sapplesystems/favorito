@@ -2,14 +2,13 @@ import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Review/ReviewListModel.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
-import 'package:favorito_user/ui/business/tabs/Review/RateMe.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import '../../../../utils/Extentions.dart';
 
 class ReviewTab extends StatelessWidget {
   BusinessProfileData data;
@@ -97,7 +96,7 @@ class ReviewTab extends StatelessWidget {
                           ],
                         ),
                       Text(
-                        '${vaTrue.getRatingData()?.totalRating?.totalRatings ?? 0} Ratings       ${vaTrue.getRatingData()?.totalReview?.totalReviews ?? 0} reviews',
+                        '${vaTrue.getRatingData()?.totalRating?.totalRatings ?? 0} Ratings       ${context.read<BusinessProfileProvider>().getBusinessProfileData()?.totalReviews ?? 0} reviews',
                         style: Theme.of(context).textTheme.headline3.copyWith(
                             fontSize: 10,
                             letterSpacing: .40,

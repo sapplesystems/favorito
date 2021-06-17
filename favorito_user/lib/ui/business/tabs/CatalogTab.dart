@@ -44,7 +44,7 @@ class _CatlogTabState extends State<CatalogTab> {
           return Center(child: Text('Error : ${snapshot.error}'));
         else if (catlogModel != snapshot.data) {
           catlogModel = snapshot.data;
-          return Container(
+          return Padding(
               padding: EdgeInsets.all(2),
               child: ListView.builder(
                 itemCount: catlogModel.data?.length,
@@ -82,14 +82,14 @@ class _CatlogTabState extends State<CatalogTab> {
                                         borderRadius: BorderRadius.circular(12),
                                         child: ImageMaster(
                                             url: catlogModel.data[index].photos
-                                                ?.split(',')[0]),
+                                                ?.split(',')?.first??""),
                                       )),
                                   Expanded(
                                       flex: 3,
                                       child: Padding(
                                         padding: EdgeInsets.only(left: 4.0),
                                         child: Text(
-                                          "${catlogModel?.data[index]?.catalogTitle}",
+                                          "${catlogModel?.data[index]?.catalogTitle??'Title'}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6

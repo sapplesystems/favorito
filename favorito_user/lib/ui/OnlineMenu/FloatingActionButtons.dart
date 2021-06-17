@@ -154,11 +154,26 @@ class _FloatingActionButtonsState extends State<FloatingActionButtons> {
             child: RoundedButton(
                 clr: _va ? myRed : myGrey,
                 clicker: () {
+
+                  
                   if (_va) {
-                    providerMenuTrue.callCustomizetion();
-                  } else {
-                    BotToast.showText(
-                        text: 'Order not accepting at these time');
+                    print(context.read<MenuHomeProvider>().selectedOrderType.minimumBill);
+                    if(double.parse(context.read<MenuHomeProvider>().selectedOrderType.minimumBill.toString()) > double.parse(context.read<MenuHomeProvider>().allPrice().toString())){
+                     BotToast.showText(text: 'Minimum cart ammount will be ${context.read<MenuHomeProvider>().selectedOrderType.minimumBill}');
+                  }else{
+                    providerMenuTrue.callCustomizetion(context);
+                  }
+                    
+                  } else if((context
+                .read<BusinessProfileProvider>()
+                .getBusinessProfileData()
+                .businessStatus
+                .toString()
+                .toLowerCase() !=
+            'online')){
+                    BotToast.showText(text: 'At present Business is offline');
+                  }else if(context.watch<MenuHomeProvider>().modelOption.data.acceptingOrder != 1){
+                    BotToast.showText(text: 'Order not accepting at these time');
                   }
                 },
                 textStyle: TextStyle(

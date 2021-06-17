@@ -43,6 +43,7 @@ class BusinessProfileProvider extends BaseProvider {
   List<String> addressList = [];
   BuildContext context;
   String addOrChangePhoto = 'Add Photo';
+  String businessName;
   final dd1 = GlobalKey<DropdownSearchState<String>>();
   List<String> titleList = ["", "Business Name", "Business Phone", "LandLine"];
   List<bool> validateList = [false, true, true, false];
@@ -353,14 +354,17 @@ class BusinessProfileProvider extends BaseProvider {
         await Future.delayed(const Duration(seconds: 1));
         needSave(false);
         BotToast.showText(text: value.message);
-
+ 
         try {
           listviewController.animateTo(
               listviewController?.position?.minScrollExtent,
               curve: Curves.easeOut,
               duration: const Duration(microseconds: 1));
           FocusScope.of(context).unfocus();
-        } catch (e) {}
+        } catch (e) {
+          getProfileData(context);
+        }
+        
       }
     });
   }
@@ -376,7 +380,8 @@ class BusinessProfileProvider extends BaseProvider {
         setPosition(_v);
       }
       addressList?.clear();
-      controller[1].text = va.businessName ?? '';
+      businessName = va.businessName ?? '';
+      controller[1].text = businessName;
 
       controller[2].text = va.businessPhone ?? '';
       controller[3].text = va.landline ?? "";

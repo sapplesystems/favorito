@@ -22,6 +22,7 @@ import 'package:favorito_user/model/appModel/Menu/Customization.dart/Customizati
 import 'package:favorito_user/model/appModel/Menu/IsFoodModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
+import 'package:favorito_user/model/appModel/Menu/order/CreateOrderModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OrderListModel.dart';
 import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
@@ -952,7 +953,7 @@ class APIManager {
   }
 
 //order Create
-  static Future<BaseResponse> userOrderCreate(Map _map) async {
+  static Future<CreateOrderModel> userOrderCreate(Map _map) async {
     String token = await Prefs.token;
     print("menuItemRequest : ${_map.toString()}");
     opt = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -960,7 +961,7 @@ class APIManager {
     response =
         await dio.post(service.userOrderCreate, data: _map, options: opt);
 
-    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+    return CreateOrderModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
 //order verbose

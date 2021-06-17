@@ -333,7 +333,10 @@ class _ManualBooking extends State<ManualBooking> {
 
     if (isToday) {
       if (b) {
-        startTime = DateTime.now().hour + h;
+        int _va = DateTime.now().hour;
+        int _va2 = _va+ h;
+        if(_va2>23)_va2=0;
+        startTime =  _va2;
       } else {
         startTime = aa.hour + h;
       }
@@ -349,6 +352,9 @@ class _ManualBooking extends State<ManualBooking> {
     print('hours:$h'
         // now:$now c:$c '
         ' isToday$isToday  startTime:${va.getStartTime()} endTime:${va.getEndTime()}');
+
+        print("startTime:$startTime");
+        
     showCustomTimePicker(
         context: context,
         onFailValidation: (context) => print('Unavailable selection'),

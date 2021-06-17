@@ -35,14 +35,7 @@ class BusinessProfile extends StatelessWidget {
         isFirst = false;
       }
       return WillPopScope(
-        onWillPop: () async {
-          print("WillpopCalled");
-          Navigator.pop(context);
-          data.clear();
-          data.getProfileData(context);
-          data.needSave(false);
-          return null;
-        },
+        onWillPop: (){popMethod(data,context);},
         child: RefreshIndicator(
           onRefresh: () async {
             data.getProfileData(context);
@@ -575,5 +568,92 @@ class BusinessProfile extends StatelessWidget {
         ),
       );
     });
+  }
+
+  void popMethod(data,context) {
+    if(data.getNeedSave()){
+  showModalBottomSheet<void>(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Container(
+                                                      height: 100,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            '\t\t\t\t\tPlease save your changes or cancel for discard.',
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'Gilroy-Medium'),
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              TextButton(
+                                                                  child: Text(
+                                                                      "save",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              myRed,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontFamily:
+                                                                              'Gilroy-Medium')),
+                                                                  onPressed:
+                                                                      () {
+                                                                    
+                                                                           if (RIKeys.josKeys24.currentState.validate())
+                                  data.prepareWebService();
+                                else {
+                                  _autovalidate = true;
+                                  data.notifyListeners();
+                                }Navigator.pop(
+                                                                        context);Navigator.pop(
+                                                                        context);
+                                                                   
+                                                                  }),
+                                                              InkWell(
+                                                                child: Text(
+                                                                  "Discard",
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          myRed,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontFamily:
+                                                                          'Gilroy-Medium'),
+                                                                ),
+                                                                onTap: () {
+Navigator.pop(
+                                                                        context);
+                                                                     
+          Navigator.pop(context);
+          data.clear();
+          data.getProfileData(context);
+          data.needSave(false);
+                                                                }
+                                                                    
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  });
+                                            
+    }else{
+      Navigator.pop(
+                                                                        context);
+    }
+   
   }
 }
