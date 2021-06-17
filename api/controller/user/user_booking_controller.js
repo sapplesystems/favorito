@@ -134,6 +134,15 @@ exports.getBookingVerbose = async(req, res, next) => {
         result_occasion = await exports.run_query(sql_occasion)
         result_booking_setting = await exports.run_query(sql_booking_setting)
         available_dates = []
+            // getting all the restricted date 
+
+        sqlRestrictedDate = `select restriction_date from business_booking_restriction where business_id = '${business_id}'`
+        resultRestrictedDate = await exports.run_query(sqlRestrictedDate)
+
+        restrictedDates = resultRestrictedDate.map((elem) => {
+            return moment(elem.restriction_date).format('YYYY-MM-DD')
+        })
+
         for (let j = 0; j <= result_booking_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
 
@@ -142,7 +151,7 @@ exports.getBookingVerbose = async(req, res, next) => {
             sqlCheckCountDate = `select count(*) as count from business_booking where business_id = '${business_id}' and date(created_datetime) = '${moment(date).format('YYYY-MM-DD')}' and deleted_at is null`
 
             resultCheckCountDate = await exports.run_query(sqlCheckCountDate)
-            if (resultCheckCountDate[0].count < result_booking_setting[0].booking_per_day) {
+            if (resultCheckCountDate[0].count < result_booking_setting[0].booking_per_day && !restrictedDates.includes(moment(date).format('YYYY-MM-DD'))) {
                 available_dates.push({ date: moment(date).format('YYYY-MM-DD'), day: getDayNameByDate(moment(date).format('YYYY-MM-DD')) })
             }
         }
@@ -170,6 +179,7 @@ exports.getBookingVerbose = async(req, res, next) => {
 
         // console.log(advance_booking_time)
         slots_data = await exports.createSlotWithDate(result_booking_setting, date, advance_booking_time, isToday)
+            // return res.send(slots_data)
         slot_with_detail = new Promise(async(resolve, reject) => {
             available_slot = []
             let count_loop = 0

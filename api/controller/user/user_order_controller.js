@@ -6,6 +6,14 @@ const DELIVERY = 1
 const DINE_IN = 2
 const TAKE_AWAY = 3
 
+// razor pay module
+var Razorpay = require("razorpay");
+
+var instanceRazorpay = new Razorpay({
+    key_id: process.env.RAZOR_PAY_KEY_ID, // your `KEY_ID`
+    key_secret: process.env.RAZOR_PAY_KEY_SECRET // your `KEY_SECRET`
+})
+
 exports.getOrderList = async function(req, res, next) {
     if (req.body.user_id) {
         user_id = req.body.user_id
@@ -15,7 +23,7 @@ exports.getOrderList = async function(req, res, next) {
         return res.status(400).json({ status: 'error', message: 'User id is not found' });
     }
     try {
-        var sql = "SELECT b_o.id,b_o.order_id,b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type,DATE_FORMAT(b_o.created_at , '%Y-%m-%d %H:%i:%s') as created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.user_id = '" + user_id + "' GROUP BY b_o.order_id order by created_at desc"
+        var sql = "SELECT b_o.id,b_o.order_id,rp_order_id,rp_status,b_o.business_id,b_m.business_name as business_name,CONCAT('" + img_path + "',b_m.photo) as business_photo,b_m.address1 as address,b_m.town_city as city, b_o.order_id,name, b_o.mobile, b_o.notes, b_o.order_type, b_o.order_status,b_o.total_amount,b_o.payment_type,DATE_FORMAT(b_o.created_at , '%Y-%m-%d %H:%i:%s') as created_at FROM business_orders AS b_o JOIN business_order_detail AS b_o_d JOIN business_master as b_m ON b_o.order_id = b_o_d.order_id AND b_o.business_id = b_m.business_id  WHERE b_o.user_id = '" + user_id + "' GROUP BY b_o.order_id order by created_at desc"
         result_sql = await exports.run_query(sql)
         final_data = []
         for (let i = 0; i < result_sql.length; i++) {
@@ -247,6 +255,8 @@ exports.createOrder = async function(req, res, next) {
 
         // getting order type name from the table order_type_master
 
+
+
         sql_order_type = `select order_type from order_type_master where id = '${req.body.order_type}'`
         result_order_type = (await exports.run_query(sql_order_type))[0].order_type
 
@@ -304,7 +314,14 @@ exports.createOrder = async function(req, res, next) {
                 db.query(sql, order_detail)
             }
         }
+        option = {
+            amount: parseInt(total_amount),
+            currency: "INR",
+            receipt: order_id,
+            payment_capture: '1'
+        }
 
+        razorResp = await instanceRazorpay.orders.create(option)
         var order = {
             business_id: req.body.business_id,
             order_id: order_id,
@@ -314,20 +331,24 @@ exports.createOrder = async function(req, res, next) {
             order_type: result_order_type,
             total_amount: total_amount,
             payment_type: req.body.payment_type,
-            user_id: user_id
+            user_id: user_id,
+            rp_note: razorResp.notes == '' ? 'no notes' : razorResp.notes,
+            rp_status: razorResp.status,
+            rp_created_at: razorResp.created_at,
+            rp_total_attempt: razorResp.attempts
         };
-
-
         var sql = "INSERT INTO business_orders set ?";
 
         db.query(sql, order, function(err, result) {
             if (err) {
-                return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+                return res.status(500).json({ status: 'error', message: 'Something went wrong.', err });
             }
-            return res.status(200).json({ status: 'success', message: 'Order created successfully.' });
+
+            return res.status(200).json({ status: 'success', message: 'Order created successfully.', data: razorResp });
+
         });
     } catch (e) {
-        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.', e });
     }
 };
 
@@ -358,15 +379,15 @@ exports.createOrderVerbose = async(req, res, next) => {
     }
 
     if (result_setting[0].take_away == 1 && result_setting[0].take_away_c == 1) {
-        final_data.push({ attribute: "take_away", minimum_bill: result_setting[0].take_away_minimum_bill, packaging_charge: result_setting[0].take_away_packaging_charge })
+        final_data.push({ attribute: "take_away", order_type_id: 3, minimum_bill: result_setting[0].take_away_minimum_bill, packaging_charge: result_setting[0].take_away_packaging_charge })
     }
 
     if (result_setting[0].delivery == 1 && result_setting[0].delivery_c == 1) {
-        final_data.push({ attribute: "delivery", minimum_bill: result_setting[0].delivery_minium_bill, packaging_charge: result_setting[0].delivery_packaging_charge })
+        final_data.push({ attribute: "delivery", order_type_id: 1, minimum_bill: result_setting[0].delivery_minium_bill, packaging_charge: result_setting[0].delivery_packaging_charge })
     }
 
     if (result_setting[0].dine_in == 1 && result_setting[0].dine_in_c == 1) {
-        final_data.push({ attribute: "dine_in" })
+        final_data.push({ attribute: "dine_in", order_type_id: 2 })
     }
 
     sql_payment = `SELECT payment_method from business_informations where business_id = '${business_id}'`
@@ -381,16 +402,19 @@ exports.cancelOrder = async(req, res) => {
     } else {
         order_id = req.body.order_id
     }
+    if (!req.body.notes) {
+        notes = 'no notes'
+    } else {
+        notes = req.body.notes
+    }
 
     try {
-        sqlCancelOrder = `update business_orders set order_status = 'canceled', deleted_at = NOW(), updated_at = NOW() where order_id = '${order_id}'`
+        sqlCancelOrder = `update business_orders set order_status = 'canceled',notes = '${notes}',  updated_at = NOW() where order_id = '${order_id}'`
         resultCancelOrder = await exports.run_query(sqlCancelOrder)
         return res.status(200).json({ status: 'success', message: 'Order canceled successfull' });
     } catch (error) {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
     }
-
-
 }
 
 exports.run_query = (sql, param = false) => {
@@ -416,4 +440,37 @@ exports.run_query = (sql, param = false) => {
             })
         })
     }
+}
+
+// payment start here by razor pay
+
+exports.paymentOrderId = async(req, res) => {
+    if (!req.body.order_id) {
+        return res.status(400).json({ status: 'error', message: 'order_id is missing' });
+    } else {
+        order_id = req.body.order_id
+    }
+    if (!req.body.amount) {
+        return res.status(400).json({ status: 'error', message: 'amount is missing' });
+    } else {
+        amount = req.body.amount
+    }
+    receipt = order_id
+    payment_capture = '1'
+    option = {
+        amount,
+        currency: "INR",
+        receipt: order_id,
+        payment_capture: '1'
+    }
+    try {
+        razorResp = await instanceRazorpay.orders.create(option)
+        return res.status(200).json({ status: 'success', message: 'success', data: [razorResp] });
+    } catch (error) {
+        return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
+    }
+}
+
+exports.paymentOrderVerify = async(req, res) => {
+    return res.send('api work in progress')
 }

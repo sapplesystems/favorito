@@ -13,5 +13,8 @@ router.post('/create-order-verbose', CheckAuth, UserOrderController.createOrderV
 
 router.post('/cancel-order', CheckAuth, UserOrderController.cancelOrder);
 
+router.post('/get-payment-order-id', CheckAuth, UserOrderController.paymentOrderId);
+
+router.post('/payment-order-verify', CheckAuth, UserOrderController.paymentOrderVerify);
 
 module.exports = router;
