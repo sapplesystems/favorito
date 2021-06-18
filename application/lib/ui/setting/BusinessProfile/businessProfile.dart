@@ -1,29 +1,34 @@
 import 'dart:ui';
+
+import 'package:Favorito/Functions/PopmyPage.dart';
 import 'package:Favorito/component/MyGoogleMap.dart';
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/component/txtfieldPostAction.dart';
+import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/component/workingDateTime.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/utils/myString.Dart';
-import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:Favorito/config/SizeManager.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
 
 class BusinessProfile extends StatelessWidget {
   bool isFirst;
+
   BusinessProfile({this.isFirst});
+
   // BusinessProfileProvider v;
   bool _autovalidate = false;
   bool abc = true;
   SizeManager sm;
+
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
@@ -35,7 +40,9 @@ class BusinessProfile extends StatelessWidget {
         isFirst = false;
       }
       return WillPopScope(
-        onWillPop: (){popMethod(data,context);},
+        onWillPop: () {
+          popMethod(data);
+        },
         child: RefreshIndicator(
           onRefresh: () async {
             data.getProfileData(context);
@@ -47,11 +54,12 @@ class BusinessProfile extends StatelessWidget {
               leading: IconButton(
                   icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: () {
-                    print("WillpopCalled");
-                    data.clear();
-                    data.getProfileData(context);
-                    Navigator.pop(context);
-                    data.needSave(false);
+                    popMethod(data);
+                    // print("WillpopCalled");
+                    // data.clear();
+                    // data.getProfileData(context);
+                    // Navigator.pop(context);
+                    // data.needSave(false);
                   }),
               iconTheme: IconThemeData(color: Colors.white),
               elevation: 0,
@@ -570,90 +578,83 @@ class BusinessProfile extends StatelessWidget {
     });
   }
 
-  void popMethod(data,context) {
-    if(data.getNeedSave()){
-  showModalBottomSheet<void>(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return Container(
-                                                      height: 100,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: <Widget>[
-                                                          Text(
-                                                            '\t\t\t\t\tPlease save your changes or cancel for discard.',
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'Gilroy-Medium'),
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            children: [
-                                                              TextButton(
-                                                                  child: Text(
-                                                                      "save",
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              myRed,
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontFamily:
-                                                                              'Gilroy-Medium')),
-                                                                  onPressed:
-                                                                      () {
-                                                                    
-                                                                           if (RIKeys.josKeys24.currentState.validate())
-                                  data.prepareWebService();
-                                else {
-                                  _autovalidate = true;
-                                  data.notifyListeners();
-                                }Navigator.pop(
-                                                                        context);Navigator.pop(
-                                                                        context);
-                                                                   
-                                                                  }),
-                                                              InkWell(
-                                                                child: Text(
-                                                                  "Discard",
-                                                                  style: TextStyle(
-                                                                      color:
-                                                                          myRed,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontFamily:
-                                                                          'Gilroy-Medium'),
-                                                                ),
-                                                                onTap: () {
-Navigator.pop(
-                                                                        context);
-                                                                     
-          Navigator.pop(context);
-          data.clear();
-          data.getProfileData(context);
-          data.needSave(false);
-                                                                }
-                                                                    
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
-                                                    );
-                                                  });
-                                            
-    }else{
-      Navigator.pop(
-                                                                        context);
+  void popMethod(data) {
+    if (data.getNeedSave()) {
+      PopmyPage(
+          cancel: () {
+            Navigator.pop(RIKeys.josKeys25.currentContext);
+            Navigator.pop(RIKeys.josKeys25.currentContext);
+            data.clear();
+            data.getProfileData(RIKeys.josKeys25.currentContext);
+            data.needSave(false);
+          },
+          key: RIKeys.josKeys25,
+          save: () {
+            if (RIKeys.josKeys24.currentState.validate())
+                                    data.prepareWebService();
+            else {
+              _autovalidate = true;
+              data.notifyListeners();
+            }
+            Navigator.pop(RIKeys.josKeys25.currentContext);
+            Navigator.pop(RIKeys.josKeys25.currentContext);
+          }).popMe();
+      // showModalBottomSheet<void>(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       return Container(
+      //         height: 100,
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.center,
+      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //           children: <Widget>[
+      //             Text(
+      //               '\t\t\t\t\tPlease save your changes or cancel for discard.',
+      //               style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Medium'),
+      //             ),
+      //             Row(
+      //               mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //               children: [
+      //                 TextButton(
+      //                     child: Text("save",
+      //                         style: TextStyle(
+      //                             color: myRed,
+      //                             fontSize: 16,
+      //                             fontFamily: 'Gilroy-Medium')),
+      //                     onPressed: () {
+      //                       if (RIKeys.josKeys24.currentState.validate())
+      //                         data.prepareWebService();
+      //                       else {
+      //                         _autovalidate = true;
+      //                         data.notifyListeners();
+      //                       }
+      //                       Navigator.pop(context);
+      //                       Navigator.pop(context);
+      //                     }),
+      //                 InkWell(
+      //                     child: Text(
+      //                       "Discard",
+      //                       style: TextStyle(
+      //                           color: myRed,
+      //                           fontSize: 16,
+      //                           fontFamily: 'Gilroy-Medium'),
+      //                     ),
+      //                     onTap: () {
+      //                       Navigator.pop(context);
+      //
+      //                       Navigator.pop(context);
+      //                       data.clear();
+      //                       data.getProfileData(context);
+      //                       data.needSave(false);
+      //                     }),
+      //               ],
+      //             )
+      //           ],
+      //         ),
+      //       );
+      //     });
+    } else {
+      Navigator.pop(RIKeys.josKeys25.currentContext);
     }
-   
   }
 }
