@@ -158,6 +158,15 @@ exports.isAccountExist = async(req, res) => {
         if (!req.body.email) {
             return res.status(400).json({ status: 'error', message: 'email number is missing' });
         } else {
+            // checking if the email domain is restricted or allowed
+            // checking the email domain is restricted or not table inlcude is restricted_domain
+            let domain = (req.body.email.split('@')[1]).split('.')[0];
+            sqlCheckDomain = `select id from restricted_domain where restricted_domain like '%${domain}%'`
+            resultCheckDomain = await exports.run_query(sqlCheckDomain)
+
+            if (resultCheckDomain != '') {
+                return res.status(403).send({ status: 'error', message: 'The domain of this email has been restricted', data: [] })
+            }
             sql_email_check = `SELECT id FROM business_master WHERE business_email = '${req.body.email}'`
             result_email_check = await exports.run_query(sql_email_check)
             if (result_email_check == '') {

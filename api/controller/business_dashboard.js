@@ -312,7 +312,7 @@ exports.newBusiness = async function(req, res, next) {
         LEFT JOIN business_ratings as b_r ON b_m.business_id = b_r.business_id \n\
         LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id \n\
         WHERE b_m.is_verified='1' AND b_m.is_activated = '1' AND b_h.day = '${day}' AND b_m.deleted_at IS NULL \n\
-        AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() AND b_r.rating > '3.4' AND b_m.created_at BETWEEN NOW() - INTERVAL 60 DAY AND NOW()\n\
+        AND b_h.start_hours < NOW() AND b_h.end_hours > NOW() AND (b_r.rating > '3.4' or b_m.created_at BETWEEN NOW() - INTERVAL 60 DAY AND NOW())\n\
         GROUP BY b_m.business_id ORDER BY avg_rating desc,  distance IS NULL , distance ,b_m.created_at LIMIT ${limit} OFFSET ${offset}`;
 
             //         var sql = `SELECT b_m.id, b_m.business_id,b_m.is_activated, \n\
@@ -329,6 +329,8 @@ exports.newBusiness = async function(req, res, next) {
 
         }
         result_master = await exports.run_query(sql)
+            // KIR4WQP35KF5EMI5Q
+            // return res.send(result_master)
         var final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {

@@ -37,9 +37,11 @@ exports.getBusinessDetail = async function(req, res) {
             user_id = req.userdata.id
             if (req.body.business_id) {
                 business_id = req.body.business_id
+                sqlGetBusinessIdByFirebaseId = `select business_id,location from business_master where business_id = '${business_id}'`
+                resultGetBusinessIdByFirebaseId = await exports.run_query(sqlGetBusinessIdByFirebaseId)
             } else {
                 firebase_chat_id = req.body.firebase_id
-                sqlGetBusinessIdByFirebaseId = `select business_id from business_master where firebase_chat_id = '${firebase_chat_id}'`
+                sqlGetBusinessIdByFirebaseId = `select business_id,location from business_master where firebase_chat_id = '${firebase_chat_id}'`
                 try {
                     resultGetBusinessIdByFirebaseId = await exports.run_query(sqlGetBusinessIdByFirebaseId)
                     if (resultGetBusinessIdByFirebaseId != '') {
@@ -53,6 +55,7 @@ exports.getBusinessDetail = async function(req, res) {
             }
         }
         try {
+
             sql_count_rating = "SELECT AVG(rating) as count FROM business_ratings WHERE business_id = '" + business_id + "'"
             result_count_rating = await exports.run_query(sql_count_rating)
             sql_attributes = `SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attributes_master as b_a_m ON b_a_m.id = b_a.attributes_id WHERE b_a.business_id= '${business_id}'`
@@ -80,27 +83,50 @@ exports.getBusinessDetail = async function(req, res) {
 
             // booking
 
-            console.log(user_id)
-            sqlIsBooking = `select id from business_booking where user_id = '${user_id}'`
+            sqlIsBooking = `select id from business_booking where user_id = '${user_id}' and business_id = '${business_id}'`
             resultIsBooking = await exports.run_query(sqlIsBooking)
 
             // waitlist
-            sqlIsWaitlist = `select id from business_waitlist where user_id = '${user_id}'`
+            sqlIsWaitlist = `select id from business_waitlist where user_id = '${user_id}'  and business_id = '${business_id}'`
             resultIsWaitlist = await exports.run_query(sqlIsWaitlist)
 
             //appointment  
-            sqlIsAppointment = `select id from business_appointment where user_id = '${user_id}'`
+            sqlIsAppointment = `select id from business_appointment where user_id = '${user_id}' and business_id = '${business_id}'`
             resultIsAppointment = await exports.run_query(sqlIsAppointment)
 
             // order 
-            sqlIsOrder = `select id from business_orders where user_id = '${user_id}'`
+            sqlIsOrder = `select id from business_orders where user_id = '${user_id}' and business_id = '${business_id}'`
             resultIsOrder = await exports.run_query(sqlIsOrder)
+
+            // also checking if the user is in the radius of 500m to the business 
+
+            if (!resultGetBusinessIdByFirebaseId[0].location) {
+                return res.status(500).json({ status: 'error', message: 'Business location is not set.' })
+            }
+            locationBusiness = resultGetBusinessIdByFirebaseId[0].location.split(',')
+
+            sqlUserLocation = `select latitude, longitude from user_address where  default_address = 1 and user_id  = "${user_id}"`
+            resultUserLocation = await exports.run_query(sqlUserLocation)
+                // var distance = await getDistanceFromLatLonInKm(resultUserLocation[0].latitude, resultUserLocation[0].longitude, locationBusiness[0], locationBusiness[1])
+
+            if (!resultUserLocation[0]) {
+                return res.status(403).json({ status: 'error', message: 'User location is not set.' })
+            }
+
+            if (resultUserLocation[0]) {
+                var distance = await getDistanceFromLatLonInKm(resultUserLocation[0].latitude, resultUserLocation[0].longitude, locationBusiness[0], locationBusiness[1])
+            } else {
+                distance = null
+            }
+
             if (resultIsBooking == '' && resultIsWaitlist == '' && resultIsAppointment == '' && resultIsOrder == '') {
                 isVisited = 0
             } else {
                 isVisited = 1
             }
-
+            if (distance < 500) {
+                isVisited = 1
+            }
 
             // removing the attribute if settings are not saved
             for (let i = 0; i < result_attributes.length; i++) {
@@ -183,6 +209,25 @@ exports.getBusinessDetail = async function(req, res) {
     }
 }
 
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    return new Promise((resolve, reject) => {
+        var R = 6371;
+        var dLat = deg2rad(lat2 - lat1);
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = (R * c) * 1000; // converting it in m.
+
+        resolve(d);
+    })
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI / 180)
+}
 
 // Detail of the overview of the business
 exports.getBusinessOverview = async function(req, res) {

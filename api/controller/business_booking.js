@@ -425,8 +425,20 @@ exports.setRestrictionDate = async(req, res) => {
     }
 
     try {
+
+        // sqlDeleteAllRestriction = `delete from business_booking_restriction where business_id = '${business_id}'`
+        // resultDeleteAllRestriction = await exports.run_query(sqlDeleteAllRestriction)
         sqlInsertRestriction = `insert into business_booking_restriction (business_id,restriction_date) values ?`
         resultInsertRestriction = await exports.run_query(sqlInsertRestriction, [array_restricted_date])
+
+        // deleting the duplicate data
+        sqlDeleteDuplicate = `DELETE c1 FROM business_booking_restriction c1  
+        INNER JOIN business_booking_restriction c2   
+        WHERE  
+            c1.id < c2.id AND  
+            c1.restriction_date = c2.restriction_date;`
+
+        resultDuplicate = await exports.run_query(sqlDeleteDuplicate)
         return res.status(200).json({ status: 'success', message: 'Restriction added successfully' });
     } catch (error) {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
@@ -435,9 +447,52 @@ exports.setRestrictionDate = async(req, res) => {
 
 exports.getRestrictionDate = async(req, res) => {
     try {
-        sqlGetRestriction = `select id as restriction_id, DATE_FORMAT(restriction_date, '%Y-%m-%d') as restriction_date from business_booking_restriction where business_id = '${req.userdata.business_id}'`
+        sqlGetRestriction = `select id as restriction_id, DATE_FORMAT(restriction_date, '%Y-%m-%d') as restriction_date from business_booking_restriction where business_id = '${req.userdata.business_id}' and (restriction_date > NOW() or DATE(restriction_date) = CURDATE()) order by restriction_date asc`
         resultGetRestriction = await exports.run_query(sqlGetRestriction)
-        return res.status(200).json({ status: 'success', message: 'Restriction added successfully', date: resultGetRestriction });
+            // return res.send(resultGetRestriction)
+        if (resultGetRestriction == '') {
+            return res.status(200).json({ status: 'success', message: 'There is no restricted dates', date: [] });
+        }
+        let restrictDate = []
+        let dateId = [resultGetRestriction[0].restriction_id]
+        let startDate = resultGetRestriction[0].restriction_date
+        let endDate = ''
+        dayCount = 0
+        firstRun = 0
+        for (let i = 0; i < resultGetRestriction.length; i++) {
+            if (resultGetRestriction[i + 1]) {
+                if (moment(moment(moment(startDate).add(dayCount + 1, 'd').toDate()).format('YYYY-MM-DD')).isSame(moment(resultGetRestriction[i + 1].restriction_date).format('YYYY-MM-DD'))) {
+                    dayCount++;
+                    if (firstRun) {
+                        dateId.push(resultGetRestriction[i].restriction_id)
+                    } else {
+                        dateId.push(resultGetRestriction[i + 1].restriction_id)
+                    }
+                    endDate = moment(resultGetRestriction[i + 1].restriction_date).format('YYYY-MM-DD')
+                } else {
+                    if (firstRun) {
+                        dateId.push(resultGetRestriction[i].restriction_id)
+                    }
+                    restrictDate.push({ startDate, endDate, dateIds: dateId })
+                    dayCount = 0
+                    startDate = moment(resultGetRestriction[i + 1].restriction_date).format('YYYY-MM-DD')
+                    endDate = ''
+                    dateId = []
+                    firstRun = 1
+                }
+            } else {
+                if (firstRun) {
+                    dateId.push(resultGetRestriction[i].restriction_id)
+                }
+                restrictDate.push({ startDate, endDate, dateIds: dateId })
+                dayCount = 0
+                startDate = moment(resultGetRestriction[i].restriction_date).format('YYYY-MM-DD')
+                endDate = ''
+                dateId = []
+            }
+
+        }
+        return res.status(200).json({ status: 'success', message: 'success', date: restrictDate });
     } catch (error) {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
     }
@@ -447,10 +502,12 @@ exports.deleteRestrictionDate = async(req, res) => {
     if (!req.body.restriction_id) {
         return res.status(400).send({ status: 'error', message: 'restriction_id is missing' });
     }
-
     try {
-        sqlDeleteRestriction = `delete from business_booking_restriction where id = ${req.body.restriction_id}`
-        resultDeleteRestriction = await exports.run_query(sqlDeleteRestriction)
+        for (let i = 0; i < req.body.restriction_id.length; i++) {
+            const id = req.body.restriction_id[i];
+            sqlDeleteRestriction = `delete from business_booking_restriction where id = ${id}`
+            resultDeleteRestriction = await exports.run_query(sqlDeleteRestriction)
+        }
         return res.status(200).json({ status: 'success', message: 'Deleted successfull' });
     } catch (error) {
         return res.status(500).json({ status: 'failed', message: 'Something went wrong' });
