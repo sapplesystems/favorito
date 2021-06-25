@@ -34,7 +34,6 @@ class MenuProvider extends BaseProvider {
             key.items;
         print('title1:${key.items}');
       }
-
       notifyListeners();
     });
   }

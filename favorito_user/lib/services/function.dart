@@ -19,6 +19,9 @@ class service {
   static final baseBusinessReview = baseBusiness + 'review/';
   static final baseUserOrder = baseUser + 'order/';
 
+//clicks
+static final funClicks = baseUserProfile + 'promo-click';
+
 //function
   static final register = baseUser2 + 'register';
   static final login = baseUser2 + 'login';

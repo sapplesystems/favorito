@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/appModel/Business/Category.dart';
 import 'package:favorito_user/model/appModel/Menu/Customization.dart/CustomizationModel.dart';
@@ -7,13 +9,9 @@ import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OptionsModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/Login/LoginController.dart';
 import 'package:favorito_user/ui/OnlineMenu/Paydata.dart';
 import 'package:favorito_user/ui/OnlineMenu/RequestData.dart';
-import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/pay/PayHome.dart';
-import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
-import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -35,17 +33,35 @@ class MenuHomeProvider extends BaseProvider {
   Map<int, List<int>> selectedCustomizetionId = Map();
   MenuItemBaseModel menuItemBaseModel = MenuItemBaseModel();
   // CustomizationItemModel customizationItemModel = CustomizationItemModel();
-
+Timer _debounce;
+  var mySearchEditTextController = TextEditingController();
   List<PayData> payDataList = [];
   List<OrderType> orderType = [];
   PayData selectedPayData;
   OrderType selectedOrderType;
-
+  bool emptySearch = false;
   MenuHomeProvider() {
-    // _businessId = 'KIR4WQ4N7KF697HRQ';
     catItems.isVeg = catItems.isVeg ?? false;
+    mySearchEditTextController.addListener(_onSearchChanged);
   }
+ _onSearchChanged() {
 
+   
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(Duration(seconds: 1), () {
+      if (mySearchEditTextController.text != "") {
+           print("calling serach not null");
+        emptySearch = true;
+        setSearchText(mySearchEditTextController.text);
+      }else{
+       if(emptySearch){
+            print("calling serach");
+        setSearchText(mySearchEditTextController.text);
+        emptySearch = false;
+       } 
+      }
+    });
+  }
   void addbucket(MenuItemModel data) {
     bucket.add(data);
     print("bucket:${bucket.length}");
@@ -102,6 +118,10 @@ class MenuHomeProvider extends BaseProvider {
       notifyListeners();
     }
   }
+
+ShowSnack(message){
+this.snackBar(message, RIKeys.josKeys25);
+}
 
   CatItem getCatItems() => catItems;
 

@@ -7,8 +7,6 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/Catlog/CatlogData.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/model/appModel/job/JobData.dart';
-import 'package:favorito_user/model/appModel/job/JobDetailModel.dart';
-
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/MyString.dart';
@@ -34,6 +32,7 @@ class BusinessProfileProvider extends BaseProvider {
   ScrollController scrollController = ScrollController();
   int remainTime;
   bool _getWaitlistDone = false;
+  
 
   JobData jobData = JobData();
   bool getIsProgress() => _isProgress;
@@ -94,7 +93,7 @@ class BusinessProfileProvider extends BaseProvider {
       case 1:
         {
           print("tullu:1");
-          getProfileDetail();
+          // getProfileDetail();//comments this 
           getBusinessHours();
           getJobList();
           break;
@@ -124,8 +123,10 @@ class BusinessProfileProvider extends BaseProvider {
   getBusinessProfileData() => _businessProfileData?.data[0];
 
   Future<void> getProfileDetail() async {
-    await APIManager.baseUserProfileDetail(
-            {'business_id': this.getBusinessId()}, RIKeys.josKeys2)
+    Map _map=  {'business_id': this.getBusinessId()};
+    print("_map:${_map.toString()}");
+    await APIManager.baseUserProfileDetails(
+           _map, RIKeys.josKeys2)
         .then((value) {
       try {
         _isProgress = false;
@@ -137,9 +138,17 @@ class BusinessProfileProvider extends BaseProvider {
         BotToast.showText(text: e.toString());
       } finally {
         // catalogList();
+       
         notifyListeners();
       }
     });
+  }
+
+  Future<void> funPromoClicks(proKey,isPro) async {
+    Map _map=  {'business_id': this.getBusinessId(),'pro_key':proKey??"",'is_pro':isPro??""};
+    print("_map:${_map.toString()}");
+    await APIManager.funClicks(_map);
+    
   }
 
   waitlistVerbose(context) async {
@@ -314,7 +323,9 @@ class BusinessProfileProvider extends BaseProvider {
   }
 
   jobDetail(int _i) async {
-    await APIManager.jobDetail({"job_id": _i}).then((value) {
+    var va = {"job_id": _i};
+    print("jobId id :${va.toString()}");
+    await APIManager.jobDetail(va).then((value) {
       jobData = value.data[0];
       notifyListeners();
     });

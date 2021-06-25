@@ -105,7 +105,13 @@ class _MenuItemState extends State<MenuItems> {
                         .copyWith(fontSize: 14)),
               ),
               InkWell(
-                  onTap: () => updateBucket(true),
+                  onTap: () {
+                    if((widget.data.quantity??0) <widget?.data?.maxQtyPerOrder)
+                    updateBucket(true);
+                    else{
+                      vaTrue.ShowSnack('You reach maximum number of these item in single cart ');
+                    }
+                  }, 
                   child: Icon(Icons.add, color: myRedDark1))
             ]),
           ),
@@ -115,7 +121,7 @@ class _MenuItemState extends State<MenuItems> {
           child: InkWell(
             onTap: () {
               print('selectedItenId is :${widget?.data?.id}');
-              // callCustomizetion(context, widget?.data?.id);
+              if(widget.data.isCustomizable == 1)callCustomizetion(context, widget?.data?.id);
               updateBucket(true);
             },
             child: Container(

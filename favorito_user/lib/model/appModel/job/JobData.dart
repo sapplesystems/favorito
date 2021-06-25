@@ -7,7 +7,7 @@ class JobData {
   String skills;
   String contactVia;
   String contactValue;
-  int city;
+  String city;
   String pincode;
 
   JobData(

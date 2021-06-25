@@ -30,7 +30,7 @@ class AppoinmentSetting extends StatelessWidget {
 
     localizations = MaterialLocalizations.of(context);
     if(isFirst){
-    vaTrue.getSettingdata();
+    vaTrue.refreshCall();
     isFirst = false;
     }
     return Scaffold(
@@ -89,8 +89,8 @@ class AppoinmentSetting extends StatelessWidget {
                                                 txtClr: Colors.black))
                                       ]),
                                 ),
-                          plusMinus("Advance Booking(Day)", vaTrue.controller[9]),
-                          plusMinus("Advance Booking(Hours)", vaTrue.controller[10]),
+                          plusMinus("Advance Booking(Day)", 9),
+                          plusMinus("Advance Booking(Hours)",10),
                           DropdownSearch<String>(
                             validator: (v) => v == '' ? "required field" : null,
                             autoValidateMode: AutovalidateMode.onUserInteraction,
@@ -119,8 +119,8 @@ class AppoinmentSetting extends StatelessWidget {
                               ..controller[11].text = value
                               ..setDone(true);
                             }),
-                          plusMinus("Booking/Slot", vaTrue.controller[12]),
-                          plusMinus("Booking/Day", vaTrue.controller[13]),
+                          plusMinus("Booking/Slot", 12),
+                          plusMinus("Booking/Day", 13),
                           Padding(
                             padding: EdgeInsets.only(bottom: sm.h(2)),
                             child: txtfieldboundry(
@@ -210,7 +210,7 @@ class AppoinmentSetting extends StatelessWidget {
     );
   }
 
-  Widget plusMinus(String _title, TextEditingController ctrl) {
+  Widget plusMinus(String _title,int controllerId) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Text("\n$_title", style: TextStyle(color: Colors.grey)),
       Padding(
@@ -218,21 +218,13 @@ class AppoinmentSetting extends StatelessWidget {
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           IconButton(
             icon: Icon(Icons.remove_circle_outline, color: myRed, size: 28),
-            onPressed: () {
-              int a = int.parse(ctrl.text);
-              a = a > 1 ? a - 1 : a;
-              ctrl.text = a.toString();
-              vaTrue.setDone(true);
-            }
+            onPressed: () =>vaTrue.subTraction(controllerId),
           ),
-          fromToo(ctrl.text),
+          fromToo(vaTrue.controller[controllerId].text),
           IconButton(
             icon: Icon(Icons.add_circle_outline, size: 28, color: myRed),
-            onPressed: () { 
-              int _i = int.parse(ctrl.text);
-             ctrl.text = (((_i<8))?++_i:_i).toString();
-              vaTrue.setDone(true);
-            }
+            onPressed: () =>vaTrue.addition(controllerId),
+            
           )
         ]),
       )
@@ -407,9 +399,6 @@ class AppoinmentSetting extends StatelessWidget {
     );
   }
 
-
-  
-
   void showBottom(Widget popupBody3) {
     showModalBottomSheet<void>(
         context: RIKeys.josKeys10.currentContext, builder: (BuildContext context) => popupBody3);
@@ -432,6 +421,7 @@ class my_ServiceSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("datalist[i].isActive:${datalist[i].isActive}");
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

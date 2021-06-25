@@ -1,5 +1,6 @@
 import 'package:Favorito/component/NetworkImages.dart';
 import 'package:Favorito/ui/ResetPass/ResetPass.dart';
+import 'package:Favorito/ui/adSpent/CreateCampaign.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/appoinment/AddPerson.dart';
 import 'package:Favorito/ui/appoinment/AddRestriction.dart';
@@ -74,8 +75,8 @@ class RouteGenerator {
       case '/bookigDateRistriction':
         return MaterialPageRoute(builder: (_) => BookigDateRistriction());
 
-      // case '/searchResult':
-      //   return MaterialPageRoute(builder: (_) => SearchResult(data: args));
+      // case '/createCampaign':
+      //   return MaterialPageRoute(builder: (_) => CreateCampaign());
 
       // case '/joinWaitList':
       //   return MaterialPageRoute(builder: (_) => JoinWaitList(data: args));

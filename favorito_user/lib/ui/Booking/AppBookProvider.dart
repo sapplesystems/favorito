@@ -29,8 +29,10 @@ class AppBookProvider extends BaseProvider {
   int _selectedOccutionId;
   int _selectedDateIndex = 0;
   int _selectedTimeIndex = 0;
-  String _selectedDate = dateFormat1.format(DateTime.now());
-  String _selectedTime = ' ';
+  String _selectedDate ;
+  // = dateFormat1.format(DateTime.now());
+  String _selectedTime ;
+  // = ' ';
   List<Slots> _slots;
 
   List<Acces> acces = [for (int i = 0; i < 5; i++) Acces()];
@@ -57,7 +59,8 @@ class AppBookProvider extends BaseProvider {
     _isVerboseCall = _val;
   }
 
-  getSubmitCalled() => _submitCalled;
+  getSubmitCalled()=> _submitCalled;
+  
 
   setSubmitCalled(bool _val) {
     _submitCalled = _val;
@@ -66,16 +69,25 @@ class AppBookProvider extends BaseProvider {
 
   setSelectDate(context, int _i) {
     _selectedDateIndex = _i;
-    _selectedDate = getBookTableVerbose().data.availableDates[_i].date;
+    _selectedDate = _bookTableVerbose.data.availableDates[_i].date;
     bookingVerbose(context);
     notifyListeners();
   }
 
+checkMobile(val){
+if(val.toString().trim().length!=10){
+acces[1].error="Invalid mobile no";
+notifyListeners();
+}else{
+acces[1].error=null;
+notifyListeners();  
+}
+}
   getSelectDate() => _selectedDateIndex;
 
   setSelectTime(int _i) {
     _selectedTimeIndex = _i;
-    _selectedTime = getBookTableVerbose()?.data?.slots[_i].startTime;
+    _selectedTime = this._bookTableVerbose?.data?.slots[_i].startTime;
     notifyListeners();
   }
 
@@ -89,17 +101,19 @@ class AppBookProvider extends BaseProvider {
   List<BookingOrAppointmentDataModel> oldData = [];
   BookTableVerbose _bookTableVerbose;
 
-  BookTableVerbose getBookTableVerbose() => this._bookTableVerbose;
+  BookTableVerbose getBookTableVerbose() {
+    for (int i = 0;i <_bookTableVerbose?.data?.slots?.length;i++){
+      print(_bookTableVerbose.data?.slots[i].startTime.substring(0, 5));
+    }
+    return this._bookTableVerbose;
+  } 
 
   setBookTableVerbose(BookTableVerbose value) {
-    // this._bookTableVerbose.data.slots.clear();
     this._bookTableVerbose = value;
-    // this._bookTableVerbose.data.slots=value.data.slots;
-
     _occasionList.clear();
     _occasionList.add(Occasion(id: 0, occasion: "Select Occasion"));
     _occasionList.addAll(value.data.occasion);
-    // setTimeSlot(_bookTableVerbose.data.slots);
+    // dsfsdfsdfsdfds
     notifyListeners();
   }
 
@@ -186,9 +200,14 @@ class AppBookProvider extends BaseProvider {
     } else
       acces[1].error = null;
     notifyListeners();
+String date = 
+    _bookTableVerbose.data.availableDates[_selectedDateIndex].date;
+String time = 
+    _bookTableVerbose.data.slots[_selectedTimeIndex].startTime;
+    print("data:$date::time:$time");
     Map _map = {
       'no_of_person': _participent,
-      'date_time': '${_selectedDate.toString()} ${_selectedTime.toString()}',
+      'date_time': '$date $time',
       'name': acces[0].controller.text,
       'phone': acces[1].controller.text,
       'special_notes': acces[2].controller.text,
@@ -266,12 +285,15 @@ class AppBookProvider extends BaseProvider {
     }, context)
         .then((value) {
       _message = value.message;
+      
       if (value.status == 'success') {
+     
         _selectedTime = value.data?.slots[0]?.startTime;
         _selectedOccasion = "Select Occasion";
+        
         setBookTableVerbose(value);
       }
-      setIsVerboseCall(false);
+      _isVerboseCall = false;
     });
   }
 

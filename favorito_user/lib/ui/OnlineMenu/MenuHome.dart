@@ -12,12 +12,12 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
 class MenuHome extends StatelessWidget {
-  var _mySearchEditTextController = TextEditingController();
   SizeManager sm;
   List<MenuItemModel> menuItemBaseModel = [];
   MenuHomeProvider vaTrue;
   ControllerCallback controller;
   bool isFisrt = true;
+
   @override
   Widget build(BuildContext context) {
     if (isFisrt) {
@@ -62,7 +62,64 @@ class MenuHome extends StatelessWidget {
                       .headline5
                       .copyWith(fontSize: 20)),
               Divider(),
-              search(),
+              Padding(
+      padding: EdgeInsets.all(sm.w(4)),
+      child: Row(children: [
+        Flexible(
+          child: EditTextComponent(
+              controller: context.watch<MenuHomeProvider>().mySearchEditTextController,
+              hint: "Search for ... ",
+              security: false,
+              valid: true,
+              keyboardSet: TextInputType.text,
+              prefixIcon: 'search',
+              keyBoardAction: TextInputAction.search,
+              myOnChanged: (_val) {
+                vaTrue.txt = _val;
+              },
+              atSubmit: (_val) {
+                vaTrue.setSearchText(_val);
+                vaTrue.notifyListeners();
+              },
+              prefClick: () {
+                vaTrue.setSearchText(
+                    (context.watch<MenuHomeProvider>().mySearchEditTextController.text == null ||
+                            context.watch<MenuHomeProvider>().mySearchEditTextController.text == "")
+                        ? null
+                        : context.watch<MenuHomeProvider>().mySearchEditTextController.text);
+                vaTrue.notifyListeners();
+              }),
+        ),
+        Visibility(
+          visible: vaTrue.getisFoody(),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Text(
+              'Only Veg',
+              style: TextStyle(
+                  fontSize: 10, fontFamily: 'Gilroy-Medium', color: myGrey),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: sm.w(2), right: sm.w(1), bottom: sm.h(3)),
+              child: NeumorphicSwitch(
+                value: vaTrue.getIsVeg() ?? false,
+                height: sm.h(3.5),
+                style: NeumorphicSwitchStyle(
+                    activeThumbColor: Colors.green,
+                    activeTrackColor: Colors.green[100],
+                    inactiveTrackColor: Color(0xfff4f6fc),
+                    inactiveThumbColor: myBackGround),
+                onChanged: (val) {
+                  vaTrue.setIsVeg(val);
+                  vaTrue.catItems.isVeg = val;
+                },
+              ),
+            ),
+          ]),
+        )
+      ]),
+    ),
+ 
               Container(
                 height: 500,
                 child: Column(
@@ -136,63 +193,5 @@ class MenuHome extends StatelessWidget {
                 )));
   }
 
-  search() {
-    return Padding(
-      padding: EdgeInsets.all(sm.w(4)),
-      child: Row(children: [
-        Flexible(
-          child: EditTextComponent(
-              controller: _mySearchEditTextController,
-              hint: "Search for ... ",
-              security: false,
-              valid: true,
-              keyboardSet: TextInputType.text,
-              prefixIcon: 'search',
-              keyBoardAction: TextInputAction.search,
-              myOnChanged: (_val) {
-                vaTrue.txt = _val;
-              },
-              atSubmit: (_val) {
-                vaTrue.setSearchText(_val);
-                vaTrue.notifyListeners();
-              },
-              prefClick: () {
-                vaTrue.setSearchText(
-                    (_mySearchEditTextController.text == null ||
-                            _mySearchEditTextController.text == "")
-                        ? null
-                        : _mySearchEditTextController.text);
-                vaTrue.notifyListeners();
-              }),
-        ),
-        Visibility(
-          visible: vaTrue.getisFoody(),
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Text(
-              'Only Veg',
-              style: TextStyle(
-                  fontSize: 10, fontFamily: 'Gilroy-Medium', color: myGrey),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: sm.w(2), right: sm.w(1), bottom: sm.h(3)),
-              child: NeumorphicSwitch(
-                value: vaTrue.getIsVeg() ?? false,
-                height: sm.h(3.5),
-                style: NeumorphicSwitchStyle(
-                    activeThumbColor: Colors.green,
-                    activeTrackColor: Colors.green[100],
-                    inactiveTrackColor: Color(0xfff4f6fc),
-                    inactiveThumbColor: myBackGround),
-                onChanged: (val) {
-                  vaTrue.setIsVeg(val);
-                  vaTrue.catItems.isVeg = val;
-                },
-              ),
-            ),
-          ]),
-        )
-      ]),
-    );
-  }
+  
 }

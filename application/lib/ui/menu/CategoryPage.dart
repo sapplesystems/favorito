@@ -72,7 +72,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         children: [
                           CallSwitcher(),
                           Text(
-                            'Out of stock11',
+                            'Out of stock',
                             style: TextStyle(color: Colors.black, fontSize: 8),
                           ),
                         ],

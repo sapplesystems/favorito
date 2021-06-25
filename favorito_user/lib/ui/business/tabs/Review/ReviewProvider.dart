@@ -34,8 +34,10 @@ class ReviewProvider extends BaseProvider {
     await APIManager.businessSetReview(_map).then((value) {
       if (_selectedReviewId == "null") {
         Navigator.pop(context);
+        Navigator.pop(context);
       }
 
+        Navigator.pop(context);
       controller.text = "";
       setRating();
 
@@ -68,7 +70,7 @@ class ReviewProvider extends BaseProvider {
 
   void getReviewReplies() async {
     print("_rootId:$_rootId");
-    if (_rootId != "null")
+    if (_rootId != null)
       await APIManager.getReviewReplies(
           {"business_id": businessId, "review_id": _rootId}).then((value) {
         if (value.status == 'success') {
@@ -79,6 +81,18 @@ class ReviewProvider extends BaseProvider {
         notifyListeners();
       });
   }
+
+pastReviewed(){
+  bool val = false;
+  for(var v in  reviewData1){
+   if( v.self==1){
+    val = true;
+    break;
+   }
+  }
+  print("Past:$val");
+  return val;
+}
 
   getSelectedReviewId() => _rootId == "null";
 

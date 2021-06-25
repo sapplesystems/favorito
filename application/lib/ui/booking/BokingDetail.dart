@@ -62,7 +62,7 @@ class BokingDetail extends StatelessWidget {
           Container(
               height: sm.h(6),
               padding: const EdgeInsets.all(4.0),
-              child: Text(waitlistData?.name?.capitalizeManner() ?? '',
+              child: Text("${waitlistData?.name?.capitalizeManner()}${waitlistData?.occasion!=null?' ('+waitlistData?.occasion?.capitalize()+')':""}",
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: 20,

@@ -1,3 +1,5 @@
+
+
 import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/model/appoinment/PersonList.dart';
 import 'package:Favorito/model/appoinment/RestrictionOnlyModel.dart';
@@ -104,7 +106,7 @@ class AppoinmentProvider extends BaseProvider {
       "person_name": controller[0].text,
       "service_id": _serviceId,
       "person_mobile": controller[1].text,
-      "person_email": controller[2].text
+      // "person_email": controller[2].text
     };
     setLoading(true);
     print("_map:${_map}");
@@ -239,6 +241,29 @@ class AppoinmentProvider extends BaseProvider {
         }
       }
     });
+  }
+
+  addition(_id){
+      int _i = int.parse(controller[_id].text);
+      if(_id ==12){
+        if(controller[12].text!=controller[13].text){
+          controller[_id].text= (((_i<8))?++_i:_i).toString();
+        }else return;
+      }else{
+          controller[_id].text= (((_i<8))?++_i:_i).toString();
+      }
+      setDone(true);
+  }
+  subTraction(_id){
+    int _i = int.parse(controller[_id].text);
+    if(_id ==13){
+      if(controller[12].text!=controller[13].text){
+          controller[_id].text = (_i > 1 ? _i - 1 : _i).toString();
+      }else return;
+    }else{
+      controller[_id].text = (_i > 1 ? _i - 1 : _i).toString();
+    }
+    setDone(true);
   }
 
   getRestrictionList() => _restrictionList;
@@ -424,7 +449,7 @@ class AppoinmentProvider extends BaseProvider {
   postRestriction(context) async {
     int _serviceId;
     int _personId;
-    for (var _va in getServicesList()) {
+    for (var _va in _servicesList) {
       if (_va.serviceName == controller[0].text) {
         _serviceId = _va.id;
       }
@@ -476,8 +501,10 @@ class AppoinmentProvider extends BaseProvider {
   getEndTime() => _endTime;
 
   dateTimePicker(bool _val, localizations) {
+    
     localizations = MaterialLocalizations.of(RIKeys.josKeys10.currentContext);
     showTimePicker(
+      
       initialEntryMode: TimePickerEntryMode.input,
       context: RIKeys.josKeys10.currentContext,
       // initialTime: _val?_startTime:_endTime,
@@ -534,6 +561,8 @@ class AppoinmentProvider extends BaseProvider {
     await WebService.funAppoinmentSaveSetting(_map).then((value) {
       if (value.status == "success") {
         setDone(false);
+
+    refreshCall();
         BotToast.showText(text: value.message, duration: Duration(seconds: 5));
       }
     });
@@ -546,6 +575,7 @@ class AppoinmentProvider extends BaseProvider {
         "person_id": getPerson()[i].id,
         "is_active": getPerson()[i].isActive
       };
+    print("datap:$_va");
       await WebService.funAppoinmentServicePersonOnOff(_va, false)
           .then((value) {
         if (value.status == "success") {
@@ -556,13 +586,13 @@ class AppoinmentProvider extends BaseProvider {
     }
 
     if (identifire == "s") {
-      getServicesList()[i].isActive = val ? 0 : 1;
+      _servicesList[i].isActive = val ? 1 :0;
 
       var _va = {
-        "service_id": getServicesList()[i].id,
-        "is_active": getServicesList()[i].isActive
+        "service_id": _servicesList[i].id,
+        "is_active": _servicesList[i].isActive
       };
-      print("data:$_va");
+      print("datas:$_va");
       await WebService.funAppoinmentServicePersonOnOff(_va, true).then((value) {
         if (value.status == "success") {
           BotToast.showText(
@@ -653,7 +683,7 @@ class AppoinmentProvider extends BaseProvider {
             initialDate: _ab,
             firstDate: DateTime.now(),
             lastDate: DateTime.now()
-                .add(Duration(days: _settingData.advanceBookingEndDays)))
+                .add(Duration(days: _settingData.advanceBookingEndDays-1)))
         .then((_val) {
       controller[_controllerId].text = dateFormat1.format(_val);
       notifyListeners();

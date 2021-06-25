@@ -6,6 +6,7 @@ class SlotData {
   String person_name;
   String service_name;
   String specialNotes;
+  String occasion;
   String createdDate;
   String createdTime;
 
@@ -15,6 +16,7 @@ class SlotData {
       this.contact,
       this.person_name,
       this.service_name,
+      this.occasion,
       this.noOfPerson,
       this.specialNotes,
       this.createdDate,
@@ -26,6 +28,7 @@ class SlotData {
     contact = json['contact'];
     person_name = json['person_name'];
     service_name = json['service_name'];
+    occasion = json['occasion'];
     noOfPerson = json['no_of_person'];
     specialNotes = json['special_notes'];
     createdDate = json['created_date'];
@@ -39,6 +42,7 @@ class SlotData {
     data['contact'] = this.contact;
     data['person_name'] = this.contact;
     data['no_of_person'] = this.noOfPerson;
+    data['occasion'] = this.occasion;
     data['service_name'] = this.service_name;
     data['special_notes'] = this.specialNotes;
     data['created_date'] = this.createdDate;

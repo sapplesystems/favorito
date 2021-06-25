@@ -54,7 +54,7 @@ title: Text('Person',style: titleStyle),
                            children: [
                 myDropDown(vaTrue.controller[3], "Services", vaTrue.servicesString),
                        
-                        for (int i = 0; i < 3; i++)     
+                        for (int i = 0; i < 2; i++)     
                             txtfieldboundry(
                                 controller: vaTrue.controller[i],
                                 title: vaTrue.abc[i],

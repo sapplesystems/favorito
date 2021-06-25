@@ -10,6 +10,8 @@ class BusinessProfileData {
   String postalCode;
   String location;
   String phone;
+  String isPro;
+  String proKey;
   String landline;
   String businessEmail;
   var totalReviews;
@@ -41,6 +43,8 @@ class BusinessProfileData {
       this.postalCode,
       this.location,
       this.phone,
+      this.isPro,
+      this.proKey,
       this.landline,
       this.businessEmail,
       this.totalReviews,
@@ -72,6 +76,8 @@ class BusinessProfileData {
     postalCode = json['postal_code'];
     location = json['location'];
     phone = json['phone'];
+    isPro = json['is_pro'].toString();
+    proKey = json['pro_key'];
     landline = json['landline'];
     businessEmail = json['business_email'];
     totalReviews = json['total_reviews'];
@@ -120,6 +126,8 @@ class BusinessProfileData {
     data['postal_code'] = this.postalCode;
     data['location'] = this.location;
     data['phone'] = this.phone;
+    data['is_pro'] = this.isPro;
+    data['pro_key'] = this.proKey;
     data['landline'] = this.landline;
     data['business_email'] = this.businessEmail;
     data['total_reviews'] = this.totalReviews;

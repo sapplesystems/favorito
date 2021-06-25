@@ -5,6 +5,7 @@ import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/dateformate.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -107,26 +108,29 @@ class ReviewTab extends StatelessWidget {
                   ),
                 ]),
                 Divider(),
-                InkWell(
-                  onTap: () {
-                    vaTrue
-                      ..clearSelectedReviewId()
-                      ..setRootId("null");
-
-                    Navigator.pushNamed(context, '/review').whenComplete(() {
-                      vaTrue.getCurrentBusinessId(context);
-                      vaTrue.getrating();
-                      vaTrue.getReviewListing(context);
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      '+ Add Review ',
-                      style: Theme.of(context).textTheme.headline6.copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: myRed),
+                Visibility(
+                  visible: !vaTrue.pastReviewed(),
+                  child: InkWell(
+                    onTap: () {
+                      vaTrue
+                        ..clearSelectedReviewId()
+                        ..setRootId("null");
+                
+                      Navigator.pushNamed(context, '/review').whenComplete(() {
+                        vaTrue.getCurrentBusinessId(context);
+                        vaTrue.getrating();
+                        vaTrue.getReviewListing(context);
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        '+ Add Review ',
+                        style: Theme.of(context).textTheme.headline6.copyWith(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: myRed),
+                      ),
                     ),
                   ),
                 ),
@@ -186,6 +190,8 @@ class ReviewTab extends StatelessWidget {
                       itemBuilder: (BuildContext _context, int _index) {
                         List<ReviewData1> _data =
                             vaTrue.getAllreviewsListForUi();
+                            
+    // print("hhhh ${DateTime.parse(_data[_index]?.createdAt)}");
                         return InkWell(
                           onTap: () {
                             if (_data[_index].self == 1) {
@@ -286,7 +292,7 @@ class ReviewTab extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                          '${_data[_index]?.reviews ?? ' '}'
+                                          '${_data[_index]?.userReview ?? ' '}'
                                           // ?.sentenseCase()
                                           ,
                                           style: Theme.of(context)
@@ -345,48 +351,55 @@ class ReviewTab extends StatelessWidget {
                                         //       _data[_index]?.businessReview !=
                                         //           null,
                                         //   child:
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text("Response from owner",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline3
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                    textScaleFactor: .3),
-                                                Text(
-                                                  _data[_index]
-                                                      ?.createdAt
-                                                      ?.replaceAll('-', ' ')
-                                                      ?.substring(0, 6),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline3
-                                                      .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: myGrey),
-                                                  textScaleFactor: .35,
-                                                ),
-                                                Text(
+                                       
+                                        Visibility(
+                                          visible: true,
+                                          // DateTime.parse(_data[_index]?.createdAt).isAfter( DateTime.parse(_data[_index]?.businessDate)),
+                                          child: 
+                                                                                   Padding(
+                                            padding: EdgeInsets.only(left: 8.0),
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("Response from owner",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline3
+                                                          .copyWith(
+                                                            color: myRed,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                      textScaleFactor: .3),
+                                                  Text(
                                                     _data[_index]
-                                                            ?.businessReview ??
-                                                        '',
+                                                        ?.createdAt
+                                                        ?.replaceAll('-', ' ')
+                                                        ?.substring(0, 6),
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline3
                                                         .copyWith(
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                    textScaleFactor: .35)
-                                              ]),
+                                                                FontWeight.w400,
+                                                            color: myGrey),
+                                                    textScaleFactor: .35,
+                                                  ),
+                                                  Text(
+                                                      _data[_index]
+                                                              ?.businessReview ??
+                                                          '',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline3
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                      textScaleFactor: .35)
+                                                ]),
+                                          ),
                                         ),
                                         // ),
                                       ]),

@@ -120,7 +120,7 @@ class _HomeState extends State<Home> {
                                   .copyWith(fontSize: 10),
                             ),
                             Text(
-                              'v2.0',
+                              'v2.3',
                               textAlign: TextAlign.start,
                               style: Theme.of(context)
                                   .textTheme

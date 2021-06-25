@@ -157,6 +157,30 @@ class WaitlistProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+plusMinusAdd(controllerId){
+  if(controllerId==3){
+    if(controller[3].text.trim()!=controller[4].text.trim()){
+      controller[controllerId].text = (int.parse(controller[controllerId].text) + 1).toString();
+    }
+  }
+  else if(int.parse(controller[controllerId].text.trim())==8){return;
+  }
+  else{
+controller[controllerId].text = (int.parse(controller[controllerId].text) + 1).toString();
+  }
+  notifyListeners();          
+}
 
+plusMinusMinus(controllerId){
+  int a = int.parse(controller[controllerId].text);
+
+
+   if(controllerId==4){
+      if(controller[3].text.trim()!=controller[4].text.trim()){
+     controller[controllerId].text = ((a != 1) ? a - 1 : a).toString();}
+   }else{controller[controllerId].text = (a != 1 ? a - 1 : a).toString();}
+  
+  notifyListeners();
+}
   getSelectedList() => _selectedList;
 }

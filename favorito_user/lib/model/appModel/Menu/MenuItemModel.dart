@@ -10,6 +10,7 @@ class MenuItemModel {
   var photos;
   var businessId;
   int quantity;
+  int maxQtyPerOrder;
   int catagoryId;
   var tax;
   int menuCategoryId;
@@ -26,6 +27,7 @@ class MenuItemModel {
       this.photos,
       this.businessId,
       this.quantity,
+      this.maxQtyPerOrder,
       this.catagoryId,
       this.customizationItemModel,
       this.tax,
@@ -40,6 +42,7 @@ class MenuItemModel {
     description = json['description'];
     type = json['type'];
     photoId = json['photo_id'] ?? [];
+    maxQtyPerOrder = json['max_qty_per_order'] ?? [];
     photos = json['photos'] ?? [];
     businessId = json['business_id'];
     tax = json['tax'];
@@ -53,6 +56,7 @@ class MenuItemModel {
     data['title'] = this.title;
     data['price'] = this.price;
     data['description'] = this.description;
+    data['max_qty_per_order'] = this.maxQtyPerOrder;
     data['type'] = this.type;
     data['photo_id'] = this.photoId;
     data['photos'] = this.photos;

@@ -192,9 +192,11 @@ class Bookings extends StatelessWidget {
                         },
                       ),
                     ),
-                    Container(
-                      height: vaTrue.blm.slots.length < 2 ? sm.h(48) : null,
-                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                    Stack(children: [
+                     
+ Container(
+                      height: vaTrue.blm.slots.length < 2 ? sm.h(42.6) : null,
+                      padding: EdgeInsets.only(left: 20.0, right: 20.0,top:sm.h(6)),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -202,20 +204,11 @@ class Bookings extends StatelessWidget {
                           topRight: Radius.circular(34),
                         ),
                       ),
-                      child: Column(
-                        // shrinkWrap: true,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            child: Text("User Details",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.w700)),
-                          ),
+                      child: 
+       
                           ListView.builder(
                               shrinkWrap: true,
-                              physics: new NeverScrollableScrollPhysics(),
+                              
                               itemCount: vaTrue.blm.slots.length != 0
                                   ? vaTrue.blm.slots[vaTrue.getSelectedSlot()]
                                       .slotData.length
@@ -295,10 +288,19 @@ class Bookings extends StatelessWidget {
                                       ]),
                                     ));
                               }),
-                        ],
-                      ),
+                      
                     ),
-                  ]),
+                  Positioned(
+                    left: sm.h(16),
+                    top:sm.h(2),
+
+                    child:  Text("User Details",
+                                style: TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.w700)),)
+                          
+                    ],)
+                   ]),
                 )),
     );
   }

@@ -467,7 +467,7 @@ class APIManager {
     return ProfileModel.fromJson(convert.jsonDecode(response.toString()));
   }
 
-  static Future<BusinessProfileModel> baseUserProfileDetail(
+  static Future<BusinessProfileModel> baseUserProfileDetails(
       Map _map, GlobalKey<ScaffoldState> josKeys2) async {
     if (!await utilProvider.checkInternet())
       return BusinessProfileModel(
@@ -530,6 +530,16 @@ class APIManager {
     print("service.mostPopulerBusiness : ${response.toString}");
     return CatlogModel.fromJson(convert.jsonDecode(response.toString()));
   }
+// funClicks
+  static Future<JobDetailModels> funClicks(Map _map) async {
+    String token = await Prefs.token;
+    String _url =service.funClicks;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
+    response = await dio.post(_url, data: _map, options: opt);
+    return JobDetailModels.fromJson(convert.jsonDecode(response.toString()));
+  }
 
 //job detail
   static Future<JobDetailModels> jobDetail(Map _map) async {
@@ -538,7 +548,7 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
-    print("service.baseUserProfileDetail : ${service.baseUserProfileDetail}");
+    print("service.jobDetail : ${service.jobDetail}");
     response = await dio.post(service.jobDetail, data: _map, options: opt);
     print("service.mostPopulerBusiness : ${response.toString}");
     return JobDetailModels.fromJson(convert.jsonDecode(response.toString()));

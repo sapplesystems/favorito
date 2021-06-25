@@ -218,11 +218,13 @@ class BusinessProfile extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                           child: Text(
-                              "\u{20B9} : " +
-                                      vatrue
-                                          .getBusinessProfileData()
-                                          ?.priceRange ??
-                                  "",
+                              "\u{20B9} : " 
+                              // +
+                              //         vatrue
+                              //             .getBusinessProfileData()
+                              //             ?.priceRange ??
+                              //     ""
+                              ,
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -371,9 +373,8 @@ class BusinessProfile extends StatelessWidget {
                   case 'Booking':
                     {
                       print("sdf1");
-                      Provider.of<AppBookProvider>(context, listen: false)
+                      context.read<AppBookProvider>()
                           .bookingVerbose(context);
-                      print("sdf4");
                       Navigator.of(context).pushNamed('/bookTable');
                     }
                     break;

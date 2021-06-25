@@ -177,179 +177,199 @@ class _SearchResultState extends State<SearchResult> {
     // }
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: InkWell(
         onTap: () {
           Provider.of<BusinessProfileProvider>(context, listen: false)
             ..setBusinessId(result.businessId)
             ..refresh(1);
 
+                          if(result.isPro=='1')context.read<BusinessProfileProvider>().funPromoClicks(result.proKey??'',result.isPro);
           Navigator.of(context).pushNamed('/businessProfile');
         },
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12))),
-          elevation: 10,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top:6.0),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12))),
+                elevation: 10,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(
-                        flex: 4,
-                        child: SizedBox(
-                            height: sm.h(16),
-                            width: sm.h(16),
-                            child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                                child: ImageMaster(url: result?.photo ?? ''))),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: sm.w(2), top: sm.h(1)),
-                                child: Text(result.businessName.capitalize(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500)),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: SizedBox(
+                                  height: sm.h(16),
+                                  width: sm.h(16),
+                                  child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      child: ImageMaster(url: result?.photo ?? ''))),
+                            ),
+                            Expanded(
+                              flex: 4,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: sm.w(2), top: sm.h(1)),
+                                      child: Text(result.businessName.capitalize(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500)),
+                                    ),
+                                    // Padding(
+                                    // padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                                    // child: Text(result.countryId ?? "",
+                                    //     style: TextStyle(
+                                    //         fontSize: 14, fontWeight: FontWeight.w300))),
+                                    // Padding(
+                                    //     padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
+                                    //     child: Text(result.avgRating ?? "",
+                                    //         style: TextStyle(
+                                    //             fontSize: 14, fontWeight: FontWeight.w300))),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            left: sm.w(2), top: sm.h(1)),
+                                        child: RatingBarIndicator(
+                                            rating: double.parse(
+                                                result.avgRating.toString()),
+                                            itemBuilder: (context, index) =>
+                                                Icon(Icons.star, color: myRed),
+                                            itemCount: 5,
+                                            itemSize: 12.0,
+                                            direction: Axis.horizontal)),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: sm.w(2), top: sm.h(1)),
+                                      child: Text(
+                                          "${((double.parse(result?.distance?.toString() ?? '0.0')) / 1.6)?.toStringAsFixed(1)} km | ${result?.townCity ?? ''}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300)),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: sm.w(2), top: sm.h(1)),
+                                      child: Text(result?.businessStatus ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: result?.businessStatus
+                                                              ?.toLowerCase() ==
+                                                          'offline'
+                                                      ? myRed
+                                                      : Colors.green)),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: sm.w(2), top: sm.h(1)),
+                                      child: Text(
+                                          "Opens | ${result?.startHours?.toString()?.substring(0, 5) ?? '00:00'}  Closes | ${result?.endHours?.toString()?.substring(0, 5) ?? "00:00"}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontSize: sm.w(2.8),
+                                                  fontWeight: FontWeight.w300)),
+                                    ),
+                                  ]),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle, color: myRedLight0),
+                                margin: EdgeInsets.only(top: sm.h(5), right: sm.h(0)),
+                                child: IconButton(
+                                    icon: Icon(Icons.call_outlined, color: myRed),
+                                    onPressed: () => launch("tel://${result.phone}")),
                               ),
-                              // Padding(
-                              // padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                              // child: Text(result.countryId ?? "",
-                              //     style: TextStyle(
-                              //         fontSize: 14, fontWeight: FontWeight.w300))),
-                              // Padding(
-                              //     padding: EdgeInsets.only(left: sm.w(2), top: sm.h(1)),
-                              //     child: Text(result.avgRating ?? "",
-                              //         style: TextStyle(
-                              //             fontSize: 14, fontWeight: FontWeight.w300))),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: sm.w(2), top: sm.h(1)),
-                                  child: RatingBarIndicator(
-                                      rating: double.parse(
-                                          result.avgRating.toString()),
-                                      itemBuilder: (context, index) =>
-                                          Icon(Icons.star, color: myRed),
-                                      itemCount: 5,
-                                      itemSize: 12.0,
-                                      direction: Axis.horizontal)),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: sm.w(2), top: sm.h(1)),
-                                child: Text(
-                                    "${((double.parse(result?.distance?.toString() ?? '0.0')) / 1.6)?.toStringAsFixed(1)} km | ${result?.townCity ?? ''}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w300)),
+                            )
+                          ]),
+                      btnTxt != null
+                          ? Padding(
+                              padding: EdgeInsets.all(sm.h(2)),
+                              child: NeumorphicButton(
+                                style: NeumorphicStyle(
+                                    shape: NeumorphicShape.convex,
+                                    // depth: 4,
+                                    lightSource: LightSource.topLeft,
+                                    color: myRed,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.all(Radius.circular(26.0)))),
+                                margin: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                                onPressed: () {
+                                  print("tulluidentifier:$identifier");
+                                  Provider.of<BusinessProfileProvider>(context,
+                                      listen: false)
+                                    ..setBusinessId(result.businessId)
+                                    ..refresh(identifier == 1 ? 4 : 2);
+                                  if (identifier == 1) {
+                                    print("aaaaaaa1");
+                                    Navigator.of(context)
+                                        .pushNamed('/bookAppointment');
+                                  } else {
+                                    print("aaaaaaa2");
+                                    Navigator.of(context).pushNamed('/bookTable');
+                                  }
+                                },
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 16),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: SvgPicture.asset(
+                                            'assets/icon/callenders.svg'),
+                                      ),
+                                      Text(btnTxt, //bookAnAppointment
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.white))
+                                    ]),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: sm.w(2), top: sm.h(1)),
-                                child: Text(result?.businessStatus ?? '',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w300,
-                                            color: result?.businessStatus
-                                                        ?.toLowerCase() ==
-                                                    'offline'
-                                                ? myRed
-                                                : Colors.green)),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: sm.w(2), top: sm.h(1)),
-                                child: Text(
-                                    "Opens | ${result?.startHours?.toString()?.substring(0, 5) ?? '00:00'}  Closes | ${result?.endHours?.toString()?.substring(0, 5) ?? "00:00"}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            fontSize: sm.w(2.8),
-                                            fontWeight: FontWeight.w300)),
-                              ),
-                            ]),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: myRedLight0),
-                          margin: EdgeInsets.only(top: sm.h(5), right: sm.h(0)),
-                          child: IconButton(
-                              icon: Icon(Icons.call_outlined, color: myRed),
-                              onPressed: () => launch("tel://${result.phone}")),
-                        ),
-                      )
+                            )
+                          : SizedBox(),
                     ]),
-                btnTxt != null
-                    ? Padding(
-                        padding: EdgeInsets.all(sm.h(2)),
-                        child: NeumorphicButton(
-                          style: NeumorphicStyle(
-                              shape: NeumorphicShape.convex,
-                              // depth: 4,
-                              lightSource: LightSource.topLeft,
-                              color: myRed,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                  BorderRadius.all(Radius.circular(26.0)))),
-                          margin: EdgeInsets.symmetric(horizontal: sm.w(4)),
-                          onPressed: () {
-                            print("tulluidentifier:$identifier");
-                            Provider.of<BusinessProfileProvider>(context,
-                                listen: false)
-                              ..setBusinessId(result.businessId)
-                              ..refresh(identifier == 1 ? 4 : 2);
-                            if (identifier == 1) {
-                              print("aaaaaaa1");
-                              Navigator.of(context)
-                                  .pushNamed('/bookAppointment');
-                            } else {
-                              print("aaaaaaa2");
-                              Navigator.of(context).pushNamed('/bookTable');
-                            }
-                          },
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: SvgPicture.asset(
-                                      'assets/icon/callenders.svg'),
-                                ),
-                                Text(btnTxt, //bookAnAppointment
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white))
-                              ]),
-                        ),
-                      )
-                    : SizedBox(),
-              ]),
-        ),
+              ),
+            ),
+          Visibility(
+            visible:result.isPro=='1', 
+          
+            child: Positioned(
+              right: sm.w(6),
+              top:  sm.h(-.2),
+              child:
+            Text("Ad",style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(fontSize: 24,fontFamily: 'Gilroy-Bold',color:Colors.amber[900]),)),
+          )
+
+          ]),
       ),
     );
   }
@@ -363,11 +383,7 @@ class _SearchResultState extends State<SearchResult> {
         left: sm.w(5),
         right: sm.w(5),
         bottom: sm.h(18),
-        child: PopupContent(
-          content: SafeArea(
-            child: widget,
-          ),
-        ),
+        child: PopupContent(content: SafeArea(child: widget)),
       ),
     );
   }

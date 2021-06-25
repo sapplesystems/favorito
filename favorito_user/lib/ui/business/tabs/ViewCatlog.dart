@@ -1,8 +1,12 @@
+import 'package:favorito_user/Function/PopmyPage.dart';
 import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../../../utils/Extentions.dart';
 class ViewCatlog extends StatefulWidget {
@@ -14,9 +18,14 @@ class ViewCatlog extends StatefulWidget {
 
 class _ViewCatlogState extends State<ViewCatlog> {
   SizeManager sm;
+  List images=[];
+  int i=0;
   Widget build(BuildContext context) {
     sm = SizeManager(context);
+    images.addAll(widget.catlogData.photos?.split(',')??[""]);
     return Scaffold(
+
+      key: RIKeys.josKeys28,
       appBar: AppBar(
         backgroundColor: myBackGround,
         elevation: 0,
@@ -28,14 +37,33 @@ class _ViewCatlogState extends State<ViewCatlog> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-                width: sm.w(100),
-                height: sm.w(100),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(0),
-                  child:
-                      ImageMaster(url: widget.catlogData.photos?.split(',')?.first??"https://lh3.googleusercontent.com/rQENYi1jRel23C9HlxIP9hK_Efjnl4gRqPYEyHOVdMxOLfMhjsuheu1bMgTZfRjqZ6u4=s85"),
-                )),
+            Stack(
+              children: [
+                Container(
+                    width: sm.w(100),
+                    height: sm.h(52),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(0),
+                      child:
+                          ImageMaster(url: images[i]),
+                    )),
+                    Positioned(
+                      top: sm.h(18),
+                      left:0,
+                      child: IconButton(icon:Icon(Icons.keyboard_arrow_left,color: myRed,size: 52,),onPressed: (){
+                        
+                        if(i!=0)
+                        setState(() =>--i);
+                      },)),
+                    Positioned(
+                      top: sm.h(18),
+                      right: 0,
+                      child: IconButton(icon:Icon(Icons.keyboard_arrow_right,color: myRed,size: 52,),onPressed: (){
+                        if(i<images.length-1)
+                        setState(() =>++i);
+                      },)),
+              ],
+            ),
             Divider(),
             
               Padding(
@@ -62,7 +90,7 @@ class _ViewCatlogState extends State<ViewCatlog> {
           Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 22,vertical: 6),
             child: Text(
-                      "${widget.catlogData?.productUrl}",
+                      "${widget.catlogData?.productUrl??""}",
                       style: Theme.of(context)
                           .textTheme
                           .headline6
@@ -99,15 +127,28 @@ class _ViewCatlogState extends State<ViewCatlog> {
           padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 4),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('BACK',style: Theme.of(context)
+            child: Text('VISIT',style: Theme.of(context)
                           .textTheme
                           .headline6
                           .copyWith(fontWeight: FontWeight.w800,fontSize: 14,letterSpacing: 1.2),),
           ),
         ),
       
-        onPressed: () {
-          // sdfsdfs
+        onPressed: ()async {
+          String url = widget.catlogData?.productUrl;
+          PopmyPage(
+            key: RIKeys.josKeys28,
+            cancelTxt: 'Discard',
+            okayTxt: 'Okay',
+            funCancel: ()=>Navigator.pop(context),
+            message: "This will lead you to an external website You want to proceed?",
+            funOkay: ()async{
+              Navigator.pop(context);
+await canLaunch(widget.catlogData?.productUrl) 
+? await launch(widget.catlogData?.productUrl) : throw 'Could not launch ${widget.catlogData?.productUrl}';
+            }
+          ).popMe();
+           
         },
       ),
    ),

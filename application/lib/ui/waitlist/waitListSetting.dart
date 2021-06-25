@@ -83,8 +83,7 @@ class WaitListSetting extends StatelessWidget {
                                                 txtClr: Colors.black))
                                       ]),
                                 ),
-                                plusMinus("Available resources",
-                                    vaTrue.controller[0]),
+                                plusMinus("Available resources",0),
                                 Padding(
                                     padding: EdgeInsets.only(bottom: sm.h(2)),
                                     child: txtfieldboundry(
@@ -119,9 +118,9 @@ class WaitListSetting extends StatelessWidget {
                                       }),
                                 ),
                                 plusMinus(
-                                    "Bookings/Slot", vaFalse.controller[3]),
+                                    "Bookings/Slot", 3),
                                 plusMinus(
-                                    "Bookings/Day", vaFalse.controller[4]),
+                                    "Bookings/Day", 4),
                                 Padding(
                                     padding: EdgeInsets.only(bottom: sm.h(2)),
                                     child: txtfieldboundry(
@@ -179,7 +178,7 @@ class WaitListSetting extends StatelessWidget {
         ));
   }
 
-  Widget plusMinus(String _title, TextEditingController ctrl) {
+  Widget plusMinus(String _title,int controllerId) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Text("\n$_title", style: TextStyle(color: Colors.grey)),
       Padding(
@@ -187,21 +186,11 @@ class WaitListSetting extends StatelessWidget {
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           IconButton(
             icon: Icon(Icons.remove_circle_outline, color: myRed, size: 28),
-            onPressed: () {
-              int a = int.parse(ctrl.text);
-              a = a > 0 ? a - 1 : a;
-              ctrl.text = a.toString();
-              vaTrue.notifyListeners();
-            },
-          ),
-          fromTo(txt: ctrl.text, clr: myRed, txtClr: Colors.black),
+            onPressed: () =>vaTrue.plusMinusMinus(controllerId)),
+          fromTo(txt: vaTrue.controller[controllerId].text, clr: myRed, txtClr: Colors.black),
           IconButton(
             icon: Icon(Icons.add_circle_outline, size: 28, color: myRed),
-            onPressed: () {
-              ctrl.text = (int.parse(ctrl.text) + 1).toString();
-
-              vaTrue.notifyListeners();
-            },
+            onPressed: ()=> vaTrue.plusMinusAdd(controllerId),
           )
         ]),
       )

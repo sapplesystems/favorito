@@ -7,8 +7,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class NewCatlog extends StatelessWidget {
   CatalogsProvider vaTrue;
@@ -59,7 +59,13 @@ class NewCatlog extends StatelessWidget {
               margin: EdgeInsets.symmetric(vertical: sm.h(4)),
               child: ListView(scrollDirection: Axis.horizontal, children: [
                 InkWell(
-                    onTap: () => vaTrue.attachImages(),
+                    onTap: () {
+                      if(vaTrue.imgUrls.length<10){
+                        vaTrue.attachImages();
+                      }else{
+                        Fluttertoast.showToast(msg: "Catalog images cant be more then 10");
+                      }
+                    },
                     child: Container(
                       width: sm.h(18),
                       child: Card(

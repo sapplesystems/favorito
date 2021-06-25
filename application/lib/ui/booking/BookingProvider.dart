@@ -1,5 +1,4 @@
 import 'package:Favorito/Provider/BaseProvider.dart';
-import 'package:Favorito/model/Restriction/BookingRestrictionModel.dart';
 import 'package:Favorito/model/Restriction/RestrictionData.dart';
 import 'package:Favorito/model/booking/BookingModel.dart';
 import 'package:Favorito/model/booking/bookingListModel.dart';
@@ -31,6 +30,7 @@ class BookingProvider extends BaseProvider {
   int _selectedSlotIndex = 0;
 
   DateTime getInitialDate() => _initialDate ?? DateTime.now();
+
   setInitialDate(String _v) {
     _initialDate = DateTime.parse(_v);
     getBookingData();
@@ -38,6 +38,7 @@ class BookingProvider extends BaseProvider {
   }
 
   getSelectedSlotIndex() => _selectedSlotIndex;
+
   setSelectedSlotIndex(int _i) {
     _selectedSlotIndex = _i;
     notifyListeners();
@@ -52,12 +53,14 @@ class BookingProvider extends BaseProvider {
   String _endTime;
 
   getStartTime() => _startTime;
+
   setStartTime(String _val) {
     _startTime = _val;
     notifyListeners();
   }
 
   getEndTime() => _endTime;
+
   setEndTime(String _val) {
     _endTime = _val;
     notifyListeners();
@@ -66,6 +69,7 @@ class BookingProvider extends BaseProvider {
   MaterialLocalizations localizations;
   List<TextEditingController> controller = [];
   bookingSettingModel bs;
+
   BookingProvider() {
     for (int i = 0; i < 8; i++) {
       controller.add(TextEditingController());
@@ -76,31 +80,37 @@ class BookingProvider extends BaseProvider {
     getBookingData();
     getPageData();
   }
+
   getTotalBookingDays() => _totalBookingDays;
+
   setTotalBookingDays(int _i) {
     _totalBookingDays = _i;
     notifyListeners();
   }
 
   getTotalBookingHours() => _totalBookingHours;
+
   setTotalBookingHours(int _i) {
     _totalBookingHours = _i;
     notifyListeners();
   }
 
   bool getIsProgress() => _isProgress;
+
   void setIsProgress(bool _val) {
     _isProgress = _val;
     notifyListeners();
   }
 
   int getSelectedSlot() => _selectedSlot;
+
   void setSelectedSlot(int _val) {
     _selectedSlot = _val;
     notifyListeners();
   }
 
   bool getDone() => _done;
+
   void setDone(bool _val) {
     _done = _val;
     notifyListeners();
@@ -132,19 +142,20 @@ class BookingProvider extends BaseProvider {
     });
   }
 
-  funSublimRestriction(context, _val, boolval) async {
-    setIsProgress(true);
-    Map _map = {'restriction_id': _val};
+  funSublimRestriction(context,List _val, boolval) async {
+    if(!boolval)setIsProgress(true);
+    print(boolval);
+    Map _map = {'restriction_id': _val.toList()};
     Map _map1 = {"start_date": controller[6].text};
     Map _map2 = {
       "start_date": controller[6].text,
       "end_date": controller[7].text
     };
     if (!boolval) {
-      print("");
+      print("_map${_map.toString()}");
     }
     await WebService.restrinction(
-            _val == ""
+            _val.length==0
                 ? isSingleDate
                     ? _map1
                     : _map2
@@ -200,12 +211,15 @@ class BookingProvider extends BaseProvider {
 
   addition(int _i) {
     if (int.parse(controller[_i].text) < 8) {
+      if (_i == 3 && controller[3].text == controller[4].text) return;
+
       controller[_i].text = (int.parse(controller[_i].text) + 1).toString();
       setDone(true);
     }
   }
 
   subTraction(int _i) {
+    if (_i == 4 && controller[3].text == controller[4].text) return;
     int a = int.parse(controller[_i].text);
 
     if (a > 1) {

@@ -124,14 +124,14 @@ class BookigDateRistriction extends StatelessWidget {
                         function: () {
                           if (data.isSingleDate) {
                             if (data.controller[6].text.trim() != "") {
-                              data.funSublimRestriction(context, "", false);
+                              data.funSublimRestriction(context, [], false);
                             } else
                               BotToast.showText(
                                   text: 'Please Select Start Date');
                           } else {
                             if (data.controller[6].text.trim() != "" &&
                                 data.controller[7].text.trim() != "") {
-                              data.funSublimRestriction(context, "", false);
+                              data.funSublimRestriction(context, [], false);
                             } else if (data.controller[6].text.trim() == "") {
                               BotToast.showText(
                                   text: 'Please Select Start Date');

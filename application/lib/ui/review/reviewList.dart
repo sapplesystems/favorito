@@ -214,6 +214,7 @@ class _ReviewListState extends State<ReviewList> {
   void getData() async {
     await WebService.funReviewIntro(context).then((value) {
       if (value.status == 'success') {
+        ratinglist.clear();
         setState(() {
           rmi = value;
         });
@@ -223,7 +224,7 @@ class _ReviewListState extends State<ReviewList> {
         ratinglist.add(va.rating3.toDouble() * .1);
         ratinglist.add(va.rating2.toDouble() * .1);
         ratinglist.add(va.rating1.toDouble() * .1);
-        ratinglist = ratinglist.reversed;
+        ratinglist.addAll(ratinglist.reversed);
       }
     });
   }

@@ -44,7 +44,7 @@ class Review extends StatelessWidget {
                 child: SmoothStarRating(
                   borderColor: myRed,
                   color: myRed,
-                  rating: double.parse(data.myRating),
+                  rating: double.parse(data.myRating??'0.0')??0.0,
                   isReadOnly: false,
                   size: 40,
                   filledIconData: Icons.star,

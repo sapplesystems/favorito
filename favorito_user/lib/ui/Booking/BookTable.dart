@@ -14,27 +14,29 @@ import '../../utils/Extentions.dart';
 
 class BookTable extends StatelessWidget {
   SizeManager sm;
-  AppBookProvider vaTrue;
+
   var fut;
   bool isFirst = true;
-  bool _FormValidate = false;
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     sm = SizeManager(context);
-    vaTrue = Provider.of<AppBookProvider>(context, listen: true);
+    
+    return Scaffold(
+        // backgroundColor: myBackGround,
+        body:
+        
+        
+  Consumer<AppBookProvider>(builder: (context,data,child){
     if (isFirst) {
-      fut = vaTrue
+      fut = data
         ..setIsVerboseCall(true)
         ..bookingVerbose(context)
         ..setMyDetail(context);
       isFirst = false;
     }
-    return Scaffold(
-        // backgroundColor: myBackGround,
-        body: vaTrue.getIsVerboseCall()
+    return  data.getIsVerboseCall()
             ? Center(
                 child: CircularProgressIndicator(
                     backgroundColor: myRed,
@@ -47,6 +49,7 @@ class BookTable extends StatelessWidget {
                 },
                 child: SafeArea(
                   child: Scaffold(
+                    
                     appBar: AppBar(
                       backgroundColor: NeumorphicTheme.isUsingDark(context)
                           ? Colors.grey[850]
@@ -64,7 +67,7 @@ class BookTable extends StatelessWidget {
                     key: RIKeys.josKeys19,
                     body: ListView(shrinkWrap: true, children: [
                       Text(
-                          vaTrue
+                          data
                                   .getBookTableVerbose()
                                   ?.data
                                   ?.businessName
@@ -110,7 +113,7 @@ class BookTable extends StatelessWidget {
                                         horizontal: sm.w(4), vertical: sm.w(5)),
                                     child: Consumer<AppBookProvider>(
                                         builder: (context, data, child) {
-                                      return Text('${vaTrue.getParticipent()}',
+                                      return Text('${data.getParticipent()}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6
@@ -128,7 +131,7 @@ class BookTable extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(left: sm.w(8)),
                                 child: InkWell(
-                                  onTap: () => vaTrue.changeParticipent(false),
+                                  onTap: () => data.changeParticipent(false),
                                   child: Card(
                                     color: NeumorphicTheme.isUsingDark(context)
                                         ? Color(0xffF4F6FC)
@@ -146,7 +149,7 @@ class BookTable extends StatelessWidget {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => vaTrue.changeParticipent(true),
+                                onTap: () => data.changeParticipent(true),
                                 child: Card(
                                   color: NeumorphicTheme.isUsingDark(context)
                                       ? Colors.white
@@ -185,7 +188,7 @@ class BookTable extends StatelessWidget {
                             children: [
                               for (int i = 0;
                                   i <
-                                      vaTrue
+                                      data
                                           .getBookTableVerbose()
                                           ?.data
                                           ?.availableDates
@@ -195,8 +198,11 @@ class BookTable extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       InkWell(
-                                        onTap: () =>
-                                            vaTrue.setSelectDate(context, i),
+                                        onTap: () {
+                                          
+                                          data.setSelectDate(context,i);
+                                        }
+                                          ,
                                         child: Card(
                                           color: !NeumorphicTheme.isUsingDark(
                                                   context)
@@ -211,13 +217,13 @@ class BookTable extends StatelessWidget {
                                                 vertical: sm.w(4),
                                                 horizontal: sm.w(6)),
                                             child: Text(
-                                              "${vaTrue.getBookTableVerbose()?.data?.availableDates[i].day} (${dateFormat7.format(DateTime.parse(vaTrue.getBookTableVerbose()?.data?.availableDates[i].date))})",
+                                              "${data.getBookTableVerbose()?.data?.availableDates[i].day} (${dateFormat7.format(DateTime.parse(data.getBookTableVerbose()?.data?.availableDates[i].date))})",
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6
                                                   .copyWith(
                                                       color:
-                                                          vaTrue.getSelectDate() ==
+                                                          data.getSelectDate() ==
                                                                   i
                                                               ? myRed
                                                               : myGrey,
@@ -248,11 +254,12 @@ class BookTable extends StatelessWidget {
                         height: 100,
                         child: ListView(
                             shrinkWrap: true,
+                            
                             scrollDirection: Axis.horizontal,
                             children: [
                               for (int i = 0;
                                   i <
-                                      vaTrue
+                                      context.watch<AppBookProvider>()
                                           .getBookTableVerbose()
                                           ?.data
                                           ?.slots
@@ -262,7 +269,7 @@ class BookTable extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       InkWell(
-                                        onTap: () => vaTrue.setSelectTime(i),
+                                        onTap: () => data.setSelectTime(i),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 8),
@@ -276,13 +283,13 @@ class BookTable extends StatelessWidget {
                                               padding: EdgeInsets.symmetric(
                                                   vertical: 20, horizontal: 8),
                                               child: Text(
-                                                  "${vaTrue.getBookTableVerbose()?.data?.slots[i].startTime.substring(0, 5)} ",
+                                                  "${data.getBookTableVerbose()?.data?.slots[i].startTime.substring(0, 5)} ",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline6
                                                       .copyWith(
                                                           color:
-                                                              vaTrue.getSelectTime() ==
+                                                              data.getSelectTime() ==
                                                                       i
                                                                   ? myRed
                                                                   : myGrey,
@@ -321,7 +328,7 @@ class BookTable extends StatelessWidget {
                                   EdgeInsets.symmetric(horizontal: sm.w(10)),
                               child: DropdownButton<String>(
                                   isExpanded: true,
-                                  value: vaTrue.selectedOccasion,
+                                  value: data.selectedOccasion,
                                   hint: Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: sm.w(2)),
@@ -335,7 +342,7 @@ class BookTable extends StatelessWidget {
                                                 fontSize: 12),
                                       )),
                                   underline: Container(),
-                                  items: vaTrue
+                                  items: data
                                       .getOccasionList()
                                       .map<DropdownMenuItem<String>>(
                                           (String value) {
@@ -354,7 +361,7 @@ class BookTable extends StatelessWidget {
                                                         fontSize: 12))));
                                   }).toList(),
                                   onChanged: (String value) =>
-                                      vaTrue.selectedOccasion = value),
+                                      data.selectedOccasion = value),
                             ),
                           ),
                         ),
@@ -374,8 +381,7 @@ class BookTable extends StatelessWidget {
                                       color: myGrey))),
                       Builder(
                           builder: (context) => Form(
-                                key: _formKey,
-                                autovalidate: _FormValidate,
+                                key: RIKeys.josKeys29,
                                 child: Column(children: [
                                   Padding(
                                       padding: EdgeInsets.only(
@@ -384,14 +390,14 @@ class BookTable extends StatelessWidget {
                                           right: sm.w(6)),
                                       child: EditTextComponent(
                                           controller:
-                                              vaTrue.acces[0].controller,
+                                              data.acces[0].controller,
                                           title: "Name",
                                           valid: true,
                                           hint: "Enter Name",
                                           maxLines: 1,
                                           maxlen: 26,
                                           prefixIcon: 'name',
-                                          error: vaTrue.acces[0].error,
+                                          error: data.acces[0].error,
                                           security: false)),
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -399,7 +405,7 @@ class BookTable extends StatelessWidget {
                                         left: sm.w(6),
                                         right: sm.w(6)),
                                     child: EditTextComponent(
-                                        controller: vaTrue.acces[1].controller,
+                                        controller: data.acces[1].controller,
                                         title: "Mobile",
                                         hint: "Enter Mobile",
                                         maxLines: 1,
@@ -407,8 +413,9 @@ class BookTable extends StatelessWidget {
                                         myregex: emailAndMobileRegex,
                                         prefixIcon: 'phone',
                                         keyboardSet: TextInputType.phone,
-                                        error: vaTrue.acces[1].error,
+                                        error: data.acces[1].error,
                                         valid: true,
+                                        myOnChanged: (val)=>data.checkMobile(val),
                                         security: false),
                                   ),
                                   Padding(
@@ -417,57 +424,63 @@ class BookTable extends StatelessWidget {
                                         left: sm.w(6),
                                         right: sm.w(6)),
                                     child: EditTextComponent(
-                                        controller: vaTrue.acces[2].controller,
+                                        controller: data.acces[2].controller,
                                         title: "Special Notes",
                                         maxlen: 200,
                                         hint: "Enter Special Notes",
-                                        error: vaTrue.acces[2].error,
+                                        error: data.acces[2].error,
                                         maxLines: 8,
                                         security: false),
                                   ),
                                 ]),
                               )),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: sm.h(4), horizontal: sm.h(10)),
-                        child: vaTrue.getSubmitCalled()
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                    backgroundColor: myRed,
-                                    valueColor: AlwaysStoppedAnimation(myGrey),
-                                    strokeWidth: 4),
-                              )
-                            : NeumorphicButton(
-                                style: NeumorphicStyle(
-                                    shape: NeumorphicShape.convex,
-                                    // depth: 4,
-                                    lightSource: LightSource.topLeft,
-                                    color: myBackGround,
-                                    boxShape: NeumorphicBoxShape.roundRect(
-                                        BorderRadius.all(
-                                            Radius.circular(24.0)))),
-                                margin:
-                                    EdgeInsets.symmetric(horizontal: sm.w(10)),
-                                onPressed: () =>
-                                    vaTrue.funSubmitBooking(context),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 16),
-                                child: Center(
-                                  child: Text("Done",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color: myRed)),
+                      Visibility(
+                        visible:context.watch<AppBookProvider>().acces[1].controller.text.trim().length==10,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: sm.h(4), horizontal: sm.h(10)),
+                          child: data.getSubmitCalled()
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                      backgroundColor: myRed,
+                                      valueColor: AlwaysStoppedAnimation(myGrey),
+                                      strokeWidth: 4),
+                                )
+                              : NeumorphicButton(
+                                  style: NeumorphicStyle(
+                                      shape: NeumorphicShape.convex,
+                                      // depth: 4,
+                                      lightSource: LightSource.topLeft,
+                                      color: myBackGround,
+                                      boxShape: NeumorphicBoxShape.roundRect(
+                                          BorderRadius.all(
+                                              Radius.circular(24.0)))),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: sm.w(10)),
+                                  onPressed: () =>
+                                      data.funSubmitBooking(context),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 16),
+                                  child: Center(
+                                    child: Text("Done",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                color: myRed)),
+                                  ),
                                 ),
-                              ),
+                        ),
                       ),
                     ]),
                   ),
                 ),
-              ));
+              );
+  
+  },));
+  
   }
 
   Widget mySlotSelector(_data, context) {
@@ -481,9 +494,9 @@ class BookTable extends StatelessWidget {
           for (var temp in _data.slotList)
             InkWell(
               onTap: () {
-                for (var temp in _data.slotList) {
+                for (var temp in _data.slotList) 
                   temp.selected = false;
-                }
+                
                 temp.selected = true;
               },
               child: Padding(
@@ -512,7 +525,7 @@ class BookTable extends StatelessWidget {
                 ),
               ),
             ),
-        ],
+        ]
       ),
     );
   }

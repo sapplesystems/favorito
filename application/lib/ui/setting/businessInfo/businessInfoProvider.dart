@@ -91,7 +91,7 @@ class businessInfoProvider extends ChangeNotifier {
           checked.clear();
           for (var v in totalpay) checked.add(false);
 
-          selectPay.addAll(_va.paymentMethod);
+          selectPay.addAll(_vaddV.staticPaymentMethod);
           totalTag.addAll(_vaddV.tagList);
           for (int i = 0; i < totalTag.length; i++)
             totalTagName.add(totalTag[i].tagName);
@@ -122,6 +122,7 @@ class businessInfoProvider extends ChangeNotifier {
             totalSubCategoriesName.remove(v.categoryName);
         }
       });
+    setNeedSave(false);
   }
 
   void funSublim(context) async {
@@ -135,8 +136,26 @@ class businessInfoProvider extends ChangeNotifier {
     for (int i = 0; i < totalAttribute.length; i++)
       if (selectAttributeName.contains(totalAttribute[i].attributeName))
         selectAttributeId.add(totalAttribute[i].id);
-
-    if (priceRange != null && selectPay.isNotEmpty) {
+    if(priceRange==null){
+      BotToast.showText(text: 'Please select a price renge');
+      return;
+    }
+    if(selectPay==null||selectPay.isEmpty){
+      BotToast.showText(text: 'Please select a payment method');
+      return;
+    }
+    if(selectedSubCategoriesId==null||selectedSubCategoriesId.isEmpty){
+      BotToast.showText(text: 'PLease select subcategory');
+      return;
+    }
+    if(selectedTagId==null||selectedTagId.isEmpty){
+      BotToast.showText(text: 'Please select a selected a Tag');
+      return;
+    }
+    if(selectAttributeId==null||selectAttributeId.isEmpty){
+      BotToast.showText(text: 'Please select a selectAttribute');
+      return;
+    }
       Map<String, dynamic> _map = {
         "sub_categories": selectedSubCategoriesId,
         "tags": selectedTagId,
@@ -154,7 +173,7 @@ class businessInfoProvider extends ChangeNotifier {
             Navigator.pop(context);
           }
         });
-    }
+    
   }
 
   Future getImage(ImgSource source, context) async {

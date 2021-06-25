@@ -3,9 +3,9 @@ import 'package:Favorito/model/TagList.dart';
 class AdSpentModels {
   String status;
   String message;
-  int totalSpent;
-  int freeCredit;
-  int paidCredit;
+  var totalSpent;
+  var freeCredit;
+  var paidCredit;
   List<Data> data;
 
   AdSpentModels(
@@ -23,7 +23,7 @@ class AdSpentModels {
     freeCredit = json['free_credit'];
     paidCredit = json['paid_credit'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = [];
       json['data'].forEach((v) {
         data.add(new Data.fromJson(v));
       });
@@ -48,9 +48,10 @@ class Data {
   int id;
   String name;
   List<TagList> keyword;
-  double cpc;
-  int totalBudget;
-  int impressions;
+  String cpc;
+  String totalBudget;
+  String totalSpent;
+  String impressions;
   int clicks;
   String status;
 
@@ -60,6 +61,7 @@ class Data {
       this.keyword,
       this.cpc,
       this.totalBudget,
+      this.totalSpent,
       this.impressions,
       this.clicks,
       this.status});
@@ -68,14 +70,15 @@ class Data {
     id = json['id'];
     name = json['name'];
     if (json['keyword'] != null) {
-      keyword = new List<TagList>();
+      keyword = [];
       json['keyword'].forEach((v) {
         keyword.add(new TagList.fromJson(v));
       });
     }
-    cpc = json['cpc'];
-    totalBudget = json['total_budget'];
-    impressions = json['impressions'];
+    cpc = json['cpc'].toString();
+    totalBudget = json['total_budget'].toString();
+    totalSpent = json['total_spent'].toString();
+    impressions = json['impressions'].toString();
     clicks = json['clicks'];
     status = json['status'];
   }
@@ -89,6 +92,7 @@ class Data {
     }
     data['cpc'] = this.cpc;
     data['total_budget'] = this.totalBudget;
+    data['total_spent'] = this.totalSpent;
     data['impressions'] = this.impressions;
     data['clicks'] = this.clicks;
     data['status'] = this.status;

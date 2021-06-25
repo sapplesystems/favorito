@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+
 import 'dart:io';
 
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
@@ -13,7 +14,6 @@ import 'package:Favorito/model/VerifyOtp.dart';
 import 'package:Favorito/model/adSpentModel.dart';
 import 'package:Favorito/model/appoinment/RestrictionModel.dart';
 import 'package:Favorito/model/appoinment/appoinmentSeviceModel.dart';
-import 'package:Favorito/model/appoinment/appointListModel.dart';
 import 'package:Favorito/model/appoinment/appointmentModel.dart';
 import 'package:Favorito/model/appoinment/appointmentServiceOnlyModel.dart';
 import 'package:Favorito/model/appoinment/appointmentSettingModel.dart';
@@ -1001,11 +1001,16 @@ class WebService {
 //  setRestrinction deleteRestrinction
   static Future<BaseResponseModel> restrinction(_map, isDelete) async {
     String token = await Prefs.token;
-    opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+     Options _opt = Options(
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+        
+
     String _url = isDelete
         ? serviceFunction.deleteRestrinction
         : serviceFunction.setRestrinction;
-    response = await dio.post(_url, data: _map, options: opt);
+        print("DeleteUrl:$_url");
+        print("DeleteUrl:${_map.toString()}");
+    response = await dio.post(_url, data: _map, options: _opt);
     return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
@@ -1371,7 +1376,7 @@ class WebService {
   }
 
   //*********************************************** adSpent ******************************/
-  static Future<AdSpentModels> getAdSpentPageData(BuildContext context) async {
+  static Future<AdSpentModels> getAdSpentPageData() async {
     String token = await Prefs.token;
     String url = serviceFunction.funAdSpentList;
     opt = Options(headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
@@ -1499,10 +1504,10 @@ class WebService {
     String url = isService
         ? serviceFunction.funAppoinmentServiceOnOff
         : serviceFunction.funAppoinmentPersonOnOff;
-    opt = Options(
+   var  _opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(url, data: _map, options: opt);
+    response = await dio.post(url, data: _map, options: _opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");

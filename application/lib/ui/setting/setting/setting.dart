@@ -1,17 +1,16 @@
 import 'dart:ui';
+
 import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/component/listItem.dart';
+import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfoProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:Favorito/config/SizeManager.dart';
-import 'package:Favorito/utils/myString.Dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -45,15 +44,14 @@ class Setting extends StatelessWidget {
             if (isFirst) {
               sm = SizeManager(context);
               isFirst = false;
-              context.read<BusinessProfileProvider>()
-                  .getProfileData(context);
+              context.read<BusinessProfileProvider>().getProfileData(context);
             }
 
-            return RefreshIndicator( onRefresh: ()async{
-              context.read<BusinessProfileProvider>()
-                  .getProfileData(context);
-                  data.notifyListeners();
-                  },
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<BusinessProfileProvider>().getProfileData(context);
+                data.notifyListeners();
+              },
               child: ListView(
                 children: [
                   Container(
@@ -69,7 +67,9 @@ class Setting extends StatelessWidget {
                                 backgroundImage: NetworkImage(data.photo)),
                           ),
                           title: Text(
-                            context.watch<BusinessProfileProvider>().businessName,
+                            context
+                                .watch<BusinessProfileProvider>()
+                                .businessName,
                             style: TextStyle(
                                 wordSpacing: 2,
                                 fontFamily: 'Gilroy-Medium',
@@ -146,16 +146,15 @@ class Setting extends StatelessWidget {
                                                     listen: false)
                                                 .getClaimData(context);
                                           if (i == 1)
-                                            Provider.of<businessInfoProvider>(
-                                                    context,
-                                                    listen: false)
+                                            context
+                                                .read<businessInfoProvider>()
                                                 .getPageData(context);
                                           if (i == 0)
                                             Provider.of<BusinessProfileProvider>(
                                                     context,
                                                     listen: false)
                                                 .getProfileData(context);
-            
+
                                           print(data.pages.toString());
                                           Navigator.push(
                                               context,
@@ -200,8 +199,8 @@ class Setting extends StatelessWidget {
                                 child: Column(children: [
                                   for (int _i = 4; _i < data.title.length; _i++)
                                     Visibility(
-                                      visible:
-                                          (data.wait && (_i != 6)) || !data.wait,
+                                      visible: (data.wait && (_i != 6)) ||
+                                          !data.wait,
                                       child: listItems(
                                           title: data.title[_i],
                                           ico: data.icon[_i],
@@ -217,7 +216,8 @@ class Setting extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
                               child: InkWell(
                                   onTap: () {
                                     Navigator.push(
@@ -246,7 +246,7 @@ class Setting extends StatelessWidget {
                                             size: 28,
                                             color: Colors.black))
                                   ])
-            
+
                                   // ListTile(
                                   //   leading: SvgPicture.asset('assets/icon/horn.svg',
                                   //       alignment: Alignment.center, height: sm.h(3)),
@@ -261,7 +261,8 @@ class Setting extends StatelessWidget {
                             Row(children: [
                               Expanded(
                                   flex: 2,
-                                  child: SvgPicture.asset('assets/icon/help.svg',
+                                  child: SvgPicture.asset(
+                                      'assets/icon/help.svg',
                                       alignment: Alignment.center,
                                       height: sm.h(3))),
                               Expanded(
@@ -282,7 +283,8 @@ class Setting extends StatelessWidget {
                                 Navigator.of(context).pushNamed('/login');
                               },
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 child: Row(children: [
                                   Expanded(
                                       flex: 2,
@@ -300,8 +302,10 @@ class Setting extends StatelessWidget {
                                               fontWeight: FontWeight.w800))),
                                   Expanded(
                                       flex: 1,
-                                      child: Icon(data.settingTool ? null : null,
-                                          size: 28, color: Colors.black))
+                                      child: Icon(
+                                          data.settingTool ? null : null,
+                                          size: 28,
+                                          color: Colors.black))
                                 ]),
                               ),
                             ),

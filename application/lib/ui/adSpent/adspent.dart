@@ -1,6 +1,6 @@
 import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/webservices.dart';
-import 'package:Favorito/ui/CreateCampaign/CreateCampaign.dart';
+import 'package:Favorito/ui/adSpent/CreateCampaign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -13,9 +13,9 @@ class adSpent extends StatefulWidget {
 
 class _adSpentState extends State<adSpent> {
   SizeManager sm;
-  int totalSpent = 0;
-  int freeCredit = 0;
-  int paidCredit = 0;
+  var totalSpent = '0';
+  var freeCredit = '0';
+  var paidCredit = '0';
   List<Data> list = [];
   Data data = Data();
 
@@ -46,124 +46,133 @@ class _adSpentState extends State<adSpent> {
                               builder: (context) =>
                                   CreateCampaign(false, null)))
                       .whenComplete(() => getPageData());
-                })
+                }),IconButton(
+                icon: Icon(Icons.refresh,
+                    color: Colors.black, size: 30),
+                onPressed: () {
+               getPageData(); })
           ],
         ),
-        body: Container(
-            height: sm.h(87.5),
-            child: ListView(
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                Padding(padding: const EdgeInsets.all(28.0), child: topArea()),
-                Card(
-                    shape: rrbTop,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: sm.w(2), vertical: sm.w(8)),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: sm.h(64),
-                            child: ListView(
-                              children: [
-                                for (int i = 0;
-                                    i < (list != null ? list.length : 0);
-                                    i++)
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        data = list[i];
-                                        return CreateCampaign(true, data);
-                                      })).whenComplete(() => getPageData());
-                                    },
-                                    child: Card(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("${list[i].name}\n",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontFamily: 'Gilroy-Bold',
-                                                    letterSpacing: .2)),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("CPC:${list[i].cpc}\$",
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 16)),
-                                                    Text(
-                                                        "Impressions:${list[i].impressions}",
-                                                        style: TextStyle(
-                                                            fontSize: 16))
-                                                  ],
-                                                ),
-                                                Container(
-                                                    height: 40,
-                                                    width: 0,
-                                                    child: VerticalDivider(
-                                                        color: Colors.black)),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                        "Spent:${list[i].totalBudget ?? 0}\$",
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 16)),
-                                                    Text(
-                                                        "Click:${list[i].clicks}",
-                                                        style: TextStyle(
-                                                            fontSize: 16))
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                          ],
+        body: RefreshIndicator(
+          onRefresh: ()async{
+            getPageData();
+          },
+          child: Container(
+              height: sm.h(87.5),
+              child: ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  Padding(padding: const EdgeInsets.all(28.0), child: topArea()),
+                  Card(
+                      shape: rrbTop,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: sm.w(2), vertical: sm.w(8)),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: sm.h(64),
+                              child: ListView(
+                                children: [
+                                  for (int i = 0;
+                                      i < (list != null ? list.length : 0);
+                                      i++)
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder: (context) {
+                                          data = list[i];
+                                          return CreateCampaign(true, data);
+                                        })).whenComplete(() => getPageData());
+                                      },
+                                      child: Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text("${list[i].name}\n",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18,
+                                                      fontFamily: 'Gilroy-Bold',
+                                                      letterSpacing: .2)),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text("CPC:${list[i].cpc}\$",
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: TextStyle(
+                                                              fontSize: 16)),
+                                                      Text(
+                                                          "Impressions:${list[i].impressions}",
+                                                          style: TextStyle(
+                                                              fontSize: 16))
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                      height: 40,
+                                                      width: 0,
+                                                      child: VerticalDivider(
+                                                          color: Colors.black)),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                          "Spent:${list[i].totalSpent ?? 0}\$",
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: TextStyle(
+                                                              fontSize: 16)),
+                                                      Text(
+                                                          "Click:${list[i].clicks}",
+                                                          style: TextStyle(
+                                                              fontSize: 16))
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 6),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: sm.w(22),
-                                    right: sm.w(2),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: sm.w(22),
+                                      right: sm.w(2),
+                                    ),
+                                    child: Image.asset(
+                                      "assets/icon/reqCal.png",
+                                      height: 20,
+                                    ),
                                   ),
-                                  child: Image.asset(
-                                    "assets/icon/reqCal.png",
-                                    height: 20,
-                                  ),
-                                ),
-                                Text("Request Callback", style: titleStyle1)
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ))
-              ],
-            )));
+                                  Text("Request Callback", style: titleStyle1)
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ))
+                ],
+              )),
+        ));
   }
 
   Widget credit(String title, String ammount, String ico) {
@@ -194,7 +203,7 @@ class _adSpentState extends State<adSpent> {
         Text("Total Spent", style: TextStyle(color: Colors.grey)),
         RichText(
             text: TextSpan(
-                text: totalSpent.toString(),
+                text: totalSpent,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 28,
@@ -218,15 +227,15 @@ class _adSpentState extends State<adSpent> {
   }
 
   void getPageData() {
-    WebService.getAdSpentPageData(context).then((value) {
+    WebService.getAdSpentPageData().then((value) {
       if (value.status == "success") {
-        setState(() {
-          totalSpent = value.totalSpent;
-          freeCredit = value.freeCredit;
-          paidCredit = value.paidCredit;
+        
+          totalSpent = value.totalSpent.toString();
+          freeCredit = value.freeCredit.toString();
+          paidCredit = value.paidCredit.toString();
           list.clear();
-          list.addAll(value.data);
-        });
+        
+        setState(() =>  list.addAll(value.data));
       }
     });
   }

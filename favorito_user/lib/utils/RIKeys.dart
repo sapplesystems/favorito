@@ -33,4 +33,6 @@ class RIKeys {
   static final josKeys25 = GlobalKey<ScaffoldState>(); //home
   static final josKeys26 = GlobalKey<ScaffoldState>(); //ChatHome
   static final josKeys27 = GlobalKey<ScaffoldState>(); //ChatHome
+  static final josKeys28 = GlobalKey<ScaffoldState>(); //catalogView
+  static final josKeys29 = GlobalKey<FormState>(); //catalogView
 }

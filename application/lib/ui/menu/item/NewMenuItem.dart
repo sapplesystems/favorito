@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Favorito/model/menu/MenuItem/ItemData.dart';
+import 'package:Favorito/ui/menu/MenuProvider.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 import '../../../utils/myString.dart';
 import '../../../utils/Extentions.dart';
 
@@ -85,6 +87,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
         messageTextStyle: TextStyle(
             color: myRed, fontSize: 19.0, fontWeight: FontWeight.w600));
     return Scaffold(
+      
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text("New Item",
@@ -228,6 +231,8 @@ class _NewMenuItemState extends State<NewMenuItem> {
                                 left: sm.w(2.6),
                                 right: sm.w(2.6)),
                             child: DropdownSearch<String>(
+                              maxHeight: double.parse(((snapshot?.data?.data?.getCategoryName() ??
+                                        <String>[]).length*56).toString())>167.0?168.0:100.0,
                                 showSelectedItem: false,
                                 validator: (v) =>
                                     v == '' ? "required field" : null,
@@ -379,6 +384,7 @@ class _NewMenuItemState extends State<NewMenuItem> {
                                 pr?.hide();
                                 print("value.status:${value.status}");
                                 if (value.status == 'success') {
+                                  Provider.of<MenuProvider>(context,listen: false).getMenuList();
                                   Navigator.pop(context);
                                 } else {
                                   BotToast.showText(text: value.message);

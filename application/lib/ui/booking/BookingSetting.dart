@@ -299,7 +299,7 @@ class BookingSetting extends StatelessWidget {
                                                                             child:
                                                                                 Text("Ok", style: TextStyle(color: myRed, fontSize: 16, fontFamily: 'Gilroy-Medium')),
                                                                             onPressed: () async {
-                                                                              data.funSublimRestriction(context, '${data.restrictionDataList[i].dateIds}', true);
+                                                                              data.funSublimRestriction(context, data.restrictionDataList[i].dateIds, true);
                                                                               Navigator.pop(context);
                                                                             }),
                                                                         InkWell(

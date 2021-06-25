@@ -1,16 +1,20 @@
-import 'package:Favorito/utils/myColors.dart';
+
+import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter/material.dart';
 
 class PopmyPage {
-  Function save;
-  Function cancel;
+  Function funOkay;
+  Function funCancel;
+  String message;
+  String okayTxt;
+  String cancelTxt;
   GlobalKey<ScaffoldState> key;
 
-  PopmyPage({this.cancel, this.save, this.key});
+  PopmyPage({this.funOkay, this.funCancel, this.key,this.message,this.cancelTxt,this.okayTxt});
 
   void popMe() {
-    print("sdfsdfffffff");
     showModalBottomSheet<void>(
+      backgroundColor: Colors.white,
         context: key.currentContext,
         builder: (BuildContext context) {
           return Container(
@@ -19,29 +23,35 @@ class PopmyPage {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Text(
-                  '\t\t\t\t\tPlease save your changes or cancel for discard.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Gilroy-Medium'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:8.0),
+                  child: Text(
+                    message,textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(fontSize: 16),
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
-                        child: Text("Save",
+                        child: Text(okayTxt,
                             style: TextStyle(
                                 color: myRed,
                                 fontSize: 16,
                                 fontFamily: 'Gilroy-Medium')),
-                        onPressed: save),
+                        onPressed: funOkay),
                     InkWell(
                         child: Text(
-                          "Discard",
+                          cancelTxt,
                           style: TextStyle(
                               color: myRed,
                               fontSize: 16,
                               fontFamily: 'Gilroy-Medium'),
                         ),
-                        onTap: cancel),
+                        onTap: funCancel),
                   ],
                 )
               ],

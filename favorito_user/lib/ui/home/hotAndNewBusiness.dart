@@ -55,6 +55,7 @@ class _HotAndNewBusinessState extends State<HotAndNewBusiness> {
                                     listen: false)
                                 .setBusinessId(
                                     newBusinessData.data[index].businessId);
+                                    
                             Navigator.of(context).pushNamed('/businessProfile'
                                 // ,arguments:
                                 //     newBusinessData.data[index].businessId

@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class BookAppointment extends StatelessWidget {
   bool isFirst = true;
-  BusinessProfileProvider vaTrue1;
+  // BusinessProfileProvider vaTrue1;
   AppointmentProvider vaTrue;
   bool _needValidate = false;
 
@@ -24,7 +24,7 @@ class BookAppointment extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     vaTrue = Provider.of<AppointmentProvider>(context, listen: true);
-    vaTrue1 = Provider.of<BusinessProfileProvider>(context, listen: true);
+    // vaTrue1 = Provider.of<BusinessProfileProvider>(context, listen: true);
     if (isFirst) {
       // vaTrue.baseUserAppointmentVerboseService();
       vaTrue
@@ -65,7 +65,7 @@ class BookAppointment extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: sm.w(8)),
                       child: Center(
                           child: Text(
-                              vaTrue1.getBusinessProfileData()?.businessName ??
+                              context.read<BusinessProfileProvider>().getBusinessProfileData()?.businessName ??
                                   "",
                               style: Theme.of(context)
                                   .textTheme
@@ -220,7 +220,6 @@ class BookAppointment extends StatelessWidget {
                                     child: Neumorphic(
                                   style: NeumorphicStyle(
                                     shape: NeumorphicShape.convex,
-                                    // depth: 18,
                                     lightSource: LightSource.top,
                                     color: !NeumorphicTheme.isUsingDark(context)
                                         ? Colors.white
@@ -255,6 +254,7 @@ class BookAppointment extends StatelessWidget {
                         for (int _i = 0; _i < data.slots.length; _i++)
                           InkWell(
                             onTap: () {
+                                  print("qqqqqqqqqqqq");
                               data.selectedTimeChange(_i);
                             },
                             child: Padding(

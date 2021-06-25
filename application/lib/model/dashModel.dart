@@ -40,10 +40,10 @@ class Data {
   int catalogoues;
   int orders;
   List<String> businessAttributes;
-  int totalSpent;
-  int freeCredit;
-  int paidCredit;
-  int businessType;
+  var totalSpent;
+  var freeCredit;
+  var paidCredit;
+  var businessType;
 
   Data(
       {this.id,

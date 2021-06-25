@@ -64,7 +64,7 @@ class _CreateCampaignState extends State<CreateCampaign> {
         iconTheme: IconThemeData(color: Colors.black //change your color here
             ),
         title: Text(
-          "Create Campaign",
+          !widget.campStat?"Create Campaign":"Edit Campaign",
           style: TextStyle(
               color: Colors.black,
               fontSize: 26,
