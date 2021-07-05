@@ -12,8 +12,6 @@ exports.getMenuCategories = async function(req, res, next) {
         } else {
             business_id = req.body.business_id
         }
-
-
         var day_name = moment().format('dddd').substring(0, 3);
         current_time = moment().format('H:mm:ss')
         var COND = `b_m_c.business_id='${business_id}' AND b_m_c.menu_type_id='${menu_type_id}' AND b_m_c.is_activated='1' AND b_m_c.available_on LIKE '%${day_name}%' AND b_m_c.deleted_at IS NULL AND b_m_c.slot_start_time < '${current_time}' AND b_m_c.slot_end_time >'${current_time}'`

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:Favorito/component/Progress.dart';
 import 'package:Favorito/ui/Chat/ChatProvider.dart';
 import 'package:Favorito/ui/Chat/HomeScreen.dart';
 import 'package:Favorito/utils/RIKeys.dart';
@@ -10,7 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math' as math;
+
 
 class ChatLogin extends StatefulWidget {
   ChatLogin({Key key}) : super(key: key);
@@ -45,7 +44,7 @@ class LoginScreenState extends State<ChatLogin> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomeScreen(currentUserId: currentUserId)));
+              builder: (context) => HomeScreen()));
     }
     print("currentUserId:$currentUserId");
     this.setState(() {
@@ -161,13 +160,6 @@ class LoginScreenState extends State<ChatLogin> {
       this.setState(() {
         isLoading = false;
       });
-
-      // Navigator.pop(context);
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) =>
-      //             HomeScreen(currentUserId: firebaseUser.uid)));
     }
     //SignIn not success
     else {

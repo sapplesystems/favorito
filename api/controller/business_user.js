@@ -2,7 +2,6 @@ var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
-const { resolveHostname } = require('nodemailer/lib/shared');
 
 
 var user_role = ['Owner', 'Manager', 'Employee'];

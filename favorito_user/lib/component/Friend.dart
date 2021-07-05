@@ -2,6 +2,7 @@ import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class FriendBtn extends StatefulWidget {
+  
   @override
   _FriendBtnState createState() => _FriendBtnState();
 }

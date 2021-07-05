@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Favorito/component/FullPhoto.dart';
 import 'package:Favorito/component/Progress.dart';
+import 'package:Favorito/model/Chat/ConnectionData.dart';
 import 'package:Favorito/model/Chat/User.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,7 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
-  User userInfo;
+  ConnectionData userInfo;
   ChatScreen({Key key, @required this.userInfo});
   @override
   State createState() => ChatScreenState();
@@ -313,7 +314,7 @@ class ChatScreenState extends State<ChatScreen> {
                           height: 35,
                           padding: EdgeInsets.all(70),
                         ),
-                        imageUrl: widget.userInfo.photoUrl,
+                        imageUrl: 'widget.userInfo.photoUrl',
                         width: 35,
                         height: 35,
                       ),

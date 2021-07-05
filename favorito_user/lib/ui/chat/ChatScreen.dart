@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorito_user/component/FullPhoto.dart';
 import 'package:favorito_user/component/circularProgress.dart';
-import 'package:favorito_user/model/Chat/User.dart';
+import 'package:favorito_user/model/Chat/ChatUserList.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
-  User userInfo;
+  ChatUser userInfo;
   ChatScreen({Key key, @required this.userInfo});
   @override
   State createState() => ChatScreenState();
@@ -43,16 +42,20 @@ class ChatScreenState extends State<ChatScreen> {
 
   readLocal() async {
     preferences = await SharedPreferences.getInstance();
-    id = preferences.getString("id") ?? "";
-    if (id.hashCode <= widget.userInfo.id.hashCode) {
-      _chatId = '$id-${widget.userInfo.id}';
+    // id = preferences.getString("id") ?? "";
+    id = preferences.getString("firebaseId") ?? "";
+    var id2 = id.trim()==widget.userInfo.targetId.trim()?widget.userInfo.sourceId:widget.userInfo.targetId;
+    // if (id.hashCode <= widget.userInfo.id.hashCode) {
+    if (id.hashCode <= id2.hashCode) {
+      _chatId = '$id-$id2';
     } else {
-      _chatId = '${widget.userInfo.id}-$id';
+      _chatId = '$id2-$id';
     }
+    print("id22:$_chatId");
     var va = Firestore.instance
         .collection('user')
         .document(id)
-        .updateData({'chattingWith': widget.userInfo.id});
+        .updateData({'chattingWith': widget.userInfo.targetId});
     setState(() {});
   }
 
@@ -304,19 +307,19 @@ class ChatScreenState extends State<ChatScreen> {
               isLastMsgLeft(index)
                   ? Container(
                       //display reciever profile image
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                          child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.lightBlueAccent)),
-                          width: 35,
-                          height: 35,
-                          padding: EdgeInsets.all(70),
-                        ),
-                        imageUrl: widget.userInfo.photoUrl,
-                        width: 35,
-                        height: 35,
-                      ),
+                      // child: CachedNetworkImage(
+                      //   placeholder: (context, url) => Container(
+                      //     child: CircularProgressIndicator(
+                      //         valueColor: AlwaysStoppedAnimation<Color>(
+                      //             Colors.lightBlueAccent)),
+                      //     width: 35,
+                      //     height: 35,
+                      //     padding: EdgeInsets.all(70),
+                      //   ),
+                      //   imageUrl: widget.userInfo.photoUrl,
+                      //   width: 35,
+                      //   height: 35,
+                      // ),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(18))),
                       clipBehavior: Clip.hardEdge,

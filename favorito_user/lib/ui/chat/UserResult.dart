@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:favorito_user/model/Chat/ChatUserList.dart';
 import 'package:favorito_user/model/Chat/User.dart';
 import 'package:favorito_user/ui/Chat/ChattingPage.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class UserResult extends StatelessWidget {
-  final User eachUser;
+  final ChatUser eachUser;
   UserResult(this.eachUser);
   @override
   Widget build(BuildContext context) {
@@ -25,17 +26,18 @@ class UserResult extends StatelessWidget {
                       radius: 28,
                       backgroundColor: Colors.black,
                       backgroundImage:
-                          CachedNetworkImageProvider(eachUser?.photoUrl ?? ""),
+                          // CachedNetworkImageProvider('eachUser?.photoUrl' ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd09TGDcJFx-t_B0HiUkc123nrs2MnSG4WWg&usqp=CAU"),
+                          CachedNetworkImageProvider( "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd09TGDcJFx-t_B0HiUkc123nrs2MnSG4WWg&usqp=CAU"),
                     ),
                     title: Text(
-                      eachUser.nickname,
+                      'eachUser.sourceId',
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "${eachUser.aboutMe}",
+                      "{eachUser.targetId}",
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 14.0, fontWeight: FontWeight.w400),
                     ),
@@ -47,6 +49,6 @@ class UserResult extends StatelessWidget {
 
   sendUserToChatPage(BuildContext context) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => Chat(userInfo: eachUser)));
+        MaterialPageRoute(builder: (context) => Chat(userInfo:eachUser)));
   }
 }

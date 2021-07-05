@@ -1,7 +1,7 @@
 const e = require('express');
 var db = require('../config/db');
-
 const moment = require('moment')
+
 
 var today = new Date();
 var today_date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -340,7 +340,9 @@ exports.getBookingSlots = async function(business_id, date, starttime, endtime, 
 
 async function timeslotdata(business_id, startdate_time, timeend) {
     return new Promise(function(resolve, reject) {
-        var sql = "SELECT id,`name`,contact,no_of_person,special_notes,DATE_FORMAT(created_datetime, '%Y-%m-%d') AS created_date, DATE_FORMAT(created_datetime, '%H:%i') AS created_time FROM business_booking WHERE business_id='" + business_id + "' \n\
+        var sql = "SELECT bb.id,bb.`name`,bb.contact,bb.no_of_person,bb.special_notes,om.occasion,DATE_FORMAT(bb.created_datetime, '%Y-%m-%d') AS created_date, DATE_FORMAT(created_datetime, '%H:%i') AS created_time FROM business_booking bb\n\
+        left join occasion_master om on bb.occasion_id = om.id \n\
+        WHERE business_id='" + business_id + "' \n\
                 AND created_datetime>='" + startdate_time + "' AND created_datetime <'" + timeend + "' \n\
                 AND deleted_at IS NULL";
         db.query(sql, function(err, result) {

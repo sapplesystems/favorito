@@ -68,7 +68,7 @@ class Setting extends StatelessWidget {
                           ),
                           title: Text(
                             context
-                                .watch<BusinessProfileProvider>()
+                                .read<BusinessProfileProvider>()
                                 .businessName,
                             style: TextStyle(
                                 wordSpacing: 2,
@@ -142,9 +142,7 @@ class Setting extends StatelessWidget {
                                         ico: data?.icon[i],
                                         clicker: () {
                                           if (i == 2)
-                                            Provider.of<ClaimProvider>(context,
-                                                    listen: false)
-                                                .getClaimData(context);
+                                          context.read<ClaimProvider>().getClaimData(context);
                                           if (i == 1)
                                             context
                                                 .read<businessInfoProvider>()

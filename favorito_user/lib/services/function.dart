@@ -8,8 +8,10 @@ class service {
   static final baseUser2 = base + 'user/';
   static final baseBusiness2 = baseBusiness + 'user/';
 
-  //User+switch
+//firebaseId
+  static final getFirebaseId = baseBusiness2 + 'firebase-id';
 
+  //User+switch
   static final baseUserBusiness = baseUser + 'business-';
   static final baseUserProfile = baseUser + 'profile/';
   static final baseUserWaitlist = baseUser + 'waitlist/';
@@ -139,4 +141,5 @@ static final funClicks = baseUserProfile + 'promo-click';
   static final getChatList = baseBusiness2 + 'get-chat-list';
   static final getChat = baseBusiness2 + 'get-chats';
   static final setGetFirebaseId = baseBusiness2 + 'firebase-id';
+  static final getChatConnectedList = baseBusiness2 + 'get-chat-connected-list';
 }

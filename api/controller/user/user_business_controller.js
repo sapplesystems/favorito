@@ -83,7 +83,7 @@ var user_pincode = (user_id) => {
 
 exports.searchByName = async function(req, res, next) {
     try {
-
+        var result_master=[];
         let latitude = undefined
         let longitude = undefined
         if (req.body.current_no_business) {
@@ -126,46 +126,50 @@ exports.searchByName = async function(req, res, next) {
             LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
             WHERE b_m.is_activated='1' and b_m.is_verified = 1\n\
             AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null,distance LIMIT ${limit} OFFSET ${offset}`;
-
-            // considering the day 
-            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
-            // LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id\n\
-            // LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
-            // WHERE b_m.is_activated='1'\n\
-            // AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id";
+            result_master = await exports.run_query(sql)
 
         } else {
-
+            
+            let keypro=req.body.keyword.trim();
             keyword = req.body.keyword.trim()
-                // global replacement
+                // global replacement    
             keyword = `%${keyword.replace(/ /g, '%-%')}%`
+            var tag_name=keyword;
+            var tagid = await exports.getTagid(tag_name);
+            if(tagid!=''){
+                var camp_businessids=await exports.getBusinessCampignid(tagid);
+                if(camp_businessids!='' && camp_businessids!=null && camp_businessids!=undefined){
+                    var businessid= "'"+camp_businessids.split(",").join("','")+"'"; 
+                    if(businessid!="" && businessid!=undefined){
+                        let sql1 = `SELECT b_m.id, b_m.business_id, b_m.business_phone as phone,1 AS is_pro,'${tagid}' AS pro_key, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
+                        SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
+                           POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
+                           , business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m \n\
+                        LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
+                        WHERE b_m.business_id IN(${businessid}) AND b_m.is_activated='1' and b_m.is_verified = 1 AND  b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null,distance LIMIT ${limit} OFFSET ${offset}`;
+                        let result1 = await exports.run_query(sql1);
+                        if(result1!=''){
+                            result_master.push(...result1);
+                        }
+                    }
+                }
+            }
+            
             keyword = ` b_m.business_name LIKE ${keyword.replace(/-/g," OR b_m.business_name LIKE ")}`
             keyword = keyword.replace(/ %/g, " '%")
-            keyword = keyword.replace(/% /g, "%' ")
-            keyword = `${keyword}' `
-
-
-            var sql = `SELECT b_m.id, b_m.business_id, b_m.business_phone as phone, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
+            keyword = keyword.replace(/% /g, "%' ") 
+            keyword=  `${keyword}' ` 
+            let sql2 = `SELECT b_m.id, b_m.business_id, b_m.business_phone as phone,0 AS is_pro,'' AS pro_key, IFNULL(AVG(b_r.rating) , 0) AS avg_rating , \n\
             SQRT(POW(69.1 * (trim(substring_index(location,',',1)) - ${latitude}), 2) +\n\
                POW(69.1 * (${longitude} - trim(substring_index(location,',',-1))) * COS(trim(substring_index(location,',',1)) / 57.3), 2)) AS distance\n\
                , business_category_id, b_m.business_name, b_m.town_city, CONCAT('${img_path}', photo) as photo, b_m.business_status FROM business_master AS b_m \n\
             LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
-            WHERE b_m.is_activated='1' and b_m.is_verified = 1 AND ${keyword} AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null,distance LIMIT ${limit} OFFSET ${offset}`;
-
-            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
-            // LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
-            // LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
-            // WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY b_m.created_at desc";
-
-            // consider the day
-            // var sql = "SELECT b_m.id, b_m.business_id, IFNULL(AVG(b_r.rating) , 0) AS avg_rating ,b_h.start_hours, b_h.end_hours, 2 as distance,business_category_id, b_m.business_name, b_m.town_city, CONCAT('" + img_path + "', photo) as photo, b_m.business_status FROM `business_master` AS b_m \n\
-            // LEFT JOIN business_hours as b_h ON b_m.business_id = b_h.business_id\n\
-            // LEFT JOIN business_ratings AS b_r ON b_m.business_id = b_r.business_id \n\
-            // WHERE b_m.is_activated='1' AND b_m.business_name LIKE '%" + req.body.keyword + "%' AND b_h.day = '" + day + "' AND b_m.deleted_at IS NULL GROUP BY b_m.business_id";
+            WHERE ${keyword} AND b_m.is_activated='1' and b_m.is_verified = 1 AND  b_m.deleted_at IS NULL GROUP BY b_m.business_id ORDER BY distance is null,distance LIMIT ${limit} OFFSET ${offset}`;
+            let result2 = await exports.run_query(sql2);
+            if(result2!=''){
+                result_master.push(...result2);
+            }
         }
-
-        result_master = await exports.run_query(sql)
-
         final_data = []
         async.eachSeries(result_master, function(data, callback) {
             db.query(`Select id, category_name FROM business_categories WHERE parent_id = ${data.business_category_id} LIMIT 5`, function(error, results1, filelds) {
@@ -173,8 +177,6 @@ exports.searchByName = async function(req, res, next) {
                     return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
                 }
                 data.sub_category = results1
-                    // final_data.push(data)
-                    // callback();
             });
 
             db.query(`select day,start_hours,end_hours from business_hours where business_id = '${data.business_id}' AND day = '${day}'AND start_hours < NOW() AND end_hours > NOW()`, function(error, result_hour, filelds) {
@@ -196,10 +198,7 @@ exports.searchByName = async function(req, res, next) {
                     data.start_hours = null
                     data.end_hours = null
                 }
-                // final_data.push(data)
-                // callback();
             });
-
 
             db.query(`SELECT b_a_m.attribute_name as attribute_name FROM business_attributes as b_a LEFT JOIN business_attributes_master as b_a_m ON b_a_m.id = b_a.attributes_id WHERE b_a.business_id= '${data.business_id}'`, function(error, results2, filelds) {
                 if (error) {
@@ -212,7 +211,7 @@ exports.searchByName = async function(req, res, next) {
 
         }, function(err, results) {
             if (err) {
-                return res.status(500).send({ status: 'error', message: 'Something went wrong.' });
+                return res.status(500).send({ status: 'error', message: 'Something went wrong.'+e });
             }
 
             // adding the attribute to the business
@@ -225,6 +224,45 @@ exports.searchByName = async function(req, res, next) {
         });
     } catch (error) {
         return res.status(500).send({ status: 'error', message: 'Something went wrong.', error });
+    }
+};
+
+/**added by shashank garg on 23-6-2021*
+ * method func:- Get tag or keyword id by tag name
+*/
+exports.getTagid =async function(tag_name) {
+    try {
+        return new Promise(function(resolve, reject) {
+            var sql = "SELECT id FROM business_tags_master WHERE `tag_name` LIKE '"+tag_name+"' AND deleted_at IS NULL";
+            db.query(sql, function(err, result) {
+                if(result!=''){
+                    resolve(result[0].id);
+                }else{
+                    resolve(result); 
+                }
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
+    }
+};
+
+
+exports.getBusinessCampignid =async function(tagid) {
+    try {
+        return new Promise(function(resolve, reject) {
+            var sql = "SELECT GROUP_CONCAT(DISTINCT (badsc.`business_id`))AS bids FROM `business_ad_spent_campaign`AS badsc WHERE FIND_IN_SET("+tagid+",badsc.`keyword`) AND badsc.status='Active'";
+            db.query(sql, function(err, result) {
+                if(result!=''){
+                    resolve(result[0].bids);
+                }else{
+                    resolve(result); 
+                }
+
+            });
+        });
+    } catch (e) {
+        return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
     }
 };
 

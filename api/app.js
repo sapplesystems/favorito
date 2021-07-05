@@ -106,6 +106,7 @@ app.use('/api/user-checkin', userCheckinRoute);
 
 app.use('/api/user-business-menu', userBusinessMenuRoute);
 
+
 /**
  * USER ROUTES FOR PROFILE 
  */

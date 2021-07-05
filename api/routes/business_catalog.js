@@ -31,4 +31,5 @@ router.post('/add-photo', upload.array('photo[]', 1000), CheckAuth, CatalogContr
 
 router.post('/delete-photo', CheckAuth, CatalogController.deletePhoto);
 
+
 module.exports = router;

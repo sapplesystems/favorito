@@ -18,7 +18,7 @@ class AppointmentProvider extends ChangeNotifier {
   List<ServiceModel> servicesList = [
     ServiceModel(id: 0, serviceName: 'Select any', status: 0)
   ];
-  List<String> _servicesNameList = [];
+  // List<String> _servicesNameList = [];
   ServiceModel _selectedService = ServiceModel();
   int selectedServiceId = 0;
   List<SettingModel> settingList = [];
@@ -28,34 +28,15 @@ class AppointmentProvider extends ChangeNotifier {
   List<DateTime> advancebookingDates = [];
   int selectedPersonId = 0;
   Person selectesPersonName;
-  int selectedDateIndex = 0;
+  int selectedDateIndex ;
   int selectedTimeIndex = 0;
   bool abletoDelete = false;
   List<Slots> slots = [];
   bool needSubmit = false;
   AppSerModel getAppSerModel() => _appSerModel;
   List<Acces> acces = [for (int i = 0; i < 5; i++) Acces()];
-
-  setAppSerModel(AppSerModel _val) {
-    _appSerModel = _val;
-    servicesList.clear();
-    servicesList.add(ServiceModel(id: 0, serviceName: 'Select any', status: 0));
-    servicesList.addAll(_val.data[0]?.service);
-
-    _servicesNameList.clear();
-    for (var _a in _val.data[0].service) _servicesNameList.add(_a.serviceName);
-    settingList.addAll(_val.data[0].setting);
-    advancebookingDates.clear();
-    advancebookingDates
-        .addAll(getDaysInBeteween(settingList[0].advanceBookingEndDays));
-    print("asw${getDaysInBeteween(settingList[0].advanceBookingEndDays)}");
-    notifyListeners();
-  }
-
-  getServicesNameList() => _servicesNameList;
   List<ServiceModel> getServicesList() => servicesList;
 
-  // String getSelectedService()=>_selectedService;
 
   setSelectedService(ServiceModel _val, BuildContext context) {
     _selectedService = _val;
@@ -63,25 +44,37 @@ class AppointmentProvider extends ChangeNotifier {
       if (_selectedService.id == servicesList[_i].id) {
         selectedServiceId = servicesList[_i].id;
         selectedPersonId = 0;
-        //services are selected now call person as per services
         baseUserAppointmentPersonByServiceid(context);
       }
     }
+    notifyListeners();
   }
 
   void baseUserAppointmentVerboseService(context) async {
+    var _date = dateFormat1.format(advancebookingDates.isNotEmpty?advancebookingDates[selectedDateIndex]:DateTime.now());
+    Map _map = {'business_id': getBusinessId(context),'date':_date};
+    print("_map:${_map.toString()}");
     await APIManager.baseUserAppointmentVerboseService(
-        {'business_id': getBusinessId(context)}).then((value) {
-      if (value.status == 'success') setAppSerModel(value);
+        _map).then((value) {
+      if (value.status == 'success') {
+         _appSerModel = value;
+    servicesList.replaceRange(1, servicesList.length, value.data[0].service);
+    settingList.replaceRange(0, settingList.length, value.data[0].setting);
+    advancebookingDates.clear();
+    advancebookingDates
+        .addAll(getDaysInBeteween(settingList[0].advanceBookingEndDays));
+    notifyListeners();
+      }
     });
   }
 
   void baseUserAppointmentPersonByServiceid(context) async {
     Map _map = {
       'business_id': getBusinessId(context),
-      'service_id': selectedServiceId
+      'service_id': selectedServiceId,
+      // 'date': dateFormat1.format(advancebookingDates[selectedDateIndex]),
     };
-    print("_map:${_map}");
+    print("_map1:${_map}");
     // _personNameList.clear();
     personList.clear();
     personList.add(Person(id: 0, personName: 'No data'));
@@ -92,7 +85,7 @@ class AppointmentProvider extends ChangeNotifier {
           personList.addAll(value.data);
           selectedPersonId = personList.first.id;
         }
-        print("dddddd:${value?.data?.length}");
+        // print("dddddd:${value?.data?.length}");
         // for(int _i=0;_i<value?.data?.length;_i++){
         // if(!_personNameList.contains(value.data[_i].personName)){
         //   _personNameList.add(value.data[_i].personName);
@@ -106,6 +99,7 @@ class AppointmentProvider extends ChangeNotifier {
 //personlist gettter setter
 // List<String> getPersonNameList()=>_personNameList;
   List<Person> getPersonList() => personList;
+
   setSelectedServicePerson(Person _val) {
     selectedPerson = _val;
     for (int _i = 0; _i < personList.length; _i++) {
@@ -116,6 +110,8 @@ class AppointmentProvider extends ChangeNotifier {
         selectesPersonName = Person();
       }
     }
+
+    print(selectedPerson.personName);
     notifyListeners();
   }
 
@@ -148,6 +144,7 @@ class AppointmentProvider extends ChangeNotifier {
           .getBusinessId();
 
   List<DateTime> getDaysInBeteween(int _days) {
+    print("asw:${_days}");
     List<DateTime> days = [];
     for (int i = 0;
         i <=
@@ -164,12 +161,15 @@ class AppointmentProvider extends ChangeNotifier {
     selectedDateIndex = _v;
     String _id = getBusinessId(context);
     String _dates = dateFormat1.format(_date);
-    Map _map = {'business_id': _id, 'date': _dates};
+    Map _map = {'business_id': _id, 'date': _dates,'person_id':selectedPersonId,'services_id':selectedServiceId};
     print("_map:${_map.toString()}");
     slots.clear();
     await APIManager.baseUserAppointmentSlots(_map).then((value) {
+      print(value.data.slots.length);
       slots.addAll(value.data.slots);
     });
+    // baseUserAppointmentVerboseService(context);
+    // baseUserAppointmentPersonByServiceid(context);
     notifyListeners();
   }
 
@@ -256,4 +256,15 @@ class AppointmentProvider extends ChangeNotifier {
   personReset() {
     selectedPersonId = 0;
   }
+
+checkMobile(val){
+    if(val.toString().trim().length!=10){
+      acces[1].error="Invalid mobile no";
+      notifyListeners();
+      }else
+      acces[1].error=null;
+    
+    notifyListeners();  
+}
+
 }

@@ -28,17 +28,13 @@ router.post('/save-service', CheckAuth, BusinessAppointmentController.saveServic
 // SAVE MULTI RESTRICTION 
 router.post('/save-multi-restriction', CheckAuth, BusinessAppointmentController.saveMultiRestriction);
 
+// get active person by service id
+router.post('/get-person-by-service', CheckAuth, BusinessAppointmentController.getPersonByService);
+
 /**
  * SAVE RESTRICTION
  */
 router.post('/save-restriction', CheckAuth, BusinessAppointmentController.saveRestriction);
-
-
-// SAVE MULTI RESTRICTION 
-router.post('/save-multi-restriction', CheckAuth, BusinessAppointmentController.saveMultiRestriction);
-
-// get active person by service id
-router.post('/get-person-by-service', CheckAuth, BusinessAppointmentController.getPersonByService);
 
 /**
  * GET ALL PERSON LIST

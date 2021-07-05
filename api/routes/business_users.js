@@ -12,7 +12,6 @@ const mkdirp = require('mkdirp');
 
 /*to upload the media use multer: start here*/
 var multer = require('multer');
-
 var storage_business_profile = multer.diskStorage({
     destination: function(req, file, cb) {
         mkdirp.sync('./public/uploads/');
@@ -24,6 +23,7 @@ var storage_business_profile = multer.diskStorage({
 });
 var upload_business_profile = multer({ storage: storage_business_profile });
 /*to upload the media use multer: end here*/
+
 
 /* Upload the chat files*/
 
@@ -51,8 +51,6 @@ var storage_business_info_media = multer.diskStorage({
     }
 });
 var upload_business_info_media = multer({ storage: storage_business_info_media });
-
-
 /**END HERE */
 
 
@@ -68,6 +66,7 @@ router.post('/login', UserController.login);
 router.post('/profile', CheckAuth, UserController.getProfile);
 
 router.post('/business-website', CheckAuth, UserController.getBusinessWebsite);
+
 
 router.post('/profile/update', upload_business_profile.single('photo'), CheckAuth, UpdateBusinessUserProfileController.updateProfile);
 
@@ -114,14 +113,11 @@ router.post('/get-chats', CheckAuth, UserController.getChats);
 
 router.post('/set-chat', upload_chat_files.single('file'), CheckAuth, UserController.setChat);
 
-
 router.post('/get-chat-list', CheckAuth, UserController.getChatList);
 
 router.post('/is-account-exist', UserRegisterController.isAccountExist);
 
 /* Set and get the firebase_id */
 router.post('/firebase-id', CheckAuth, UserController.firebaseId);
-
-
 
 module.exports = router;

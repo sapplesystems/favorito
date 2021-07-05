@@ -137,12 +137,12 @@ class _adSpentState extends State<adSpent> {
                                                           "Click:${list[i].clicks}",
                                                           style: TextStyle(
                                                               fontSize: 16))
-                                                    ],
+                                                    ]
                                                   ),
-                                                ],
+                                                ]
                                               )
-                                            ],
-                                          ),
+                                            ]
+                                          )
                                         ),
                                       ),
                                     ),

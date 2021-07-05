@@ -1,142 +1,207 @@
-// import 'dart:async';
-// import 'dart:ui';
+// @dart=2.9
+import 'package:favorito_user/component/EditTextComponent.dart';
+import 'package:favorito_user/config/SizeManager.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:latlong/latlong.dart';
+class ClusterMap extends StatefulWidget {
+  @override
+  _ClusterMapState createState() => _ClusterMapState();
+}
 
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'place.dart';
+class _ClusterMapState extends State<ClusterMap> {
+  final PopupController _popupController = PopupController();
+SizeManager sm;
+  List<Marker> markers;
+  int pointIndex;
+  List points = [
+    LatLng(51.5, -0.09),
+    LatLng(49.8566, 3.3522),
+  ];
 
+  @override
+  void initState() {
+    pointIndex = 0;
+    markers = [
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 30,
+        width: 30,
+        point: points[pointIndex],
+        builder: (ctx) => Icon(Icons.pin_drop),
+      ),
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 30,
+        width: 30,
+        point: LatLng(28.5970, 77.2009),
+        builder: (ctx) => Icon(Icons.pin_drop),
+      ),
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 30,
+        width: 30,
+        point: LatLng(28.4472, 77.0406),
+        builder: (ctx) => Icon(Icons.pin_drop),
+      ),
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 30,
+        width: 30,
+        point: LatLng(53.3488, -6.2613),
+        builder: (ctx) => Icon(Icons.pin_drop),
+      ),
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 30,
+        width: 30,
+        point: LatLng(48.8566, 2.3522),
+        builder: (ctx) => Icon(Icons.pin_drop),
+      ),
+      Marker(
+        anchorPos: AnchorPos.align(AnchorAlign.center),
+        height: 30,
+        width: 30,
+        point: LatLng(49.8566, 3.3522),
+        builder: (ctx) => Icon(Icons.pin_drop),
+      ),
+    ];
 
-// // Clustering maps
+    super.initState();
+  }
 
-// class ClusterMap extends StatefulWidget {
-//   @override
-//   State<ClusterMap> createState() => ClusterMapState();
-// }
+  @override
+  Widget build(BuildContext context) {
+    sm = SizeManager(context);
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          pointIndex++;
+          if (pointIndex >= points.length) {
+            pointIndex = 0;
+          }
+          setState(() {
+            markers[0] = Marker(
+              point: points[pointIndex],
+              anchorPos: AnchorPos.align(AnchorAlign.center),
+              height: 30,
+              width: 30,
+              builder: (ctx) => Icon(Icons.pin_drop),
+            );
+            markers = List.from(markers);
+          });
+        },
+        child: Icon(Icons.refresh),
+      ),
+      body: Stack(
+        children: [
+          FlutterMap(
+            options: MapOptions(
+              center: points[0],
+              zoom: 5,
+              maxZoom: 15,
+              plugins: [
+                MarkerClusterPlugin(),
+              ],
+              onTap: (_) => _popupController
+                  .hidePopup(), // Hide popup when the map is tapped.
+            ),
+            layers: [
+              TileLayerOptions(
+                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                subdomains: ['a', 'b', 'c'],
+              ),
+              MarkerClusterLayerOptions(
+                maxClusterRadius: 120,
+                size: Size(40, 40),
+                anchor: AnchorPos.align(AnchorAlign.center),
+                fitBoundsOptions: FitBoundsOptions(
+                  padding: EdgeInsets.all(50),
+                ),
+                markers: markers,
+                polygonOptions: PolygonOptions(
+                    borderColor: Colors.blueAccent,
+                    color: Colors.black12,
+                    borderStrokeWidth: 3),
+                popupOptions: PopupOptions(
+                    popupSnap: PopupSnap.markerTop,
+                    popupController: _popupController,
+                    popupBuilder: (_, marker) => Container(
+                          width: 200,
+                          height: 100,
+                          color: Colors.white,
+                          child: GestureDetector(
+                            onTap: () => debugPrint('Popup tap!'),
+                            child: Text(
+                              'Container popup for marker at ${marker.point}',style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(color: Colors.black),
+                            ),
+                          ),
+                        )),
+                builder: (context, markers) {
+                  return FloatingActionButton(
+                    onPressed: null,
+                    child: Text(markers.length.toString()),
+                  );
+                },
+              ),
+            ],
+          ),
+        Container(
+          margin: EdgeInsets.only(top:50),
+            height: sm.h(10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          left: sm.w(5), right: sm.w(5), top: sm.h(1)),
+                      child: EditTextComponent(
+                          // controller: _mySearchEditTextController,
+                          title: "Search",
+                          suffixTxt: '',
+                          hint: 'Search',
+                          security: false,
+                          valid: true,
+                          maxLines: 1,
+                          maxlen: 100,
+                          keyBoardAction: TextInputAction.search,
+                          // atSubmit: (_val) => executeSearch(SearchReqData(
+                          //     text: _mySearchEditTextController.text)),
+                          prefixIcon: 'search',
+                          // prefClick: () => executeSearch(SearchReqData(
+                          //     text: _mySearchEditTextController.text)
+                          //     )
+                              )
+                              ),
+                ),
+                //Don't remove it is filter part for search
 
-// class ClusterMapState extends State<ClusterMap> {
-//   // late
-//    ClusterManager _manager;
-
-//   Completer<GoogleMapController> _controller = Completer();
-
-//   Set<Marker> markers = Set();
-
-//   final CameraPosition _parisCameraPosition =
-//       CameraPosition(target: LatLng(48.856613, 2.352222), zoom: 12.0);
-
-//   List<ClusterItem<Place>> items = [
-//     for (int i = 0; i < 10; i++)
-//       ClusterItem(LatLng(48.848200 + i * 0.001, 2.319124 + i * 0.001),
-//           item: Place(name: 'Place $i')),
-//     for (int i = 0; i < 10; i++)
-//       ClusterItem(LatLng(48.858265 - i * 0.001, 2.350107 + i * 0.001),
-//           item: Place(name: 'Restaurant $i', isClosed: i % 2 == 0)),
-//     for (int i = 0; i < 10; i++)
-//       ClusterItem(LatLng(48.858265 + i * 0.01, 2.350107 - i * 0.01),
-//           item: Place(name: 'Bar $i')),
-//     for (int i = 0; i < 10; i++)
-//       ClusterItem(LatLng(48.858265 - i * 0.1, 2.350107 - i * 0.01),
-//           item: Place(name: 'Hotel $i')),
-//     for (int i = 0; i < 10; i++)
-//       ClusterItem(LatLng(48.858265 + i * 0.1, 2.350107 + i * 0.1)),
-//     for (int i = 0; i < 10; i++)
-//       ClusterItem(LatLng(48.858265 + i * 1, 2.350107 + i * 1)),
-//   ];
-
-//   @override
-//   void initState() {
-//     _manager = _initClusterManager();
-//     super.initState();
-//   }
-
-//   ClusterManager _initClusterManager() {
-//     return ClusterManager<Place>(items, _updateMarkers,
-//         markerBuilder: _markerBuilder,
-//         initialZoom: _parisCameraPosition.zoom,
-//         stopClusteringZoom: 17.0);
-//   }
-
-//   void _updateMarkers(Set<Marker> markers) {
-//     print('Updated ${markers.length} markers');
-//     setState(() {
-//       this.markers = markers;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Scaffold(
-//       body: GoogleMap(
-//           mapType: MapType.normal,
-//           initialCameraPosition: _parisCameraPosition,
-//           markers: markers,
-//           onMapCreated: (GoogleMapController controller) {
-//             _controller.complete(controller);
-//             _manager.setMapController(controller);
-//           },
-//           onCameraMove: _manager.onCameraMove,
-//           onCameraIdle: _manager.updateMap),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           _manager.setItems(<ClusterItem<Place>>[
-//             for (int i = 0; i < 30; i++)
-//               ClusterItem<Place>(LatLng(48.858265 + i * 0.01, 2.350107),
-//                   item: Place(name: 'New Place ${DateTime.now()}'))
-//           ]);
-//         },
-//         child: Icon(Icons.update),
-//       ),
-//     );
-//   }
-
-//   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
-//       (cluster) async {
-//         return Marker(
-//           markerId: MarkerId(cluster.getId()),
-//           position: cluster.location,
-//           onTap: () {
-//             print('---- $cluster');
-//             cluster.items.forEach((p) => print(p));
-//           },
-//           icon: await _getMarkerBitmap(cluster.isMultiple ? 125 : 75,
-//               text: cluster.isMultiple ? cluster.count.toString() : null),
-//         );
-//       };
-
-//   Future<BitmapDescriptor> _getMarkerBitmap(int size, {String? text}) async {
-//     if (kIsWeb) size = (size / 2).floor();
-
-//     final PictureRecorder pictureRecorder = PictureRecorder();
-//     final Canvas canvas = Canvas(pictureRecorder);
-//     final Paint paint1 = Paint()..color = Colors.orange;
-//     final Paint paint2 = Paint()..color = Colors.white;
-
-//     canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);
-//     canvas.drawCircle(Offset(size / 2, size / 2), size / 2.2, paint2);
-//     canvas.drawCircle(Offset(size / 2, size / 2), size / 2.8, paint1);
-
-//     if (text != null) {
-//       TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-//       painter.text = TextSpan(
-//         text: text,
-//         style: TextStyle(
-//             fontSize: size / 3,
-//             color: Colors.white,
-//             fontWeight: FontWeight.normal),
-//       );
-//       painter.layout();
-//       painter.paint(
-//         canvas,
-//         Offset(size / 2 - painter.width / 2, size / 2 - painter.height / 2),
-//       );
-//     }
-
-//     final img = await pictureRecorder.endRecording().toImage(size, size);
-//     final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
-
-//     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
-//   }
-// }
+                // Padding(
+                //   padding: EdgeInsets.only(right: sm.w(5), bottom: sm.h(2)),
+                //   child: Card(
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(8)),
+                //       ),
+                //       elevation: 10,
+                //       child: Padding(
+                //           padding: const EdgeInsets.all(12.0),
+                //           child: InkWell(
+                //             onTap: () => showPopup(
+                //                 sm, context, _popupBody(sm), 'Select Filters'),
+                //             child: SvgPicture.asset('assets/icon/filter.svg',
+                //                 height: sm.h(2), fit: BoxFit.fitHeight),
+                //           ))),
+                // ),
+              ],
+            ),
+          ),
+          
+        ],
+      ),
+    );
+  }
+}

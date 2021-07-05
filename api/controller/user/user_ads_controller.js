@@ -21,7 +21,6 @@ exports.clickOnAd = async(req, res) => {
         sql_get_free_paid_credits = `select free_credits,paid_credits from business_ad_credits where business_id = '${business_id}'`
 
         result_get_free_paid_credits = await exports.run_query(sql_get_free_paid_credits)
-            // return res.send(result_get_free_paid_credits)
 
         if (result_get_free_paid_credits && result_get_free_paid_credits[0]) {
             if (result_get_free_paid_credits[0].free_credits > 0 && result_get_free_paid_credits[0].free_credits >= result_sql_get_cpc_business_id[0].cpc) {
@@ -62,7 +61,7 @@ exports.clickOnAd = async(req, res) => {
                 }
             }
         } else {
-            return res.status(500).send({ status: 'failed', message: 'Something went wrong' })
+            return res.status(500).send({ status: 'failed', message: 'Business has na ad credits' })
         }
 
     } catch (error) {

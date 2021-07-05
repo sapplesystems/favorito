@@ -25,12 +25,11 @@ class BusinessClaim extends StatelessWidget {
       sm = SizeManager(context);
       vaTrue = Provider.of<ClaimProvider>(context, listen: true);
       vaTrue.getClaimData(context);
-
       vaTrue.initCall(context);
       isFirst = false;
       vaTrue.setNeedSubmit(false);
     }
-
+      
     return Scaffold(
       key: RIKeys.josKeys21,
       appBar: AppBar(
@@ -39,9 +38,21 @@ class BusinessClaim extends StatelessWidget {
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => Navigator.of(context).pop()),
           iconTheme: IconThemeData(color: Colors.black)),
-      body: vaTrue.claimInfo.result == null
+      body:
+       vaTrue.claimInfo.result == null
           ? Center(child: Text("Please wait ...."))
-          : Container(
+          : 
+
+
+Consumer<ClaimProvider>(builder: (context,data,child){
+   if (isFirst) {
+      sm = SizeManager(context);
+      data.getClaimData(context);
+      data.initCall(context);
+      data.setNeedSubmit(false);
+    }
+   
+  return           Container(
               color: myBackGround,
               height: sm.h(82),
               padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
@@ -72,34 +83,23 @@ class BusinessClaim extends StatelessWidget {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     txtfieldPostAction(
-                                        controller: vaTrue.ctrlMobile,
+                                        controller: data.ctrlMobile,
                                         hint: "Enter business phone",
                                         title: "Phone",
                                         maxLines: 1,
                                         readOnly: true,
-                                        // readOnly: false,
                                         maxlen: 10,
                                         valid: true,
                                         sufixTxt:
-                                            //  vaTrue.claimInfo?.result[0]
-                                            //             ?.isPhoneVerified ==
-                                            //         0
-                                            //     ?
-                                            vaTrue.getOtpverify(),
-                                        // : null,
-                                        // sufixIcon: vaTrue.claimInfo?.result[0]
-                                        //             ?.isPhoneVerified ==
-                                        //         0
-                                        //     ? null
-                                        //     : Icons.check_circle,
+                                            data.otpVerify,
                                         security: false,
                                         sufixClick: () {
-                                          print(vaTrue.getOtpverify());
-                                          if (vaTrue.getOtpverify() == 'verify')
-                                            vaTrue.sendOtp(context);
+                                          print(data.otpVerify);
+                                          if (data.otpVerify == 'verify')
+                                            data.sendOtp(context);
                                         }),
-                                    Container(
-                                      height: vaTrue.getIsOtpSend() ? 140 : 0,
+                                    Visibility(
+                                     visible: data.isOtpSend,
                                       child: Column(children: [
                                         Padding(
                                           padding: const EdgeInsets.all(12.0),
@@ -107,14 +107,12 @@ class BusinessClaim extends StatelessWidget {
                                             "Enter OTP",
                                             style: TextStyle(
                                                 color: Colors.grey,
-                                                fontSize: 20),
+                                                fontSize: 20)
                                           ),
                                         ),
                                         PinCodeTextField(
                                           onChanged: (d) {},
                                           length: 6,
-
-                                          // controller: vaTrue.otpController,
                                           obscureText: true,
                                           appContext: context,
                                           animationType: AnimationType.fade,
@@ -136,15 +134,10 @@ class BusinessClaim extends StatelessWidget {
                                               Duration(milliseconds: 300),
                                           backgroundColor: Colors.white,
                                           enableActiveFill: true,
-                                          // errorAnimationController:
-                                          //     vaTrue.errorController,
                                           onCompleted: (v) =>
-                                              vaTrue.verifyOtp(v, context),
+                                              data.verifyOtp(v, context),
                                           beforeTextPaste: (text) {
-                                            print("Allowing to paste $text");
-                                            //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                                            //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                                            return true;
+                                            print("Allowing to paste $text");return true;
                                           },
                                         ),
                                         Row(
@@ -162,7 +155,7 @@ class BusinessClaim extends StatelessWidget {
                                               ),
                                               InkWell(
                                                 onTap: () =>
-                                                    vaTrue.sendOtp(context),
+                                                    data.sendOtp(context),
                                                 child: Text(
                                                   "Resend OTP",
                                                   textAlign: TextAlign.center,
@@ -179,7 +172,7 @@ class BusinessClaim extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 10),
                                       child: txtfieldPostAction(
-                                          controller: vaTrue.ctrlMail,
+                                          controller: data.ctrlMail,
                                           hint: "Enter business Email",
                                           title: "Email",
                                           maxLines: 1,
@@ -188,24 +181,24 @@ class BusinessClaim extends StatelessWidget {
                                           keyboardSet:
                                               TextInputType.emailAddress,
                                           valid: true,
-                                          sufixTxt: vaTrue.claimInfo?.result[0]
+                                          sufixTxt: data.claimInfo?.result[0]
                                                       ?.isEmailVerified ==
                                                   0
-                                              ? vaTrue.emailverify
+                                              ? data.emailVerify
                                               : null,
-                                          sufixIcon: vaTrue.claimInfo?.result[0]
+                                          sufixIcon: data.claimInfo?.result[0]
                                                       ?.isEmailVerified ==
                                                   0
                                               ? null
                                               : Icons.check_circle,
                                           security: false,
-                                          sufixClick: () => vaTrue
+                                          sufixClick: () => data
                                               .funSendEmailVerifyLink(context)),
                                     ),
                                     MyOutlineButton(
                                         title: "Upload Document",
                                         function: () {
-                                          vaTrue.pickMyFile(context);
+                                          data.pickMyFile(context);
                                         }),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
@@ -213,7 +206,7 @@ class BusinessClaim extends StatelessWidget {
                                       child: ListView.builder(
                                           shrinkWrap: true,
                                           itemCount:
-                                              vaTrue.result?.files?.length ?? 0,
+                                              data.result?.files?.length ?? 0,
                                           itemBuilder: (_context, _index) =>
                                               Padding(
                                                 padding:
@@ -225,12 +218,12 @@ class BusinessClaim extends StatelessWidget {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                        vaTrue.result
+                                                        data.result
                                                             .files[_index].name,
                                                         textAlign:
                                                             TextAlign.left),
                                                     Text(
-                                                        '${vaTrue.result.files[_index].size.toString()}kb',
+                                                        '${data.result.files[_index].size.toString()}kb',
                                                         textAlign:
                                                             TextAlign.right)
                                                   ],
@@ -241,18 +234,21 @@ class BusinessClaim extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: vaTrue.getNeedSubmit(),
+                    visible: data.getNeedSubmit(),
                     child: Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: sm.w(16), vertical: sm.h(4)),
                         child: RoundedButton(
-                            clicker: () => vaTrue.funClaimAdd(context),
+                            clicker: () => data.funClaimAdd(context),
                             clr: Colors.red,
                             title: "Submit")),
                   )
                 ],
               ),
-            ),
+            );
+},)
+
+
     );
   }
 }

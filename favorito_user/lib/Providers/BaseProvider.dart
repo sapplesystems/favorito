@@ -1,4 +1,3 @@
-import 'package:favorito_user/utils/Prefs.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 

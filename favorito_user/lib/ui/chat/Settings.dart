@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorito_user/component/circularProgress.dart';
 import 'package:favorito_user/ui/Chat/LoginPage.dart';
+import 'package:favorito_user/ui/chat/HomeScreen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
@@ -261,7 +262,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     });
 
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => ChatLogin()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
         (Route<dynamic> route) => false);
   }
 

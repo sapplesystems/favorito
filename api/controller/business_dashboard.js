@@ -563,7 +563,6 @@ exports.sponsored = async function(req, res, next) {
 };
 
 // return all the business which have by appoinment is 1 and business type is 2 
-// also which is set as attribute as appointment
 // this is for the freelancer
 exports.getBusinessByAppointment = async function(req, res, next) {
     try {

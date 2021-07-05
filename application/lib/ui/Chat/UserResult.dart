@@ -1,11 +1,10 @@
-import 'package:Favorito/model/Chat/User.dart';
-import 'package:Favorito/ui/Chat/ChatScreen.dart';
+import 'package:Favorito/model/Chat/ConnectionData.dart';
 import 'package:Favorito/ui/Chat/ChattingPage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class UserResult extends StatelessWidget {
-  final User eachUser;
+  final ConnectionData eachUser;
   UserResult(this.eachUser);
   @override
   Widget build(BuildContext context) {
@@ -26,17 +25,17 @@ class UserResult extends StatelessWidget {
                       radius: 28,
                       backgroundColor: Colors.black,
                       backgroundImage:
-                          CachedNetworkImageProvider(eachUser?.photoUrl ?? ""),
+                          CachedNetworkImageProvider('eachUser?.photoUrl'),
                     ),
                     title: Text(
-                      eachUser.nickname,
+                      'eachUser.nickname',
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "${eachUser.aboutMe}",
+                      'eachUser.aboutMe',
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 14.0, fontWeight: FontWeight.w400),
                     ),

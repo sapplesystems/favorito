@@ -4,13 +4,13 @@ class Slots {
 
   Slots({this.startTime, this.endTime});
 
-  Slots.fromJson(Map<String, dynamic> json) {
+  Slots.fromJson(Map json) {
     startTime = json['start_time'];
     endTime = json['end_time'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Map toJson() {
+    final Map data = new Map();
     data['start_time'] = this.startTime;
     data['end_time'] = this.endTime;
     return data;

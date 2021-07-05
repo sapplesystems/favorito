@@ -1,7 +1,10 @@
+
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/ui/Signup/SignupProvider.dart';
+import 'package:favorito_user/ui/chat/LoginPage.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/Regexer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -42,8 +45,10 @@ class Signup extends StatelessWidget {
                         padding: EdgeInsets.only(top: sm.h(2)),
                         child: Text(
                           "Welcome.",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 28),
+                          style:Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(fontSize: 16),
                         ),
                       ),
                       Container(
@@ -69,14 +74,32 @@ class Signup extends StatelessWidget {
                                             hint: vaTrue.title[i],
                                             errorColor: vaTrue.errorColor[i],
                                             myOnChanged: (s) {
+                                              vaTrue.verifyMobile='verify';
                                               if (i == 6) {}
                                               spFalse.onChange(i);
                                             },
-                                            suffixTap: () =>
-                                                vaTrue.checkIdClicked(i),
+                                            suffixTap: () {
+                                              print("sdfsdfs");
+                                              if(i==3)
+                                                  vaTrue.checkIdClicked(i);
+                                              else if(i==1){
+                                                if(mobileRegex.hasMatch(vaTrue.acces[i].controller.text)){
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatLogin(mobileNo:vaTrue.acces[1].controller.text,imIn: false))).whenComplete(() {
+                                                  vaTrue.checkId();
+                                                  });
+                                                  vaTrue.notifyListeners();
+                                                }
+                                                  else{
+                                                  vaTrue.acces[i].error = 'Invalid contact number..';
+                                                  vaTrue.notifyListeners();
+                                                  } 
+
+                                              }
+                                            },
                                             suffixTxt: i == 3
                                                 ? vaTrue.getCheckId()
-                                                : '',
+                                                : i == 1?vaTrue.verifyMobile
+                                                :'',
                                             error: vaTrue.acces[i].error,
                                             security: false,
                                             valid: true,
@@ -103,10 +126,13 @@ class Signup extends StatelessWidget {
                                         padding: EdgeInsets.only(left: 50),
                                         child: Text(vaTrue.checkIdMessage,
                                             style:
-                                                TextStyle(color: myGreyDark)),
+                                                Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(fontSize: 16),),
                                       ),
                                       tcp(
-                                        key: key,
+                                        key: key, 
                                         sm: sm,
                                         newValue: vaTrue.newValue,
                                         newValue1: vaTrue.newValue1,

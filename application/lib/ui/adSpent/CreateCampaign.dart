@@ -195,9 +195,12 @@ class _CreateCampaignState extends State<CreateCampaign> {
         if (widget.campStat) {
           ctrl[0].text = widget.data.name;
           ctrl[1].text = widget.data.totalBudget.toString();
+          
           for (int i = 0; i < statusData.keys.toList().length; i++)
             statusData[(statusData.keys.toList())[i]] = false;
-          statusData[widget.data.status] = true;
+            statusData[widget.data.status] = true;
+            print("aa${widget.data.status}");
+          
           _cpcKey.currentState.changeSelectedItem(widget.data.cpc.toString());
 
           for (int j = 0; j < widget.data.keyword.length; j++) {
@@ -248,6 +251,12 @@ class _CreateCampaignState extends State<CreateCampaign> {
               ? va[1]
               : va[2]
     };
+    if(widget.campStat){
+      if(double.parse(widget.data.totalBudget.toString())>double.parse( widget.data.totalSpent.toString())){}else{
+        BotToast.showText(text: "Please increase campaign budget");
+        return;
+      }
+    }
     if (_formKey.currentState.validate()) {
       _autovalidate = false;
       print("_map:${_map.toString()}");

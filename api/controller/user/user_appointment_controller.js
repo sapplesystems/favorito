@@ -5,16 +5,47 @@ var today = new Date();
 
 
 
+
 exports.verboseService = async(req, res) => {
     if (!req.body.business_id) {
         return res.status(400).send({ status: 'error', message: 'Business id is missing' });
     } else {
         business_id = req.body.business_id
     }
+
+    // if (!req.body.date) {
+    //     return res.status(400).send({ status: 'error', message: 'date is missing' });
+    // } else {
+    //     date = req.body.date
+    // }
     try {
         sqlGetService = `select id, service_name,is_active as status from business_appointment_service where business_id = '${business_id}'`
+        //  and is_active = 1`
+
         resultGetService = await exports.run_query(sqlGetService)
 
+        // sqlSelectRestriction = `select id,service_id,start_datetime,end_datetime from business_appointment_restriction where business_id = '${business_id}' and ( (DATE('${date}') > DATE(start_datetime) and DATE(end_datetime) > DATE('${date}')) or (DATE('${date}') = DATE(start_datetime) or (DATE('${date}') = DATE(end_datetime)))) and deleted_at is null group by service_id `
+
+        // resultRestriction = await exports.run_query(sqlSelectRestriction)
+
+
+        // for (let i = 0; i < resultRestriction.length; i++) {
+        //     const res = resultRestriction[i];
+        //     for (let j = 0; j < resultGetService.length; j++) {
+        //         const ser = resultGetService[j];
+        //         if (res.service_id == ser.id) {
+        //             resultGetService.splice(j, 1)
+        //         }
+        //     }
+        // }
+        // return res.send({ resultRestriction, resultGetService })
+
+        // var sqlService = "SELECT bas.id as id, bar.id as idr,bas.service_name,bas.is_active as status FROM business_appointment_service bas \n\
+        // left join business_appointment_restriction as bar on bas.id = bar.service_id WHERE ((DATE(NOW()) < DATE(bar.start_datetime) or DATE(bar.end_datetime) < DATE(NOW())) AND bas.business_id='" + business_id + "') OR ((DATE(NOW()) < DATE(bar.start_datetime) or DATE(bar.end_datetime) < DATE(NOW())) AND bas.business_id='" + business_id + "' AND bas.id is null) group by bas.id";
+
+        // var sqlService = "SELECT bas.id as ids, bar.id as idr,bas.service_name,bas.is_active as status FROM business_appointment_service bas \n\
+        // left join business_appointment_restriction as bar on bas.id = bar.service_id WHERE (DATE(NOW()) < DATE(bar.start_datetime) or DATE(bar.end_datetime) < DATE(NOW())) AND bas.business_id='" + business_id + "' group by bas.id";
+        // resultGetService = await exports.run_query(sqlService)
         sqlGetSetting = `select booking_per_slot, advance_booking_start_days,advance_booking_end_days, advance_booking_hours from business_appointment_setting where business_id = '${business_id}'`
 
         resultGetSetting = await exports.run_query(sqlGetSetting)
@@ -38,10 +69,39 @@ exports.getPersonByServiceId = async(req, res) => {
         var service_id = req.body.service_id
     }
 
-    var sql_get_person_by_service = `SELECT id, business_id, person_name FROM business_appointment_person WHERE service_id = ${service_id} and business_id = '${business_id}' and is_active = 1`
+    // if (!req.body.date) {
+    //     return res.status(400).json({ status: 'failed', message: 'date is missing' });
+    // } else {
+    //     var date = req.body.date
+    // }
+
+    var sql_get_person_by_service = `SELECT id, business_id, person_name FROM business_appointment_person WHERE service_id = ${service_id} and business_id = '${business_id}'`
+    // and is_active = 1
 
     try {
         var result_get_persons = await exports.run_query(sql_get_person_by_service)
+
+        // sqlSelectRestriction = `select id as restriction_id,person_id,start_datetime,end_datetime from business_appointment_restriction where business_id = '${business_id}' and ( (DATE('${date}') > DATE(start_datetime) and DATE(end_datetime) > DATE('${date}')) or (DATE('${date}') = DATE(start_datetime) or (DATE('${date}') = DATE(end_datetime)))) and deleted_at is null group by person_id `
+
+        // restriction date by range manage in this query
+        // sqlSelectRestriction = `select id as restriction_id,person_id,start_datetime,end_datetime from business_appointment_restriction where business_id = '${business_id}' and ( (DATE(NOW()) > DATE(start_datetime) and DATE(end_datetime) > DATE(NOW())) or (DATE(NOW()) = DATE(start_datetime) or (DATE(NOW()) = DATE(end_datetime)))) and deleted_at is null group by person_id `
+
+        // resultRestriction = await exports.run_query(sqlSelectRestriction)
+
+        // return res.send(resultRestriction)
+
+        // for (let i = 0; i < resultRestriction.length; i++) {
+        //     const res = resultRestriction[i];
+        //     for (let j = 0; j < result_get_persons.length; j++) {
+        //         const per = result_get_persons[j];
+        //         if (res.person_id == per.id) {
+        //             result_get_persons.splice(j, 1)
+        //         }
+        //     }
+        // }
+
+
+
         if (result_get_persons == '') {
             return res.status(200).json({ status: 'success', message: 'There is no person by this service id', data: [] });
         }
@@ -50,6 +110,7 @@ exports.getPersonByServiceId = async(req, res) => {
         return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
     }
 }
+
 
 exports.restrictedPersonDateTime = async(req, res) => {
     if (!req.body.business_id) {
@@ -203,6 +264,48 @@ exports.getsSlots = async(req, res) => {
 
 }
 
+getDayNameByDate = (date = false) => {
+    if (date) {
+        var d = new Date(date);
+    } else {
+        var d = new Date();
+    }
+    var weekday = new Array(7);
+    weekday[0] = "Sunday";
+    weekday[1] = "Monday";
+    weekday[2] = "Tuesday";
+    weekday[3] = "Wednesday";
+    weekday[4] = "Thursday";
+    weekday[5] = "Friday";
+    weekday[6] = "Saturday";
+    var day = weekday[d.getDay()].substring(0, 3);
+    return day
+}
+
+exports.setAppointmentNote = async function(req, res, next) {
+    if (req.body.appointment_id != null && req.body.appointment_id != undefined && req.body.appointment_id != '') {
+        var condition = " WHERE id = '" + req.body.appointment_id + "'"
+    } else {
+        return res.status(403).send({ status: 'failed', message: 'appointment_id is missing' })
+    }
+    if (req.body.user_notes == null || req.body.user_notes == undefined || req.body.user_notes == '') {
+        return res.status(403).send({ status: 'failed', message: 'user_notes is missing' })
+    }
+
+    var sql = "UPDATE business_appointment SET updated_at = NOW(), special_notes = '" + req.body.user_notes + "'" + condition;
+
+    try {
+        db.query(sql, function(err, result) {
+            if (err) {
+                return res.status(500).send({ status: 'Failed', message: 'Failed', error: err });
+            } else {
+                return res.status(200).send({ status: 'success', message: 'Notes is updates' })
+            }
+        })
+    } catch (error) {
+        return res.status(500).send({ status: 'failed', message: 'Something went wrong' });
+    }
+}
 
 exports.createSlotWithDate = async(result_appointment_setting, date) => {
     return new Promise(async(resolve, reject) => {
@@ -302,48 +405,7 @@ exports.createSlots = async function(starttime, endtime, interval, advance_booki
     })
 }
 
-getDayNameByDate = (date = false) => {
-    if (date) {
-        var d = new Date(date);
-    } else {
-        var d = new Date();
-    }
-    var weekday = new Array(7);
-    weekday[0] = "Sunday";
-    weekday[1] = "Monday";
-    weekday[2] = "Tuesday";
-    weekday[3] = "Wednesday";
-    weekday[4] = "Thursday";
-    weekday[5] = "Friday";
-    weekday[6] = "Saturday";
-    var day = weekday[d.getDay()].substring(0, 3);
-    return day
-}
 
-exports.setAppointmentNote = async function(req, res, next) {
-    if (req.body.appointment_id != null && req.body.appointment_id != undefined && req.body.appointment_id != '') {
-        var condition = " WHERE id = '" + req.body.appointment_id + "'"
-    } else {
-        return res.status(403).send({ status: 'failed', message: 'appointment_id is missing' })
-    }
-    if (req.body.user_notes == null || req.body.user_notes == undefined || req.body.user_notes == '') {
-        return res.status(403).send({ status: 'failed', message: 'user_notes is missing' })
-    }
-
-    var sql = "UPDATE business_appointment SET updated_at = NOW(), special_notes = '" + req.body.user_notes + "'" + condition;
-
-    try {
-        db.query(sql, function(err, result) {
-            if (err) {
-                return res.status(500).send({ status: 'Failed', message: 'Failed', error: err });
-            } else {
-                return res.status(200).send({ status: 'success', message: 'Notes is updates' })
-            }
-        })
-    } catch (error) {
-        return res.status(500).send({ status: 'failed', message: 'Something went wrong' });
-    }
-}
 
 // exports.createSlots = function(starttime, endtime, interval, date) {
 //     if( )

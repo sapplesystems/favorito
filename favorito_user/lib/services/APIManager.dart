@@ -2,8 +2,10 @@ import 'dart:convert' as convert;
 import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
+import 'package:favorito_user/model/Chat/ChatUserListModel.dart';
 import 'package:favorito_user/model/Chat/UserModel.dart';
 import 'package:favorito_user/model/Chat/chatModel.dart';
+import 'package:favorito_user/model/Chat/firebaseIdModel.dart';
 import 'package:favorito_user/model/CityStateModel.dart';
 import 'package:favorito_user/model/Follow/followingModel.dart';
 import 'package:favorito_user/model/ProfilePhoto.dart';
@@ -63,7 +65,7 @@ class APIManager {
   static UtilProvider utilProvider = UtilProvider();
 
   static Options opt =
-      Options(contentType: Headers.formUrlEncodedContentType, method: 'Post');
+      Options(contentType: Headers.formUrlEncodedContentType);
 
 //this is used for register new user
   static Future<registerModel> register(
@@ -91,8 +93,9 @@ class APIManager {
     print("responseData1:${_map.toString()}");
     String url = service.register;
     try {
-      response = await dio.post(url, data: _map, options: opt);
+      response = await dio.post(url, data:_map, options: opt);
     } on DioError catch (e) {
+      BotToast.showText(text: e.message);
       ExceptionHandler(e, pr, url, formKey);
     } finally {
       pr.hide();
@@ -169,6 +172,20 @@ class APIManager {
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
     return AddressListModel.fromJson(convert.json.decode(response.toString()));
+  }
+
+//getFirebaseId
+  static Future<firebaseIdModel> getFirebaseId(_map) async {
+    String token = await Prefs.token;
+    String url = service.getFirebaseId;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url,data:_map, options: opt);
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return firebaseIdModel.fromJson(convert.json.decode(response.toString()));
   }
 
   static Future<ProfileImageModel> getUserImage() async {
@@ -360,6 +377,23 @@ class APIManager {
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
     return SearchBusinessListModel.fromJson(
+        convert.json.decode(response.toString()));
+  }
+
+//getChatConnectedList
+  static Future<ChatUserListModel> getChatConnectedList() async {
+    String token = await Prefs.token;
+    String url = service.getChatConnectedList;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    
+    response = await dio
+        .post(url,options: opt);
+
+    print("Request URL:$url.toString()");
+    print("responseData1:${response.toString()}");
+    return ChatUserListModel.fromJson(
         convert.json.decode(response.toString()));
   }
 

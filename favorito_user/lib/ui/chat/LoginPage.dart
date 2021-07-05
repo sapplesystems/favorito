@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/component/circularProgress.dart';
-import 'package:favorito_user/ui/Chat/ChatProvider.dart';
 import 'package:favorito_user/ui/Chat/HomeScreen.dart';
-import 'package:favorito_user/ui/Login/LoginController.dart';
+import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,11 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatLogin extends StatefulWidget {
-  ChatLogin({Key key}) : super(key: key);
+  String mobileNo;
+  bool imIn;
+  ChatLogin({this.mobileNo,this.imIn});
   @override
   LoginScreenState createState() => LoginScreenState();
 }
@@ -35,12 +34,12 @@ class LoginScreenState extends State<ChatLogin> {
   FocusNode focusnode = FocusNode();
   String verificationId, smsCode;
   bool codeSent = false;
-  var mobileNo = '';
+  
   String currentUserId = '';
   @override
   void initState() {
     super.initState();
-    isSignedIn();
+    // isSignedIn();
   }
 
   void isSignedIn() async {
@@ -48,7 +47,7 @@ class LoginScreenState extends State<ChatLogin> {
       isLoggedIn = true;
     });
     preferences = await SharedPreferences.getInstance();
-    mobileNo = preferences.getString('phone');
+    widget.mobileNo = preferences.getString('phone');
     currentUserId = preferences.getString('id');
     _controllerOtp.text = '123456';
     // isLoggedIn = await googleSignIn.isSignedIn();
@@ -59,7 +58,7 @@ class LoginScreenState extends State<ChatLogin> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomeScreen(currentUserId: currentUserId)));
+              builder: (context) => HomeScreen()));
     }
     this.setState(() {
       focusnode.requestFocus();
@@ -95,7 +94,7 @@ class LoginScreenState extends State<ChatLogin> {
                     SizedBox(height: 50),
                     Text(
                       // '+918178865073',
-                      mobileNo,
+                      widget.mobileNo,
                       style: Theme.of(context)
                           .textTheme
                           .headline6
@@ -146,7 +145,7 @@ class LoginScreenState extends State<ChatLogin> {
     isLoadingSet = true;
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
       print("verified is called");
-      AuthServices().signIn(authResult, key);
+      AuthServices().signIn(authResult, key,false);
     };
 
     final PhoneVerificationFailed verificationfield =
@@ -169,17 +168,25 @@ class LoginScreenState extends State<ChatLogin> {
         (String verId) => this.verificationId = verId;
 
     FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+91$mobileNo',
+        phoneNumber: '+91${widget.mobileNo}',
         timeout: const Duration(seconds: 10),
         verificationCompleted: verified,
         verificationFailed: verificationfield,
         codeSent: smsSent,
         codeAutoRetrievalTimeout: autoTimeout);
   }
+
+
 }
 
 class AuthServices {
   SharedPreferences preferences;
+  AuthServices(){
+      initCall();
+  }
+  initCall()async{
+     preferences = await SharedPreferences.getInstance();
+  }
   handleAuth() {
     return StreamBuilder(
         stream: FirebaseAuth.instance.onAuthStateChanged,
@@ -200,7 +207,7 @@ class AuthServices {
   }
 
   //SignIn
-  signIn(AuthCredential authCreds, key) async {
+  signIn(AuthCredential authCreds, key,bool mayIComeIn) async {
     FirebaseUser firebaseUser = (await FirebaseAuth.instance
             .signInWithCredential(authCreds)
             .onError((error, stackTrace) {
@@ -210,21 +217,23 @@ class AuthServices {
     }))
         .user;
     var uid = firebaseUser.uid;
-    var phoneNumber = firebaseUser.phoneNumber;
+    preferences.setString('firebaseId',uid);
 
-    print("uid:$uid\nphoneNumber$phoneNumber");
-    initFirebase(firebaseUser, key);
+    print("uid:$uid");
+   if(mayIComeIn) initFirebase(firebaseUser, key);
+   else{
+     Navigator.pop(key.currentContext);
+   }
   }
 
   signInWithOtp(smsCode, verId, key) {
     print(smsCode);
     AuthCredential authCreds = PhoneAuthProvider.getCredential(
         verificationId: verId, smsCode: smsCode);
-    signIn(authCreds, key);
+    signIn(authCreds, key,true);
   }
 
   void initFirebase(FirebaseUser firebaseUser, key) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
 
     //Signin Success
     if (firebaseUser != null) {
@@ -236,10 +245,7 @@ class AuthServices {
       final List<DocumentSnapshot> documentSnapshots = resultQuery.documents;
       //Save dota to firebase if new user
       if (documentSnapshots.length == 0) {
-        Firestore.instance
-            .collection("user")
-            .document(firebaseUser.uid)
-            .setData({
+        Map _map = {
           "nickname": preferences.getString('nickname') ?? "User",
           "photoUrl": preferences.getString('photoUrl') ?? '',
           "id": firebaseUser.uid,
@@ -247,7 +253,12 @@ class AuthServices {
           "phone": firebaseUser.phoneNumber,
           "createAt": DateTime.now().microsecondsSinceEpoch.toString(),
           "chattingWith": null,
-        });
+        };
+        print("_map12:${_map.toString()}");
+        // Firestore.instance
+        //     .collection("user")
+        //     .document(firebaseUser.uid)
+        //     .setData(_map);
         //Write data to Local
 
         await preferences.setString("id", firebaseUser.uid);
@@ -275,7 +286,7 @@ class AuthServices {
           key.currentContext,
           MaterialPageRoute(
               builder: (context) =>
-                  HomeScreen(currentUserId: firebaseUser.uid)));
+                  HomeScreen()));
     }
     //SignIn not success
 

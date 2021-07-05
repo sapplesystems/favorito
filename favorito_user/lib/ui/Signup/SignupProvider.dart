@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/Prefs.dart';
@@ -7,8 +8,9 @@ import 'package:favorito_user/utils/Validator.dart';
 import 'package:favorito_user/utils/acces.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SignupProvider extends ChangeNotifier {
+class SignupProvider extends BaseProvider {
   Validator validator = Validator();
 
   List<Acces> acces = [for (int i = 0; i < 8; i++) Acces()];
@@ -16,6 +18,7 @@ class SignupProvider extends ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   String _checkId = 'verify';
+  String verifyMobile = 'verify';
   String _checkIdMessage = null;
   bool uniqueId = false;
   bool uniqueMobile = false;
@@ -23,12 +26,17 @@ class SignupProvider extends ChangeNotifier {
   bool newValue = false;
   bool newValue1 = false;
   GlobalKey key = GlobalKey();
-
+SharedPreferences preferences ;
   List<String> title = ['Full Name', 'Phone', 'Postal', 'Unique Id'];
 
   List<String> prefix = ['name', 'phone', 'postal', 'name'];
   List<Color> errorColor = [null, null, null, null, null, null, null];
-
+SignupProvider(){
+  initCall();
+}
+initCall()async{
+  preferences = await SharedPreferences.getInstance();
+}
   void decideit() async {
     String token = await Prefs.token;
     print("token : $token");
@@ -45,7 +53,16 @@ class SignupProvider extends ChangeNotifier {
   }
 
   funSubmit() async {
-    print("$newValue");
+    // verifyMobile
+    
+    if(verifyMobile=='verify'){
+      snackBar('Please verify contact number..', scaffoldKey);
+      return;
+    }
+    if(_checkId=='verify'){
+      snackBar('Please verify id..', scaffoldKey);
+      return;
+    }print("$newValue");
     acces[0].error = validator.validateFullName(acces[0].controller.text);
     acces[1].error = validator.validateMobile(acces[1].controller.text);
     acces[2].error = validator.validatePin(acces[2].controller.text);
@@ -60,18 +77,25 @@ class SignupProvider extends ChangeNotifier {
         uniqueMobile) {
       if (newValue) {
         Map _map = {
-          "full_name": acces[0].controller.text,
-          "phone": acces[1].controller.text,
-          "postal_code": acces[2].controller.text,
-          "profile_id": acces[3].controller.text,
-          "reach_whatsapp": newValue1 ? 1 : 0
+          "full_name": acces[0].controller.text.trim(),
+          "phone": acces[1].controller.text.trim(),
+          "postal_code": acces[2].controller.text.trim(),
+          "profile_id": acces[3].controller.text.trim(),
+          "reach_whatsapp": newValue1 ? 1 : 0,
+          "fb_key": preferences.getString('firebaseId').trim()
         };
         print("map:${_map.toString()}");
         await APIManager.register(_map, scaffoldKey).then((value) {
+          snackBar(value.message, scaffoldKey);
           if (value.status == "success") {
-            BotToast.showText(text: value.message);
+            acces[0].controller.text='';
+            acces[1].controller.text='';
+            acces[2].controller.text='';
+            acces[3].controller.text='';
+            newValue = false;
+            newValue1 = false;
             Navigator.pop(context);
-            Navigator.of(context).pushNamed('/login');
+            // Navigator.of(context).pushNamed('/login');
           }
         });
       } else {
@@ -215,4 +239,12 @@ class SignupProvider extends ChangeNotifier {
   }
 
   String get checkIdMessage => _checkIdMessage ?? '';
+
+  checkId()async{
+
+    if(preferences.getString('firebaseId')!=null){
+      verifyMobile = 'verified';
+      notifyListeners();
+    }                                                
+  }
 }

@@ -9,6 +9,7 @@ import 'package:favorito_user/model/appModel/SearchFilterList.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/model/appModel/search/SearchBusinessListModel.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/ClusterMap/ClusterMap.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/utils/MyColors.dart';
@@ -68,6 +69,7 @@ class _SearchResultState extends State<SearchResult> {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return SafeArea(
+      
       child: Scaffold(
         key: RIKeys.josKeys4,
         body: ListView(children: [
@@ -158,6 +160,21 @@ class _SearchResultState extends State<SearchResult> {
                   )),
           ),
         ]),
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0))
+        ),
+        backgroundColor: Color(0xffF4F6FC),
+        onPressed: () {
+         
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ClusterMap()));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Icon(Icons.location_on,color: myRed,size: 28,),
+        ),
+      ),
+      
       ),
     );
   }

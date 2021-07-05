@@ -14,7 +14,6 @@ var storage_user_profile = multer.diskStorage({
         mkdirp.sync('./public/uploads/');
         cb(null, './public/uploads/');
     },
-
     filename: function(req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
     }
@@ -56,6 +55,7 @@ router.post('/get-business-rating', CheckAuth, UserProfileController.getBusiness
 router.post('/get-contact-business', CheckAuth, UserProfileBusinessDetailController.getContactBusiness);
 
 
+router.post('/promo-click', CheckAuth, UserProfileBusinessDetailController.promoClick);
 
 // terms and condition for the user link
 router.get('/user-terms-condition', (req, res) => {

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:Favorito/model/BaseResponse/BaseResponseModel.dart';
 import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/Chat/ChatModel.dart';
+import 'package:Favorito/model/Chat/ConnectionListModel.dart';
 import 'package:Favorito/model/Chat/UserModel.dart';
 import 'package:Favorito/model/Restriction/BookingRestrictionModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
@@ -1758,6 +1759,17 @@ class WebService {
     return UserModel.fromJson(convert.json.decode(response.toString()));
   }
 
+  //getFirebaseConnectedList
+  static Future<ConnectionListModel> getFirebaseConnectedList(Key key) async {
+    String url = serviceFunction.getFirebaseConnectedList;
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+    response = await dio.post(url, options: opt);
+    return ConnectionListModel.fromJson(convert.json.decode(response.toString()));
+  }
+
   //getChat
   static Future<ChatModel> getChat(Map _map, Key key) async {
     String url = serviceFunction.getChat;
@@ -1870,15 +1882,14 @@ class WebService {
     return BaseResponseModel.fromJson(convert.json.decode(response.toString()));
   }
 
-  static Future<BaseResponseModel> funClaimVerifyOtp(
-      Map _map, BuildContext context) async {
+  static Future<BaseResponseModel> funClaimVerifyOtp() async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.funClaimVerifyOtp;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(url, data: _map, options: opt);
+    response = await dio.post(url,options: opt);
 
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");

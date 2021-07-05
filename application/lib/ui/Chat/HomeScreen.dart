@@ -1,42 +1,37 @@
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/ui/Chat/ChatProvider.dart';
+import 'package:Favorito/ui/Chat/UserResult.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String currentUserId;
-  HomeScreen({Key key, @required this.currentUserId});
   @override
-  State createState() => HomeScreenState(currentUserId: currentUserId);
+  State createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  TextEditingController searchTextEditingController = TextEditingController();
-
-  final String currentUserId;
-  HomeScreenState({Key key, @required this.currentUserId});
-  ChatProvier vaTrue;
-
+  
   SizeManager sm;
   bool isFirst = true;
   var vv;
   @override
   Widget build(BuildContext context) {
-    if (isFirst) {
-      isFirst = false;
-      sm = SizeManager(context);
-      vaTrue = Provider.of<ChatProvier>(context, listen: true);
-      vaTrue.currentUserId = currentUserId;
-      vaTrue.initialCAll();
-      vv = vaTrue.getabd();
-      vaTrue.controlSearching("");
-      print("vLength:${vv.length}");
-    }
+    
+
     return SafeArea(
       child: Scaffold(
-          body: Column(children: [
+        key: RIKeys.josKeys29,
+          body: 
+          Consumer<ChatProvier>(builder: (context,_data,child){
+            if (isFirst) {
+      isFirst = false;
+      sm = SizeManager(context);
+      _data.initialCAll();
+    }
+            return Column(children: [
         Row(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +62,7 @@ class HomeScreenState extends State<HomeScreen> {
           ],
         ),
         SizedBox(height: 20),
-        homePageHeader(),
+        homePageHeader(_data),
         SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
@@ -86,10 +81,18 @@ class HomeScreenState extends State<HomeScreen> {
                   child: vv.length <= 0
                       // ? circularProgress()
                       ? displayNoSerachResultScreen()
-                      : ListView(children: vv),
+                      : ListView.builder(
+                        itemCount: _data.connectionsList.length,
+                        itemBuilder: (context,index){
+                          return UserResult(_data.connectionsList[index]);
+                        }),
                 ),
         )
-      ])),
+      ]);
+          },)
+      ),
+    
+    
     );
   }
 
@@ -146,7 +149,7 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  homePageHeader() {
+  homePageHeader(_data) {
     return AppBar(
       automaticallyImplyLeading: false,
       // actions: [
@@ -165,7 +168,7 @@ class HomeScreenState extends State<HomeScreen> {
               .textTheme
               .headline6
               .copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
-          controller: searchTextEditingController,
+          controller: _data.searchTextEditingController,
           decoration: InputDecoration(
               hintText: 'Search ',
               hintStyle: Theme.of(context).textTheme.headline6.copyWith(
@@ -176,15 +179,12 @@ class HomeScreenState extends State<HomeScreen> {
               prefixIcon: Icon(Icons.search, color: Colors.black, size: 30),
               suffixIcon: IconButton(
                   icon: Icon(Icons.clear, color: Colors.black),
-                  onPressed: emptyTextFormFirld)),
-          onFieldSubmitted: (_val) => vaTrue.controlSearching(_val),
+                  onPressed: _data.emptyTextFormFirld)),
+          onFieldSubmitted: (_val) => _data.controlSearching(_val),
         ),
       ),
     );
   }
 
-  void emptyTextFormFirld() {
-    searchTextEditingController.clear();
-    vaTrue.controlSearching('');
-  }
+ 
 }

@@ -3,6 +3,7 @@ import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/component/myCarousel.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/ClusterMap/ClusterMap.dart';
 import 'package:favorito_user/ui/home/hotAndNewBusiness.dart';
 import 'package:favorito_user/ui/search/SearchReqData.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
@@ -40,9 +41,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     vaTrue = Provider.of<UserAddressProvider>(context, listen: true);
     if (isFirst == true) {
-      vaTrue.getAddress();
-      vaTrue.getUserImage();
-
+      vaTrue
+      ..getAddress()
+      ..getUserImage()
+      ..getFirabaseId();
+      
       Provider.of<PersonalInfoProvider>(context, listen: true)
           .getPersonalData();
       isFirst = false;

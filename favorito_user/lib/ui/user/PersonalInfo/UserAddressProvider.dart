@@ -9,6 +9,7 @@ import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/utils/Acces.dart';
 import 'package:favorito_user/utils/MyColors.dart';
+import 'package:favorito_user/utils/Prefs.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,11 +17,13 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../utils/Extentions.dart';
 import 'package:place_picker/place_picker.dart';
 
 class UserAddressProvider extends ChangeNotifier {
   String _profileImage;
+  SharedPreferences preferences;
   AddressListModel addressListModel = AddressListModel();
   String mode = 'Add';
   String _city;
@@ -36,12 +39,19 @@ class UserAddressProvider extends ChangeNotifier {
   LocationResult locationResult;
   var id;
   UserAddressProvider() {
+    initCall();
     for (int i = 0; i < 5; i++) acces.add(Acces());
     getAddress();
     getUserImage();
+    getFirabaseId();
     // getAllState();
   }
-
+getFirabaseId()async{
+ await APIManager.getFirebaseId({'api_type':'get'}).then((value){
+   print("firebaseId:${value.data[0].firebaseChatId}");
+    preferences.setString('firebaseId',value.data[0].firebaseChatId);
+  });
+}
   String getAddresstype() => _addresstype;
   setAddresstype(String _va) {
     _addresstype = _va;
@@ -179,6 +189,7 @@ class UserAddressProvider extends ChangeNotifier {
   }
 
   getAddress() async {
+    
     await APIManager.getAddress().then((value) {
       if (value.status == 'success') {
         addressListModel = value;
@@ -222,14 +233,12 @@ class UserAddressProvider extends ChangeNotifier {
   }
 
   getProfileImage() =>
-      _profileImage ??
-      'https://www.rameng.ca/wp-content/uploads/2014/03/placeholder.jpg';
+      _profileImage ;
 
   void getUserImage() async {
     await APIManager.getUserImage().then((value) {
       if (value.status == 'success') {
-        _profileImage = value?.data[0]?.photo ??
-            'https://www.rameng.ca/wp-content/uploads/2014/03/placeholder.jpg';
+        _profileImage = value?.data[0]?.photo;
         notifyListeners();
       }
     });
@@ -348,6 +357,10 @@ class UserAddressProvider extends ChangeNotifier {
     acces[1].controller.text = locationResult.locality;
     acces[2].controller.text = locationResult.postalCode;
     checkPin();
+  }
+
+  void initCall() async{
+     preferences = await SharedPreferences.getInstance();
   }
   // void getAllCity(String selectedCity, key) async {
   //   await APIManager.stateList(null, key).then((value) {

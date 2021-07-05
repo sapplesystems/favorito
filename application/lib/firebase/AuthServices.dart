@@ -1,23 +1,28 @@
-import 'package:Favorito/Functions/signIn.dart';
-import 'package:Favorito/Provider/BaseProvider.dart';
+import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
-import 'package:Favorito/utils/myColors.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthServices extends BaseProvider {
+class AuthServices {
   SharedPreferences preferences;
+  AuthServices(){
+      initCall();
+  }
+  initCall()async{
+     preferences = await SharedPreferences.getInstance();
+  }
   handleAuth() {
     return StreamBuilder(
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            // return DashBoardPage();
             print("DashboardScreen");
           } else {
-            // return LoginScreen();
             print("LoginScreen");
           }
         });
@@ -29,21 +34,29 @@ class AuthServices extends BaseProvider {
   }
 
   //SignIn
-  signIn(AuthCredential authCreds, GlobalKey<ScaffoldState> key) async {
+  signIn(AuthCredential authCreds, key) async {
     FirebaseUser firebaseUser = (await FirebaseAuth.instance
             .signInWithCredential(authCreds)
             .onError((error, stackTrace) {
       print("otpError:${error.message}");
-      Provider.of<ClaimProvider>(key.currentContext).isLoadingSet(false);
-      snackBar('Invalid otp please try again.', key, myGreen);
+      Fluttertoast.showToast(msg: 'Invalid otp please try again.');
       return null;
-    }))
-        .user;
+    })).user;
     var uid = firebaseUser.uid;
-    var phoneNumber = firebaseUser.phoneNumber;
+    preferences.setString('firebaseId',uid);
+    if(uid!=null&&uid.length>4)
+  await WebService.setGetFirebaseId({'api_type': 'set', 'firebase_id': uid}).then((value)=>
+      WebService.funClaimVerifyOtp().then((value) {
+        
+         Provider.of<ClaimProvider>(key.currentContext,
+                                                    listen: false)
+                                                .getClaimData(key.currentContext);
+      })
+    );
+  
+print("uid:$uid");
+initFirebase(firebaseUser, key);
 
-    print("uid:$uid\nphoneNumber$phoneNumber");
-    initFirebase(firebaseUser, key);
   }
 
   signInWithOtp(smsCode, verId, key) {
@@ -51,5 +64,67 @@ class AuthServices extends BaseProvider {
     AuthCredential authCreds = PhoneAuthProvider.getCredential(
         verificationId: verId, smsCode: smsCode);
     signIn(authCreds, key);
+  }
+
+  void initFirebase(FirebaseUser firebaseUser, key) async {
+
+    //Signin Success
+    if (firebaseUser != null) {
+      //check if already signedUp
+      final QuerySnapshot resultQuery = await Firestore.instance
+          .collection("user")
+          .where("id", isEqualTo: firebaseUser.uid)
+          .getDocuments();
+      final List<DocumentSnapshot> documentSnapshots = resultQuery.documents;
+      //Save dota to firebase if new user
+      if (documentSnapshots.length == 0) {
+        Map _map = {
+          "nickname": preferences.getString('nickname') ?? "User",
+          "photoUrl": preferences.getString('photoUrl') ?? '',
+          "id": firebaseUser.uid,
+          "aboutMe": "I am using favorito",
+          "phone": firebaseUser.phoneNumber,
+          "createAt": DateTime.now().microsecondsSinceEpoch.toString(),
+          "chattingWith": null,
+        };
+        print("_map12:${_map.toString()}");
+        // Firestore.instance
+        //     .collection("user")
+        //     .document(firebaseUser.uid)
+        //     .setData(_map);
+        //Write data to Local
+
+        await preferences.setString("id", firebaseUser.uid);
+        await preferences.setString("phone", firebaseUser.phoneNumber);
+        await preferences.setString("nickname", firebaseUser.displayName);
+        await preferences.setString("photoUrl", firebaseUser.photoUrl);
+      } else {
+        //Write data to Local
+        await preferences.setString("id", documentSnapshots[0]["id"]);
+        await preferences.setString(
+            "nickname", documentSnapshots[0]["nickname"]);
+        await preferences.setString("phone", documentSnapshots[0]["phone"]);
+        await preferences.setString(
+            "photoUrl", documentSnapshots[0]["photoUrl"]);
+        await preferences.setString("aboutMe", documentSnapshots[0]["aboutMe"]);
+        // await preferences.setString("id", documentSnapshots[0]["id"]);
+      }
+      Fluttertoast.showToast(msg: "Congratulations.");
+      // this.setState(() {
+      //   isLoading = false;
+      // });
+
+      // Navigator.pop(context);
+      // Navigator.push(
+      //     key.currentContext,
+      //     MaterialPageRoute(
+      //         builder: (context) =>
+      //             HomeScreen()));
+    }
+    //SignIn not success
+
+    else {
+      Fluttertoast.showToast(msg: 'Try again , Sign in Failed');
+    }
   }
 }

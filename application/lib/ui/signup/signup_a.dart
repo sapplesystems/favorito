@@ -184,8 +184,7 @@ class Signup_a extends StatelessWidget {
                                       onChanged: (newValue) {
                                         signUpProviderTrue.setChecked(newValue);
                                       },
-                                      controlAffinity: ListTileControlAffinity
-                                          .leading, //  <-- leading Checkbox
+                                      controlAffinity: ListTileControlAffinity.leading,
                                     ),
                                   ]),
                             ),

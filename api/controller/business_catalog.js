@@ -293,6 +293,7 @@ exports.run_query = (sql, param = false) => {
     }
 }
 
+
 /**
  * FETCH ALL PHOTOS OF BUSINESS CATALOG
  */

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:favorito_user/model/Chat/User.dart';
+import 'package:favorito_user/model/Chat/ChatUserList.dart';
+
 import 'package:favorito_user/ui/Chat/ChatScreen.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../../utils/Extentions.dart';
 
 class Chat extends StatelessWidget {
-  User userInfo;
+  ChatUser userInfo;
   Chat({Key key, @required this.userInfo});
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class Chat extends StatelessWidget {
           //   ..refresh(1);
           // Navigator.pushNamed(context, '/businessProfile');
         },
-        child: Text(userInfo.nickname.toString().capitalize(),
+        child: Text('userInfo.nickname.toString().capitalize()',
             style: Theme.of(context).textTheme.headline6.copyWith()),
       ),
     );

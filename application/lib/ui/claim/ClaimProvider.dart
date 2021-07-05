@@ -22,54 +22,46 @@ class ClaimProvider extends BaseProvider {
   TextEditingController ctrlMail = TextEditingController();
   StreamController<ErrorAnimationType> errorController = StreamController();
   ClaimInfo claimInfo = ClaimInfo();
-  // TextEditingController otpController;
+  TextEditingController otpController;
   bool isOtpSend = false;
   String currentUserId;
   SharedPreferences preferences;
   String verificationId;
-  String otpverify = "verify";
-  String emailverify = "verify";
+  String otpVerify = "verify";
+  String emailVerify = "verify";
   List<File> files = [];
   FilePickerResult result;
   bool needSubmit = false;
   bool isLoading = false;
   ClaimProvider() {
     ctrlMobile = TextEditingController();
-    // otpController = TextEditingController();
+    otpController = TextEditingController();
   }
   void initCall(context) async {
     preferences = await SharedPreferences.getInstance();
     currentUserId = preferences.getString("id");
-    if (currentUserId != null &&
-        currentUserId != "" &&
-        currentUserId.length > 5) {
-      otpverify = 'verified';
-    }
+      
+    if (preferences.getString('isPhoneVerified')=='1') 
+      otpVerify = 'verified';
+    
     notifyListeners();
   }
 
-  getOtpverify() {
-    currentUserId = preferences.getString("id");
-    var _v = currentUserId != null ? "verified" : "verify";
-    return _v;
-  }
 
   isLoadingSet(bool _val) {
     isLoading = _val;
     notifyListeners();
   }
 
-  getIsOtpSend() => isOtpSend ?? false;
   isOtpSendSet(bool _val) {
     isOtpSend = _val;
-    otpverify = 'verified';
+    // otpverify = 'verified';
     notifyListeners();
   }
 
   sendOtp(context) async {
     isLoadingSet(true);
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-      print("verified is called");
       AuthServices().signIn(authResult, RIKeys.josKeys21);
     };
 
@@ -104,21 +96,7 @@ class ClaimProvider extends BaseProvider {
     print("complete is called");
     isLoadingSet(true);
     AuthServices().signInWithOtp(v, verificationId, RIKeys.josKeys21);
-    // if (await Provider.of<UtilProvider>(context, listen: false)
-    //     .checkInternet()) {
-    //   await WebService.funClaimVerifyOtp({"otp": v.toString()}, context)
-    //       .then((value) {
-    //     BotToast.showText(text: value.message, duration: Duration(seconds: 5));
-    //     if (value.status == 'success') {
-    //       isOtpSend = false;
-    //       getClaimData(context);
-    //     } else if (value.status == 'fail') {
-    //       textEditingController.clear();
-    //       print("value.message:${value.message}");
-    //     }
-    //     notifyListeners();
-    //   });
-    // }
+    
   }
 
   void funSendEmailVerifyLink(context) async {
@@ -129,7 +107,7 @@ class ClaimProvider extends BaseProvider {
           BotToast.showText(
               text: value.message, duration: Duration(seconds: 5));
           if (value.status == 'success') {
-            emailverify = "";
+            // emailverify = "";
             notifyListeners();
             getClaimData(context);
           }
@@ -194,12 +172,16 @@ class ClaimProvider extends BaseProvider {
           ctrlMail.text = value?.result[0]?.businessEmail;
           ctrlMobile.text = value?.result[0]?.businessPhone;
           claimInfo = value;
-          if (claimInfo?.result[0]?.isPhoneVerified == 1) otpverify = "";
-          if (claimInfo?.result[0]?.isEmailVerified == 1) emailverify = "";
-          notifyListeners();
+          preferences.setString('isPhoneVerified', '${claimInfo?.result[0]?.isPhoneVerified}') ;
+          preferences.setString('isMailVerified', '${claimInfo?.result[0]?.isEmailVerified}') ;
+    print("aaaaaa:${claimInfo?.result[0]?.isPhoneVerified}");
+          otpVerify = claimInfo?.result[0]?.isPhoneVerified == 1?  "verified":"verify";
+          emailVerify = claimInfo?.result[0]?.isEmailVerified == 1?   "verified":"verify";
         }
+        if(otpVerify=="verified")isOtpSend=false;
       });
     }
+        notifyListeners();
   }
 
   setNeedSubmit(_val) {

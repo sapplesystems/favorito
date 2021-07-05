@@ -1,8 +1,9 @@
 var db = require('../config/db');
 var fs = require('fs');
 
+
 var dd_verbose = {
-    static_payment_method: ['Cash Only', 'Cash & Cards', 'Favorito Pay'],
+    static_payment_method: ['Cash Only', 'Cash & Cards'],
     static_price_range: ['\u{20B9}', '\u{20B9}\u{20B9}', '\u{20B9}\u{20B9}\u{20B9}', '\u{20B9}\u{20B9}\u{20B9}\u{20B9}']
 };
 var img_path = process.env.BASE_URL + ':' + process.env.APP_PORT + '/uploads/';

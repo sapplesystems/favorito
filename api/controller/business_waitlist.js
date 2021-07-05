@@ -53,6 +53,7 @@ exports.all_business_waitlist = async function(req, res, next) {
     }
 };
 
+
 var getSlots = async(business_id) => {
     return new Promise(async(resolve, reject) => {
         current_time = moment(new Date(), 'HHmmss').format('YYYY-MM-DD HH:MM:SS')
@@ -195,9 +196,9 @@ exports.save_setting = function(req, res, next) {
 
         var sql = "UPDATE business_waitlist_setting SET " + update_column + " WHERE business_id='" + business_id + "'";
         db.query(sql, function(err, result) {
-            if(result.affectedRows>0){
+            if (result.affectedRows > 0) {
                 return res.status(200).json({ status: 'success', message: 'Waitlist settings saved successfully.' });
-            }else{
+            } else {
                 return res.status(500).json({ status: 'error', message: 'Something went wrong.' });
             }
         });

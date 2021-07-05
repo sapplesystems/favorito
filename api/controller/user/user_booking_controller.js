@@ -143,7 +143,7 @@ exports.getBookingVerbose = async(req, res, next) => {
             return moment(elem.restriction_date).format('YYYY-MM-DD')
         })
 
-        for (let j = 0; j <= result_booking_setting[0].advance_booking_end_days; j++) {
+        for (let j = 0; j < result_booking_setting[0].advance_booking_end_days; j++) {
             date = moment().add(j, 'd').toDate()
 
             // checking the count from the date.
@@ -154,6 +154,9 @@ exports.getBookingVerbose = async(req, res, next) => {
             if (resultCheckCountDate[0].count < result_booking_setting[0].booking_per_day && !restrictedDates.includes(moment(date).format('YYYY-MM-DD'))) {
                 available_dates.push({ date: moment(date).format('YYYY-MM-DD'), day: getDayNameByDate(moment(date).format('YYYY-MM-DD')) })
             }
+        }
+        if (available_dates == '') {
+            return res.status(200).send({ status: 'success', message: 'No slots are available now', data: {} });
         }
         today_date = moment().format('YYYY-MM-DD')
 
@@ -293,6 +296,7 @@ exports.setBookTable = async function(req, res, next) {
                     if (error) {
                         return res.status(500).send({ status: "failed", message: "Something went wrong", error: error })
                     } else {
+                        console.log(data_to_insert);
                         return res.status(200).send({ status: "success", message: "Booking successfull" })
                     }
                 })
@@ -449,7 +453,7 @@ exports.getBookTable = async function(req, res, next) {
         return res.status(400).json({ status: 'failed', message: 'user_id is missing' });
     }
 
-    var sql = "SELECT b_b.id,b_b.name as name, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, IFNULL(AVG(b_r.rating),0) as avg_rating,b_m.business_phone,if(b_b.created_datetime < NOW() ,'completed', if(b_b.deleted_at IS NOT NULL,'cancelled','upcoming'))  as status, b_b.special_notes as special_notes, b_b.business_id,b_b.no_of_person,DATE_FORMAT(b_b.created_datetime , '%Y%m%d%H%i%s') as time,DATE_FORMAT(b_b.created_datetime , '%Y-%m-%d %H:%i:%s') AS created_datetime\n\
+    var sql = "SELECT b_b.id,b_b.name as name, (select occasion from occasion_master where id = b_b.occasion_id)as occasion, IF(b_b.user_id = b_b.business_id,1,0) as walk_in, b_m.business_name, IFNULL(AVG(b_r.rating),0) as avg_rating,b_m.business_phone,if(b_b.created_datetime < NOW() ,'completed', if(b_b.deleted_at IS NOT NULL,'cancelled','upcoming'))  as status, b_b.special_notes as special_notes, b_b.business_id,b_b.no_of_person,DATE_FORMAT(b_b.created_datetime , '%Y%m%d%H%i%s') as time,DATE_FORMAT(b_b.created_datetime , '%Y-%m-%d %H:%i:%s') AS created_datetime\n\
     FROM business_booking AS b_b \n\
     JOIN business_master AS b_m \n\
     LEFT JOIN business_ratings AS b_r \n\
@@ -534,20 +538,6 @@ getDayNameByDate = (date = false) => {
 }
 
 
-// exports.createSlotWithDate = async(result_booking_setting, date, advance_booking_hours, isToday) => {
-//     return new Promise(async(resolve, reject) => {
-//         // create object with date and slots of that date
-//         temp_slot_detail = {}
-//         date_1 = moment(date).format('YYYY-MM-DD');
-//         // creating slot 
-//         const get_slot = await exports.createSlots(result_booking_setting[0].start_time, result_booking_setting[0].end_time, result_booking_setting[0].slot_length, advance_booking_hours, isToday)
-//         temp_slot_detail.date = date_1
-//         temp_slot_detail.slots = get_slot
-//         resolve(temp_slot_detail)
-//     })
-
-// }
-
 exports.createSlotWithDate = async(result_booking_setting, date, advance_booking_hours, isToday) => {
     return new Promise(async(resolve, reject) => {
         // create object with date and slots of that date
@@ -596,6 +586,7 @@ exports.createSlots = async function(starttime, endtime, interval, advance_booki
         current_time = moment()
 
         start_time = moment(`${moment(current_time).format('YYYY-MM-DD')} ${start_time}`)
+            // if it is today then advance_booking_hours has the value otherwise null
         if (advance_booking_hours) {
             start_time = moment(start_time, 'HH:mm').add(advance_booking_hours, 'minutes')
         }
@@ -634,6 +625,7 @@ exports.createSlots = async function(starttime, endtime, interval, advance_booki
         } else {
             // select query to get the slot lenght
             array_slots_final = [...array_slots]
+
         }
 
         resolve(array_slots_final)

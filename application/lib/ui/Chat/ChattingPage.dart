@@ -1,3 +1,4 @@
+import 'package:Favorito/model/Chat/ConnectionData.dart';
 import 'package:Favorito/model/Chat/User.dart';
 import 'package:Favorito/ui/Chat/ChatScreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../utils/Extentions.dart';
 
 class Chat extends StatelessWidget {
-  User userInfo;
+  ConnectionData userInfo;
   Chat({Key key, @required this.userInfo});
   @override
   Widget build(BuildContext context) {

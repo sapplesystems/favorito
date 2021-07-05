@@ -35,97 +35,99 @@ exports.getCaruoselData = async function(req, res) {
 }
 
 exports.getUserReview = async function(req, res, next) {
-    // try {
-    business_id = null
-    if (!req.userdata.id) {
-        return res.status(400).json({ status: 'error', message: 'user_id is missing.' });
-    } else {
-        user_id = req.userdata.id
-    }
-    if (!req.body.business_id) {
-        return res.status(400).json({ status: 'error', message: 'business_id is missing.' });
-    } else {
-        business_id = req.body.business_id
-    }
-    if (req.body.page_size == null || req.body.page_size == undefined || req.body.page_size == '' || req.body.page_size == 0 || req.body.page_size == 1) {
-        var data_from = 0;
-    } else {
-        var num = parseInt(req.body.page_size.trim());
-        var data_from = (num - 1) * 8;
-    }
-    if (business_id) {
-        var sql = `SELECT br.id as root_id, br.user_id, if(br.user_id = '${req.userdata.id}',1,0) as self,br.business_id,br.reviews,br.parent_id,u.full_name as name,if(u.photo IS NULL or u.photo = '(NULL)' , null ,concat('${img_path}' ,u.photo) )  as photo FROM business_reviews as br\n\
+    try {
+        business_id = null
+        if (!req.userdata.id) {
+            return res.status(400).json({ status: 'error', message: 'user_id is missing.' });
+        } else {
+            user_id = req.userdata.id
+        }
+        if (!req.body.business_id) {
+            return res.status(400).json({ status: 'error', message: 'business_id is missing.' });
+        } else {
+            business_id = req.body.business_id
+        }
+        if (req.body.page_size == null || req.body.page_size == undefined || req.body.page_size == '' || req.body.page_size == 0 || req.body.page_size == 1) {
+            var data_from = 0;
+        } else {
+            var num = parseInt(req.body.page_size.trim());
+            var data_from = (num - 1) * 8;
+        }
+        if (business_id) {
+
+            // fetching the all the reviews
+            var sql = `SELECT br.id as root_id, br.user_id, if(br.user_id = '${req.userdata.id}',1,0) as self,br.business_id,br.reviews,br.parent_id,u.full_name as name,if(u.photo IS NULL or u.photo = '(NULL)' , null ,concat('${img_path}' ,u.photo) )  as photo FROM business_reviews as br\n\
             left join users as u on u.id = br.user_id WHERE b_to_u = 0 AND parent_id = 0 and business_id = '${business_id}' order by root_id desc limit 8 offset ${data_from}`
-    }
+        }
 
-    var result = await exports.run_query(sql)
+        var result = await exports.run_query(sql)
 
 
-    if (result.length > 0) {
-        for (let i = 0; i < result.length; i++) {
+        if (result.length > 0) {
+            for (let i = 0; i < result.length; i++) {
+                // for the latest review.
+                var sqlReviewReplies = "SELECT id, reviews, parent_id, b_to_u,  DATE_FORMAT(created_at,'%d-%b-%Y %H:%i:%s') AS created_at FROM `business_reviews` WHERE id>='" + result[i].root_id + "' AND user_id='" + result[i].user_id + "' and business_id ='" + result[i].business_id + "' order by parent_id";
+                var resultReviewReplies = await exports.run_query(sqlReviewReplies)
+                result[i].user_review = null
+                result[i].created_at = null
+                result[i].business_date = null
+                result[i].business_review = null
 
-            // for the latest review.
-            var sqlReviewReplies = "SELECT id, reviews, parent_id, b_to_u,  DATE_FORMAT(created_at,'%d-%b-%Y %H:%i:%s') AS created_at FROM `business_reviews` WHERE id>='" + result[i].root_id + "' AND user_id='" + result[i].user_id + "' and business_id ='" + result[i].business_id + "' order by parent_id";
-            var resultReviewReplies = await exports.run_query(sqlReviewReplies)
-            result[i].user_review = null
-            result[i].created_at = null
-            result[i].business_date = null
-            result[i].business_review = null
-
-            if (resultReviewReplies.length > 0) {
-                final_result = []
-                var start_id = result[i].root_id
-                final_result.push(resultReviewReplies[0])
-                resultReviewReplies.forEach(element => {
-                    resultReviewReplies.forEach((value, index, arr) => {
-                        if (value.parent_id == start_id) {
-                            final_result.push(value)
-                            start_id = value.id
+                if (resultReviewReplies.length > 0) {
+                    final_result = []
+                    var start_id = result[i].root_id
+                    final_result.push(resultReviewReplies[0])
+                    resultReviewReplies.forEach(element => {
+                        resultReviewReplies.forEach((value, index, arr) => {
+                            if (value.parent_id == start_id) {
+                                final_result.push(value)
+                                start_id = value.id
+                            }
+                        })
+                    });
+                    let ur = 0
+                    let br = 0
+                    for (let p = final_result.length - 1; p >= 0; p--) {
+                        if (final_result[p].b_to_u == 1 && br != 1) {
+                            result[i].business_review = final_result[p].reviews
+                            result[i].business_date = final_result[p].created_at
+                            br = 1
                         }
-                    })
-                });
-                let ur = 0
-                let br = 0
-                for (let p = final_result.length - 1; p >= 0; p--) {
-                    if (final_result[p].b_to_u == 1) {
-                        result[i].business_review = final_result[p].reviews
-                        result[i].business_date = final_result[p].created_at
-                        br = 1
-                    }
-                    if (final_result[p].b_to_u == 0) {
-                        result[i].user_review = final_result[p].reviews
-                        result[i].created_at = final_result[p].created_at
-                        ur = 1
-                    }
+                        if (final_result[p].b_to_u == 0 && ur != 1) {
+                            result[i].user_review = final_result[p].reviews
+                            result[i].created_at = final_result[p].created_at
+                            ur = 1
+                        }
 
-                    if (br == 1 && ur == 1) {
-                        break
+                        if (br == 1 && ur == 1) {
+                            break
+                        }
                     }
                 }
+
+                var sqlcountReview = "SELECT count(id) as count FROM `business_reviews` WHERE id>='" + result[i].root_id + "' AND user_id='" + result[i].user_id + "' and business_id ='" + result[i].business_id + "'";
+                var resultsqlcountReview = await exports.run_query(sqlcountReview)
+
+                sql_rating = `SELECT rating from business_ratings where business_id = '${result[i].business_id}' and user_id = '${result[i].user_id}' limit 1`
+                result_rating = await exports.run_query(sql_rating)
+                if (result_rating != '') {
+                    result[i].rating = result_rating[0].rating
+                } else {
+                    result[i].rating = null
+                }
+                result[i].total_reviews = resultsqlcountReview[0].count
             }
-
-            var sqlcountReview = "SELECT count(id) as count FROM `business_reviews` WHERE id>='" + result[i].root_id + "' AND user_id='" + result[i].user_id + "' and business_id ='" + result[i].business_id + "'";
-            var resultsqlcountReview = await exports.run_query(sqlcountReview)
-
-            sql_rating = `SELECT rating from business_ratings where business_id = '${result[i].business_id}' and user_id = '${result[i].user_id}' limit 1`
-            result_rating = await exports.run_query(sql_rating)
-            if (result_rating != '') {
-                result[i].rating = result_rating[0].rating
-            } else {
-                result[i].rating = null
-            }
-
-            result[i].total_reviews = resultsqlcountReview[0].count
         }
-    }
 
-    if (result == '') {
-        return res.status(200).send({ status: 'success', message: 'No review found', data: result })
+        if (result == '') {
+            return res.status(200).send({ status: 'success', message: 'No review found', data: result })
+        }
+        // setTimeout(() => {
+        // }, 2000);
+        return res.status(200).send({ status: 'success', message: 'success', data: result })
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: 'Something went wrong.', error })
     }
-    return res.status(200).send({ status: 'success', message: 'success', data: result })
-        // } catch (error) {
-        // res.status(500).json({ status: 'error', message: 'Something went wrong.', error })
-        // }
 }
 
 exports.setBusinessRating = async(req, res) => {

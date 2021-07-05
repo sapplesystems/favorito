@@ -2,6 +2,7 @@ import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/chat/ChatProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileDetail.dart';
@@ -12,7 +13,6 @@ import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import '../../utils/MyColors.dart';
 
 class Profile extends StatelessWidget {
@@ -145,8 +145,10 @@ class Profile extends StatelessWidget {
           case 'Logout':
             {
               try {
+                context.read<ChatProvider>().preferences.clear();
                 Provider.of<UserAddressProvider>(context, listen: false)
                     .allClear();
+                    
               } catch (e) {} finally {
                 Prefs().clear();
               }

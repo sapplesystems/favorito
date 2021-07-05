@@ -321,7 +321,7 @@ class _dashboardState extends State<dashboard> {
       photoUrl = va?.photo;
       is_profile_completed = va?.isProfileCompleted?.toString() ?? '';
       is_information_completed = va?.isInformationCompleted?.toString() ?? '';
-      is_phone_verified = va?.isPhoneVerified?.toString() ?? '';
+      preferences.setString('isPhoneVerified', '${va?.isPhoneVerified}') ;
       is_email_verified = va?.isEmailVerified?.toString() ?? '';
       is_verified = va?.isVerified.toString() ?? '';
       check_ins = va?.checkIns.toString() ?? '';

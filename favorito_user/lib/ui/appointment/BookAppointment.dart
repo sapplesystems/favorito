@@ -36,6 +36,7 @@ class BookAppointment extends StatelessWidget {
     }
     return SafeArea(
       child: Scaffold(
+        key: RIKeys.josKeys30,
         body: Column(children: [
           Row(children: [
             IconButton(
@@ -89,7 +90,7 @@ class BookAppointment extends StatelessWidget {
                                 BorderRadius.all(Radius.circular(8.0)))),
                         margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                         child: DropdownButton<ServiceModel>(
-                          value: data.servicesList[data.selectedServiceSet()],
+                          value: data.servicesList[data.selectedServiceSet()]??"",
                           isExpanded: true,
                           hint: Padding(
                             padding: EdgeInsets.symmetric(horizontal: sm.w(2)),
@@ -111,7 +112,7 @@ class BookAppointment extends StatelessWidget {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: sm.w(2)),
                                     child: Text(
-                                      _va.serviceName,
+                                      _va.serviceName??"",
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6
@@ -124,23 +125,19 @@ class BookAppointment extends StatelessWidget {
                                     )));
                           })?.toList(),
 
-                          //     selectedItemBuilder: (BuildContext context) {
-                          //   return vaTrue.servicesList.map<Widget>((ServiceModel item) {
-                          //     return Text(item.serviceName+"d");
-                          //   }).toList();
-                          // },
-                          //
+                          
                           onChanged: (ServiceModel value) {
                             if (value.status == 1)
                               vaTrue.setSelectedService(value, context);
                             else {
+                            if(value.serviceName!="Select any")
                               BotToast.showText(
                                   text:
                                       'selected service is not availeble now! Sorry for inconvenience',
                                   duration: Duration(seconds: 3));
                               data.resetServicesId();
                             }
-                          },
+                          }
                         ),
                       ),
                     ),
@@ -162,7 +159,7 @@ class BookAppointment extends StatelessWidget {
                           margin: EdgeInsets.symmetric(horizontal: sm.w(10)),
                           child: DropdownButton<Person>(
                             isExpanded: true,
-                            value: data.personList.first,
+                            value: data.personList[data.personList.indexWhere((element) => element.id==data.selectedPersonId)==-1?0:data.personList.indexWhere((element) => element.id==data.selectedPersonId)],
                             hint: Padding(
                               padding:
                                   EdgeInsets.symmetric(horizontal: sm.w(2)),
@@ -193,107 +190,118 @@ class BookAppointment extends StatelessWidget {
                                 ),
                               );
                             })?.toList(),
-                            onChanged: (Person value) {
-                              data.setSelectedServicePerson(value);
-                            },
-                          ),
+                            onChanged: (Person value) =>
+                              data.setSelectedServicePerson(value)),
                         ),
                       ),
                     ),
-                    Container(
-                      height: 80,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          for (int _i = 0;
-                              _i < data.advancebookingDates.length;
-                              _i++)
-                            Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: sm.h(1)),
-                              child: InkWell(
-                                onTap: () {
-                                  data.selectedDateChange(_i, context,
-                                      data.advancebookingDates[_i]);
-                                },
-                                child: Center(
-                                    child: Neumorphic(
-                                  style: NeumorphicStyle(
-                                    shape: NeumorphicShape.convex,
-                                    lightSource: LightSource.top,
-                                    color: !NeumorphicTheme.isUsingDark(context)
-                                        ? Colors.white
-                                        : null,
-                                    boxShape: NeumorphicBoxShape.roundRect(
-                                        BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                  ),
-                                  child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: sm.w(4)),
-                                      child: Text(
-                                          dateFormat8.format(
-                                              data.advancebookingDates[_i]),
-                                          style: TextStyle(
-                                              fontSize: sm.h(2),
-                                              color:
-                                                  data.selectedDateIndex == _i
-                                                      ? myRed
-                                                      : Colors.grey[600]))),
-                                  padding: EdgeInsets.symmetric(vertical: 12),
-                                )),
+                    
+                    Visibility(
+                      visible: data.selectedServiceId != 0,
+                      child: Container(
+                        height: 80,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            for (int _i = 0;
+                                _i < data.advancebookingDates.length;
+                                _i++)
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: sm.h(1)),
+                                child: InkWell(
+                                  onTap: () =>data.selectedDateChange(_i, context,
+                                        data.advancebookingDates[_i]),
+                                  child: Center(
+                                      child: Neumorphic(
+                                    style: NeumorphicStyle(
+                                      shape: NeumorphicShape.convex,
+                                      lightSource: LightSource.top,
+                                      color: !NeumorphicTheme.isUsingDark(context)
+                                          ? Colors.white
+                                          : null,
+                                      boxShape: NeumorphicBoxShape.roundRect(
+                                          BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                    ),
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: sm.w(4)),
+                                        child: Text(
+                                            dateFormat8.format(
+                                                data.advancebookingDates[_i]),
+                                            style: TextStyle(
+                                                fontSize: sm.h(2),
+                                                color:
+                                                    '${data.selectedDateIndex}' == '${_i}'
+                                                        ? myRed
+                                                        :
+                                                         Colors.grey[600]))),
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                  )),
+                                ),
                               ),
-                            ),
-                        ],
+                          ]),
                       ),
                     ),
-                    SizedBox(
-                      height: 60,
-                      child:
-                          ListView(scrollDirection: Axis.horizontal, children: [
-                        for (int _i = 0; _i < data.slots.length; _i++)
-                          InkWell(
-                            onTap: () {
-                                  print("qqqqqqqqqqqq");
-                              data.selectedTimeChange(_i);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 2, vertical: 8),
-                              child: Neumorphic(
-                                style: NeumorphicStyle(
-                                    shape: NeumorphicShape.convex,
-                                    // depth: 8,
-                                    lightSource: LightSource.top,
-                                    color: !NeumorphicTheme.isUsingDark(context)
-                                        ? Colors.white
-                                        : null,
-                                    boxShape: NeumorphicBoxShape.roundRect(
-                                        BorderRadius.all(
-                                            Radius.circular(8.0)))),
-                                margin:
-                                    EdgeInsets.symmetric(horizontal: sm.w(2)),
-                                child: Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: sm.w(4)),
-                                    child: Text(data.slots[_i].startTime,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(
-                                                color:
-                                                    data.selectedTimeIndex == _i
-                                                        ? myRed
-                                                        : Colors.grey,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400)),
+                    Visibility(
+
+                      visible: data.selectedServiceId != 0,
+                      child: SizedBox(
+                        height: 60,
+                        child:data.slots.length!=0?
+                            ListView(scrollDirection: Axis.horizontal, children: [
+                          for (int _i = 0; _i < data.slots.length; _i++)
+                            InkWell(
+                              onTap: () {
+                                data.selectedTimeChange(_i);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 2, vertical: 8),
+                                child: Neumorphic(
+                                  style: NeumorphicStyle(
+                                      shape: NeumorphicShape.convex,
+                                      // depth: 8,
+                                      lightSource: LightSource.top,
+                                      color: !NeumorphicTheme.isUsingDark(context)
+                                          ? Colors.white
+                                          : null,
+                                      boxShape: NeumorphicBoxShape.roundRect(
+                                          BorderRadius.all(
+                                              Radius.circular(8.0)))),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: sm.w(2)),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: sm.w(4)),
+                                      child: Text(data.slots[_i].startTime,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(
+                                                  color:
+                                                      data.selectedTimeIndex == _i
+                                                          ? myRed
+                                                          : Colors.grey,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400)),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                      ]),
+                        ]):Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Slots not available",
+                          textAlign: TextAlign.center,
+                          style:Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(color: myGrey,fontSize: 18)),
+                        ),
+                      ),
                     ),
                     Padding(
                         padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
@@ -336,11 +344,14 @@ class BookAppointment extends StatelessWidget {
                                       hint: "Enter Mobile",
                                       maxLines: 1,
                                       maxlen: 10,
+                                      
                                       myregex: emailAndMobileRegex,
                                       prefixIcon: 'phone',
                                       keyboardSet: TextInputType.phone,
                                       error: vaTrue.acces[1].error,
                                       valid: true,
+                                      myOnChanged: (val)=>vaTrue.checkMobile(val),
+                                        
                                       security: false),
                                 ),
                                 Padding(
@@ -380,7 +391,9 @@ class BookAppointment extends StatelessWidget {
                               margin:
                                   EdgeInsets.symmetric(horizontal: sm.w(10)),
                               onPressed: () {
-                                vaTrue.funSubmitBooking(context);
+                                bool _va=emailAndMobileRegex.hasMatch(vaTrue.acces[1].controller.text);
+                                if(_va)vaTrue.funSubmitBooking(context);
+                                else BotToast.showText(text: 'Invalid mobile number');
                               },
                               padding: EdgeInsets.symmetric(
                                   horizontal: 14, vertical: 16),
@@ -392,6 +405,7 @@ class BookAppointment extends StatelessWidget {
                               ),
                             ),
                     ),
+                    
                     Visibility(
                       visible: data.abletoDelete,
                       child: Container(
@@ -418,6 +432,8 @@ class BookAppointment extends StatelessWidget {
                                 .copyWith(color: myRed, fontSize: 16)),
                       ),
                     )
+                 
+                 
                   ],
                 );
               },

@@ -360,22 +360,22 @@ class AppoinmentProvider extends BaseProvider {
             firstDate: DateTime.now(),
             lastDate: DateTime(2022))
         .then((_val) {
-      showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-              data:
-                  MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-              child: child);
-        },
-      ).then((value) {
+      // showTimePicker(
+      //   context: context,
+      //   initialTime: TimeOfDay.now(),
+      //   builder: (BuildContext context, Widget child) {
+      //     return MediaQuery(
+      //         data:
+      //             MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+      //         child: child);
+      //   },
+      // ).then((value) {
         String date = dateFormat1.format(_val);
-        String time =
-            localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
-        print(date + " " + time);
-        controller[3].text = date + " " + time;
-      });
+        // String time =
+        //     localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
+        // print(date + " " + time);
+        controller[3].text = date;
+      // });
     });
     notifyListeners();
   }
@@ -394,22 +394,23 @@ class AppoinmentProvider extends BaseProvider {
             firstDate: DateTime.now(),
             lastDate: DateTime(2022))
         .then((_val) {
-      showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child,
-          );
-        },
-      ).then((value) {
+      // showTimePicker(
+      //   context: context,
+      //   initialTime: TimeOfDay.now(),
+      //   builder: (BuildContext context, Widget child) {
+      //     return MediaQuery(
+      //       data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+      //       child: child,
+      //     );
+      //   },
+      // ).then((value) {
         String date = dateFormat1.format(_val);
-        String time =
-            localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
-        print(date + " " + time);
-        controller[2].text = date + " " + time;
-      });
+        // String time =
+        //     localizations.formatTimeOfDay(value, alwaysUse24HourFormat: true);
+        // print(date + " " + time);
+        // controller[2].text = date + " " + time;
+        controller[2].text = date;
+      // });
     });
     notifyListeners();
   }

@@ -219,11 +219,11 @@ class BusinessProfile extends StatelessWidget {
                           padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                           child: Text(
                               "\u{20B9} : " 
-                              // +
-                              //         vatrue
-                              //             .getBusinessProfileData()
-                              //             ?.priceRange ??
-                              //     ""
+                              +
+                                      vatrue
+                                          .getBusinessProfileData()
+                                          ?.priceRange ??
+                                  ""
                               ,
                               style: Theme.of(context)
                                   .textTheme

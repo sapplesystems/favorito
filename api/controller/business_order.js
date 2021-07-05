@@ -270,7 +270,6 @@ exports.orderItemDetail = function(business_id, order_id) {
                         FROM business_order_detail \n\
                         WHERE business_id='" + business_id + "' AND order_id='" + order_id + "'";
             db.query(sql, function(err, result) {
-                console.log(result)
                 resolve(result);
             });
         });
