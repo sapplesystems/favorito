@@ -50,7 +50,8 @@ class MyTheme {
           textTheme: TextTheme(
               headline1: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 30,
+                  fontSize: 35,
+                  letterSpacing: 1.2,
                   fontFamily: 'Gilroy-ExtraBold',
                   color: Colors.black)),
           color: myBackGround,

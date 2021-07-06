@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/component/card1.dart';
 import 'package:Favorito/component/card2.dart';
-import 'package:Favorito/component/cart3.dart';
+import 'package:Favorito/component/card3.dart';
 import 'package:Favorito/component/rowWithTextNButton.dart';
 import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/model/dashModel.dart';
@@ -76,7 +76,7 @@ class _dashboardState extends State<dashboard> {
             onRefresh: () => calldashBoard(context),
             backgroundColor: Colors.amber,
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
                 child: ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: sm.h(2)),
@@ -161,7 +161,7 @@ class _dashboardState extends State<dashboard> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: sm.h(2)),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         card1(
                             checkins: check_ins,
@@ -187,9 +187,9 @@ class _dashboardState extends State<dashboard> {
                     ),
                   ),
                   Padding(
-                      padding: EdgeInsets.symmetric(vertical: sm.h(2)),
+                      padding: EdgeInsets.only(bottom: sm.h(4)),
                       child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             InkWell(
                                 onTap: () {
@@ -224,7 +224,7 @@ class _dashboardState extends State<dashboard> {
                     )
                   ]),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -244,6 +244,9 @@ class _dashboardState extends State<dashboard> {
                       () {
                     Navigator.of(context).pushNamed('/notifications');
                   }),
+                  SizedBox(
+                    height: 20,
+                  )
                 ])),
           )),
     );
@@ -252,16 +255,23 @@ class _dashboardState extends State<dashboard> {
   Widget rowCard(String title, String subtitle, Function function) => InkWell(
         onTap: function,
         child: Container(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            margin: EdgeInsets.symmetric(vertical: 12),
-            decoration: bd3,
-            child: ListTile(
-                title: Text(title ?? '',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Gilroy-Medium')),
-                subtitle: Text(subtitle ?? ''))),
+            //padding: EdgeInsets.symmetric(vertical: 6),
+            margin: EdgeInsets.symmetric(vertical: 5),
+            //decoration: bd3,
+            child: Card(
+              elevation: 5,
+              shadowColor: Colors.grey.withOpacity(0.2),
+              child: ListTile(
+                  title: Text(title ?? '',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Gilroy-Medium')),
+                  subtitle: Text(
+                    subtitle ?? '',
+                    style: TextStyle(fontSize: 14),
+                  )),
+            )),
       );
 
   Widget credit(String title, String ammount, String ico, bool val) {

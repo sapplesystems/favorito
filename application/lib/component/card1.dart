@@ -38,11 +38,12 @@ class _card1State extends State<card1> {
     return InkWell(
       onTap: widget.function,
       child: Card(
+        elevation: 8,
+        shadowColor: Colors.grey.withOpacity(0.2),
         child: Container(
-          width: sm.w(42),
-          height: sm.w(42),
-          padding: EdgeInsets.only(
-              bottom: sm.h(2), right: sm.h(3), top: sm.h(1), left: sm.h(2)),
+          width: sm.w(40),
+          height: sm.h(20),
+          padding: EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(6)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

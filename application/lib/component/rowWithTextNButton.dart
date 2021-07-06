@@ -21,12 +21,12 @@ class rowWithTextNButton extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10))),
       padding: EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(2)),
       margin: EdgeInsets.symmetric(
-        vertical: sm.h(1),
+        vertical: sm.h(0.7),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(txt1, style: TextStyle(color: myGrey)),
+          Text(txt1, style: TextStyle(color: myGrey, fontSize: 16)),
           InkWell(
             onTap: function,
             child: Visibility(
