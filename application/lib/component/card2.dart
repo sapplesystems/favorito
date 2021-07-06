@@ -22,11 +22,12 @@ class _card2State extends State<card2> {
         child: Container(
           width: sm.w(42),
           height: sm.w(42),
-          padding: EdgeInsets.all(sm.h(1)),
+          padding: EdgeInsets.symmetric(vertical: sm.h(1)),
           child: Column(
             children: [
               Text(
                 "Ratings",
+                //textAlign: TextAlign.left,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 30,

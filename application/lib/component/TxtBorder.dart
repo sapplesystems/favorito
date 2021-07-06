@@ -1,3 +1,4 @@
+import 'package:Favorito/utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class TxtBorder extends StatelessWidget {
@@ -16,7 +17,7 @@ class TxtBorder extends StatelessWidget {
       child: Text(
         txt,
         textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.red),
+        style: TextStyle(color: myRed),
       ),
     );
   }

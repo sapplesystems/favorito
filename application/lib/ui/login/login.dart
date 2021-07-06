@@ -53,13 +53,14 @@ class _LoginState extends State<Login> {
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1))),
       Container(
-        margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+        margin: EdgeInsets.only(left: sm.w(6), right: sm.w(6), bottom: 32.0),
         child: Stack(children: [
           Card(
             margin: EdgeInsets.only(top: sm.h(10)),
-            elevation: 5,
+            elevation: 8,
+            shadowColor: Colors.grey.withOpacity(0.2),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -126,12 +127,16 @@ class _LoginState extends State<Login> {
         ]),
       ),
       Padding(
-          padding: EdgeInsets.only(top: 16, left: sm.w(16), right: sm.w(16)),
+          padding:
+              EdgeInsets.only(top: sm.h(4), left: sm.w(20), right: sm.w(20)),
           child: RoundedButton(
-              clicker: () => funClick(), clr: Colors.red, title: "Login")),
+            clicker: () => funClick(),
+            clr: Colors.red,
+            title: "Login",
+          )),
       Center(
         child: Padding(
-          padding: EdgeInsets.only(top: sm.h(6)),
+          padding: EdgeInsets.only(top: sm.h(4)),
           child: Text(
             "Dont have account yet?",
             style: TextStyle(fontWeight: FontWeight.w200, fontSize: 16),
@@ -140,7 +145,7 @@ class _LoginState extends State<Login> {
       ),
       Center(
         child: Padding(
-          padding: EdgeInsets.only(top: sm.h(1)),
+          padding: EdgeInsets.only(top: sm.h(1), bottom: sm.h(4)),
           child: InkWell(
             onTap: () {
               SignUpProvider?.categoryKey?.currentState
@@ -161,14 +166,53 @@ class _LoginState extends State<Login> {
       ),
       Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Text(
-              "By continuing, you agree to Favorito's Terms of Service and acknowledge Favorito's \nPrivacy Policy.",
+          child: RichText(
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: "Roboto",
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.32)))
+              text: TextSpan(
+                text: "By continuing, you agree to Favorito's ",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontFamily: "Roboto",
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.32),
+                children: [
+                  TextSpan(
+                      text: "Terms of Service ",
+                      style: TextStyle(
+                          color: myRed,
+                          fontSize: 14,
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.32)),
+                  TextSpan(
+                      text: "and acknowledge Favorito's \n",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.32)),
+                  TextSpan(
+                      text: "Privacy Policy.",
+                      style: TextStyle(
+                          color: myRed,
+                          fontSize: 14,
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.32))
+                ],
+              ))
+
+          //  Text(
+          //     "By continuing, you agree to Favorito's Terms of Service and acknowledge Favorito's \nPrivacy Policy.",
+          //     textAlign: TextAlign.center,
+          //     style: TextStyle(
+          //         fontSize: 14,
+          //         fontFamily: "Roboto",
+          //         fontWeight: FontWeight.w400,
+          //         letterSpacing: 0.32))
+          )
     ]));
   }
 

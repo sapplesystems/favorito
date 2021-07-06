@@ -35,19 +35,24 @@ class MyTheme {
       fontFamily: fontfamily,
       textTheme: TextTheme(
           headline1:
-              TextStyle(fontFamily: ' Gilroy-ExtraBold', color: Colors.black),
-          headline2:
-              TextStyle(fontFamily: ' Gilroy-Heavy', color: Colors.black),
-          headline3: TextStyle(fontFamily: ' Gilroy-Bold', color: Colors.black),
+              TextStyle(fontFamily: 'Gilroy-ExtraBold', color: Colors.black),
+          headline2: TextStyle(fontFamily: 'Gilroy-Heavy', color: Colors.black),
+          headline3: TextStyle(fontFamily: 'Gilroy-Bold', color: Colors.black),
           headline4:
-              TextStyle(fontFamily: ' Gilroy-Medium', color: Colors.black),
+              TextStyle(fontFamily: 'Gilroy-Medium', color: Colors.black),
           headline5:
-              TextStyle(fontFamily: ' Gilroy-Regular', color: Colors.black),
+              TextStyle(fontFamily: 'Gilroy-Regular', color: Colors.black),
           headline6:
-              TextStyle(fontFamily: ' Gilroy-Light', color: Colors.black)),
+              TextStyle(fontFamily: 'Gilroy-Light', color: Colors.black)),
       primaryColor: myRed,
       accentColor: myRedLight,
       appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+              headline1: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 30,
+                  fontFamily: 'Gilroy-ExtraBold',
+                  color: Colors.black)),
           color: myBackGround,
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black)),

@@ -33,7 +33,7 @@ class card3 extends StatelessWidget {
                 textAlign: TextAlign.start,
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 30,
+                    fontSize: 45,
                     fontFamily: "Gilroy-Medium",
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.60)),
