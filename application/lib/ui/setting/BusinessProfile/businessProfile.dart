@@ -40,7 +40,7 @@ class BusinessProfile extends StatelessWidget {
         isFirst = false;
       }
       return WillPopScope(
-        onWillPop: ()=>popMethod(data),
+        onWillPop: () => popMethod(data),
         child: RefreshIndicator(
           onRefresh: () async {
             data.getProfileData(context);
@@ -62,14 +62,16 @@ class BusinessProfile extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 26,
+                            fontSize: 35,
                             fontFamily: 'Gilroy-Bold',
-                            letterSpacing: .2)),
+                            letterSpacing: 1.2)),
                     Container(
                       margin: EdgeInsets.only(
-                          left: 16.0, right: 16.0, bottom: 32.0),
+                          left: sm.w(6), right: sm.w(6), bottom: 32.0),
                       child: Stack(children: [
                         Card(
+                          elevation: 8,
+                          shadowColor: Colors.grey.withOpacity(0.2),
                           margin: EdgeInsets.only(top: sm.h(10)),
                           child: Builder(
                             builder: (context) => Form(
@@ -81,7 +83,10 @@ class BusinessProfile extends StatelessWidget {
                                     SizedBox(height: sm.h(4)),
                                     Padding(
                                         padding: EdgeInsets.only(
-                                            top: sm.h(5), bottom: sm.h(2)),
+                                            top: sm.h(5),
+                                            bottom: sm.h(2),
+                                            left: sm.w(2),
+                                            right: sm.w(2)),
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(20.0),
@@ -510,6 +515,8 @@ class BusinessProfile extends StatelessWidget {
                             left: sm.w(8),
                             right: sm.w(8),
                             child: Card(
+                              elevation: 8,
+                              shadowColor: Colors.grey.withOpacity(0.2),
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: sm.w(0), vertical: sm.h(4)),
@@ -518,7 +525,7 @@ class BusinessProfile extends StatelessWidget {
                                     "Your Business ID",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 13,
+                                        fontSize: 16,
                                         fontFamily: 'Gilroy-Medium'),
                                   ),
                                   SizedBox(height: 4),
@@ -526,7 +533,7 @@ class BusinessProfile extends StatelessWidget {
                                     business_id,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 16,
+                                        fontSize: 25,
                                         letterSpacing: 1.2,
                                         fontFamily: 'Gilroy-Medium'),
                                   )

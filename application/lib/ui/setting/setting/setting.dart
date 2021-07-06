@@ -31,13 +31,10 @@ class Setting extends StatelessWidget {
             title: Text("Settings",
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 30,
+                    fontSize: 35,
                     fontFamily: 'Gilroy-ExtraBold',
-                    letterSpacing: .2)),
+                    letterSpacing: 1.2)),
             centerTitle: true,
-            iconTheme: IconThemeData(
-              color: Colors.black, //change your color here
-            ),
             elevation: 0,
           ),
           body: Consumer<SettingProvider>(builder: (context, data, child) {
@@ -55,8 +52,11 @@ class Setting extends StatelessWidget {
               child: ListView(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 20, vertical: sm.h(0.5)),
                     child: Card(
+                      elevation: 5,
+                      shadowColor: Colors.grey.withOpacity(0.2),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: ListTile(
@@ -73,9 +73,9 @@ class Setting extends StatelessWidget {
                             style: TextStyle(
                                 wordSpacing: 2,
                                 fontFamily: 'Gilroy-Medium',
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.w600,
                                 letterSpacing: .5,
-                                fontSize: 18),
+                                fontSize: 20),
                           ),
                           subtitle: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -89,7 +89,7 @@ class Setting extends StatelessWidget {
                               maxFontSize: 14,
                               style: TextStyle(
                                   wordSpacing: 2,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   color: Colors.black),
                             ),
                           ),
@@ -99,8 +99,10 @@ class Setting extends StatelessWidget {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                        EdgeInsets.only(left: 20, right: 20, bottom: sm.h(2)),
                     child: Card(
+                      elevation: 5,
+                      shadowColor: Colors.grey.withOpacity(0.2),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -142,7 +144,9 @@ class Setting extends StatelessWidget {
                                         ico: data?.icon[i],
                                         clicker: () {
                                           if (i == 2)
-                                          context.read<ClaimProvider>().getClaimData(context);
+                                            context
+                                                .read<ClaimProvider>()
+                                                .getClaimData(context);
                                           if (i == 1)
                                             context
                                                 .read<businessInfoProvider>()
