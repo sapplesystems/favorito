@@ -67,7 +67,7 @@ class BusinessProfile extends StatelessWidget {
                             letterSpacing: 1.2)),
                     Container(
                       margin: EdgeInsets.only(
-                          left: sm.w(6), right: sm.w(6), bottom: 32.0),
+                          left: sm.w(6), right: sm.w(6), bottom: sm.h(1)),
                       child: Stack(children: [
                         Card(
                           elevation: 8,
@@ -133,6 +133,7 @@ class BusinessProfile extends StatelessWidget {
                                         controller: data.controller[i],
                                         title: data.titleList[i],
                                         security: false,
+                                        inputTextSize: 16,
                                         isEnabled: i == 2 ? false : true,
                                         myOnChanged: (d) => data.needSave(true),
                                         valid: data.validateList[i],
@@ -172,8 +173,7 @@ class BusinessProfile extends StatelessWidget {
                                     Visibility(
                                       visible: data.text == "Select Hours",
                                       child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 18, right: 18),
+                                        padding: EdgeInsets.only(right: 18),
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -183,9 +183,15 @@ class BusinessProfile extends StatelessWidget {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text("Business Hours",
-                                                      style: TextStyle(
-                                                          color: myGrey)),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: sm.w(2)),
+                                                    child: Text(
+                                                        "Business Hours",
+                                                        style: TextStyle(
+                                                            color: myGrey,
+                                                            fontSize: 16)),
+                                                  ),
                                                   Visibility(
                                                     visible: false,
                                                     child: InkWell(
@@ -229,7 +235,8 @@ class BusinessProfile extends StatelessWidget {
                                               //     children: [
                                               Container(
                                                 padding: EdgeInsets.symmetric(
-                                                    vertical: sm.w(1)),
+                                                  vertical: sm.w(1),
+                                                ),
                                                 // width: sm.w(60),
                                                 height: sm.w(14),
                                                 child: ListView(
@@ -326,8 +333,11 @@ class BusinessProfile extends StatelessWidget {
                                                                           .start,
                                                                   children: [
                                                                     Text(
-                                                                        data.selecteddayList.keys.toList()[
-                                                                            i],
+                                                                        data.selecteddayList
+                                                                            .keys
+                                                                            .toList()[
+                                                                                i]
+                                                                            .trim(),
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 16,
@@ -337,7 +347,8 @@ class BusinessProfile extends StatelessWidget {
                                                                         height:
                                                                             2),
                                                                     Text(
-                                                                        "${(data.selecteddayList[data.selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)}-${(data.selecteddayList[data.selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}",
+                                                                        "${(data.selecteddayList[data.selecteddayList.keys.toList()[i]].split("-")[0]).substring(0, 5)}-${(data.selecteddayList[data.selecteddayList.keys.toList()[i]].split("-")[1]).substring(0, 5)}"
+                                                                            .trim(),
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 14,
@@ -366,8 +377,9 @@ class BusinessProfile extends StatelessWidget {
                                         data.notifyListeners();
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 16, horizontal: 20),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: sm.h(1),
+                                            horizontal: sm.w(2)),
                                         child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -393,7 +405,7 @@ class BusinessProfile extends StatelessWidget {
                                     SizedBox(height: sm.h(2)),
                                     Row(
                                       children: [
-                                        Text('\t\t\tWhere are you located?',
+                                        Text('\t\tWhere are you located?',
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontFamily: 'Gilroy-Medium',
@@ -437,6 +449,7 @@ class BusinessProfile extends StatelessWidget {
                                         title: "Pincode",
                                         security: false,
                                         valid: true,
+                                        inputTextSize: 16,
                                         maxlen: 6,
                                         isEnabled: true,
                                         error: data.error[9],
@@ -450,6 +463,7 @@ class BusinessProfile extends StatelessWidget {
                                         title: "Town/City",
                                         hint: "Please Select Town/City",
                                         security: false,
+                                        inputTextSize: 16,
                                         valid: true,
                                         isEnabled: false,
                                         error: data.error[10]),
@@ -458,6 +472,7 @@ class BusinessProfile extends StatelessWidget {
                                         title: "State",
                                         hint: "Please Select State",
                                         security: false,
+                                        inputTextSize: 16,
                                         valid: true,
                                         isEnabled: false,
                                         error: data.error[11]),
@@ -466,6 +481,7 @@ class BusinessProfile extends StatelessWidget {
                                       title: "Country",
                                       security: false,
                                       valid: false,
+                                      inputTextSize: 16,
                                       isEnabled: false,
                                       myOnChanged: (_) {
                                         data.needSave(true);
@@ -477,6 +493,7 @@ class BusinessProfile extends StatelessWidget {
                                       title: "Email",
                                       security: false,
                                       isEnabled: false,
+                                      inputTextSize: 16,
                                       valid: true,
                                       myOnChanged: (_) {
                                         data.needSave(true);
@@ -488,6 +505,7 @@ class BusinessProfile extends StatelessWidget {
                                       controller: data.controller[14],
                                       maxLines: 3,
                                       valid: true,
+                                      inputTextSize: 16,
                                       security: false,
                                       myOnChanged: (_) => data.needSave(true),
                                       hint: "Enter Description",
@@ -511,7 +529,7 @@ class BusinessProfile extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                            top: sm.h(4),
+                            top: sm.h(3),
                             left: sm.w(8),
                             right: sm.w(8),
                             child: Card(
@@ -548,7 +566,7 @@ class BusinessProfile extends StatelessWidget {
                         alignment: Alignment.center,
                         child: Container(
                           width: sm.w(60),
-                          margin: EdgeInsets.only(bottom: 8.0),
+                          margin: EdgeInsets.only(top: 20.0, bottom: 25.0),
                           child: RoundedButton(
                               clicker: () {
                                 if (RIKeys.josKeys24.currentState.validate())

@@ -19,7 +19,7 @@ class txtfieldboundry extends StatefulWidget {
   String prefix;
   String error;
   FocusNode focusNode;
-  double InputTextSize;
+  var inputTextSize;
 
   txtfieldboundry(
       {this.title,
@@ -37,7 +37,7 @@ class txtfieldboundry extends StatefulWidget {
       this.error,
       this.prefix,
       this.focusNode,
-      this.InputTextSize});
+      this.inputTextSize});
   @override
   _txtfieldboundryState createState() => _txtfieldboundryState();
 }
@@ -69,7 +69,10 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,
-        style: Theme.of(context).textTheme.body1,
+        style: Theme.of(context)
+            .textTheme
+            .body1
+            .copyWith(fontSize: double.parse(widget.inputTextSize.toString())),
         maxLines: widget.maxLines,
         focusNode: widget.focusNode,
         onChanged: widget.myOnChanged,

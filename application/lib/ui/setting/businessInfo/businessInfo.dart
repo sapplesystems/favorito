@@ -13,7 +13,6 @@ import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 import 'package:provider/provider.dart';
 
 class businessInfo extends StatelessWidget {
-
   bool isFirst = true;
   SizeManager sm;
 
@@ -22,32 +21,30 @@ class businessInfo extends StatelessWidget {
     sm = SizeManager(context);
     // data = Provider.of<businessInfoProvider>(context, listen: true);
 
-    return
-
-    Consumer<businessInfoProvider>(builder: (context,data,child){
-      return   WillPopScope(
-        onWillPop: ()=>poper(data),
+    return Consumer<businessInfoProvider>(builder: (context, data, child) {
+      return WillPopScope(
+        onWillPop: () => poper(data),
         child: Scaffold(
           key: RIKeys.josKeys28,
           backgroundColor: Color(0xfffff4f4),
           appBar: AppBar(
+            centerTitle: true,
             title: Text("Business Information",
-                textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2)),
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2)),
             backgroundColor: Colors.transparent,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed:  ()=>poper(data),
+              onPressed: () => poper(data),
             ),
             iconTheme: IconThemeData(color: Colors.black),
             elevation: 0,
           ),
           body: Container(
-            padding: EdgeInsets.only(top: sm.h(2), bottom: sm.h(0)),
+            padding: EdgeInsets.only(top: sm.h(2)),
             child: ListView(
               children: [
                 Container(
@@ -86,163 +83,169 @@ class businessInfo extends StatelessWidget {
                   function: () => data.getImage(ImgSource.Gallery, context),
                 ),
                 Container(
-                  decoration: bd1,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16.0),
-                  margin: EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(children: [
-                    TextFormField(
-                      controller: data.controller[0],
-                      decoration: InputDecoration(
-                          labelText: "Category",
-                          labelStyle: Theme.of(context).textTheme.body2,
-                          counterText: "",
-                          enabled: false,
-                          hintText: "Enter Category",
-                          hintStyle: Theme.of(context).textTheme.subhead,
-                          fillColor: Colors.transparent,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              borderSide: BorderSide())),
-                    ),
+                  //decoration: bd1,
+                  margin: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                  child: Card(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 16.0),
+                      child: Column(children: [
+                        TextFormField(
+                          controller: data.controller[0],
+                          decoration: InputDecoration(
+                              labelText: "Category",
+                              labelStyle: Theme.of(context).textTheme.body2,
+                              counterText: "",
+                              enabled: false,
+                              hintText: "Enter Category",
+                              hintStyle: Theme.of(context).textTheme.subhead,
+                              fillColor: Colors.transparent,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  borderSide: BorderSide())),
+                        ),
 
-                    //this is commented due to tester
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 8),
-                    //   child: DropdownSearch<String>(
-                    //     validator: (v) => v == '' ? "required field" : null,
-                    //     autoValidateMode: AutovalidateMode.onUserInteraction,
-                    //     mode: Mode.MENU,
-                    //     key: _keyCategory,
-                    //     showSelectedItem: true,
-                    //     selectedItem: controller[0].text,
-                    //     enabled: false,
-                    //     // items: catLst != null ? catLst.values.toList() : null,
-                    //     label: "Category",
-                    //     hint: "Please Select Category",
-                    //     onChanged: (value) {
-                    //       setState(() => controller[0].text = value);
-                    //     },
-                    //   ),
-                    // ),
-                    MyTags(
-                        sourceList: data.totalSubCategoriesName,
-                        selectedList: data.selectedSubCategoriesName,
-                        hint: "Please select Sub category",
-                        border: true,
-                        directionVeticle: false,
-                        refresh: () => data.setNeedSave(true),
-                        title: " Sub Category"),
-                    MyTags(
-                        sourceList: data.totalTagName,
-                        selectedList: data.selectedTagName,
-                        hint: "Please select Tags",
-                        border: true,
-                        directionVeticle: false,
-                        refresh: () => data.setNeedSave(true),
-                        title: "Tags"),
-                    Row(children: [
-                      Padding(
-                          padding: const EdgeInsets.only(top: 18.0),
-                          child: Text(
-                            "Select price range",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey),
-                          ))
-                    ]),
-                    SizedBox(
-                      height: 52,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: data.priceRangelist != null
-                              ? data.priceRangelist.length
-                              : 0,
-                          itemBuilder: (context, i) {
-                            return Padding(
-                              padding: EdgeInsets.all(8.0),
+                        //this is commented due to tester
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(vertical: 8),
+                        //   child: DropdownSearch<String>(
+                        //     validator: (v) => v == '' ? "required field" : null,
+                        //     autoValidateMode: AutovalidateMode.onUserInteraction,
+                        //     mode: Mode.MENU,
+                        //     key: _keyCategory,
+                        //     showSelectedItem: true,
+                        //     selectedItem: controller[0].text,
+                        //     enabled: false,
+                        //     // items: catLst != null ? catLst.values.toList() : null,
+                        //     label: "Category",
+                        //     hint: "Please Select Category",
+                        //     onChanged: (value) {
+                        //       setState(() => controller[0].text = value);
+                        //     },
+                        //   ),
+                        // ),
+                        MyTags(
+                            sourceList: data.totalSubCategoriesName,
+                            selectedList: data.selectedSubCategoriesName,
+                            hint: "Please select Sub category",
+                            border: true,
+                            directionVeticle: false,
+                            refresh: () => data.setNeedSave(true),
+                            title: " Sub Category"),
+                        MyTags(
+                            sourceList: data.totalTagName,
+                            selectedList: data.selectedTagName,
+                            hint: "Please select Tags",
+                            border: true,
+                            directionVeticle: false,
+                            refresh: () => data.setNeedSave(true),
+                            title: "Tags"),
+                        Row(children: [
+                          Padding(
+                              padding: const EdgeInsets.only(top: 18.0),
+                              child: Text(
+                                "Select price range",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey),
+                              ))
+                        ]),
+                        SizedBox(
+                          height: 52,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: data.priceRangelist != null
+                                  ? data.priceRangelist.length
+                                  : 0,
+                              itemBuilder: (context, i) {
+                                return Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      data.tapOnRupies(i);
+                                    },
+                                    child: Row(children: [
+                                      Icon(
+                                        data.priceRangelist[i] ==
+                                                data.priceRange
+                                            ? Icons.radio_button_checked
+                                            : Icons.radio_button_unchecked,
+                                        color: data.priceRangelist[i] ==
+                                                data.priceRange
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                                      Text(data.priceRangelist[i],
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: data.priceRangelist[i] ==
+                                                      data.priceRange
+                                                  ? Colors.red
+                                                  : Colors.grey))
+                                    ]),
+                                  ),
+                                );
+                              }),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                              padding: const EdgeInsets.only(top: 18.0),
+                              child: Text(
+                                "Select payment method",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey),
+                              )),
+                        ),
+                        Column(children: [
+                          for (int i = 0; i < data.totalpay.length; i++)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: () {
-                                  data.tapOnRupies(i);
+                                  data.selectPay.contains(data.totalpay[i])
+                                      ? data.selectPay.remove(data.totalpay[i])
+                                      : data.selectPay.add(data.totalpay[i]);
+                                  data.setNeedSave(true);
                                 },
                                 child: Row(children: [
                                   Icon(
-                                    data.priceRangelist[i] == data.priceRange
-                                        ? Icons.radio_button_checked
-                                        : Icons.radio_button_unchecked,
-                                    color: data.priceRangelist[i] ==
-                                        data.priceRange
+                                    data.selectPay.contains(data.totalpay[i])
+                                        ? Icons.check_box
+                                        : Icons.check_box_outline_blank,
+                                    color: data.selectPay
+                                            .contains(data.totalpay[i])
                                         ? Colors.red
                                         : Colors.grey,
                                   ),
-                                  Text(data.priceRangelist[i],
+                                  Text(data.totalpay[i],
                                       style: TextStyle(
                                           fontSize: 16,
-                                          color: data.priceRangelist[i] ==
-                                              data.priceRange
+                                          color: data.selectPay
+                                                  .contains(data.totalpay[i])
                                               ? Colors.red
                                               : Colors.grey))
                                 ]),
                               ),
-                            );
-                          }),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                          padding: const EdgeInsets.only(top: 18.0),
-                          child: Text(
-                            "Select payment method",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey),
-                          )),
-                    ),
-                    Column(children: [
-                      for (int i = 0; i < data.totalpay.length; i++)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {
-                              data.selectPay.contains(data.totalpay[i])
-                                  ? data.selectPay.remove(data.totalpay[i])
-                                  : data.selectPay.add(data.totalpay[i]);
+                            ),
+                          MyTags(
+                            sourceList: data.totalAttributeName,
+                            selectedList: data.selectAttributeName,
+                            hint: "Please select Attributes",
+                            title: " Attributes",
+                            border: false,
+                            refresh: () {
                               data.setNeedSave(true);
                             },
-                            child: Row(children: [
-                              Icon(
-                                data.selectPay.contains(data.totalpay[i])
-                                    ? Icons.check_box
-                                    : Icons.check_box_outline_blank,
-                                color:
-                                data.selectPay.contains(data.totalpay[i])
-                                    ? Colors.red
-                                    : Colors.grey,
-                              ),
-                              Text(data.totalpay[i],
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: data.selectPay
-                                          .contains(data.totalpay[i])
-                                          ? Colors.red
-                                          : Colors.grey))
-                            ]),
+                            directionVeticle: true,
                           ),
-                        ),
-                      MyTags(
-                        sourceList: data.totalAttributeName,
-                        selectedList: data.selectAttributeName,
-                        hint: "Please select Attributes",
-                        title: " Attributes",
-                        border: false,
-                        refresh: () {
-                          data.setNeedSave(true);
-                        },
-                        directionVeticle: true,
-                      ),
-                    ]),
-                  ]),
+                        ]),
+                      ]),
+                    ),
+                  ),
                 ),
                 Visibility(
                   visible: data.getNeedSave(),
@@ -271,7 +274,6 @@ class businessInfo extends StatelessWidget {
           cancel: () {
             Navigator.pop(RIKeys.josKeys28.currentContext);
             Navigator.pop(RIKeys.josKeys28.currentContext);
-
           },
           key: RIKeys.josKeys28,
           save: () {
@@ -280,7 +282,5 @@ class businessInfo extends StatelessWidget {
           }).popMe();
     } else
       Navigator.pop(RIKeys.josKeys28.currentContext);
-
-
   }
 }
