@@ -44,7 +44,7 @@ class ChatScreenState extends State<ChatScreen> {
     preferences = await SharedPreferences.getInstance();
     // id = preferences.getString("id") ?? "";
     id = preferences.getString("firebaseId") ?? "";
-    var id2 = id.trim()==widget.userInfo.targetId.trim()?widget.userInfo.sourceId:widget.userInfo.targetId;
+    var id2 = widget.userInfo.targetId;
     // if (id.hashCode <= widget.userInfo.id.hashCode) {
     if (id.hashCode <= id2.hashCode) {
       _chatId = '$id-$id2';

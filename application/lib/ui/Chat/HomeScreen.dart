@@ -55,9 +55,14 @@ class HomeScreenState extends State<HomeScreen> {
                       .copyWith(fontWeight: FontWeight.w500),
                   textScaleFactor: 1.2),
             ),
-            Icon(
-              Icons.arrow_back,
-              color: Colors.transparent,
+            InkWell(
+              onTap: (){
+                _data.controlSearching('');
+              },
+              child: Icon(
+                Icons.refresh,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
@@ -74,11 +79,11 @@ class HomeScreenState extends State<HomeScreen> {
               textScaleFactor: 1),
         ),
         Expanded(
-          child: vv == null
+          child: _data.connectionsList.isEmpty
               ? displayNoSerachResultScreen()
               : Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: vv.length <= 0
+                  child: _data.connectionsList.isEmpty
                       // ? circularProgress()
                       ? displayNoSerachResultScreen()
                       : ListView.builder(

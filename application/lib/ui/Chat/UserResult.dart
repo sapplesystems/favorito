@@ -25,17 +25,17 @@ class UserResult extends StatelessWidget {
                       radius: 28,
                       backgroundColor: Colors.black,
                       backgroundImage:
-                          CachedNetworkImageProvider('eachUser?.photoUrl'),
+                          CachedNetworkImageProvider(eachUser?.photo),
                     ),
                     title: Text(
-                      'eachUser.nickname',
+                      eachUser.name,
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'eachUser.aboutMe',
+                      eachUser.shortDescription??'',
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 14.0, fontWeight: FontWeight.w400),
                     ),

@@ -161,14 +161,11 @@ class _SearchResultState extends State<SearchResult> {
           ),
         ]),
       floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0))
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
         backgroundColor: Color(0xffF4F6FC),
-        onPressed: () {
-         
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ClusterMap()));
-        },
+        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>ClusterMap(
+          list: searchResult.data
+          )));},
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Icon(Icons.location_on,color: myRed,size: 28,),

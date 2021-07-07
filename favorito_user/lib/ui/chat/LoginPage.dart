@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorito_user/component/circularProgress.dart';
 import 'package:favorito_user/ui/Chat/HomeScreen.dart';
-import 'package:favorito_user/ui/Signup/SignupProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -220,10 +219,8 @@ class AuthServices {
     preferences.setString('firebaseId',uid);
 
     print("uid:$uid");
-   if(mayIComeIn) initFirebase(firebaseUser, key);
-   else{
-     Navigator.pop(key.currentContext);
-   }
+   initFirebase(firebaseUser, key);
+   
   }
 
   signInWithOtp(smsCode, verId, key) {
@@ -245,20 +242,20 @@ class AuthServices {
       final List<DocumentSnapshot> documentSnapshots = resultQuery.documents;
       //Save dota to firebase if new user
       if (documentSnapshots.length == 0) {
-        Map _map = {
-          "nickname": preferences.getString('nickname') ?? "User",
-          "photoUrl": preferences.getString('photoUrl') ?? '',
-          "id": firebaseUser.uid,
-          "aboutMe": "I am using favorito",
-          "phone": firebaseUser.phoneNumber,
-          "createAt": DateTime.now().microsecondsSinceEpoch.toString(),
-          "chattingWith": null,
-        };
-        print("_map12:${_map.toString()}");
-        // Firestore.instance
-        //     .collection("user")
-        //     .document(firebaseUser.uid)
-        //     .setData(_map);
+        // Map _map = {
+        //   "nickname": preferences.getString('nickname') ?? "User",
+        //   "photoUrl": preferences.getString('photoUrl') ?? 'null',
+        //   "id": firebaseUser.uid,
+        //   "aboutMe": "I am using favorito",
+        //   "phone": firebaseUser.phoneNumber.toString(),
+        //   "createAt": DateTime.now().microsecondsSinceEpoch.toString(),
+        //   "chattingWith": 'null',
+        // };
+        // print("_map12:${_map.toString()}");
+        Firestore.instance
+            .collection("user")
+            .document(firebaseUser.uid)
+            .setData({});
         //Write data to Local
 
         await preferences.setString("id", firebaseUser.uid);
@@ -281,12 +278,13 @@ class AuthServices {
       //   isLoading = false;
       // });
 
-      // Navigator.pop(context);
-      Navigator.push(
-          key.currentContext,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HomeScreen()));
+      Navigator.pop(
+          key.currentContext);
+      // Navigator.push(
+      //     key.currentContext,
+      //     MaterialPageRoute(
+      //         builder: (context) =>
+      //             HomeScreen()));
     }
     //SignIn not success
 

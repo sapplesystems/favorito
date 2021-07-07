@@ -47,7 +47,6 @@ class AuthServices {
     if(uid!=null&&uid.length>4)
   await WebService.setGetFirebaseId({'api_type': 'set', 'firebase_id': uid}).then((value)=>
       WebService.funClaimVerifyOtp().then((value) {
-        
          Provider.of<ClaimProvider>(key.currentContext,
                                                     listen: false)
                                                 .getClaimData(key.currentContext);
@@ -88,10 +87,7 @@ initFirebase(firebaseUser, key);
           "chattingWith": null,
         };
         print("_map12:${_map.toString()}");
-        // Firestore.instance
-        //     .collection("user")
-        //     .document(firebaseUser.uid)
-        //     .setData(_map);
+        Firestore.instance.collection("user").document(firebaseUser.uid).setData({});
         //Write data to Local
 
         await preferences.setString("id", firebaseUser.uid);

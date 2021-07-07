@@ -30,14 +30,14 @@ class UserResult extends StatelessWidget {
                           CachedNetworkImageProvider( "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd09TGDcJFx-t_B0HiUkc123nrs2MnSG4WWg&usqp=CAU"),
                     ),
                     title: Text(
-                      'eachUser.sourceId',
+                      eachUser.name??"",
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "{eachUser.targetId}",
+                      eachUser.shortDescription??'',
                       style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 14.0, fontWeight: FontWeight.w400),
                     ),

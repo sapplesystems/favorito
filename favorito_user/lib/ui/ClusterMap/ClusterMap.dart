@@ -1,11 +1,14 @@
 // @dart=2.9
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
+import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong/latlong.dart';
 class ClusterMap extends StatefulWidget {
+  List<BusinessProfileData> list;
+  ClusterMap({this.list});
   @override
   _ClusterMapState createState() => _ClusterMapState();
 }
@@ -23,6 +26,20 @@ SizeManager sm;
   @override
   void initState() {
     pointIndex = 0;
+    int i;
+    for( var v in widget.list){
+    // markers = [
+    //   Marker(
+    //     anchorPos: AnchorPos.align(AnchorAlign.center),
+    //     height: 30,
+    //     width: 30,
+    //     point: points[0],
+    //     builder: (ctx) => Icon(Icons.pin_drop),
+    //   )
+    // ]  ; 
+      print(v.location);
+    // points.add(LatLng(v.location.split(',')[0],v.location.split(',')[1]));
+    }
     markers = [
       Marker(
         anchorPos: AnchorPos.align(AnchorAlign.center),

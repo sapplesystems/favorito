@@ -50,6 +50,7 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       _chatId = '${widget.userInfo.id}-$id';
     }
+    print('_chatid:$_chatId');
     var va = Firestore.instance
         .collection('user')
         .document(id)

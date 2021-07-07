@@ -16,7 +16,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ClaimProvider extends BaseProvider {
+class ClaimProvider extends ChangeNotifier {
   TextEditingController ctrlMobile;
   String otp = "";
   TextEditingController ctrlMail = TextEditingController();
@@ -60,6 +60,7 @@ class ClaimProvider extends BaseProvider {
   }
 
   sendOtp(context) async {
+    print("ffsffd");
     isLoadingSet(true);
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
       AuthServices().signIn(authResult, RIKeys.josKeys21);
@@ -68,7 +69,8 @@ class ClaimProvider extends BaseProvider {
     final PhoneVerificationFailed verificationfield =
         (AuthException exception) {
       // otpController.text = "";
-      snackBar(exception.message, RIKeys.josKeys21, myGreen);
+      BotToast.showText(text: exception.message);
+      // snackBar(exception.message, RIKeys.josKeys21, myGreen);
       isLoadingSet(false);
       print("${exception.message}");
     };
