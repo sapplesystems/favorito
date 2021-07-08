@@ -29,7 +29,7 @@ class MyOutlineButton extends StatelessWidget {
           child: Text(title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Colors.red,
+                  color: myRed,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                   letterSpacing: 1)),

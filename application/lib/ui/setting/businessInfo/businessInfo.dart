@@ -30,11 +30,7 @@ class businessInfo extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             title: Text("Business Information",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2)),
+                style: Theme.of(context).appBarTheme.textTheme.headline1),
             backgroundColor: Colors.transparent,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -49,6 +45,7 @@ class businessInfo extends StatelessWidget {
               children: [
                 Container(
                   height: sm.h(24),
+                  //padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
                   child: ListView(scrollDirection: Axis.horizontal, children: [
                     for (int i = 0; i < data.photos.length; i++)
                       Stack(children: [
@@ -65,6 +62,7 @@ class businessInfo extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
+                            shadowColor: Colors.grey.withOpacity(0.2),
                             elevation: 5,
                             margin: EdgeInsets.all(10)),
                         Positioned(
@@ -84,8 +82,13 @@ class businessInfo extends StatelessWidget {
                 ),
                 Container(
                   //decoration: bd1,
-                  margin: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: sm.w(4), vertical: sm.h(1)),
                   child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    elevation: 8,
+                    shadowColor: Colors.grey.withOpacity(0.2),
                     child: Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 16.0),
@@ -101,7 +104,7 @@ class businessInfo extends StatelessWidget {
                               hintStyle: Theme.of(context).textTheme.subhead,
                               fillColor: Colors.transparent,
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(4.0),
+                                  borderRadius: BorderRadius.circular(12.0),
                                   borderSide: BorderSide())),
                         ),
 
@@ -127,15 +130,15 @@ class businessInfo extends StatelessWidget {
                         MyTags(
                             sourceList: data.totalSubCategoriesName,
                             selectedList: data.selectedSubCategoriesName,
-                            hint: "Please select Sub category",
+                            hint: "\u{1F50D}  Please select Sub category",
                             border: true,
                             directionVeticle: false,
                             refresh: () => data.setNeedSave(true),
-                            title: " Sub Category"),
+                            title: "Sub Category"),
                         MyTags(
                             sourceList: data.totalTagName,
                             selectedList: data.selectedTagName,
-                            hint: "Please select Tags",
+                            hint: "\u{1F50D}  Please select Tags",
                             border: true,
                             directionVeticle: false,
                             refresh: () => data.setNeedSave(true),
@@ -144,7 +147,7 @@ class businessInfo extends StatelessWidget {
                           Padding(
                               padding: const EdgeInsets.only(top: 18.0),
                               child: Text(
-                                "Select price range",
+                                "Select Price Range",
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -176,6 +179,9 @@ class businessInfo extends StatelessWidget {
                                             ? Colors.red
                                             : Colors.grey,
                                       ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
                                       Text(data.priceRangelist[i],
                                           style: TextStyle(
                                               fontSize: 16,
@@ -193,7 +199,7 @@ class businessInfo extends StatelessWidget {
                           child: Padding(
                               padding: const EdgeInsets.only(top: 18.0),
                               child: Text(
-                                "Select payment method",
+                                "Select Payment Method",
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -211,30 +217,41 @@ class businessInfo extends StatelessWidget {
                                       : data.selectPay.add(data.totalpay[i]);
                                   data.setNeedSave(true);
                                 },
-                                child: Row(children: [
-                                  Icon(
-                                    data.selectPay.contains(data.totalpay[i])
-                                        ? Icons.check_box
-                                        : Icons.check_box_outline_blank,
-                                    color: data.selectPay
-                                            .contains(data.totalpay[i])
-                                        ? Colors.red
-                                        : Colors.grey,
-                                  ),
-                                  Text(data.totalpay[i],
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: data.selectPay
-                                                  .contains(data.totalpay[i])
-                                              ? Colors.red
-                                              : Colors.grey))
-                                ]),
+                                child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        data.selectPay
+                                                .contains(data.totalpay[i])
+                                            ? Icons.check_box
+                                            : Icons.check_box_outline_blank,
+                                        color: data.selectPay
+                                                .contains(data.totalpay[i])
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 3.0),
+                                        child: Text(data.totalpay[i],
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: data.selectPay.contains(
+                                                        data.totalpay[i])
+                                                    ? Colors.red
+                                                    : Colors.grey)),
+                                      )
+                                    ]),
                               ),
                             ),
                           MyTags(
                             sourceList: data.totalAttributeName,
                             selectedList: data.selectAttributeName,
-                            hint: "Please select Attributes",
+                            hint: "Please Select Attributes",
                             title: " Attributes",
                             border: false,
                             refresh: () {
@@ -250,9 +267,9 @@ class businessInfo extends StatelessWidget {
                 Visibility(
                   visible: data.getNeedSave(),
                   child: Container(
-                      margin: EdgeInsets.only(bottom: sm.w(30)),
+                      //margin: EdgeInsets.only(bottom: sm.w(30)),
                       padding: EdgeInsets.symmetric(
-                          horizontal: sm.w(16), vertical: sm.h(2)),
+                          horizontal: sm.w(16), vertical: sm.h(4)),
                       child: RoundedButton(
                           clicker: () {
                             data.funSublim(context);
