@@ -7,6 +7,7 @@ import 'package:Favorito/component/txtfieldboundry.dart';
 import 'package:Favorito/utils/Regexer.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
@@ -53,7 +54,7 @@ class signup_b extends StatelessWidget {
           ),
           Container(
             color: myBackGround,
-            height: sm.w(180),
+            height: sm.w(170),
             child: Stack(
               children: [
                 Positioned(
@@ -65,7 +66,7 @@ class signup_b extends StatelessWidget {
                         // height: sm.w(100),
                         padding: EdgeInsets.only(
                           top: sm.h(8),
-                          bottom: sm.h(8),
+                          bottom: sm.h(2),
                           left: sm.w(4),
                           right: sm.w(4),
                         ),
@@ -138,6 +139,7 @@ class signup_b extends StatelessWidget {
                                           ),
                                         ),
                                   txtfieldboundry(
+                                      keyboardSet: TextInputType.emailAddress,
                                       title: signUpProviderTrue.getTypeId() == 1
                                           ? 'Business Email'
                                           : 'Email',
@@ -180,20 +182,64 @@ class signup_b extends StatelessWidget {
                                       myOnChanged: (_v) => signUpProviderTrue
                                           .validatePassword1(_v),
                                       security: true),
-                                  CheckboxListTile(
-                                    title: Text(
-                                      "By continuing, you agree to Favorito's\nTerms of Service and acknowledge\nFavorito's Privacy Policy.",
-                                      style: TextStyle(
-                                        fontSize: 10.5,
-                                        fontWeight: FontWeight.w400,
-                                        letterSpacing: 0.32,
-                                      ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: sm.h(1)),
+                                    child: Row(
+                                      children: [
+                                        Checkbox(
+                                          value: signUpProviderTrue
+                                              .getTnCChecked(),
+                                          onChanged: (newValue) =>
+                                              signUpProviderTrue
+                                                  .setTnCChecked(newValue),
+                                        ),
+                                        RichText(
+                                            text: TextSpan(
+                                          text:
+                                              "By continuing, you agree to Favorito's\n",
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                              fontFamily: "Roboto",
+                                              fontWeight: FontWeight.w400,
+                                              letterSpacing: 0.32),
+                                          children: [
+                                            TextSpan(
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        print(
+                                                            'The button is clicked!');
+                                                      },
+                                                text: "Terms of Service ",
+                                                style: TextStyle(
+                                                    color: myRed,
+                                                    fontSize: 14,
+                                                    fontFamily: "Roboto",
+                                                    fontWeight: FontWeight.w400,
+                                                    letterSpacing: 0.32)),
+                                            TextSpan(
+                                                text:
+                                                    "and acknowledge\nFavorito's "),
+                                            TextSpan(
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        print(
+                                                            'The Button is clicked!');
+                                                      },
+                                                text: "Privacy Policy.",
+                                                style: TextStyle(
+                                                    color: myRed,
+                                                    fontSize: 14,
+                                                    fontFamily: "Roboto",
+                                                    fontWeight: FontWeight.w400,
+                                                    letterSpacing: 0.32))
+                                          ],
+                                        ))
+                                      ],
                                     ),
-                                    value: signUpProviderTrue.getTnCChecked(),
-                                    onChanged: (newValue) => signUpProviderTrue
-                                        .setTnCChecked(newValue),
-                                    controlAffinity: ListTileControlAffinity
-                                        .leading, //  <-- leading Checkbox
                                   ),
                                 ]),
                           ),
@@ -210,8 +256,7 @@ class signup_b extends StatelessWidget {
             ),
           ),
           Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: sm.w(20), vertical: sm.w(10)),
+            padding: EdgeInsets.symmetric(horizontal: sm.w(20)),
             child: RoundedButton(
               clicker: () => funSublim(),
               clr: Colors.red,

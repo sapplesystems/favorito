@@ -25,13 +25,12 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import './utils/MyTheme.dart';
 import 'package:flutter/foundation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DotEnv.load(fileName: ".env");
+  //await DotEnv.load(fileName: ".env");
   // print('size:${FlutterConfig.get('image_max_length')}');
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {

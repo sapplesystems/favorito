@@ -113,15 +113,15 @@ class businessInfoProvider extends ChangeNotifier {
         }
       });
 
-    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
-      await WebService.getSubCat({"category_id": catid}, context).then((value) {
-        if (value.message == "success") {
-          subCategoryModel = value;
-          totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
-          for (var v in selectedSubCategories)
-            totalSubCategoriesName.remove(v.categoryName);
-        }
-      });
+    // if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+    await WebService.getSubCat({"category_id": catid}, context).then((value) {
+      if (value.message == "success") {
+        subCategoryModel = value;
+        totalSubCategoriesName.addAll(subCategoryModel.getAllSubCategory());
+        for (var v in selectedSubCategories)
+          totalSubCategoriesName.remove(v.categoryName);
+      }
+    });
     setNeedSave(false);
   }
 
@@ -136,44 +136,42 @@ class businessInfoProvider extends ChangeNotifier {
     for (int i = 0; i < totalAttribute.length; i++)
       if (selectAttributeName.contains(totalAttribute[i].attributeName))
         selectAttributeId.add(totalAttribute[i].id);
-    if(priceRange==null){
+    if (priceRange == null) {
       BotToast.showText(text: 'Please select a price renge');
       return;
     }
-    if(selectPay==null||selectPay.isEmpty){
+    if (selectPay == null || selectPay.isEmpty) {
       BotToast.showText(text: 'Please select a payment method');
       return;
     }
-    if(selectedSubCategoriesId==null||selectedSubCategoriesId.isEmpty){
+    if (selectedSubCategoriesId == null || selectedSubCategoriesId.isEmpty) {
       BotToast.showText(text: 'PLease select subcategory');
       return;
     }
-    if(selectedTagId==null||selectedTagId.isEmpty){
+    if (selectedTagId == null || selectedTagId.isEmpty) {
       BotToast.showText(text: 'Please select a selected a Tag');
       return;
     }
-    if(selectAttributeId==null||selectAttributeId.isEmpty){
+    if (selectAttributeId == null || selectAttributeId.isEmpty) {
       BotToast.showText(text: 'Please select a selectAttribute');
       return;
     }
-      Map<String, dynamic> _map = {
-        "sub_categories": selectedSubCategoriesId,
-        "tags": selectedTagId,
-        "price_range": priceRange,
-        "payment_method": selectPay,
-        "attributes": selectAttributeId
-      };
-      print("_map:${_map.toString()}");
-      if (await Provider.of<UtilProvider>(context, listen: false)
-          .checkInternet())
-        await WebService.setBusinessInfoData(_map, context).then((value) {
-          if (value.status == "success") {
-            FocusScope.of(context).unfocus();
-            BotToast.showText(text: value.message);
-            Navigator.pop(context);
-          }
-        });
-    
+    Map<String, dynamic> _map = {
+      "sub_categories": selectedSubCategoriesId,
+      "tags": selectedTagId,
+      "price_range": priceRange,
+      "payment_method": selectPay,
+      "attributes": selectAttributeId
+    };
+    print("_map:${_map.toString()}");
+    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+      await WebService.setBusinessInfoData(_map, context).then((value) {
+        if (value.status == "success") {
+          FocusScope.of(context).unfocus();
+          BotToast.showText(text: value.message);
+          Navigator.pop(context);
+        }
+      });
   }
 
   Future getImage(ImgSource source, context) async {
@@ -185,14 +183,14 @@ class businessInfoProvider extends ChangeNotifier {
         cameraIcon: Icon(Icons.add, color: Colors.red));
     img.add(image);
 
-    if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
-      await WebService.profileInfoImageUpdate(img, context).then((value) async {
-        if (value.status == "success") {
-          BotToast.showText(text: value.message);
-          photos.clear();
-          photos.addAll(value.data);
-        }
-      });
+    //if (await Provider.of<UtilProvider>(context, listen: false).checkInternet())
+    await WebService.profileInfoImageUpdate(img, context).then((value) async {
+      if (value.status == "success") {
+        BotToast.showText(text: value.message);
+        photos.clear();
+        photos.addAll(value.data);
+      }
+    });
     _image = image;
     notifyListeners();
   }
