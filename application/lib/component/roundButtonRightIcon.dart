@@ -16,7 +16,7 @@ class _roundButtonRightIconState extends State<roundButtonRightIcon> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0),
       child: InkWell(
         onTap: () {
           widget.function();
@@ -33,6 +33,7 @@ class _roundButtonRightIconState extends State<roundButtonRightIcon> {
           padding: const EdgeInsets.all(8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 widget.title,
@@ -44,7 +45,11 @@ class _roundButtonRightIconState extends State<roundButtonRightIcon> {
                 ),
               ),
               SizedBox(width: 23),
-              Icon(widget.ico, color: widget.clr),
+              Icon(
+                widget.ico,
+                color: widget.clr,
+                size: 18,
+              ),
             ],
           ),
         ),
