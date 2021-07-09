@@ -69,10 +69,10 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
         validator: (value) =>
             _validation(value, widget.valid, widget.title, widget.myregex),
         keyboardType: widget.keyboardSet,
-        style: Theme.of(context)
-            .textTheme
-            .body1
-            .copyWith(fontSize: double.parse(widget.inputTextSize.toString())),
+        style: Theme.of(context).textTheme.body1.copyWith(
+            fontSize: widget.inputTextSize != null
+                ? double.parse("${widget.inputTextSize}")
+                : 16.0),
         maxLines: widget.maxLines,
         focusNode: widget.focusNode,
         onChanged: widget.myOnChanged,

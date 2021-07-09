@@ -56,7 +56,7 @@ class _highlightsState extends State<highlights> {
         elevation: 0,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        //padding: EdgeInsets.symmetric(horizontal: 8),
         child: Builder(
           builder: (context) => Form(
             key: _formKey,
@@ -65,11 +65,7 @@ class _highlightsState extends State<highlights> {
               children: [
                 Text("Highlights",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 26,
-                        fontFamily: 'Gilroy-Bold',
-                        letterSpacing: 2)),
+                    style: Theme.of(context).appBarTheme.textTheme.headline1),
                 Container(
                   height: sm.h(20),
                   margin: EdgeInsets.symmetric(vertical: sm.h(4)),
@@ -113,6 +109,7 @@ class _highlightsState extends State<highlights> {
                           child: Container(
                             width: sm.h(18),
                             child: Card(
+                                shadowColor: Colors.grey.withOpacity(0.2),
                                 semanticContainer: true,
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 child: Padding(
@@ -135,51 +132,56 @@ class _highlightsState extends State<highlights> {
                           )),
                       for (int i = imgUrls.length - 1; i > 0; i--) //Network
                         Container(
+                          //padding: EdgeInsets.symmetric(horizontal: 8.0),
                           width: sm.h(20),
                           child: Card(
+                              shadowColor: Colors.grey.withOpacity(0.2),
                               semanticContainer: true,
                               clipBehavior: Clip.antiAliasWithSaveLayer,
                               child: Image.network(imgUrls[i].toString(),
                                   fit: BoxFit.fill),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0)),
-                              elevation: 5,
+                              elevation: 8,
                               margin: EdgeInsets.all(10)),
                         )
                     ],
                   ),
                 ),
                 Container(
-                    decoration: bd1,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 40.0),
-                    margin: EdgeInsets.symmetric(horizontal: 12),
-                    child: Column(children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: sm.h(1)),
-                        child: txtfieldboundry(
-                          valid: true,
-                          title: "Title",
-                          hint: "Enter title of highlights",
-                          controller: ctrlTitle,
-                          security: false,
+                    padding: EdgeInsets.symmetric(horizontal: sm.w(4)),
+                    child: Card(
+                      elevation: 8.0,
+                      shadowColor: Colors.grey.withOpacity(0.2),
+                      child: Column(children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 20),
+                          child: txtfieldboundry(
+                            valid: true,
+                            title: "Title",
+                            hint: "Enter title of highlights",
+                            controller: ctrlTitle,
+                            security: false,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: sm.h(1)),
-                        child: txtfieldboundry(
-                          valid: true,
-                          title: "Description",
-                          maxLines: 4,
-                          hint: "Enter Description highlights",
-                          controller: ctrlDisc,
-                          security: false,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 20),
+                          child: txtfieldboundry(
+                            valid: true,
+                            title: "Description",
+                            maxLines: 4,
+                            hint: "Enter Description highlights",
+                            controller: ctrlDisc,
+                            security: false,
+                          ),
                         ),
-                      ),
-                    ])),
+                      ]),
+                    )),
                 Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: sm.w(16), vertical: sm.h(2)),
+                        horizontal: sm.w(16), vertical: sm.h(4)),
                     child: RoundedButton(
                         clicker: () {
                           if (_formKey.currentState.validate()) {

@@ -11,20 +11,22 @@ class card3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    final h = MediaQuery.of(context).textScaleFactor;
+    print(h);
     return Card(
         elevation: 8,
         shadowColor: Colors.grey.withOpacity(0.2),
         child: Container(
-          width: sm.w(40),
-          height: sm.h(20),
+          width: sm.w(42),
+          height: sm.w(42),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding:
-                  EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(6)),
+                  EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(4)),
               child: Text(txt1,
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w400)),
             ),
@@ -34,7 +36,7 @@ class card3 extends StatelessWidget {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       color: Colors.black,
-                      fontSize: 45,
+                      fontSize: 35,
                       fontFamily: "Gilroy-Medium",
                       fontWeight: FontWeight.w400,
                       letterSpacing: 0.60)),

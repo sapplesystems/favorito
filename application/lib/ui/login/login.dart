@@ -63,7 +63,7 @@ class _LoginState extends State<Login> {
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Builder(
                 builder: (context) => Form(
                   key: _formKey,

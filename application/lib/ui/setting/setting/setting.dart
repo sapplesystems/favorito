@@ -31,7 +31,7 @@ class Setting extends StatelessWidget {
             title: Text("Settings",
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 35,
+                    fontSize: 25,
                     fontFamily: 'Gilroy-ExtraBold',
                     letterSpacing: 1.2)),
             centerTitle: true,
@@ -135,8 +135,7 @@ class Setting extends StatelessWidget {
                             Visibility(
                               visible: data.settingHeight,
                               child: Padding(
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: sm.w(14)),
+                                padding: EdgeInsets.only(left: sm.w(14)),
                                 child: Column(children: [
                                   for (int i = 0; i < 4; i++)
                                     listItems(
@@ -196,8 +195,7 @@ class Setting extends StatelessWidget {
                             Visibility(
                               visible: data.settingTool,
                               child: Padding(
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: sm.w(14)),
+                                padding: EdgeInsets.only(left: sm.w(14)),
                                 child: Column(children: [
                                   for (int _i = 4; _i < data.title.length; _i++)
                                     Visibility(

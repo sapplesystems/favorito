@@ -34,6 +34,7 @@ class _card1State extends State<card1> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    double h = MediaQuery.of(context).textScaleFactor;
     print("widget.checkins:${widget.checkins}");
     return InkWell(
       onTap: widget.function,
@@ -41,9 +42,9 @@ class _card1State extends State<card1> {
         elevation: 8,
         shadowColor: Colors.grey.withOpacity(0.2),
         child: Container(
-          width: sm.w(40),
-          height: sm.h(20),
-          padding: EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(6)),
+          width: sm.w(42),
+          height: sm.w(42),
+          padding: EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(4)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -51,7 +52,7 @@ class _card1State extends State<card1> {
                 widget.checkins ?? '0',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 30,
+                  fontSize: 25,
                   fontFamily: "Gilroy-Medium",
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.60,
@@ -61,13 +62,13 @@ class _card1State extends State<card1> {
                 "Check-in(s) ",
                 style: TextStyle(
                   color: Color(0xff9996a3),
-                  fontSize: 13,
+                  fontSize: 13 * h,
                   fontFamily: "Roboto",
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.26,
                 ),
               ),
-              SizedBox(height: sm.h(6)),
+              SizedBox(height: sm.h(4)),
               Row(
                 children: [
                   for (int i = 0; i < hList.length; i++)

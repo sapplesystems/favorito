@@ -16,15 +16,16 @@ class _card2State extends State<card2> {
   @override
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
+    final h = MediaQuery.of(context).textScaleFactor;
     return InkWell(
       onTap: widget.function,
       child: Card(
         elevation: 8,
         shadowColor: Colors.grey.withOpacity(0.2),
         child: Container(
-          width: sm.w(40),
-          height: sm.h(20),
-          padding: EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(6)),
+          width: sm.w(42),
+          height: sm.w(42),
+          padding: EdgeInsets.symmetric(vertical: sm.h(2), horizontal: sm.w(4)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +34,7 @@ class _card2State extends State<card2> {
                 "Ratings",
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 30,
+                    fontSize: 25,
                     fontFamily: "Gilroy-Medium",
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.60),
@@ -48,7 +49,7 @@ class _card2State extends State<card2> {
                       widget.ratings,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 30,
+                        fontSize: 25,
                         fontFamily: "Gilroy-Medium",
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.60,

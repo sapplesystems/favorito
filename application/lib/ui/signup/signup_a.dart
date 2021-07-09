@@ -111,6 +111,7 @@ class Signup_a extends StatelessWidget {
                                             padding: EdgeInsets.only(top: 2),
                                             child: txtfieldboundry(
                                                 valid: true,
+                                                inputTextSize: 16,
                                                 controller: signUpProviderTrue
                                                     .controller[0],
                                                 title: signUpProviderTrue
@@ -156,6 +157,7 @@ class Signup_a extends StatelessWidget {
                                           controller:
                                               signUpProviderTrue.controller[1],
                                           valid: true,
+                                          inputTextSize: 16,
                                           maxlen: 6,
                                           error: signUpProviderTrue.error[1],
                                           keyboardSet: TextInputType.number,
@@ -173,6 +175,7 @@ class Signup_a extends StatelessWidget {
                                             controller: signUpProviderTrue
                                                 .controller[2],
                                             valid: true,
+                                            inputTextSize: 16,
                                             title: signUpProviderTrue.catvisib
                                                 ? "Business Phone"
                                                 : "Phone",

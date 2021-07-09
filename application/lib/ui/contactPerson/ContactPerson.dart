@@ -1,10 +1,12 @@
 import 'package:Favorito/component/roundedButton.dart';
 import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/component/txtfieldboundry.dart';
+import 'package:Favorito/myCss.dart';
 import 'package:Favorito/ui/ResetPass/ResetPass.dart';
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/contactPerson/ContactPersonProvider.dart';
 import 'package:Favorito/utils/RIKeys.dart';
+import 'package:Favorito/utils/myColors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:Favorito/component/BranchDetailsListVIewAdd.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,7 @@ class ContactPerson extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
             "Contact Person",
-            style: TextStyle(color: Colors.black),
+            style: Theme.of(context).appBarTheme.textTheme.headline1,
           ),
         ),
         body: RefreshIndicator(
@@ -46,11 +48,15 @@ class ContactPerson extends StatelessWidget {
           child: ListView(
             children: [
               Container(
-                margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
                 child: Stack(
                   children: [
                     Card(
+                      elevation: 8,
+                      shadowColor: Colors.grey.withOpacity(0.2),
                       margin: EdgeInsets.only(top: sm.h(10)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                       child: Builder(
                         builder: (context) => Form(
                           key: cpFalse.form1Key,
@@ -76,18 +82,26 @@ class ContactPerson extends StatelessWidget {
                                     children: [
                                       Text(
                                         "Email : ",
-                                        style: TextStyle(fontSize: 20.0),
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w400),
                                       ),
                                       Text(
                                         // cpTrue.displayEmail,
                                         cpTrue.controller[2].text,
-                                        style: TextStyle(fontSize: 20.0),
+                                        style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w400,
+                                            color: myGrey),
                                       ),
                                     ]),
                               ),
                               for (int i = 0; i < 4; i++)
                                 Padding(
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
                                   child: txtfieldboundry(
                                     controller: cpFalse.controller[i],
                                     title: cpFalse.titles[i],
@@ -100,10 +114,8 @@ class ContactPerson extends StatelessWidget {
                                   ),
                                 ),
                               Padding(
-                                padding: EdgeInsets.only(
-                                    left: sm.w(7),
-                                    right: sm.w(7),
-                                    top: sm.h(4)),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: sm.w(7), vertical: 12.0),
                                 child: DropdownSearch<String>(
                                   key: cpFalse.roleKey,
                                   validator: (v) =>
@@ -111,6 +123,9 @@ class ContactPerson extends StatelessWidget {
                                   autoValidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   mode: Mode.MENU,
+                                  maxHeight: cpFalse.roleList != null
+                                      ? cpFalse.roleList.length * 54.0
+                                      : 0.0,
                                   selectedItem: cpFalse.selectedRole,
                                   items: cpFalse.roleList,
                                   label: "Role",
@@ -127,7 +142,7 @@ class ContactPerson extends StatelessWidget {
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: sm.w(12)),
+                                      horizontal: sm.w(16)),
                                   child: SvgPicture.asset(
                                       'assets/icon/changePassword.svg',
                                       alignment: Alignment.center,
@@ -150,39 +165,45 @@ class ContactPerson extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                 child: Card(
+                    // elevation: 8,
+                    shadowColor: Colors.grey.withOpacity(0.2),
                     child: Builder(
-                  builder: (context) => Form(
-                    key: cpFalse.form2Key,
-                    autovalidate: _autoValidateForm,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            "Bank Details",
-                            style: TextStyle(
-                                fontSize: 24.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        for (int i = 4; i < cpFalse.titles.length; i++)
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: txtfieldboundry(
-                              controller: cpFalse.controller[i],
-                              title: cpFalse.titles[i],
-                              security: false,
-                              valid: true,
-                              keyboardSet: i == 5
-                                  ? TextInputType.number
-                                  : TextInputType.text,
+                      builder: (context) => Form(
+                        key: cpFalse.form2Key,
+                        autovalidate: _autoValidateForm,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 16.0),
+                              child: Text(
+                                "Bank Details",
+                                style: TextStyle(
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.w600,
+                                    color: myGrey),
+                              ),
                             ),
-                          )
-                      ],
-                    ),
-                  ),
-                )),
+                            for (int i = 4; i < cpFalse.titles.length; i++)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 10.0),
+                                child: txtfieldboundry(
+                                  controller: cpFalse.controller[i],
+                                  title: cpFalse.titles[i],
+                                  security: false,
+                                  valid: true,
+                                  keyboardSet: i == 5
+                                      ? TextInputType.number
+                                      : TextInputType.text,
+                                ),
+                              )
+                          ],
+                        ),
+                      ),
+                    )),
               ),
               // Container(
               //   margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 32.0),
