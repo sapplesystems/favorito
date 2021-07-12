@@ -6,7 +6,6 @@ import 'package:Favorito/component/card3.dart';
 import 'package:Favorito/component/rowWithTextNButton.dart';
 import 'package:Favorito/component/showPopup.dart';
 import 'package:Favorito/model/dashModel.dart';
-import 'package:Favorito/myCss.dart';
 import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
@@ -76,7 +75,7 @@ class _dashboardState extends State<dashboard> {
             onRefresh: () => calldashBoard(context),
             backgroundColor: Colors.amber,
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sm.w(6)),
+                padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
                 child: ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: sm.h(2)),
@@ -224,7 +223,8 @@ class _dashboardState extends State<dashboard> {
                     )
                   ]),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: sm.h(2), vertical: 6),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -240,6 +240,9 @@ class _dashboardState extends State<dashboard> {
                       () => Navigator.of(context)
                           .pushNamed('/adSpent')
                           .whenComplete(() => calldashBoard(context))),
+                  SizedBox(
+                    height: 10,
+                  ),
                   rowCard("Notifications", "Send Direct Update To Customer",
                       () {
                     Navigator.of(context).pushNamed('/notifications');
@@ -254,24 +257,23 @@ class _dashboardState extends State<dashboard> {
 
   Widget rowCard(String title, String subtitle, Function function) => InkWell(
         onTap: function,
-        child: Container(
-            //padding: EdgeInsets.symmetric(vertical: 6),
-            margin: EdgeInsets.symmetric(vertical: 5),
-            //decoration: bd3,
-            child: Card(
-              elevation: 5,
-              shadowColor: Colors.grey.withOpacity(0.2),
-              child: ListTile(
-                  title: Text(title ?? '',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Gilroy-Medium')),
-                  subtitle: Text(
-                    subtitle ?? '',
-                    style: TextStyle(fontSize: 14),
-                  )),
-            )),
+        child: Card(
+          elevation: 5,
+          shadowColor: Colors.grey.withOpacity(0.2),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: ListTile(
+                title: Text(title ?? '',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Gilroy-Medium')),
+                subtitle: Text(
+                  subtitle ?? '',
+                  style: TextStyle(fontSize: 14),
+                )),
+          ),
+        ),
       );
 
   Widget credit(String title, String ammount, String ico, bool val) {
@@ -348,6 +350,9 @@ class _dashboardState extends State<dashboard> {
 
       Provider.of<SettingProvider>(_context, listen: false).wait =
           va.businessType == 1;
+    });
+    await WebService.setGetFirebaseId({'api_type': 'get'}).then((value) {
+        preferences.setString("firebaseId",value.data[0].firebaseChatId??"");
     });
   }
 }

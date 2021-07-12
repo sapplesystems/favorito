@@ -90,7 +90,7 @@ initFirebase(firebaseUser, key);
         Firestore.instance.collection("user").document(firebaseUser.uid).setData({});
         //Write data to Local
 
-        await preferences.setString("id", firebaseUser.uid);
+        await preferences.setString("firebaseId", firebaseUser.uid);
         await preferences.setString("phone", firebaseUser.phoneNumber);
         await preferences.setString("nickname", firebaseUser.displayName);
         await preferences.setString("photoUrl", firebaseUser.photoUrl);

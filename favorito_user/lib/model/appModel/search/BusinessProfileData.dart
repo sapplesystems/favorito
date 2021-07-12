@@ -5,6 +5,7 @@ import 'package:favorito_user/model/appModel/Business/RelationModel.dart';
 class BusinessProfileData {
   var id;
   String businessId;
+  String firebaseId;
   String shortDesciption;
   String priceRange;
   String postalCode;
@@ -38,6 +39,7 @@ class BusinessProfileData {
   BusinessProfileData(
       {this.id,
       this.businessId,
+        this.firebaseId,
       this.shortDesciption,
       this.priceRange,
       this.postalCode,
@@ -71,6 +73,7 @@ class BusinessProfileData {
   BusinessProfileData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     businessId = json['business_id'];
+    firebaseId = json['firebase_chat_id'];
     shortDesciption = json['short_desciption'];
     priceRange = json['price_range'];
     postalCode = json['postal_code'];
@@ -121,6 +124,7 @@ class BusinessProfileData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['business_id'] = this.businessId;
+    data['firebase_chat_id'] = this.firebaseId;
     data['short_desciption'] = this.shortDesciption;
     data['price_range'] = this.priceRange;
     data['postal_code'] = this.postalCode;

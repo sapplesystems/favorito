@@ -1,3 +1,4 @@
+
 class ChatUser {
   int id;
   String targetId;
@@ -34,3 +35,4 @@ class ChatUser {
     return data;
   }
 }
+

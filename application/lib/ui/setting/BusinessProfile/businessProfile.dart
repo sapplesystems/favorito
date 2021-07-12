@@ -62,7 +62,7 @@ class BusinessProfile extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 35,
+                            fontSize: 25,
                             fontFamily: 'Gilroy-Bold',
                             letterSpacing: 1.2)),
                     Container(
@@ -551,7 +551,7 @@ class BusinessProfile extends StatelessWidget {
                                     business_id,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 25,
+                                        fontSize: 16,
                                         letterSpacing: 1.2,
                                         fontFamily: 'Gilroy-Medium'),
                                   )

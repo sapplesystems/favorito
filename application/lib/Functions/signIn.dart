@@ -29,7 +29,7 @@ initFirebase(firebaseUser, key) async {
       });
       //Write data to Local
 
-      await preferences.setString("id", firebaseUser.uid);
+      await preferences.setString("firebaseId", firebaseUser.uid);
       await preferences.setString("phone", firebaseUser.phoneNumber);
       await preferences.setString("nickname", firebaseUser.displayName);
     } else {

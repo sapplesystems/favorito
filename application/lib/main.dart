@@ -1,6 +1,5 @@
 import 'package:Favorito/Provider/SignUpProvider.dart';
 import 'package:Favorito/ui/Chat/ChatProvider.dart';
-
 import 'package:Favorito/ui/ResetPass/ResetPassProvider.dart';
 import 'package:Favorito/ui/appoinment/AppoinmentProvider.dart';
 import 'package:Favorito/ui/booking/BookingProvider.dart';

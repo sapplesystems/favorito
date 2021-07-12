@@ -14,7 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ChatLogin extends StatefulWidget {
   String mobileNo;
   bool imIn;
-  ChatLogin({this.mobileNo,this.imIn});
+
+  ChatLogin({this.mobileNo, this.imIn});
+
   @override
   LoginScreenState createState() => LoginScreenState();
 }
@@ -33,8 +35,9 @@ class LoginScreenState extends State<ChatLogin> {
   FocusNode focusnode = FocusNode();
   String verificationId, smsCode;
   bool codeSent = false;
-  
+
   String currentUserId = '';
+
   @override
   void initState() {
     super.initState();
@@ -55,9 +58,7 @@ class LoginScreenState extends State<ChatLogin> {
         currentUserId.length > 4) {
       // Navigator.pop(context);
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomeScreen()));
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
     this.setState(() {
       focusnode.requestFocus();
@@ -144,7 +145,7 @@ class LoginScreenState extends State<ChatLogin> {
     isLoadingSet = true;
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
       print("verified is called");
-      AuthServices().signIn(authResult, key,false);
+      AuthServices().signIn(authResult, key, false);
     };
 
     final PhoneVerificationFailed verificationfield =
@@ -174,18 +175,19 @@ class LoginScreenState extends State<ChatLogin> {
         codeSent: smsSent,
         codeAutoRetrievalTimeout: autoTimeout);
   }
-
-
 }
 
 class AuthServices {
   SharedPreferences preferences;
-  AuthServices(){
-      initCall();
+
+  AuthServices() {
+    initCall();
   }
-  initCall()async{
-     preferences = await SharedPreferences.getInstance();
+
+  initCall() async {
+    preferences = await SharedPreferences.getInstance();
   }
+
   handleAuth() {
     return StreamBuilder(
         stream: FirebaseAuth.instance.onAuthStateChanged,
@@ -206,7 +208,7 @@ class AuthServices {
   }
 
   //SignIn
-  signIn(AuthCredential authCreds, key,bool mayIComeIn) async {
+  signIn(AuthCredential authCreds, key, bool mayIComeIn) async {
     FirebaseUser firebaseUser = (await FirebaseAuth.instance
             .signInWithCredential(authCreds)
             .onError((error, stackTrace) {
@@ -216,22 +218,20 @@ class AuthServices {
     }))
         .user;
     var uid = firebaseUser.uid;
-    preferences.setString('firebaseId',uid);
+    preferences.setString('firebaseId', uid);
 
     print("uid:$uid");
-   initFirebase(firebaseUser, key);
-   
+    initFirebase(firebaseUser, key);
   }
 
   signInWithOtp(smsCode, verId, key) {
     print(smsCode);
     AuthCredential authCreds = PhoneAuthProvider.getCredential(
         verificationId: verId, smsCode: smsCode);
-    signIn(authCreds, key,true);
+    signIn(authCreds, key, true);
   }
 
   void initFirebase(FirebaseUser firebaseUser, key) async {
-
     //Signin Success
     if (firebaseUser != null) {
       //check if already signedUp
@@ -278,8 +278,7 @@ class AuthServices {
       //   isLoading = false;
       // });
 
-      Navigator.pop(
-          key.currentContext);
+      Navigator.pop(key.currentContext);
       // Navigator.push(
       //     key.currentContext,
       //     MaterialPageRoute(

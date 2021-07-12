@@ -8,19 +8,27 @@ class MyTheme {
   ThemeData themeDataDark = ThemeData(
       fontFamily: fontfamily,
       appBarTheme: AppBarTheme(
-          shadowColor: myRed, foregroundColor: myRed, color: myBackGround),
+          shadowColor: myRed,
+          foregroundColor: myRed,
+          color: myBackGround,
+          textTheme: TextTheme(
+              headline1: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 25,
+                  letterSpacing: 1.2,
+                  fontFamily: 'Gilroy-ExtraBold',
+                  color: Colors.black))),
       textTheme: TextTheme(
           headline1:
-              TextStyle(fontFamily: ' Gilroy-ExtraBold', color: Colors.white),
-          headline2:
-              TextStyle(fontFamily: ' Gilroy-Heavy', color: Colors.white),
-          headline3: TextStyle(fontFamily: ' Gilroy-Bold', color: Colors.white),
+              TextStyle(fontFamily: 'Gilroy-ExtraBold', color: Colors.white),
+          headline2: TextStyle(fontFamily: 'Gilroy-Heavy', color: Colors.white),
+          headline3: TextStyle(fontFamily: 'Gilroy-Bold', color: Colors.white),
           headline4:
-              TextStyle(fontFamily: ' Gilroy-Medium', color: Colors.white),
+              TextStyle(fontFamily: 'Gilroy-Medium', color: Colors.white),
           headline5:
-              TextStyle(fontFamily: ' Gilroy-Regular', color: Colors.white),
+              TextStyle(fontFamily: 'Gilroy-Regular', color: Colors.white),
           headline6:
-              TextStyle(fontFamily: ' Gilroy-Light', color: Colors.white)),
+              TextStyle(fontFamily: 'Gilroy-Light', color: Colors.white)),
       primaryColor: myRed,
       accentColor: myRedLight,
       cardTheme: CardTheme(shape: roundedRectangleBorder, elevation: 2),
@@ -50,7 +58,7 @@ class MyTheme {
           textTheme: TextTheme(
               headline1: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 35,
+                  fontSize: 25,
                   letterSpacing: 1.2,
                   fontFamily: 'Gilroy-ExtraBold',
                   color: Colors.black)),

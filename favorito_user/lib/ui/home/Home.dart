@@ -77,8 +77,7 @@ class _HomeState extends State<Home> {
                               height: sm.h(8),
                               width: sm.h(8),
                               child: ImageMaster(
-                                  url: Provider.of<UserAddressProvider>(context,
-                                          listen: true)
+                                  url:context.watch<UserAddressProvider>()
                                       .getProfileImage()))),
                     ),
                   ),

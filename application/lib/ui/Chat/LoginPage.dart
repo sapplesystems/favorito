@@ -136,7 +136,7 @@ class LoginScreenState extends State<ChatLogin> {
         });
         //Write data to Local
         currentUser = firebaseUser;
-        await preferences.setString("id", currentUser.uid);
+        await preferences.setString("firebaseId", currentUser.uid);
         await preferences.setString("nickname", currentUser.displayName);
         await preferences.setString("photoUrl", currentUser.photoUrl);
         print("Email:${firebaseUser.email}");

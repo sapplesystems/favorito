@@ -233,7 +233,7 @@ getFirabaseId()async{
   }
 
   getProfileImage() =>
-      _profileImage ;
+      _profileImage??'https://icon-library.com/images/icon-f/icon-f-13.jpg';
 
   void getUserImage() async {
     await APIManager.getUserImage().then((value) {

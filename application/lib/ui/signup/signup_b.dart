@@ -81,6 +81,7 @@ class signup_b extends StatelessWidget {
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: txtfieldboundry(
                                           valid: true,
+                                          inputTextSize: 16,
                                           controller:
                                               signUpProviderTrue.controller[3],
                                           title:
@@ -144,6 +145,7 @@ class signup_b extends StatelessWidget {
                                           ? 'Business Email'
                                           : 'Email',
                                       valid: true,
+                                      inputTextSize: 16,
                                       controller:
                                           signUpProviderTrue.controller[5],
                                       myregex: emailRegex,
@@ -164,6 +166,7 @@ class signup_b extends StatelessWidget {
                                   ),
                                   txtfieldboundry(
                                       valid: true,
+                                      inputTextSize: 16,
                                       maxLines: 1,
                                       controller:
                                           signUpProviderTrue.controller[6],
@@ -173,6 +176,7 @@ class signup_b extends StatelessWidget {
                                           .validatePassword(_v),
                                       security: true),
                                   txtfieldboundry(
+                                      inputTextSize: 16,
                                       valid: true,
                                       maxLines: 1,
                                       controller:
@@ -200,7 +204,7 @@ class signup_b extends StatelessWidget {
                                               "By continuing, you agree to Favorito's\n",
                                           style: TextStyle(
                                               color: Colors.grey,
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               fontFamily: "Roboto",
                                               fontWeight: FontWeight.w400,
                                               letterSpacing: 0.32),
@@ -215,7 +219,7 @@ class signup_b extends StatelessWidget {
                                                 text: "Terms of Service ",
                                                 style: TextStyle(
                                                     color: myRed,
-                                                    fontSize: 14,
+                                                    fontSize: 12,
                                                     fontFamily: "Roboto",
                                                     fontWeight: FontWeight.w400,
                                                     letterSpacing: 0.32)),
@@ -232,7 +236,7 @@ class signup_b extends StatelessWidget {
                                                 text: "Privacy Policy.",
                                                 style: TextStyle(
                                                     color: myRed,
-                                                    fontSize: 14,
+                                                    fontSize: 12,
                                                     fontFamily: "Roboto",
                                                     fontWeight: FontWeight.w400,
                                                     letterSpacing: 0.32))

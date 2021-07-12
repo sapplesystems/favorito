@@ -44,11 +44,13 @@ class ChatScreenState extends State<ChatScreen> {
 
   readLocal() async {
     preferences = await SharedPreferences.getInstance();
-    id = preferences.getString("id") ?? "";
-    if (id.hashCode <= widget.userInfo.id.hashCode) {
-      _chatId = '$id-${widget.userInfo.id}';
+    id = preferences.getString("firebaseId") ?? "";
+    print("_chatid:${widget.userInfo.targetId}");
+    var id2 = widget.userInfo.targetId;
+    if (id.hashCode <= id2.hashCode) {
+      _chatId = '$id-$id2';
     } else {
-      _chatId = '${widget.userInfo.id}-$id';
+      _chatId = '$id2-$id';
     }
     print('_chatid:$_chatId');
     var va = Firestore.instance
@@ -315,7 +317,7 @@ class ChatScreenState extends State<ChatScreen> {
                           height: 35,
                           padding: EdgeInsets.all(70),
                         ),
-                        imageUrl: 'widget.userInfo.photoUrl',
+                        imageUrl: widget.userInfo.photo,
                         width: 35,
                         height: 35,
                       ),
@@ -563,7 +565,7 @@ class ChatScreenState extends State<ChatScreen> {
           .document(DateTime.now().millisecondsSinceEpoch.toString());
 
       Firestore.instance.runTransaction((transaction) async {
-        await transaction.set(docRef, {
+        await transaction.set(docRef,{
           "idFrom": id,
           "idTo": widget.userInfo.id,
           "timestamp": DateTime.now().millisecondsSinceEpoch,

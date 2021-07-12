@@ -1,3 +1,4 @@
+import 'package:favorito_user/model/Chat/ChatUserList.dart';
 import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/FollowBtn.dart';
 import 'package:favorito_user/component/ImageMaster.dart';
@@ -7,6 +8,7 @@ import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/tabber.dart';
+import 'package:favorito_user/ui/chat/ChattingPage.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -368,7 +370,18 @@ class BusinessProfile extends StatelessWidget {
                     break;
 
                   case 'Chat':
-                    {}
+                    {
+                      ChatUser chatUser = ChatUser(name:  vatrue
+                          .getBusinessProfileData()
+                          .businessName,photo: vatrue
+                          .getBusinessProfileData()
+                          .photo,targetId:  vatrue
+                          .getBusinessProfileData().firebaseId,targetRole: 'business'
+                          );
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Chat(userInfo:chatUser)));
+
+                    }
                     break;
                   case 'Booking':
                     {

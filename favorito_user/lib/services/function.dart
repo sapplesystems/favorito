@@ -142,4 +142,5 @@ static final funClicks = baseUserProfile + 'promo-click';
   static final getChat = baseBusiness2 + 'get-chats';
   static final setGetFirebaseId = baseBusiness2 + 'firebase-id';
   static final getChatConnectedList = baseBusiness2 + 'get-chat-connected-list';
+  static final createChatConnected = baseBusiness2 + 'create-chat-connected';
 }

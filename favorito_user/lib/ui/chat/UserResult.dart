@@ -26,8 +26,7 @@ class UserResult extends StatelessWidget {
                       radius: 28,
                       backgroundColor: Colors.black,
                       backgroundImage:
-                          // CachedNetworkImageProvider('eachUser?.photoUrl' ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd09TGDcJFx-t_B0HiUkc123nrs2MnSG4WWg&usqp=CAU"),
-                          CachedNetworkImageProvider( "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd09TGDcJFx-t_B0HiUkc123nrs2MnSG4WWg&usqp=CAU"),
+                          CachedNetworkImageProvider(eachUser?.photo ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd09TGDcJFx-t_B0HiUkc123nrs2MnSG4WWg&usqp=CAU"),
                     ),
                     title: Text(
                       eachUser.name??"",

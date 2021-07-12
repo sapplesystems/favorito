@@ -13,7 +13,7 @@ import '../../utils/Extentions.dart';
 
 class HomeScreen extends StatelessWidget {
   
-  String currentUserId;
+  // String currentUserId;
   SizeManager sm;
   bool isFirst = true;
   @override

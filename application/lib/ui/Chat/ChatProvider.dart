@@ -12,14 +12,30 @@ TextEditingController searchTextEditingController = TextEditingController();
   SharedPreferences preferences;
   List<ConnectionData> connectionsList=[];
   String _chatId = "";
-  // String id;
+  String id;
   String currentUserId;
 
   List<UserResult> serachUserResult = [];
   initialCAll() async {
     preferences = await SharedPreferences.getInstance();
     currentUserId = preferences.getString("firebaseId");
+    print("currentUserId:${currentUserId}");
+    // id = preferences.getString("id");//this is targeted person Id
+    id = preferences.getString("targetId");
+    getChatConnectedList();
   }
+
+getChatConnectedList()async{
+  await WebService.getFirebaseConnectedList().then((value){
+    if(value.status=="success"){
+      connectionsList.clear();
+      connectionsList.addAll(value.data);
+      print("serachUserResult:${serachUserResult.length}");
+    }
+    notifyListeners();
+  });
+}
+
 
   controlSearching(String userName) async {
     // print("userName$userName");
@@ -28,12 +44,10 @@ TextEditingController searchTextEditingController = TextEditingController();
     //     .where("nickname", isGreaterThanOrEqualTo: userName)
     //     .getDocuments();
 
-await WebService.getFirebaseConnectedList(RIKeys.josKeys29).then((value) {
-connectionsList.clear();
-  connectionsList.addAll(value.data);
-    
+// await WebService.getFirebaseConnectedList(RIKeys.josKeys29).then((value) {
+// connectionsList.clear();
+//   connectionsList.addAll(value.data);
     //   serachUserResult.forEach((document) {
-        
     //      ConnectionData eachUser= UserResult(eachUser);
     //     removeUser(userResult);
     //     if (currentUserId != document["id"] &&
@@ -41,11 +55,8 @@ connectionsList.clear();
     //       serachUserResult.add(UserResult(eachUser));
     //       notifyListeners();
     //     }
-    
     // });
- 
-
-});
+// });
    }
 
   removeUser([userResult]) {

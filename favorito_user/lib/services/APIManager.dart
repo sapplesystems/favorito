@@ -1563,6 +1563,28 @@ class APIManager {
   }
 
 //chat this will provide list  of all user who is nvolved in chat
+  static Future<BaseResponse> createChatConnected(Map _map) async {
+    if (!await utilProvider.checkInternet())
+      return BaseResponse(
+          status: 'fail', message: 'Please check internet connections');
+
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = service.createChatConnected;
+    print("url : $url");
+    try {
+      response = await dio.post(url,data:_map, options: opt);
+    } on DioError catch (e) {
+      // ExceptionHandler(e, null, url, formKey);
+    }
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+
+//chat this will provide list  of all user who is nvolved in chat
   static Future<UserModel> getChatList(GlobalKey<ScaffoldState> formKey) async {
     if (!await utilProvider.checkInternet())
       return UserModel(

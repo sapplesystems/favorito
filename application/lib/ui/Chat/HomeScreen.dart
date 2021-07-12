@@ -19,8 +19,6 @@ class HomeScreenState extends State<HomeScreen> {
   var vv;
   @override
   Widget build(BuildContext context) {
-    
-
     return SafeArea(
       child: Scaffold(
         key: RIKeys.josKeys29,

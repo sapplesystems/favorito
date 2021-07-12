@@ -7,6 +7,7 @@ import 'package:Favorito/model/CatListModel.dart';
 import 'package:Favorito/model/Chat/ChatModel.dart';
 import 'package:Favorito/model/Chat/ConnectionListModel.dart';
 import 'package:Favorito/model/Chat/UserModel.dart';
+import 'package:Favorito/model/Chat/getFBIdModel.dart';
 import 'package:Favorito/model/Restriction/BookingRestrictionModel.dart';
 import 'package:Favorito/model/StateListModel.dart';
 import 'package:Favorito/model/SubCategoryModel.dart';
@@ -1759,8 +1760,9 @@ class WebService {
     return UserModel.fromJson(convert.json.decode(response.toString()));
   }
 
+
   //getFirebaseConnectedList
-  static Future<ConnectionListModel> getFirebaseConnectedList(Key key) async {
+  static Future<ConnectionListModel> getFirebaseConnectedList() async {
     String url = serviceFunction.getFirebaseConnectedList;
     String token = await Prefs.token;
     opt = Options(
@@ -2090,7 +2092,7 @@ class WebService {
     }
   }
 
-  static Future<BaseResponseModel> setGetFirebaseId(Map _map) async {
+  static Future<getFBIdModel> setGetFirebaseId(Map _map) async {
     String token = await Prefs.token;
     print("tiken:${token}");
     String url = serviceFunction.setGetFirebaseId;
@@ -2101,7 +2103,7 @@ class WebService {
     if (response.statusCode == HttpStatus.ok) {
       print("Request URL:$url");
       print("Response is :${response.toString()}");
-      return BaseResponseModel.fromJson(
+      return getFBIdModel.fromJson(
           convert.json.decode(response.toString()));
     }
   }
