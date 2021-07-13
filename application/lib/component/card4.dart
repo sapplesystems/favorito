@@ -22,16 +22,22 @@ class card4 extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeManager sm = SizeManager(context);
     return Card(
+      shadowColor: Colors.grey.withOpacity(0.2),
+      elevation: 8,
       child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         Container(
-          width: 48,
-          height: 48,
+          width: sm.w(15),
+          height: sm.w(15),
           decoration:
               BoxDecoration(shape: BoxShape.circle, color: Color(circleColor)),
           child: Image.asset('assets/icon/$circleIcon.png'),
         ),
-        Text(title),
+        Text(
+          title,
+          style: TextStyle(
+              fontSize: 16, fontFamily: 'Roboto', fontWeight: FontWeight.w400),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

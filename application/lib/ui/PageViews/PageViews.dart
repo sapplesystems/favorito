@@ -32,12 +32,8 @@ class _PageViewsState extends State<PageViews> {
             color: Colors.black, //change your color here
           ),
           title: Text(
-            "Page Viesw",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 2),
+            "Page Views",
+            style: Theme.of(context).appBarTheme.textTheme.headline1,
           ),
           centerTitle: true,
         ),
@@ -50,7 +46,7 @@ class _PageViewsState extends State<PageViews> {
               children: [
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: sm.w(6)),
-                  padding: EdgeInsets.only(top: sm.h(2), bottom: sm.h(8)),
+                  padding: EdgeInsets.only(top: sm.h(2), bottom: sm.h(2)),
                   child: GridView.count(
                     shrinkWrap: true,
                     physics: const ScrollPhysics(),
@@ -133,18 +129,21 @@ class _PageViewsState extends State<PageViews> {
                     ],
                   ),
                 ),
-                Column(
-                  children: <Widget>[
-                    Text("Top KeyWords",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: sm.h(2), horizontal: sm.h(3)),
-                      child: Text(branchList,
-                          style: TextStyle(fontWeight: FontWeight.w400)),
-                    )
-                  ],
+                Card(
+                  child: Column(
+                    children: <Widget>[
+                      Text("Top KeyWords",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: sm.h(2), horizontal: sm.h(3)),
+                        child: Text(branchList,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.w400)),
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
