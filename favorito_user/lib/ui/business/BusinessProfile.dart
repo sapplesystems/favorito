@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:favorito_user/model/Chat/ChatUserList.dart';
 import 'package:favorito_user/ui/Booking/AppBookProvider.dart';
 import 'package:favorito_user/component/FollowBtn.dart';
@@ -8,6 +9,7 @@ import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/tabber.dart';
+import 'package:favorito_user/ui/chat/ChatProvider.dart';
 import 'package:favorito_user/ui/chat/ChattingPage.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -378,8 +380,12 @@ class BusinessProfile extends StatelessWidget {
                           .photo,targetId:  vatrue
                           .getBusinessProfileData().firebaseId,targetRole: 'business'
                           );
-                      Navigator.push(context,
+                      if(vatrue
+                          .getBusinessProfileData().firebaseId.length>5)Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Chat(userInfo:chatUser)));
+                      else{
+                        BotToast.showText(text: 'These Business is not available for chat support');
+                      }
 
                     }
                     break;

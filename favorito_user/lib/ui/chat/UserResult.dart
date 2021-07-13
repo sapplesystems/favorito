@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:favorito_user/model/Chat/ChatUserList.dart';
-import 'package:favorito_user/model/Chat/User.dart';
 import 'package:favorito_user/ui/Chat/ChattingPage.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 

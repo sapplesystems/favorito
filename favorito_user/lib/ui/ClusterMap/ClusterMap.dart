@@ -2,10 +2,12 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
+import 'package:favorito_user/ui/search/business_on_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong/latlong.dart';
+
 class ClusterMap extends StatefulWidget {
   List<BusinessProfileData> list;
   ClusterMap({this.list});
@@ -14,76 +16,23 @@ class ClusterMap extends StatefulWidget {
 }
 
 class _ClusterMapState extends State<ClusterMap> {
+  List<BusinessProfileData> businessLocalList=[];
+
+  List<BusinessProfileData> data =[];
   final PopupController _popupController = PopupController();
 SizeManager sm;
-  List<Marker> markers;
   int pointIndex;
-  List points = [
-    LatLng(51.5, -0.09),
-    LatLng(49.8566, 3.3522),
-  ];
-
   @override
   void initState() {
     pointIndex = 0;
     int i;
-    for( var v in widget.list){
-    // markers = [
-    //   Marker(
-    //     anchorPos: AnchorPos.align(AnchorAlign.center),
-    //     height: 30,
-    //     width: 30,
-    //     point: points[0],
-    //     builder: (ctx) => Icon(Icons.pin_drop),
-    //   )
-    // ]  ; 
-      print(v.location);
-    // points.add(LatLng(v.location.split(',')[0],v.location.split(',')[1]));
+    data.addAll(widget.list);
+
+    for(int i=0;i<data.length;i++){
+      if(data[i].location==null)
+        data.removeAt(i);
     }
-    markers = [
-      Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
-        point: points[pointIndex],
-        builder: (ctx) => Icon(Icons.pin_drop),
-      ),
-      Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
-        point: LatLng(28.5970, 77.2009),
-        builder: (ctx) => Icon(Icons.pin_drop),
-      ),
-      Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
-        point: LatLng(28.4472, 77.0406),
-        builder: (ctx) => Icon(Icons.pin_drop),
-      ),
-      Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
-        point: LatLng(53.3488, -6.2613),
-        builder: (ctx) => Icon(Icons.pin_drop),
-      ),
-      Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
-        point: LatLng(48.8566, 2.3522),
-        builder: (ctx) => Icon(Icons.pin_drop),
-      ),
-      Marker(
-        anchorPos: AnchorPos.align(AnchorAlign.center),
-        height: 30,
-        width: 30,
-        point: LatLng(49.8566, 3.3522),
-        builder: (ctx) => Icon(Icons.pin_drop),
-      ),
-    ];
+
 
     super.initState();
   }
@@ -92,30 +41,23 @@ SizeManager sm;
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          pointIndex++;
-          if (pointIndex >= points.length) {
-            pointIndex = 0;
-          }
-          setState(() {
-            markers[0] = Marker(
-              point: points[pointIndex],
-              anchorPos: AnchorPos.align(AnchorAlign.center),
-              height: 30,
-              width: 30,
-              builder: (ctx) => Icon(Icons.pin_drop),
-            );
-            markers = List.from(markers);
-          });
-        },
-        child: Icon(Icons.refresh),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //       pointIndex = 0;
+      //   },
+      //   child: Icon(Icons.refresh),
+      // ),
       body: Stack(
         children: [
           FlutterMap(
             options: MapOptions(
-              center: points[0],
+              center: (data.map((e) => Marker(
+                anchorPos: AnchorPos.align(AnchorAlign.center),
+                height: 30,
+                width: 30,
+                point: LatLng(double.parse(e.location.split(',').first.trim()), double.parse(e.location.split(',').last.trim())),
+                builder: (ctx) => Icon(Icons.pin_drop),
+              )).toList(growable: true))[0].point,
               zoom: 5,
               maxZoom: 15,
               plugins: [
@@ -133,10 +75,15 @@ SizeManager sm;
                 maxClusterRadius: 120,
                 size: Size(40, 40),
                 anchor: AnchorPos.align(AnchorAlign.center),
-                fitBoundsOptions: FitBoundsOptions(
-                  padding: EdgeInsets.all(50),
-                ),
-                markers: markers,
+                fitBoundsOptions: FitBoundsOptions(padding: EdgeInsets.all(50)),
+                // markers: markers,
+                markers: data.map((e) => Marker(
+                  anchorPos: AnchorPos.align(AnchorAlign.center),
+                  height: 30,
+                  width: 30,
+                  point: LatLng(double.parse(e.location.split(',').first.trim()), double.parse(e.location.split(',').last.trim())),
+                  builder: (ctx) => Icon(Icons.pin_drop),
+                )).toList(growable: true),
                 polygonOptions: PolygonOptions(
                     borderColor: Colors.blueAccent,
                     color: Colors.black12,
@@ -151,7 +98,7 @@ SizeManager sm;
                           child: GestureDetector(
                             onTap: () => debugPrint('Popup tap!'),
                             child: Text(
-                              'Container popup for marker at ${marker.point}',style: Theme.of(context)
+                              '${marker.point}',style: Theme.of(context)
                                       .textTheme
                                       .headline6
                                       .copyWith(color: Colors.black),
@@ -216,9 +163,9 @@ SizeManager sm;
               ],
             ),
           ),
-          
+          Positioned(bottom: sm.h(8),child: Container(width: sm.w(100),child: business_on_map(list:data),),)
         ],
       ),
     );
-  }
+  } 
 }

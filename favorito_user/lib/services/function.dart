@@ -11,6 +11,9 @@ class service {
 //firebaseId
   static final getFirebaseId = baseBusiness2 + 'firebase-id';
 
+  //offer
+  static final baseOffer = baseUser + 'offer/';
+
   //User+switch
   static final baseUserBusiness = baseUser + 'business-';
   static final baseUserProfile = baseUser + 'profile/';

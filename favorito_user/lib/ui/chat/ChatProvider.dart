@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/Chat/ChatUserList.dart';
-import 'package:favorito_user/model/Chat/User.dart';
 import 'package:favorito_user/services/APIManager.dart';
-import 'package:favorito_user/ui/Chat/HomeScreen.dart';
-import 'package:favorito_user/ui/Chat/UserResult.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatProvider extends BaseProvider {
