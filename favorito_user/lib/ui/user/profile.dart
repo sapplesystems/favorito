@@ -3,6 +3,7 @@ import 'package:favorito_user/component/ImageMaster.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/services/APIManager.dart';
 import 'package:favorito_user/ui/chat/ChatProvider.dart';
+import 'package:favorito_user/ui/notification/NotificationHome.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileDetail.dart';
@@ -148,7 +149,6 @@ class Profile extends StatelessWidget {
                 context.read<ChatProvider>().preferences.clear();
                 Provider.of<UserAddressProvider>(context, listen: false)
                     .allClear();
-                    
               } catch (e) {} finally {
                 Prefs().clear();
               }
@@ -192,6 +192,11 @@ class Profile extends StatelessWidget {
               Provider.of<ProfileProvider>(context, listen: false).dataWill(-3);
               Navigator.of(context).pushNamed('/followingUser');
               break;
+            }
+          case 'Terms of services':
+            {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NotificationHome()));
             }
         }
       },

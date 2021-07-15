@@ -27,6 +27,7 @@ import 'package:favorito_user/model/appModel/Menu/MenuTabModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/CreateOrderModel.dart';
 import 'package:favorito_user/model/appModel/Menu/order/ModelOption.dart';
 import 'package:favorito_user/model/appModel/Menu/order/OrderListModel.dart';
+import 'package:favorito_user/model/appModel/OffersModel.dart';
 import 'package:favorito_user/model/appModel/PostalCodeModel.dart';
 import 'package:favorito_user/model/appModel/ProfileData/ProfileModel.dart';
 import 'package:favorito_user/model/appModel/ProfileImageModel.dart';
@@ -64,8 +65,7 @@ class APIManager {
 
   static UtilProvider utilProvider = UtilProvider();
 
-  static Options opt =
-      Options(contentType: Headers.formUrlEncodedContentType);
+  static Options opt = Options(contentType: Headers.formUrlEncodedContentType);
 
 //this is used for register new user
   static Future<registerModel> register(
@@ -93,7 +93,7 @@ class APIManager {
     print("responseData1:${_map.toString()}");
     String url = service.register;
     try {
-      response = await dio.post(url, data:_map, options: opt);
+      response = await dio.post(url, data: _map, options: opt);
     } on DioError catch (e) {
       BotToast.showText(text: e.message);
       ExceptionHandler(e, pr, url, formKey);
@@ -181,7 +181,7 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    response = await dio.post(url,data:_map, options: opt);
+    response = await dio.post(url, data: _map, options: opt);
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
@@ -387,14 +387,12 @@ class APIManager {
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    
-    response = await dio
-        .post(url,options: opt);
+
+    response = await dio.post(url, options: opt);
 
     print("Request URL:$url.toString()");
     print("responseData1:${response.toString()}");
-    return ChatUserListModel.fromJson(
-        convert.json.decode(response.toString()));
+    return ChatUserListModel.fromJson(convert.json.decode(response.toString()));
   }
 
 //this is used for get small list of hot and new businesses
@@ -564,10 +562,11 @@ class APIManager {
     print("service.mostPopulerBusiness : ${response.toString}");
     return CatlogModel.fromJson(convert.jsonDecode(response.toString()));
   }
+
 // funClicks
   static Future<JobDetailModels> funClicks(Map _map) async {
     String token = await Prefs.token;
-    String _url =service.funClicks;
+    String _url = service.funClicks;
     opt = Options(
         contentType: Headers.formUrlEncodedContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'});
@@ -1576,13 +1575,12 @@ class APIManager {
     String url = service.createChatConnected;
     print("url : $url");
     try {
-      response = await dio.post(url,data:_map, options: opt);
+      response = await dio.post(url, data: _map, options: opt);
     } on DioError catch (e) {
       // ExceptionHandler(e, null, url, formKey);
     }
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
-
 
 //chat this will provide list  of all user who is nvolved in chat
   static Future<UserModel> getChatList(GlobalKey<ScaffoldState> formKey) async {
@@ -1701,5 +1699,37 @@ class APIManager {
           ),
         ) ??
         false;
+  }
+
+  static Future<OfferModel> getOffers() async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = service.getoffers;
+    print("url : $url");
+    try {
+      response = await dio.post(url, options: opt);
+    } on DioError catch (e) {
+      // ExceptionHandler(e, null, url, formKey);
+    }
+    return OfferModel.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<BaseResponse> updateOffers(_map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = service.updateoffers;
+    print("url : $url");
+    try {
+      response = await dio.post(url, options: opt, data: _map);
+    } on DioError catch (e) {
+      // ExceptionHandler(e, null, url, formKey);
+    }
+    return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
   }
 }

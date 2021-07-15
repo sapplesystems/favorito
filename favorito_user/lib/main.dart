@@ -12,6 +12,7 @@ import 'package:favorito_user/ui/appointment/appointmentProvider.dart';
 import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/business/tabs/Review/ReviewProvider.dart';
 import 'package:favorito_user/ui/chat/ChatProvider.dart';
+import 'package:favorito_user/ui/notification/NofificationProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileProvider.dart';
@@ -44,6 +45,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => ReviewProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationProvider())
       ],
       child: MyApp(),
     ));
@@ -65,33 +67,33 @@ class MyApp extends StatelessWidget {
           primaryIconTheme: IconThemeData(color: Colors.black87),
           primaryTextTheme: TextTheme(
             headline1:
-                TextStyle(fontFamily: ' Gilroy-ExtraBold', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-ExtraBold', color: Colors.black),
             headline2:
-                TextStyle(fontFamily: ' Gilroy-Heavy', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Heavy', color: Colors.black),
             headline3:
-                TextStyle(fontFamily: ' Gilroy-Bold', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Bold', color: Colors.black),
             headline4:
-                TextStyle(fontFamily: ' Gilroy-Medium', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Medium', color: Colors.black),
             headline5:
-                TextStyle(fontFamily: ' Gilroy-Regular', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Regular', color: Colors.black),
             headline6:
-                TextStyle(fontFamily: ' Gilroy-Light', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Light', color: Colors.black),
           ),
           appBarTheme: AppBarTheme(
               shadowColor: myRed, foregroundColor: myRed, color: myGreyDark),
           textTheme: TextTheme(
             headline1:
-                TextStyle(fontFamily: ' Gilroy-ExtraBold', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-ExtraBold', color: Colors.black),
             headline2:
-                TextStyle(fontFamily: ' Gilroy-Heavy', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Heavy', color: Colors.black),
             headline3:
-                TextStyle(fontFamily: ' Gilroy-Bold', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Bold', color: Colors.black),
             headline4:
-                TextStyle(fontFamily: ' Gilroy-Medium', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Medium', color: Colors.black),
             headline5:
-                TextStyle(fontFamily: ' Gilroy-Regular', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Regular', color: Colors.black),
             headline6:
-                TextStyle(fontFamily: ' Gilroy-Light', color: Colors.black),
+                TextStyle(fontFamily: 'Gilroy-Light', color: Colors.black),
           )), //Gilroy-Regular
       theme: NeumorphicThemeData(
           baseColor: myGreyLight,
