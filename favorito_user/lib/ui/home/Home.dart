@@ -11,6 +11,7 @@ import 'package:favorito_user/ui/user/PersonalInfo/UserAddress.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/RIKeys.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,10 +33,36 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+   String messageTitle = "Empty";
+String notificationAlert = "alert";
+
+FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   var _mySearchEditTextController = TextEditingController();
   SizeManager sm;
   UserAddressProvider vaTrue;
   bool isFirst = true;
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _firebaseMessaging.configure(
+      onMessage: (message) async{
+        setState(() {
+          messageTitle = message["notification"]["title"];
+          notificationAlert = "New Notification Alert";
+        });
+      },
+      onResume: (message) async{
+        setState(() {
+          messageTitle = message["data"]["title"];
+          notificationAlert = "Application opened from Notification";
+        });
+
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

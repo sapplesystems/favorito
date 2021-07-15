@@ -16,6 +16,8 @@ import 'package:favorito_user/ui/notification/NofificationProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/PersonalInfoProvider.dart';
 import 'package:favorito_user/ui/user/PersonalInfo/UserAddressProvider.dart';
 import 'package:favorito_user/ui/user/ProfileProvider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,7 @@ import 'package:flutter/foundation.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+ 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MultiProvider(
@@ -53,6 +56,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) => NeumorphicApp(
       debugShowCheckedModeBanner: kReleaseMode ? false : true,

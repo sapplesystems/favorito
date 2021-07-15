@@ -29,7 +29,7 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLoading = false;
   File imageFile;
   String imageUrl;
-  bool isFirst = false;
+  bool isFirst = true;
   String _chatId = "";
   String id;
   SharedPreferences preferences;
@@ -79,7 +79,7 @@ class ChatScreenState extends State<ChatScreen> {
               createListMessages(),
 
               //Show stickers
-              Visibility(visible: isDisplaySticker, child: createStickers()),
+              // Visibility(visible: isDisplaySticker, child: createStickers()),
               //Create input
               createInput(),
             ]),
@@ -103,71 +103,72 @@ class ChatScreenState extends State<ChatScreen> {
     return Future.value(false);
   }
 
-  createStickers() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.grey, width: 0.5))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi1", 2),
-                  child: Image.asset('images/mimi1.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi2", 2),
-                  child: Image.asset('images/mimi2.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi3", 2),
-                  child: Image.asset('images/mimi3.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi4", 2),
-                  child: Image.asset('images/mimi4.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi5", 2),
-                  child: Image.asset('images/mimi5.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi6", 2),
-                  child: Image.asset('images/mimi6.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi7", 2),
-                  child: Image.asset('images/mimi7.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi8", 2),
-                  child: Image.asset('images/mimi8.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-              FlatButton(
-                  // onPressed: () => onSendMessage("mimi9", 2),
-                  child: Image.asset('images/mimi9.gif',
-                      width: 50.0, height: 50, fit: BoxFit.cover)),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+  // createStickers() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         border: Border(top: BorderSide(color: Colors.grey, width: 0.5))),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       children: [
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           children: [
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi1", 2),
+  //                 child: Image.asset('images/mimi1.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi2", 2),
+  //                 child: Image.asset('images/mimi2.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi3", 2),
+  //                 child: Image.asset('images/mimi3.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //           ],
+  //         ),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           children: [
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi4", 2),
+  //                 child: Image.asset('images/mimi4.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi5", 2),
+  //                 child: Image.asset('images/mimi5.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi6", 2),
+  //                 child: Image.asset('images/mimi6.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //           ],
+  //         ),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           children: [
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi7", 2),
+  //                 child: Image.asset('images/mimi7.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi8", 2),
+  //                 child: Image.asset('images/mimi8.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //             FlatButton(
+  //                 // onPressed: () => onSendMessage("mimi9", 2),
+  //                 child: Image.asset('images/mimi9.gif',
+  //                     width: 50.0, height: 50, fit: BoxFit.cover)),
+  //           ],
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   createListMessages() {
+    isFirst = true;
     return Flexible(
         child: _chatId == ""
             ? Center(
@@ -186,7 +187,7 @@ class ChatScreenState extends State<ChatScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    isFirst = true;
+
                     return Center(
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -195,11 +196,12 @@ class ChatScreenState extends State<ChatScreen> {
                     );
                   } else {
                     listMessage = snapshot.data.documents;
-
                     return ListView.builder(
                       padding: EdgeInsets.all(10),
-                      itemBuilder: (context, index) =>
-                          createItem(index, snapshot.data.documents[index]),
+                      itemBuilder: (context, index) {
+                        isFirst = false;
+                        return createItem(index, snapshot.data.documents[index]);
+                      },
                       itemCount: snapshot.data.documents.length,
                       reverse: true,
                       controller: listScrollController,
@@ -210,7 +212,6 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Widget createItem(int index, DocumentSnapshot document) {
-    //My Messages right side
     if (document["idFrom"] == id) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -453,19 +454,6 @@ class ChatScreenState extends State<ChatScreen> {
     return Container(
       child: Row(
         children: [
-          //pick image icon button
-          // Material(
-          //   child: Container(
-          //     margin: EdgeInsets.only(left: .5),
-          //     child: IconButton(
-          //       icon: Icon(Icons.image, color: Colors.lightBlueAccent),
-          //       onPressed: () => getImage(true),
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          //   color: Colors.white,
-          // ),
-          //imoji icon button placeholder
           InkWell(
             onTap: () => getImage(true),
             child: Container(
@@ -502,7 +490,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: IconButton(
             color: Colors.white,
             icon: Icon(Icons.send, color: myRed),
-            onPressed: () => onSendMessage(textEditingController.text, 0,isFirst),
+            onPressed: () => onSendMessage(textEditingController.text, 0),
           ))
         ],
       ),
@@ -559,7 +547,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  void onSendMessage(String contentMsg, int type,bool isFirst) async {
+  void onSendMessage(String contentMsg, int type) async {
     //type = 0 its text message
     //type = 1 its text imageFile
     //type = 2 its text sticker imoji gif
