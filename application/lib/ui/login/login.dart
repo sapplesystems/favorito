@@ -8,12 +8,15 @@ import 'package:Favorito/model/loginModel.dart';
 import 'package:Favorito/network/RequestModel.dart';
 import 'package:Favorito/network/serviceFunction.dart';
 import 'package:Favorito/network/webservices.dart';
+import 'package:Favorito/ui/Terms_of_service/termsofservice.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigation.dart';
 import 'package:Favorito/ui/bottomNavigation/bottomNavigationProvider.dart';
+import 'package:Favorito/ui/privacypolicy/privacypolicy.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
 import 'package:Favorito/utils/Prefs.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -178,6 +181,11 @@ class _LoginState extends State<Login> {
                     letterSpacing: 0.32),
                 children: [
                   TextSpan(
+                      recognizer: new TapGestureRecognizer()
+                        ..onTap = () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TermsOfServicePage())),
                       text: "Terms of Service ",
                       style: TextStyle(
                           color: myRed,
@@ -194,6 +202,11 @@ class _LoginState extends State<Login> {
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.32)),
                   TextSpan(
+                      recognizer: new TapGestureRecognizer()
+                        ..onTap = () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PrivacyPolicy())),
                       text: "Privacy Policy.",
                       style: TextStyle(
                           color: myRed,

@@ -40,7 +40,7 @@ class ReviewData1 {
   String createdAt;
   String businessDate;
   String businessReview;
-  var rating;
+  double rating;
   int totalReviews;
 
   ReviewData1(

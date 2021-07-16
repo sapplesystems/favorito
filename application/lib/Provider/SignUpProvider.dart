@@ -192,14 +192,13 @@ class SignUpProvider extends ChangeNotifier {
   }
 
   validatemail() async {
-    print("fsdfsdfsdf");
     if (emailRegex.hasMatch(controller[5].text)) {
       await WebService.checkEmailAndMobile(
         {"api_type": "email", "email": controller[5].text},
       ).then((value) {
         if (value.status == "success") {
           mailError = value.data[0].isExist == 1
-              ? '\t\t\tThis mail arleady registered with us.'
+              ? '\t\t\tThis mail already registered with us.'
               : null;
         } else {
           mailError = '${value.message}';

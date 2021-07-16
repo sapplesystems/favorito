@@ -7,6 +7,7 @@ import 'package:Favorito/model/notification/CityListModel.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessHoursProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 
 import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -354,7 +355,7 @@ class BusinessProfileProvider extends BaseProvider {
         await Future.delayed(const Duration(seconds: 1));
         needSave(false);
         BotToast.showText(text: value.message);
- 
+
         try {
           listviewController.animateTo(
               listviewController?.position?.minScrollExtent,
@@ -364,7 +365,6 @@ class BusinessProfileProvider extends BaseProvider {
         } catch (e) {
           getProfileData(context);
         }
-        
       }
     });
   }
@@ -521,7 +521,9 @@ class BusinessProfileProvider extends BaseProvider {
         .then((value) async {
       if (value != null) {
         image = value;
-        await WebService.profileImageUpdate(image, context).then((value) {
+        await WebService.profileImageUpdate(
+                image, RIKeys.josKeys25.currentContext)
+            .then((value) {
           if (value.status == "success") {
             controller[0].text = value.data[0].photo;
             addOrChangePhoto = 'Change Photo';

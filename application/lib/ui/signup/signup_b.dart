@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:Favorito/Provider/SignUpProvider.dart';
+import 'package:Favorito/ui/Terms_of_service/termsofservice.dart';
+import 'package:Favorito/ui/privacypolicy/privacypolicy.dart';
 import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/myColors.dart';
 import 'package:Favorito/component/roundedButton.dart';
@@ -210,12 +212,12 @@ class signup_b extends StatelessWidget {
                                               letterSpacing: 0.32),
                                           children: [
                                             TextSpan(
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        print(
-                                                            'The button is clicked!');
-                                                      },
+                                                recognizer: new TapGestureRecognizer()
+                                                  ..onTap = () => Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              TermsOfServicePage())),
                                                 text: "Terms of Service ",
                                                 style: TextStyle(
                                                     color: myRed,
@@ -227,12 +229,12 @@ class signup_b extends StatelessWidget {
                                                 text:
                                                     "and acknowledge\nFavorito's "),
                                             TextSpan(
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        print(
-                                                            'The Button is clicked!');
-                                                      },
+                                                recognizer: new TapGestureRecognizer()
+                                                  ..onTap = () => Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              PrivacyPolicy())),
                                                 text: "Privacy Policy.",
                                                 style: TextStyle(
                                                     color: myRed,
