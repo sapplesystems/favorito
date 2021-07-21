@@ -20,6 +20,7 @@ import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart'
 import 'package:favorito_user/model/appModel/Carousel/CarouselModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogModel.dart';
 import 'package:favorito_user/model/appModel/CheckAccountmodel.dart';
+import 'package:favorito_user/model/appModel/HighlightsModel.dart';
 import 'package:favorito_user/model/appModel/Menu/Customization.dart/CustomizationModel.dart';
 import 'package:favorito_user/model/appModel/Menu/IsFoodModel.dart';
 import 'package:favorito_user/model/appModel/Menu/MenuItemBaseModel.dart';
@@ -1731,5 +1732,21 @@ class APIManager {
       // ExceptionHandler(e, null, url, formKey);
     }
     return BaseResponse.fromJson(convert.jsonDecode(response.toString()));
+  }
+
+  static Future<HighlightsModel> getHighlights(_map) async {
+    String token = await Prefs.token;
+    opt = Options(
+        contentType: Headers.formUrlEncodedContentType,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+
+    String url = service.gethighlights;
+    print("url : $url");
+    try {
+      response = await dio.post(url, options: opt, data: _map);
+    } on DioError catch (e) {
+      // ExceptionHandler(e, null, url, formKey);
+    }
+    return HighlightsModel.fromJson(convert.jsonDecode(response.toString()));
   }
 }

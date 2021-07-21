@@ -17,6 +17,9 @@ class service {
   //update offers
   static final updateoffers = baseUser + 'offer/offer-status';
 
+  //get highlights
+  static final gethighlights = baseUserProfile + 'get-business-highlight';
+
   //User+switch
   static final baseUserBusiness = baseUser + 'business-';
   static final baseUserProfile = baseUser + 'profile/';

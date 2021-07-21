@@ -5,11 +5,13 @@ import 'package:favorito_user/model/appModel/Business/AttributesModel.dart';
 import 'package:favorito_user/model/appModel/businessOverViewModel.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/services/APIManager.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/search/mostPopular.dart';
 import 'package:favorito_user/utils/MyColors.dart';
 import 'package:favorito_user/utils/MyString.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class OverviewTab extends StatefulWidget {
   BusinessProfileData data;
@@ -88,7 +90,40 @@ class _OverviewState extends State<OverviewTab> {
                             fontWeight: FontWeight.w500, fontSize: 15),
                         textAlign: TextAlign.justify),
                   ),
-                  myCarousel(overviewData?.data[0]?.businessId),
+                  SizedBox(
+                    height: sm.h(25),
+                    child: Consumer<BusinessProfileProvider>(
+                        builder: (context, data, child) {
+                      return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data.gethighlightsdata.length,
+                          itemBuilder: (context, index) => Container(
+                                width: sm.w(90),
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: sm.w(4)),
+                                  child: Card(
+                                      elevation: 8,
+                                      shadowColor:
+                                          Colors.transparent.withOpacity(0.2),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Text(
+                                          data.gethighlightsdata[index].photo)),
+                                ),
+                              ));
+                    }),
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  //   child: Container(
+                  //     height: sm.h(25),
+                  //     child:
+                  //   ),
+                  // ),
+
+                  //myCarousel(overviewData?.data[0]?.businessId),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: sm.h(2)),
                     child: Text(longDisc,

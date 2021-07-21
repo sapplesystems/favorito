@@ -13,7 +13,7 @@ class ReviewProvider extends BaseProvider {
   List<ReviewData1> reviewData1 = [];
   String _selectedReviewId = "null";
   String _rootId = "null";
-  String myRating = '3.0';
+  double myRating = 3.0;
   String businessId;
   List<double> ratingPoints = [0.0, 0.0, 0.0, 0.0, 0.0];
   List<Reviewdata> reviewModel = [];
@@ -130,7 +130,7 @@ class ReviewProvider extends BaseProvider {
     Map _map = {'business_id': businessId};
     print("_map${_map.toString()}");
     await APIManager.getMyRating(_map).then((value) {
-      myRating = '${value.data[0].rating}';
+      myRating = double.parse('${value.data[0].rating}');
       notifyListeners();
     });
   }

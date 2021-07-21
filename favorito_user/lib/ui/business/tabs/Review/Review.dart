@@ -44,7 +44,7 @@ class Review extends StatelessWidget {
                 child: SmoothStarRating(
                   borderColor: myRed,
                   color: myRed,
-                  rating: double.parse(data.myRating ?? '0.0') ?? 0.0,
+                  rating: data.myRating,
                   isReadOnly: false,
                   size: 40,
                   filledIconData: Icons.star,
@@ -53,7 +53,7 @@ class Review extends StatelessWidget {
                   starCount: 5,
                   allowHalfRating: false,
                   spacing: 2.0,
-                  onRated: (value) => data.myRating = value.toString(),
+                  onRated: (value) => data.myRating = value,
                 ),
               ),
 
