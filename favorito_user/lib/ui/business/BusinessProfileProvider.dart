@@ -5,6 +5,7 @@ import 'package:favorito_user/Providers/BaseProvider.dart';
 import 'package:favorito_user/model/WorkingHoursModel.dart';
 import 'package:favorito_user/model/appModel/Business/businessProfileModel.dart';
 import 'package:favorito_user/model/appModel/Catlog/CatlogData.dart';
+import 'package:favorito_user/model/appModel/HighlightsModel.dart';
 import 'package:favorito_user/model/appModel/WaitList/WaitListDataModel.dart';
 import 'package:favorito_user/model/appModel/job/JobData.dart';
 import 'package:favorito_user/model/appModel/job/JobListModel.dart';
@@ -22,6 +23,7 @@ class BusinessProfileProvider extends BaseProvider {
   BusinessProfileModel _businessProfileData = BusinessProfileModel();
   List<String> attribute = [];
   List<String> service = [];
+  List<Photos> gethighlightsdata = [];
   String _shopTiming = '';
   bool timerTime = false;
   double per = 0.3;
@@ -32,7 +34,6 @@ class BusinessProfileProvider extends BaseProvider {
   ScrollController scrollController = ScrollController();
   int remainTime;
   bool _getWaitlistDone = false;
-  
 
   JobData jobData = JobData();
   bool getIsProgress() => _isProgress;
@@ -93,7 +94,7 @@ class BusinessProfileProvider extends BaseProvider {
       case 1:
         {
           print("tullu:1");
-          // getProfileDetail();//comments this 
+          // getProfileDetail();//comments this
           getBusinessHours();
           getJobList();
           break;
@@ -123,10 +124,9 @@ class BusinessProfileProvider extends BaseProvider {
   getBusinessProfileData() => _businessProfileData?.data[0];
 
   Future<void> getProfileDetail() async {
-    Map _map=  {'business_id': this.getBusinessId()};
+    Map _map = {'business_id': this.getBusinessId()};
     print("_map:${_map.toString()}");
-    await APIManager.baseUserProfileDetails(
-           _map, RIKeys.josKeys2)
+    await APIManager.baseUserProfileDetails(_map, RIKeys.josKeys2)
         .then((value) {
       try {
         _isProgress = false;
@@ -138,17 +138,20 @@ class BusinessProfileProvider extends BaseProvider {
         BotToast.showText(text: e.toString());
       } finally {
         // catalogList();
-       
+
         notifyListeners();
       }
     });
   }
 
-  Future<void> funPromoClicks(proKey,isPro) async {
-    Map _map=  {'business_id': this.getBusinessId(),'pro_key':proKey??"",'is_pro':isPro??""};
+  Future<void> funPromoClicks(proKey, isPro) async {
+    Map _map = {
+      'business_id': this.getBusinessId(),
+      'pro_key': proKey ?? "",
+      'is_pro': isPro ?? ""
+    };
     print("_map:${_map.toString()}");
     await APIManager.funClicks(_map);
-    
   }
 
   waitlistVerbose(context) async {
@@ -265,6 +268,18 @@ class BusinessProfileProvider extends BaseProvider {
       }
     });
     // recall();
+  }
+
+  void getHighlightsPhotos() async {
+    await APIManager.getHighlights({'business_id': this.getBusinessId()})
+        .then((value) {
+      gethighlightsdata.clear();
+      if (value.status == 'success') {
+        gethighlightsdata.addAll(value.data.photos);
+        print(gethighlightsdata.length);
+        notifyListeners();
+      }
+    });
   }
 
   void cancelWaitList() async {
