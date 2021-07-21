@@ -222,13 +222,11 @@ class BusinessProfile extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(left: sm.w(4), top: sm.h(1)),
                           child: Text(
-                              "\u{20B9} : " 
-                              +
+                              "\u{20B9} : " +
                                       vatrue
                                           .getBusinessProfileData()
                                           ?.priceRange ??
-                                  ""
-                              ,
+                                  "",
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -373,27 +371,28 @@ class BusinessProfile extends StatelessWidget {
 
                   case 'Chat':
                     {
-                      ChatUser chatUser = ChatUser(name:  vatrue
-                          .getBusinessProfileData()
-                          .businessName,photo: vatrue
-                          .getBusinessProfileData()
-                          .photo,targetId:  vatrue
-                          .getBusinessProfileData().firebaseId,targetRole: 'business'
-                          );
-                      if(vatrue
-                          .getBusinessProfileData().firebaseId.length>5)Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Chat(userInfo:chatUser)));
-                      else{
-                        BotToast.showText(text: 'These Business is not available for chat support');
+                      ChatUser chatUser = ChatUser(
+                          name: vatrue.getBusinessProfileData().businessName,
+                          photo: vatrue.getBusinessProfileData().photo,
+                          targetId: vatrue.getBusinessProfileData().firebaseId,
+                          targetRole: 'business');
+                      if (vatrue.getBusinessProfileData().firebaseId.length > 5)
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Chat(userInfo: chatUser)));
+                      else {
+                        BotToast.showText(
+                            text:
+                                'These Business is not available for chat support');
                       }
-
                     }
                     break;
                   case 'Booking':
                     {
                       print("sdf1");
-                      context.read<AppBookProvider>()
-                          .bookingVerbose(context);
+                      context.read<AppBookProvider>().bookingVerbose(context);
                       Navigator.of(context).pushNamed('/bookTable');
                     }
                     break;
@@ -451,6 +450,7 @@ class BusinessProfile extends StatelessWidget {
     List<WorkingHoursData> businessProfileProvider =
         vaTrue.getWorkingHoursList();
     return Container(
+      color: Colors.white,
       height: sm.h(70),
       child: ListView(
         children: [

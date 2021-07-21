@@ -39,5 +39,6 @@ class RIKeys {
   static final josKeys27 = GlobalKey<FormState>(); //bottom navigation
   static final josKeys28 = GlobalKey<ScaffoldState>(); //bottom navigation
   static final josKeys29 = GlobalKey<ScaffoldState>(); //bottom navigation
+  static final josKeys30 = GlobalKey<ScaffoldState>(); //setting page
 
 }

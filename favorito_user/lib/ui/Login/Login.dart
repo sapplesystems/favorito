@@ -35,9 +35,9 @@ class _LoginState extends State<Login> {
                   SvgPicture.asset('assets/icon/login_image.svg',
                       height: sm.h(34), fit: BoxFit.fill),
                   SizedBox(height: sm.h(2)),
-                  Text("Welcome Back...",
+                  Text("Welcome Back.",
                       style: Theme.of(context).textTheme.headline5.copyWith(
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w800,
                           letterSpacing: 1.4,
                           fontSize: 28)),
                   Builder(

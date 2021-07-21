@@ -37,7 +37,7 @@ class ReviewProvider extends BaseProvider {
         Navigator.pop(context);
       }
 
-        Navigator.pop(context);
+      Navigator.pop(context);
       controller.text = "";
       setRating();
 
@@ -82,17 +82,17 @@ class ReviewProvider extends BaseProvider {
       });
   }
 
-pastReviewed(){
-  bool val = false;
-  for(var v in  reviewData1){
-   if( v.self==1){
-    val = true;
-    break;
-   }
+  pastReviewed() {
+    bool val = false;
+    for (var v in reviewData1) {
+      if (v.self == 1) {
+        val = true;
+        break;
+      }
+    }
+    print("Past:$val");
+    return val;
   }
-  print("Past:$val");
-  return val;
-}
 
   getSelectedReviewId() => _rootId == "null";
 

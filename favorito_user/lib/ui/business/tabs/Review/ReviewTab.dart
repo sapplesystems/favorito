@@ -115,7 +115,7 @@ class ReviewTab extends StatelessWidget {
                       vaTrue
                         ..clearSelectedReviewId()
                         ..setRootId("null");
-                
+
                       Navigator.pushNamed(context, '/review').whenComplete(() {
                         vaTrue.getCurrentBusinessId(context);
                         vaTrue.getrating();
@@ -190,8 +190,8 @@ class ReviewTab extends StatelessWidget {
                       itemBuilder: (BuildContext _context, int _index) {
                         List<ReviewData1> _data =
                             vaTrue.getAllreviewsListForUi();
-                            
-    // print("hhhh ${DateTime.parse(_data[_index]?.createdAt)}");
+
+                        // print("hhhh ${DateTime.parse(_data[_index]?.createdAt)}");
                         return InkWell(
                           onTap: () {
                             if (_data[_index].self == 1) {
@@ -351,12 +351,11 @@ class ReviewTab extends StatelessWidget {
                                         //       _data[_index]?.businessReview !=
                                         //           null,
                                         //   child:
-                                       
+
                                         Visibility(
                                           visible: true,
                                           // DateTime.parse(_data[_index]?.createdAt).isAfter( DateTime.parse(_data[_index]?.businessDate)),
-                                          child: 
-                                                                                   Padding(
+                                          child: Padding(
                                             padding: EdgeInsets.only(left: 8.0),
                                             child: Column(
                                                 crossAxisAlignment:
@@ -367,7 +366,7 @@ class ReviewTab extends StatelessWidget {
                                                           .textTheme
                                                           .headline3
                                                           .copyWith(
-                                                            color: myRed,
+                                                              color: myRed,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500),

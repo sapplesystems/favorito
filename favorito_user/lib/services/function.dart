@@ -11,8 +11,11 @@ class service {
 //firebaseId
   static final getFirebaseId = baseBusiness2 + 'firebase-id';
 
-  //offer
-  static final baseOffer = baseUser + 'offer/';
+  //offers
+  static final getoffers = baseUser + 'offer/list';
+
+  //update offers
+  static final updateoffers = baseUser + 'offer/offer-status';
 
   //User+switch
   static final baseUserBusiness = baseUser + 'business-';
@@ -25,7 +28,7 @@ class service {
   static final baseUserOrder = baseUser + 'order/';
 
 //clicks
-static final funClicks = baseUserProfile + 'promo-click';
+  static final funClicks = baseUserProfile + 'promo-click';
 
 //function
   static final register = baseUser2 + 'register';

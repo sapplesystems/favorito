@@ -36,6 +36,7 @@ class BusinessProfile extends StatelessWidget {
     return Consumer<BusinessProfileProvider>(builder: (context, data, child) {
       if (isFirst) {
         data.getProfileData(context);
+
         //   v.localAuth();
         isFirst = false;
       }
@@ -606,14 +607,15 @@ class BusinessProfile extends StatelessWidget {
           },
           key: RIKeys.josKeys25,
           save: () {
-            if (RIKeys.josKeys24.currentState.validate())
+            if (RIKeys.josKeys24.currentState.validate()) {
+              Navigator.pop(RIKeys.josKeys25.currentContext);
+              Navigator.pop(RIKeys.josKeys25.currentContext);
               data.prepareWebService();
-            else {
+            } else {
               _autovalidate = true;
               data.notifyListeners();
+              Navigator.pop(RIKeys.josKeys25.currentContext);
             }
-            Navigator.pop(RIKeys.josKeys25.currentContext);
-            Navigator.pop(RIKeys.josKeys25.currentContext);
           }).popMe();
     } else {
       Navigator.pop(RIKeys.josKeys25.currentContext);
