@@ -1,0 +1,221 @@
+var db = require('../../config/db');
+
+exports.getAddress = async function(req, res, next) {
+    if (req.userdata.business_id) {
+        var sql = "SELECT address1, address2, address3, pincode, town_city, state_id, country_id, location FROM business_master WHERE business_id = '" + req.userdata.business_id + "'";
+    } else if (req.userdata.id) {
+        var sql_count_for_default = `select count(id) as count , id from user_address where user_id = '${req.userdata.id}' and deleted_at is null`
+        var sql = "SELECT id, user_id, city, state, pincode, country, landmark,address, default_address, IFNULL(address_type,'') as address_type, deleted_at,latitude, longitude FROM user_address WHERE user_id = '" + req.userdata.id + "' and deleted_at is null";
+        var sql_name = "SELECT first_name, last_name FROM users WHERE id = '" + req.userdata.id + "'"
+    } else {
+        return res.status(500).json({ status: 'failed', message: 'Something went wrong.' });
+    }
+    try {
+        result_count = await exports.executeSql(sql_count_for_default, res)
+        if (result_count[0].count == 1) {
+            sql_update_address = `update user_address set updated_at = now(), default_address = 1 where id = '${result_count[0].id}'`
+            result_udpate_address = await exports.executeSql(sql_update_address, res)
+        }
+        var user_name
+        db.query(sql_name, function(err, result) {
+            if (result != '' && result != undefined && result != null) {
+                user_name = `${result[0].first_name} ${result[0].last_name}`
+            } else {
+                user_name = ''
+            }
+        })
+        db.query(sql, function(err, result) {
+            return res.status(200).json({ status: 'success', message: 'success', data: { user_name: user_name, addresses: result } });
+        })
+    } catch (error) {
+        return res.status(500).json({ status: 'failed', message: 'Something went wrong.', error: error });
+    }
+}
+
+//  on work 
+exports.changeDefaultAddress = async function(req, res, next) {
+    if (req.body.default_address_id == null || req.body.default_address_id == undefined || req.body.default_address_id == '') {
+        return res.status(400).json({ status: 'failed', message: 'Something went wrong.' });
+    }
+    var user_id = req.userdata.id
+    var sql = "UPDATE user_address SET default_address=0 WHERE user_id='" + user_id + "'";
+    update_result = await exports.executeSql(sql, res)
+    if (parseInt(update_result.affectedRows) > 0) {
+        var sql = "UPDATE user_address SET default_address=1 WHERE id='" + req.body.default_address_id + "'";
+        update_result_2 = await exports.executeSql(sql, res)
+        if (update_result_2) {
+            res.status(200).send({ status: 'success', message: 'update done' })
+        }
+    }
+}
+
+exports.deleteAddress = async(req, res) => {
+    if (!req.body.address_id) {
+        return res.status(400).json({ status: 'failed', message: 'address_id is missing' });
+    }
+
+    let set = "deleted_at=NOW() "
+    try {
+        var sql = "UPDATE user_address SET " + set + " WHERE id='" + req.body.address_id + "'";
+        update_result = await exports.executeSql(sql, res)
+        if (parseInt(update_result.affectedRows) > 0) {
+            return res.status(200).send({ status: 'success', message: 'Update done' })
+        } else {
+            return res.status(200).send({ status: 'failed', message: 'Something went wrong' })
+        }
+    } catch (error) {
+        return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+    }
+
+}
+
+exports.changeAddress = async function(req, res, next) {
+    var set = "updated_at=NOW() "
+    if (req.userdata.business_id) {
+        if (req.userdata.address1 || req.userdata.business_id || req.userdata.business_id) {
+            if (req.body.address1) {
+                set += ", address1 = '" + req.body.address1 + "'"
+            }
+            if (req.body.address2) {
+                set += ", address2 = '" + req.body.address2 + "'"
+            }
+            if (req.body.address3) {
+                set += ", address3 = '" + req.body.address3 + "'"
+            }
+            try {
+                var sql = "UPDATE business_master SET " + set + " WHERE business_id='" + req.userdata.business_id + "'";
+                update_result = await exports.executeSql(sql, res)
+                if (parseInt(update_result.affectedRows) > 0) {
+                    return res.status(200).send({ status: 'success', message: 'update done' })
+                }
+            } catch (error) {
+                return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+            }
+        } else {
+            return res.status(400).json({ status: 'failed', message: 'New address is missing' });
+        }
+    } else if (req.userdata.id) {
+        // For update the user address by the address id
+        if (req.body.address_id) {
+            var set = "updated_at=NOW() "
+            if (req.body.city) {
+                set += ", city = '" + req.body.city + "'"
+            }
+            if (req.body.state) {
+                set += ", state = '" + req.body.state + "'"
+            }
+            if (req.body.pincode) {
+                set += ", pincode = '" + req.body.pincode + "'"
+            }
+            if (req.body.country) {
+                set += ", country = '" + req.body.country + "'"
+            }
+            if (req.body.landmark) {
+                set += ", landmark = '" + req.body.landmark + "'"
+            }
+            if (req.body.address) {
+                set += ", address = '" + req.body.address + "'"
+            }
+            if (req.body.address_type) {
+                set += ", address_type = '" + req.body.address_type + "'"
+            }
+            if (req.body.latitude) {
+                set += ", latitude = '" + req.body.latitude + "'"
+            }
+            if (req.body.longitude) {
+                set += ", longitude = '" + req.body.longitude + "'"
+            }
+            try {
+                var sql = "UPDATE user_address SET " + set + " WHERE id='" + req.body.address_id + "'";
+                update_result = await exports.executeSql(sql, res)
+                if (parseInt(update_result.affectedRows) > 0) {
+                    return res.status(200).send({ status: 'success', message: 'update done' })
+                }
+            } catch (error) {
+                return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+            }
+
+        } else {
+            try {
+
+                if (req.body.city) {
+                    city = req.body.city
+                }
+                if (req.body.state) {
+                    state = req.body.state
+                }
+                if (req.body.pincode) {
+                    pincode = req.body.pincode
+                }
+                if (req.body.country) {
+                    country = req.body.country
+                }
+                if (req.body.landmark) {
+                    landmark = req.body.landmark
+                }
+                if (req.body.address) {
+                    address = req.body.address
+                }
+                if (req.body.address_type) {
+                    address_type = req.body.address_type
+                }
+                if (req.body.latitude) {
+                    latitude = req.body.latitude
+                } else {
+                    latitude = null
+
+                }
+
+                if (req.body.longitude) {
+                    longitude = req.body.longitude
+                } else {
+                    longitude = null
+                }
+                var user_id = req.userdata.id
+                data_to_enter = {
+                    city: city,
+                    state: state,
+                    pincode: pincode,
+                    country: country,
+                    landmark: landmark,
+                    address: address,
+                    user_id: user_id,
+                    address_type: address_type,
+                    latitude: latitude,
+                    longitude: longitude,
+                }
+
+                var sql = "INSERT user_address SET ?";
+                db.query(sql, data_to_enter, function(err, result) {
+                    if (err) {
+                        return res.status(400).json({ status: 'failed', message: 'Something went wrong', error: err });
+                    } else {
+                        return res.status(200).send({ status: "success", message: "insert successfull" })
+                    }
+                })
+            } catch (error) {
+                return res.status(400).json({ status: 'failed', message: 'Something went wrong' });
+            }
+        }
+    }
+
+
+}
+
+
+
+
+exports.executeSql = function(sql, res) {
+    return new Promise(function(resolve, reject) {
+        db.query(sql, function(err, result) {
+            if (err) {
+                console.log('file change')
+
+                return res.status(500).send({ status: "failed", message: "error occured", error: err })
+            } else {
+                return resolve(result)
+            }
+        })
+
+    })
+}

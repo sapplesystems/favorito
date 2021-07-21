@@ -3,6 +3,7 @@ import 'package:Favorito/ui/claim/ClaimProvider.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,10 @@ class AuthServices {
 
   //SignIn
   signIn(AuthCredential authCreds, key) async {
+    FirebaseMessaging firebaseMessaging= FirebaseMessaging();
+    await firebaseMessaging.getToken().then((value) {
+      print(value);
+    });
     FirebaseUser firebaseUser = (await FirebaseAuth.instance
             .signInWithCredential(authCreds)
             .onError((error, stackTrace) {
@@ -51,6 +56,7 @@ class AuthServices {
                                                     listen: false)
                                                 .getClaimData(key.currentContext);
       })
+      
     );
   
 print("uid:$uid");
@@ -123,4 +129,5 @@ initFirebase(firebaseUser, key);
       Fluttertoast.showToast(msg: 'Try again , Sign in Failed');
     }
   }
+
 }

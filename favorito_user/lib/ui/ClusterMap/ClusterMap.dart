@@ -3,6 +3,7 @@ import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
 import 'package:favorito_user/ui/search/business_on_map.dart';
+import 'package:favorito_user/utils/MyMarker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
@@ -73,16 +74,25 @@ SizeManager sm;
               ),
               MarkerClusterLayerOptions(
                 maxClusterRadius: 120,
-                size: Size(40, 40),
+                size: Size(100 , 60),
                 anchor: AnchorPos.align(AnchorAlign.center),
                 fitBoundsOptions: FitBoundsOptions(padding: EdgeInsets.all(50)),
                 // markers: markers,
                 markers: data.map((e) => Marker(
                   anchorPos: AnchorPos.align(AnchorAlign.center),
-                  height: 30,
-                  width: 30,
+                  height: 50,
+                  width: 200,              
                   point: LatLng(double.parse(e.location.split(',').first.trim()), double.parse(e.location.split(',').last.trim())),
-                  builder: (ctx) => Icon(Icons.pin_drop),
+                  builder: (ctx) => Column(
+                    children: [
+                      Text(e.businessName,style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(fontSize: 12,color: Colors.red),),
+                      Icon(Icons.pin_drop)
+                    ],
+                  ),
+                  // 
                 )).toList(growable: true),
                 polygonOptions: PolygonOptions(
                     borderColor: Colors.blueAccent,
