@@ -350,7 +350,9 @@ class BusinessProfileProvider extends BaseProvider {
     };
     print("_map:${map.toString()}");
     await WebService.funUserProfileUpdate(map).then((value) async {
-      // Provider.of<SettingProvider>(context, listen: false).getProfileImage();
+      Provider.of<SettingProvider>(RIKeys.josKeys30.currentContext,
+              listen: false)
+          .getProfileImage();
       if (value.status == 'success') {
         await Future.delayed(const Duration(seconds: 1));
         needSave(false);

@@ -56,7 +56,7 @@ class signup_b extends StatelessWidget {
           ),
           Container(
             color: myBackGround,
-            height: sm.w(170),
+            height: sm.h(95),
             child: Stack(
               children: [
                 Positioned(
@@ -64,6 +64,8 @@ class signup_b extends StatelessWidget {
                   left: sm.w(6),
                   right: sm.w(6),
                   child: Card(
+                    elevation: 8,
+                    shadowColor: Colors.grey.withOpacity(0.2),
                     child: Container(
                         // height: sm.w(100),
                         padding: EdgeInsets.only(

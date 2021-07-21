@@ -213,7 +213,7 @@ class SignUpProvider extends ChangeNotifier {
   validatePassword(_val) {
     if (!passwordRegex.hasMatch(_val)) {
       passError =
-          'Password should be 8 Character or \n longer. At least a number, a symbol.';
+          'Password should be 8 Character long \nincludes a capital letter, a special character and a number.';
     } else {
       passError = null;
     }
@@ -227,8 +227,8 @@ class SignUpProvider extends ChangeNotifier {
 
   validatePassword1(_val) {
     if (!passwordRegex.hasMatch(_val)) {
-      passError1 =
-          'Password should be 8 Character or \n longer. At least a number, a symbol.';
+      // passError1 =
+      //     'Password should be 8 Character long includes a capital letter,a special character and a number.';
     } else if (controller[6].text != controller[7].text) {
       passError1 = 'Password mismatch';
     } else {

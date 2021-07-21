@@ -6,8 +6,10 @@ import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/ui/adSpent/adspent.dart';
 import 'package:Favorito/ui/claim/ClaimProvider.dart';
 import 'package:Favorito/ui/setting/BusinessProfile/BusinessProfileProvider.dart';
+import 'package:Favorito/ui/setting/BusinessProfile/businessProfile.dart';
 import 'package:Favorito/ui/setting/businessInfo/businessInfoProvider.dart';
 import 'package:Favorito/ui/setting/setting/SettingProvider.dart';
+import 'package:Favorito/utils/RIKeys.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,9 +25,11 @@ class Setting extends StatelessWidget {
     return WillPopScope(
       onWillPop: () {
         BaseProvider.onWillPop(context);
+
         return null;
       },
       child: Scaffold(
+          key: RIKeys.josKeys30,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             title: Text("Settings",
@@ -54,43 +58,51 @@ class Setting extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(
                         horizontal: 20, vertical: sm.h(0.5)),
-                    child: Card(
-                      elevation: 5,
-                      shadowColor: Colors.grey.withOpacity(0.2),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: ListTile(
-                          leading: Padding(
-                            padding: EdgeInsets.only(right: 12.0),
-                            child: CircleAvatar(
-                                radius: sm.w(8),
-                                backgroundImage: NetworkImage(data.photo)),
-                          ),
-                          title: Text(
-                            context
-                                .read<BusinessProfileProvider>()
-                                .businessName,
-                            style: TextStyle(
-                                wordSpacing: 2,
-                                fontFamily: 'Gilroy-Medium',
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: .5,
-                                fontSize: 20),
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: AutoSizeText(
-                              data?.shortdescription,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              softWrap: true,
-                              wrapWords: true,
-                              minFontSize: 12,
-                              maxFontSize: 14,
+                    child: InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BusinessProfile(
+                                    isFirst: true,
+                                  ))),
+                      child: Card(
+                        elevation: 5,
+                        shadowColor: Colors.grey.withOpacity(0.2),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            leading: Padding(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: CircleAvatar(
+                                  radius: sm.w(8),
+                                  backgroundImage: NetworkImage(data.photo)),
+                            ),
+                            title: Text(
+                              context
+                                  .read<BusinessProfileProvider>()
+                                  .businessName,
                               style: TextStyle(
                                   wordSpacing: 2,
+                                  fontFamily: 'Gilroy-Medium',
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                                  letterSpacing: .5,
+                                  fontSize: 20),
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: AutoSizeText(
+                                data?.shortdescription,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                softWrap: true,
+                                wrapWords: true,
+                                minFontSize: 12,
+                                maxFontSize: 14,
+                                style: TextStyle(
+                                    wordSpacing: 2,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black),
+                              ),
                             ),
                           ),
                         ),

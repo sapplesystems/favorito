@@ -56,6 +56,7 @@ class _txtfieldboundryState extends State<txtfieldboundry> {
             contentPadding:
                 EdgeInsets.symmetric(vertical: sm.h(2.4), horizontal: sm.w(4)),
             errorText: widget.error,
+            errorMaxLines: 3,
             labelText: widget.title,
             labelStyle: TextStyle(color: myGrey, fontFamily: 'Gilroy-Regular'),
             counterText: "",
