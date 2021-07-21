@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:Favorito/Provider/BaseProvider.dart';
 import 'package:Favorito/firebase/AuthServices.dart';
 import 'package:Favorito/model/claimInfo.dart';
 import 'package:Favorito/network/webservices.dart';
 import 'package:Favorito/utils/RIKeys.dart';
 import 'package:Favorito/utils/UtilProvider.dart';
-import 'package:Favorito/utils/myColors.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

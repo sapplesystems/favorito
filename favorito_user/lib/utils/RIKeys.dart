@@ -37,4 +37,5 @@ class RIKeys {
   static final josKeys29 = GlobalKey<FormState>(); //catalogView
   static final josKeys30 = GlobalKey<ScaffoldState>(); //home
   static final josKeys31 = GlobalKey<ScaffoldState>(); //home
+  static final josKeys32 = GlobalKey<ScaffoldState>(); //cluster
 }

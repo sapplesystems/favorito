@@ -25,10 +25,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:Favorito/config/SizeManager.dart';
 import 'package:Favorito/utils/myString.Dart';
 import 'dart:convert' as convert;
-
+import 'package:device_info/device_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 class dashboard extends StatefulWidget {
   @override
   _dashboardState createState() => _dashboardState();
@@ -312,6 +312,16 @@ class _dashboardState extends State<dashboard> {
   }
 
   calldashBoard(BuildContext _context) async {
+DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+print('Running on ${androidInfo.id}');  // e.g. "Moto G (4)"
+FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+String firebaseToken = await firebaseMessaging.getToken();
+IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+print('Running on ${iosInfo.utsname.machine}'); 
+print('Running on token $firebaseToken'); 
+
+
     preferences = await SharedPreferences.getInstance();
     final RequestModel requestModel = RequestModel();
     requestModel.context = _context;

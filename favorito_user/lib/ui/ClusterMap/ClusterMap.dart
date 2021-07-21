@@ -2,12 +2,14 @@
 import 'package:favorito_user/component/EditTextComponent.dart';
 import 'package:favorito_user/config/SizeManager.dart';
 import 'package:favorito_user/model/appModel/search/BusinessProfileData.dart';
+import 'package:favorito_user/ui/business/BusinessProfileProvider.dart';
 import 'package:favorito_user/ui/search/business_on_map.dart';
-import 'package:favorito_user/utils/MyMarker.dart';
+import 'package:favorito_user/utils/RIKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong/latlong.dart';
+import 'package:provider/provider.dart';
 
 class ClusterMap extends StatefulWidget {
   List<BusinessProfileData> list;
@@ -42,12 +44,6 @@ SizeManager sm;
   Widget build(BuildContext context) {
     sm = SizeManager(context);
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //       pointIndex = 0;
-      //   },
-      //   child: Icon(Icons.refresh),
-      // ),
       body: Stack(
         children: [
           FlutterMap(
@@ -83,14 +79,26 @@ SizeManager sm;
                   height: 50,
                   width: 200,              
                   point: LatLng(double.parse(e.location.split(',').first.trim()), double.parse(e.location.split(',').last.trim())),
-                  builder: (ctx) => Column(
-                    children: [
-                      Text(e.businessName,style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(fontSize: 12,color: Colors.red),),
-                      Icon(Icons.pin_drop)
-                    ],
+                  builder: (ctx) => InkWell(
+                    onTap: (){
+                              Provider.of<BusinessProfileProvider>(context,
+                                  listen: false)
+                                ..setBusinessId(e.businessId)
+                                ..refresh(1);
+                            Navigator.pushNamed(context, '/businessProfile');
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          color: Colors.yellow,
+                          padding: EdgeInsets.all(1),
+                          child: Text(e.businessName,style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(fontSize: 12,color: Colors.black),),
+                        ),
+                        Icon(Icons.pin_drop)
+                      ]),
                   ),
                   // 
                 )).toList(growable: true),
@@ -102,17 +110,19 @@ SizeManager sm;
                     popupSnap: PopupSnap.markerTop,
                     popupController: _popupController,
                     popupBuilder: (_, marker) => Container(
-                          width: 200,
-                          height: 100,
-                          color: Colors.white,
-                          child: GestureDetector(
+                          width: 0,
+                          height: 0,
+                          color: Colors.transparent,
+                          child: InkWell(
                             onTap: () => debugPrint('Popup tap!'),
                             child: Text(
-                              '${marker.point}',style: Theme.of(context)
+                              '',
+                              //${marker.point}
+                              style: Theme.of(context)
                                       .textTheme
                                       .headline6
                                       .copyWith(color: Colors.black),
-                            ),
+                            )
                           ),
                         )),
                 builder: (context, markers) {
@@ -129,29 +139,29 @@ SizeManager sm;
             height: sm.h(10),
             child: Row(
               children: [
-                Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          left: sm.w(5), right: sm.w(5), top: sm.h(1)),
-                      child: EditTextComponent(
-                          // controller: _mySearchEditTextController,
-                          title: "Search",
-                          suffixTxt: '',
-                          hint: 'Search',
-                          security: false,
-                          valid: true,
-                          maxLines: 1,
-                          maxlen: 100,
-                          keyBoardAction: TextInputAction.search,
-                          // atSubmit: (_val) => executeSearch(SearchReqData(
-                          //     text: _mySearchEditTextController.text)),
-                          prefixIcon: 'search',
-                          // prefClick: () => executeSearch(SearchReqData(
-                          //     text: _mySearchEditTextController.text)
-                          //     )
-                              )
-                              ),
-                ),
+                // Expanded(
+                //   child: Padding(
+                //       padding: EdgeInsets.only(
+                //           left: sm.w(5), right: sm.w(5), top: sm.h(1)),
+                //       child: EditTextComponent(
+                //           // controller: _mySearchEditTextController,
+                //           title: "Search",
+                //           suffixTxt: '',
+                //           hint: 'Search',
+                //           security: false,
+                //           valid: true,
+                //           maxLines: 1,
+                //           maxlen: 100,
+                //           keyBoardAction: TextInputAction.search,
+                //           // atSubmit: (_val) => executeSearch(SearchReqData(
+                //           //     text: _mySearchEditTextController.text)),
+                //           prefixIcon: 'search',
+                //           // prefClick: () => executeSearch(SearchReqData(
+                //           //     text: _mySearchEditTextController.text)
+                //           //     )
+                //               )
+                //               ),
+                // ),
                 //Don't remove it is filter part for search
 
                 // Padding(

@@ -18,7 +18,6 @@ import 'package:favorito_user/ui/business/tabs/JobDetail.dart';
 import 'package:favorito_user/ui/business/tabs/Review/Review.dart';
 import 'package:favorito_user/ui/business/waitlist/JoinWaitList.dart';
 import 'package:favorito_user/ui/business/waitlist/waitlist.dart';
-import 'package:favorito_user/ui/pay/PayHome.dart';
 import 'package:favorito_user/ui/search/SearchResult.dart';
 import 'package:favorito_user/ui/splash/Splash.dart';
 import 'package:favorito_user/ui/user/Following.dart';

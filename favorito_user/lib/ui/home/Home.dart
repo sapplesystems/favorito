@@ -46,21 +46,26 @@ FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   void initState() {
     // TODO: implement initState
     super.initState();
+    _firebaseMessaging.getToken().then((value) {
+      print("this is new Token:${value}");
+    });
 
     _firebaseMessaging.configure(
-      onMessage: (message) async{
+      onMessage: (message) async {
         setState(() {
           messageTitle = message["notification"]["title"];
+          messageTitle = message["data"]["message"];
+          print("messageTitle:$messageTitle");
           notificationAlert = "New Notification Alert";
         });
       },
-      onResume: (message) async{
+      onResume: (message) async {
         setState(() {
           messageTitle = message["data"]["title"];
+          print("messageTitle1:$messageTitle");
           notificationAlert = "Application opened from Notification";
         });
-
-      },
+      }
     );
   }
 
