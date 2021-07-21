@@ -30,7 +30,10 @@ class _LoginState extends State<Login> {
             key: _scaffoldKey,
             body: Padding(
                 padding: EdgeInsets.only(
-                    left: sm.w(10), right: sm.w(10), top: sm.h(5)),
+                  left: sm.w(10),
+                  right: sm.w(10),
+                  top: sm.h(5),
+                ),
                 child: ListView(shrinkWrap: true, children: [
                   SvgPicture.asset('assets/icon/login_image.svg',
                       height: sm.h(34), fit: BoxFit.fill),
@@ -40,6 +43,7 @@ class _LoginState extends State<Login> {
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.4,
                           fontSize: 28)),
+                  SizedBox(height: sm.h(2)),
                   Builder(
                       builder: (context) => Form(
                           key: _formKey,
