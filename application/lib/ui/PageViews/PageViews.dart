@@ -55,7 +55,7 @@ class _PageViewsState extends State<PageViews> {
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                     crossAxisCount: 2,
-                    children: <Widget>[
+                    children: [
                       card4(
                           circleColor: 0xffe4efff,
                           circleIcon: "like",

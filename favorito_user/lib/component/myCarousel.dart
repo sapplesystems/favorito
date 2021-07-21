@@ -17,6 +17,7 @@ class myCarousel extends StatefulWidget {
 
 class _myCarouselState extends State<myCarousel> {
   CarouselModel carouselModel = CarouselModel();
+
   var fut;
   SizeManager sm;
 
